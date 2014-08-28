@@ -128,6 +128,78 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         GridData gridData = new GridData(GridData.FILL_BOTH);
         parent.setLayoutData(gridData);
 
+        createRuleFolder(parent);
+
+        // ADD msjian TDQ-8090: add a edit button
+        Composite com = toolkit.createComposite(ruleFolder);
+        GridLayout comTableLayout = new GridLayout(2, Boolean.TRUE);
+        com.setLayout(comTableLayout);
+
+        createEditButton(com);
+
+        createAddButton(com);
+
+        ruleFolder.setTopRight(com);
+        // TDQ-8090~
+
+        initMatchRuleTabs();
+
+        createGroupQualityThreshold(parent);
+
+        return parent;
+    }
+
+    /**
+     * DOC yyin Comment method "createAddButton".
+     * 
+     * @param com
+     */
+    protected void createAddButton(Composite com) {
+        Button addButton = new Button(com, SWT.FLAT | SWT.CENTER);
+        addButton.setImage(ADD_IMG);
+        addButton.setToolTipText(DefaultMessagesImpl.getString("MatchingKeySection.Add_rule_hint")); //$NON-NLS-1$
+        addButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                addNewMatchRule();
+            }
+
+        });
+    }
+
+    /**
+     * DOC yyin Comment method "createEditButton".
+     * 
+     * @param com
+     */
+    protected void createEditButton(Composite com) {
+        Button editButton = new Button(com, SWT.FLAT | SWT.CENTER);
+        editButton.setImage(EDIT_IMG);
+        editButton.setToolTipText(DefaultMessagesImpl.getString("EditSortMatchRuleNamesDialog.Title")); //$NON-NLS-1$
+        editButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                List<MatchRule> matchRuleList = getMatchRuleList();
+                EditSortMatchRuleNamesDialog dialog = new EditSortMatchRuleNamesDialog(Display.getCurrent().getActiveShell(),
+                        matchRuleList);
+                if (dialog.open() == Window.OK) {
+                    matchRuleList.clear();
+                    matchRuleList.addAll(dialog.getResultMatchRuleList());
+                    redrawnSubTableContent();
+                    listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+                }
+            }
+        });
+    }
+
+    /**
+     * DOC yyin Comment method "createRuleFolder".
+     * 
+     * @param parent
+     */
+    protected void createRuleFolder(Composite parent) {
         ruleFolder = new CTabFolder(parent, SWT.MULTI | SWT.BORDER);
         ruleFolder.setRenderer(new MatchRuleCTabFolderRenderer(ruleFolder));
         ruleFolder.setMaximizeVisible(false);
@@ -160,51 +232,6 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             }
 
         });
-
-        // ADD msjian TDQ-8090: add a edit button
-        Composite com = toolkit.createComposite(ruleFolder);
-        GridLayout comTableLayout = new GridLayout(2, Boolean.TRUE);
-        com.setLayout(comTableLayout);
-
-        Button editButton = new Button(com, SWT.FLAT | SWT.CENTER);
-        editButton.setImage(EDIT_IMG);
-        editButton.setToolTipText(DefaultMessagesImpl.getString("EditSortMatchRuleNamesDialog.Title")); //$NON-NLS-1$
-        editButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                List<MatchRule> matchRuleList = getMatchRuleList();
-                EditSortMatchRuleNamesDialog dialog = new EditSortMatchRuleNamesDialog(Display.getCurrent().getActiveShell(),
-                        matchRuleList);
-                if (dialog.open() == Window.OK) {
-                    matchRuleList.clear();
-                    matchRuleList.addAll(dialog.getResultMatchRuleList());
-                    redrawnSubTableContent();
-                    listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
-                }
-            }
-        });
-
-        Button addButton = new Button(com, SWT.FLAT | SWT.CENTER);
-        addButton.setImage(ADD_IMG);
-        addButton.setToolTipText(DefaultMessagesImpl.getString("MatchingKeySection.Add_rule_hint")); //$NON-NLS-1$
-        addButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                addNewMatchRule();
-            }
-
-        });
-
-        ruleFolder.setTopRight(com);
-        // TDQ-8090~
-
-        initMatchRuleTabs();
-
-        createGroupQualityThreshold(parent);
-
-        return parent;
     }
 
     /**

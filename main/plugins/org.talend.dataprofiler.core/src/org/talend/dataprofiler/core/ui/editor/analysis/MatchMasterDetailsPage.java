@@ -79,6 +79,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWiza
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.section.AnaMatchSurvivorSection;
@@ -1477,7 +1478,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
         selectAlgorithmSection.setMatchRuleDef(matchRule);
-        selectAlgorithmSection.setSelection(selectAlgorithmSection.isVSRMode());
+        boolean isVSR = RecordMatcherType.simpleVSRMatcher.name().equals(matchRule.getRecordLinkageAlgorithm());
+        selectAlgorithmSection.setSelection(isVSR);
         if (selectAlgorithmSection.isVSRMode()) {
             this.matchingKeySection.importMatchRule(matchRule, overwrite);
         } else {
