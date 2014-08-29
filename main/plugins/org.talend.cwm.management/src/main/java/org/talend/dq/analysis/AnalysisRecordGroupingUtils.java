@@ -116,9 +116,11 @@ public class AnalysisRecordGroupingUtils {
      * @return
      */
     public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
-            Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName, String handleNull) {
-        return getMatchKeyMap(column, algoType, algoParameter, confidentWeight, columnIndexMap, matchInterval, attributeName,
-                handleNull, null);// The jar path is null when the matcher's algorithm is not a type of "custom"
+            double attrThreshold, Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName,
+            String handleNull) {
+        return getMatchKeyMap(column, algoType, algoParameter, confidentWeight, attrThreshold, columnIndexMap, matchInterval,
+                attributeName, handleNull, null);// The jar path is null when the matcher's algorithm is not a type of
+                                                 // "custom"
     }
 
     /**
@@ -136,10 +138,10 @@ public class AnalysisRecordGroupingUtils {
      * @return
      */
     public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
-            Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName, String handleNull,
-            String jarPath) {
-        Map<String, String> matchKeyMap = getMatchKeyMap(column, algoType, algoParameter, confidentWeight, columnIndexMap,
-                matchInterval, attributeName, null, handleNull, jarPath);
+            double attrThreshold, Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName,
+            String handleNull, String jarPath) {
+        Map<String, String> matchKeyMap = getMatchKeyMap(column, algoType, algoParameter, confidentWeight, attrThreshold,
+                columnIndexMap, matchInterval, attributeName, null, handleNull, jarPath);
         return matchKeyMap;
     }
 
@@ -160,8 +162,8 @@ public class AnalysisRecordGroupingUtils {
      * @return
      */
     public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
-            Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName, String matchKeyName,
-            String handleNull, String jarPath) {
+            double attrThreshold, Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName,
+            String matchKeyName, String handleNull, String jarPath) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();
         for (MetadataColumn metaCol : columnIndexMap.keySet()) {
             if (metaCol.getName().equals(column)) {
@@ -172,6 +174,7 @@ public class AnalysisRecordGroupingUtils {
         matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, AttributeMatcherType.valueOf(algoType).name());
         matchKeyMap.put(IRecordGrouping.CUSTOMER_MATCH_CLASS, algoParameter);
         matchKeyMap.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(confidentWeight));
+        matchKeyMap.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(attrThreshold));
         matchKeyMap.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(matchInterval));
         matchKeyMap.put(IRecordGrouping.ATTRIBUTE_NAME, attributeName);
         matchKeyMap.put(IRecordGrouping.MATCH_KEY_NAME, matchKeyName);

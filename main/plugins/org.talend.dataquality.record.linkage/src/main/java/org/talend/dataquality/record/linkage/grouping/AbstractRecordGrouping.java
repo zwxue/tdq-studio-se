@@ -20,6 +20,9 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.matchmerge.SubString;
+import org.talend.dataquality.matchmerge.mfb.MFBAttributeMatcher;
+import org.talend.dataquality.matchmerge.mfb.MFBRecordMatcher;
 import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
@@ -76,7 +79,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     // VSR algorithm by default.
     private RecordMatcherType matchAlgo = RecordMatcherType.simpleVSRMatcher;
 
-    private TSwooshGrouping<TYPE> swooshGrouping = new TSwooshGrouping<TYPE>(this);
+    protected TSwooshGrouping<TYPE> swooshGrouping = new TSwooshGrouping<TYPE>(this);
 
     // The exthended column size.
     int extSize;
@@ -503,37 +506,43 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         masterRecords.clear();
         combinedRecordMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
         for (List<Map<String, String>> matchRule : multiMatchRules) {
-            createSimpleRecordMatcher(matchRule);
+            createRecordMatcher(matchRule);
         }
     }
 
-    private void createSimpleRecordMatcher(List<Map<String, String>> matchRule) throws InstantiationException,
-            IllegalAccessException, ClassNotFoundException {
+    private void createRecordMatcher(List<Map<String, String>> matchRule) throws InstantiationException, IllegalAccessException,
+            ClassNotFoundException {
         final int recordSize = matchRule.size();
         double[] arrAttrWeights = new double[recordSize];
+        double[] attrThresholds = new double[recordSize];
         String[] attributeNames = new String[recordSize];
         String[][] algorithmName = new String[recordSize][2];
         String[] arrMatchHandleNull = new String[recordSize];
         String[] customizedJarPath = new String[recordSize];
         double recordMatchThreshold = acceptableThreshold;// keep compatibility to older version.
-        int recordIdx = 0;
+        int keyIdx = 0;
         for (Map<String, String> recordMap : matchRule) {
-            algorithmName[recordIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
-            if (AttributeMatcherType.DUMMY.name().equals(algorithmName[recordIdx][0])) {
-                recordIdx++;
+            algorithmName[keyIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
+            if (AttributeMatcherType.DUMMY.name().equals(algorithmName[keyIdx][0])) {
+                keyIdx++;
                 continue;
             }
-            arrAttrWeights[recordIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
-            algorithmName[recordIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
-            attributeNames[recordIdx] = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
-            arrMatchHandleNull[recordIdx] = recordMap.get(IRecordGrouping.HANDLE_NULL);
+            arrAttrWeights[keyIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
+            algorithmName[keyIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
+            attributeNames[keyIdx] = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
+            arrMatchHandleNull[keyIdx] = recordMap.get(IRecordGrouping.HANDLE_NULL);
+            if (matchAlgo == RecordMatcherType.T_SwooshAlgorithm) {
+                // Set attribute threshold
+                attrThresholds[keyIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.ATTRIBUTE_THRESHOLD));
+
+            }
             String rcdMathThresholdEach = recordMap.get(IRecordGrouping.RECORD_MATCH_THRESHOLD);
-            customizedJarPath[recordIdx] = recordMap.get(IRecordGrouping.JAR_PATH);
+            customizedJarPath[keyIdx] = recordMap.get(IRecordGrouping.JAR_PATH);
             if (!StringUtils.isEmpty(rcdMathThresholdEach)) {
                 recordMatchThreshold = Double.valueOf(rcdMathThresholdEach);
 
             }
-            recordIdx++;
+            keyIdx++;
         }
         IAttributeMatcher[] attributeMatcher = new IAttributeMatcher[recordSize];
 
@@ -549,17 +558,25 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             } else {
                 // Use the default class loader to load the class.
                 attributeMatcher[indx] = AttributeMatcherFactory.createMatcher(attrMatcherType, algorithmName[indx][1]);
+                if (matchAlgo == RecordMatcherType.T_SwooshAlgorithm) {
+                    attributeMatcher[indx] = MFBAttributeMatcher.wrap(attributeMatcher[indx], arrAttrWeights[indx],
+                            attrThresholds[indx], SubString.NO_SUBSTRING);
+                }
             }
             attributeMatcher[indx].setNullOption(arrMatchHandleNull[indx]);
             attributeMatcher[indx].setAttributeName(attributeNames[indx]);
 
         }
-        IRecordMatcher simpleRecordMatcher = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
-        simpleRecordMatcher.setRecordSize(recordSize);
-        simpleRecordMatcher.setAttributeWeights(arrAttrWeights);
-        simpleRecordMatcher.setAttributeMatchers(attributeMatcher);
-        simpleRecordMatcher.setRecordMatchThreshold(recordMatchThreshold);
-        combinedRecordMatcher.add(simpleRecordMatcher);
+
+        IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
+        if (matchAlgo == RecordMatcherType.T_SwooshAlgorithm) {
+            recordMatcher = new MFBRecordMatcher(recordMatchThreshold);
+        }
+        recordMatcher.setRecordSize(recordSize);
+        recordMatcher.setAttributeWeights(arrAttrWeights);
+        recordMatcher.setAttributeMatchers(attributeMatcher);
+        recordMatcher.setRecordMatchThreshold(recordMatchThreshold);
+        combinedRecordMatcher.add(recordMatcher);
     }
 
     /**

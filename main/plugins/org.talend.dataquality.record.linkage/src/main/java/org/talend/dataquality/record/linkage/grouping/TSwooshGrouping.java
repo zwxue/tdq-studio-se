@@ -35,6 +35,7 @@ import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorit
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams.SurvivorshipFunction;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
+import org.talend.utils.collections.BidiMultiMap;
 
 /**
  * Record grouping class with t-swoosh algorithm.
@@ -48,11 +49,22 @@ public class TSwooshGrouping<TYPE> {
 
     AbstractRecordGrouping<TYPE> recordGrouping;
 
+    BidiMultiMap<String, String> oldGID2New = new BidiMultiMap<String, String>();
+
     /**
      * DOC zhao TSwooshGrouping constructor comment.
      */
     public TSwooshGrouping(AbstractRecordGrouping<TYPE> recordGrouping) {
         this.recordGrouping = recordGrouping;
+    }
+
+    /**
+     * Getter for oldGID2New.
+     * 
+     * @return the oldGID2New
+     */
+    public Map<String, String> getOldGID2New() {
+        return this.oldGID2New;
     }
 
     /**
@@ -173,10 +185,16 @@ public class TSwooshGrouping<TYPE> {
 
             } else if (grpId1 != null && grpId2 != null) {
                 // Both records are merged records.
-                // Append the new group id to the existing id delimited by ","
-                String combinedGRPID = richRecord1.getGroupId() + "," + richRecord2.getGroupId(); //$NON-NLS-1$
-                richRecord1.setGroupId(combinedGRPID);
-                richRecord2.setGroupId(combinedGRPID);
+                richRecord2.setGroupId(grpId1);
+                // Put into the map: <gid2,gid1>
+                oldGID2New.put(grpId2, grpId1);
+                // Update map where value equals to gid2
+                List<String> keysOfGID2 = oldGID2New.getKeys(grpId2);
+                if (keysOfGID2 != null) {
+                    for (String key : keysOfGID2) {
+                        oldGID2New.put(key, grpId1);
+                    }
+                }
 
             } else if (grpId1 == null) {
                 // richRecord1 is original record
@@ -211,19 +229,16 @@ public class TSwooshGrouping<TYPE> {
         public void onNewMerge(Record record) {
             // record must be RichRecord from DQ grouping implementation.
             RichRecord richRecord = (RichRecord) record;
+            richRecord.setMaster(true);
+            richRecord.setScore(1.0);
             if (record.getGroupId() != null) {
-                richRecord.setMaster(true);
                 richRecord.setMerged(true);
-                richRecord.setScore(1.0);
                 richRecord.setGrpSize(richRecord.getRelatedIds().size());
                 if (richRecord.getGroupQuality() == 0) {
                     // group quality will be the confidence (score) .
                     richRecord.setGroupQuality(record.getConfidence());
                 }
-            } else {
-                richRecord.setMaster(true);
             }
-
         }
 
         /*

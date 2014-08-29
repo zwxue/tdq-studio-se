@@ -3,3 +3,5 @@
 /plugins/*/class
 /plugins/*/.settings
 /*/.settings
+/plugins/**/dev_con
+

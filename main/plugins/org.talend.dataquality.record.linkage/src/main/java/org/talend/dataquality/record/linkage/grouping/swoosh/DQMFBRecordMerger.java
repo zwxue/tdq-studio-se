@@ -138,13 +138,14 @@ public class DQMFBRecordMerger extends MFBRecordMerger {
 
             }
             /**
-             * Else the matching key's value will be udpated when calll {@link RichRecord#getOutputRow()}
+             * Else the matching key's value will be udpated when call {@link RichRecord#getOutputRow()}
              */
 
         }
         List<DQAttribute<?>> originalRowList = new ArrayList<DQAttribute<?>>();
         CollectionUtils.addAll(originalRowList, mergedRows);
         mergedRecord.setOriginRow(originalRowList);
+        mergedRecord.setRecordSize(richRecord1.getRecordSize());
         // Set the group quality
         double gQuality1 = richRecord1.getGroupQuality();
         double gQuality2 = richRecord2.getGroupQuality();
