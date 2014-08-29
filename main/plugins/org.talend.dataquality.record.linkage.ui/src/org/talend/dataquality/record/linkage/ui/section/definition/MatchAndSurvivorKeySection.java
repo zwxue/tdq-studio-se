@@ -13,14 +13,10 @@
 package org.talend.dataquality.record.linkage.ui.section.definition;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ModifyEvent;
@@ -30,23 +26,23 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.MatchKeyAndSurvivorTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorDefinition;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.KeyDefinitionTableViewerSorter;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.ui.section.AnaMatchSurvivorSection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
- * DOC yyin class global comment. Detailled comment
+ * The section used in match rule editor, show Match and Survivor keys for t-swoosh algorithm
  */
 public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
@@ -84,160 +80,22 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
         super.setIsNeedSubChart(false);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
-     */
     @Override
-    public void addTableItem() {
-        tableComposite.addKeyDefinition(StringUtils.EMPTY, matchAndSurvivorKeyList);
-        // link the added MatchKeyAndSurvivorDefinition's match and survivor key with matchRuleDef's matchkey and
-        // survivorkey list;
-        MatchKeyAndSurvivorDefinition definition = matchAndSurvivorKeyList.get(matchAndSurvivorKeyList.size() - 1);
-        matchRuleDef.getMatchRules().get(0).getMatchKeys().add(definition.getMatchKey());
-        matchRuleDef.getSurvivorshipKeys().add(definition.getSurvivorShipKey());
-
-        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
-    }
-
-    @Override
-    public void removeTableItem() {
-        boolean success = false;
-        ISelection selectItems = tableComposite.getSelectItems();
-        if (selectItems instanceof IStructuredSelection) {
-            Iterator<MatchKeyAndSurvivorDefinition> iterator = ((IStructuredSelection) selectItems).iterator();
-            while (iterator.hasNext()) {
-                MatchKeyAndSurvivorDefinition next = iterator.next();
-                removeMatchAndSurvivorKey(next);
-                success = true;
-            }
-            if (success) {
-                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
-            }
-        }
+    protected MatchRuleDefinition getMatchRuleDefinition() {
+        return this.matchRuleDef;
     }
 
     /**
-     * DOC yyin Comment method "removeMatchAndSurvivorKey".
+     * DOC yyin Comment method "createTableComposite".
      * 
-     * @param next
-     */
-    private void removeMatchAndSurvivorKey(MatchKeyAndSurvivorDefinition definition) {
-        tableComposite.removeKeyDefinition(definition, matchAndSurvivorKeyList);
-    }
-
-    @Override
-    public void moveDownTableItem() {
-        ISelection selectItems = tableComposite.getSelectItems();
-        if (selectItems instanceof StructuredSelection) {
-            if (selectItems.isEmpty()) {
-                return;
-            }
-            Iterator<MatchKeyAndSurvivorDefinition> iterator = ((StructuredSelection) selectItems).iterator();
-            while (iterator.hasNext()) {
-                MatchKeyAndSurvivorDefinition next = iterator.next();
-                tableComposite.moveDownKeyDefinition(next, matchAndSurvivorKeyList);
-                moveMatchKey(next, matchAndSurvivorKeyList.indexOf(next));
-            }
-            tableComposite.selectAllItem(((StructuredSelection) selectItems).toList());
-        }
-    }
-
-    /**
-     * move related match key and survivor key in model.
-     * 
-     * @param next
-     * @param indexOf
-     */
-    private void moveMatchKey(MatchKeyAndSurvivorDefinition next, int newIndex) {
-        // move the related match key in model
-        EList<MatchKeyDefinition> matchKeys = matchRuleDef.getMatchRules().get(0).getMatchKeys();
-        matchKeys.remove(next.getMatchKey());
-        matchKeys.add(newIndex, next.getMatchKey());
-
-        // move the related survivor keys
-        matchRuleDef.getSurvivorshipKeys().remove(next.getSurvivorShipKey());
-        matchRuleDef.getSurvivorshipKeys().add(newIndex, next.getSurvivorShipKey());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
-     */
-    @Override
-    public void moveUpTableItem() {
-        ISelection selectItems = tableComposite.getSelectItems();
-        if (selectItems instanceof StructuredSelection) {
-            if (selectItems.isEmpty()) {
-                return;
-            }
-            Iterator<MatchKeyAndSurvivorDefinition> iterator = ((StructuredSelection) selectItems).iterator();
-            while (iterator.hasNext()) {
-                MatchKeyAndSurvivorDefinition next = iterator.next();
-                tableComposite.moveUpKeyDefinition(next, matchAndSurvivorKeyList);
-                moveMatchKey(next, matchAndSurvivorKeyList.indexOf(next));
-            }
-            tableComposite.selectAllItem(((StructuredSelection) selectItems).toList());
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubContent(org.eclipse
-     * .swt.widgets.Composite)
-     */
-    @Override
-    protected Composite createSubContent(Composite sectionClient) {
-        Composite ruleComp = toolkit.createComposite(sectionClient, SWT.NONE);
-        GridData data = new GridData(GridData.FILL_BOTH);
-        ruleComp.setLayoutData(data);
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginWidth = 0;
-        gridLayout.marginHeight = 0;
-        ruleComp.setLayout(gridLayout);
-        tableComposite = (MatchKeyAndSurvivorTableComposite) createTableComposite(ruleComp, matchRuleDef.getMatchRules().get(0));
-        tableComposite.addPropertyChangeListener(this);
-        tableComposite.setAddColumn(isAddColumn());
-        tableComposite.setLayout(gridLayout);
-        tableComposite.setLayoutData(data);
-        if (columnMap != null) {
-            ArrayList<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
-            columnList.addAll(columnMap.keySet());
-            tableComposite.setColumnList(columnList);
-        }
-        tableComposite.createContent();
-
-        List<MatchKeyAndSurvivorDefinition> keyList = new ArrayList<MatchKeyAndSurvivorDefinition>();
-        EList<MatchRule> matchRules = matchRuleDef.getMatchRules();
-        if (!matchRules.isEmpty()) {
-            keyList = getKeyList(matchRules.get(0), Boolean.FALSE);
-            matchAndSurvivorKeyList = matchRuleWithSurvMap.get(matchRules.get(0));
-        }
-
-        tableComposite.serViewerSorter(new KeyDefinitionTableViewerSorter<MatchKeyAndSurvivorDefinition>(keyList));
-        tableComposite.setInput(keyList);
-
-        createGroupQualityThreshold(ruleComp);
-
-        return ruleComp;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataquality.record.linkage.ui.section.AnaMatchSurvivorSection#createTableComposite(org.eclipse.swt
-     * .widgets.Composite, org.talend.dataquality.rules.MatchRule)
+     * @param ruleComp
+     * @param data
+     * @param gridLayout
      */
     @Override
     protected AbsMatchAnalysisTableComposite<?> createTableComposite(Composite ruleComp, MatchRule matchRule) {
-        MatchKeyAndSurvivorTableComposite tableComp = new MatchKeyAndSurvivorTableComposite(ruleComp, SWT.NO_FOCUS, matchRule);
-        return tableComp;
+        tableComposite = new MatchKeyAndSurvivorTableComposite(ruleComp, SWT.NO_FOCUS, matchRule);
+        return tableComposite;
     }
 
     /*
@@ -329,4 +187,29 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
         groupQualityThresholdText.setText(String.valueOf(this.matchRuleDef.getMatchGroupQualityThreshold()));
     }
 
+    /**
+     * For the rule editor, no column is needed.
+     */
+    @Override
+    protected boolean checkColumnNameIsEmpty(MatchKeyDefinition mdk) {
+        return false;
+    }
+
+    /**
+     * When the user has selected t-swoosh and clicks on the "plus" button, there should be a warning pop-up Added
+     * TDQ-9318
+     */
+    @Override
+    protected void addNewMatchRule() {
+        if (matchRuleWithSurvMap.keySet().size() > 0) {
+            boolean isOk = MessageDialogWithToggle
+                    .openConfirm(
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            DefaultMessagesImpl.getString("AnaMatchSurvivorSection.Tswoosh"), DefaultMessagesImpl.getString("AnaMatchSurvivorSection.MultiRule")); //$NON-NLS-1$ //$NON-NLS-2$ 
+            if (!isOk) {
+                return;
+            }
+        }
+        super.addNewMatchRule();
+    }
 }

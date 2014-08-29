@@ -32,6 +32,7 @@ import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableC
 import org.talend.dataquality.record.linkage.ui.composite.MatchKeyAndSurvivorTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorDefinition;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.KeyDefinitionTableViewerSorter;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
@@ -270,11 +271,13 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
      */
     @Override
     protected void deleteMatchRuleTab(CTabItem tabItem) {
-        List<MatchKeyAndSurvivorDefinition> matchAndSurvDefList = matchRuleWithSurvMap.get(getMatchRule(tabItem));
+        MatchRule matchRule = getMatchRule(tabItem);
+        List<MatchKeyAndSurvivorDefinition> matchAndSurvDefList = matchRuleWithSurvMap.get(matchRule);
         MatchRuleDefinition matchRuleDefinition = getMatchRuleDefinition();
         for (MatchKeyAndSurvivorDefinition matchAndSurvDef : matchAndSurvDefList) {
             matchRuleDefinition.getSurvivorshipKeys().remove(matchAndSurvDef.getSurvivorShipKey());
         }
+        matchRuleWithSurvMap.remove(matchRule);
         super.deleteMatchRuleTab(tabItem);
     }
 
@@ -337,6 +340,23 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
         MatchKeyAndSurvivorTableComposite matchRuleTableComp = (MatchKeyAndSurvivorTableComposite) getMatchRuleComposite(tabItem);
         MatchRule matchRule = matchRuleTableComp.getMatchRule();
         return matchRule;
+    }
+
+    @Override
+    protected MatchRule getCurrentMatchRule() throws Exception {
+        CTabItem currentTabItem = ruleFolder.getSelection();
+        if (currentTabItem == null) {
+            throw new Exception(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
+        }
+        return getMatchRule(currentTabItem);
+    }
+
+    @Override
+    public void removeMatchKeyFromCurrentMatchRule(String column) {
+        MatchKeyAndSurvivorTableComposite matchRuleTableComp = (MatchKeyAndSurvivorTableComposite) getCurrentMatchRuleTableComposite();
+        MatchRule matchRule = matchRuleTableComp.getMatchRule();
+        List<MatchKeyAndSurvivorDefinition> matchAndSurvDefList = matchRuleWithSurvMap.get(matchRule);
+        matchRuleTableComp.removeKeyDefinition(column, matchAndSurvDefList);
     }
 
     /*
