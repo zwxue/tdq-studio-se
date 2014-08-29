@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.grouping.swoosh;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
@@ -48,6 +49,8 @@ public class RichRecord extends Record {
     // Matching distance details. Only none-master records has this attribute.
     private String labeledAttributeScores = StringUtils.EMPTY;
 
+    private int recordSize = 0;
+
     /**
      * DOC zhao RichRecord constructor .
      * 
@@ -80,6 +83,24 @@ public class RichRecord extends Record {
      */
     public void setOriginRow(List<DQAttribute<?>> originRow) {
         this.originRow = originRow;
+    }
+
+    /**
+     * Sets the recordSize.
+     * 
+     * @param recordSize the recordSize to set
+     */
+    public void setRecordSize(int recordSize) {
+        this.recordSize = recordSize;
+    }
+
+    /**
+     * Getter for recordSize.
+     * 
+     * @return the recordSize
+     */
+    public int getRecordSize() {
+        return this.recordSize;
     }
 
     public void setMaster(boolean isMaster) {
@@ -180,7 +201,7 @@ public class RichRecord extends Record {
         this.labeledAttributeScores = labeledAttributeScores;
     }
 
-    public List<DQAttribute<?>> getOutputRow() {
+    public List<DQAttribute<?>> getOutputRow(Map<String, String> oldGID2New) {
         if (originRow == null) {
             return null;
         }
@@ -197,26 +218,44 @@ public class RichRecord extends Record {
 
         if (isMaster()) {
             if (isMerged) {// Master records
-                int extSize = 6;
                 // Update group id.
-                originRow.get(originRow.size() - extSize).setValue(getGroupId());
-                extSize--;
-                // group size
-                originRow.get(originRow.size() - extSize).setValue(String.valueOf(getGrpSize()));
-                extSize--;
-                // is master
-                originRow.get(originRow.size() - extSize).setValue(String.valueOf(true));
-                extSize--;
-                // Score
-                originRow.get(originRow.size() - extSize).setValue(String.valueOf(1.0));
-                extSize--;
-                // group quality
-                originRow.get(originRow.size() - extSize).setValue(String.valueOf(getGroupQuality()));
-                extSize--;
-                // attribute scores (distance details).
-                originRow.get(originRow.size() - extSize).setValue(StringUtils.EMPTY);
+                String finalGID = computeGID(oldGID2New);
+                if (recordSize == originRow.size()) {
+                    // The output is wait until the matching finished. (e.g. chart display in match analysis)
+
+                    originRow.add(new DQAttribute<String>("GID", originRow.size(), finalGID)); //$NON-NLS-1$
+                    // group size
+                    originRow.add(new DQAttribute<Integer>("Group size", originRow.size(), getGrpSize())); //$NON-NLS-1$
+                    // is master
+                    originRow.add(new DQAttribute<Boolean>("Is master", originRow.size(), true)); //$NON-NLS-1$
+                    // Score
+                    originRow.add(new DQAttribute<Double>("Score", originRow.size(), 1.0)); //$NON-NLS-1$
+                    // group quality
+                    originRow.add(new DQAttribute<String>("Group quality", originRow.size(), String.valueOf(getGroupQuality()))); //$NON-NLS-1$
+                    // attribute scores (distance details).
+                    originRow.add(new DQAttribute<String>("Attribute scores", originRow.size(), StringUtils.EMPTY)); //$NON-NLS-1$
+                } else {
+
+                    int extSize = 6;
+                    originRow.get(originRow.size() - extSize).setValue(finalGID);
+                    extSize--;
+                    // group size
+                    originRow.get(originRow.size() - extSize).setValue(String.valueOf(getGrpSize()));
+                    extSize--;
+                    // is master
+                    originRow.get(originRow.size() - extSize).setValue(String.valueOf(true));
+                    extSize--;
+                    // Score
+                    originRow.get(originRow.size() - extSize).setValue(String.valueOf(1.0));
+                    extSize--;
+                    // group quality
+                    originRow.get(originRow.size() - extSize).setValue(String.valueOf(getGroupQuality()));
+                    extSize--;
+                    // attribute scores (distance details).
+                    originRow.get(originRow.size() - extSize).setValue(StringUtils.EMPTY);
+                }
             } else {// Unique records
-                // GID
+                    // GID
                 originRow.add(new DQAttribute<String>("GID", originRow.size(), UUID.randomUUID().toString())); //$NON-NLS-1$
                 // Group size
                 originRow.add(new DQAttribute<Integer>("Group size", originRow.size(), 1)); //$NON-NLS-1$
@@ -233,7 +272,7 @@ public class RichRecord extends Record {
         } else {// Matched records (with records regardless of group quality)
 
             // GID
-            originRow.add(new DQAttribute<String>("GID", originRow.size(), getGroupId())); //$NON-NLS-1$
+            originRow.add(new DQAttribute<String>("GID", originRow.size(), computeGID(oldGID2New))); //$NON-NLS-1$
             // Group size
             originRow.add(new DQAttribute<Integer>("Group size", originRow.size(), 0)); //$NON-NLS-1$
             // Master
@@ -249,4 +288,17 @@ public class RichRecord extends Record {
         return originRow;
 
     }
+
+    /**
+     * DOC zhao Comment method "computeGID".
+     * 
+     * @param oldGID2New
+     * @return
+     */
+    private String computeGID(Map<String, String> oldGID2New) {
+        String groupId = getGroupId();
+        String finalGID = oldGID2New.get(groupId) == null ? groupId : oldGID2New.get(groupId);
+        return finalGID;
+    }
+
 }

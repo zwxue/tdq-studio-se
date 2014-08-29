@@ -109,6 +109,7 @@ public class AbstractRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
 
         matchingRule.add(lnameRecords);
 
@@ -117,6 +118,7 @@ public class AbstractRecordGroupingTest {
         accountRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(6));
         accountRecords.put(IRecordGrouping.MATCHING_TYPE, "LEVENSHTEIN"); //$NON-NLS-1$
         accountRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(0.8));
+        accountRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
         matchingRule.add(accountRecords);
 
         recordGroup.addMatchRule(matchingRule);
@@ -285,6 +287,7 @@ public class AbstractRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.95f));
         matchingRule.add(lnameRecords);
 
@@ -420,6 +423,7 @@ public class AbstractRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.0f));
         matchingRule.add(lnameRecords);
 

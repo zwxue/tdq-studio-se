@@ -23,7 +23,6 @@ import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.record.IRecordMerger;
-import org.talend.dataquality.record.linkage.record.SimpleVSRRecordMatcher;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 public class MFB implements MatchMergeAlgorithm {
@@ -74,7 +73,7 @@ public class MFB implements MatchMergeAlgorithm {
     public static MFB build(AttributeMatcherType[] algorithms, String[] algorithmParameters, float[] thresholds,
             double minConfidenceValue, SurvivorShipAlgorithmEnum[] merges, String[] mergesParameters, double[] weights,
             IAttributeMatcher.NullOption[] nullOptions, SubString[] subStrings, String mergedRecordSource) {
-        IRecordMatcher newMatcher = MFBRecordMatcher.wrap(new SimpleVSRRecordMatcher(), minConfidenceValue);
+        IRecordMatcher newMatcher = new MFBRecordMatcher(minConfidenceValue);
         newMatcher.setRecordSize(algorithms.length);
         // Create attribute match
         IAttributeMatcher[] attributeMatchers = new IAttributeMatcher[algorithms.length];

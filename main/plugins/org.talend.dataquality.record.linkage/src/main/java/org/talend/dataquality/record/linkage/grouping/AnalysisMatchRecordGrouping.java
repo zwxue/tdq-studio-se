@@ -33,7 +33,9 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
 
     List<Object[]> inputList = new ArrayList<Object[]>();
 
-    private static final String columnDelimiter = "|"; //$NON-NLS-1$
+    // Temporarily store the match result so that it can be iterated to be handled later after all of the records are
+    // computed.
+    private List<RichRecord> tmpMatchResult = new ArrayList<RichRecord>();
 
     private MatchGroupResultConsumer matchResultConsumer = null;
 
@@ -108,13 +110,44 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#end()
+     */
+    @Override
+    public void end() throws IOException, InterruptedException {
+        super.end();
+        if (matchResultConsumer.isKeepDataInMemory) {
+            for (RichRecord row : tmpMatchResult) {
+                // For swoosh algorithm, the GID can only be know after all of the records are computed.
+                out(row);
+            }
+        }
+        // Clear the GID map , no use anymore.
+        swooshGrouping.getOldGID2New().clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see
      * org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(org.talend.dataquality.record
      * .linkage.grouping.swoosh.RichRecord)
      */
     @Override
     protected void outputRow(RichRecord row) {
-        List<DQAttribute<?>> originRow = row.getOutputRow();
+        if (matchResultConsumer.isKeepDataInMemory) {
+            tmpMatchResult.add(row);
+        } else {
+            out(row);
+        }
+    }
+
+    /**
+     * DOC zhao Comment method "out".
+     * 
+     * @param row
+     */
+    private void out(RichRecord row) {
+        List<DQAttribute<?>> originRow = row.getOutputRow(swooshGrouping.getOldGID2New());
         String[] strRow = new String[originRow.size()];
         int idx = 0;
         for (DQAttribute<?> attr : originRow) {

@@ -133,20 +133,32 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
 
         monitor.worked(20);
 
+        // Set schema for match key.
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>();
         ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        MetadataColumn[] completeColumnSchema = AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap);
+        String[] colSchemaString = new String[completeColumnSchema.length];
+        int idx = 0;
+        for (MetadataColumn metadataCol : completeColumnSchema) {
+            colSchemaString[idx++] = metadataCol.getName();
+        }
+        recordMatchingIndicator.setMatchRowSchema(colSchemaString);
+        recordMatchingIndicator.reset();
+
+        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(recordMatchingIndicator);
         if (sqlExecutor.getStoreOnDisk()) {
             Map<BlockKey, String> blockKeys = sqlExecutor.getStoreOnDiskHandler().getBlockKeys();
             @SuppressWarnings("rawtypes")
             IPersistentLookupManager persistentLookupManager = (sqlExecutor.getStoreOnDiskHandler()).getPersistentLookupManager();
             try {
                 returnCode = execHandler.executeWithStoreOnDisk(columnMap, recordMatchingIndicator, blockKeyIndicator,
-                        persistentLookupManager, blockKeys);
+                        persistentLookupManager, blockKeys, matchResultConsumer);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
         } else {
-            returnCode = execHandler.execute(columnMap, recordMatchingIndicator, matchRows, blockKeyIndicator);
+            returnCode = execHandler.execute(columnMap, recordMatchingIndicator, matchRows, blockKeyIndicator,
+                    matchResultConsumer);
         }
 
         if (!returnCode.isOk()) {
@@ -173,6 +185,22 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         }
 
         return rc;
+    }
+
+    private MatchGroupResultConsumer createMatchGroupResultConsumer(final RecordMatchingIndicator recordMatchingIndicator) {
+        MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer(false) {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping. MatchGroupResultConsumer#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(Object row) {
+                recordMatchingIndicator.handle(row);
+            }
+        };
+        return matchResultConsumer;
     }
 
     /**

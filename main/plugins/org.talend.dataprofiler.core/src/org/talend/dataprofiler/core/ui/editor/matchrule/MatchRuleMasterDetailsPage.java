@@ -32,12 +32,12 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataquality.properties.TDQMatchRuleItem;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.section.SelectAlgorithmSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvivorKeySection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
-import org.talend.dataquality.record.linkage.ui.section.definition.SurvivorshipDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.service.IMatchRuleChangeService;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
@@ -60,8 +60,6 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     private BlockingKeyDefinitionSection blockingKeyDefinitionSection = null;
 
     private MatchKeyDefinitionSection matchingKeyDefinitionSection = null;
-
-    private SurvivorshipDefinitionSection survivorshipDefinitionSection = null;
 
     private MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
 
@@ -139,12 +137,12 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         if (this.isDirty) {
             ReturnCode checkResultStatus = blockingKeyDefinitionSection.checkResultStatus();
             if (checkResultStatus.isOk()) {
-                checkResultStatus = matchingKeyDefinitionSection.checkResultStatus();
+                if (RecordMatcherType.T_SwooshAlgorithm.name().equals(this.selectAlgorithmSection.getAlgorithmName())) {
+                    checkResultStatus = matchAndSurvivorKeySection.checkResultStatus();
+                } else {
+                    checkResultStatus = matchingKeyDefinitionSection.checkResultStatus();
+                }
             }
-            // if (checkResultStatus.isOk()) {
-            // checkResultStatus = survivorshipDefinitionSection.checkResultStatus();
-            // }
-
             if (!checkResultStatus.isOk()) {
                 return checkResultStatus;
             }

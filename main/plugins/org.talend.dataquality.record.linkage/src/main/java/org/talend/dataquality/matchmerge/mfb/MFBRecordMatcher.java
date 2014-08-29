@@ -2,81 +2,39 @@ package org.talend.dataquality.matchmerge.mfb;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
-import org.talend.dataquality.record.linkage.record.IRecordMatcher;
+import org.talend.dataquality.record.linkage.record.AbstractRecordMatcher;
 
-public class MFBRecordMatcher implements IRecordMatcher {
+public class MFBRecordMatcher extends AbstractRecordMatcher {
 
     private static final Logger LOGGER = Logger.getLogger(MFBRecordMatcher.class);
 
     private static final double MAX_SCORE = 1;
 
-    private final IRecordMatcher delegate;
-
-    private IAttributeMatcher[] attributeMatchers;
-
     private final double minConfidenceValue;
 
-    private MFBRecordMatcher(IRecordMatcher delegate, double minConfidenceValue) {
-        this.delegate = delegate;
+    public MFBRecordMatcher(double minConfidenceValue) {
         this.minConfidenceValue = minConfidenceValue;
-    }
-
-    public static MFBRecordMatcher wrap(IRecordMatcher matcher, double minConfidenceValue) {
-        if (!(matcher instanceof MFBRecordMatcher)) {
-            return new MFBRecordMatcher(matcher, minConfidenceValue);
-        } else {
-            return (MFBRecordMatcher) matcher;
-        }
-    }
-
-    @Override
-    public int getRecordSize() {
-        return delegate.getRecordSize();
-    }
-
-    @Override
-    public void setRecordSize(int numberOfAttributes) {
-        delegate.setRecordSize(numberOfAttributes);
-    }
-
-    @Override
-    public boolean setAttributeWeights(double[] weights) {
-        return delegate.setAttributeWeights(weights);
-    }
-
-    @Override
-    public boolean setAttributeGroups(int[][] groups) {
-        return delegate.setAttributeGroups(groups);
-    }
-
-    @Override
-    public boolean setAttributeMatchers(IAttributeMatcher[] attributeMatchers) {
-        this.attributeMatchers = attributeMatchers;
-        return delegate.setAttributeMatchers(attributeMatchers);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getAttributeMatchers()
-     */
-    @Override
-    public IAttributeMatcher[] getAttributeMatchers() {
-        return attributeMatchers;
-    }
-
-    @Override
-    public boolean setBlockingAttributeMatchers(int[] attrMatcherIndices) {
-        return delegate.setBlockingAttributeMatchers(attrMatcherIndices);
     }
 
     @Override
     public double getMatchingWeight(String[] record1, String[] record2) {
-        return delegate.getMatchingWeight(record1, record2);
+        return getMatchingWeight(buildRecord(record1), buildRecord(record2)).getNormalizedConfidence();
+    }
+
+    private static Record buildRecord(String[] values) {
+        Record record = new Record(null, 0, StringUtils.EMPTY);
+        int i = 0;
+        for (String value : values) {
+            Attribute attribute = new Attribute(String.valueOf(i++));
+            attribute.setValue(value);
+            record.getAttributes().add(attribute);
+        }
+        return record;
     }
 
     @Override
@@ -93,6 +51,8 @@ public class MFBRecordMatcher implements IRecordMatcher {
             IAttributeMatcher matcher = attributeMatchers[matchIndex];
             // Find the first score to exceed threshold (if any).
             double score = matchScore(left, right, matcher);
+            attributeMatchingWeights[matchIndex] = score;
+
             result.setScore(matchIndex, matcher.getMatchType(), score, left.getValue(), right.getValue());
             result.setThreshold(matchIndex, matcher.getThreshold());
             confidence += score * matcher.getWeight();
@@ -155,33 +115,4 @@ public class MFBRecordMatcher implements IRecordMatcher {
         return maxScore;
     }
 
-    @Override
-    public double[] getCurrentAttributeMatchingWeights() {
-        return delegate.getCurrentAttributeMatchingWeights();
-    }
-
-    @Override
-    public String getLabeledAttributeMatchWeights() {
-        return delegate.getLabeledAttributeMatchWeights();
-    }
-
-    @Override
-    public boolean setblockingThreshold(double threshold) {
-        return delegate.setblockingThreshold(threshold);
-    }
-
-    @Override
-    public double getRecordMatchThreshold() {
-        return delegate.getRecordMatchThreshold();
-    }
-
-    @Override
-    public void setRecordMatchThreshold(double recordMatchThreshold) {
-        delegate.setRecordMatchThreshold(recordMatchThreshold);
-    }
-
-    @Override
-    public void setDisplayLabels(boolean displayLabels) {
-        delegate.setDisplayLabels(displayLabels);
-    }
 }

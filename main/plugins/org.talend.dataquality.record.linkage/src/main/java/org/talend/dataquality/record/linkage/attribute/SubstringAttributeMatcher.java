@@ -112,4 +112,14 @@ public class SubstringAttributeMatcher implements IAttributeMatcher {
     public double getWeight() {
         return delegate.getWeight();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#isDummyMatcher()
+     */
+    @Override
+    public boolean isDummyMatcher() {
+        return false;
+    }
 }

@@ -61,6 +61,8 @@ import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.MDMSQLExecutor;
+import org.talend.cwm.db.connection.SQLExecutor;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -77,6 +79,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWiza
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.section.AnaMatchSurvivorSection;
@@ -203,15 +206,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         metadataSection.setDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
         createDataSection();
-
         createSelectRecordLinkageSection();
-
         createBlockingKeySection();
-
         createMatchingKeySection();
         createMatchAndSurvivorKeySection();
         createDefaultSurvivorshipSection();
-
         createMatchParameterSection();
 
         // TDQ-7781: we must do this, this will recompute the layout and scroll bars
@@ -225,7 +224,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         selectAlgorithmSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
-        selectAlgorithmSection.getSection().setExpanded(true);
+        selectAlgorithmSection.getSection().setExpanded(foldingState == null ? false : foldingState);
     }
 
     private void createMatchAndSurvivorKeySection() {
@@ -239,7 +238,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         matchAndSurvivorKeySection.createContent();
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
         matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        matchAndSurvivorKeySection.getSection().setExpanded(true);
+        matchAndSurvivorKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
         matchAndSurvivorKeySection.setIsNeedSubChart(true);
         selectAlgorithmSection.setAnaMatchSurvivorSection(matchAndSurvivorKeySection);
         if (selectAlgorithmSection.isVSRMode()) {
@@ -258,7 +257,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         defaultSurvivorshipDefinitionSection.createContent();
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        defaultSurvivorshipDefinitionSection.getSection().setExpanded(true);
+        defaultSurvivorshipDefinitionSection.getSection().setExpanded(foldingState == null ? false : foldingState);
         selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
         if (selectAlgorithmSection.isVSRMode()) {
             // Hide the section in case of vsr.
@@ -275,6 +274,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         matchParameterSection.addPropertyChangeListener(this);
         matchParameterSection.createParameterCom();
         registerSection(matchParameterSection.getSection());
+        matchParameterSection.getSection().setExpanded(foldingState == null ? false : foldingState);
     }
 
     /**
@@ -307,6 +307,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         blockingKeySection.createContent();
         registerSection(blockingKeySection.getSection());
         selectAlgorithmSection.setBlockkeySection(blockingKeySection);
+        blockingKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
     }
 
     /**
@@ -1115,33 +1116,67 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * handle the add/delete column for the Match Key Selection.
+     * handle the add/remove column for the Match Key Selection.
      * 
      * @param columnName
      */
     private void handleMatchKeySelection(String columnName) {
         try {
-            Boolean isAdded = matchingKeySection.isKeyDefinitionAdded(columnName);
+            Boolean isAdded = isKeyAlreadyAdded(columnName);
             if (isAdded) {
-                if (selectAlgorithmSection.isVSRMode()) {
-                    matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
-                } else {
-                    matchAndSurvivorKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
-                }
+                removeCurrentKeyFromCurrentMatchRule(columnName);
                 sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_BLACK, DataSampleTable.MATCH_EKY);
             } else {
-                if (selectAlgorithmSection.isVSRMode()) {
-                    matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
-                } else {
-                    matchAndSurvivorKeySection.createMatchKeyFromCurrentMatchRule(columnName);
-                }
+                addCurrentKeyFromCurrentMatchRule(columnName);
                 sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_RED, DataSampleTable.MATCH_EKY);
             }
         } catch (Exception e) {
+            log.error(e, e);
             // popup to notify user that at least one match rule tab is needed.
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.warning"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchRuleTabError")); //$NON-NLS-1$
 
+        }
+    }
+
+    /**
+     * create a match key for the selected column and add to current match rule tab.
+     * 
+     * @param columnName
+     */
+    private void addCurrentKeyFromCurrentMatchRule(String columnName) {
+        if (selectAlgorithmSection.isVSRMode()) {
+            matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
+        } else {
+            matchAndSurvivorKeySection.createMatchKeyFromCurrentMatchRule(columnName);
+        }
+    }
+
+    /**
+     * remove the current key from the current Match Rule tab.
+     * 
+     * @param columnName
+     */
+    private void removeCurrentKeyFromCurrentMatchRule(String columnName) {
+        if (selectAlgorithmSection.isVSRMode()) {
+            matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
+        } else {
+            matchAndSurvivorKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
+        }
+    }
+
+    /**
+     * DOC yyin Comment method "isKeyAlreadyAdded".
+     * 
+     * @param columnName
+     * @return
+     * @throws Exception
+     */
+    private Boolean isKeyAlreadyAdded(String columnName) throws Exception {
+        if (selectAlgorithmSection.isVSRMode()) {
+            return matchingKeySection.isKeyDefinitionAdded(columnName);
+        } else {
+            return matchAndSurvivorKeySection.isKeyDefinitionAdded(columnName);
         }
     }
 
@@ -1333,6 +1368,19 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 }
             }
 
+            if (checkResultStatus.isOk()) {
+                if (TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY, this.getAnalysis())) {
+                    String tempDataPath = TaggedValueHelper.getValueString(SQLExecutor.TEMP_DATA_DIR, this.getAnalysis());
+                    if (tempDataPath != null && (tempDataPath.endsWith("\\") || tempDataPath.endsWith("/"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                        tempDataPath = tempDataPath.substring(0, tempDataPath.length() - 1);
+                    }
+                    if (StringUtils.isBlank(tempDataPath)) {
+                        checkResultStatus.setOk(false);
+                        checkResultStatus.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.invalidTempFolder")); //$NON-NLS-1$
+                    }
+                }
+            }
+
             if (!checkResultStatus.isOk()) {
                 return checkResultStatus;
             }
@@ -1429,7 +1477,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
         selectAlgorithmSection.setMatchRuleDef(matchRule);
-        selectAlgorithmSection.setSelection(selectAlgorithmSection.isVSRMode());
+        boolean isVSR = RecordMatcherType.simpleVSRMatcher.name().equals(matchRule.getRecordLinkageAlgorithm());
+        selectAlgorithmSection.setSelection(isVSR);
         if (selectAlgorithmSection.isVSRMode()) {
             this.matchingKeySection.importMatchRule(matchRule, overwrite);
         } else {

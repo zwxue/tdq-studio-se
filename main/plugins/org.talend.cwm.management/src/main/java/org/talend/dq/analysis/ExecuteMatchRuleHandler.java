@@ -62,11 +62,10 @@ import org.talend.utils.sugars.TypedReturnCode;
 public class ExecuteMatchRuleHandler {
 
     public TypedReturnCode<MatchGroupResultConsumer> execute(Map<MetadataColumn, String> columnMap,
-            RecordMatchingIndicator recordMatchingIndicator, List<Object[]> matchRows, BlockKeyIndicator blockKeyIndicator) {
+            RecordMatchingIndicator recordMatchingIndicator, List<Object[]> matchRows, BlockKeyIndicator blockKeyIndicator,
+            MatchGroupResultConsumer matchResultConsumer) {
 
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>(false);
-        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator,
-                Boolean.TRUE);
         returnCode.setObject(matchResultConsumer);
 
         // By default for analysis, the applied blocking key will be the key
@@ -86,13 +85,12 @@ public class ExecuteMatchRuleHandler {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public TypedReturnCode<MatchGroupResultConsumer> executeWithStoreOnDisk(Map<MetadataColumn, String> columnMap,
             RecordMatchingIndicator recordMatchingIndicator, BlockKeyIndicator blockKeyIndicator,
-            IPersistentLookupManager persistentLookupManager, Map<BlockKey, String> blockKeys) throws Exception {
+            IPersistentLookupManager persistentLookupManager, Map<BlockKey, String> blockKeys,
+            MatchGroupResultConsumer matchResultConsumer) throws Exception {
 
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>(false);
         // The parameter of "isKeepDataInMemory" should be false in
         // "store on disk" option.
-        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator,
-                Boolean.FALSE);
         returnCode.setObject(matchResultConsumer);
 
         // By default for analysis, the applied blocking key will be the key
@@ -157,40 +155,6 @@ public class ExecuteMatchRuleHandler {
         blockKeyIndicator.setBlockSize2frequency(blockSize2Freq);
 
         return returnCode;
-    }
-
-    /**
-     * DOC zhao Comment method "initRecordMatchIndicator".
-     * 
-     * @param columnMap
-     * @return
-     */
-    private MatchGroupResultConsumer createMatchGroupResultConsumer(Map<MetadataColumn, String> columnMap,
-            final RecordMatchingIndicator recordMatchingIndicator, Boolean isKeepDataInMemory) {
-        MetadataColumn[] completeColumnSchema = AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap);
-        String[] colSchemaString = new String[completeColumnSchema.length];
-        int idx = 0;
-        for (MetadataColumn metadataCol : completeColumnSchema) {
-            colSchemaString[idx++] = metadataCol.getName();
-        }
-        recordMatchingIndicator.setMatchRowSchema(colSchemaString);
-        recordMatchingIndicator.reset();
-        MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer(isKeepDataInMemory) {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.talend.dataquality.record.linkage.grouping. MatchGroupResultConsumer#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(Object row) {
-                recordMatchingIndicator.handle(row);
-                if (this.isKeepDataInMemory) {
-                    addOneRowOfResult(row);
-                }
-            }
-        };
-        return matchResultConsumer;
     }
 
     /**
@@ -340,18 +304,18 @@ public class ExecuteMatchRuleHandler {
         analysisMatchRecordGrouping.setMatchRows(matchRows);
 
         try {
-            analysisMatchRecordGrouping.initialize();
 
             if (recordMatchingIndicator.getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm()
                     .equals(RecordMatcherType.simpleVSRMatcher.name())) {
                 analysisMatchRecordGrouping.setRecordLinkAlgorithm(RecordMatcherType.simpleVSRMatcher);
+                analysisMatchRecordGrouping.initialize();
             } else {
                 analysisMatchRecordGrouping.setRecordLinkAlgorithm(RecordMatcherType.T_SwooshAlgorithm);
+                analysisMatchRecordGrouping.initialize();
                 SurvivorShipAlgorithmParams survivorShipAlgorithmParams = createSurvivorShipAlgorithmParams(
                         analysisMatchRecordGrouping, recordMatchingIndicator, columnMap);
                 analysisMatchRecordGrouping.setSurvivorShipAlgorithmParams(survivorShipAlgorithmParams);
             }
-            // the case for matching key custom Algorithm can not be loaded normal.
 
             analysisMatchRecordGrouping.run();
         } catch (InstantiationException e1) {
@@ -595,16 +559,16 @@ public class ExecuteMatchRuleHandler {
         Map<String, String> matchKeyMap = null;
         if (AttributeMatcherType.get(algorithmType) == AttributeMatcherType.CUSTOM) {
             matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), algorithmType, matchDef.getAlgorithm()
-                    .getAlgorithmParameters(), matchDef.getConfidenceWeight(), columnMap, matcher.getMatchInterval(), matchDef
-                    .getColumn(), matchDef.getName(), matchDef.getHandleNull(), CustomAttributeMatcherHelper
-                    .getFullJarPath(matchDef.getAlgorithm().getAlgorithmParameters()));
+                    .getAlgorithmParameters(), matchDef.getConfidenceWeight(), matchDef.getThreshold(), columnMap, matcher
+                    .getMatchInterval(), matchDef.getColumn(), matchDef.getName(), matchDef.getHandleNull(),
+                    CustomAttributeMatcherHelper.getFullJarPath(matchDef.getAlgorithm().getAlgorithmParameters()));
         } else {
             matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), algorithmType, matchDef.getAlgorithm()
-                    .getAlgorithmParameters(), matchDef.getConfidenceWeight(), columnMap, matcher.getMatchInterval(), matchDef
-                    .getColumn(), matchDef.getName(), matchDef.getHandleNull(), null);
+                    .getAlgorithmParameters(), matchDef.getConfidenceWeight(), matchDef.getThreshold(), columnMap, matcher
+                    .getMatchInterval(), matchDef.getColumn(), matchDef.getName(), matchDef.getHandleNull(), null);
         }
         return matchKeyMap;
     }
 
-    private final static String[] NUMBERS = new String[] { "Integer", "Float", "Double", "Number", "Long" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
+    private final static String[] NUMBERS = new String[] { "Integer", "Float", "Double", "Number", "Long", "Short", "Byte" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 }

@@ -41,6 +41,11 @@ public interface IRecordGrouping<T> {
     public static final String CONFIDENCE_WEIGHT = "CONFIDENCE_WEIGHT"; //$NON-NLS-1$
 
     /**
+     * Attribute threshold
+     */
+    public static final String ATTRIBUTE_THRESHOLD = "ATTRIBUTE_THRESHOLD"; //$NON-NLS-1$
+
+    /**
      * Key for Record match threshold (match interval).
      */
     public static final String RECORD_MATCH_THRESHOLD = "RECORD_MATCH_THRESHOLD"; //$NON-NLS-1$
