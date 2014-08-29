@@ -19,10 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -47,9 +44,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
-import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
@@ -60,7 +55,6 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
-import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -113,7 +107,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             AnalysisExecutionException {
         // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
         // so just return true and get the row count from RowCount indicator
-        if (indicator instanceof WhereRuleAideIndicator && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty()) {
+        if (isAideAndJoinEmpty(indicator)) {
             return true;
         }
         // ~ TDQ-9294
@@ -222,6 +216,17 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return true;
     }
 
+    /**
+     * DOC yyin Comment method "isAideAndJoinEmpty".
+     * 
+     * @param indicator
+     * @return
+     */
+    private boolean isAideAndJoinEmpty(Indicator indicator) {
+        return indicator instanceof WhereRuleAideIndicator
+                && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty();
+    }
+
     protected TypedReturnCode<Boolean> belongToSameSchemata(final TdTable tdTable) {
         TypedReturnCode<Boolean> returnCode = new TypedReturnCode<Boolean>(Boolean.TRUE);
         assert tdTable != null;
@@ -314,76 +319,44 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         Connection connection = trc.getObject();
         try {
-            // store map of element to each indicator used for computation (leaf indicator)
-            Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
+            Long rowCount = 0L;
 
-            // execute the sql statement for each indicator
-            Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
-            for (final Indicator indicator : indicators) {
-                // skip composite indicators that do not require a sql execution
-                if (indicator instanceof CompositeIndicator) {
-                    // options of composite indicators are handled elsewhere
-                    continue;
+            List<Indicator> indicatorList = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
+
+            // execute the row count
+            Indicator rowIndicator = indicatorList.get(0);
+            isSuccess = executeIndicator(rowIndicator, connection);
+            publishDynamicEvent(rowIndicator);
+            // remember the row count
+            rowCount = rowIndicator.getCount();
+
+            // After execute the row count, group the rules before executing
+            List<List<Indicator>> indicators = groupAideRule(indicatorList);
+
+            // execute the sql statement for each group of aide and rule
+            for (final List<Indicator> aideAndRule : indicators) {
+                Long aideCount = -1L;
+
+                Indicator aide = aideAndRule.get(0);
+                final Indicator rule = aideAndRule.get(1);
+                // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
+                // row count, so will not generate query for it
+                if (!isAideAndJoinEmpty(aide)) {
+                    isSuccess = executeIndicator(aide, connection);
+                    aideCount = ((WhereRuleAideIndicator) aide).getUserCount();
                 }
-                // set the connection's catalog
-                String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
-                if (catalogName != null) { // check whether null argument can be given
-                    changeCatalog(catalogName, connection);
+
+                isSuccess = executeIndicator(rule, connection);
+                // TDQ-9300-- if the join condition is not empty, use the usercount in aide indicator for rule's
+                // count; otherwise give the row count to the rule,because the rule can not compute the count by itself
+                if (aideCount > -1) {
+                    rule.setCount(aideCount);
+                } else {
+                    rule.setCount(rowCount);
                 }
 
-                Expression query = dbms().getInstantiatedExpression(indicator);
-                if (query == null) {
-                    // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
-                    // row count, so will not generate query for it
-                    if (!(indicator instanceof WhereRuleAideIndicator && ((WhereRule) indicator.getIndicatorDefinition())
-                            .getJoins().isEmpty())) {
-                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                                + "query is null");//$NON-NLS-1$
-                        isSuccess = Boolean.FALSE;
-                        continue;
-                    }
-                    // TDQ-9294
-                }
-                if (query != null) {
-                    try {
-                        Boolean isExecSuccess = executeQuery(indicator, connection, query.getBody());
-                        if (!isExecSuccess) {
-                            traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                                    + "SQL query: " + query.getBody());//$NON-NLS-1$
-                            isSuccess = Boolean.FALSE;
-                            continue;
-                        }
-                    } catch (Exception e) {
-                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                                + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
-                        isSuccess = Boolean.FALSE;
-                        continue;
-                    }
-                }
-                indicator.setComputed(true);
-
-                // Added TDQ-8787 publish the related event when one indicator is finished: to refresh the chart with
-                // new result
-                // of the current indicator
-                final ITDQRepositoryService tdqRepositoryService = AnalysisExecutorHelper.getTDQService();
-                if (tdqRepositoryService != null) {
-                    Display.getDefault().asyncExec(new Runnable() {
-
-                        public void run() {
-                            tdqRepositoryService.publishDynamicEvent(indicator, IndicatorCommonUtil.getIndicatorValue(indicator));
-                        }
-                    });
-                }// ~
-
-                // add mapping of analyzed elements to their indicators
-                MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
-
+                publishDynamicEvent(rule);
             }
-
-            // ADD xqliu 2012-04-23 TDQ-5057
-            // set the aide count for the DQRule indicator
-            setDQRuleAideCount(elementToIndicator);
-            // ~ TDQ-5057
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
             if (!rc.isOk()) {
@@ -396,69 +369,76 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     }
 
     /**
-     * DOC xqliu Comment method "setDQRuleAideCount".
+     * Added TDQ-8787 publish the related event when one indicator is finished: to refresh the chart with new result of
+     * the current indicator
      * 
-     * @param elementToIndicator
+     * @param rule
      */
-    protected void setDQRuleAideCount(Map<ModelElement, List<Indicator>> elementToIndicator) {
-        Set<ModelElement> analyzedElements = elementToIndicator.keySet();
-        for (ModelElement modelElement : analyzedElements) {
-            List<Indicator> list = elementToIndicator.get(modelElement);
-            for (Indicator ind : list) {
-                if (ind instanceof WhereRuleIndicator && !(ind instanceof WhereRuleAideIndicator)) {
-                    Indicator tempInd = getAideIndicator(list, ind);
-                    if (tempInd != null) {
-                        WhereRuleAideIndicator aideInd = (WhereRuleAideIndicator) tempInd;
-                        if (!((WhereRule) aideInd.getIndicatorDefinition()).getJoins().isEmpty()) {
-                            ind.setCount(aideInd.getUserCount());
-                        } else {
-                            Indicator rowInd = getRowCountIndicator(list, ind);
-                            if (rowInd != null) {
-                                ind.setCount(rowInd.getCount());
-                            }
-                        }
-                    }
+    private void publishDynamicEvent(final Indicator rule) {
+        final ITDQRepositoryService tdqRepositoryService = AnalysisExecutorHelper.getTDQService();
+        if (tdqRepositoryService != null) {
+            Display.getDefault().syncExec(new Runnable() {
+
+                public void run() {
+                    tdqRepositoryService.publishDynamicEvent(rule, IndicatorCommonUtil.getIndicatorValue(rule));
                 }
-            }
+            });
         }
     }
 
-    /**
-     * DOC xqliu Comment method "getAideIndicator".
-     * 
-     * @param list
-     * @param ind
-     * @return
-     */
-    private Indicator getAideIndicator(List<Indicator> list, Indicator indicator) {
-        Indicator aideInd = null;
-        String indName = indicator.getName();
-        for (Indicator ind : list) {
-            if (ind instanceof WhereRuleAideIndicator && indName.equals(ind.getName())) {
-                aideInd = ind;
-                break;
+    private boolean executeIndicator(Indicator indicator, Connection connection) {
+        // set the connection's catalog
+        String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+        if (catalogName != null) { // check whether null argument can be given
+            changeCatalog(catalogName, connection);
+        }
+
+        Expression query = dbms().getInstantiatedExpression(indicator);
+        if (query == null) {
+            traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                    + "query is null");//$NON-NLS-1$
+            return Boolean.FALSE;
+        } else {
+            try {
+                Boolean isExecSuccess = executeQuery(indicator, connection, query.getBody());
+                if (!isExecSuccess) {
+                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + "SQL query: " + query.getBody());//$NON-NLS-1$
+                    return Boolean.FALSE;
+                }
+            } catch (Exception e) {
+                traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
+                return Boolean.FALSE;
             }
         }
-        return aideInd;
+        indicator.setComputed(true);
+        return Boolean.TRUE;
     }
 
     /**
-     * DOC xqliu Comment method "getRowCountIndicator".
+     * Added TDQ-9300 : Group the rule and its aide together as one pair in one list; and reorder to move the aide rule
+     * upper the rule : old order : rule, aiderule--> new order: aiderule, rule.
      * 
-     * @param list
-     * @param indicator
-     * @return
+     * @param indicators
      */
-    private Indicator getRowCountIndicator(List<Indicator> list, Indicator indicator) {
-        Indicator rowInd = null;
-        ModelElement analyzedElement = indicator.getAnalyzedElement();
-        for (Indicator ind : list) {
-            if (ind instanceof RowCountIndicator && analyzedElement.equals(ind.getAnalyzedElement())) {
-                rowInd = ind;
-                break;
+    private List<List<Indicator>> groupAideRule(List<Indicator> indicators) {
+        List<List<Indicator>> orderedIndicators = new ArrayList<List<Indicator>>();
+        // no need to consider the row count
+        int index = 1;
+        // each aide and rule are put in one list, as the order aide, rule.
+        for (; index < indicators.size(); index = index + 2) {
+            List<Indicator> pairOfRule = new ArrayList<Indicator>();
+            Indicator indicator = indicators.get(index);
+            if (indicator instanceof WhereRuleIndicator && indicator.getName().equals(indicators.get(index + 1).getName())) {
+                // position: index+1 is the Aide
+                pairOfRule.add(indicators.get(index + 1));
+                // Rule 's position is index
+                pairOfRule.add(indicator);
+                orderedIndicators.add(pairOfRule);
             }
         }
-        return rowInd;
+        return orderedIndicators;
     }
 
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
@@ -495,9 +475,10 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     }
 
     private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
+
         // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
         // row count, so needn't to execute query for it
-        if (indicator instanceof WhereRuleAideIndicator && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty()) {
+        if (isAideAndJoinEmpty(indicator)) {
             return true;
         }
         // ~ TDQ-9294
