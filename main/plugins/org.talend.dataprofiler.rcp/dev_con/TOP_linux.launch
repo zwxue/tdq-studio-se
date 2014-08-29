@@ -2,6 +2,7 @@
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
 <setAttribute key="additional_plugins">
 <setEntry value="javax.servlet:2.5.0.v201103041518:default:false"/>
+<setEntry value="org.apache.log4j:1.2.15.v201005080500:default:false"/>
 </setAttribute>
 <booleanAttribute key="append.args" value="true"/>
 <booleanAttribute key="askclear" value="true"/>

@@ -33,26 +33,51 @@ public class TableDynamicChartEventReceiver extends DynamicChartEventReceiver {
         if (IndicatorEnum.RowCountIndicatorEnum.equals(this.getIndicatorType())) {
             super.handle(value);
         } else {
-            double valueD = Double.parseDouble(value.toString());
-            double valueM = getIndicator().getCount() - valueD;
-            if (this.getDataset() != null) {
-                this.getDataset().setValue(valueM, WhereRuleStatisticsStateTable.ROW_KEY_NOT_PASS, this.getIndicatorName());
-                this.getDataset().setValue(valueD, WhereRuleStatisticsStateTable.ROW_KEY_PASS, this.getIndicatorName());
+            Long count = getIndicator().getCount();
+            double valueMatch = Double.parseDouble(value.toString()) / count;
+            double valueNotmatch = 1 - valueMatch;
+            if (dataset != null) {
+                dataset.setValue(valueNotmatch, WhereRuleStatisticsStateTable.ROW_KEY_NOT_PASS, indicatorName);
+                dataset.setValue(valueMatch, WhereRuleStatisticsStateTable.ROW_KEY_PASS, indicatorName);
             }
-            if (this.getTableViewer() != null) {
-                ChartWithData input = (ChartWithData) getTableViewer().getInput();
+            if (tableViewer != null) {
+                ChartWithData input = (ChartWithData) tableViewer.getInput();
                 if (input != null) {
                     ChartDataEntity[] dataEntities = input.getEnity();
 
-                    ((WhereRuleChartDataEntity) dataEntities[this.getEntityIndex()]).setNumMatch(String.valueOf(valueD));
-                    ((WhereRuleChartDataEntity) dataEntities[this.getEntityIndex()]).setNumNoMatch(String.valueOf(valueM));
+                    ((WhereRuleChartDataEntity) dataEntities[this.getEntityIndex()]).setNumMatch(String.valueOf(valueMatch));
+                    ((WhereRuleChartDataEntity) dataEntities[this.getEntityIndex()]).setNumNoMatch(String.valueOf(valueNotmatch));
 
-                    getTableViewer().getTable().clearAll();
-                    getTableViewer().setInput(input);
+                    tableViewer.getTable().clearAll();
+                    tableViewer.setInput(input);
                 }
             }
         }
         return true;
+    }
+
+    @Override
+    public void clearValue() {
+        if (IndicatorEnum.RowCountIndicatorEnum.equals(this.getIndicatorType())) {
+            super.clearValue();
+        } else {// clear the data before running.
+            if (dataset != null) {
+                dataset.setValue(0.0, WhereRuleStatisticsStateTable.ROW_KEY_NOT_PASS, indicatorName);
+                dataset.setValue(0.0, WhereRuleStatisticsStateTable.ROW_KEY_PASS, indicatorName);
+            }
+            if (tableViewer != null) {
+                ChartWithData input = (ChartWithData) tableViewer.getInput();
+                if (input != null) {
+                    ChartDataEntity[] dataEntities = input.getEnity();
+
+                    ((WhereRuleChartDataEntity) dataEntities[this.getEntityIndex()]).setNumMatch(NAN_STRING);
+                    ((WhereRuleChartDataEntity) dataEntities[this.getEntityIndex()]).setNumNoMatch(NAN_STRING);
+
+                    tableViewer.getTable().clearAll();
+                    tableViewer.setInput(input);
+                }
+            }
+        }
     }
 
     // every indicator need to be remembered in table analysis
