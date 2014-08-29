@@ -343,8 +343,8 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
             // return;
             // }// ~
             String columnKey = unit.getIndicatorName();
-            double value = unit.getValue() == null ? Double.NaN : Double.parseDouble(unit.getValue().toString());
-            double valueNotM = unit.getValue() == null ? Double.NaN : unit.geIndicatorCount() - value;
+            double value = getMatchValue(unit.getValue());
+            double valueNotM = getNotMatchValue(unit.getValue(), value, unit.geIndicatorCount());
             customerDataset.addValue(valueNotM, ROW_KEY_NOT_PASS, columnKey);
             customerDataset.addValue(value, ROW_KEY_PASS, columnKey);
 
@@ -359,6 +359,20 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
             customerDataset.addDataEntity(entity);
         }
+    }
+
+    /**
+     * get the MatchValue
+     * 
+     * @param value
+     * @return
+     */
+    public static double getMatchValue(Object value) {
+        return value == null ? Double.NaN : Double.parseDouble(value.toString());
+    }
+
+    public static double getNotMatchValue(Object value, double matchValue, long rowCount) {
+        return value == null ? Double.NaN : rowCount - matchValue;
     }
 
     /**

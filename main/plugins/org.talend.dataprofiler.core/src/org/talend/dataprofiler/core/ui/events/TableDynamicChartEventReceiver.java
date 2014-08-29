@@ -34,8 +34,8 @@ public class TableDynamicChartEventReceiver extends DynamicChartEventReceiver {
             super.handle(value);
         } else {
             Long count = getIndicator().getCount();
-            double valueMatch = Double.parseDouble(value.toString()) / count;
-            double valueNotmatch = 1 - valueMatch;
+            double valueMatch = WhereRuleStatisticsStateTable.getMatchValue(value);
+            double valueNotmatch = WhereRuleStatisticsStateTable.getNotMatchValue(value, valueMatch, count);
             if (dataset != null) {
                 dataset.setValue(valueNotmatch, WhereRuleStatisticsStateTable.ROW_KEY_NOT_PASS, indicatorName);
                 dataset.setValue(valueMatch, WhereRuleStatisticsStateTable.ROW_KEY_PASS, indicatorName);
