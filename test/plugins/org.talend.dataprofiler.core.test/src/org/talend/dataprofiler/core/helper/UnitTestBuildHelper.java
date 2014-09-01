@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 import junit.framework.Assert;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -125,8 +126,6 @@ import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.resource.record.RecordFactory;
 import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwmx.analysis.informationreporting.Report;
-
-import common.Logger;
 
 /**
  * created by yyin on 2012-8-22 Detailled comment: include some structure methods which can be used for any tests who
