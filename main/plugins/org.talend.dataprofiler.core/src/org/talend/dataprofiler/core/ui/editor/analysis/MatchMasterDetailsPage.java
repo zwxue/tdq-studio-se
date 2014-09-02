@@ -1370,11 +1370,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             if (checkResultStatus.isOk()) {
                 if (TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY, this.getAnalysis())) {
-                    String tempDataPath = TaggedValueHelper.getValueString(SQLExecutor.TEMP_DATA_DIR, this.getAnalysis());
-                    if (tempDataPath != null && (tempDataPath.endsWith("\\") || tempDataPath.endsWith("/"))) { //$NON-NLS-1$ //$NON-NLS-2$
-                        tempDataPath = tempDataPath.substring(0, tempDataPath.length() - 1);
-                    }
-                    if (StringUtils.isBlank(tempDataPath)) {
+                    if (StringUtils.isBlank(TaggedValueHelper.getValueString(SQLExecutor.TEMP_DATA_DIR, this.getAnalysis()))) {
                         checkResultStatus.setOk(false);
                         checkResultStatus.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.invalidTempFolder")); //$NON-NLS-1$
                     }
@@ -1483,6 +1479,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             this.matchingKeySection.importMatchRule(matchRule, overwrite);
         } else {
             this.matchAndSurvivorKeySection.importMatchRule(matchRule, overwrite);
+            this.defaultSurvivorshipDefinitionSection.importDefaultSurvivorshipFunctions(matchRule, overwrite);
         }
         this.blockingKeySection.importMatchRule(matchRule, overwrite);
         this.setDirty(true);

@@ -14,7 +14,6 @@ package org.talend.dataquality.record.linkage.ui.section;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +21,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
@@ -732,10 +730,10 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      * if overwrite: need to delete all current tabs, and create the tab according to the parameter:matchRule else: only
      * add the tab in the parameter matchrule, to the current matchrule.
      * 
-     * @param matchRule
+     * @param matchRuleDefinition
      * @param overwrite
      */
-    public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
+    public void importMatchRule(MatchRuleDefinition matchRuleDefinition, boolean overwrite) {
         if (overwrite) {
             // delete all tab in UI
             CTabItem[] tabItems = ruleFolder.getItems();
@@ -747,14 +745,19 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                     oneTab.dispose();
                 }
             }
+            // clear all survivorship keys
+            getMatchRuleDefinition().getSurvivorshipKeys().clear();
             // clear all match rules in matchrule definition
             getMatchRuleDefinition().getMatchRules().clear();
             // overwrite the threshold
-            groupQualityThresholdText.setText(String.valueOf(matchRule.getMatchGroupQualityThreshold()));
-            // getMatchRuleDefinition().setMatchGroupQualityThreshold(matchRule.getMatchGroupQualityThreshold());
+            groupQualityThresholdText.setText(String.valueOf(matchRuleDefinition.getMatchGroupQualityThreshold()));
+        }
+        // import survivorship keys
+        for (SurvivorshipKeyDefinition skd : matchRuleDefinition.getSurvivorshipKeys()) {
+            getMatchRuleDefinition().getSurvivorshipKeys().add(EcoreUtil.copy(skd));
         }
         // create the tab from the parameter:matchRule
-        for (MatchRule oneMatchRule : matchRule.getMatchRules()) {
+        for (MatchRule oneMatchRule : matchRuleDefinition.getMatchRules()) {
             MatchRule matchRule2 = createMatchRuleByCopy(oneMatchRule);
             // MOD msjian TDQ-8484: set the name of the match rule by the old name
             matchRule2.setName(oneMatchRule.getName());
@@ -817,9 +820,10 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                             "BlockingKeySection.invalidConfidenceWeight.message", getSectionName())); //$NON-NLS-1$
                     return returnCode;
                 }
-                if (!checkSurvivorshipFunction(mdk)) {
-                    returnCode.setMessage(DefaultMessagesImpl.getString(
-                            "BlockingKeySection.invalidSurvivorshipFunction.message", getSectionName())); //$NON-NLS-1$
+                ReturnCode checkSurvivorshipFunction = checkSurvivorshipFunction(mdk, this.getMatchRuleDefinition());
+                if (!checkSurvivorshipFunction.isOk()) {
+                    returnCode.setMessage(DefaultMessagesImpl.getString("MatchingKeySection.invalidSurvivorshipFunction", //$NON-NLS-1$
+                            getSectionName(), checkSurvivorshipFunction.getMessage()));
                     return returnCode;
                 }
                 boolean currentNameIsDuplicate = false;
@@ -847,69 +851,59 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     /**
      * check the survivorship function fit the column or not.
      * 
-     * @param mdk
+     * @param mkDef
+     * @param mrDef
      * @return
      */
-    private boolean checkSurvivorshipFunction(MatchKeyDefinition mdk) {
-        EObject eContainer = mdk.eContainer();
-        if (eContainer != null && eContainer instanceof MatchRule) {
-            EObject eContainer2 = ((MatchRule) eContainer).eContainer();
-            if (eContainer2 != null && eContainer2 instanceof MatchRuleDefinition) {
-                MatchRuleDefinition mrDef = (MatchRuleDefinition) eContainer2;
-                EList<SurvivorshipKeyDefinition> survivorshipKeys = mrDef.getSurvivorshipKeys();
-                for (SurvivorshipKeyDefinition skDef : survivorshipKeys) {
-                    String columnName = skDef.getColumn();
-                    if (columnName != null) {
-                        MetadataColumn metadataColumn = getMetadataColumnByName(columnName);
-                        if (metadataColumn != null) {
-                            SurvivorShipAlgorithmEnum survivorShipAlgorithm = SurvivorShipAlgorithmEnum.getTypeBySavedValue(skDef
-                                    .getFunction().getAlgorithmType());
-                            switch (survivorShipAlgorithm) {
-                            case LARGEST:
-                            case SMALLEST:
-                                Set<String> numericalType = new HashSet<String>();
-                                numericalType.add(JavaTypesManager.DOUBLE.getId());
-                                numericalType.add(JavaTypesManager.FLOAT.getId());
-                                numericalType.add(JavaTypesManager.INTEGER.getId());
-                                numericalType.add(JavaTypesManager.LONG.getId());
-                                numericalType.add(JavaTypesManager.SHORT.getId());
-                                numericalType.add(JavaTypesManager.BIGDECIMAL.getId());
-                                if (!numericalType.contains(metadataColumn.getTalendType())) {
-                                    return false;
-                                }
-                                break;
-                            case LONGEST:
-                            case SHORTEST:
-                                Set<String> stringType = new HashSet<String>();
-                                stringType.add(JavaTypesManager.STRING.getId());
-                                if (!stringType.contains(metadataColumn.getTalendType())) {
-                                    return false;
-                                }
-                                break;
-                            case PREFER_TRUE:
-                            case PREFER_FALSE:
-                                Set<String> booleanType = new HashSet<String>();
-                                booleanType.add(JavaTypesManager.BOOLEAN.getId());
-                                if (!booleanType.contains(metadataColumn.getTalendType())) {
-                                    return false;
-                                }
-                                break;
-                            default:
-                                break;
-                            }
+    private ReturnCode checkSurvivorshipFunction(MatchKeyDefinition mkDef, MatchRuleDefinition mrDef) {
+        ReturnCode rc = new ReturnCode(true);
+        EList<SurvivorshipKeyDefinition> survivorshipKeys = mrDef.getSurvivorshipKeys();
+        for (SurvivorshipKeyDefinition skDef : survivorshipKeys) {
+            if (StringUtils.equals(mkDef.getName(), skDef.getName())) {
+                MetadataColumn metadataColumn = getMetadataColumnByName(skDef.getColumn());
+                if (metadataColumn != null) {
+                    SurvivorShipAlgorithmEnum survivorShipAlgorithm = SurvivorShipAlgorithmEnum.getTypeBySavedValue(skDef
+                            .getFunction().getAlgorithmType());
+                    switch (survivorShipAlgorithm) {
+                    case LARGEST:
+                    case SMALLEST:
+                        if (!JavaTypesManager.isNumber(metadataColumn.getTalendType())) {
+                            rc.setOk(false);
+                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
+                            return rc;
                         }
+                        break;
+                    case LONGEST:
+                    case SHORTEST:
+                        if (!JavaTypesManager.isString(metadataColumn.getTalendType())) {
+                            rc.setOk(false);
+                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
+                            return rc;
+                        }
+                        break;
+                    case PREFER_TRUE:
+                    case PREFER_FALSE:
+                        if (!JavaTypesManager.isBoolean(metadataColumn.getTalendType())) {
+                            rc.setOk(false);
+                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
+                            return rc;
+                        }
+                        break;
+                    default:
+                        break;
                     }
                 }
+                break;
             }
         }
-        return true;
+        return rc;
     }
 
     private MetadataColumn getMetadataColumnByName(String columnName) {
         if (columnMap != null) {
             Set<MetadataColumn> keySet = columnMap.keySet();
             for (MetadataColumn col : keySet) {
-                if (col != null && columnName.equals(col.getName())) {
+                if (col != null && StringUtils.equals(columnName, col.getName())) {
                     return col;
                 }
             }

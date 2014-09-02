@@ -201,7 +201,7 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
      */
     @Override
     protected void addNewMatchRule() {
-        if (matchRuleWithSurvMap.keySet().size() > 0) {
+        if (matchRuleWithSurvMap.keySet() != null && matchRuleWithSurvMap.keySet().size() > 0) {
             boolean isOk = MessageDialogWithToggle
                     .openConfirm(
                             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),

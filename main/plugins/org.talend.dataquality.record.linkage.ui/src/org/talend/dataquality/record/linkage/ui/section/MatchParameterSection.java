@@ -181,7 +181,9 @@ public class MatchParameterSection extends AbstractSectionComposite {
 
             @Override
             public void modifyText(ModifyEvent e) {
-                String text = ((Text) e.widget).getText() + File.separator;
+                String tempText = ((Text) e.widget).getText();
+                String text = StringUtils.isBlank(tempText) ? tempText : tempText.endsWith(File.separator) ? tempText : tempText
+                        + File.separator;
                 TaggedValueHelper.setTaggedValue(currAnalysis, SQLExecutor.TEMP_DATA_DIR, text);
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
             }

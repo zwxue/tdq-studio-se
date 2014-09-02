@@ -51,12 +51,8 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     protected MatchRule matchRule = null;
 
-    public MatchKeyAndSurvivorshipTableViewer(Composite parent, int style, boolean isAddColumn) {
-        super(parent, style, isAddColumn);
-    }
-
     public MatchKeyAndSurvivorshipTableViewer(Composite parent, int style, boolean isAddColumn, MatchRule matchRule) {
-        this(parent, style, isAddColumn);
+        super(parent, style, isAddColumn);
         this.matchRule = matchRule;
     }
 

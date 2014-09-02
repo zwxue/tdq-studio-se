@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.types.JavaTypesManager;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
@@ -51,7 +51,6 @@ import org.talend.designer.components.lookup.persistent.IPersistentLookupManager
 import org.talend.dq.analysis.persistent.BlockKey;
 import org.talend.dq.analysis.persistent.MatchRow;
 import org.talend.dq.helper.CustomAttributeMatcherHelper;
-import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -123,14 +122,16 @@ public class ExecuteMatchRuleHandler {
             AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
             // Set rule matcher for record grouping API.
             setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
-            analysisMatchRecordGrouping.initialize();
-            persistentLookupManager.lookup(matchRow);
 
             if (recordMatchingIndicator.getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm()
                     .equals(RecordMatcherType.simpleVSRMatcher.name())) {
                 analysisMatchRecordGrouping.setRecordLinkAlgorithm(RecordMatcherType.simpleVSRMatcher);
+                analysisMatchRecordGrouping.initialize();
+                persistentLookupManager.lookup(matchRow);
             } else {
                 analysisMatchRecordGrouping.setRecordLinkAlgorithm(RecordMatcherType.T_SwooshAlgorithm);
+                analysisMatchRecordGrouping.initialize();
+                persistentLookupManager.lookup(matchRow);
                 analysisMatchRecordGrouping.setSurvivorShipAlgorithmParams(createSurvivorShipAlgorithmParams(
                         analysisMatchRecordGrouping, recordMatchingIndicator, columnMap));
             }
@@ -359,12 +360,12 @@ public class ExecuteMatchRuleHandler {
         Map<Integer, SurvivorshipFunction> defaultSurvRules = new HashMap<Integer, SurvivorshipFunction>();
 
         for (MetadataColumn metaColumn : columnMap.keySet()) {
-            String dataTypeName = TalendTypeConvert.convertToJavaType(metaColumn.getTalendType());
+            String dataTypeName = metaColumn.getTalendType();
             for (DefaultSurvivorshipDefinition defSurvDef : defSurvDefs) {
                 if (dataTypeName.equals(defSurvDef.getDataType())) {
                     putNewSurvFunc(columnMap, survivorShipAlgorithmParams, defaultSurvRules, metaColumn, defSurvDef);
                     break;
-                } else if (defSurvDef.getDataType().equals("Number") && isNumber(dataTypeName)) { //$NON-NLS-1$
+                } else if (defSurvDef.getDataType().equals("Number") && JavaTypesManager.isNumber(dataTypeName)) { //$NON-NLS-1$
                     putNewSurvFunc(columnMap, survivorShipAlgorithmParams, defaultSurvRules, metaColumn, defSurvDef);
                     break;
 
@@ -425,13 +426,6 @@ public class ExecuteMatchRuleHandler {
         survivorShipAlgorithmParams.setSurvivorshipAlgosMap(survAlgos);
 
         return survivorShipAlgorithmParams;
-    }
-
-    public boolean isNumber(String type) {
-        if (ArrayUtils.contains(NUMBERS, type)) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -569,6 +563,4 @@ public class ExecuteMatchRuleHandler {
         }
         return matchKeyMap;
     }
-
-    private final static String[] NUMBERS = new String[] { "Integer", "Float", "Double", "Number", "Long", "Short", "Byte" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 }

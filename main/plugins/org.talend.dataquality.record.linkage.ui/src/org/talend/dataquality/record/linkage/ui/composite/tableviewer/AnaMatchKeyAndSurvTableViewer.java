@@ -41,13 +41,8 @@ public class AnaMatchKeyAndSurvTableViewer extends MatchKeyAndSurvivorshipTableV
      * @param style
      * @param isAddColumn
      */
-    public AnaMatchKeyAndSurvTableViewer(Composite parent, int style, boolean isAddColumn) {
-        super(parent, style, isAddColumn);
-    }
-
     public AnaMatchKeyAndSurvTableViewer(Composite parent, int style, boolean isAddColumn, MatchRule matchRule) {
-        this(parent, style, isAddColumn);
-        this.matchRule = matchRule;
+        super(parent, style, isAddColumn, matchRule);
     }
 
     /*
