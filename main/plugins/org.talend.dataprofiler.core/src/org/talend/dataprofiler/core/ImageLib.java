@@ -275,6 +275,8 @@ public final class ImageLib {
 
     public static final String APPLICATION_HOME = "application_home.png"; //$NON-NLS-1$
 
+    public static final String EXPORT_WIZARD = "export_wiz.gif"; //$NON-NLS-1$
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */

@@ -15,13 +15,14 @@ import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl implements MinLengthWithNullIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MinLengthWithNullIndicatorImpl() {
@@ -30,6 +31,7 @@ public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl imple
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -52,10 +54,10 @@ public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl imple
      */
     @Override
     public boolean handle(Object data) {
-        mustStoreRow = true;
         boolean ok = super.handle(data);
         if (data == null) {
             length = new Long(0);
+            mustStoreRow = true;
         }
         return ok;
     }

@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.swt,
  org.talend.dataquality.record.linkage;visibility:=reexport,
  org.eclipse.ui.forms,
  org.talend.cwm.management,
- org.talend.dataprofiler.common.ui
+ org.talend.dataprofiler.common.ui,
+ org.talend.libraries.mapdb
 Import-Package: org.eclipse.ui.views.properties.tabbed
 Export-Package: org.talend.dataquality.record.linkage.ui.action,
  org.talend.dataquality.record.linkage.ui.composite.chart,

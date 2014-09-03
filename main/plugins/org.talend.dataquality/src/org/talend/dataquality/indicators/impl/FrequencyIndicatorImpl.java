@@ -7,21 +7,31 @@ package org.talend.dataquality.indicators.impl;
 
 import java.text.DecimalFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.talend.commons.MapDB.utils.AbstractDB;
+import org.talend.commons.MapDB.utils.DBMap;
+import org.talend.commons.MapDB.utils.StandardDBName;
+import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.collections.MapValueSorter;
 
 /**
@@ -30,14 +40,17 @@ import org.talend.utils.collections.MapValueSorter;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValues <em>Unique Values</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDistinctValueCount <em>Distinct Value Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValueCount <em>Unique Value Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDuplicateValueCount <em>Duplicate Value Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getValueToFreq <em>Value To Freq</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValues <em>Unique Values</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDistinctValueCount <em>Distinct Value
+ * Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValueCount <em>Unique Value Count
+ * </em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDuplicateValueCount <em>Duplicate Value
+ * Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getValueToFreq <em>Value To Freq</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIndicator {
@@ -51,9 +64,9 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     protected String datePattern = null;
 
     /**
-     * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list.
-     * <!-- begin-user-doc
+     * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list. <!-- begin-user-doc
      * --> <!-- end-user-doc -->
+     * 
      * @see #getUniqueValues()
      * @generated
      * @ordered
@@ -121,9 +134,9 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     protected static final HashMap<Object, Long> VALUE_TO_FREQ_EDEFAULT = new HashMap<Object, Long>();
 
     /**
-     * The cached value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getValueToFreq()
      * @generated
      * @ordered
@@ -131,7 +144,14 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     protected HashMap<Object, Long> valueToFreq = VALUE_TO_FREQ_EDEFAULT;
 
     /**
+     * store the value of group when use MapDB.
+     */
+
+    protected Map<Object, Long> valueToFreqForMapDB = null;
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected FrequencyIndicatorImpl() {
@@ -139,7 +159,20 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     }
 
     /**
+     * DOC talend Comment method "initValueByGroupMap".
+     * 
+     * @return
+     */
+    private Map<Object, Long> initValueForDBMap(String dbName) {
+        if (saveTempDataToFile) {
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+        }
+        return null;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -149,11 +182,14 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public EList<Object> getUniqueValues() {
         if (uniqueValues == null) {
-            uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this, IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES);
+            uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this,
+                    IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES);
         }
         return uniqueValues;
     }
@@ -163,16 +199,17 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @generated NOT
      */
+    @Override
     public Long getCount(Object dataValue) {
         if (dataValue == OTHER) {
             long counted = 0L;
-            for (Object val : valueToFreq.keySet()) {
-                Long freq = this.valueToFreq.get(val);
+            for (Object val : getValueToFreq().keySet()) {
+                Long freq = getValueToFreq().get(val);
                 counted = (freq == null) ? counted : counted + freq;
             }
             return (count != null && count > 0) ? count - counted : 0L;
         }
-        Long freq = this.valueToFreq.get(dataValue);
+        Long freq = getValueToFreq().get(dataValue);
         return (freq == null) ? 0L : freq;
     }
 
@@ -181,6 +218,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @generated NOT
      */
+    @Override
     public Double getFrequency(Object dataValue) {
         if (this.count.compareTo(0L) == 0) {
             return Double.NaN;
@@ -193,6 +231,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @generated NOT
      */
+    @Override
     public Set<Object> getDistinctValues() {
         if (!distinctComputed) {
             computeDistinctValues();
@@ -205,7 +244,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * true.
      */
     private void computeDistinctValues() {
-        this.distinctValues = this.valueToFreq.keySet();
+        this.distinctValues = getValueToFreq().keySet();
         this.setDistinctValueCount(Long.valueOf(distinctValues.size()));
         distinctComputed = true;
     }
@@ -224,6 +263,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @generated NOT
      */
+    @Override
     public Long getDistinctValueCount() {
         if (!distinctComputed) {
             computeDistinctValues();
@@ -233,32 +273,42 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public void setDistinctValueCount(Long newDistinctValueCount) {
         Long oldDistinctValueCount = distinctValueCount;
         distinctValueCount = newDistinctValueCount;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT, oldDistinctValueCount, distinctValueCount));
+        if (eNotificationRequired()) {
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT,
+                    oldDistinctValueCount, distinctValueCount));
+        }
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public Long getUniqueValueCount() {
         return uniqueValueCount;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public void setUniqueValueCount(Long newUniqueValueCount) {
         Long oldUniqueValueCount = uniqueValueCount;
         uniqueValueCount = newUniqueValueCount;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT, oldUniqueValueCount, uniqueValueCount));
+        if (eNotificationRequired()) {
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT,
+                    oldUniqueValueCount, uniqueValueCount));
+        }
     }
 
     /**
@@ -266,12 +316,14 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @generated NOT
      */
+    @Override
     public Long getDuplicateValueCount() {
         return count - getUniqueValueCount();
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public HashMap<Object, Long> getValueToFreqGen() {
@@ -281,15 +333,29 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.FrequencyIndicator#getValueToFreq() @generated NOT
+     * @see org.talend.dataquality.indicators.FrequencyIndicator#getValueToFreq()
+     * 
+     * @generated NOT
      */
+    @Override
     public HashMap<Object, Long> getValueToFreq() {
-        if (valueToFreq == VALUE_TO_FREQ_EDEFAULT) {
-            valueToFreq = new HashMap<Object, Long>();
-        }
         return getValueToFreqGen();
     }
 
+    /**
+     * 
+     * When MapDB is valid will return BtreeMap else will return HashMap(valueToFreq)
+     * 
+     * @return
+     */
+    public Map<Object, Long> getMapForFreq() {
+        if (saveTempDataToFile) {
+            return valueToFreqForMapDB;
+        }
+        return getValueToFreq();
+    }
+
+    @Override
     public void setValueToFreq(HashMap<Object, Long> newValueToFreq) {
         this.distinctComputed = false;
         this.setValueToFreqGen(newValueToFreq);
@@ -297,101 +363,111 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setValueToFreqGen(HashMap<Object, Long> newValueToFreq) {
         HashMap<Object, Long> oldValueToFreq = valueToFreq;
         valueToFreq = newValueToFreq;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ, oldValueToFreq, valueToFreq));
+        if (eNotificationRequired()) {
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ,
+                    oldValueToFreq, valueToFreq));
+        }
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
-                return getUniqueValues();
-            case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
-                return getDistinctValueCount();
-            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
-                return getUniqueValueCount();
-            case IndicatorsPackage.FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT:
-                return getDuplicateValueCount();
-            case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
-                return getValueToFreq();
+        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
+            return getUniqueValues();
+        case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
+            return getDistinctValueCount();
+        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
+            return getUniqueValueCount();
+        case IndicatorsPackage.FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT:
+            return getDuplicateValueCount();
+        case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
+            return getValueToFreq();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
-                getUniqueValues().clear();
-                getUniqueValues().addAll((Collection<? extends Object>)newValue);
-                return;
-            case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
-                setDistinctValueCount((Long)newValue);
-                return;
-            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
-                setUniqueValueCount((Long)newValue);
-                return;
-            case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
-                setValueToFreq((HashMap<Object, Long>)newValue);
-                return;
+        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
+            getUniqueValues().clear();
+            getUniqueValues().addAll((Collection<? extends Object>) newValue);
+            return;
+        case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
+            setDistinctValueCount((Long) newValue);
+            return;
+        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
+            setUniqueValueCount((Long) newValue);
+            return;
+        case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
+            setValueToFreq((HashMap<Object, Long>) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
-                getUniqueValues().clear();
-                return;
-            case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
-                setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
-                return;
-            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
-                setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
-                return;
-            case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
-                setValueToFreq(VALUE_TO_FREQ_EDEFAULT);
-                return;
+        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
+            getUniqueValues().clear();
+            return;
+        case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
+            setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
+            return;
+        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
+            setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
+            return;
+        case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
+            setValueToFreq(VALUE_TO_FREQ_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
-                return uniqueValues != null && !uniqueValues.isEmpty();
-            case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
-                return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT.equals(distinctValueCount);
-            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
-                return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT.equals(uniqueValueCount);
-            case IndicatorsPackage.FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT:
-                return DUPLICATE_VALUE_COUNT_EDEFAULT == null ? getDuplicateValueCount() != null : !DUPLICATE_VALUE_COUNT_EDEFAULT.equals(getDuplicateValueCount());
-            case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
-                return VALUE_TO_FREQ_EDEFAULT == null ? valueToFreq != null : !VALUE_TO_FREQ_EDEFAULT.equals(valueToFreq);
+        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
+            return uniqueValues != null && !uniqueValues.isEmpty();
+        case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
+            return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT
+                    .equals(distinctValueCount);
+        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
+            return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT
+                    .equals(uniqueValueCount);
+        case IndicatorsPackage.FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT:
+            return DUPLICATE_VALUE_COUNT_EDEFAULT == null ? getDuplicateValueCount() != null : !DUPLICATE_VALUE_COUNT_EDEFAULT
+                    .equals(getDuplicateValueCount());
+        case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
+            return VALUE_TO_FREQ_EDEFAULT == null ? valueToFreq != null : !VALUE_TO_FREQ_EDEFAULT.equals(valueToFreq);
         }
         return super.eIsSet(featureID);
     }
@@ -403,15 +479,19 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     @Override
     public boolean handle(Object data) {
-        mustStoreRow = true;
         super.handle(data);
-        Long freq = getValueToFreq().get(data);
+        mustStoreRow = true;
+        Long freq = getMapForFreq().get(data);
         if (freq == null) { // new data
             freq = 0L;
-            this.getUniqueValues().add(data);
+            if (!saveTempDataToFile) {
+                this.getUniqueValues().add(data);
+            }
             this.uniqueValueCount++;
         } else { // data not new
-            this.getUniqueValues().remove(data);
+            if (!saveTempDataToFile) {
+                this.getUniqueValues().remove(data);
+            }
             if (freq.compareTo(1L) == 0) { // decrement when data is seen twice
                 this.uniqueValueCount--;
             }
@@ -419,7 +499,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         freq++;
         // TODO scorreia compute distinct values ?
         // TODO scorreia handle options (for numeric values and date values)
-        valueToFreq.put(data, freq);
+        getMapForFreq().put(data, freq);
         return freq > 0;
 
     }
@@ -430,7 +510,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         List<Object> mostFrequent = getReducedValues(topN);
         HashMap<Object, Long> map = new HashMap<Object, Long>();
         for (Object object : mostFrequent) {
-            map.put(object, valueToFreq.get(object));
+            map.put(object, getMapForFreq().get(object));
         }
         this.setValueToFreq(map);
         // this.distinctComputed = true;
@@ -438,7 +518,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     }
 
     protected List<Object> getReducedValues(int n) {
-        return new MapValueSorter().getMostFrequent(this.valueToFreq, n);
+        return new MapValueSorter().getMostFrequent(getMapForFreq(), n);
     }
 
     @Override
@@ -447,8 +527,65 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         this.distinctValueCount = 0L;
         this.distinctComputed = false;
         this.datePattern = null;
+        if (saveTempDataToFile) {
+            if (valueToFreqForMapDB != null) {
+
+                ((DBMap<Object, Long>) valueToFreqForMapDB).clear();
+            }
+            valueToFreqForMapDB = initValueForDBMap(StandardDBName.computeProcess.name());
+            clearDrillDownMaps();
+        }
         this.getValueToFreq().clear();
         return super.reset();
+    }
+
+    /**
+     * DOC talend Comment method "clearDrillDownMaps".
+     * 
+     * @param valueToFreqForMapDB2
+     */
+    @SuppressWarnings("unchecked")
+    protected void clearDrillDownMaps() {
+        Iterator<Object> iterator = valueToFreqForMapDB.keySet().iterator();
+        while (iterator.hasNext()) {
+            Object next = iterator.next();
+            String dbName = getDBName(next);
+            Map<Object, List<Object>> mapDB = (Map<Object, List<Object>>) getMapDB(dbName);
+            mapDB.clear();
+        }
+
+    }
+
+    /**
+     * DOC talend Comment method "getDBName".
+     * 
+     * @param next
+     */
+    private String getDBName(Object name) {
+        String dbName = null;
+        if (null == name) {
+            dbName = SpecialValueDisplay.NULL_FIELD;
+        } else if (StringUtils.EMPTY.equals(name)) {
+            dbName = SpecialValueDisplay.EMPTY_FIELD;
+        } else {
+            if (datePattern != null) {
+                dbName = getFormatName(name);
+            } else {
+                dbName = name.toString();
+            }
+        }
+        return dbName;
+
+    }
+
+    /**
+     * Year/Month/Quarter indicator will need this method format input data
+     * 
+     * @param name
+     * @return
+     */
+    protected String getFormatName(Object name) {
+        return DateFormatUtils.format((Date) name, datePattern);
     }
 
     @Override
@@ -643,6 +780,44 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         // else
         String str = String.valueOf(year);
         return F4_DIGIT.format(Integer.valueOf(str));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getMapDB(java.lang.String)
+     */
+    @Override
+    public AbstractDB getMapDB(String dbName) {
+        if (saveTempDataToFile) {
+            // is get computeProcess map
+            if (StandardDBName.computeProcess.name().equals(dbName)) {
+                // current set is valid
+                if (valueToFreqForMapDB != null && !((DBMap<Object, Long>) valueToFreqForMapDB).isClosed()) {
+                    return (DBMap<Object, Long>) valueToFreqForMapDB;
+                } else {
+                    // create new DBSet
+                    return ((DBMap<Object, Long>) initValueForDBMap(StandardDBName.computeProcess.name()));
+                }
+            }
+        }
+        return super.getMapDB(dbName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.lang.Object,
+     * int, int, java.lang.String)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
+            String currentColumnName) {
+        String dbName = getDBName(masterObject);
+
+        drillDownMap = (Map<Object, List<Object>>) getMapDB(dbName);
+        super.handleDrillDownData(masterObject, currentObject, columnCount, currentIndex, currentColumnName);
     }
 
 } // FrequencyIndicatorImpl

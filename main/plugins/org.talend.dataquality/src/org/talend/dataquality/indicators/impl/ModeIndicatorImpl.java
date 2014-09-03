@@ -235,9 +235,9 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
 
         List<Object[]> mostFrequentList = new ArrayList<Object[]>();
         // get the most frequency value
-        List<Object> mostFrequent = new MapValueSorter().getMostFrequent(this.valueToFreq, 1);
+        List<Object> mostFrequent = new MapValueSorter().getMostFrequent(getMapForFreq(), 1);
         if (mostFrequent != null && !mostFrequent.isEmpty()) {
-            Object[] mostFrequentObj = new Object[] { mostFrequent.get(0), valueToFreq.get(mostFrequent.get(0)) };
+            Object[] mostFrequentObj = new Object[] { mostFrequent.get(0), getMapForFreq().get(mostFrequent.get(0)) };
             mostFrequentList.add(mostFrequentObj);
         }
 

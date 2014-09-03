@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -69,6 +70,27 @@ public final class AnalysisHelper {
         Analysis analysis = AnalysisFactory.eINSTANCE.createAnalysis();
         analysis.setName(name);
         return analysis;
+    }
+
+    /**
+     * 
+     * Get Analysis by indicator
+     * 
+     * @param indicator
+     * @return
+     */
+    public static Analysis getAnalysis(Indicator indicator) {
+        if (indicator == null) {
+            return null;
+        }
+        EObject eContainer = indicator.eContainer();
+        while (eContainer != null && !Analysis.class.isInstance(eContainer)) {
+            eContainer = eContainer.eContainer();
+        }
+        if (eContainer == null) {
+            return null;
+        }
+        return (Analysis) eContainer;
     }
 
     /**
