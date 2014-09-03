@@ -218,8 +218,9 @@ public class MFB implements MatchMergeAlgorithm {
         }
 
         @Override
-        public void setScore(int index, AttributeMatcherType algorithm, double score, String value1, String value2) {
-            result.setScore(index, algorithm, score, value1, value2);
+        public void setScore(int index, AttributeMatcherType algorithm, double score, String recordId1, String value1,
+                String recordId2, String value2) {
+            result.setScore(index, algorithm, score, recordId1, value1, recordId2, value2);
         }
 
         @Override
