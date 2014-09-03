@@ -202,11 +202,11 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
     /**
      * import the DefaultSurvivorshipFunctions, if overwrite, clear the DefaultSurvivorshipFunctions before import.
      * 
-     * @param matchRule
+     * @param matchRuleDef
      * @param overwrite
      */
     @SuppressWarnings("unchecked")
-    public void importDefaultSurvivorshipFunctions(MatchRuleDefinition matchRule, boolean overwrite) {
+    public void importDefaultSurvivorshipFunctions(MatchRuleDefinition matchRuleDef, boolean overwrite) {
         EList<DefaultSurvivorshipDefinition> functions = null;
         Object input = tableComposite.getInput();
         if (input != null) {
@@ -218,7 +218,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
         if (overwrite) {
             functions.clear();
         }
-        for (DefaultSurvivorshipDefinition def : matchRule.getDefaultSurvivorshipDefinitions()) {
+        for (DefaultSurvivorshipDefinition def : matchRuleDef.getDefaultSurvivorshipDefinitions()) {
             functions.add(EcoreUtil.copy(def));
         }
         tableComposite.setInput(functions);

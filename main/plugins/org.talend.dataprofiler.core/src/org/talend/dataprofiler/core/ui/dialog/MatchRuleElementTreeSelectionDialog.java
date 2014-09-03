@@ -14,8 +14,10 @@ package org.talend.dataprofiler.core.ui.dialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
@@ -81,6 +83,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     private List<String> inputColumnNames;
 
+    private List<String> survivorshipKeys;
+
     private List<String> lookupColumnNames;
 
     private Button overwriteBTN;
@@ -142,7 +146,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
             public IStatus validate(Object[] selection) {
                 IStatus status = new Status(IStatus.OK, CorePlugin.PLUGIN_ID, StringUtils.EMPTY);
-                if (selection != null && selection.length > 1) {
+                if (selection == null || (selection != null && selection.length > 1)) {
                     status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
                             DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.validate")); //$NON-NLS-1$
                     return status;
@@ -152,19 +156,50 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                         if (selectObject instanceof IFile) {
                             IFile file = (IFile) selectObject;
                             if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                                MatchRuleDefinition matchRule = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
-                                if ((matchRule.getBlockKeys() == null || matchRule.getBlockKeys().size() < 1)
-                                        && (matchRule.getMatchRules() == null || matchRule.getMatchRules().size() < 1)) {
+                                MatchRuleDefinition matchRuleDef = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
+                                if ((matchRuleDef.getBlockKeys() == null || matchRuleDef.getBlockKeys().size() < 1)
+                                        && (matchRuleDef.getMatchRules() == null || matchRuleDef.getMatchRules().size() < 1)) {
                                     status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
                                             DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.emptyRule")); //$NON-NLS-1$
                                     return status;
                                 }
 
+                                // check if exist duplicated Match Keys
+                                Set<String> duplicatedSurvivorshipKeys = new HashSet<String>();
+                                for (SurvivorshipKeyDefinition skDef : matchRuleDef.getSurvivorshipKeys()) {
+                                    if (!isOverwrite) {
+                                        if (skDef != null && getSurvivorshipKeys().contains(skDef.getName())) {
+                                            duplicatedSurvivorshipKeys.add(skDef.getName());
+                                        }
+                                    }
+                                }
+                                if (!duplicatedSurvivorshipKeys.isEmpty()) {
+                                    status = new Status(
+                                            IStatus.ERROR,
+                                            CorePlugin.PLUGIN_ID,
+                                            DefaultMessagesImpl
+                                                    .getString(
+                                                            "MatchRuleCheckedTreeSelectionDialog.duplicatedMatchKey", duplicatedSurvivorshipKeys.toString())); //$NON-NLS-1$
+                                    return status;
+                                }
+
+                                // for component tMatchGroup and tRecordMatching when the imported rule's algorithm is
+                                // "T_Swoosh", block importing, !!!!NOTE!!! these code are a temporary solution, we will
+                                // support the importing of Match Rule which's algorithm is t-swoosh for component
+                                // tMatchGroup and tRecordMatching later
+                                if ((dialogType == MATCHGROUP_TYPE || dialogType == RECORD_MATCHING_TYPE)
+                                        && T_SWOOSH_ALGORITHM.equals(matchRuleDef.getRecordLinkageAlgorithm())) {
+                                    status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
+                                            "The algorithm of this Match Rule is t-swoosh, can't import it now!"); //$NON-NLS-1$
+                                    return status;
+                                }
+                                // ~~~~~~~~~~
+
                                 String warningMsg = StringUtils.EMPTY;
 
                                 boolean needColumnWarning = false;
                                 if (dialogType != MATCHGROUP_TYPE && dialogType != RECORD_MATCHING_TYPE) {
-                                    for (BlockKeyDefinition bkd : matchRule.getBlockKeys()) {
+                                    for (BlockKeyDefinition bkd : matchRuleDef.getBlockKeys()) {
                                         boolean hasColumnMatch = false;
                                         for (String col : inputColumnNames) {
                                             if (col.equalsIgnoreCase(bkd.getColumn()) || col.equalsIgnoreCase(bkd.getName())) {
@@ -179,7 +214,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                                     }
                                 }
                                 if (dialogType != GENKEY_TYPE) {
-                                    for (MatchRule rule : matchRule.getMatchRules()) {
+                                    for (MatchRule rule : matchRuleDef.getMatchRules()) {
                                         EList<MatchKeyDefinition> matchKeys = rule.getMatchKeys();
                                         for (MatchKeyDefinition mkd : matchKeys) {
                                             boolean hasColumnMatch = false;
@@ -323,6 +358,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isOverwrite = overwriteBTN.getSelection();
+                updateOKStatus();
             }
 
         });
@@ -644,6 +680,27 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     public void setInputColumnNames(List<String> inputColumnNames) {
         this.inputColumnNames = inputColumnNames;
+    }
+
+    /**
+     * Getter for survivorshipKeys.
+     * 
+     * @return the survivorshipKeys
+     */
+    public List<String> getSurvivorshipKeys() {
+        if (this.survivorshipKeys == null) {
+            this.survivorshipKeys = new ArrayList<String>();
+        }
+        return this.survivorshipKeys;
+    }
+
+    /**
+     * Sets the survivorshipKeys.
+     * 
+     * @param survivorshipKeys the survivorshipKeys to set
+     */
+    public void setSurvivorshipKeys(List<String> survivorshipKeys) {
+        this.survivorshipKeys = survivorshipKeys;
     }
 
     public List<String> getLookupColumnNames() {

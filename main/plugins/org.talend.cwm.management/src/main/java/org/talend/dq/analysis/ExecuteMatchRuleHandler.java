@@ -362,13 +362,14 @@ public class ExecuteMatchRuleHandler {
         for (MetadataColumn metaColumn : columnMap.keySet()) {
             String dataTypeName = metaColumn.getTalendType();
             for (DefaultSurvivorshipDefinition defSurvDef : defSurvDefs) {
-                if (dataTypeName.equals(defSurvDef.getDataType())) {
+                // the column's data type start with id_, so need to add id_ ahead of the default survivorship's data
+                // type before judging if they are equal
+                if (StringUtils.equals(dataTypeName, "id_" + defSurvDef.getDataType())) { //$NON-NLS-1$
                     putNewSurvFunc(columnMap, survivorShipAlgorithmParams, defaultSurvRules, metaColumn, defSurvDef);
                     break;
-                } else if (defSurvDef.getDataType().equals("Number") && JavaTypesManager.isNumber(dataTypeName)) { //$NON-NLS-1$
+                } else if (StringUtils.equals(defSurvDef.getDataType(), "Number") && JavaTypesManager.isNumber(dataTypeName)) { //$NON-NLS-1$
                     putNewSurvFunc(columnMap, survivorShipAlgorithmParams, defaultSurvRules, metaColumn, defSurvDef);
                     break;
-
                 }
             }// End for: if no func defined, then the value will be taken from one of the records in a group (1st
              // one ).
