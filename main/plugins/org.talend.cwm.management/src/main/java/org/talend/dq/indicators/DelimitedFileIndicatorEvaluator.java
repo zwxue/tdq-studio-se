@@ -30,6 +30,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -82,7 +83,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             delimitedFileconnection = (DelimitedFileConnection) service.cloneOriginalValueConnection(delimitedFileconnection);
         }
 
-        String path = AnalysisExecutorHelper.getFilePath(delimitedFileconnection);
+        String path = JavaSqlFactory.getURL(delimitedFileconnection);
         IPath iPath = new Path(path);
 
         try {
@@ -113,7 +114,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
                 FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
 
-                long currentRow = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
+                long currentRow = JavaSqlFactory.getHeadValue(delimitedFileconnection);
 
                 while (fileInputDelimited.nextRecord()) {
                     if (!continueRun()) {
@@ -155,8 +156,8 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     private void useCsvReader(File file, DelimitedFileConnection dfCon, List<ModelElement> analysisElementList,
             List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
-        int limitValue = AnalysisExecutorHelper.getLimitValue(delimitedFileconnection);
-        int headValue = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
+        int limitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
+        int headValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
         CsvReader csvReader = null;
         try {
             csvReader = AnalysisExecutorHelper.createCsvReader(file, delimitedFileconnection);
