@@ -38,7 +38,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
@@ -202,12 +202,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      */
     private ReturnCode evaluateByDelimitedFile(String sqlStatement, ReturnCode returnCode) {
         DelimitedFileConnection fileConnection = (DelimitedFileConnection) analysis.getContext().getConnection();
-        String path = AnalysisExecutorHelper.getFilePath(fileConnection);
+        String path = JavaSqlFactory.getURL(fileConnection);
 
-        String rowSeparator = fileConnection.getRowSeparatorValue();
-        if (fileConnection.isContextMode()) {
-            rowSeparator = ConnectionUtils.getOriginalConntextValue(fileConnection, rowSeparator);
-        }
+        String rowSeparator = JavaSqlFactory.getRowSeparatorValue(fileConnection);
         IPath iPath = new Path(path);
         File file = iPath.toFile();
         if (!file.exists()) {
@@ -228,7 +225,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
                 FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(fileConnection);
 
-                long currentRow = AnalysisExecutorHelper.getHeadValue(fileConnection);
+                long currentRow = JavaSqlFactory.getHeadValue(fileConnection);
                 int columsCount = 0;
                 while (fileInputDelimited.nextRecord()) {
                     if (!continueRun()) {
@@ -265,7 +262,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         AnalysisExecutorHelper.initializeCsvReader(dfCon, csvReader);
 
         long currentRecord = 0;
-        int limitValue = AnalysisExecutorHelper.getLimitValue(dfCon);
+        int limitValue = JavaSqlFactory.getLimitValue(dfCon);
 
         while (csvReader.readRecord()) {
             currentRecord = csvReader.getCurrentRecord();
