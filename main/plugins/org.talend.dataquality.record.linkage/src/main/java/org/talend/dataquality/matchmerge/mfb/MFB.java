@@ -165,7 +165,7 @@ public class MFB implements MatchMergeAlgorithm {
             if (!leftRecord.getGroupId().equals(rightRecord.getGroupId())) {
                 boolean isMatchDiffGroup = isMatchDiffGroups();
                 if (!isMatchDiffGroup) {
-                    return NonMatchResult.INSTANCE;
+                    return NonMatchResult.wrap(matcher.getMatchingWeight(leftRecord, rightRecord));
                 }
             } else { // Two records of same group
                 if (LOGGER.isDebugEnabled()) {
