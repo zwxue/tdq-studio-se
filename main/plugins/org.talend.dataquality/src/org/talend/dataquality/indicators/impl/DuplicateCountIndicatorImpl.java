@@ -79,7 +79,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @return
      */
     private Map<Object, List<Object[]>> initValueForDBMap(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             return new DBValueListMap<Object>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
         } else {
             return new HashMap<Object, List<Object[]>>();
@@ -92,7 +92,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @return
      */
     private Set<Object> initValueForDBSet(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
         } else {
             return new HashSet<Object>();
@@ -285,7 +285,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @param valuelist
      */
     private void addDrillDownData(long keyIndex, List<Object[]> valuelist) {
-        if (!isSaveTempDataToFile()) {
+        if (!isUsedMapDBMode()) {
             return;
         }
         for (int i = 0; i < valuelist.size(); i++) {
@@ -311,7 +311,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     @Override
     public boolean reset() {
         this.duplicateValueCount = DUPLICATE_VALUE_COUNT_EDEFAULT;
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             if (duplicateMap != null) {
                 ((DBValueListMap<Object>) duplicateMap).clear();
             }
@@ -387,7 +387,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName)) {
                 // current set is valid

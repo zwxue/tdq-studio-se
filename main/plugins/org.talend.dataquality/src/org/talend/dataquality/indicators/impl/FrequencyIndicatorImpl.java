@@ -63,6 +63,8 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     protected String datePattern = null;
 
+    private final String FREQUENCYMAPNAME = StandardDBName.computeProcess.name() + "frequency";
+
     /**
      * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list. <!-- begin-user-doc
      * --> <!-- end-user-doc -->
@@ -164,7 +166,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * @return
      */
     private Map<Object, Long> initValueForDBMap(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
         }
         return null;
@@ -349,7 +351,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * @return
      */
     public Map<Object, Long> getMapForFreq() {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             return valueToFreqForMapDB;
         }
         return getValueToFreq();
@@ -484,12 +486,12 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         Long freq = getMapForFreq().get(data);
         if (freq == null) { // new data
             freq = 0L;
-            if (!saveTempDataToFile) {
+            if (!isUsedMapDBMode()) {
                 this.getUniqueValues().add(data);
             }
             this.uniqueValueCount++;
         } else { // data not new
-            if (!saveTempDataToFile) {
+            if (!isUsedMapDBMode()) {
                 this.getUniqueValues().remove(data);
             }
             if (freq.compareTo(1L) == 0) { // decrement when data is seen twice
@@ -527,15 +529,16 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         this.distinctValueCount = 0L;
         this.distinctComputed = false;
         this.datePattern = null;
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             if (valueToFreqForMapDB != null) {
-
+                clearDrillDownMaps();
                 ((DBMap<Object, Long>) valueToFreqForMapDB).clear();
             }
-            valueToFreqForMapDB = initValueForDBMap(StandardDBName.computeProcess.name());
-            clearDrillDownMaps();
+            valueToFreqForMapDB = initValueForDBMap(StandardDBName.computeProcess.name() + FREQUENCYMAPNAME);
+
+        } else {
+            this.getValueToFreq().clear();
         }
-        this.getValueToFreq().clear();
         return super.reset();
     }
 
@@ -789,15 +792,15 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             // is get computeProcess map
-            if (StandardDBName.computeProcess.name().equals(dbName)) {
+            if (FREQUENCYMAPNAME.equals(dbName)) {
                 // current set is valid
                 if (valueToFreqForMapDB != null && !((DBMap<Object, Long>) valueToFreqForMapDB).isClosed()) {
                     return (DBMap<Object, Long>) valueToFreqForMapDB;
                 } else {
                     // create new DBSet
-                    return ((DBMap<Object, Long>) initValueForDBMap(StandardDBName.computeProcess.name()));
+                    return ((DBMap<Object, Long>) initValueForDBMap(FREQUENCYMAPNAME));
                 }
             }
         }

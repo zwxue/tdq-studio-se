@@ -511,13 +511,28 @@ public interface Indicator extends ModelElement, DataValidation, MapDBDrillDown 
      * 
      * @return where we will save temp data on a file
      */
-    public boolean isSaveTempDataToFile();
+    public boolean isUsedMapDBMode();
 
     /**
-     * Sets the saveTempDataToFile.
      * 
-     * @param saveTempDataToFile the saveTempDataToFile to set
+     * Set current indicator is belong to MapDB mode
+     * 
+     * @param usedMapDBMode
      */
-    public void setSaveTempDataToFile(boolean saveTempDataToFile);
+    public void setUsedMapDBMode(boolean usedMapDBMode);
+
+    /**
+     * Getter for dirllDownSize.
+     * 
+     * @return the dirllDownSize
+     */
+    public int getDirllDownSize();
+
+    /**
+     * Sets the dirllDownSize.
+     * 
+     * @param dirllDownSize the dirllDownSize to set
+     */
+    public void setDirllDownSize(int dirllDownSize);
 
 } // Indicator

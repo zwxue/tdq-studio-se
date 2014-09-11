@@ -354,7 +354,7 @@ public class DrillDownEditorInput implements IEditorInput {
                 }
             }
             if (simpleStatIndicator != null) {
-                return simpleStatIndicator.getMapDB(StandardDBName.computeProcess.name());
+                return simpleStatIndicator.getMapDB(StandardDBName.dataSection.name());
             }
         }
         return null;
@@ -373,7 +373,7 @@ public class DrillDownEditorInput implements IEditorInput {
             String selectValue = ((LengthIndicator) currIndicator).getLength().toString();
             dbMapName = this.getSelectValue() + selectValue;
         } else if (AnalysisType.COLUMN_SET == analysisType) {
-            dbMapName = StandardDBName.computeProcess.name();
+            dbMapName = StandardDBName.dataSection.name();
         }
 
         return dbMapName;

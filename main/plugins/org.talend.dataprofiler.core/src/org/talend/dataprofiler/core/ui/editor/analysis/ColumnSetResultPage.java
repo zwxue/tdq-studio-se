@@ -184,7 +184,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            if (simpleStaticIndicator.isSaveTempDataToFile()) {
+            if (simpleStaticIndicator.isUsedMapDBMode()) {
                 this.createTableSectionPartForMapDB(sectionClient,
                         DefaultMessagesImpl.getString("ColumnSetResultPage.Data"), simpleStaticIndicator); //$NON-NLS-1$
             } else {

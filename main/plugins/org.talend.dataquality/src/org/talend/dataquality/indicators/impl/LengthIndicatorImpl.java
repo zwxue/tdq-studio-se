@@ -212,7 +212,7 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     @Override
     public boolean reset() {
         this.length = LENGTH_EDEFAULT;
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             clearDrillDownMaps();
         }
         return super.reset();

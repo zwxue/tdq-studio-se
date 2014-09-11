@@ -76,7 +76,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      * @return
      */
     private Set<Object> initValueForDBSet(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
         } else {
             return new HashSet<Object>();
@@ -248,7 +248,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      * 
      */
     private void clearDrillDownData() {
-        if (!isSaveTempDataToFile()) {
+        if (!isUsedMapDBMode()) {
             return;
         }
         Iterator<Object> iterator = duplicateObjects.iterator();
@@ -267,7 +267,9 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
                 duplicateObjects.add(data);
 
             } else {
-                mustStoreRow = true;
+                if (drillDownMap.size() - duplicateObjects.size() <= this.getDirllDownSize()) {
+                    mustStoreRow = true;
+                }
             }
         }
         return true;
@@ -276,7 +278,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     @Override
     public boolean reset() {
         this.uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             if (uniqueObjects != null) {
                 ((DBSet<Object>) uniqueObjects).clear();
             }
@@ -318,7 +320,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName)) {
                 // current set is valid

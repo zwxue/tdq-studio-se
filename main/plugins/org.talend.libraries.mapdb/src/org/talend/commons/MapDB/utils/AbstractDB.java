@@ -49,12 +49,8 @@ public abstract class AbstractDB<K> {
             return;
         }
         DBMaker<?> fileDBMaker = DBMaker.newFileDB(dbFile);
-        if (limiteSize > 0) {
-            fileDBMaker = fileDBMaker.mmapFileEnablePartial();
-        } else {
-            fileDBMaker = fileDBMaker.mmapFileEnable();
-        }
-        db = fileDBMaker.sizeLimit(2).cacheSize(1024 * 1024).transactionDisable().closeOnJvmShutdown().make();
+        fileDBMaker = fileDBMaker.mmapFileEnablePartial();
+        db = fileDBMaker.sizeLimit(2).cacheSize(12 * 1024).transactionDisable().closeOnJvmShutdown().make();
         MapDBFactory.getInstance().putDB(dbFile, db);
 
     }

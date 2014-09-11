@@ -152,7 +152,7 @@ public class DrillDownResultEditor extends EditorPart {
         GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(table);
         if (this.getEditorInput() instanceof DrillDownEditorInput) {
             DrillDownEditorInput ddEditorInput = (DrillDownEditorInput) this.getEditorInput();
-            if (ddEditorInput.getCurrIndicator().isSaveTempDataToFile()) {
+            if (ddEditorInput.getCurrIndicator().isUsedMapDBMode()) {
                 initTableViewerForMapDB(parent, table, ddEditorInput);
             } else {
                 initTableViewerForJava(table, ddEditorInput);

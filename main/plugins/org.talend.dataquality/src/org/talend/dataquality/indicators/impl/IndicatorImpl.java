@@ -74,12 +74,17 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     /**
      * Decide whether save temp data to file
      */
-    public boolean saveTempDataToFile = true;
+    protected boolean usedMapDBMode = true;
+
+    /**
+     * The limit size of the items which will be store by drillDown
+     */
+    protected int dirllDownSize = 0;
 
     /**
      * store drill down rows.
      */
-    public Map<Object, List<Object>> drillDownMap = null;
+    protected Map<Object, List<Object>> drillDownMap = null;
 
     /**
      * The default value of the '{@link #getCount() <em>Count</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -738,7 +743,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * DOC talend Comment method "clearDrillDownMap".
      */
     protected void clearDrillDownMap() {
-        if (saveTempDataToFile) {
+        if (this.isUsedMapDBMode()) {
             if (drillDownMap != null) {
                 drillDownMap.clear();
             }
@@ -1252,8 +1257,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @return the saveTempDataToFile
      */
     @Override
-    public boolean isSaveTempDataToFile() {
-        return this.saveTempDataToFile;
+    public boolean isUsedMapDBMode() {
+        return this.usedMapDBMode;
     }
 
     /*
@@ -1267,7 +1272,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             if (StandardDBName.drillDown.name().equals(dbName) && drillDownMap != null
                     && !((DBMap<Object, List<Object>>) drillDownMap).isClosed()) {
                 return (DBMap<Object, List<Object>>) drillDownMap;
@@ -1305,13 +1310,31 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
-     * Sets the saveTempDataToFile.
+     * Sets the usedMapDBMode.
      * 
-     * @param saveTempDataToFile the saveTempDataToFile to set
+     * @param usedMapDBMode the usedMapDBMode to set
      */
     @Override
-    public void setSaveTempDataToFile(boolean saveTempDataToFile) {
-        this.saveTempDataToFile = saveTempDataToFile;
+    public void setUsedMapDBMode(boolean usedMapDBMode) {
+        this.usedMapDBMode = usedMapDBMode;
+    }
+
+    /**
+     * Getter for dirllDownSize.
+     * 
+     * @return the dirllDownSize
+     */
+    public int getDirllDownSize() {
+        return this.dirllDownSize;
+    }
+
+    /**
+     * Sets the dirllDownSize.
+     * 
+     * @param dirllDownSize the dirllDownSize to set
+     */
+    public void setDirllDownSize(int dirllDownSize) {
+        this.dirllDownSize = dirllDownSize;
     }
 
 } // IndicatorImpl

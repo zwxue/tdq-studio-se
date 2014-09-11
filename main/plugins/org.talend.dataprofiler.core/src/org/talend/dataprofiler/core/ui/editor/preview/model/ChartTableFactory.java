@@ -383,7 +383,7 @@ public final class ChartTableFactory {
                         } else {
 
                             if (analysis.getParameters().isStoreData()) { // if allow drill down
-                                if (indicator.isSaveTempDataToFile()) {
+                                if (indicator.isUsedMapDBMode()) {
                                     createDrillDownMenuForMapDB(dataEntity, menu, itemEntities);
                                 } else {
                                     createDrillDownMenuForJava(dataEntity, menu, itemEntities);
