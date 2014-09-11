@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -69,6 +70,27 @@ public final class AnalysisHelper {
         Analysis analysis = AnalysisFactory.eINSTANCE.createAnalysis();
         analysis.setName(name);
         return analysis;
+    }
+
+    /**
+     * 
+     * Get Analysis by indicator
+     * 
+     * @param indicator
+     * @return
+     */
+    public static Analysis getAnalysis(Indicator indicator) {
+        if (indicator == null) {
+            return null;
+        }
+        EObject eContainer = indicator.eContainer();
+        while (eContainer != null && !Analysis.class.isInstance(eContainer)) {
+            eContainer = eContainer.eContainer();
+        }
+        if (eContainer == null) {
+            return null;
+        }
+        return (Analysis) eContainer;
     }
 
     /**
@@ -204,8 +226,7 @@ public final class AnalysisHelper {
             } else {
                 Expression expression = expressions.getExpression();
                 if (expression == null) {
-                    expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
-                            datafilterString);
+                    expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE, datafilterString);
                     expressions.setExpression(expression);
                 } else {
                     expression.setBody(datafilterString);
@@ -245,8 +266,7 @@ public final class AnalysisHelper {
                 } else {
                     Expression expression = expressions.getExpression();
                     if (expression == null) {
-                        expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
-                                datafilterString);
+                        expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE, datafilterString);
                         expressions.setExpression(expression);
                     } else {
                         expression.setBody(datafilterString);
@@ -461,8 +481,7 @@ public final class AnalysisHelper {
      * @return
      */
     public static String getLastRunContext(Analysis analysis) {
-        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.ANA_LAST_RUN_CONTEXT,
-                analysis.getTaggedValue());
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.ANA_LAST_RUN_CONTEXT, analysis.getTaggedValue());
         if (taggedValue == null) {
             return PluginConstant.EMPTY_STRING;
         }
@@ -494,6 +513,6 @@ public final class AnalysisHelper {
      * @return
      */
     public static boolean setLastRunContext(String lastRunContext, Analysis analysis) {
-        return TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.REP_LAST_RUN_CONTEXT, lastRunContext);
+        return TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.ANA_LAST_RUN_CONTEXT, lastRunContext);
     }
 }

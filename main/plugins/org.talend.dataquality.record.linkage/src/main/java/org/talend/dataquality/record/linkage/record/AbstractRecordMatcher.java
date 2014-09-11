@@ -18,13 +18,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.Messages;
-import org.talend.dataquality.record.linkage.attribute.DummyMatcher;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 
 /**
  * @author scorreia Abstract class for matching records.
  */
-abstract class AbstractRecordMatcher implements IRecordMatcher {
+public abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     private static Logger log = Logger.getLogger(AbstractRecordMatcher.class);
 
@@ -139,6 +138,16 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getAttributeMatchers()
+     */
+    @Override
+    public IAttributeMatcher[] getAttributeMatchers() {
+        return attributeMatchers;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.matching.record.IRecordMatcher#setAttributeWeights(double[])
      */
     @Override
@@ -199,22 +208,6 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
         this.attributeMatchingWeights = new double[recordSize];
     }
 
-    /**
-     * Method "internalScalarProduct" computes the scalar product of elements listed in usedIndices array.
-     * 
-     * @param v1
-     * @param v2
-     * @return
-     */
-    protected double internalScalarProduct(double[] v1, double[] v2) {
-        assert usedIndices != null;
-        double result = 0;
-        for (int idx : usedIndices) {
-            result += v1[idx] * v2[idx];
-        }
-        return result;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -233,7 +226,6 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
     }
 
     protected int[] getUsedIndicesNotblocked() {
-
         if (usedIndicesNotblocked == null && usedIndices != null) {
             List<Integer> indices = new ArrayList<Integer>();
             for (int usedIdx : usedIndices) {
@@ -291,7 +283,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
         double[] currentAttributeMatchingWeights = this.getCurrentAttributeMatchingWeights();
         for (int i = 0; i < currentAttributeMatchingWeights.length; i++) {
             IAttributeMatcher attributeMatcher = this.attributeMatchers[i];
-            if (attributeMatcher instanceof DummyMatcher) {
+            if (attributeMatcher.isDummyMatcher()) {
                 continue; // Don't take dummy matcher into account.
             }
             if (buffer.length() > 0) {

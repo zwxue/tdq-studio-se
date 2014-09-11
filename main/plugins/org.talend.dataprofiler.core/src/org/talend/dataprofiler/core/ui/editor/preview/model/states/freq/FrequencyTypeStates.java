@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
@@ -43,11 +44,17 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     }
 
     public JFreeChart getChart() {
-        return TopChartFactory.createBarChart(DefaultMessagesImpl.getString("TopChartFactory.count"), getDataset()); //$NON-NLS-1$
+        return getChart(getDataset());
+    }
+
+    @Override
+    public JFreeChart getChart(CategoryDataset dataset) {
+        return TopChartFactory.createBarChart(DefaultMessagesImpl.getString("TopChartFactory.count"), dataset); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
+        boolean withRowCountIndicator = isWithRowCountIndicator();
 
         for (IndicatorUnit unit : units) {
             if (unit.isExcuted()) {
@@ -83,14 +90,14 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                     entity.setLabel(keyLabel);
                     entity.setValue(String.valueOf(freqExt.getValue()));
 
-                    Double percent = isWithRowCountIndicator() ? freqExt.getFrequency() : Double.NaN;
+                    Double percent = withRowCountIndicator ? freqExt.getFrequency() : Double.NaN;
                     entity.setPercent(percent);
 
                     customerdataset.addDataEntity(entity);
                 }
             } else {
                 ChartDataEntity entity = AnalysisUtils.createChartEntity(unit.getIndicator(), null,
-                        SpecialValueDisplay.EMPTY_FIELD);
+                        SpecialValueDisplay.EMPTY_FIELD, false);
                 FrequencyExt fre = new FrequencyExt();
                 fre.setFrequency(0.0);
                 setValueToDataset(customerdataset, fre, unit.getIndicatorName());

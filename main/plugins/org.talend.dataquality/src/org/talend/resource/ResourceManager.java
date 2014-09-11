@@ -29,6 +29,10 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 
 /**
@@ -41,7 +45,7 @@ public final class ResourceManager {
 
     /**
      * DOC bzhou Comment method "getRoot".
-     *
+     * 
      * @return
      */
     public static IWorkspaceRoot getRoot() {
@@ -50,7 +54,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getRootProject".
-     *
+     * 
      * @return
      */
     public static IProject getRootProject() {
@@ -60,7 +64,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getRootProjectName".
-     *
+     * 
      * @return
      */
     public static String getRootProjectName() {
@@ -70,7 +74,7 @@ public final class ResourceManager {
     // ADD msjian 2011-8-5 TDQ-3165: get the Project Description
     /**
      * DOC msjian Comment method "getRootProjectDescription".
-     *
+     * 
      * @return
      */
     public static String getRootProjectDescription() {
@@ -79,7 +83,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getDataProfilingFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getDataProfilingFolder() {
@@ -87,8 +91,39 @@ public final class ResourceManager {
     }
 
     /**
+     * get Temp MapDB Folder
+     * 
+     * @return
+     */
+    public static IFolder getTempMapDBFolder() {
+        return getOneFolder(EResourceConstant.TEMP_MAPDB);
+    }
+
+    /**
+     * get the path of Map DB file. It should be full path.
+     * 
+     * @param indicator we should find the name of analysis,analysisElement,indicatorDefinition.So that it should be
+     * used by some one analysis
+     * @return
+     */
+    public static String getMapDBFilePath(Indicator indicator) {
+        Analysis analysis = AnalysisHelper.getAnalysis(indicator);
+        String analysisName = analysis.getName();
+        String indicatorName = indicator.getName();
+        String modelElementName = Path.EMPTY.toString();
+        if (indicator instanceof ColumnSetMultiValueIndicator) {
+
+        } else {
+            modelElementName = indicator.getAnalyzedElement().getName();
+        }
+        return getTempMapDBFolder().getLocation().append(analysisName).append(modelElementName).append(indicatorName)
+                .toOSString();
+
+    }
+
+    /**
      * DOC bZhou Comment method "getLibrariesFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getLibrariesFolder() {
@@ -97,7 +132,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getMetadataFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getMetadataFolder() {
@@ -106,7 +141,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getAnalysisFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getAnalysisFolder() {
@@ -115,7 +150,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getReportsFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getReportsFolder() {
@@ -124,7 +159,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getReportingDBFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getReportDBFolder() {
@@ -133,7 +168,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getRulesFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getRulesFolder() {
@@ -142,7 +177,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getRulesSQLFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getRulesSQLFolder() {
@@ -150,9 +185,9 @@ public final class ResourceManager {
     }
 
     /**
-     *
+     * 
      * DOC klliu Comment method "getRulesParserFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getRulesParserFolder() {
@@ -160,7 +195,7 @@ public final class ResourceManager {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public static IFolder getRulesMatcherFolder() {
@@ -169,7 +204,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getPatternFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getPatternFolder() {
@@ -178,7 +213,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getPatternSQLFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getPatternSQLFolder() {
@@ -187,7 +222,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getPatternRegexFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getPatternRegexFolder() {
@@ -196,7 +231,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getIndicatorFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getIndicatorFolder() {
@@ -205,7 +240,7 @@ public final class ResourceManager {
 
     /**
      * DOC xqliu Comment method "getSystemIndicatorFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getSystemIndicatorFolder() {
@@ -214,7 +249,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getUDIFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getUDIFolder() {
@@ -222,9 +257,9 @@ public final class ResourceManager {
     }
 
     /**
-     *
+     * 
      * zshen Comment method "getUDIJarFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getUDIJarFolder() {
@@ -233,7 +268,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getJRXMLFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getJRXMLFolder() {
@@ -242,7 +277,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getConnectionFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getConnectionFolder() {
@@ -251,7 +286,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getMDMConnectionFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getMDMConnectionFolder() {
@@ -260,7 +295,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getExchangeFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getExchangeFolder() {
@@ -269,7 +304,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getSourceFileFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getSourceFileFolder() {
@@ -278,7 +313,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isDataProfilingFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -288,7 +323,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isLibrariesFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -298,7 +333,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isMetadataFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -308,7 +343,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isAnalysisFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -318,7 +353,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isReportsFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -328,7 +363,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isReportDBFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -338,7 +373,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isRulesFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -348,7 +383,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isRulesSQLFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -358,7 +393,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isPatternFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -368,7 +403,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isPatternSQLFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -378,7 +413,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isPatternRegexFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -388,7 +423,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isIndicatorFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -398,7 +433,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isUDIFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -408,7 +443,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isJRXMLFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -418,7 +453,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isConnectionFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -428,7 +463,7 @@ public final class ResourceManager {
 
     /**
      * DOC zshen Comment method "isConnectionFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -438,7 +473,7 @@ public final class ResourceManager {
 
     /**
      * DOC xqliu Comment method "isMdmConnectionFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -448,7 +483,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isExchangeFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -458,7 +493,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isSourceFileFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -468,7 +503,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "isFolder".
-     *
+     * 
      * @param resource
      * @param constant
      * @return
@@ -484,7 +519,7 @@ public final class ResourceManager {
 
     /**
      * DOC bZhou Comment method "getFolder".
-     *
+     * 
      * @param name
      * @return
      */
@@ -496,7 +531,7 @@ public final class ResourceManager {
 
     /**
      * DOC xqliu Comment method "getRootFolderLocation".
-     *
+     * 
      * @return
      */
     public static IPath getRootFolderLocation() {
@@ -505,7 +540,7 @@ public final class ResourceManager {
 
     /**
      * get the product root folder location.
-     *
+     * 
      * @return
      */
     public static IPath getProductFolderLocation() {
@@ -513,9 +548,9 @@ public final class ResourceManager {
     }
 
     /**
-     *
+     * 
      * DOC qiongli Comment method "isFileDelimitedFolder".
-     *
+     * 
      * @param resource
      * @return
      */
@@ -524,9 +559,9 @@ public final class ResourceManager {
     }
 
     /**
-     *
+     * 
      * DOC qiongli Comment method "getFileDelimitedFolder".
-     *
+     * 
      * @return
      */
     public static IFolder getFileDelimitedFolder() {
@@ -535,7 +570,7 @@ public final class ResourceManager {
 
     /**
      * get the absolute path relative to the current project.
-     *
+     * 
      * @param path
      * @return never null
      */
@@ -575,7 +610,7 @@ public final class ResourceManager {
 
     /**
      * remove the jrxml Resource from ResourceSet, should call this method only when call MatchService.doMatch().
-     *
+     * 
      * @param resourceSet
      * @return Jrxml Resource List
      */
@@ -592,7 +627,7 @@ public final class ResourceManager {
 
     /**
      * if the Resource is Jrxml return true else return false.
-     *
+     * 
      * @param res
      * @return
      */

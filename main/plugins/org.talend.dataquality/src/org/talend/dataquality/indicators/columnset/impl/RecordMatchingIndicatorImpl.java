@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -40,6 +41,9 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
  * @generated
  */
 public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements RecordMatchingIndicator {
+
+    // To be syn with RecordMatcherType#T_SwooshAlgorithm
+    private final static String T_SWOOSH_ALG_NAME = "T_SwooshAlgorithm";
 
     /**
      * The default value of the '{@link #getGroupSize2groupFrequency() <em>Group Size2group Frequency</em>}' attribute.
@@ -167,7 +171,9 @@ public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImp
     @Override
     public boolean handle(Object data) {
         String[] values = (String[]) data;
-        if (Boolean.valueOf(values[masterColumnIndex])) { // Find the master row
+        Boolean isMaster = Boolean.valueOf(values[masterColumnIndex]);
+        Integer groupSize = StringUtils.isEmpty(values[groupSizeColumnIndex]) ? 0 : Integer.valueOf(values[groupSizeColumnIndex]);
+        if (isMaster) { // Find the master row
             if (null == groupSize2groupFrequency.get(values[groupSizeColumnIndex])) {
                 groupSize2groupFrequency.put(values[groupSizeColumnIndex], 1l);
             } else {
@@ -175,7 +181,6 @@ public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImp
                 groupSize2groupFrequency.put(values[groupSizeColumnIndex], freq);
             }
             // Compute matched record count
-            Integer groupSize = Integer.valueOf(values[groupSizeColumnIndex]);
             if (builtInMatchRuleDefinition != null && groupSize > 1) {
                 // Group quality score >= confidence threshold then it's a confident match group
                 double groupScore = Double.valueOf(values[groupQualityColumnIndex]);
@@ -187,7 +192,15 @@ public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImp
                 }
             }
         }
-        count++;
+        if (T_SWOOSH_ALG_NAME.equals(getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm())) {
+            // masters with group size greater than 1 should NOT be taken into account when compute row count in case of
+            // t-swoosh algorithm.
+            if (!(isMaster && groupSize > 1)) {
+                count++;
+            }
+        } else {
+            count++;
+        }
         return Boolean.TRUE;
     }
 

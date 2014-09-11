@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.SWT;
@@ -24,6 +26,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
@@ -32,6 +35,7 @@ import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataCha
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dq.analysis.AnalysisRecordGroupingUtils;
 import org.talend.dq.analysis.ExecuteMatchRuleHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -76,7 +80,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
         // change spin to combo
         final Spinner lessSpin = new Spinner(toolComp, SWT.BORDER);
-        lessSpin.setSelection(1);
+        lessSpin.setSelection(2);
         lessSpin.addModifyListener(new ModifyListener() {
 
             @Override
@@ -103,8 +107,20 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
         final Object[] IndicatorList = MatchRuleAnlaysisUtils.getNeedIndicatorFromAna(analysis);
         final RecordMatchingIndicator recordMatchingIndicator = EcoreUtil.copy((RecordMatchingIndicator) IndicatorList[0]);
         BlockKeyIndicator blockKeyIndicator = EcoreUtil.copy((BlockKeyIndicator) IndicatorList[1]);
-        TypedReturnCode<MatchGroupResultConsumer> execute = ExecuteMatchRuleHandler.execute(columnMap, recordMatchingIndicator,
-                matchRows, blockKeyIndicator);
+        ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(recordMatchingIndicator);
+        // Set match key schema to the record matching indicator.
+        MetadataColumn[] completeColumnSchema = AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap);
+        String[] colSchemaString = new String[completeColumnSchema.length];
+        int idx = 0;
+        for (MetadataColumn metadataCol : completeColumnSchema) {
+            colSchemaString[idx++] = metadataCol.getName();
+        }
+        recordMatchingIndicator.setMatchRowSchema(colSchemaString);
+        recordMatchingIndicator.reset();
+
+        TypedReturnCode<MatchGroupResultConsumer> execute = execHandler.execute(columnMap, recordMatchingIndicator, matchRows,
+                blockKeyIndicator, matchResultConsumer);
         if (!execute.isOk()) {
             rc.setMessage(DefaultMessagesImpl.getString(
                     "RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ 
@@ -114,14 +130,38 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                 return rc;
             }
             // sort the result before refresh
-            MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute.getObject()
-                    .getFullMatchResult());
-            MatchRuleAnlaysisUtils.refreshDataTable(analysis, execute.getObject().getFullMatchResult());
+            List<Object[]> results = MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute
+                    .getObject().getFullMatchResult());
+            MatchRuleAnlaysisUtils.refreshDataTable(analysis, results);
         }
         rc.setOk(true);
         rc.setObject(recordMatchingIndicator);
         return rc;
 
+    }
+
+    /**
+     * DOC zhao Comment method "initRecordMatchIndicator".
+     * 
+     * @param columnMap
+     * @return
+     */
+    private MatchGroupResultConsumer createMatchGroupResultConsumer(final RecordMatchingIndicator recordMatchingIndicator) {
+
+        MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer(true) {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping. MatchGroupResultConsumer#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(Object row) {
+                recordMatchingIndicator.handle(row);
+                addOneRowOfResult(row);
+            }
+        };
+        return matchResultConsumer;
     }
 
 }

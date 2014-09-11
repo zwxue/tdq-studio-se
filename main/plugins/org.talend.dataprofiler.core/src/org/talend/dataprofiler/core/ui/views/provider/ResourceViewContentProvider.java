@@ -37,6 +37,7 @@ import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.xml.TdXmlElementType;
@@ -174,7 +175,10 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (EResourceConstant.METADATA.getName().equals(label)) {
                 List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                 resContants.add(EResourceConstant.DB_CONNECTIONS);
-                resContants.add(EResourceConstant.MDM_CONNECTIONS);
+                // TDQ-8965 Deprecate MDM connection profiling
+                if (TalendPropertiesUtil.isEnabledOldMDMProfiling()) {
+                    resContants.add(EResourceConstant.MDM_CONNECTIONS);
+                }
                 resContants.add(EResourceConstant.FILEDELIMITED);
                 instance.createRepositoryNodeSystemFolders(node, resContants);
             }
@@ -272,8 +276,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     private IRepositoryNode createNewRepNode(ERepositoryObjectType type) {
         IRepositoryViewObject viewObject = null;
 
-        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                ProjectManager.getInstance().getCurrentProject(), type, Path.EMPTY);
+        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(), type,
+                Path.EMPTY);
         if (folderItem == null) {
             String folderName = ERepositoryObjectType.getFolderName(type);
             viewObject = new Folder(folderName, folderName);

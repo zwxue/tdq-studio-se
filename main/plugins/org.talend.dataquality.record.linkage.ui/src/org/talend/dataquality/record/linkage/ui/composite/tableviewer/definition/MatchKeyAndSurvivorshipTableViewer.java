@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -25,12 +24,12 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchCellModifier;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.cellEditor.jarFileCellEditor;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAndSurvivorCellModifer;
@@ -50,9 +49,12 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
  */
 public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTableViewer<MatchKeyAndSurvivorDefinition> {
 
-    private static Logger log = Logger.getLogger(MatchRuleTableViewer.class);
+    protected MatchRule matchRule = null;
 
-    private MatchRule matchRule = null;
+    public MatchKeyAndSurvivorshipTableViewer(Composite parent, int style, boolean isAddColumn, MatchRule matchRule) {
+        super(parent, style, isAddColumn);
+        this.matchRule = matchRule;
+    }
 
     @Override
     protected IContentProvider getTableContentProvider() {
@@ -75,7 +77,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
     public boolean addElement(String columnName, Analysis analysis) {
         return false;
         // if (matchRule == null) {
-        //                log.error(DefaultMessagesImpl.getString("MatchRuleTableViewer.NULL_MATCH_RULE_INSTANCE") + analysis.getName()); //$NON-NLS-1$
+        //            log.error(DefaultMessagesImpl.getString("MatchRuleTableViewer.NULL_MATCH_RULE_INSTANCE") + analysis.getName()); //$NON-NLS-1$
         // return false;
         // }
         // return addElement(columnName, matchRule.getMatchKeys());
@@ -83,7 +85,14 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     @Override
     public void removeElement(String columnName, List<MatchKeyAndSurvivorDefinition> keyList) {
-        // no need to implement
+        Iterator<MatchKeyAndSurvivorDefinition> matchKeyIterator = keyList.iterator();
+        while (matchKeyIterator.hasNext()) {
+            MatchKeyAndSurvivorDefinition keyDef = matchKeyIterator.next();
+            if (StringUtils.equals(keyDef.getColumn(), columnName)) {
+                this.removeElement(keyDef, keyList);
+                break;
+            }
+        }
     }
 
     @Override
@@ -98,7 +107,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
                 // survivorkey list;
                 SurvivorshipKeyDefinition survivorShipKey = msDedefinition.getSurvivorShipKey();
                 MatchRuleDefinition matchRuleDef = (MatchRuleDefinition) survivorShipKey.eContainer();
-                matchRuleDef.getMatchRules().get(0).getMatchKeys().remove(msDedefinition.getMatchKey());
+                ((MatchRule) msDedefinition.getMatchKey().eContainer()).getMatchKeys().remove(msDedefinition.getMatchKey());
                 matchRuleDef.getSurvivorshipKeys().remove(survivorShipKey);
                 break;
             }
@@ -115,10 +124,6 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
         return 10;
     }
 
-    public void setMatchRule(MatchRule matchRule) {
-        this.matchRule = matchRule;
-    }
-
     @Override
     public void addContextMenu() {
         MatchRuleActionGroup<MatchKeyAndSurvivorDefinition> actionGroup = new MatchRuleActionGroup<MatchKeyAndSurvivorDefinition>(
@@ -129,32 +134,32 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorshipTableViewer#
      * createNewKeyDefinition(java.lang.String)
      */
     @Override
     protected MatchKeyAndSurvivorDefinition createNewKeyDefinition(String columnName) {
         MatchKeyDefinition matchKeyDefinition = MatchRuleAnlaysisUtils.createDefaultMatchRow(columnName);
         SurvivorshipKeyDefinition survivorshipKeyDefinition = createNewSurvivorshipKeyDefinition(columnName);
-        MatchKeyAndSurvivorDefinition mAnds = new MatchKeyAndSurvivorDefinition();
-        mAnds.setMatchKey(matchKeyDefinition);
-        mAnds.setSurvivorShipKey(survivorshipKeyDefinition);
-        return mAnds;
+        MatchKeyAndSurvivorDefinition matchKeySurvDef = new MatchKeyAndSurvivorDefinition();
+        matchKeySurvDef.setMatchKey(matchKeyDefinition);
+        matchKeySurvDef.setSurvivorShipKey(survivorshipKeyDefinition);
+
+        matchRule.getMatchKeys().add(matchKeySurvDef.getMatchKey());
+        ((MatchRuleDefinition) matchRule.eContainer()).getSurvivorshipKeys().add(matchKeySurvDef.getSurvivorShipKey());
+        return matchKeySurvDef;
     }
 
     private SurvivorshipKeyDefinition createNewSurvivorshipKeyDefinition(String columnName) {
         SurvivorshipKeyDefinition skd = RulesFactory.eINSTANCE.createSurvivorshipKeyDefinition();
-        skd.setName(StringUtils.EMPTY);
+        skd.setName(columnName);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(SurvivorShipAlgorithmEnum.getTypeByIndex(0).getValue());
         createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         skd.setFunction(createAlgorithmDefinition);
         skd.setAllowManualResolution(true);
         return skd;
-    }
-
-    public MatchKeyAndSurvivorshipTableViewer(Composite parent, int style, boolean isAddColumn) {
-        super(parent, style, isAddColumn);
     }
 
     /*
@@ -164,7 +169,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             // used for MDM T-swoosh
@@ -188,6 +193,43 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
         }
         return editors;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpFromModel
+     * (java.lang.Object, java.util.List, int)
+     */
+    @Override
+    protected void moveUpFromModel(MatchKeyAndSurvivorDefinition keyDef, List<MatchKeyAndSurvivorDefinition> keyList,
+            int indexForElement) {
+        super.moveUpFromModel(keyDef, keyList, indexForElement);
+        // Move up Match key
+        matchRule.getMatchKeys().remove(keyDef.getMatchKey());
+        matchRule.getMatchKeys().add(indexForElement - 2, keyDef.getMatchKey());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownFromModel
+     * (java.lang.Object, java.util.List, int)
+     */
+    @Override
+    protected void moveDownFromModel(MatchKeyAndSurvivorDefinition keyDef, List<MatchKeyAndSurvivorDefinition> keyList,
+            int indexForElement) {
+        super.moveDownFromModel(keyDef, keyList, indexForElement);
+        // modify model for match key.
+        matchRule.getMatchKeys().remove(keyDef.getMatchKey());
+        if (indexForElement == keyList.size()) {
+            matchRule.getMatchKeys().add(keyDef.getMatchKey());
+        } else {
+            matchRule.getMatchKeys().add(indexForElement, keyDef.getMatchKey());
+        }
+
     }
 
     /*

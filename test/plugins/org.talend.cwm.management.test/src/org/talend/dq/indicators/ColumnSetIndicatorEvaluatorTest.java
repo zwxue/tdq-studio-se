@@ -12,11 +12,12 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,6 +42,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -57,7 +59,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC msjian class global comment. Detailled comment
  */
 @PrepareForTest({ LanguageManager.class, ConnectionUtils.class, ResourceBundle.class, Messages.class, ConnectionUtils.class,
-        LanguageManager.class, ParameterUtil.class, StringUtils.class, ColumnHelper.class })
+        LanguageManager.class, ParameterUtil.class, StringUtils.class, ColumnHelper.class, JavaSqlFactory.class })
 public class ColumnSetIndicatorEvaluatorTest {
 
     public static String empty = ""; //$NON-NLS-1$
@@ -74,7 +76,7 @@ public class ColumnSetIndicatorEvaluatorTest {
 
     public static String context_fd1_Encoding = "context.fd1_Encoding"; //$NON-NLS-1$
 
-    public static String realHeading = "1"; //$NON-NLS-1$
+    public static int realHeading = 1;
 
     public static String zero = "0"; //$NON-NLS-1$
 
@@ -115,10 +117,10 @@ public class ColumnSetIndicatorEvaluatorTest {
         when(iPath.toFile()).thenReturn(file);
         assertTrue(file.exists());
 
-        PowerMockito.mockStatic(ConnectionUtils.class);
-        when(ConnectionUtils.getOriginalConntextValue(deliFileConn, context_fd1_File)).thenReturn(realFile);
-        when(ConnectionUtils.getOriginalConntextValue(deliFileConn, context_fd1_FieldSeparator)).thenReturn(realFieldSeparator);
-        when(ConnectionUtils.getOriginalConntextValue(deliFileConn, context_fd1_Encoding)).thenReturn(realEncoding);
+        PowerMockito.mockStatic(JavaSqlFactory.class);
+        when(JavaSqlFactory.getURL(deliFileConn)).thenReturn(realFile);
+        when(JavaSqlFactory.getFieldSeparatorValue(deliFileConn)).thenReturn(realFieldSeparator);
+        when(JavaSqlFactory.getEncoding(deliFileConn)).thenReturn(realEncoding);
 
         PowerMockito.mockStatic(ResourceBundle.class);
         ResourceBundle bundle = mock(ResourceBundle.class);
@@ -140,9 +142,8 @@ public class ColumnSetIndicatorEvaluatorTest {
         when(deliFileConn.isSplitRecord()).thenReturn(false);
         when(deliFileConn.isRemoveEmptyRow()).thenReturn(false);
 
-        when(ConnectionUtils.getOriginalConntextValue(deliFileConn, context_fd1_Header)).thenReturn(realHeading);
-        when(ConnectionUtils.getOriginalConntextValue(deliFileConn, zero)).thenReturn(zero);
-        when(ConnectionUtils.getOriginalConntextValue(deliFileConn, context_fd1_RowSeparator)).thenReturn(realRowSeparator);
+        when(JavaSqlFactory.getHeadValue(deliFileConn)).thenReturn(realHeading);
+        when(JavaSqlFactory.getRowSeparatorValue(deliFileConn)).thenReturn(realRowSeparator);
 
         PowerMockito.mockStatic(LanguageManager.class);
         when(LanguageManager.getCurrentLanguage()).thenReturn(ECodeLanguage.JAVA);

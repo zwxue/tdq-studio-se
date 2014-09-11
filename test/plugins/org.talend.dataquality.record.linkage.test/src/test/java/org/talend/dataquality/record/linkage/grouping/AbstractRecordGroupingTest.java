@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 public class AbstractRecordGroupingTest {
 
@@ -25,7 +26,7 @@ public class AbstractRecordGroupingTest {
      */
     private List<String[]> inputList = null;
 
-    private IRecordGrouping recordGroup = null;
+    private IRecordGrouping<String> recordGroup = null;
 
     private static final String columnDelimiter = "|"; //$NON-NLS-1$
 
@@ -44,6 +45,14 @@ public class AbstractRecordGroupingTest {
             String[] fields = StringUtils.splitPreserveAllTokens(line, columnDelimiter);
             inputList.add(fields);
         }
+
+    }
+
+    @Test
+    public void testDoGroup() {
+        // set the matching parameters
+        // matching parameters for lname
+
         recordGroup = new AbstractRecordGrouping<String>() {
 
             /*
@@ -55,18 +64,28 @@ public class AbstractRecordGroupingTest {
             @Override
             protected void outputRow(String[] row) {
                 groupingRecords.add(row);
+                for (String c : row) {
+                    System.out.print(c + ",");
+                }
+                System.out.println();
 
+            }
+
+            @Override
+            protected String incrementGroupSize(String oldGroupSize) {
+                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
+                return newGroupSize;
+            }
+
+            @Override
+            protected String castAsType(Object objectValue) {
+                String column = String.valueOf(objectValue);
+                return column;
             }
 
             @Override
             protected boolean isMaster(String col) {
                 return "true".equals(col); //$NON-NLS-1$
-            }
-
-            @Override
-            protected String modifyGroupSize(String oldGroupSize) {
-                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
-                return newGroupSize;
             }
 
             @Override
@@ -76,19 +95,12 @@ public class AbstractRecordGroupingTest {
             }
 
             @Override
-            protected String getTYPEFromObject(Object objectValue) {
-                String column = String.valueOf(objectValue);
-                return column;
+            protected void outputRow(RichRecord row) {
+                // TODO Auto-generated method stub
+
             }
+
         };
-
-    }
-
-    @Test
-    public void testDoGroup() {
-        // set the matching parameters
-        // matching parameters for lname
-
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
         List<Map<String, String>> matchingRule = new ArrayList<Map<String, String>>();
@@ -97,6 +109,7 @@ public class AbstractRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
 
         matchingRule.add(lnameRecords);
 
@@ -105,6 +118,7 @@ public class AbstractRecordGroupingTest {
         accountRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(6));
         accountRecords.put(IRecordGrouping.MATCHING_TYPE, "LEVENSHTEIN"); //$NON-NLS-1$
         accountRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(0.8));
+        accountRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
         matchingRule.add(accountRecords);
 
         recordGroup.addMatchRule(matchingRule);
@@ -222,6 +236,49 @@ public class AbstractRecordGroupingTest {
         Map<String, String> lnameRecords;
         Map<String, String> accountRecords;
         groupingRecords.clear();
+        recordGroup = new AbstractRecordGrouping<String>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
+             */
+
+            @Override
+            protected void outputRow(String[] row) {
+                groupingRecords.add(row);
+
+            }
+
+            @Override
+            protected boolean isMaster(String col) {
+                return "true".equals(col); //$NON-NLS-1$
+            }
+
+            @Override
+            protected String incrementGroupSize(String oldGroupSize) {
+                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
+                return newGroupSize;
+            }
+
+            @Override
+            protected String[] createTYPEArray(int size) {
+                String[] arrays = new String[size];
+                return arrays;
+            }
+
+            @Override
+            protected String castAsType(Object objectValue) {
+                String column = String.valueOf(objectValue);
+                return column;
+            }
+
+            @Override
+            protected void outputRow(RichRecord row) {
+                // Empty implementation for vsr
+            }
+
+        };
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
         matchingRule = new ArrayList<Map<String, String>>();
@@ -230,6 +287,7 @@ public class AbstractRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.95f));
         matchingRule.add(lnameRecords);
 
@@ -313,8 +371,50 @@ public class AbstractRecordGroupingTest {
     private void testMatchThreshold_0() {
         List<Map<String, String>> matchingRule;
         Map<String, String> lnameRecords;
-        Map<String, String> accountRecords;
         groupingRecords.clear();
+        recordGroup = new AbstractRecordGrouping<String>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
+             */
+
+            @Override
+            protected void outputRow(String[] row) {
+                groupingRecords.add(row);
+
+            }
+
+            @Override
+            protected boolean isMaster(String col) {
+                return "true".equals(col); //$NON-NLS-1$
+            }
+
+            @Override
+            protected String incrementGroupSize(String oldGroupSize) {
+                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
+                return newGroupSize;
+            }
+
+            @Override
+            protected String[] createTYPEArray(int size) {
+                String[] arrays = new String[size];
+                return arrays;
+            }
+
+            @Override
+            protected String castAsType(Object objectValue) {
+                String column = String.valueOf(objectValue);
+                return column;
+            }
+
+            @Override
+            protected void outputRow(RichRecord row) {
+                // Empty implementation.
+            }
+
+        };
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
         matchingRule = new ArrayList<Map<String, String>>();
@@ -323,6 +423,7 @@ public class AbstractRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.0f));
         matchingRule.add(lnameRecords);
 

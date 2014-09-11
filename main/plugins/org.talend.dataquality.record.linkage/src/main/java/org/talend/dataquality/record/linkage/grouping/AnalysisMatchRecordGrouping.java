@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 /**
  * created by zshen on Aug 7, 2013 Detailled comment
@@ -31,7 +33,9 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
 
     List<Object[]> inputList = new ArrayList<Object[]>();
 
-    private static final String columnDelimiter = "|"; //$NON-NLS-1$
+    // Temporarily store the match result so that it can be iterated to be handled later after all of the records are
+    // computed.
+    private List<RichRecord> tmpMatchResult = new ArrayList<RichRecord>();
 
     private MatchGroupResultConsumer matchResultConsumer = null;
 
@@ -41,7 +45,6 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
         setIsOutputDistDetails(true);
         setSeperateOutput(Boolean.TRUE);
     }
-
 
     public void addRuleMatcher(List<Map<String, String>> ruleMatcherConvertResult) {
         addMatchRule(ruleMatcherConvertResult);
@@ -57,9 +60,16 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
         this.inputList = inputRows;
     }
 
+    /**
+     * 
+     * The initialize(); method must be called before run.
+     * 
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
     public void run() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
-        initialize();
         try {
             for (Object[] inputRow : inputList) {
                 String[] inputStrRow = new String[inputRow.length];
@@ -100,6 +110,56 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#end()
+     */
+    @Override
+    public void end() throws IOException, InterruptedException {
+        super.end();
+        if (matchResultConsumer.isKeepDataInMemory) {
+            for (RichRecord row : tmpMatchResult) {
+                // For swoosh algorithm, the GID can only be know after all of the records are computed.
+                out(row);
+            }
+        }
+        // Clear the GID map , no use anymore.
+        swooshGrouping.getOldGID2New().clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(org.talend.dataquality.record
+     * .linkage.grouping.swoosh.RichRecord)
+     */
+    @Override
+    protected void outputRow(RichRecord row) {
+        if (matchResultConsumer.isKeepDataInMemory) {
+            tmpMatchResult.add(row);
+        } else {
+            out(row);
+        }
+    }
+
+    /**
+     * DOC zhao Comment method "out".
+     * 
+     * @param row
+     */
+    private void out(RichRecord row) {
+        List<DQAttribute<?>> originRow = row.getOutputRow(swooshGrouping.getOldGID2New());
+        String[] strRow = new String[originRow.size()];
+        int idx = 0;
+        for (DQAttribute<?> attr : originRow) {
+            strRow[idx] = attr.getValue();
+            idx++;
+        }
+        outputRow(strRow);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#isMaster(java.lang.Object)
      */
     @Override
@@ -113,7 +173,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
      * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#modifyGroupSize(java.lang.Object)
      */
     @Override
-    protected String modifyGroupSize(String oldGroupSize) {
+    protected String incrementGroupSize(String oldGroupSize) {
         return String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
     }
 
@@ -133,7 +193,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
      * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#getCOLUMNFromObject(java.lang.Object)
      */
     @Override
-    protected String getTYPEFromObject(Object objectValue) {
+    protected String castAsType(Object objectValue) {
         return String.valueOf(objectValue);
     }
 

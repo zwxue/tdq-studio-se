@@ -48,7 +48,6 @@ import org.talend.core.IRepositoryContextService;
 import org.talend.core.database.EDatabase4DriverClassName;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
-import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -67,13 +66,11 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
-import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.utils.CloneConnectionUtils;
-import org.talend.core.model.utils.ContextParameterUtils;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -91,7 +88,6 @@ import org.talend.cwm.xml.TdXmlContent;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.EObjectHelper;
@@ -104,7 +100,6 @@ import org.talend.repository.ui.utils.ManagerConnection;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
@@ -223,9 +218,10 @@ public final class ConnectionUtils {
         ReturnCode connectionAvailable = new ReturnCode(false);
         connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
         if (!connectionAvailable.isOk()) {
+            log.error(connectionAvailable.getMessage());
             MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
                     Messages.getString("ConnectionUtils.checkConnFailTitle"),//$NON-NLS-1$
-                    Messages.getString("ConnectionUtils.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
+                    Messages.getString("ConnectionUtils.checkConnFailMsg"));//$NON-NLS-1$
             return false;
         }
         return true;
@@ -450,8 +446,8 @@ public final class ConnectionUtils {
      */
     public static ReturnCode checkGeneralJdbcJarFilePathDriverClassName(DatabaseConnection dbConn) {
         ReturnCode returnCode = new ReturnCode();
-        String driverClass = dbConn.getDriverClass();
-        String driverJarPath = dbConn.getDriverJarPath();
+        String driverClass = JavaSqlFactory.getDriverClass(dbConn);
+        String driverJarPath = JavaSqlFactory.getDriverJarPath(dbConn);
         if (driverClass == null || driverClass.trim().equals("")) { //$NON-NLS-1$
             returnCode.setOk(false);
             returnCode.setMessage(Messages.getString("ConnectionUtils.DriverClassEmpty")); //$NON-NLS-1$
@@ -1135,137 +1131,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC xqliu Comment method "setDriverClass".
-     * 
-     * @param conn
-     * @param driverClass
-     */
-    public static void setDriverClass(Connection conn, String driverClass) {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
-        if (dbConn != null) {
-            dbConn.setDriverClass(driverClass);
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "getServerName".
-     * 
-     * @param conn
-     * @return server name of the connection or null
-     */
-    public static String getServerName(Connection conn) {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
-        if (dbConn != null) {
-
-            String serverName = dbConn.getServerName();
-            if (dbConn.isContextMode()) {
-                serverName = getOriginalConntextValue(dbConn, serverName);
-            }
-            return serverName;
-        }
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
-        if (mdmConn != null) {
-            return mdmConn.getServer();
-        }
-        return null;
-    }
-
-    /**
-     * DOC xqliu Comment method "setServerName".
-     * 
-     * @param conn
-     * @param serverName
-     */
-    public static void setServerName(Connection conn, String serverName) {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
-        if (dbConn != null) {
-            dbConn.setServerName(serverName);
-        }
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
-        if (mdmConn != null) {
-            mdmConn.setServer(serverName);
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "getPort".
-     * 
-     * @param conn
-     * @return port of the connection or null
-     */
-    public static String getPort(Connection conn) {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
-        if (dbConn != null) {
-            String port = dbConn.getPort();
-            if (dbConn.isContextMode()) {
-                port = getOriginalConntextValue(dbConn, port);
-            }
-            return port;
-        }
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
-        if (mdmConn != null) {
-            return mdmConn.getPort();
-        }
-        return null;
-    }
-
-    /**
-     * DOC xqliu Comment method "setPort".
-     * 
-     * @param conn
-     * @param port
-     */
-    public static void setPort(Connection conn, String port) {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
-        if (dbConn != null) {
-            dbConn.setPort(port);
-        }
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
-        if (mdmConn != null) {
-            mdmConn.setPort(port);
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "getSID".
-     * 
-     * @param conn
-     * @return sid of the connection or null
-     */
-    public static String getSID(Connection conn) {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
-        if (dbConn != null) {
-            String sid = dbConn.getSID();
-            if (conn.isContextMode()) {
-                sid = getOriginalConntextValue(dbConn, sid);
-            }
-            return sid;
-        }
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
-        if (mdmConn != null) {
-            return mdmConn.getContext();
-        }
-        return null;
-    }
-
-    /**
-     * DOC xqliu Comment method "setSID".
-     * 
-     * @param conn
-     * @param sid
-     */
-    public static void setSID(Connection conn, String sid) {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
-        if (dbConn != null) {
-            dbConn.setSID(sid);
-        }
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
-        if (mdmConn != null) {
-            mdmConn.setContext(sid);
-        }
-    }
-
-    /**
      * DOC connection created by TOS need to fill the basic information for useing in TOP.<br>
      * 
      * @deprecated Not be useful anymore later, TOS should use the common filler API to create the metadata objects,
@@ -1410,8 +1275,8 @@ public final class ConnectionUtils {
         connectionParam.setDriverPath(((DatabaseConnection) conn).getDriverJarPath());
         connectionParam.setDriverClassName(JavaSqlFactory.getDriverClass(conn));
         connectionParam.setJdbcUrl(JavaSqlFactory.getURL(conn));
-        connectionParam.setHost(ConnectionUtils.getServerName(conn));
-        connectionParam.setPort(ConnectionUtils.getPort(conn));
+        connectionParam.setHost(JavaSqlFactory.getServerName(conn));
+        connectionParam.setPort(JavaSqlFactory.getPort(conn));
 
         if (conn instanceof DatabaseConnection) {
             connectionParam.setSqlTypeName(((DatabaseConnection) conn).getDatabaseType());
@@ -1431,7 +1296,7 @@ public final class ConnectionUtils {
         // additionally.
         // connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE,
         // DataProviderHelper.getUniverse(connection));
-        connectionParam.setDbName(ConnectionUtils.getSID(conn));
+        connectionParam.setDbName(JavaSqlFactory.getSID(conn));
         // MOD by zshen for bug 15314
         String retrieveAllMetadata = MetadataHelper.getRetrieveAllMetadata(conn);
         connectionParam.setRetrieveAllMetadata(retrieveAllMetadata == null ? true : new Boolean(retrieveAllMetadata)
@@ -1766,7 +1631,7 @@ public final class ConnectionUtils {
         if (element != null && element instanceof Connection) {
             if (element instanceof DatabaseConnection) {
                 DatabaseConnection dbConn = (DatabaseConnection) element;
-                String sid = getSID(dbConn);
+                String sid = JavaSqlFactory.getSID(dbConn);
                 if (sid != null && !"".equals(sid.trim())) { //$NON-NLS-1$
                     // MOD klliu bug 22900
                     TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.RETRIEVE_ALL,
@@ -1806,32 +1671,6 @@ public final class ConnectionUtils {
             }
         }
         return true;
-    }
-
-    /**
-     * Get the original value for context mode.
-     * 
-     * @param connection
-     * @param rawValue
-     * @return
-     */
-    public static String getOriginalConntextValue(Connection connection, String rawValue) {
-        if (rawValue == null) {
-            return PluginConstant.EMPTY_STRING;
-        }
-        String origValu = null;
-        if (connection != null && connection.isContextMode()) {
-            String contextName = connection.getContextName();
-            ContextType contextType = null;
-            ContextItem contextItem = ContextUtils.getContextItemById2(connection.getContextId());
-            if (contextName == null) {
-                contextName = contextItem.getDefaultContext();
-            }
-            contextType = ContextUtils.getContextTypeByName(contextItem, contextName, true);
-
-            origValu = ContextParameterUtils.getOriginalValue(contextType, rawValue);
-        }
-        return origValu == null ? rawValue : origValu;
     }
 
     /**

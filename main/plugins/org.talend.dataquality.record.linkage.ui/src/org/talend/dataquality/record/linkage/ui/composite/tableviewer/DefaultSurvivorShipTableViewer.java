@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.DefaultSurvivorshipLabelProvider;
@@ -40,6 +41,11 @@ import org.talend.dataquality.rules.RulesFactory;
  * 
  */
 public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<DefaultSurvivorshipDefinition> {
+
+    /**
+     * the weight for eache column in this TableViewer.
+     */
+    int[] weights = { 12, 10, 30 };
 
     /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
@@ -101,7 +107,7 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
      * (java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             {
@@ -161,6 +167,20 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
     @Override
     protected int getHeaderDisplayWeight() {
         return 12;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
+     * getHeaderDisplayWeight(int)
+     */
+    @Override
+    protected int getHeaderDisplayWeight(int index) {
+        if (index < weights.length) {
+            return weights[index];
+        }
+        return super.getHeaderDisplayWeight(index);
     }
 
     /*

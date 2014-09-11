@@ -98,8 +98,8 @@ public class AnalysisEditor extends SupportContextEditor {
     // Added TDQ-8787 2014-06-16 yyin
     private EventReceiver registerDynamicEvent = null;
 
-    private EventReceiver unRegisterDynamicEvent=null;
-    
+    private EventReceiver unRegisterDynamicEvent = null;
+
     private boolean isRefreshResultPage = false;
 
     /**
@@ -216,6 +216,11 @@ public class AnalysisEditor extends SupportContextEditor {
         if (masterPage != null && masterPage.isDirty()) {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
+            // reset the modified status of ContextManager according to the masterPage
+            if (contextManager instanceof JobContextManager) {
+                JobContextManager jobContextManager = (JobContextManager) contextManager;
+                jobContextManager.setModified(masterPage.isDirty());
+            }
         }
         setEditorObject(getMasterPage().getAnalysisRepNode());
         super.doSave(monitor);
@@ -271,6 +276,12 @@ public class AnalysisEditor extends SupportContextEditor {
         if (isRefreshResultPage) {
             resultPage.refresh(getMasterPage());
             isRefreshResultPage = false;
+        } else {
+            // Added TDQ-9241
+            if (resultPage != null) {
+                EventManager.getInstance().publish(resultPage.getAnalysisHandler().getAnalysis(),
+                        EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE, null);
+            }
         }
     }
 
@@ -465,18 +476,6 @@ public class AnalysisEditor extends SupportContextEditor {
         };
         EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
 
-        // register: refresh the dataprovider combobox when the name of the data provider is changed.
-        refreshDataProvider = new EventReceiver() {
-
-            @Override
-            public boolean handle(Object data) {
-                getMasterPage().reloadDataproviderAndFillConnCombo();
-                return true;
-            }
-        };
-        EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
-                refreshDataProvider);
-
         // register: reopen this editor after reload its depended connection
         reopenEditor = new EventReceiver() {
 
@@ -524,8 +523,12 @@ public class AnalysisEditor extends SupportContextEditor {
                         ((DynamicAnalysisMasterPage) masterPage).registerDynamicEvent();
                     } else {
                         // register result page
-                        if (resultPage != null && resultPage instanceof ColumnAnalysisResultPage) {
-                            ((ColumnAnalysisResultPage) resultPage).registerDynamicEvent();
+                        if (resultPage != null) {
+                            if (resultPage instanceof ColumnAnalysisResultPage) {
+                                ((ColumnAnalysisResultPage) resultPage).registerDynamicEvent();
+                            } else if (resultPage instanceof TableAnalysisResultPage) {
+                                ((TableAnalysisResultPage) resultPage).registerDynamicEvent();
+                            }
                         }
                     }
                     return true;
@@ -542,8 +545,12 @@ public class AnalysisEditor extends SupportContextEditor {
                         ((DynamicAnalysisMasterPage) masterPage).unRegisterDynamicEvent();
                     } else {
                         // register result page
-                        if (resultPage != null && resultPage instanceof ColumnAnalysisResultPage) {
-                            ((ColumnAnalysisResultPage) resultPage).unRegisterDynamicEvent();
+                        if (resultPage != null) {
+                            if (resultPage instanceof ColumnAnalysisResultPage) {
+                                ((ColumnAnalysisResultPage) resultPage).unRegisterDynamicEvent();
+                            } else if (resultPage instanceof TableAnalysisResultPage) {
+                                ((TableAnalysisResultPage) resultPage).unRegisterDynamicEvent();
+                            }
                         }
                     }
                     return true;
@@ -564,8 +571,6 @@ public class AnalysisEditor extends SupportContextEditor {
                 checkBeforeRunReceiver);
         EventManager.getInstance()
                 .unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
-        EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
-                refreshDataProvider);
         EventManager.getInstance().unRegister(getMasterPage().getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
                 reopenEditor);
 

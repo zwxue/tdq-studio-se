@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefini
 import org.talend.dq.dbms.DB2DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.dbms.HiveDbmsLanguage;
 import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -161,8 +162,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             }
             // no break
         case MONTH:
-            clause = concatWhereClause(clause, dbmsLanguage.extractMonth(this.columnName) + dbmsLanguage.equal()
-                    + getMonthCharacters(dateGrain, entity.getLabel()));
+            clause = concatWhereClause(clause,
+                    dbmsLanguage.extractMonth(this.columnName) + dbmsLanguage.equal() + getMonthCharacters(dateGrain, entity.getLabel()));
             // no break
         case QUARTER:
             if (clause.length() == 0) { // need quarter to identify the row
@@ -171,8 +172,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             }
             // no break
         case YEAR:
-            clause = concatWhereClause(clause, dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.equal()
-                    + getYearCharacters(entity.getLabel()));
+            clause = concatWhereClause(clause,
+                    dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.equal() + getYearCharacters(entity.getLabel()));
             break;
         case NONE:
         default:
@@ -191,14 +192,13 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
     private String createWhereClause(RangeRestriction rangeRestriction) {
         double max = Double.valueOf(DomainHelper.getMaxValue(rangeRestriction));
         double min = Double.valueOf(DomainHelper.getMinValue(rangeRestriction));
-        String whereClause = columnName + dbmsLanguage.greaterOrEqual() + min + dbmsLanguage.and() + columnName
-                + dbmsLanguage.less() + max;
+        String whereClause = columnName + dbmsLanguage.greaterOrEqual() + min + dbmsLanguage.and() + columnName + dbmsLanguage.less() + max;
         return whereClause;
     }
 
     private String getDefaultQuotedStatement(String quote) {
-        return entity.isLabelNull() ? dbmsLanguage.quote(this.columnName) + dbmsLanguage.isNull() : dbmsLanguage
-                .quote(this.columnName) + dbmsLanguage.equal() + quote + entity.getLabel() + quote;
+        return entity.isLabelNull() ? dbmsLanguage.quote(this.columnName) + dbmsLanguage.isNull() : dbmsLanguage.quote(this.columnName)
+                + dbmsLanguage.equal() + quote + entity.getLabel() + quote;
     }
 
     /**
@@ -308,6 +308,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof DB2DbmsLanguage) {
             value = entity.getKey();
         } else if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof SybaseASEDbmsLanguage) {
+            value = entity.getKey();
+        } else if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof HiveDbmsLanguage) {
             value = entity.getKey();
         } else {
             value = "'" + entity.getKey() + "'"; //$NON-NLS-1$ //$NON-NLS-2$

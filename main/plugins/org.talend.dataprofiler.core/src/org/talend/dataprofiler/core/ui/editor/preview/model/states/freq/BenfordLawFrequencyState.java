@@ -39,7 +39,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
 
     // 1~9,Numerically, the leading digits have the following distribution in Benford's law, add: 0, invalid with value
     // 0.0
-    private double[] formalValues = { 0.301, 0.176, 0.125, 0.097, 0.079, 0.067, 0.058, 0.051, 0.046, 0.0, 0.0 };
+    public static double[] formalValues = { 0.301, 0.176, 0.125, 0.097, 0.079, 0.067, 0.058, 0.051, 0.046, 0.0, 0.0 };
 
     private List<String> dotChartLabels = new ArrayList<String>();
 
@@ -100,6 +100,16 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
         // Clear the dot category label first, so that the new category label will be added into list.
         dotChartLabels.clear();
         CategoryDataset dataset = getDataset();
+        return createChart(dataset);
+    }
+
+    /**
+     * DOC yyin Comment method "createChart".
+     * 
+     * @param dataset
+     * @return
+     */
+    private JFreeChart createChart(CategoryDataset dataset) {
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         String categoryAxisLabel = DefaultMessagesImpl.getString("BenfordLawFrequencyState.AxisY"); //$NON-NLS-1$
         String axisXLabel = DefaultMessagesImpl.getString("BenfordLawFrequencyState.value"); //$NON-NLS-1$
@@ -109,6 +119,13 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
         JFreeChart lineChart = ChartDecorator.decorateBenfordLawChart(dataset, barChart, getTitle(), categoryAxisLabel,
                 dotChartLabels, formalValues);
         return lineChart;
+    }
+
+    @Override
+    public JFreeChart getChart(CategoryDataset dataset) {
+        // Clear the dot category label first, so that the new category label will be added into list.
+        dotChartLabels.clear();
+        return createChart(dataset);
     }
 
     /*

@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -25,9 +26,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -123,6 +126,14 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
     }
 
     public PieDataset getPieDataset() {
+        return null;
+    }
+
+    public JFreeChart getChart(CategoryDataset dataset) {
+        return TopChartFactory.createBarChart(StringUtils.EMPTY, dataset, false);
+    }
+
+    public List<JFreeChart> getChartList(List<DefaultCategoryDataset> datasets) {
         return null;
     }
 }

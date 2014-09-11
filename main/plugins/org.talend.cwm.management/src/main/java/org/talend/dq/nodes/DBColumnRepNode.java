@@ -32,8 +32,6 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class DBColumnRepNode extends ColumnRepNode {
 
-    private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
-
     /**
      * DOC klliu DBColumnRepNode constructor comment.
      * 
@@ -82,10 +80,6 @@ public class DBColumnRepNode extends ColumnRepNode {
                     (TdView) columnOwnerAsMetadataTable);
         }
         return returnViewObject;
-    }
-
-    public MetadataColumnRepositoryObject getMetadataColumnRepositoryObject() {
-        return this.metadataColumnRepositoryObject;
     }
 
     public TdColumn getTdColumn() {

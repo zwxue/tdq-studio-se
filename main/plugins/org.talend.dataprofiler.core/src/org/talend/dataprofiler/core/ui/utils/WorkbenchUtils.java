@@ -459,6 +459,7 @@ public final class WorkbenchUtils {
                     continue;
                 }
                 EventManager.getInstance().publish(mod, EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST, null);
+                EventManager.getInstance().publish(mod, EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL, null);
             }
         }
 

@@ -15,7 +15,12 @@ package org.talend.dataquality.record.linkage.record;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataquality.matchmerge.Record;
+import org.talend.dataquality.matchmerge.mfb.MFB.NonMatchResult;
+import org.talend.dataquality.matchmerge.mfb.MFBRecordMatcher;
+import org.talend.dataquality.matchmerge.mfb.MatchResult;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 /**
  * created by scorreia on Jan 9, 2013
@@ -136,4 +141,64 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
         return buf.toString();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.record.AbstractRecordMatcher#getMatchingWeight(org.talend.dataquality.
+     * matchmerge.Record, org.talend.dataquality.matchmerge.Record)
+     */
+    @Override
+    public MatchResult getMatchingWeight(Record record1, Record record2) {
+        MatchResult lastPositiveMatchResult = NonMatchResult.INSTANCE;
+        double matchingWeight = 0;
+        for (IRecordMatcher m : matchers) {
+            MFBRecordMatcher matcher = (MFBRecordMatcher) m;
+            MatchResult matchResult = matcher.getMatchingWeight(record1, record2);
+            double currentWeight = matchResult.getNormalizedConfidence();
+            if (currentWeight < matchingWeight) {
+                continue; // a better match already exists
+            }
+            // store last matcher
+            lastPositiveMatcher = matcher;
+            matchingWeight = currentWeight;
+            lastPositiveMatchResult = matchResult;
+
+            if (matchingWeight >= matcher.getRecordMatchThreshold()) {
+                // when there is a match with one matcher, no need to loop on all matchers
+                break;
+            }
+        }
+        if (record1 instanceof RichRecord) { // record 2 will then be instance of RichRecord class naturally.
+            // Set matching score and labeled attribute scores
+            RichRecord richRecord1 = (RichRecord) record1;
+            RichRecord richRecord2 = (RichRecord) record2;
+            richRecord1.setScore(matchingWeight);
+            richRecord2.setScore(matchingWeight);
+            if (lastPositiveMatchResult.isMatch()) {
+                String labeledAttributeMatchWeights = getLabeledAttributeMatchWeights();
+                richRecord1.setLabeledAttributeScores(labeledAttributeMatchWeights);
+                richRecord2.setLabeledAttributeScores(labeledAttributeMatchWeights);
+            }
+
+        }
+        return lastPositiveMatchResult;
+    }
+
+    /**
+     * Getter for lastPositiveMatcher.
+     * 
+     * @return the lastPositiveMatcher
+     */
+    public IRecordMatcher getLastPositiveMatcher() {
+        return this.lastPositiveMatcher;
+    }
+
+    /**
+     * Getter for matchers.
+     * 
+     * @return the matchers
+     */
+    public List<IRecordMatcher> getMatchers() {
+        return this.matchers;
+    }
 }

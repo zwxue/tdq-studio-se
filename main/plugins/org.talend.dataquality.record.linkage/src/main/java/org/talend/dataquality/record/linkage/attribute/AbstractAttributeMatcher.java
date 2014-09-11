@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.attribute;
 
+import org.apache.commons.lang.NotImplementedException;
+
 /**
  * Abstract matcher class for shared operations like blank string checking.
  */
@@ -20,6 +22,18 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
     private NullOption nullOption = NullOption.nullMatchNull;
 
     private String attributeName = null;
+
+    @Override
+    public float getThreshold() {
+        // TODO Default implementations
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public double getWeight() {
+        // TODO Default implementations
+        throw new NotImplementedException();
+    }
 
     /*
      * (non-Javadoc)
@@ -90,7 +104,7 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getAttributeName()
      */
     @Override
@@ -124,6 +138,16 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
         } else {
             this.nullOption = IAttributeMatcher.NullOption.nullMatchNull;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#isDummyMatcher()
+     */
+    @Override
+    public boolean isDummyMatcher() {
+        return false;
     }
 
 }

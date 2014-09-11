@@ -6,30 +6,36 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.algorithms.AlgoUtils;
+import org.talend.commons.MapDB.utils.AbstractDB;
+import org.talend.commons.MapDB.utils.DBMap;
+import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.resource.ResourceManager;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Upper Quartile Indicator</b></em>'. <!--
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements UpperQuartileIndicator {
 
     private static Logger log = Logger.getLogger(UpperQuartileIndicatorImpl.class);
 
-    private TreeMap<Object, Long> frequenceTable = new TreeMap<Object, Long>();
-    
+    private Map<Object, Long> frequenceTable = null;
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected UpperQuartileIndicatorImpl() {
@@ -37,7 +43,21 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
     }
 
     /**
+     * Create a new DBMap
+     * 
+     * @return
+     */
+    private Map<Object, Long> initValueForDBMap(String dbName) {
+        if (saveTempDataToFile) {
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+        } else {
+            return new TreeMap<Object, Long>();
+        }
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -95,9 +115,16 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
 
     @Override
     public boolean reset() {
-        this.computed = COMPUTED_EDEFAULT; 
+        this.computed = COMPUTED_EDEFAULT;
         this.setValue(VALUE_EDEFAULT);
-        this.frequenceTable.clear();
+        if (saveTempDataToFile) {
+            if (frequenceTable != null) {
+                ((DBMap<Object, Long>) frequenceTable).clear();
+            }
+            frequenceTable = initValueForDBMap(StandardDBName.computeProcess.name());
+        } else {
+            this.frequenceTable.clear();
+        }
         return super.reset();
     }
 
@@ -112,6 +139,24 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
             this.setDatatype(javaType);
         }
         return super.finalizeComputation();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getMapDB(java.lang.String)
+     */
+    @Override
+    public AbstractDB getMapDB(String dbName) {
+        if (saveTempDataToFile) {
+            if (StandardDBName.computeProcess.name().equals(dbName) && frequenceTable != null
+                    && !((DBMap<Object, Long>) frequenceTable).isClosed()) {
+                return (DBMap<Object, Long>) frequenceTable;
+            }
+            return ((DBMap<Object, Long>) initValueForDBMap(StandardDBName.computeProcess.name()));
+        } else {
+            return super.getMapDB(dbName);
+        }
     }
 
 } // UpperQuartileIndicatorImpl

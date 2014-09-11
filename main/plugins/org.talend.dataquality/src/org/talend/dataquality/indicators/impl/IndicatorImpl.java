@@ -6,8 +6,10 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -19,6 +21,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.talend.commons.MapDB.utils.AbstractDB;
+import org.talend.commons.MapDB.utils.DBMap;
+import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -30,6 +35,7 @@ import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.JoinElement;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -64,6 +70,16 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     private static Logger log = Logger.getLogger(IndicatorImpl.class);
+
+    /**
+     * Decide whether save temp data to file
+     */
+    public boolean saveTempDataToFile = true;
+
+    /**
+     * store drill down rows.
+     */
+    public Map<Object, List<Object>> drillDownMap = null;
 
     /**
      * The default value of the '{@link #getCount() <em>Count</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -696,6 +712,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = false;
         if (data == null) {
             nullCount++;
         }
@@ -712,7 +729,30 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public boolean reset() {
         count = COUNT_EDEFAULT;
         nullCount = NULL_COUNT_EDEFAULT;
+        // for MapDB init
+        clearDrillDownMap();
         return true;
+    }
+
+    /**
+     * DOC talend Comment method "clearDrillDownMap".
+     */
+    protected void clearDrillDownMap() {
+        if (saveTempDataToFile) {
+            if (drillDownMap != null) {
+                drillDownMap.clear();
+            }
+            drillDownMap = initValueForDBMap(StandardDBName.drillDown.name());
+        }
+    }
+
+    /**
+     * Create a new DBMap
+     * 
+     * @return
+     */
+    private Map<Object, List<Object>> initValueForDBMap(String dbName) {
+        return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
     }
 
     /**
@@ -1204,6 +1244,74 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         result.append(storeData);
         result.append(')');
         return result.toString();
+    }
+
+    /**
+     * Getter for saveTempDataToFile.
+     * 
+     * @return the saveTempDataToFile
+     */
+    @Override
+    public boolean isSaveTempDataToFile() {
+        return this.saveTempDataToFile;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.Indicator#getMapDB(java.lang.String)
+     * 
+     * Get Map for MapDB by spical dbName
+     * 
+     * @return null when current is not support MapDB
+     */
+    @Override
+    public AbstractDB getMapDB(String dbName) {
+        if (saveTempDataToFile) {
+            if (StandardDBName.drillDown.name().equals(dbName) && drillDownMap != null
+                    && !((DBMap<Object, List<Object>>) drillDownMap).isClosed()) {
+                return (DBMap<Object, List<Object>>) drillDownMap;
+            }
+            return ((DBMap<Object, List<Object>>) initValueForDBMap(dbName));
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.DataValidation#isValid(java.lang.Object)
+     */
+    @Override
+    public boolean isValid(Object inputData) {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.Indicator#handleDrillDownData(java.lang.Object, java.lang.Object, int,
+     * int, java.lang.String)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
+            String currentColumnName) {
+        List<Object> rowData = drillDownMap.get(count);
+        if (rowData == null) {
+            rowData = new ArrayList<Object>();
+            drillDownMap.put(count, rowData);
+        }
+        rowData.add(currentObject);
+    }
+
+    /**
+     * Sets the saveTempDataToFile.
+     * 
+     * @param saveTempDataToFile the saveTempDataToFile to set
+     */
+    @Override
+    public void setSaveTempDataToFile(boolean saveTempDataToFile) {
+        this.saveTempDataToFile = saveTempDataToFile;
     }
 
 } // IndicatorImpl

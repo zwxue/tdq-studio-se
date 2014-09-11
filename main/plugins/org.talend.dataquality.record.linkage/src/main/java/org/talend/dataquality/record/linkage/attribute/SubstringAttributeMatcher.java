@@ -102,4 +102,24 @@ public class SubstringAttributeMatcher implements IAttributeMatcher {
     public void setAttributeName(String name) {
         delegate.setAttributeName(name);
     }
+
+    @Override
+    public float getThreshold() {
+        return delegate.getThreshold();
+    }
+
+    @Override
+    public double getWeight() {
+        return delegate.getWeight();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#isDummyMatcher()
+     */
+    @Override
+    public boolean isDummyMatcher() {
+        return false;
+    }
 }

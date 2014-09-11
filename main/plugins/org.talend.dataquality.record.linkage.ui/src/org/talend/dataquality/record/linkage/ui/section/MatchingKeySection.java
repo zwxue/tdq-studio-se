@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -45,8 +46,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.types.JavaTypesManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.KeyDefinitionTableViewerSorter;
@@ -54,11 +58,13 @@ import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
+import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -73,7 +79,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     private final String SECTION_NAME = MatchAnalysisConstant.MATCHING_KEY_SECTION_NAME;
 
-    private CTabFolder ruleFolder;
+    protected CTabFolder ruleFolder;
 
     private static final Image ADD_IMG = ImageLib.getImage(ImageLib.ADD_ACTION);
 
@@ -120,6 +126,78 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         GridData gridData = new GridData(GridData.FILL_BOTH);
         parent.setLayoutData(gridData);
 
+        createRuleFolder(parent);
+
+        // ADD msjian TDQ-8090: add a edit button
+        Composite com = toolkit.createComposite(ruleFolder);
+        GridLayout comTableLayout = new GridLayout(2, Boolean.TRUE);
+        com.setLayout(comTableLayout);
+
+        createEditButton(com);
+
+        createAddButton(com);
+
+        ruleFolder.setTopRight(com);
+        // TDQ-8090~
+
+        initMatchRuleTabs();
+
+        createGroupQualityThreshold(parent);
+
+        return parent;
+    }
+
+    /**
+     * DOC yyin Comment method "createAddButton".
+     * 
+     * @param com
+     */
+    protected void createAddButton(Composite com) {
+        Button addButton = new Button(com, SWT.FLAT | SWT.CENTER);
+        addButton.setImage(ADD_IMG);
+        addButton.setToolTipText(DefaultMessagesImpl.getString("MatchingKeySection.Add_rule_hint")); //$NON-NLS-1$
+        addButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                addNewMatchRule();
+            }
+
+        });
+    }
+
+    /**
+     * DOC yyin Comment method "createEditButton".
+     * 
+     * @param com
+     */
+    protected void createEditButton(Composite com) {
+        Button editButton = new Button(com, SWT.FLAT | SWT.CENTER);
+        editButton.setImage(EDIT_IMG);
+        editButton.setToolTipText(DefaultMessagesImpl.getString("EditSortMatchRuleNamesDialog.Title")); //$NON-NLS-1$
+        editButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                List<MatchRule> matchRuleList = getMatchRuleList();
+                EditSortMatchRuleNamesDialog dialog = new EditSortMatchRuleNamesDialog(Display.getCurrent().getActiveShell(),
+                        matchRuleList);
+                if (dialog.open() == Window.OK) {
+                    matchRuleList.clear();
+                    matchRuleList.addAll(dialog.getResultMatchRuleList());
+                    redrawnSubTableContent();
+                    listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+                }
+            }
+        });
+    }
+
+    /**
+     * DOC yyin Comment method "createRuleFolder".
+     * 
+     * @param parent
+     */
+    protected void createRuleFolder(Composite parent) {
         ruleFolder = new CTabFolder(parent, SWT.MULTI | SWT.BORDER);
         ruleFolder.setRenderer(new MatchRuleCTabFolderRenderer(ruleFolder));
         ruleFolder.setMaximizeVisible(false);
@@ -152,54 +230,16 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             }
 
         });
+    }
 
-        // ADD msjian TDQ-8090: add a edit button
-        Composite com = toolkit.createComposite(ruleFolder);
-        GridLayout comTableLayout = new GridLayout(2, Boolean.TRUE);
-        com.setLayout(comTableLayout);
-
-        Button editButton = new Button(com, SWT.FLAT | SWT.CENTER);
-        editButton.setImage(EDIT_IMG);
-        editButton.setToolTipText(DefaultMessagesImpl.getString("EditSortMatchRuleNamesDialog.Title")); //$NON-NLS-1$
-        editButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                List<MatchRule> matchRuleList = getMatchRuleList();
-                EditSortMatchRuleNamesDialog dialog = new EditSortMatchRuleNamesDialog(Display.getCurrent().getActiveShell(),
-                        matchRuleList);
-                if (dialog.open() == Window.OK) {
-                    matchRuleList.clear();
-                    matchRuleList.addAll(dialog.getResultMatchRuleList());
-                    redrawnSubTableContent();
-                    listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
-                }
-            }
-        });
-
-        Button addButton = new Button(com, SWT.FLAT | SWT.CENTER);
-        addButton.setImage(ADD_IMG);
-        addButton.setToolTipText(DefaultMessagesImpl.getString("MatchingKeySection.Add_rule_hint")); //$NON-NLS-1$
-        addButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                MatchRule newMatchRule = getNewMatchRule();
-                addRuleTab(true, newMatchRule);
-                addMatchRuleToAnalysis(newMatchRule);
-                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
-            }
-
-        });
-
-        ruleFolder.setTopRight(com);
-        // TDQ-8090~
-
-        initMatchRuleTabs();
-
-        createGroupQualityThreshold(parent);
-
-        return parent;
+    /**
+     * add a new match rule when the user click "+" button.
+     */
+    protected void addNewMatchRule() {
+        MatchRule newMatchRule = getNewMatchRule();
+        addRuleTab(true, newMatchRule);
+        addMatchRuleToAnalysis(newMatchRule);
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
     }
 
     /*
@@ -261,10 +301,8 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         matchRules.add(newMatchRule);
     }
 
-    private void deleteMatchRuleTab(CTabItem tabItem) {
-        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) tabItem
-                .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
-        MatchRule matchRule = matchRuleTableComp.getMatchRule();
+    protected void deleteMatchRuleTab(CTabItem tabItem) {
+        MatchRule matchRule = getMatchRule(tabItem);
         // Remove it from anaysis.
         boolean removed = getMatchRuleList().remove(matchRule);
         if (removed) {
@@ -272,6 +310,18 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             fireSwitchRuleTabEvent();
         }
 
+    }
+
+    /**
+     * DOC zhao Comment method "getMatchRule".
+     * 
+     * @param tabItem
+     * @return
+     */
+    protected MatchRule getMatchRule(CTabItem tabItem) {
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getMatchRuleComposite(tabItem);
+        MatchRule matchRule = matchRuleTableComp.getMatchRule();
+        return matchRule;
     }
 
     /**
@@ -320,11 +370,11 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      * @param column
      */
     public void createMatchKeyFromCurrentMatchRule(String column) {
-        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
-        matchRuleTableComp.addKeyDefinition(column, getCurrentMatchRuleTableComposite().getMatchRule().getMatchKeys());
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getCurrentMatchRuleTableComposite();
+        matchRuleTableComp.addKeyDefinition(column, matchRuleTableComp.getMatchRule().getMatchKeys());
     }
 
-    protected MatchRuleTableComposite getCurrentMatchRuleTableComposite() {
+    protected AbsMatchAnalysisTableComposite<?> getCurrentMatchRuleTableComposite() {
         CTabItem currentTabItem = ruleFolder.getSelection();
         if (currentTabItem == null) {
             log.warn(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
@@ -333,9 +383,18 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             addMatchRuleToAnalysis(newMatchRule);
             currentTabItem = ruleFolder.getSelection();
         }
-        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) currentTabItem
-                .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+        AbsMatchAnalysisTableComposite<?> matchRuleTableComp = getMatchRuleComposite(currentTabItem);
         return matchRuleTableComp;
+    }
+
+    /**
+     * DOC zhao Comment method "getMatchRuleComposite".
+     * 
+     * @param currentTabItem
+     * @return
+     */
+    public AbsMatchAnalysisTableComposite<?> getMatchRuleComposite(CTabItem currentTabItem) {
+        return (AbsMatchAnalysisTableComposite<?>) currentTabItem.getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
     }
 
     /**
@@ -345,7 +404,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      * @param column
      */
     public void removeMatchKeyFromCurrentMatchRule(String column) {
-        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getCurrentMatchRuleTableComposite();
         matchRuleTableComp.removeKeyDefinition(column, matchRuleTableComp.getMatchRule().getMatchKeys());
     }
 
@@ -356,7 +415,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      * @param column
      */
     public void removeMatchKeyFromCurrentMatchRule(MatchKeyDefinition columnkey) {
-        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getCurrentMatchRuleTableComposite();
         matchRuleTableComp.removeKeyDefinition(columnkey, matchRuleTableComp.getMatchRule().getMatchKeys());
     }
 
@@ -379,17 +438,17 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         gridLayout.marginHeight = 0;
         ruleComp.setLayout(gridLayout);
 
-        MatchRuleTableComposite matchRuleComposite = createTableComposite(ruleComp, matchRule);
+        AbsMatchAnalysisTableComposite<?> matchRuleComposite = createTableComposite(ruleComp, matchRule);
         matchRuleComposite.addPropertyChangeListener(this);
         matchRuleComposite.setAddColumn(isAddColumn());
         if (columnMap != null) {
-            ArrayList<String> columnList = new ArrayList<String>();
+            ArrayList<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
             columnList.addAll(columnMap.keySet());
             matchRuleComposite.setColumnList(columnList);
         }
         matchRuleComposite.createContent();
-        matchRuleComposite.serViewerSorter(new KeyDefinitionTableViewerSorter<MatchKeyDefinition>(matchRule.getMatchKeys()));
-        matchRuleComposite.setInput(matchRule);
+        setInput(matchRule, matchRuleComposite);
+        matchRuleComposite.serViewerSorter(getTableViewerSorter(matchRule));
 
         matchRuleComposite.setLayout(gridLayout);
         matchRuleComposite.setLayoutData(data);
@@ -400,7 +459,27 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         ruleFolder.setSelection(tabItem);
     }
 
-    protected MatchRuleTableComposite createTableComposite(Composite parent, MatchRule matchRule) {
+    /**
+     * DOC zhao Comment method "getTableViewerSorter".
+     * 
+     * @param matchRule
+     * @return
+     */
+    protected KeyDefinitionTableViewerSorter<?> getTableViewerSorter(MatchRule matchRule) {
+        return new KeyDefinitionTableViewerSorter<MatchKeyDefinition>(matchRule.getMatchKeys());
+    }
+
+    /**
+     * DOC zhao Comment method "setInput".
+     * 
+     * @param matchRule
+     * @param matchRuleComposite
+     */
+    protected void setInput(MatchRule matchRule, AbsMatchAnalysisTableComposite<?> matchRuleComposite) {
+        ((MatchRuleTableComposite) matchRuleComposite).setInput(matchRule.getMatchKeys());
+    }
+
+    protected AbsMatchAnalysisTableComposite<?> createTableComposite(Composite parent, MatchRule matchRule) {
         return new MatchRuleTableComposite(parent, SWT.NO_FOCUS, matchRule);
     }
 
@@ -433,9 +512,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         GridData gridData = new GridData(GridData.FILL_BOTH);
         chartComposite.setLayoutData(gridData);
         matchRuleChartComp = new MatchRuleDataChart(chartComposite, new HashMap<Object, Long>());
-
         createHideGroupComposite(chartComposite);
-
     }
 
     @Override
@@ -487,13 +564,12 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         return isAddded;
     }
 
-    private MatchRule getCurrentMatchRule() throws Exception {
+    protected MatchRule getCurrentMatchRule() throws Exception {
         CTabItem currentTabItem = ruleFolder.getSelection();
         if (currentTabItem == null) {
             throw new Exception(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
         }
-        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) currentTabItem
-                .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getMatchRuleComposite(currentTabItem);
         MatchRule matchRule = matchRuleTableComp.getMatchRule();
         return matchRule;
     }
@@ -558,23 +634,24 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void moveDownTableItem() {
-        ISelection selectItems = getCurrentMatchRuleTableComposite().getSelectItems();
+        AbsMatchAnalysisTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        ISelection selectItems = matchRuleTableComp.getSelectItems();
         if (selectItems instanceof StructuredSelection) {
             if (selectItems.isEmpty()) {
                 return;
             }
-            List<MatchKeyDefinition> currentElements = getCurrentMatchRuleTableComposite().getMatchRule().getMatchKeys();
-            List<MatchKeyDefinition> blockKeyDefinitionlist = ((StructuredSelection) selectItems).toList();
+            List<?> currentElements = getCurrentTabDefinitions();
+            List<?> blockKeyDefinitionlist = ((StructuredSelection) selectItems).toList();
             for (int index = blockKeyDefinitionlist.size() - 1; 0 <= index; index--) {
                 if (!isSameWithCurrentModel(currentElements.get(currentElements.size() - blockKeyDefinitionlist.size() + index),
                         blockKeyDefinitionlist.get(index))) {
                     continue;
                 }
-                MatchKeyDefinition next = blockKeyDefinitionlist.get(index);
-                getCurrentMatchRuleTableComposite().moveDownKeyDefinition(next, currentElements);
+                matchRuleTableComp.moveDownKeyDefinition(blockKeyDefinitionlist.get(index), currentElements);
             }
-            getCurrentMatchRuleTableComposite().selectAllItem(((StructuredSelection) selectItems).toList());
+            matchRuleTableComp.selectAllItem(((StructuredSelection) selectItems).toList());
         }
     }
 
@@ -584,32 +661,40 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void moveUpTableItem() {
-        ISelection selectItems = getCurrentMatchRuleTableComposite().getSelectItems();
+        AbsMatchAnalysisTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        ISelection selectItems = matchRuleTableComp.getSelectItems();
         if (selectItems instanceof StructuredSelection) {
             if (selectItems.isEmpty()) {
                 return;
             }
-            List<MatchKeyDefinition> currentElements = getCurrentMatchRuleTableComposite().getMatchRule().getMatchKeys();
-            List<MatchKeyDefinition> blockKeyDefinitionlist = ((StructuredSelection) selectItems).toList();
-            for (int index = 0; index < blockKeyDefinitionlist.size(); index++) {
-                if (!isSameWithCurrentModel(currentElements.get(index), blockKeyDefinitionlist.get(index))) {
+            List<?> currentElements = getCurrentTabDefinitions();
+            List<?> KeyDefinitionlist = ((StructuredSelection) selectItems).toList();
+            for (int index = 0; index < KeyDefinitionlist.size(); index++) {
+                if (!isSameWithCurrentModel(currentElements.get(index), KeyDefinitionlist.get(index))) {
                     continue;
                 }
-                MatchKeyDefinition next = blockKeyDefinitionlist.get(index);
-                getCurrentMatchRuleTableComposite().moveUpKeyDefinition(next, currentElements);
+                matchRuleTableComp.moveUpKeyDefinition(KeyDefinitionlist.get(index), currentElements);
             }
-            getCurrentMatchRuleTableComposite().selectAllItem(((StructuredSelection) selectItems).toList());
+            matchRuleTableComp.selectAllItem(((StructuredSelection) selectItems).toList());
         }
+    }
+
+    /**
+     * DOC zhao Comment method "getCurrentTabDefinitions".
+     * 
+     * @return
+     */
+    protected List<?> getCurrentTabDefinitions() {
+        return getMatchRule(ruleFolder.getSelection()).getMatchKeys();
     }
 
     public void removeKeyFromAllTab(String column) {
         CTabItem[] tabItems = ruleFolder.getItems();
         if (tabItems != null && tabItems.length > 0) {
             for (CTabItem oneTab : tabItems) {
-                MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) oneTab
-                        .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
-                matchRuleTableComp.removeKeyDefinition(column, matchRuleTableComp.getMatchRule().getMatchKeys());
+                remoteKeyDefinition(column, oneTab);
                 checkAndRemoveEmptyMatchRule(oneTab);
             }
             this.redrawnSubTableContent();
@@ -619,11 +704,21 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     /**
+     * DOC zhao Comment method "remoteKeyDefinition".
+     * 
+     * @param column
+     * @param oneTab
+     */
+    protected void remoteKeyDefinition(String column, CTabItem oneTab) {
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getMatchRuleComposite(oneTab);
+        matchRuleTableComp.removeKeyDefinition(column, matchRuleTableComp.getMatchRule().getMatchKeys());
+    }
+
+    /**
      * check and remove empty match rule
      */
-    private void checkAndRemoveEmptyMatchRule(CTabItem theTab) {
-        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) theTab
-                .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+    protected void checkAndRemoveEmptyMatchRule(CTabItem theTab) {
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getMatchRuleComposite(theTab);
         EList<MatchKeyDefinition> matchKeys = matchRuleTableComp.getMatchRule().getMatchKeys();
         if (matchKeys.size() <= 0) {
             getMatchRuleList().remove(matchRuleTableComp.getMatchRule());
@@ -635,29 +730,34 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      * if overwrite: need to delete all current tabs, and create the tab according to the parameter:matchRule else: only
      * add the tab in the parameter matchrule, to the current matchrule.
      * 
-     * @param matchRule
+     * @param matchRuleDefinition
      * @param overwrite
      */
-    public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
+    public void importMatchRule(MatchRuleDefinition matchRuleDefinition, boolean overwrite) {
         if (overwrite) {
             // delete all tab in UI
             CTabItem[] tabItems = ruleFolder.getItems();
             if (tabItems != null && tabItems.length > 0) {
                 for (CTabItem oneTab : tabItems) {
-                    MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) oneTab
-                            .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+                    @SuppressWarnings("rawtypes")
+                    AbsMatchAnalysisTableComposite matchRuleTableComp = getMatchRuleComposite(oneTab);
                     matchRuleTableComp.dispose();
                     oneTab.dispose();
                 }
             }
+            // clear all survivorship keys
+            getMatchRuleDefinition().getSurvivorshipKeys().clear();
             // clear all match rules in matchrule definition
             getMatchRuleDefinition().getMatchRules().clear();
             // overwrite the threshold
-            groupQualityThresholdText.setText(String.valueOf(matchRule.getMatchGroupQualityThreshold()));
-            // getMatchRuleDefinition().setMatchGroupQualityThreshold(matchRule.getMatchGroupQualityThreshold());
+            groupQualityThresholdText.setText(String.valueOf(matchRuleDefinition.getMatchGroupQualityThreshold()));
+        }
+        // import survivorship keys
+        for (SurvivorshipKeyDefinition skd : matchRuleDefinition.getSurvivorshipKeys()) {
+            getMatchRuleDefinition().getSurvivorshipKeys().add(EcoreUtil.copy(skd));
         }
         // create the tab from the parameter:matchRule
-        for (MatchRule oneMatchRule : matchRule.getMatchRules()) {
+        for (MatchRule oneMatchRule : matchRuleDefinition.getMatchRules()) {
             MatchRule matchRule2 = createMatchRuleByCopy(oneMatchRule);
             // MOD msjian TDQ-8484: set the name of the match rule by the old name
             matchRule2.setName(oneMatchRule.getName());
@@ -701,18 +801,29 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             returnCode.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$
             return returnCode;
         }
-        for (MatchRule CurrentRule : getMatchRuleList()) {
-            EList<MatchKeyDefinition> matchKeys = CurrentRule.getMatchKeys();
+        for (MatchRule currentRule : getMatchRuleList()) {
+            EList<MatchKeyDefinition> matchKeys = currentRule.getMatchKeys();
             for (MatchKeyDefinition mdk : matchKeys) {
                 String currentName = mdk.getName();
                 if (currentName.equals(StringUtils.EMPTY)) {
-                    returnCode
-                            .setMessage(DefaultMessagesImpl.getString("BlockingKeySection.emptyKeys.message", getSectionName())); //$NON-NLS-1$
+                    returnCode.setMessage(DefaultMessagesImpl.getString(
+                            "BlockingKeySection.emptyKeys.message", getSectionName() + " , " + currentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
                     return returnCode;
                 }
                 if (checkColumnNameIsEmpty(mdk)) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
-                            "BlockingKeySection.emptyColumn.message", getSectionName())); //$NON-NLS-1$
+                            "BlockingKeySection.emptyColumn.message", getSectionName() + " , " + currentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
+                    return returnCode;
+                }
+                if (mdk.getConfidenceWeight() <= 0) {
+                    returnCode.setMessage(DefaultMessagesImpl.getString(
+                            "BlockingKeySection.invalidConfidenceWeight.message", getSectionName())); //$NON-NLS-1$
+                    return returnCode;
+                }
+                ReturnCode checkSurvivorshipFunction = checkSurvivorshipFunction(mdk, this.getMatchRuleDefinition());
+                if (!checkSurvivorshipFunction.isOk()) {
+                    returnCode.setMessage(DefaultMessagesImpl.getString("MatchingKeySection.invalidSurvivorshipFunction", //$NON-NLS-1$
+                            getSectionName(), checkSurvivorshipFunction.getMessage()));
                     return returnCode;
                 }
                 boolean currentNameIsDuplicate = false;
@@ -728,7 +839,8 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             }
         }
         if (duplicateNameList.size() > 0) {
-            returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.duplicateKeys.message", getSectionName())); //$NON-NLS-1$
+            returnCode.setMessage(DefaultMessagesImpl.getString(
+                    "BlockingKeySection.duplicateKeys.message", getSectionName() + "--" + duplicateNameList.get(0))); //$NON-NLS-1$
             return returnCode;
         } else {
             returnCode.setOk(true);
@@ -736,7 +848,70 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
     }
 
-    private boolean hasMatchKey(boolean isCareAboutFirstMatchRuleCase) {
+    /**
+     * check the survivorship function fit the column or not.
+     * 
+     * @param mkDef
+     * @param mrDef
+     * @return
+     */
+    private ReturnCode checkSurvivorshipFunction(MatchKeyDefinition mkDef, MatchRuleDefinition mrDef) {
+        ReturnCode rc = new ReturnCode(true);
+        EList<SurvivorshipKeyDefinition> survivorshipKeys = mrDef.getSurvivorshipKeys();
+        for (SurvivorshipKeyDefinition skDef : survivorshipKeys) {
+            if (StringUtils.equals(mkDef.getName(), skDef.getName())) {
+                MetadataColumn metadataColumn = getMetadataColumnByName(skDef.getColumn());
+                if (metadataColumn != null) {
+                    SurvivorShipAlgorithmEnum survivorShipAlgorithm = SurvivorShipAlgorithmEnum.getTypeBySavedValue(skDef
+                            .getFunction().getAlgorithmType());
+                    switch (survivorShipAlgorithm) {
+                    case LARGEST:
+                    case SMALLEST:
+                        if (!JavaTypesManager.isNumber(metadataColumn.getTalendType())) {
+                            rc.setOk(false);
+                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
+                            return rc;
+                        }
+                        break;
+                    case LONGEST:
+                    case SHORTEST:
+                        if (!JavaTypesManager.isString(metadataColumn.getTalendType())) {
+                            rc.setOk(false);
+                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
+                            return rc;
+                        }
+                        break;
+                    case PREFER_TRUE:
+                    case PREFER_FALSE:
+                        if (!JavaTypesManager.isBoolean(metadataColumn.getTalendType())) {
+                            rc.setOk(false);
+                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
+                            return rc;
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        return rc;
+    }
+
+    private MetadataColumn getMetadataColumnByName(String columnName) {
+        if (columnMap != null) {
+            Set<MetadataColumn> keySet = columnMap.keySet();
+            for (MetadataColumn col : keySet) {
+                if (col != null && StringUtils.equals(columnName, col.getName())) {
+                    return col;
+                }
+            }
+        }
+        return null;
+    }
+
+    protected boolean hasMatchKey(boolean isCareAboutFirstMatchRuleCase) {
         List<MatchRule> matchRules = getMatchRuleDefinition().getMatchRules();
         if (isCareAboutFirstMatchRuleCase) {// no match rule tab case
             if (matchRules == null || matchRules.size() == 0) {

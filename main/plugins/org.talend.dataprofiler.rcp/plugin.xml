@@ -855,6 +855,22 @@
             uripath="platform:/plugin/org.talend.libraries.apache.http/lib/httpcore-4.1.2.jar">
       </libraryNeeded>
       <libraryNeeded
+            context="Impala wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="httpclient-4.2.5.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.http/lib/httpclient-4.2.5.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Impala wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="httpcore-4.2.5.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.http/lib/httpcore-4.2.5.jar">
+      </libraryNeeded>
+      <libraryNeeded
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"

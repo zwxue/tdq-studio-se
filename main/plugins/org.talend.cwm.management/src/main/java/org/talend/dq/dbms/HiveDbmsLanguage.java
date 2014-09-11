@@ -16,7 +16,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.utils.ProductVersion;
+import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -143,4 +146,44 @@ public class HiveDbmsLanguage extends DbmsLanguage {
     public String getQueryColumnsWithPrefix(TdColumn[] columns) {
         return getQueryColumns(columns);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#castColumn4ColumnAnalysisSqlExecutor(org.talend.dataquality.indicators.Indicator,
+     * org.talend.cwm.relational.TdColumn, java.lang.String)
+     */
+    @Override
+    public String castColumn4ColumnAnalysisSqlExecutor(Indicator indicator, TdColumn tdColumn, String colName) {
+        if (indicator instanceof BenfordLawFrequencyIndicator) {
+            int javaType = tdColumn.getSqlDataType().getJavaDataType();
+            if (Java2SqlType.isNumbericInSQL(javaType)) {
+                return castColumnNameToChar(colName);
+            }
+        }
+        return super.castColumn4ColumnAnalysisSqlExecutor(indicator, tdColumn, colName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#castColumnNameToChar(java.lang.String)
+     */
+    @Override
+    public String castColumnNameToChar(String columnName) {
+        // for impala, int type can not be used for string method,
+        return "CAST(" + columnName + " AS String)";//$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
+     */
+    @Override
+    public String getInvalidClauseBenFord(String columnName) {
+        // for impala, int type can not be used for REGEXP method
+        return super.getInvalidClauseBenFord(castColumnNameToChar(columnName));
+    }
+
 }

@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.utils.MatchRuleColorRegistry;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
@@ -173,7 +174,12 @@ public class DataSampleTable {
             if (currentGrpSize.length() > 0) {
                 int grpSize = Integer.valueOf(currentGrpSize);
                 if (grpSize > 0) {
-                    this.rowOfGIDWithColor.put((String) row[sortState.getGrpSizeIndex() - 1], grpSize);
+                    String groupId = (String) row[sortState.getGrpSizeIndex() - 1];
+                    String[] gids = StringUtils.splitByWholeSeparatorPreserveAllTokens(groupId, PluginConstant.COMMA_STRING);
+                    for (String gid : gids) {
+                        this.rowOfGIDWithColor.put(gid, grpSize);
+                    }
+                    this.rowOfGIDWithColor.put(groupId, grpSize);
                 }
             }
         }
@@ -538,8 +544,12 @@ public class DataSampleTable {
             super.paintCell(cell, gc, bounds, configRegistry);
             // when the GID changed, draw a line
             if (currentGID != null) {
-                // only draw a line when the group with same size neighbour with each other
-                if (!StringUtils.equals(previousGID, currentGID) && isEqualGroupSize(previousGID, currentGID)) {
+                // only draw a line when the group with same size neighbour with each other and the record in current
+                // line is master.
+                Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
+                Boolean isMaster = Boolean.parseBoolean(rowObject[masterColumn].toString());
+                if (isMaster && !MatchRuleAnlaysisUtils.isSameGroup(previousGID, currentGID)
+                        && isEqualGroupSize(previousGID, currentGID)) {
                     gc.setLineWidth(gc.getLineWidth() * 2);
                     gc.setLineStyle(SWT.LINE_DOT);
                     gc.setForeground(GUIHelper.COLOR_BLUE);

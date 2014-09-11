@@ -20,7 +20,7 @@ import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class EventManager {
 
@@ -86,6 +86,22 @@ public class EventManager {
     }
 
     /**
+     * clear all eventReceivers for the current event, for the current context
+     * 
+     * @param context
+     * @param event
+     * @return
+     */
+    public boolean clearEvent(Object context, EventEnum event) {
+        MultiMap receverQueryMap = ctxToReceiverQueueMap.get(context);
+        if (receverQueryMap == null) {
+            return false;
+        }
+        receverQueryMap.remove(event);
+        return true;
+    }
+
+    /**
      * call the registered event's related receiver to handle
      * 
      * @param context
@@ -97,7 +113,6 @@ public class EventManager {
         if (receverQueryMap == null || receverQueryMap.isEmpty()) {
             return true;
         }
-        @SuppressWarnings("unchecked")
         List<IEventReceiver> receivers = (List<IEventReceiver>) receverQueryMap.get(event);
         if (receivers == null || receivers.size() == 0) {
             return true;
@@ -111,5 +126,24 @@ public class EventManager {
             }
         }
         return handleResult;
+    }
+
+    /**
+     * find if there are some registered event for the context, if existed, return the index position in the event list.
+     * 
+     * @param context
+     * @param event
+     * @return
+     */
+    public IEventReceiver findRegisteredEvent(Object context, EventEnum event, int index) {
+        MultiMap receverQueryMap = ctxToReceiverQueueMap.get(context);
+        if (receverQueryMap == null || receverQueryMap.isEmpty()) {
+            return null;
+        }
+        List<IEventReceiver> receivers = (List<IEventReceiver>) receverQueryMap.get(event);
+        if (receivers == null || receivers.size() == 0 || receivers.size() < index) {
+            return null;
+        }
+        return receivers.get(index);
     }
 }

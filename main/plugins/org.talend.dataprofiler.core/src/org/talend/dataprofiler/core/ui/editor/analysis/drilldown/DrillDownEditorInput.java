@@ -18,10 +18,20 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import net.sourceforge.sqlexplorer.dataset.DataSet;
+import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBColumnSetDataSet;
+import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBDataSet;
+import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBSetDataSet;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.talend.commons.MapDB.utils.AbstractDB;
+import org.talend.commons.MapDB.utils.ColumnFilter;
+import org.talend.commons.MapDB.utils.ColumnSetDBMap;
+import org.talend.commons.MapDB.utils.DBMap;
+import org.talend.commons.MapDB.utils.DBSet;
+import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
@@ -34,12 +44,17 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
+import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -230,6 +245,140 @@ public class DrillDownEditorInput implements IEditorInput {
         return new DataSet(columnHeader, columnValue);
     }
 
+    /**
+     * 
+     * DataSet is used to be the input on the export wizard. unchecked is for the type of mapDB else will have a warning
+     * 
+     * @param controller
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public DataSet getDataSetForMapDB(PageableController controller) {
+        List<String> columnElementList = filterAdaptColumnHeader();
+        columnHeader = new String[columnElementList.size()];
+        int headerIndex = 0;
+        for (String columnElement : columnElementList) {
+            columnHeader[headerIndex++] = columnElement;
+        }
+        AbstractDB<?> mapDB = getMapDB();
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        if (AnalysisType.COLUMN_SET == analysisType) {
+            Long size = getCurrentIndicatorResultSize();
+            if (ColumnSetDBMap.class.isInstance(mapDB)) {
+                return new MapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size, currIndicator,
+                        controller.getPageSize());
+            }
+        }
+
+        if (DBSet.class.isInstance(mapDB)) {
+            return new MapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, controller.getPageSize());
+        } else {
+            ColumnFilter columnFilter = getColumnFilter();
+            return new MapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, controller.getPageSize(), columnFilter);
+        }
+    }
+
+    /**
+     * Create columnFilter for current columnSet. It will be used when we can drill down both current column and whole
+     * of the row
+     * 
+     * @return
+     */
+    public ColumnFilter getColumnFilter() {
+        Integer[] columnIndexArray = getColumnIndexArray();
+        ColumnFilter filter = null;
+        if (columnIndexArray != null) {
+            filter = new ColumnFilter(columnIndexArray);
+        }
+        return filter;
+    }
+
+    /**
+     * Get the result of current indicator. Which only be used by column Set analysis
+     * 
+     * @return
+     */
+    public Long getCurrentIndicatorResultSize() {
+        Long itemsSize = 0l;
+        SimpleStatIndicator simpleStatIndicator = null;
+        // Find simpleStatIndicator from result of analysis
+        for (Indicator indicator : analysis.getResults().getIndicators()) {
+            if (SimpleStatIndicator.class.isInstance(indicator)) {
+                simpleStatIndicator = (SimpleStatIndicator) indicator;
+                break;
+            }
+        }
+        // Get the Result from simpleStatIndicator by currIndicator
+        if (simpleStatIndicator != null) {
+            if (DuplicateCountIndicator.class.isInstance(currIndicator)) {
+                itemsSize = simpleStatIndicator.getDuplicateCount();
+            } else if (DistinctCountIndicator.class.isInstance(currIndicator)) {
+                itemsSize = simpleStatIndicator.getDistinctCount();
+            } else if (UniqueCountIndicator.class.isInstance(currIndicator)) {
+                itemsSize = simpleStatIndicator.getUniqueCount();
+            } else if (RowCountIndicator.class.isInstance(currIndicator)) {
+                itemsSize = simpleStatIndicator.getCount();
+            }
+        }
+        return itemsSize;
+    }
+
+    /**
+     * Get MapDB which store the drill down data for current indicator
+     * 
+     * @return
+     */
+    public AbstractDB<Object> getMapDB() {
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        String dbMapName = getDBMapName(analysisType);
+        AbstractDB<Object> columnSetMapDB = getColumnSetAnalysisMapDB(analysisType);
+        if (columnSetMapDB != null) {
+            return columnSetMapDB;
+        }
+        return this.currIndicator.getMapDB(dbMapName);
+
+    }
+
+    /**
+     * Get MapDB which store the drill down data for columnSet analysis
+     * 
+     * @param analysisType
+     */
+    private AbstractDB<Object> getColumnSetAnalysisMapDB(AnalysisType analysisType) {
+        if (AnalysisType.COLUMN_SET == analysisType) {
+            SimpleStatIndicator simpleStatIndicator = null;
+            for (Indicator indicator : analysis.getResults().getIndicators()) {
+                if (SimpleStatIndicator.class.isInstance(indicator)) {
+                    simpleStatIndicator = (SimpleStatIndicator) indicator;
+                    break;
+                }
+            }
+            if (simpleStatIndicator != null) {
+                return simpleStatIndicator.getMapDB(StandardDBName.computeProcess.name());
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the name of MapDB
+     * 
+     * @return
+     */
+    private String getDBMapName(AnalysisType analysisType) {
+        String dbMapName = StandardDBName.drillDown.name();
+        if (FrequencyIndicator.class.isInstance(currIndicator)) {
+            dbMapName = this.getSelectValue();
+        } else if (LengthIndicator.class.isInstance(currIndicator)) {
+            String selectValue = ((LengthIndicator) currIndicator).getLength().toString();
+            dbMapName = this.getSelectValue() + selectValue;
+        } else if (AnalysisType.COLUMN_SET == analysisType) {
+            dbMapName = StandardDBName.computeProcess.name();
+        }
+
+        return dbMapName;
+    }
+
     public boolean computeColumnValueLength(List<Object[]> newColumnElementList) {
         List<Integer> maxLength = new ArrayList<Integer>();
         for (Object[] columnValue : newColumnElementList) {
@@ -244,7 +393,6 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * 
-     * DOC zshen Comment method "filterAdaptDataList".
      * 
      * @return get the data which will be displayed on the drill down editor.
      */
@@ -438,14 +586,6 @@ public class DrillDownEditorInput implements IEditorInput {
                     columnElementList.add(column.getName());
                 }
 
-            } else if (analysisElement instanceof TdXmlElementType) {
-                TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
-                        .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
-                for (TdXmlElementType xmlElement : org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement)) {
-                    if (!DqRepositoryViewService.hasChildren(xmlElement)) {
-                        columnElementList.add(xmlElement.getName());
-                    }
-                }
             } else if (analysisElement instanceof MetadataColumn) {
                 MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
                 for (MetadataColumn mColumn : mTable.getColumns()) {
@@ -455,6 +595,41 @@ public class DrillDownEditorInput implements IEditorInput {
         }
 
         return columnElementList;
+    }
+
+    /**
+     * Get index of column whiche will be used on the dirll down
+     * 
+     * @return
+     */
+    public Integer[] getColumnIndexArray() {
+        if (!DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+            return null;
+        }
+        List<Integer> indexArray = new ArrayList<Integer>();
+        Indicator indicator = this.getCurrIndicator();
+        ModelElement analysisElement = indicator.getAnalyzedElement();
+        int index = 0;
+        if (analysisElement instanceof TdColumn) {
+            for (TdColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
+                    .eContainer()))) {
+                if (column.getName().equals(analysisElement.getName())) {
+                    indexArray.add(index);
+                }
+                index++;
+            }
+
+        } else if (analysisElement instanceof MetadataColumn) {
+            MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
+            for (MetadataColumn mColumn : mTable.getColumns()) {
+                if (mColumn.getLabel().equals(analysisElement.getName())) {
+                    indexArray.add(index);
+                }
+                index++;
+            }
+        }
+
+        return indexArray.toArray(new Integer[indexArray.size()]);
     }
 
     public boolean isDataSpill() {

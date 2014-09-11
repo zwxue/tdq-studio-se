@@ -77,5 +77,16 @@
          </presentation>
       </config>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:help?after=additions">
+         <menu
+               id="talend"
+               label="talend">
+         </menu>
+      </menuContribution>
+   </extension>
 
 </plugin>

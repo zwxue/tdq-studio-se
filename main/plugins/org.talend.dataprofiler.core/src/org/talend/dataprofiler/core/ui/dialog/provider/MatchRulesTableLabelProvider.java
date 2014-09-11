@@ -37,6 +37,12 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
 
     public static final String HANDLE_NULL = "HANDLE_NULL"; //$NON-NLS-1$
 
+    public static final String THRESHOLD = "THRESHOLD"; //$NON-NLS-1$
+
+    public static final String SURVIVORSHIP_FUNCTION = "SURVIVORSHIP_FUNCTION"; //$NON-NLS-1$
+
+    public static final String PARAMETER = "PARAMETER"; //$NON-NLS-1$
+
     List<String> inputColumnNames;
 
     public MatchRulesTableLabelProvider(List<String> inputColumnNames) {
@@ -84,6 +90,15 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
             break;
         case 5: // handle null
             result = rule.get(HANDLE_NULL);
+            break;
+        case 6: // threshold
+            result = rule.get(THRESHOLD);
+            break;
+        case 7: // survivorship function
+            result = rule.get(SURVIVORSHIP_FUNCTION);
+            break;
+        case 8: // parameter
+            result = rule.get(PARAMETER);
             break;
         }
         return result;

@@ -71,14 +71,13 @@ public class AliasAndManaDriverHelper {
      * @throws ClassNotFoundException
      */
     public ManagedDriver createNewManagerDriver(DatabaseConnection dbConn) throws Exception {
-        ManagedDriver manaDriver;
         String id = this.joinManagedDriverId(dbConn);
-        manaDriver = new ManagedDriver(id);
+        ManagedDriver manaDriver = new ManagedDriver(id);
         String dbType = dbConn.getDatabaseType();
         String dbVersion = dbConn.getDbVersionString();
         manaDriver.setName(dbVersion == null ? dbType : dbType + ":" + dbVersion);
-        manaDriver.setDriverClassName(dbConn.getDriverClass());
-        manaDriver.setUrl(dbConn.getURL());
+        manaDriver.setDriverClassName(JavaSqlFactory.getDriverClass(dbConn));
+        manaDriver.setUrl(JavaSqlFactory.getURL(dbConn));
         // set jar path
         addJars(dbConn, manaDriver);
         // register jdbc driver for Object ManagedDriver when its jars are not empty.
@@ -175,7 +174,7 @@ public class AliasAndManaDriverHelper {
      */
     public void addJars(Connection connection, ManagedDriver manDr) throws MalformedURLException {
         DatabaseConnection dbConnnection = (DatabaseConnection) connection;
-        String driverJarPath = dbConnnection.getDriverJarPath();
+        String driverJarPath = JavaSqlFactory.getDriverJarPath(dbConnnection);
         if (ConnectionHelper.isJDBC(dbConnnection) && driverJarPath != null) {
             String[] pathArray = driverJarPath.split(";"); //$NON-NLS-1$
             for (String path : pathArray) {
@@ -204,7 +203,7 @@ public class AliasAndManaDriverHelper {
         if (databaseType.equalsIgnoreCase(EDatabaseTypeName.HIVE.getXmlName())) {
             id = joinHiveManagedDriverId(dbConn);
         } else {
-            String driverClassName = dbConn.getDriverClass();
+            String driverClassName = JavaSqlFactory.getDriverClass(dbConn);
             String dbVersion = dbConn.getDbVersionString();
             id = joinManagedDriverId(databaseType, driverClassName, dbVersion);
         }
@@ -234,7 +233,7 @@ public class AliasAndManaDriverHelper {
 
     /**
      * 
-     * join dbtype_driverClassName_dbVersion as a ManagedDriver id.
+     * join dbtype:driverClassName:dbVersion as a ManagedDriver id.
      * 
      * @param databaseType
      * @param driverClassName

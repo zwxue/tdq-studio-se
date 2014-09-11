@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
@@ -39,7 +40,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
 
     private boolean isAddColumn = true;
 
-    protected List<String> columnList = new ArrayList<String>();
+    protected List<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
 
     protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
@@ -67,7 +68,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
      * 
      * @param columnMap the columnMap to set
      */
-    public void setColumnList(List<String> columnList) {
+    public void setColumnList(List<MetadataColumn> columnList) {
         this.columnList.addAll(columnList);
     }
 

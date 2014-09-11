@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.genkey.AbstractGenerateKey;
 import org.talend.designer.components.lookup.common.ICommonLookup;
@@ -47,7 +48,7 @@ public class StoreOnDiskHandler {
     /**
      * The field map<columnName,columnIndex>
      */
-    private Map<String, String> columnMap;
+    private Map<MetadataColumn, String> columnMap;
 
     /**
      * List of block key field, each block key will have a property map<algoName,algoNameValue> etc.
@@ -72,11 +73,12 @@ public class StoreOnDiskHandler {
         return this.persistentLookupManager;
     }
 
-    public StoreOnDiskHandler(RecordMatchingIndicator recordMatchingIndicator, final Map<String, String> columnMap,
+    public StoreOnDiskHandler(RecordMatchingIndicator recordMatchingIndicator, final Map<MetadataColumn, String> columnMap,
             String container, int buffSize) throws IOException {
         this.columnMap = columnMap;
         this.recordMatchingIndicator = recordMatchingIndicator;
-        this.blockKeyDefinitions = ExecuteMatchRuleHandler.getBlockKeySchema(StoreOnDiskHandler.this.recordMatchingIndicator);
+        ExecuteMatchRuleHandler handler = new ExecuteMatchRuleHandler();
+        this.blockKeyDefinitions = handler.getBlockKeySchema(StoreOnDiskHandler.this.recordMatchingIndicator);
         initPersistentLookupManager(container, buffSize);
         generateKeyAPI = new AbstractGenerateKey();
     }
@@ -138,8 +140,8 @@ public class StoreOnDiskHandler {
 
     private BlockKey genBlockKey(String[] inputRow) {
         Map<String, String> columnValueMap = new HashMap<String, String>();
-        for (String columnName : columnMap.keySet()) {
-            columnValueMap.put(columnName, inputRow[Integer.parseInt(columnMap.get(columnName))]);
+        for (MetadataColumn columnName : columnMap.keySet()) {
+            columnValueMap.put(columnName.getName(), inputRow[Integer.parseInt(columnMap.get(columnName))]);
         }
         BlockKey blockKey = new BlockKey(blockKeyDefinitions.size());
         String[] keys = generateKeyAPI.getGenKeyArray(blockKeyDefinitions, columnValueMap);

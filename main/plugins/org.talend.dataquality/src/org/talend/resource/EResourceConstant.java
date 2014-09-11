@@ -63,6 +63,7 @@ public enum EResourceConstant {
     LIBRARIES("TDQ_Libraries", "TDQ_Libraries", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     METADATA("metadata", "metadata", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     ANALYSIS("Analyses", "TDQ_Data Profiling/Analyses", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
+    TEMP_MAPDB("Work_MapDB", "Work_MapDB", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     REPORTS("Reports", "TDQ_Data Profiling/Reports", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     EXCHANGE("Exchange", "TDQ_Libraries/Exchange", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     INDICATORS("Indicators", "TDQ_Libraries/Indicators", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
@@ -104,8 +105,7 @@ public enum EResourceConstant {
     SYSTEM_INDICATORS_TEXT_STATISTICS("Text Statistics",//$NON-NLS-1$
                                       "TDQ_Libraries/Indicators/System Indicators/Text Statistics",//$NON-NLS-1$
                                       ResourceConstant.READONLY),
-    SYSTEM_INDICATORS_PHONENUMBER_STATISTICS(
-"Phone Number Statistics",//$NON-NLS-1$
+    SYSTEM_INDICATORS_PHONENUMBER_STATISTICS("Phone Number Statistics",//$NON-NLS-1$
                                              "TDQ_Libraries/Indicators/System Indicators/Phone Number Statistics",//$NON-NLS-1$
                                              ResourceConstant.READONLY),
     SYSTEM_INDICATORS_FRAUDDETECTION("Fraud Detection",//$NON-NLS-1$
@@ -139,7 +139,7 @@ public enum EResourceConstant {
 
     /**
      * Getter for name.
-     *
+     * 
      * @return the name
      */
     public String getName() {
@@ -148,7 +148,7 @@ public enum EResourceConstant {
 
     /**
      * Getter for path.
-     *
+     * 
      * @return the path
      */
     public String getPath() {
@@ -157,7 +157,7 @@ public enum EResourceConstant {
 
     /**
      * Getter for qualifications.
-     *
+     * 
      * @return the qualifications
      */
     public QualifiedName[] getQualifications() {
@@ -166,7 +166,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bzhou Comment method "getPathes".
-     *
+     * 
      * @return
      */
     public static IPath[] getPathes() {
@@ -182,9 +182,9 @@ public enum EResourceConstant {
     }
 
     /**
-     *
+     * 
      * This method is to find the matched Qualifications constant by path.
-     *
+     * 
      * @param path
      * @return
      */
@@ -200,7 +200,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "getTypedConstantList".
-     *
+     * 
      * @return
      */
     public static List<EResourceConstant> getTypedConstantList() {
@@ -221,7 +221,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "getTypedConstant".
-     *
+     * 
      * @param element
      * @return
      */
@@ -254,7 +254,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "getTypedConstant".
-     *
+     * 
      * @param item
      * @return
      */
@@ -369,7 +369,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "isMDMConnection".
-     *
+     * 
      * @param provider
      * @return
      */
@@ -379,9 +379,9 @@ public enum EResourceConstant {
     }
 
     /**
-     *
+     * 
      * This mehtod is to get the top level folder constant of TOP.
-     *
+     * 
      * @return An array of EResourceConstant.
      */
     public static EResourceConstant[] getTopConstants() {
@@ -390,7 +390,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "getTopConstantIndexFromPath".
-     *
+     * 
      * @param inputPath
      * @return
      */
@@ -415,9 +415,9 @@ public enum EResourceConstant {
     }
 
     /**
-     *
+     * 
      * This method is to see whether the path is a current workspace constant path.
-     *
+     * 
      * @param path
      * @return true if it is, otherwise false.
      */

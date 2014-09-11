@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
+import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams;
+
 /**
  * <strike> feature TDQ-1707, record comparison algorithm with blocking key for component tMatchGroupHadoop.</strike>
  * The record grouping interface handles record grouping
@@ -38,6 +41,11 @@ public interface IRecordGrouping<T> {
     public static final String CONFIDENCE_WEIGHT = "CONFIDENCE_WEIGHT"; //$NON-NLS-1$
 
     /**
+     * Attribute threshold
+     */
+    public static final String ATTRIBUTE_THRESHOLD = "ATTRIBUTE_THRESHOLD"; //$NON-NLS-1$
+
+    /**
      * Key for Record match threshold (match interval).
      */
     public static final String RECORD_MATCH_THRESHOLD = "RECORD_MATCH_THRESHOLD"; //$NON-NLS-1$
@@ -51,6 +59,8 @@ public interface IRecordGrouping<T> {
 
     // Key for the the matcher's attribute name.
     public static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME"; //$NON-NLS-1$
+
+    public static final String MATCH_KEY_NAME = "MATCH_KEY_NAME"; //$NON-NLS-1$
 
     /**
      * 
@@ -115,7 +125,9 @@ public interface IRecordGrouping<T> {
      * Sets the isSeperateOutput.
      * 
      * @param isSeperateOutput the isSeperateOutput to set
+     * @deprecated Use {@link #setIsComputeGrpQuality(Boolean)} instead.
      */
+    @Deprecated
     public void setSeperateOutput(boolean isSeperateOutput);
 
     /**
@@ -140,5 +152,25 @@ public interface IRecordGrouping<T> {
      * @param matchRule the matcher to be added.
      */
     public void addMatchRule(List<Map<String, String>> matchRule);
+
+    /**
+     * 
+     * set if display attribute labels.
+     * 
+     * @param isDisplayAttLabels
+     */
+    public void setIsDisplayAttLabels(Boolean isDisplayAttLabels);
+
+    public void setSurvivorShipAlgorithmParams(SurvivorShipAlgorithmParams survivorShipAlgorithmParams);
+
+    public void setRecordLinkAlgorithm(RecordMatcherType algorithm);
+
+    /**
+     * 
+     * set if compute group quality.
+     * 
+     * @param isComputeGrpQuality.if true,it will compute group quality and output value as column "GRP_QUALITY".
+     */
+    public void setIsComputeGrpQuality(Boolean isComputeGrpQuality);
 
 }

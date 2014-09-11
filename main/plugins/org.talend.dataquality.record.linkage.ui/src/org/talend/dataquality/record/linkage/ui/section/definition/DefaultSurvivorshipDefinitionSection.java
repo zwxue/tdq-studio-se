@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -36,7 +38,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- *
+ * 
  */
 public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSection {
 
@@ -44,10 +46,9 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     private MatchRuleDefinition matchRuleDef;
 
-
     /**
      * DOC HHB SurvivorshipDefinitionTableSection constructor comment.
-     *
+     * 
      * @param form
      * @param parent
      * @param style
@@ -87,9 +88,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
         return ruleComp;
     }
 
-
     private void initTableInput() {
-
         tableComposite.setInput(matchRuleDef.getDefaultSurvivorshipDefinitions());
     }
 
@@ -137,7 +136,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /**
      * Getter for defaultSurvivorshipKeys.
-     *
+     * 
      * @return the defaultSurvivorshipKeys
      */
     public List<DefaultSurvivorshipDefinition> getDefaultSurvivorshipKeys() {
@@ -148,7 +147,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -176,7 +175,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -200,4 +199,28 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
         }
     }
 
+    /**
+     * import the DefaultSurvivorshipFunctions, if overwrite, clear the DefaultSurvivorshipFunctions before import.
+     * 
+     * @param matchRuleDef
+     * @param overwrite
+     */
+    @SuppressWarnings("unchecked")
+    public void importDefaultSurvivorshipFunctions(MatchRuleDefinition matchRuleDef, boolean overwrite) {
+        EList<DefaultSurvivorshipDefinition> functions = null;
+        Object input = tableComposite.getInput();
+        if (input != null) {
+            functions = (EList<DefaultSurvivorshipDefinition>) input;
+        }
+        if (functions == null) {
+            functions = new BasicEList<DefaultSurvivorshipDefinition>();
+        }
+        if (overwrite) {
+            functions.clear();
+        }
+        for (DefaultSurvivorshipDefinition def : matchRuleDef.getDefaultSurvivorshipDefinitions()) {
+            functions.add(EcoreUtil.copy(def));
+        }
+        tableComposite.setInput(functions);
+    }
 }

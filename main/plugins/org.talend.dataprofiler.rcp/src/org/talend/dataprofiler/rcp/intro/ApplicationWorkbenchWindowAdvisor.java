@@ -46,7 +46,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         Rectangle screenSize = Display.getDefault().getClientArea();
         configurer.setInitialSize(new Point(screenSize.width, screenSize.height));
         configurer.setShowCoolBar(true);
-        configurer.setShowStatusLine(false);
+        // TDQ-9268 Progress display on statausLine.
+        configurer.setShowStatusLine(true);
+        configurer.setShowProgressIndicator(true);
         String buildId = VersionUtils.getVersion();
         IBrandingService brandingService = GlobalServiceRegister.getDefault().getBrandingService(IBrandingService.class);
         configurer.setTitle(brandingService.getFullProductName() + " (" + buildId + ")"); //$NON-NLS-1$ //$NON-NLS-2$
