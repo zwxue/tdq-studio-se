@@ -344,6 +344,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
             createSelectBlockingKeysTable(form);
             createSelectMatchRulesTableVsr(form);
             form.setWeights(new int[] { 5, 2, 3 });
+
         } else if (dialogType == SUGGEST_TYPE) {
             createSelectBlockingKeysTable(form);
             createSelectMatchRulesTableVsr(form);
