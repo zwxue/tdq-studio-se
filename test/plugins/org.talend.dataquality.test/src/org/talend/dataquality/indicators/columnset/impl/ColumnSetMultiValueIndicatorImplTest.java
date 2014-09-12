@@ -13,9 +13,12 @@
 package org.talend.dataquality.indicators.columnset.impl;
 
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
@@ -27,6 +30,7 @@ import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.XmlFactory;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -153,5 +157,81 @@ public class ColumnSetMultiValueIndicatorImplTest {
         tdSqlDataType.setJavaDataType(Types.NUMERIC);
         tdColumn.setSqlDataType(tdSqlDataType);
         return tdColumn;
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#handle(EList)}.
+     */
+    @Test
+    public void testHandleElist() {
+
+        ColumnSetMultiValueIndicatorImpl createColumnSetMultiValueIndicator = (ColumnSetMultiValueIndicatorImpl) ColumnsetFactory.eINSTANCE
+                .createColumnSetMultiValueIndicator();
+        for (EList<Object> datas : initdatas()) {
+            createColumnSetMultiValueIndicator.handle(datas);
+        }
+        boolean computeResult = createColumnSetMultiValueIndicator.finalizeComputation();
+        Assert.assertEquals(true, computeResult);
+        Assert.assertEquals(6l, createColumnSetMultiValueIndicator.getCount().longValue());
+        Assert.assertEquals(3l, createColumnSetMultiValueIndicator.getDistinctCount().longValue());
+        Assert.assertEquals(2l, createColumnSetMultiValueIndicator.getDuplicateCount().longValue());
+        Assert.assertEquals(1l, createColumnSetMultiValueIndicator.getUniqueCount().longValue());
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#handle(EList)}.
+     */
+    @Test
+    public void testHandleElistIsEmpty() {
+
+        ColumnSetMultiValueIndicatorImpl createColumnSetMultiValueIndicator = (ColumnSetMultiValueIndicatorImpl) ColumnsetFactory.eINSTANCE
+                .createColumnSetMultiValueIndicator();
+        EList<Object> elist = new BasicEList<Object>();
+        createColumnSetMultiValueIndicator.handle(elist);
+
+        boolean computeResult = createColumnSetMultiValueIndicator.finalizeComputation();
+        Assert.assertEquals(true, computeResult);
+        Assert.assertEquals(1l, createColumnSetMultiValueIndicator.getCount().longValue());
+        Assert.assertEquals(1l, createColumnSetMultiValueIndicator.getDistinctCount().longValue());
+        Assert.assertEquals(0l, createColumnSetMultiValueIndicator.getDuplicateCount().longValue());
+        Assert.assertEquals(1l, createColumnSetMultiValueIndicator.getUniqueCount().longValue());
+    }
+
+    /**
+     * DOC talend Comment method "init".
+     * 
+     * @param datas
+     */
+    private List<EList<Object>> initdatas() {
+        List<EList<Object>> datas = new ArrayList<EList<Object>>();
+        EList<Object> elist = new BasicEList<Object>();
+        elist.add("3"); //$NON-NLS-1$
+        elist.add("test3"); //$NON-NLS-1$
+        datas.add(elist);
+        elist = new BasicEList<Object>();
+        elist.add("2"); //$NON-NLS-1$
+        elist.add("test2"); //$NON-NLS-1$
+        datas.add(elist);
+        elist = new BasicEList<Object>();
+        elist.add("1"); //$NON-NLS-1$
+        elist.add("test1"); //$NON-NLS-1$
+        datas.add(elist);
+        elist = new BasicEList<Object>();
+        elist.add("3"); //$NON-NLS-1$
+        elist.add("test3"); //$NON-NLS-1$
+        datas.add(elist);
+        elist = new BasicEList<Object>();
+        elist.add("2"); //$NON-NLS-1$
+        elist.add("test2"); //$NON-NLS-1$
+        datas.add(elist);
+        elist = new BasicEList<Object>();
+        elist.add("3"); //$NON-NLS-1$
+        elist.add("test3"); //$NON-NLS-1$
+        datas.add(elist);
+
+        return datas;
+
     }
 }

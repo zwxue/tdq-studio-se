@@ -20,6 +20,9 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.matchmerge.SubString;
+import org.talend.dataquality.matchmerge.mfb.MFBAttributeMatcher;
+import org.talend.dataquality.matchmerge.mfb.MFBRecordMatcher;
 import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
@@ -47,9 +50,6 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
 
     // Output distance details or not.
     private boolean isOutputDistDetails = Boolean.FALSE;
-
-    // Allow seperate output give group score and the confidence threshold.
-    private boolean isSeperateOutput = Boolean.FALSE;
 
     private CombinedRecordMatcher combinedRecordMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
 
@@ -79,10 +79,13 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     // VSR algorithm by default.
     private RecordMatcherType matchAlgo = RecordMatcherType.simpleVSRMatcher;
 
-    private TSwooshGrouping<TYPE> swooshGrouping = new TSwooshGrouping<TYPE>(this);
+    protected TSwooshGrouping<TYPE> swooshGrouping = new TSwooshGrouping<TYPE>(this);
 
     // The exthended column size.
     int extSize;
+
+    // Allow compute Group Quality.
+    private Boolean isComputeGrpQuality = Boolean.FALSE;
 
     /*
      * (non-Javadoc)
@@ -132,10 +135,12 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
      * Sets the isSeperateOutput.
      * 
      * @param isSeperateOutput the isSeperateOutput to set
+     * @deprecated Use {@link #setIsComputeGrpQuality(Boolean)} instead.
      */
+    @Deprecated
     @Override
     public void setSeperateOutput(boolean isSeperateOutput) {
-        this.isSeperateOutput = isSeperateOutput;
+        this.setIsComputeGrpQuality(isSeperateOutput);
     }
 
     /*
@@ -159,6 +164,15 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     }
 
     /*
+     * set if need to compute group quality.
+     */
+    @Override
+    public void setIsComputeGrpQuality(Boolean isComputeGrpQuality) {
+        this.isComputeGrpQuality = isComputeGrpQuality;
+
+    }
+
+    /*
      * (non-Javadoc)
      * 
      * @see
@@ -175,7 +189,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
 
         extSize = isOutputDistDetails ? 5 : 4;
         // extSize + 1 when isSeperateOutput is enabled.
-        extSize = isSeperateOutput ? extSize + 1 : extSize;
+        extSize = isComputeGrpQuality ? extSize + 1 : extSize;
 
         // if the inputRow size less than original column size,should set 'isLinkToPrevious' to false and work on
         // none-multi-pass.
@@ -199,8 +213,8 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         String[] lookupDataArray = new String[matchingRule.size()];
 
         for (int idx = 0; idx < lookupDataArray.length; idx++) {
-            lookupDataArray[idx] = String.valueOf(inputRow[Integer
-                    .parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))]);
+            Object inputObj = inputRow[Integer.parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))];
+            lookupDataArray[idx] = inputObj == null ? null : String.valueOf(inputObj);
         }
         switch (matchAlgo) {
         case simpleVSRMatcher:
@@ -237,8 +251,8 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             String[] masterMatchRecord = new String[lookupDataArray.length];
             // Find the match record from master record.
             for (int idx = 0; idx < lookupDataArray.length; idx++) {
-                masterMatchRecord[idx] = String.valueOf(masterRecord[Integer.parseInt(matchingRule.get(idx).get(
-                        IRecordGrouping.COLUMN_IDX))]);
+                Object masterObj = masterRecord[Integer.parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))];
+                masterMatchRecord[idx] = masterObj == null ? null : String.valueOf(masterObj);
             }
             double matchingProba = combinedRecordMatcher.getMatchingWeight(masterMatchRecord, lookupDataArray);
             // Similar
@@ -251,10 +265,14 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
                     if (masterGRPSize == 1) {
                         inputRow[originalInputColumnSize + 1] = incrementGroupSize(inputRow[originalInputColumnSize + 1]);
                         TYPE[] inputRowWithExtColumns = createNewInputRowForMultPass(inputRow, originalInputColumnSize + extSize);
-                        // since the 'masterRecord' will be output as a duplicate,need to set masterRecord GRP_QUALITY
-                        // to 'inputRow_with_extColumns'. then compare it with 'matchingProba' later.
-                        if (isSeperateOutput) {
-                            inputRowWithExtColumns[originalInputColumnSize + 4] = masterRecord[originalInputColumnSize + 4];
+                        // since the 'masterRecord' will be output as a duplicate,if the masterRecord Gneed GRP_QUALITY
+                        // is less than Input,should set masterRecord GRP_QUALITY to 'inputRow_with_extColumns' at here.
+                        if (isComputeGrpQuality) {
+                            double inputGRP = Double.valueOf(String.valueOf(inputRowWithExtColumns[originalInputColumnSize + 4]));
+                            double masterGRP = Double.valueOf(String.valueOf(masterRecord[originalInputColumnSize + 4]));
+                            if (masterGRP < inputGRP) {
+                                inputRowWithExtColumns[originalInputColumnSize + 4] = masterRecord[originalInputColumnSize + 4];
+                            }
                         }
                         updateWithExtendedColumn(masterRecord, inputRowWithExtColumns, matchingProba, distanceDetails,
                                 columnDelimiter);
@@ -300,10 +318,12 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
                 masterRow[masterRow.length - extSize + 3] = castAsType(1.0);
 
             }
-            if (isSeperateOutput) {
+            if (isComputeGrpQuality) {
                 // Group quality for multiple pass
                 extIdx++;
-                masterRow[inputColumnLenth + 4] = castAsType(1.0);
+                if (!isLinkToPrevious) {
+                    masterRow[inputColumnLenth + 4] = castAsType(1.0);
+                }
             }
             if (isOutputDistDetails) {
                 // Match distance details for multiple pass
@@ -327,22 +347,22 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             inputRowWithExtColumn[idx] = inputRow[idx];
         }
 
-        TYPE prevDistanceTMP = null;
-        // In case of multi-pass, the value of index "originalInputColumnSize + 4" is the 1st tMatchGroup's distance
-        // details. Note no seperate output for 1st tMatchGroup in multi-pass.
-        if (extSize > 4 && inputRowWithExtColumn[originalInputColumnSize + 4] != null) {
-            prevDistanceTMP = inputRowWithExtColumn[originalInputColumnSize + 4];
-        }
         int extInd = 0;
-        if (isSeperateOutput) {
-            inputRowWithExtColumn[originalInputColumnSize + 4] = castAsType(0.0);
+        if (isComputeGrpQuality) {
+            // In case of multi-pass, the value of index "originalInputColumnSize + 4" is the 1st tMatchGroup's
+            // group quality. should propagate it to next tMatchGroup.or else set default value 0.0.
+            TYPE inputGRP = inputRowWithExtColumn[originalInputColumnSize + 4];
+            if (inputGRP == null) {
+                inputRowWithExtColumn[originalInputColumnSize + 4] = castAsType(0.0);
+            }
             extInd++;
         }
+
         if (isOutputDistDetails) {
-            // propagate previous Match distance to next when the previous distance is not null.
-            if (prevDistanceTMP != null) {
-                inputRowWithExtColumn[originalInputColumnSize + 4 + extInd] = prevDistanceTMP;
-            } else {
+            // In case of multi-pass, the value of index "originalInputColumnSize + 4+ extInd" is the 1st tMatchGroup's
+            // distance details. should propagate it to next tMatchGroup.or else set the Empty to Match distance.
+            TYPE inputDistance = inputRowWithExtColumn[originalInputColumnSize + 4 + extInd];
+            if (inputDistance == null) {
                 inputRowWithExtColumn[originalInputColumnSize + 4 + extInd] = castAsType(StringUtils.EMPTY);
             }
         }
@@ -415,7 +435,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
 
         int extIdx = 3;
         // Group quality
-        if (isSeperateOutput) {
+        if (isComputeGrpQuality) {
             extIdx++;
             double groupQuality = computeGroupQuality(masterRecord, matchingProba, extIdx);
             masterRecord[duplicateRecord.length - extSize + extIdx] = castAsType(groupQuality);
@@ -486,37 +506,43 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         masterRecords.clear();
         combinedRecordMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
         for (List<Map<String, String>> matchRule : multiMatchRules) {
-            createSimpleRecordMatcher(matchRule);
+            createRecordMatcher(matchRule);
         }
     }
 
-    private void createSimpleRecordMatcher(List<Map<String, String>> matchRule) throws InstantiationException,
-            IllegalAccessException, ClassNotFoundException {
+    private void createRecordMatcher(List<Map<String, String>> matchRule) throws InstantiationException, IllegalAccessException,
+            ClassNotFoundException {
         final int recordSize = matchRule.size();
         double[] arrAttrWeights = new double[recordSize];
+        double[] attrThresholds = new double[recordSize];
         String[] attributeNames = new String[recordSize];
         String[][] algorithmName = new String[recordSize][2];
         String[] arrMatchHandleNull = new String[recordSize];
         String[] customizedJarPath = new String[recordSize];
         double recordMatchThreshold = acceptableThreshold;// keep compatibility to older version.
-        int recordIdx = 0;
+        int keyIdx = 0;
         for (Map<String, String> recordMap : matchRule) {
-            algorithmName[recordIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
-            if (AttributeMatcherType.DUMMY.name().equals(algorithmName[recordIdx][0])) {
-                recordIdx++;
+            algorithmName[keyIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
+            if (AttributeMatcherType.DUMMY.name().equals(algorithmName[keyIdx][0])) {
+                keyIdx++;
                 continue;
             }
-            arrAttrWeights[recordIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
-            algorithmName[recordIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
-            attributeNames[recordIdx] = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
-            arrMatchHandleNull[recordIdx] = recordMap.get(IRecordGrouping.HANDLE_NULL);
+            arrAttrWeights[keyIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
+            algorithmName[keyIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
+            attributeNames[keyIdx] = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
+            arrMatchHandleNull[keyIdx] = recordMap.get(IRecordGrouping.HANDLE_NULL);
+            if (matchAlgo == RecordMatcherType.T_SwooshAlgorithm) {
+                // Set attribute threshold
+                attrThresholds[keyIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.ATTRIBUTE_THRESHOLD));
+
+            }
             String rcdMathThresholdEach = recordMap.get(IRecordGrouping.RECORD_MATCH_THRESHOLD);
-            customizedJarPath[recordIdx] = recordMap.get(IRecordGrouping.JAR_PATH);
+            customizedJarPath[keyIdx] = recordMap.get(IRecordGrouping.JAR_PATH);
             if (!StringUtils.isEmpty(rcdMathThresholdEach)) {
                 recordMatchThreshold = Double.valueOf(rcdMathThresholdEach);
 
             }
-            recordIdx++;
+            keyIdx++;
         }
         IAttributeMatcher[] attributeMatcher = new IAttributeMatcher[recordSize];
 
@@ -532,17 +558,25 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             } else {
                 // Use the default class loader to load the class.
                 attributeMatcher[indx] = AttributeMatcherFactory.createMatcher(attrMatcherType, algorithmName[indx][1]);
+                if (matchAlgo == RecordMatcherType.T_SwooshAlgorithm) {
+                    attributeMatcher[indx] = MFBAttributeMatcher.wrap(attributeMatcher[indx], arrAttrWeights[indx],
+                            attrThresholds[indx], SubString.NO_SUBSTRING);
+                }
             }
             attributeMatcher[indx].setNullOption(arrMatchHandleNull[indx]);
             attributeMatcher[indx].setAttributeName(attributeNames[indx]);
 
         }
-        IRecordMatcher simpleRecordMatcher = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
-        simpleRecordMatcher.setRecordSize(recordSize);
-        simpleRecordMatcher.setAttributeWeights(arrAttrWeights);
-        simpleRecordMatcher.setAttributeMatchers(attributeMatcher);
-        simpleRecordMatcher.setRecordMatchThreshold(recordMatchThreshold);
-        combinedRecordMatcher.add(simpleRecordMatcher);
+
+        IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
+        if (matchAlgo == RecordMatcherType.T_SwooshAlgorithm) {
+            recordMatcher = new MFBRecordMatcher(recordMatchThreshold);
+        }
+        recordMatcher.setRecordSize(recordSize);
+        recordMatcher.setAttributeWeights(arrAttrWeights);
+        recordMatcher.setAttributeMatchers(attributeMatcher);
+        recordMatcher.setRecordMatchThreshold(recordMatchThreshold);
+        combinedRecordMatcher.add(recordMatcher);
     }
 
     /**

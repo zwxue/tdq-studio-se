@@ -23,10 +23,20 @@ public abstract class MatchGroupResultConsumer {
     // save the match result
     protected List<Object[]> matchResult = null;
 
+    // Keep the match result in memory so that it can be used for further handling (such as sort of GID etc.)
     protected boolean isKeepDataInMemory = Boolean.FALSE;
 
     public MatchGroupResultConsumer(boolean isKeepDataInMemory) {
         this.isKeepDataInMemory = isKeepDataInMemory;
+    }
+
+    /**
+     * Getter for isKeepDataInMemory.
+     * 
+     * @return the isKeepDataInMemory
+     */
+    public boolean isKeepDataInMemory() {
+        return this.isKeepDataInMemory;
     }
 
     /**

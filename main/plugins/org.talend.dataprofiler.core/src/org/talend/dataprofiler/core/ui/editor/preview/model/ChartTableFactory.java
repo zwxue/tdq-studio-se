@@ -381,33 +381,13 @@ public final class ChartTableFactory {
                                 });
                             }
                         } else {
-                            AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
+
                             if (analysis.getParameters().isStoreData()) { // if allow drill down
-
-                                boolean hasData = analyDataSet != null
-                                        && (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
-                                                || analyDataSet.getFrequencyData() != null
-                                                && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
-                                                && analyDataSet.getPatternData().size() > 0);
-
-                                if (hasData) {
-                                    for (final MenuItemEntity itemEntity : itemEntities) {
-                                        MenuItem item = new MenuItem(menu, SWT.PUSH);
-                                        item.setText(itemEntity.getLabel());
-                                        item.setImage(itemEntity.getIcon());
-                                        item.addSelectionListener(new SelectionAdapter() {
-
-                                            @Override
-                                            public void widgetSelected(SelectionEvent e) {
-                                                CorePlugin.getDefault().openEditor(
-                                                        new DrillDownEditorInput(analysis, dataEntity, itemEntity),
-                                                        ChartTableFactory.DRILL_DOWN_EDITOR);
-                                            }
-
-                                        });
-                                    }
+                                if (indicator.isSaveTempDataToFile()) {
+                                    createDrillDownMenuForMapDB(dataEntity, menu, itemEntities);
+                                } else {
+                                    createDrillDownMenuForJava(dataEntity, menu, itemEntities);
                                 }
-
                                 if (isPatternFrequencyIndicator(indicator)) {
                                     for (final MenuItemEntity itemEntity : itemEntities) {
 
@@ -463,6 +443,62 @@ public final class ChartTableFactory {
 
                         // ~11574
                         menu.setVisible(true);
+                    }
+                }
+            }
+
+            private void createDrillDownMenuForMapDB(final ChartDataEntity dataEntity, Menu menu, MenuItemEntity[] itemEntities) {
+                final Indicator indicator = dataEntity != null ? dataEntity.getIndicator() : null;
+                if (dataEntity == null || RowCountIndicator.class.isInstance(indicator)) {
+                    return;
+                }
+                for (final MenuItemEntity itemEntity : itemEntities) {
+                    MenuItem item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(itemEntity.getLabel());
+                    item.setImage(itemEntity.getIcon());
+                    item.addSelectionListener(new SelectionAdapter() {
+
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            CorePlugin.getDefault().openEditor(new DrillDownEditorInput(analysis, dataEntity, itemEntity),
+                                    ChartTableFactory.DRILL_DOWN_EDITOR);
+                        }
+
+                    });
+                }
+
+            }
+
+            /**
+             * DOC talend Comment method "createDrillDownMenu".
+             * 
+             * @param analysis
+             * @param dataEntity
+             * @param menu
+             * @param itemEntities
+             */
+            private void createDrillDownMenuForJava(final ChartDataEntity dataEntity, Menu menu, MenuItemEntity[] itemEntities) {
+                final Indicator indicator = dataEntity != null ? dataEntity.getIndicator() : null;
+                AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
+                boolean hasData = analyDataSet != null
+                        && (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
+                                || analyDataSet.getFrequencyData() != null && analyDataSet.getFrequencyData().size() > 0 || analyDataSet
+                                .getPatternData() != null && analyDataSet.getPatternData().size() > 0);
+
+                if (hasData) {
+                    for (final MenuItemEntity itemEntity : itemEntities) {
+                        MenuItem item = new MenuItem(menu, SWT.PUSH);
+                        item.setText(itemEntity.getLabel());
+                        item.setImage(itemEntity.getIcon());
+                        item.addSelectionListener(new SelectionAdapter() {
+
+                            @Override
+                            public void widgetSelected(SelectionEvent e) {
+                                CorePlugin.getDefault().openEditor(new DrillDownEditorInput(analysis, dataEntity, itemEntity),
+                                        ChartTableFactory.DRILL_DOWN_EDITOR);
+                            }
+
+                        });
                     }
                 }
             }

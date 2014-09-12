@@ -22,15 +22,25 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.nebula.widgets.pagination.IPageLoader;
+import org.eclipse.nebula.widgets.pagination.PageLoaderStrategyHelper;
+import org.eclipse.nebula.widgets.pagination.PageableController;
+import org.eclipse.nebula.widgets.pagination.collections.PageResult;
+import org.eclipse.nebula.widgets.pagination.collections.PageResultContentProvider;
+import org.eclipse.nebula.widgets.pagination.renderers.navigation.ResultAndNavigationPageGraphicsRenderer;
+import org.eclipse.nebula.widgets.pagination.table.SortTableColumnSelectionListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -49,8 +59,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.commons.MapDB.utils.StandardDBName;
+import org.talend.commons.MapDB.utils.TupleArray;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -171,8 +184,13 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createTableSectionPart(sectionClient,
-                    DefaultMessagesImpl.getString("ColumnSetResultPage.Data"), simpleStaticIndicator); //$NON-NLS-1$
+            if (simpleStaticIndicator.isSaveTempDataToFile()) {
+                this.createTableSectionPartForMapDB(sectionClient,
+                        DefaultMessagesImpl.getString("ColumnSetResultPage.Data"), simpleStaticIndicator); //$NON-NLS-1$
+            } else {
+                this.createTableSectionPart(sectionClient,
+                        DefaultMessagesImpl.getString("ColumnSetResultPage.Data"), simpleStaticIndicator); //$NON-NLS-1$
+            }
         }
         graphicsAndTableSection.setExpanded(true);
         graphicsAndTableSection.setClient(sectionClient);
@@ -363,6 +381,115 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         return columnSetElementSection;
     }
 
+    private Section createTableSectionPartForMapDB(Composite parentComp, String title, SimpleStatIndicator ssIndicator) {
+        Section columnSetElementSection = this.createSection(form, parentComp, title, null);
+        Composite sectionTableComp = toolkit.createComposite(columnSetElementSection);
+        // MOD yyi 2010-12-07 17282:create parameter section for storing data control
+        if (ssIndicator.isStoreData()) {
+            columnSetElementSection.setExpanded(true);
+            columnSetElementSection.setEnabled(true);
+
+            sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+            sectionTableComp.setLayout(new GridLayout());
+            // MOD zshen for feature 14000
+            Button filterDataBt = new Button(sectionTableComp, SWT.NONE);
+            filterDataBt.setText(DefaultMessagesImpl.getString("ColumnSetResultPage.filterData"));//$NON-NLS-1$
+            filterDataBt.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+            filterDataBt.setEnabled(containAllMatchIndicator());
+            filterDataBt.addMouseListener(new MouseListener() {
+
+                public void mouseDoubleClick(MouseEvent e) {
+                    // TODO Auto-generated method stub
+                }
+
+                public void mouseDown(MouseEvent e) {
+                    List<Indicator> indicatorsList = masterPage.analysisItem.getAnalysis().getResults().getIndicators();
+                    SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
+                    wizard.setFilterType(filterType);
+                    wizard.setOldTableInputList(ColumnSetResultPage.this.tableFilterResult);
+                    WizardDialog dialog = new WizardDialog(null, wizard);
+                    dialog.setPageSize(300, 400);
+                    wizard.setContainer(dialog);
+                    wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));//$NON-NLS-1$
+                    if (WizardDialog.OK == dialog.open()) {
+                        ColumnSetResultPage.this.tableFilterResult = wizard.getPatternSelectPage().getTableInputList();
+                        filterType = wizard.getPatternSelectPage().getFilterType();
+                        columnsElementViewer.refresh();
+                    }
+                }
+
+                public void mouseUp(MouseEvent e) {
+                    // TODO Auto-generated method stub
+
+                }
+
+            });
+
+            columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
+
+            Table table = columnsElementViewer.getTable();
+            table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            table.setLinesVisible(true);
+            table.setHeaderVisible(true);
+            TableSectionViewerProvider provider = new TableSectionViewerProvider();
+            columnsElementViewer.setContentProvider(provider);
+            columnsElementViewer.addFilter(new PatternDataFilter());
+            columnSetElementSection.setClient(sectionTableComp);
+            columnSetElementSection.setExpanded(false);
+            int pageSize = 100;
+            // // ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+            setupTableGridDataLimitedSize(table, pageSize);
+
+            // add pagation control
+            final PageableController controller = new PageableController(100);
+            final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(
+                    ssIndicator.getMapDB(StandardDBName.dataSection.name()));
+            controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
+                    columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null));
+            ResultAndNavigationPageGraphicsRenderer resultAndPageButtonsDecorator = new ResultAndNavigationPageGraphicsRenderer(
+                    sectionTableComp, SWT.NONE, controller);
+            resultAndPageButtonsDecorator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+            createColumns(controller, ssIndicator);
+            // Set current page to 0 to refresh the table
+            controller.setCurrentPage(0);
+            for (TableColumn column : table.getColumns()) {
+                column.pack();
+            }
+        } else {
+            columnSetElementSection.setExpanded(false);
+            columnSetElementSection.setEnabled(false);
+        }
+        return columnSetElementSection;
+    }
+
+    /**
+     * DOC talend Comment method "createColumns".
+     * 
+     * @param columnsElementViewer2
+     * @param controller
+     */
+    private void createColumns(PageableController controller, SimpleStatIndicator ssIndicator) {
+        List<String> tableColumnNames = ssIndicator.getColumnHeaders();
+        for (String tableColumnName : tableColumnNames) {
+            // First column is for the first name
+            TableViewerColumn col = createTableViewerColumn(tableColumnName);
+            TableSectionViewerProvider provider = new TableSectionViewerProvider();
+            col.setLabelProvider(provider);
+            col.getColumn().addSelectionListener(new SortTableColumnSelectionListener(tableColumnName, controller));
+
+        }
+    }
+
+    private TableViewerColumn createTableViewerColumn(String title) {
+        final TableViewerColumn viewerColumn = new TableViewerColumn(columnsElementViewer, SWT.NONE);
+        final TableColumn column = viewerColumn.getColumn();
+        column.setText(title);
+        column.setResizable(true);
+        column.setMoveable(true);
+        return viewerColumn;
+    }
+
     /**
      * 
      * DOC hcheng Comment method "addColumnSorters".For 8267.
@@ -382,7 +509,8 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     /**
      * DOC zshen ColumnSetResultPage class global comment. Detailled comment
      */
-    class TableSectionViewerProvider implements IStructuredContentProvider, ITableLabelProvider, ITableColorProvider {
+    class TableSectionViewerProvider extends CellLabelProvider implements IStructuredContentProvider, ITableLabelProvider,
+            ITableColorProvider {
 
         @SuppressWarnings("unchecked")
         public Object[] getElements(Object inputElement) {
@@ -391,6 +519,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            // nothing need to do at here
         }
 
         public Image getImage(Object element) {
@@ -400,6 +529,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             return null;
         }
 
+        @Override
         public void dispose() {
             // TODO Auto-generated method stub
 
@@ -411,24 +541,40 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         }
 
         public String getColumnText(Object element, int columnIndex) {
-            for (int i = 0; i < ((Object[]) element).length; i++) {
-                if (columnIndex == i) {
-                    return String.valueOf(((Object[]) element)[i]);
+            if (TupleArray.class.isInstance(element)) {
+                String[] keyArray = ((TupleArray) element).keyArray;
+                if (columnIndex < keyArray.length) {
+                    return keyArray[columnIndex];
+                }
+
+            } else if (List.class.isInstance(element)) {
+                String[] keyArray = ((List<?>) element).toArray(new String[((List<?>) element).size()]);
+                if (columnIndex < keyArray.length) {
+                    return keyArray[columnIndex];
+                }
+            } else {
+                for (int i = 0; i < ((Object[]) element).length; i++) {
+                    if (columnIndex == i) {
+                        return String.valueOf(((Object[]) element)[i]);
+                    }
                 }
             }
             return null;
         }
 
+        @Override
         public void addListener(ILabelProviderListener listener) {
             // TODO Auto-generated method stub
 
         }
 
+        @Override
         public boolean isLabelProperty(Object element, String property) {
             // TODO Auto-generated method stub
             return false;
         }
 
+        @Override
         public void removeListener(ILabelProviderListener listener) {
             // TODO Auto-generated method stub
 
@@ -449,6 +595,19 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             // MOD by zshen for feature 14000
             return getMatchColor(element, columnIndex);
             // ~14000
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
+         */
+        @Override
+        public void update(ViewerCell cell) {
+            Object element = cell.getElement();
+            int index = cell.getColumnIndex();
+            cell.setText(getColumnText(element, index));
+            cell.setForeground(getForeground(element, index));
         }
     }
 

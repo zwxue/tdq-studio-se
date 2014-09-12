@@ -17,13 +17,14 @@ import org.talend.dataquality.indicators.RowCountIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RowCountIndicatorImpl() {
@@ -32,6 +33,7 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -48,8 +50,9 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
      */
     @Override
     public boolean handle(Object value) {
+        boolean returnValue = super.handle(value);
         mustStoreRow = true;
-        return super.handle(value);
+        return returnValue;
     }
 
     /*
@@ -92,6 +95,16 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
     @Override
     public Long getIntegerValue() {
         return this.getCount();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#isValid(java.lang.Object)
+     */
+    @Override
+    public boolean isValid(Object inputData) {
+        return true;
     }
 
 } // RowCountIndicatorImpl

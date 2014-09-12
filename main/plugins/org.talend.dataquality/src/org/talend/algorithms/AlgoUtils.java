@@ -67,12 +67,12 @@ public final class AlgoUtils {
      * @param qQuantile the q-quantile (e.g. 4 when we compute quartile)
      * @return the nth quantile
      */
-    public static double getQuantile(long totalCount, final TreeMap<Object, Long> valueToCount, int nthQuantile, int qQuantile) {
+    public static double getQuantile(long totalCount, final Map<Object, Long> valueToCount, int nthQuantile, int qQuantile) {
         double p = (double) nthQuantile / qQuantile;
         Set<Object> keys = valueToCount.keySet();
         Collection<Long> counts = valueToCount.values();
 
-        double kthValue = ((double) totalCount) * p;
+        double kthValue = totalCount * p;
 
         double localMedian = 0;
 

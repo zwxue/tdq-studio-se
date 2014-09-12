@@ -45,11 +45,12 @@ public class AnalysisRecordGroupingUtilsTest {
         metaColumn.setName(column);
         columnIndexMap.put(metaColumn, "0"); //$NON-NLS-1$
         double matchInterval = 0.5;
+        double attrThreshold = 1.0d;
         String attributeName = "attribute1"; //$NON-NLS-1$
         String handleNull = "nullMatchNone"; //$NON-NLS-1$
 
         Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(column, algoType, algoParameter,
-                confidentWeight, columnIndexMap, matchInterval, attributeName, handleNull);
+                confidentWeight, attrThreshold, columnIndexMap, matchInterval, attributeName, handleNull);
         judgeMatchMapResult(matchKeyMap);
     }
 

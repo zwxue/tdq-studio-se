@@ -236,7 +236,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         this.dynamicList.add(dyModel);
 
         ChartDataEntity[] dataEntities = ((ICustomerDataset) dataset).getDataEntities();
-        if (dataEntities != null && dataEntities.length > 0) {
+        if (EIndicatorChartType.TEXT_STATISTICS.equals(chartType) && dataEntities != null && dataEntities.length > 0) {
+            // only text indicator need
             indicators = getIndicators(dataEntities);
         } else {
             indicators = getIndicators(units);

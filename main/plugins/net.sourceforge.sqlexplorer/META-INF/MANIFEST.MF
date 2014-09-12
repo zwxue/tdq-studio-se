@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.2.0",
  org.talend.model,
  org.talend.utils,
  org.talend.core.runtime,
- org.talend.metadata.managment
+ org.talend.metadata.managment,
+ org.talend.libraries.mapdb
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: sqlexplorer.jar,
  lib/rowset.jar,
@@ -37,6 +38,7 @@ Export-Package: META-INF,
  net.sourceforge.sqlexplorer.connections.actions,
  net.sourceforge.sqlexplorer.dataset,
  net.sourceforge.sqlexplorer.dataset.actions,
+ net.sourceforge.sqlexplorer.dataset.mapdb,
  net.sourceforge.sqlexplorer.dbdetail,
  net.sourceforge.sqlexplorer.dbdetail.tab,
  net.sourceforge.sqlexplorer.dbproduct,

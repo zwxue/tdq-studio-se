@@ -21,7 +21,7 @@ import org.talend.dataquality.indicators.WeekFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class WeekFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements WeekFrequencyIndicator {
@@ -30,6 +30,7 @@ public class WeekFrequencyIndicatorImpl extends FrequencyIndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected WeekFrequencyIndicatorImpl() {
@@ -38,6 +39,7 @@ public class WeekFrequencyIndicatorImpl extends FrequencyIndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -72,11 +74,21 @@ public class WeekFrequencyIndicatorImpl extends FrequencyIndicatorImpl implement
         }
 
         if (data instanceof Date) {
-            Date date = (Date) data;
-            String format = DateFormatUtils.format((Date) data, datePattern + getWeekOfYear(date));
+            String format = getFormatName(data);
             return super.handle(format);
         }
         return super.handle(data);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getSpecialName(java.lang.Object)
+     */
+    @Override
+    protected String getFormatName(Object data) {
+        Date date = (Date) data;
+        return DateFormatUtils.format(date, datePattern + getWeekOfYear(date));
     }
 
     /**

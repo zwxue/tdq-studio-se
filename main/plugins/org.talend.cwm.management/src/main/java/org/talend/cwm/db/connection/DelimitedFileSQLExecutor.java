@@ -26,6 +26,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.fileprocess.FileInputDelimited;
@@ -58,7 +59,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
             return dataFromTable;
         }
         DelimitedFileConnection delimitedFileconnection = (DelimitedFileConnection) connection;
-        String path = AnalysisExecutorHelper.getFilePath(delimitedFileconnection);
+        String path = JavaSqlFactory.getURL(delimitedFileconnection);
         IPath iPath = new Path(path);
 
         try {
@@ -125,8 +126,8 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
     }
 
     private void useCsvReader(File file, DelimitedFileConnection delimitedFileconnection, List<ModelElement> analysisElementList) {
-        int limitValue = AnalysisExecutorHelper.getLimitValue(delimitedFileconnection);
-        int headValue = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
+        int limitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
+        int headValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
         CsvReader csvReader = null;
         try {
             csvReader = AnalysisExecutorHelper.createCsvReader(file, delimitedFileconnection);

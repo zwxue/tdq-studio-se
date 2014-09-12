@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.talend.top_feature"
@@ -680,4 +681,12 @@
          fragment="true"
          unpack="false"/>
 
+   <plugin
+         id="org.talend.updates.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+      
 </feature>

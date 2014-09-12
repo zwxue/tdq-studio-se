@@ -442,7 +442,12 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         if (this.columnMap == null) {
             return false;
         }
-        return columnMap.containsKey(keyName);
+        for (MetadataColumn column : columnMap.keySet()) {
+            if (StringUtils.equals(column.getName(), keyName)) {
+                return true;
+            }
+        }
+        return false;// columnMap.containsKey(keyName);
     }
 
     public void addColumn(MetadataColumn column, int index) {

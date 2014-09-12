@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.matchrule.NewMatchRuleWizard;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
@@ -72,6 +73,17 @@ public class ExportMatchRuleAction extends Action implements ICheatSheetAction {
             return;
         }
 
+        // Added TDQ-9318 Add a warning when multiple rules are used with t-swoosh
+        if (RecordMatcherType.T_SwooshAlgorithm.name().equals(matchRule.getRecordLinkageAlgorithm())
+                && matchRule.getMatchRules().size() > 1) {
+            boolean isContinue = MessageDialog.openConfirm(null,
+                    DefaultMessagesImpl.getString("MatchAnalysisEditor.exportMatchRule"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ExportMatchRuleAction.MultiRule")); //$NON-NLS-1$
+            if (!isContinue) {
+                return;
+            }
+        }
+
         DQMatchRuleParameter parameter = new DQMatchRuleParameter();
         FolderProvider folderProvider = new FolderProvider();
         folderProvider.setFolderResource(ResourceManager.getRulesMatcherFolder());
@@ -86,6 +98,7 @@ public class ExportMatchRuleAction extends Action implements ICheatSheetAction {
         WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), matchWizard);
         dialog.open();
     }
+
     /*
      * (non-Javadoc)
      * 

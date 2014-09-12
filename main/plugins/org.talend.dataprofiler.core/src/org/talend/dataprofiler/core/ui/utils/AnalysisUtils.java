@@ -109,6 +109,9 @@ public class AnalysisUtils {
         InternalEObject eIndicator = (InternalEObject) indicator;
         AnalysisResult result = (AnalysisResult) eIndicator.eContainer();
         // MOD msjian TDQ-5960: fix a NPE
+        if (result == null) {
+            return false;
+        }
         EList<Indicator> indicators = result.getIndicators();
         if (indicators != null) {
             for (Indicator indi : indicators) {
@@ -165,8 +168,6 @@ public class AnalysisUtils {
         eReceiver.setIndicatorName(oneIndicator.getName());
 
         eReceiver.setIndicator(oneIndicator);
-        // clear data
-        eReceiver.clearValue();
         return eReceiver;
     }
 

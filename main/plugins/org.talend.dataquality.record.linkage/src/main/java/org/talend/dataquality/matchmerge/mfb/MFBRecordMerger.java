@@ -138,13 +138,13 @@ public class MFBRecordMerger implements IRecordMerger {
                 return leftValue;
             }
         case PREFER_TRUE:
-            if (!Boolean.parseBoolean(mergedValue) && !Boolean.parseBoolean(mergedValue)) {
-                return "false"; //$NON-NLS-1$
-            } else {
+            if (Boolean.parseBoolean(leftValue) || Boolean.parseBoolean(rightValue)) {
                 return "true"; //$NON-NLS-1$
+            } else {
+                return "false"; //$NON-NLS-1$
             }
         case PREFER_FALSE:
-            if (Boolean.parseBoolean(mergedValue) && Boolean.parseBoolean(mergedValue)) {
+            if (Boolean.parseBoolean(leftValue) && Boolean.parseBoolean(rightValue)) {
                 return "true"; //$NON-NLS-1$
             } else {
                 return "false"; //$NON-NLS-1$
@@ -172,7 +172,7 @@ public class MFBRecordMerger implements IRecordMerger {
         case MOST_TRUSTED_SOURCE:
             String mostTrustedSourceName = parameter;
             if (mostTrustedSourceName == null) {
-                throw new IllegalStateException("Survivorship 'most trusted source' must specify a trusted source.");
+                throw new IllegalStateException("Survivorship 'most trusted source' must specify a trusted source."); //$NON-NLS-1$
             }
             if (mostTrustedSourceName.equals(leftSource)) {
                 return leftValue;

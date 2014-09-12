@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -171,7 +172,7 @@ public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImp
     public boolean handle(Object data) {
         String[] values = (String[]) data;
         Boolean isMaster = Boolean.valueOf(values[masterColumnIndex]);
-        Integer groupSize = Integer.valueOf(values[groupSizeColumnIndex]);
+        Integer groupSize = StringUtils.isEmpty(values[groupSizeColumnIndex]) ? 0 : Integer.valueOf(values[groupSizeColumnIndex]);
         if (isMaster) { // Find the master row
             if (null == groupSize2groupFrequency.get(values[groupSizeColumnIndex])) {
                 groupSize2groupFrequency.put(values[groupSizeColumnIndex], 1l);

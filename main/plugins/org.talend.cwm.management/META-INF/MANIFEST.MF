@@ -27,7 +27,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.librariesmanager,
  org.talend.dataquality.record.linkage,
  org.talend.libraries.jboss,
- org.talend.repository.items.importexport
+ org.talend.repository.items.importexport,
+ org.talend.libraries.mapdb
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
  lib/advancedPersistentLookupLib-1.0.jar,

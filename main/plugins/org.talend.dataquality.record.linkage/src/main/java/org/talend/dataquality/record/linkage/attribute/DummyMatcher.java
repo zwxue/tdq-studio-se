@@ -28,6 +28,7 @@ public class DummyMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
      * java.lang.String)
      */
+    @Override
     protected double getWeight(String str1, String str2) {
         return 1;
     }
@@ -37,8 +38,19 @@ public class DummyMatcher extends AbstractAttributeMatcher {
      * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
+    @Override
     public AttributeMatcherType getMatchType() {
         return AttributeMatcherType.DUMMY;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#isDummyMatcher()
+     */
+    @Override
+    public boolean isDummyMatcher() {
+        return true;
     }
 
 }

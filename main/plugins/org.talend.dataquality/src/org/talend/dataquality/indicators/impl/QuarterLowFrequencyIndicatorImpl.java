@@ -21,7 +21,7 @@ import org.talend.dataquality.indicators.QuarterLowFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class QuarterLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements QuarterLowFrequencyIndicator {
@@ -30,6 +30,7 @@ public class QuarterLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected QuarterLowFrequencyIndicatorImpl() {
@@ -38,6 +39,7 @@ public class QuarterLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -72,13 +74,23 @@ public class QuarterLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         }
 
         if (data instanceof Date) {
-            // add the quater pattern for each data.
-            String monthStr = DateFormatUtils.format((Date) data, monthSign);
-            int month = Integer.parseInt(monthStr) / 4 + 1;
-            String format = DateFormatUtils.format((Date) data, datePattern + month);
+            String format = getFormatName(data);
             return super.handle(format);
         }
         return super.handle(data);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getSpecialName(java.lang.Object)
+     */
+    @Override
+    protected String getFormatName(Object data) {
+        // add the quater pattern for each data.
+        String monthStr = DateFormatUtils.format((Date) data, monthSign);
+        int month = Integer.parseInt(monthStr) / 4 + 1;
+        return DateFormatUtils.format((Date) data, datePattern + month);
     }
 
     /*

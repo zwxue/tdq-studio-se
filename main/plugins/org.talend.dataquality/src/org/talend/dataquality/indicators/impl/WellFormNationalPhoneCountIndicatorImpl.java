@@ -193,7 +193,6 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
     @Override
     public boolean handle(Object data) {
 
-        this.mustStoreRow = false;
         super.handle(data);
         if (data == null) {
             return false;

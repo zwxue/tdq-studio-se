@@ -12,35 +12,27 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern;
 
-import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
-import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC msjian class global comment. Detailled comment
  */
 public class PatternStatisticsStateTest {
 
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
-
     private PatternStatisticsState patternStatisticsState;
-
-    private PatternMatchingExt patternMatchingExt;
 
     /**
      * init the state.
@@ -51,19 +43,10 @@ public class PatternStatisticsStateTest {
     public void setUp() throws Exception {
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
 
-        IndicatorUnit unit = mock(IndicatorUnit.class);
-        units.add(unit);
-
-        patternMatchingExt = new PatternMatchingExt();
-        patternMatchingExt.setMatchingValueCount(1);
-        patternMatchingExt.setNotMatchingValueCount(9);
-        when(unit.getValue()).thenReturn(patternMatchingExt);
-
         RegexpMatchingIndicator indicator = IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator();
         indicator.setName("Blank text"); //$NON-NLS-1$
-        when(unit.getIndicator()).thenReturn(indicator);
 
-        when(unit.isExcuted()).thenReturn(true);
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, indicator));
 
         patternStatisticsState = new PatternStatisticsState(units);
     }

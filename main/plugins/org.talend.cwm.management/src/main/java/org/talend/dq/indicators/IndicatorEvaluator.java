@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
+import org.talend.commons.MapDB.utils.AbstractDB;
+import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -161,57 +163,74 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         analyzedDataSet.setDataCount(maxNumberRows);
                         analyzedDataSet.setRecordSize(0);
                     }
+                    // should store data for dirll down
+                    if (analysis.getParameters().isStoreData()) {
+                        // current indicator is need to store the data
+                        if (indicator.mustStoreRow()) {
 
-                    if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
-                        List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
-                        // MOD zshen add another loop to insert all of columnValue on the row into indicator.
-                        recordIncrement = valueObjectList.size();
-                        // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
-                        // columnset
-                        ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH
-                                .doSwitch(indicator.getAnalyzedElement().eContainer());
-                        List<TdColumn> columnList = ColumnSetHelper.getColumns(doSwitch);
+                            List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
+                            // MOD zshen add another loop to insert all of columnValue on the row into indicator.
+                            recordIncrement = valueObjectList.size();
+                            // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
+                            // columnset
+                            ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement()
+                                    .eContainer());
+                            List<TdColumn> columnList = ColumnSetHelper.getColumns(doSwitch);
 
-                        for (int j = 0; j < columnCount; j++) {
-                            String newcol = columnList.get(j).getName();
-                            Object newobject = null;
-                            try {
-                                newobject = resultSet.getObject(newcol);
-                            } catch (SQLException e) {
-                                if ("0000-00-00 00:00:00".equals(resultSet.getString(newcol))) { //$NON-NLS-1$
-                                    newobject = null;
+                            for (int j = 0; j < columnCount; j++) {
+                                String newcol = columnList.get(j).getName();
+                                Object newobject = null;
+                                try {
+                                    newobject = resultSet.getObject(newcol);
+                                } catch (SQLException e) {
+                                    if ("0000-00-00 00:00:00".equals(resultSet.getString(newcol))) { //$NON-NLS-1$
+                                        newobject = null;
+                                    }
+
                                 }
-
-                            }
-                            if (recordIncrement < maxNumberRows) {// decide whether current record is more than max
-                                                                  // Number else don't need to record more than data.
-                                if (recordIncrement < valueObjectList.size()) {// decide whether need to increase
-                                                                               // current array.
-                                    valueObjectList.get(recordIncrement)[j] = newobject;
-
+                                if (indicator.isSaveTempDataToFile()) {
+                                    AbstractDB<Object> mapDB = indicator.getMapDB(StandardDBName.drillDown.name());
+                                    if (mapDB.size() > maxNumberRows) {
+                                        break;
+                                    }
+                                    indicator.handleDrillDownData(object, newobject, columnCount, j, newcol);
+                                    continue;
                                 } else {
-                                    Object[] valueObject = new Object[columnCount];
-                                    valueObject[j] = newobject;
-                                    valueObjectList.add(valueObject);
+                                    if (recordIncrement < maxNumberRows) {// decide whether current record is more than
+                                                                          // max
+                                                                          // Number else don't need to record more than
+                                                                          // data.
+                                        if (recordIncrement < valueObjectList.size()) {// decide whether need to
+                                                                                       // increase
+                                                                                       // current array.
+                                            valueObjectList.get(recordIncrement)[j] = newobject;
+
+                                        } else {
+                                            Object[] valueObject = new Object[columnCount];
+                                            valueObject[j] = newobject;
+                                            valueObjectList.add(valueObject);
+                                        }
+                                    } else {
+                                        break;
+                                    }
                                 }
-                            } else {
-                                break;
                             }
-                        }
-                        // ~
-                    } else if (indicator instanceof UniqueCountIndicator
-                            && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
-                        List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
-                        // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
-                        // columnset
-                        ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH
-                                .doSwitch(indicator.getAnalyzedElement().eContainer());
-                        List<TdColumn> columnElementList = ColumnSetHelper.getColumns(doSwitch);
-                        int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
-                        for (Object[] dataObject : removeValueObjectList) {
-                            if (dataObject[offsetting].equals(object)) {
-                                removeValueObjectList.remove(dataObject);
-                                break;
+                            // ~
+                        } else if (indicator instanceof UniqueCountIndicator
+                                && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
+                            List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator)
+                                    .getData();
+                            // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
+                            // columnset
+                            ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement()
+                                    .eContainer());
+                            List<TdColumn> columnElementList = ColumnSetHelper.getColumns(doSwitch);
+                            int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
+                            for (Object[] dataObject : removeValueObjectList) {
+                                if (dataObject[offsetting].equals(object)) {
+                                    removeValueObjectList.remove(dataObject);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -222,6 +241,10 @@ public class IndicatorEvaluator extends Evaluator<String> {
         for (int i = 0; i < columnListSize; i++) {
             String col = columnlist.get(i);
             List<Indicator> indicators = getIndicators(col);
+            // mapDB mode don't need this part
+            if (indicators.size() > 0 && indicators.get(0).isSaveTempDataToFile()) {
+                break;
+            }
             for (Indicator indicator : indicators) {
                 if (indicator instanceof DuplicateCountIndicator) {
                     AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);

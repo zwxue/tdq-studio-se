@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.connection;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 import org.apache.log4j.Level;
@@ -21,7 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -34,7 +32,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -66,7 +63,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
-import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.helper.PropertyHelper;
@@ -325,8 +321,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 return new ReturnCode("connection is null!", false); //$NON-NLS-1$
             }
             if (connection.isContextMode()) {
-                userName = ConnectionUtils.getOriginalConntextValue(connection, userName);
-                password = ConnectionUtils.getOriginalConntextValue(connection, password);
+                userName = JavaSqlFactory.getUsername(connection);
+                password = JavaSqlFactory.getPassword(connection);
             }
             props.put(TaggedValueHelper.USER, userName);
             props.put(TaggedValueHelper.PASSWORD, password);
@@ -343,29 +339,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         }
 
         return returnCode;
-    }
-
-    private ReturnCode checkDBConnectionWithProgress() {
-        final ReturnCode rc = new ReturnCode();
-        IRunnableWithProgress op = new IRunnableWithProgress() {
-
-            public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    public void run() {
-                        rc.setOk(checkDBConnection().isOk());
-                    }
-                });
-            }
-        };
-        try {
-            ProgressUI.popProgressDialog(op);
-        } catch (InvocationTargetException e) {
-            log.error(e, e);
-        } catch (InterruptedException e) {
-            log.error(e, e);
-        }
-        return rc;
     }
 
     @Override

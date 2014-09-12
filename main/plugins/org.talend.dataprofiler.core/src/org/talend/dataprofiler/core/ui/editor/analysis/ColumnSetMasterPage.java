@@ -589,7 +589,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * DOC yyin Comment method "setStoreData".
+     * This is for drill down parameter
      * 
      * @param selection
      */

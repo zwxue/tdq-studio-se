@@ -8,6 +8,7 @@ package org.talend.dataquality.indicators.columnset.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
@@ -142,9 +143,10 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     public void setMatchingValueCount(Long newMatchingValueCount) {
         Long oldMatchingValueCount = matchingValueCount;
         matchingValueCount = newMatchingValueCount;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT,
                     oldMatchingValueCount, matchingValueCount));
+        }
     }
 
     /**
@@ -166,9 +168,10 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     public void setNotMatchingValueCount(Long newNotMatchingValueCount) {
         Long oldNotMatchingValueCount = notMatchingValueCount;
         notMatchingValueCount = newNotMatchingValueCount;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT,
                     oldNotMatchingValueCount, notMatchingValueCount));
+        }
     }
 
     /**
@@ -365,8 +368,9 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      */
     @Override
     public String toString() {
-        if (eIsProxy())
+        if (eIsProxy()) {
             return super.toString();
+        }
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (matchingValueCount: ");
@@ -402,28 +406,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
         Long matchCount = 0L;
         // loop all rows of the resultset(objects)
         for (Object[] row : objects) {
-
-            boolean isAMatch = false;
-            // loop all columns of the row
-            for (int i = 0; i < row.length - 1; i++) {
-                if (null != patterns[i]) {
-                    // loop all pattern of the column
-                    for (java.util.regex.Pattern p : patterns[i]) {
-                        Matcher m = p.matcher(String.valueOf(row[i]));
-                        if (!m.find()) {
-                            isAMatch = false; // one match failed => record does not match
-                            break;
-                        }
-                        isAMatch = true;
-                    }
-                    // end of for loop
-                    if (false == isAMatch) {
-                        break;
-                    }
-                }
-            }
-            // end of for loop
-
+            boolean isAMatch = computeCounts(row);
             if (isAMatch) {
                 // MOD yyi 2010-06-09 for 13040
                 if (null != row[row.length - 1]) {
@@ -434,6 +417,58 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
                 }
                 // ~
             }
+        }
+        // end of for loop
+        setMatchingValueCount(matchCount);
+        setNotMatchingValueCount(getCount() - matchCount);
+        return ok;
+    }
+
+    private boolean computeCounts(Object[] row) {
+        boolean isAMatch = false;
+        // loop all columns of the row
+        for (int i = 0; i < row.length - 1; i++) {
+            if (null != patterns[i]) {
+                // loop all pattern of the column
+                for (java.util.regex.Pattern p : patterns[i]) {
+                    Matcher m = p.matcher(String.valueOf(row[i]));
+                    if (!m.find()) {
+                        isAMatch = false; // one match failed => record does not match
+                        break;
+                    }
+                    isAMatch = true;
+                }
+                // end of for loop
+                if (false == isAMatch) {
+                    break;
+                }
+            }
+        }
+        // end of for loop
+
+        return isAMatch;
+    }
+
+    private boolean computeCounts(Map<List<Object>, Long> resultMap) {
+        boolean ok = true;
+        Long matchCount = 0L;
+        // loop all rows of the resultset(objects)
+        for (List<Object> tuple : resultMap.keySet()) {
+            Object[] row = tuple.toArray();
+
+            boolean isAMatch = computeCounts(row);
+
+            if (isAMatch) {
+                // MOD yyi 2010-06-09 for 13040
+                Long frequency = resultMap.get(tuple);
+                if (null != frequency) {
+                    matchCount += frequency; // recode all match count
+                } else {
+                    ok = false;
+                }
+                // ~
+            }
+
         }
         // end of for loop
         setMatchingValueCount(matchCount);
@@ -454,6 +489,19 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
         return ok;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#storeSqlResults(java.util.Map)
+     */
+    @Override
+    public boolean storeSqlResults(Map<List<Object>, Long> resultMap) {
+        boolean ok = super.storeSqlResults(resultMap);
+        computeCounts(resultMap);
+        return ok;
+    }
+
     @SuppressWarnings("unchecked")
     private boolean instantiatePatterns() {
         boolean noErrors = true;
@@ -467,7 +515,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
                         this.patterns[i] = new ArrayList<java.util.regex.Pattern>();
                     }
                     String regex = rmi.getRegex();
-                    //MOD TDQ-8388 20150530 yyin, should check all patterns, and log the errors
+                    // MOD TDQ-8388 20150530 yyin, should check all patterns, and log the errors
                     if (null == regex) {
                         continue;
                     }

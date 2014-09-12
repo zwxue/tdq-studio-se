@@ -73,7 +73,8 @@ public class MatchRuleDataTable extends Composite {
 
     private Label index;
 
-    private int disGroupSize = 0;
+    // TDQ-9297: Set the default value of "hide groups less than" to 2 instead of 1
+    private int disGroupSize = 2;
 
     private final ControlAdapter matchRuleTableResizeListener = new MatchRuleTableResizeListener();
 

@@ -19,13 +19,14 @@ import org.talend.utils.collections.MapValueSorter;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class SoundexLowFreqIndicatorImpl extends SoundexFreqIndicatorImpl implements SoundexLowFreqIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected SoundexLowFreqIndicatorImpl() {
@@ -34,6 +35,7 @@ public class SoundexLowFreqIndicatorImpl extends SoundexFreqIndicatorImpl implem
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -45,22 +47,27 @@ public class SoundexLowFreqIndicatorImpl extends SoundexFreqIndicatorImpl implem
     public boolean handle(Object data) {
         return super.handle(data);
     }
+
     @Override
     /*
      * MOD qiongli bug 13654,the low soudex should order by ValueToDistinct asc
      */
     public boolean finalizeComputation() {
         final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
-		soundexForJavaEngine();
-        MapValueSorter mvs=new MapValueSorter();
-        List<Object> ls=mvs.sortMap(this.getValueToDistinctFreq(), true);
-        List<Object> mostFrequent = getOrderElements(ls, topN,true);
-        HashMap<Object, Long> map = new HashMap<Object, Long>();
-        for (Object object : mostFrequent) {
-            map.put(object, valueToFreq.get(object));
+        if (saveTempDataToFile) {
+            computeSoundexFreqByMapDB(false);
+        } else {
+            soundexForJavaEngine();
+            MapValueSorter mvs = new MapValueSorter();
+            List<Object> ls = mvs.sortMap(this.getValueToDistinctFreq(), true);
+            List<Object> mostFrequent = getOrderElements(ls, topN, true);
+            HashMap<Object, Long> map = new HashMap<Object, Long>();
+            for (Object object : mostFrequent) {
+                map.put(object, valueToFreq.get(object));
+            }
+            this.setValueToFreq(map);
+            // this.distinctComputed = true;
         }
-        this.setValueToFreq(map);
-        // this.distinctComputed = true;
         return true;
     }
 

@@ -15,13 +15,14 @@ import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MaxLengthWithBlankIndicatorImpl extends MaxLengthIndicatorImpl implements MaxLengthWithBlankIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MaxLengthWithBlankIndicatorImpl() {
@@ -30,6 +31,7 @@ public class MaxLengthWithBlankIndicatorImpl extends MaxLengthIndicatorImpl impl
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -52,11 +54,11 @@ public class MaxLengthWithBlankIndicatorImpl extends MaxLengthIndicatorImpl impl
      */
     @Override
     public boolean handle(Object data) {
-        mustStoreRow = true;
         boolean ok = super.handle(data);
         // handle case when length is not set although data is not null (this means that data is blank)
         if (length == LENGTH_EDEFAULT && data != null) {
             length = 0L;
+            mustStoreRow = true;
         }
         return ok;
     }

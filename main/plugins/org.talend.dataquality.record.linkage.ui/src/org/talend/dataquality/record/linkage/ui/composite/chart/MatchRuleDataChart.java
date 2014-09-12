@@ -42,7 +42,8 @@ public class MatchRuleDataChart extends Composite {
 
     private ChartComposite jfreeChartComp;
 
-    private int times = 0;
+    // TDQ-9297: Set the default value of "hide groups less than" to 2 instead of 1
+    private int times = 2;
 
     private Map<Object, Long> groupSize2GroupFrequency = null;
 
