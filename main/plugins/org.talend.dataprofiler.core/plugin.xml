@@ -316,6 +316,27 @@
       </actionProvider> 
             
       <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.SuggestAnalysisActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.SuggestAnalysisActionProvider">
+         <enablement>
+            <or>
+               <instanceof
+                     value="org.talend.dq.nodes.DBColumnRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DBTableRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DBViewRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DFColumnRepNode">
+               </instanceof>
+            </or>
+         </enablement>
+      </actionProvider> 
+            
+      <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.OverViewAnalysisActionProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.OverViewAnalysisActionProvider">
          <enablement>

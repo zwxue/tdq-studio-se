@@ -32,72 +32,74 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class SuggestAnalysisAction extends Action {
 
-	private static Logger log = Logger.getLogger(SuggestAnalysisAction.class);
+    private static Logger log = Logger.getLogger(SuggestAnalysisAction.class);
 
-	private MetadataTable set;
+    private MetadataTable set;
 
-	public SuggestAnalysisAction(MetadataTable set) {
-		super("Suggest Analysis"); // TODO externalize
-		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE)); // TODO
-																					// change
-																					// icon
-		this.set = set;
-	}
+    public SuggestAnalysisAction(MetadataTable set) {
+        this();
+        this.set = set;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		// TODO scorreia implement me
+    public SuggestAnalysisAction() {
+        super("Suggest Analysis"); // TODO externalize
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE)); // TODO
+        // change
+        // icon
+    }
 
-		Analysis analyses = generateAnalysis(this.set);
-		// generate property file
-		// IFolder folder = analysis.eResource().getURI();
-		AnalysisWriter analysisWriter = ElementWriterFactory.getInstance()
-				.createAnalysisWrite();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        // TODO scorreia implement me
 
-		// for (Analysis analysis : analyses) {
-		// add resource to save analysis
-		// File outfile = new
-		// File("C:/runtime-top.product/TOP_DEFAULT_PRJ/TDQ_Data Profiling/Analyses/"+analysis.getName()+".ana");//
-		// save analysis
-		// EMFUtil emfUtil = new EMFUtil();
-		// ResourceSet rs = emfUtil.getResourceSet();
-		// Resource outResource =
-		// rs.createResource(URI.createFileURI(outfile.getAbsolutePath()));
-		// outResource.getContents().add(analysis);
-		// analysisWriter.save(analysis, true);
+        Analysis analyses = generateAnalysis(this.set);
+        // generate property file
+        // IFolder folder = analysis.eResource().getURI();
+        AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
 
-		TypedReturnCode<Object> code = analysisWriter.create(analyses,
-				ResourceManager.getAnalysisFolder(), false);
+        // for (Analysis analysis : analyses) {
+        // add resource to save analysis
+        // File outfile = new
+        // File("C:/runtime-top.product/TOP_DEFAULT_PRJ/TDQ_Data Profiling/Analyses/"+analysis.getName()+".ana");//
+        // save analysis
+        // EMFUtil emfUtil = new EMFUtil();
+        // ResourceSet rs = emfUtil.getResourceSet();
+        // Resource outResource =
+        // rs.createResource(URI.createFileURI(outfile.getAbsolutePath()));
+        // outResource.getContents().add(analysis);
+        // analysisWriter.save(analysis, true);
 
-		analysisWriter.save((Item) code.getObject(), true);
-		// }
-	}
+        TypedReturnCode<Object> code = analysisWriter.create(analyses, ResourceManager.getAnalysisFolder(), false);
 
-	/**
-	 * DOC scorreia Comment method "generateAnalysis".
-	 * 
-	 * @param table
-	 * @return
-	 */
-	private Analysis generateAnalysis(MetadataTable table) {
-		try {
-			// initialize path parameters
-			// add parameter to AnalysisGenerator constructor (pathref,
-			// pathMetaSem)
-			AnalysisGenerator gen = new AnalysisGenerator();
-			return gen.handleTableItem(table);
+        analysisWriter.save((Item) code.getObject(), true);
+        // }
+    }
 
-		} catch (FileNotFoundException e) {
-			log.error(e, e);
-		} catch (Exception e) {
-			log.error(e, e);
-		}
-		return null;
-	}
+    /**
+     * DOC scorreia Comment method "generateAnalysis".
+     * 
+     * @param table
+     * @return
+     */
+    private Analysis generateAnalysis(MetadataTable table) {
+        try {
+            // initialize path parameters
+            // add parameter to AnalysisGenerator constructor (pathref,
+            // pathMetaSem)
+            AnalysisGenerator gen = new AnalysisGenerator();
+            return gen.handleTableItem(table);
+
+        } catch (FileNotFoundException e) {
+            log.error(e, e);
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+        return null;
+    }
 
 }
