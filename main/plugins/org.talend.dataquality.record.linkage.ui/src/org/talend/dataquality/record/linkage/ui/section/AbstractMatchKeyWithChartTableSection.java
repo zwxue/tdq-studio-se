@@ -80,7 +80,6 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
         // change spin to combo
         final Spinner lessSpin = new Spinner(toolComp, SWT.BORDER);
-        lessSpin.setSelection(2);
         lessSpin.addModifyListener(new ModifyListener() {
 
             @Override
@@ -97,6 +96,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
             }
         });
+        lessSpin.setSelection(2);
 
         Label lessText2 = new Label(toolComp, SWT.NONE);
         lessText2.setText(DefaultMessagesImpl.getString("AbstractMatchKeyWithChartTableSection.items")); //$NON-NLS-1$
