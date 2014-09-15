@@ -118,7 +118,9 @@ public class MapDBDataSet extends TalendDataSet {
         long pageSize = endIndex - startIndex;
         Comparable[][] compareArray = new Comparable[(int) (pageSize)][this.getColumns().length];
         List<Object[]> subList = this.dataMap.subList(startIndex, endIndex, null);
-        subList = columnFilter.filterArray(subList);
+        if (columnFilter != null) {
+            subList = columnFilter.filterArray(subList);
+        }
         for (int i = 0; i < pageSize; i++) {
             Object[] objArray = subList.get(i);
             for (int j = 0; j < this.getColumns().length; j++) {
