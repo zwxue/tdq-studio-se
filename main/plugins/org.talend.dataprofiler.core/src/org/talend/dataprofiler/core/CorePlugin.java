@@ -60,7 +60,6 @@ import org.talend.commons.utils.VersionUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
-import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.ILibrariesService;
 import org.talend.core.model.general.Project;
@@ -230,10 +229,7 @@ public class CorePlugin extends AbstractUIPlugin {
         }
         // MOD qiongli 2013-12-9,TDQ-8442,if the database type is not supported on DQ side,ruturn null.
         List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
-        String username = JavaSqlFactory.getUsername(tdDataProvider);
-        boolean isInvalidUserForMsSql = EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(dbType)
-                && (username == null || PluginConstant.EMPTY_STRING.equals(username));
-        if (isInvalidUserForMsSql || !tdqSupportDBType.contains(dbType)) {
+        if (!tdqSupportDBType.contains(dbType)) {
             MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
             return null;
         }

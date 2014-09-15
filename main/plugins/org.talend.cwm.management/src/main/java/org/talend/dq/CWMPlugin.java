@@ -233,13 +233,10 @@ public class CWMPlugin extends Plugin {
      * @param connection
      */
     public void loadDriverByLibManageSystem(DatabaseConnection connection) {
-        String dbType = connection.getDatabaseType();
-        String dbVersion = connection.getDbVersionString();
-        String driverClassName = JavaSqlFactory.getDriverClass(connection);
         if (ConnectionHelper.isHive(connection)) {
-            loadDriverForHive(connection, driverClassName);
+            loadManagedDriverForHive(connection);
         } else {
-            loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
+            loadManagedDriver(connection);
         }
     }
 
@@ -250,7 +247,9 @@ public class CWMPlugin extends Plugin {
      * @param dbType
      * @param dbVersion
      * @param driverClassName
+     * @deprecated use loadDriverByLibManageSystem(DatabaseConnection connection) instead of.
      */
+    @Deprecated
     public void loadDriverByLibManageSystem(String dbType, String dbVersion, String driverClassName) {
         if (dbType == null || driverClassName == null) {
             return;
@@ -271,6 +270,44 @@ public class CWMPlugin extends Plugin {
                 }
 
                 manDr.registerSQLDriver(dbType, dbVersion);
+            } catch (Exception e) {
+                log.error(e);
+            }
+        }
+    }
+
+    /**
+     * 
+     * Load the driver by lib management system , which will configure the SQL Explorer driver classpath from xml.
+     * 
+     * @param dbType
+     * @param dbVersion
+     * @param driverClassName
+     * @param userName. the userName is used a special case :it MSSQL with empty userName.
+     */
+    private void loadManagedDriver(DatabaseConnection dbConn) {
+        String dbType = dbConn.getDatabaseType();
+        String dbVersion = dbConn.getDbVersionString();
+        String driverClassName = JavaSqlFactory.getDriverClass(dbConn);
+        if (dbType == null || driverClassName == null) {
+            return;
+        }
+        DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
+        AliasAndManaDriverHelper aliasManaHelper = AliasAndManaDriverHelper.getInstance();
+        String manaDriverId = aliasManaHelper.joinManagedDriverId(dbType, driverClassName, dbVersion);
+        ManagedDriver manDr = driverManager.getDriver(manaDriverId);
+        if (manDr != null && !manDr.isDriverClassLoaded()) {
+            // find driver jars from 'temp\dbWizard', prefrence page or installation path 'lib\java',
+            // "librariesIndex.xml".
+            try {
+                List<String> jarNames = EDatabaseVersion4Drivers.getDrivers(dbType, dbVersion);
+                LinkedList<String> driverJarRealPaths = aliasManaHelper.getDriverJarRealPaths(jarNames);
+                if (!driverJarRealPaths.isEmpty()) {
+                    manDr.getJars().clear();
+                    manDr.getJars().addAll(driverJarRealPaths);
+                }
+
+                manDr.registerSQLDriver(dbConn);
             } catch (Exception e) {
                 log.error(e);
             }
@@ -368,7 +405,7 @@ public class CWMPlugin extends Plugin {
      * @param connection
      * @param driverClassName
      */
-    private void loadDriverForHive(DatabaseConnection connection, String driverClassName) {
+    private void loadManagedDriverForHive(DatabaseConnection connection) {
         DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
         String id = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(connection);
         ManagedDriver manDr = driverManager.getDriver(id);
