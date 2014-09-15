@@ -330,11 +330,11 @@ public class DrillDownEditorInput implements IEditorInput {
      */
     public AbstractDB<Object> getMapDB() {
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        String dbMapName = getDBMapName(analysisType);
         AbstractDB<Object> columnSetMapDB = getColumnSetAnalysisMapDB(analysisType);
         if (columnSetMapDB != null) {
             return columnSetMapDB;
         }
+        String dbMapName = getDBMapName(analysisType);
         return this.currIndicator.getMapDB(dbMapName);
 
     }
