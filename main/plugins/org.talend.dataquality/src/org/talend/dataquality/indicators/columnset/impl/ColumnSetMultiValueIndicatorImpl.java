@@ -1437,21 +1437,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     }
 
-    private String[] ConvertToStringArray(EList<Object> inputList) {
-        if (inputList == null) {
-            return null;
-        }
-        String[] strArray = new String[inputList.size()];
-        for (int index = 0; index < inputList.size(); index++) {
-            if (inputList.get(index) != null) {
-                strArray[index] = inputList.get(index).toString();
-            } else {
-                strArray[index] = null;
-            }
-        }
-        return strArray;
-    }
-
     /*
      * (non-Javadoc)
      * 
