@@ -216,22 +216,6 @@ public class DBMapTest {
         }
         dbMap2.close();
         // BtreeMap
-        dbMap2 = new DBMap<String, Long>();
-        Assert.assertEquals(true, dbMap2.isEmpty());
-        dbMap2.put("key1", 100l); //$NON-NLS-1$
-        try {
-            dbMap2.put(null, 100l);
-            Assert.fail("should have a NullPointerException be throw"); //$NON-NLS-1$
-        } catch (NullPointerException e) {
-            // nothing to do
-        }
-        try {
-            dbMap2.put("key2", null); //$NON-NLS-1$
-            Assert.fail("should have a NullPointerException be throw"); //$NON-NLS-1$
-        } catch (NullPointerException e) {
-            // nothing to do
-        }
-        dbMap2.close();
     }
 
     /**
