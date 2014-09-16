@@ -161,7 +161,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     }
 
     /**
-     * DOC talend Comment method "initValueByGroupMap".
+     * init the ValueByGroupMap.
      * 
      * @return
      */
@@ -506,6 +506,11 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#finalizeComputation()
+     */
     @Override
     public boolean finalizeComputation() {
         final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
@@ -519,10 +524,21 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         return super.finalizeComputation();
     }
 
+    /**
+     * get Reduced Values after reduce until n(the topN value).
+     * 
+     * @param n
+     * @return
+     */
     protected List<Object> getReducedValues(int n) {
         return new MapValueSorter().getMostFrequent(getMapForFreq(), n);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#reset()
+     */
     @Override
     public boolean reset() {
         this.uniqueValueCount = 0L;
@@ -543,7 +559,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     }
 
     /**
-     * DOC talend Comment method "clearDrillDownMaps".
+     * clear DrillDown Maps.
      * 
      * @param valueToFreqForMapDB2
      */
@@ -556,13 +572,14 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             Map<Object, List<Object>> mapDB = (Map<Object, List<Object>>) getMapDB(dbName);
             mapDB.clear();
         }
-
     }
 
     /**
-     * DOC talend Comment method "getDBName".
+     * get Map DB Name.
      * 
-     * @param next
+     * @param name
+     * 
+     * @return String
      */
     private String getDBName(Object name) {
         String dbName = null;
@@ -591,6 +608,11 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         return DateFormatUtils.format((Date) name, datePattern);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#toString()
+     */
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer(this.getName());

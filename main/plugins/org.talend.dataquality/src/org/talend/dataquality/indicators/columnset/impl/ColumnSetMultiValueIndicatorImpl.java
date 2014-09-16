@@ -1364,7 +1364,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         if (isUsedMapDBMode()) {
             if (valueByGroupMapForMapDB != null) {
                 valueByGroupMapForMapDB.clear();
-
             }
             valueByGroupMapForMapDB = initValueForDBMap(StandardDBName.dataSection.name());
         } else {

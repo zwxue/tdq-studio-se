@@ -31,7 +31,7 @@ public abstract class AbstractDB<K> {
 
     private DB db = null;
 
-    protected Long limiteSize = 0l;
+    protected Long limitSize = 0l;
 
     public static final Object EMPTY = new TupleEmpty();
 
@@ -260,7 +260,7 @@ public abstract class AbstractDB<K> {
      * @return the limiteSize
      */
     public Long getLimiteSize() {
-        return this.limiteSize;
+        return this.limitSize;
     }
 
     /**
@@ -269,7 +269,7 @@ public abstract class AbstractDB<K> {
      * @param limiteSize the limiteSize to set
      */
     public void setLimiteSize(Long limiteSize) {
-        this.limiteSize = limiteSize;
+        this.limitSize = limiteSize;
     }
 
     public abstract int size();
