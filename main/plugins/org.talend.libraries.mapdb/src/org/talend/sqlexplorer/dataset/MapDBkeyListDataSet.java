@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package net.sourceforge.sqlexplorer.dataset.mapdb;
+package org.talend.sqlexplorer.dataset;
 
 import java.util.Iterator;
 import java.util.List;

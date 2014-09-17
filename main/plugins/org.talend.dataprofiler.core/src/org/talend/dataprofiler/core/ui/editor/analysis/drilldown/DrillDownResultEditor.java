@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 
 import net.sourceforge.sqlexplorer.dataset.actions.ExportCSVAction;
-import net.sourceforge.sqlexplorer.dataset.mapdb.TalendDataSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -74,6 +73,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.sqlexplorer.dataset.TalendDataSet;
 
 /**
  * 

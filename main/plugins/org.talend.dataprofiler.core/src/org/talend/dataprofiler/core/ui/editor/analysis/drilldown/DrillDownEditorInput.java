@@ -18,9 +18,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import net.sourceforge.sqlexplorer.dataset.DataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBColumnSetDataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBDataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBSetDataSet;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.nebula.widgets.pagination.PageableController;
@@ -58,6 +55,9 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
+import org.talend.sqlexplorer.dataset.MapDBColumnSetDataSet;
+import org.talend.sqlexplorer.dataset.MapDBDataSet;
+import org.talend.sqlexplorer.dataset.MapDBSetDataSet;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

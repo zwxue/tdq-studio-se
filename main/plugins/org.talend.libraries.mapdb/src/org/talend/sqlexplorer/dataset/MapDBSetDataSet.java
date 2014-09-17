@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package net.sourceforge.sqlexplorer.dataset.mapdb;
+package org.talend.sqlexplorer.dataset;
 
 import java.util.List;
 
@@ -18,32 +18,50 @@ import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dataset.DataSetRow;
 
-import org.talend.commons.MapDB.utils.ColumnSetDBMap;
-import org.talend.commons.MapDB.utils.DataValidation;
+import org.talend.commons.MapDB.utils.DBSet;
 
 /**
- * created by talend on Sep 1, 2014 Detailled comment
+ * created by talend on Aug 29, 2014 Detailled comment
  * 
  */
-public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
+public class MapDBSetDataSet extends MapDBDataSet {
+
+    protected DBSet<Object> dataSet = null;
 
     /**
-     * DOC talend MapDBColumnSetDataSet constructor comment.
+     * DOC talend MapDBSetDataSet constructor comment.
      * 
      * @param columnLabels
-     * @param imputDBMap
-     * @param size
-     * @param dataItemValidator
+     * @param data
      */
-    public MapDBColumnSetDataSet(String[] columnLabels, ColumnSetDBMap imputDBMap, Long size, DataValidation dataItemValidator,
-            int pageSize) {
-        super(columnLabels, imputDBMap, size, dataItemValidator, pageSize);
+    public MapDBSetDataSet(String[] columnLabels, Comparable[][] data, int pageSize) {
+        super(columnLabels, data, pageSize);
+    }
+
+    public MapDBSetDataSet(String[] columnLabels, DBSet<Object> imputDBSet, int pageSize) {
+        super(columnLabels, new Comparable[0][0], pageSize);
+        this.dataSet = imputDBSet;
+        iterator = dataSet.iterator();
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see net.sourceforge.sqlexplorer.dataset.mapdb.MapDBkeyListDataSet#getRow(int)
+     * @see net.sourceforge.sqlexplorer.dataset.DataSet#getRowCount()
+     */
+    @Override
+    public int getRowCount() {
+        if (dataSet != null) {
+            return dataSet.size();
+        } else {
+            return super.getRowCount();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sourceforge.sqlexplorer.dataset.DataSet#getRow(int)
      */
     @Override
     public DataSetRow getRow(int index) {
@@ -51,32 +69,21 @@ public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
         if (iterator == null) {
             return super.getRow(index);
         } else {
-            if (index < 0 || index >= getRowCount()) {
+            if (index < 0 || index >= dataMap.size()) {
                 throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index);
             }
             if (currentIndex > index) {
-                iterator = dataMap.iterator();
+                iterator = dataSet.iterator();
                 currentIndex = 0;
             }
-
-            while (currentIndex < index && iterator.hasNext()) {
-
-                List<Object> next = iterator.next();
-                if (dataValidator.isValid(dataMap.get(next))) {
-                    currentIndex++;
-                }
+            while (currentIndex < index) {
+                iterator.next();
+                currentIndex++;
             }
-
-            List<Object> valueList = iterator.next();
-            while (!dataValidator.isValid(dataMap.get(valueList)) && iterator.hasNext()) {
-
-                valueList = iterator.next();
-            }
+            Object currentData = iterator.next();
             currentIndex++;
-            Comparable[] comparable = new Comparable[valueList.size()];
-            for (int i = 0; i < valueList.size(); i++) {
-                comparable[i] = (Comparable) valueList.get(i);
-            }
+            Comparable[] comparable = new Comparable[1];
+            comparable[1] = (Comparable) currentData;
             returnDataSetRow = new DataSetRow(this, comparable);
             return returnDataSetRow;
         }
@@ -90,7 +97,7 @@ public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
     @Override
     public DataSet getCurrentPageDataSet() {
         Comparable[][] compareArray = new Comparable[(int) (endIndex - startIndex)][this.getColumns().length];
-        List<Object[]> subList = ((ColumnSetDBMap) this.dataMap).subList(startIndex, endIndex, null, dataValidator);
+        List<Object[]> subList = this.dataSet.subList(startIndex, endIndex, null);
         for (int i = 0; i < endIndex - startIndex; i++) {
             Object[] objArray = subList.get(i);
             for (int j = 0; j < this.getColumns().length; j++) {
