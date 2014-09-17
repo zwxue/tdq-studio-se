@@ -142,7 +142,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
                 // --- give row to handle to indicators
                 for (Indicator indicator : indicators) {
-                    indicator.setDirllDownSize(maxNumberRows);
+                    indicator.setDrillDownLimitSize(Long.valueOf(maxNumberRows));
                     // MOD xqliu 2009-02-09 bug 6237
                     if (!continueRun()) {
                         break label;

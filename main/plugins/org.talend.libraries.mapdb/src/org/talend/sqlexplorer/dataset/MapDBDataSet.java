@@ -46,11 +46,13 @@ public class MapDBDataSet extends TalendDataSet {
         super(columnLabels, data, pageSize);
     }
 
-    public MapDBDataSet(String[] columnLabels, DBMap<Object, List<Object>> imputDBMap, int pageSize, ColumnFilter cfilter) {
+    public MapDBDataSet(String[] columnLabels, DBMap<Object, List<Object>> imputDBMap, int pageSize, ColumnFilter cfilter,
+            Long rowSize) {
         super(columnLabels, new Comparable[0][0], pageSize);
         this.dataMap = imputDBMap;
         iterator = dataMap.iterator();
         this.columnFilter = cfilter;
+        this.rowSize = rowSize;
     }
 
     /*
@@ -60,7 +62,9 @@ public class MapDBDataSet extends TalendDataSet {
      */
     @Override
     public int getRowCount() {
-        if (dataMap != null) {
+        if (rowSize != -1) {
+            return (int) rowSize;
+        } else if (dataMap != null) {
             return dataMap.size();
         } else {
             return super.getRowCount();

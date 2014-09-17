@@ -254,6 +254,17 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
         Iterator<Object> iterator = duplicateObjects.iterator();
         while (iterator.hasNext()) {
             drillDownMap.remove(iterator.next());
+            drillDownRowCount--;
+        }
+        // remove some items because limit
+        if (!this.checkMustStorCurrentRow()) {
+            Iterator<Object> desIterator = drillDownMap.descendingKeySet().iterator();
+            // Here is remove operation so that we need to use drillDownRowCount - 1 be parameter
+            while (desIterator.hasNext() && !this.checkMustStorCurrentRow(drillDownRowCount - 1)) {
+                Object currenKey = desIterator.next();
+                drillDownMap.remove(currenKey);
+                drillDownRowCount--;
+            }
         }
 
     }
@@ -267,9 +278,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
                 duplicateObjects.add(data);
 
             } else {
-                if (drillDownMap.size() - duplicateObjects.size() <= this.getDirllDownSize()) {
-                    mustStoreRow = true;
-                }
+                this.mustStoreRow = true;
             }
         }
         return true;
@@ -344,10 +353,12 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     @Override
     public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
             String currentColumnName) {
+        // this key is a masterObject super method is Long so need override
         List<Object> rowData = drillDownMap.get(masterObject);
         if (rowData == null) {
             rowData = new ArrayList<Object>();
             drillDownMap.put(masterObject, rowData);
+            this.drillDownRowCount++;
         }
         rowData.add(currentObject);
     }

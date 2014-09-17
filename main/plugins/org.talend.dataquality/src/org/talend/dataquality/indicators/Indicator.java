@@ -522,17 +522,17 @@ public interface Indicator extends ModelElement, DataValidation, MapDBDrillDown 
     public void setUsedMapDBMode(boolean usedMapDBMode);
 
     /**
-     * Getter for dirllDownSize.
+     * Getter for drillDownLimitSize.
      * 
-     * @return the dirllDownSize
+     * @return the drillDownLimitSize
      */
-    public int getDirllDownSize();
+    public Long getDrillDownLimitSize();
 
     /**
-     * Sets the dirllDownSize.
+     * Sets the drillDownLimitSize.
      * 
-     * @param dirllDownSize the dirllDownSize to set
+     * @param drillDownLimitSize the drillDownLimitSize to set
      */
-    public void setDirllDownSize(int dirllDownSize);
+    public void setDrillDownLimitSize(Long dirllDownSize);
 
 } // Indicator

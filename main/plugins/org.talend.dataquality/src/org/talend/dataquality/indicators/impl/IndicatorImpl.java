@@ -9,7 +9,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -27,6 +26,8 @@ import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
@@ -79,12 +80,17 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     /**
      * The limit size of the items which will be store by drillDown
      */
-    protected int dirllDownSize = 0;
+    protected Long drillDownLimitSize = 0l;
+
+    /**
+     * The count which how many rows have been store.
+     */
+    protected Long drillDownRowCount = 0l;
 
     /**
      * store drill down rows.
      */
-    protected Map<Object, List<Object>> drillDownMap = null;
+    protected DBMap<Object, List<Object>> drillDownMap = null;
 
     /**
      * The default value of the '{@link #getCount() <em>Count</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -748,6 +754,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 drillDownMap.clear();
             }
             drillDownMap = initValueForDBMap(StandardDBName.drillDown.name());
+            drillDownRowCount = 0l;
         }
     }
 
@@ -756,7 +763,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @return
      */
-    private Map<Object, List<Object>> initValueForDBMap(String dbName) {
+    private DBMap<Object, List<Object>> initValueForDBMap(String dbName) {
         return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
     }
 
@@ -1273,11 +1280,10 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     @Override
     public AbstractDB getMapDB(String dbName) {
         if (isUsedMapDBMode()) {
-            if (StandardDBName.drillDown.name().equals(dbName) && drillDownMap != null
-                    && !((DBMap<Object, List<Object>>) drillDownMap).isClosed()) {
-                return (DBMap<Object, List<Object>>) drillDownMap;
+            if (StandardDBName.drillDown.name().equals(dbName) && drillDownMap != null && !drillDownMap.isClosed()) {
+                return drillDownMap;
             }
-            return ((DBMap<Object, List<Object>>) initValueForDBMap(dbName));
+            return initValueForDBMap(dbName);
         }
         return null;
     }
@@ -1305,6 +1311,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         if (rowData == null) {
             rowData = new ArrayList<Object>();
             drillDownMap.put(count, rowData);
+            this.drillDownRowCount++;
         }
         rowData.add(currentObject);
     }
@@ -1320,21 +1327,77 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
-     * Getter for dirllDownSize.
+     * Getter for dirllDownLimitSize.
      * 
-     * @return the dirllDownSize
+     * @return the dirllDownLimitSize
      */
-    public int getDirllDownSize() {
-        return this.dirllDownSize;
+    @Override
+    public Long getDrillDownLimitSize() {
+        Analysis analysis = AnalysisHelper.getAnalysis(this);
+        if (analysis != null) {
+            this.drillDownLimitSize = Long.valueOf(analysis.getParameters().getMaxNumberRows());
+        }
+        return this.drillDownLimitSize;
     }
 
     /**
-     * Sets the dirllDownSize.
+     * Sets the dirllDownLimitSize.
      * 
-     * @param dirllDownSize the dirllDownSize to set
+     * @param dirllDownLimitSize the dirllDownLimitSize to set
      */
-    public void setDirllDownSize(int dirllDownSize) {
-        this.dirllDownSize = dirllDownSize;
+    @Override
+    public void setDrillDownLimitSize(Long drillDownLimitSize) {
+        this.drillDownLimitSize = drillDownLimitSize;
     }
 
+    /**
+     * Getter for dirllDownRowCount.
+     * 
+     * @return the dirllDownRowCount
+     */
+    public Long getDrillDownRowCount() {
+        return this.drillDownRowCount;
+    }
+
+    /**
+     * Sets the dirllDownRowCount.
+     * 
+     * @param dirllDownRowCount the dirllDownRowCount to set
+     */
+    public void setDrillDownRowCount(Long drillDownRowCount) {
+        this.drillDownRowCount = drillDownRowCount;
+    }
+
+    /**
+     * 
+     * Reset drillDownRowCount
+     */
+    public void resetDrillDownRowCount() {
+        this.drillDownRowCount = 0l;
+    }
+
+    /**
+     * 
+     * DirllDownRowCount if From the beginning of 0
+     */
+    protected boolean checkMustStorCurrentRow() {
+        return checkMustStorCurrentRow(getDrillDownRowCount());
+
+    }
+
+    /**
+     * 
+     * DirllDownRowCount if From the beginning of 0
+     */
+    protected boolean checkMustStorCurrentRow(Long rowCount) {
+        Long currentDrillDownLimit = getDrillDownLimitSize();
+        if (currentDrillDownLimit == null || currentDrillDownLimit == 0l) {
+            return true;
+        }
+        if (rowCount < currentDrillDownLimit) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 } // IndicatorImpl

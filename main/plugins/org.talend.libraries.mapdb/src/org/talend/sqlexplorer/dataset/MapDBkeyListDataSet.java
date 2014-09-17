@@ -33,8 +33,6 @@ public class MapDBkeyListDataSet extends TalendDataSet {
 
     protected Iterator<List<Object>> iterator = null;
 
-    protected long rowSize = 0;
-
     /**
      * DOC talend MapDBValueListDataSet constructor comment.
      * 

@@ -24,6 +24,8 @@ public class SqlExplorerTalendDataSet extends DataSet {
 
     protected long endIndex = 0;
 
+    protected long rowSize = -1;
+
     protected String[] columnHeads = null;
 
     /**

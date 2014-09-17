@@ -274,7 +274,23 @@ public class DrillDownEditorInput implements IEditorInput {
             return new MapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, controller.getPageSize());
         } else {
             ColumnFilter columnFilter = getColumnFilter();
-            return new MapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, controller.getPageSize(), columnFilter);
+            Long itemSize = getItemSize(mapDB);
+            return new MapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, controller.getPageSize(), columnFilter,
+                    itemSize);
+        }
+    }
+
+    /**
+     * DOC talend Comment method "getPageSize".
+     * 
+     * @param controller
+     * @return
+     */
+    private Long getItemSize(AbstractDB<?> mapDB) {
+        if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+            return getCurrentIndicatorResultSize();
+        } else {
+            return Long.valueOf(mapDB.size());
         }
     }
 
@@ -299,6 +315,33 @@ public class DrillDownEditorInput implements IEditorInput {
      * @return
      */
     public Long getCurrentIndicatorResultSize() {
+        Long itemsSize = 0l;
+        if (isColumnSetIndicator()) {
+            itemsSize = getColumnSetIndicatorResultSize();
+        } else {
+            itemsSize = currIndicator.getIntegerValue();
+        }
+        return itemsSize;
+    }
+
+    /**
+     * DOC talend Comment method "isColumnSetIndicator".
+     * 
+     * @return
+     */
+    private boolean isColumnSetIndicator() {
+        Analysis analysis = this.getAnalysis();
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        return AnalysisType.COLUMN_SET == analysisType;
+    }
+
+    /**
+     * DOC talend Comment method "getColumnSetIndicatorResultSize".
+     * 
+     * @param itemsSize
+     * @return
+     */
+    private Long getColumnSetIndicatorResultSize() {
         Long itemsSize = 0l;
         SimpleStatIndicator simpleStatIndicator = null;
         // Find simpleStatIndicator from result of analysis

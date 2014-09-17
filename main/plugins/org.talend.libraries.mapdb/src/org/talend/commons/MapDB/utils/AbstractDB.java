@@ -50,9 +50,16 @@ public abstract class AbstractDB<K> {
         }
         DBMaker<?> fileDBMaker = DBMaker.newFileDB(dbFile);
         fileDBMaker = fileDBMaker.mmapFileEnablePartial();
-        db = fileDBMaker.sizeLimit(2).cacheSize(12 * 1024).transactionDisable().closeOnJvmShutdown().make();
+        db = fileDBMaker.cacheSize(12 * 1024).transactionDisable().closeOnJvmShutdown().make();
         MapDBFactory.getInstance().putDB(dbFile, db);
 
+    }
+
+    public void clearDB() {
+        for (String catalogName : db.getAll().keySet()) {
+            db.delete(catalogName);
+        }
+        this.getDB().getEngine().clearCache();
     }
 
     protected void initDefaultDB() {

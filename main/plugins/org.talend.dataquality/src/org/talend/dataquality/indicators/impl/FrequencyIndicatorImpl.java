@@ -9,7 +9,6 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -482,7 +481,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     @Override
     public boolean handle(Object data) {
         super.handle(data);
-        mustStoreRow = true;
+
         Long freq = getMapForFreq().get(data);
         if (freq == null) { // new data
             freq = 0L;
@@ -497,6 +496,9 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             if (freq.compareTo(1L) == 0) { // decrement when data is seen twice
                 this.uniqueValueCount--;
             }
+        }
+        if (this.checkMustStorCurrentRow(freq)) {
+            mustStoreRow = true;
         }
         freq++;
         // TODO scorreia compute distinct values ?
@@ -565,13 +567,9 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      */
     @SuppressWarnings("unchecked")
     protected void clearDrillDownMaps() {
-        Iterator<Object> iterator = valueToFreqForMapDB.keySet().iterator();
-        while (iterator.hasNext()) {
-            Object next = iterator.next();
-            String dbName = getDBName(next);
-            Map<Object, List<Object>> mapDB = (Map<Object, List<Object>>) getMapDB(dbName);
-            mapDB.clear();
-        }
+        AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
+        mapDB.clearDB();
+
     }
 
     /**
@@ -591,11 +589,20 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             if (datePattern != null) {
                 dbName = getFormatName(name);
             } else {
-                dbName = name.toString();
+                dbName = specialName(name);
             }
         }
         return dbName;
 
+    }
+
+    /**
+     * DOC talend Comment method "specialName".
+     * @param name
+     * @return
+     */
+    protected String specialName(Object name) {
+        return name.toString();
     }
 
     /**
@@ -841,7 +848,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             String currentColumnName) {
         String dbName = getDBName(masterObject);
 
-        drillDownMap = (Map<Object, List<Object>>) getMapDB(dbName);
+        drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
         super.handleDrillDownData(masterObject, currentObject, columnCount, currentIndex, currentColumnName);
     }
 

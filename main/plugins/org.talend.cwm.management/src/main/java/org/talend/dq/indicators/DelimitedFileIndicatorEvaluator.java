@@ -272,7 +272,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position], mColumn.getPattern());
             List<Indicator> indicators = getIndicators(mColumn.getLabel());
             for (Indicator indicator : indicators) {
-                indicator.setDirllDownSize(maxNumberRows);
+                indicator.setDrillDownLimitSize(Long.valueOf(maxNumberRows));
                 if (!continueRun()) {
                     break element;
                 }
