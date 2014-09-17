@@ -20,6 +20,7 @@ import net.sourceforge.sqlexplorer.SQLCannotConnectException;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
+import net.sourceforge.sqlexplorer.service.SqlexplorerService;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
@@ -89,7 +90,7 @@ public class NewDatabaseStructureViewAction extends AbstractConnectionTreeAction
                             user.setDatabaseConnection(databaseConnection);
                             // if ManagedDriver class is not Loaded,check if it lack jars then update the
                             // realted jar.
-                            tdqRepService.updateDriverIfClassNotLoad(databaseConnection);
+                            SqlexplorerService.getInstance().updateDriverIfClassNotLoad(databaseConnection);
                         }
                         break;
                     }

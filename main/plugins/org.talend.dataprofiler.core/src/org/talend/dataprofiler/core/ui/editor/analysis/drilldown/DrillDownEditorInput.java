@@ -17,20 +17,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import net.sourceforge.sqlexplorer.dataset.DataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBColumnSetDataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBDataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBSetDataSet;
-
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.ColumnFilter;
-import org.talend.commons.MapDB.utils.ColumnSetDBMap;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.DBSet;
 import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -210,40 +201,40 @@ public class DrillDownEditorInput implements IEditorInput {
         }
     }
 
-    public DataSet getDataSet() {
-        List<String> columnElementList = filterAdaptColumnHeader();
-        columnHeader = new String[columnElementList.size()];
-        int headerIndex = 0;
-        for (String columnElement : columnElementList) {
-            columnHeader[headerIndex++] = columnElement;
-        }
-        List<Object[]> newColumnElementList = filterAdaptDataList();
-        if (newColumnElementList.size() <= 0) {
-            columnValue = new String[0][0];
-            return new DataSet(columnHeader, columnValue);
-        }
-        // MOD qiongli 2011-4-8,bug 19192.delimited file may has diffrent number of columns for every row.
-        if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
-            columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
-        } else {
-            columnValue = new String[newColumnElementList.size()][columnElementList.size()];
-        }
-        int rowIndex = 0;
-        for (Object[] tableRow : newColumnElementList) {
-            int columnIndex = 0;
-            for (Object tableValue : tableRow) {
-                // added yyin 20120523 TDQ-4691: in MDM, when these two size not equal, this for will throw exception
-                if (tableValue == null) {
-                    if (newColumnElementList.get(0).length != columnElementList.size()) {
-                        continue;
-                    }
-                }// ~
-                columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
-            }
-            rowIndex++;
-        }
-        return new DataSet(columnHeader, columnValue);
-    }
+    // public DataSet getDataSet() {
+    // List<String> columnElementList = filterAdaptColumnHeader();
+    // columnHeader = new String[columnElementList.size()];
+    // int headerIndex = 0;
+    // for (String columnElement : columnElementList) {
+    // columnHeader[headerIndex++] = columnElement;
+    // }
+    // List<Object[]> newColumnElementList = filterAdaptDataList();
+    // if (newColumnElementList.size() <= 0) {
+    // columnValue = new String[0][0];
+    // return new DataSet(columnHeader, columnValue);
+    // }
+    // // MOD qiongli 2011-4-8,bug 19192.delimited file may has diffrent number of columns for every row.
+    // if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+    // columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
+    // } else {
+    // columnValue = new String[newColumnElementList.size()][columnElementList.size()];
+    // }
+    // int rowIndex = 0;
+    // for (Object[] tableRow : newColumnElementList) {
+    // int columnIndex = 0;
+    // for (Object tableValue : tableRow) {
+    // // added yyin 20120523 TDQ-4691: in MDM, when these two size not equal, this for will throw exception
+    // if (tableValue == null) {
+    // if (newColumnElementList.get(0).length != columnElementList.size()) {
+    // continue;
+    // }
+    // }// ~
+    // columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
+    // }
+    // rowIndex++;
+    // }
+    // return new DataSet(columnHeader, columnValue);
+    // }
 
     /**
      * 
@@ -253,31 +244,31 @@ public class DrillDownEditorInput implements IEditorInput {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public DataSet getDataSetForMapDB(PageableController controller) {
-        List<String> columnElementList = filterAdaptColumnHeader();
-        columnHeader = new String[columnElementList.size()];
-        int headerIndex = 0;
-        for (String columnElement : columnElementList) {
-            columnHeader[headerIndex++] = columnElement;
-        }
-        AbstractDB<?> mapDB = getMapDB();
-        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        if (AnalysisType.COLUMN_SET == analysisType) {
-            Long size = getCurrentIndicatorResultSize();
-            if (ColumnSetDBMap.class.isInstance(mapDB)) {
-                return new MapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size, currIndicator,
-                        controller.getPageSize());
-            }
-        }
-
-        if (DBSet.class.isInstance(mapDB)) {
-            return new MapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, controller.getPageSize());
-        } else {
-            ColumnFilter columnFilter = getColumnFilter();
-            return new MapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, controller.getPageSize(), columnFilter);
-        }
-    }
-
+    // public DataSet getDataSetForMapDB(PageableController controller) {
+    // List<String> columnElementList = filterAdaptColumnHeader();
+    // columnHeader = new String[columnElementList.size()];
+    // int headerIndex = 0;
+    // for (String columnElement : columnElementList) {
+    // columnHeader[headerIndex++] = columnElement;
+    // }
+    // AbstractDB<?> mapDB = getMapDB();
+    // AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+    // if (AnalysisType.COLUMN_SET == analysisType) {
+    // Long size = getCurrentIndicatorResultSize();
+    // if (ColumnSetDBMap.class.isInstance(mapDB)) {
+    // return new MapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size, currIndicator,
+    // controller.getPageSize());
+    // }
+    // }
+    //
+    // if (DBSet.class.isInstance(mapDB)) {
+    // return new MapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, controller.getPageSize());
+    // } else {
+    // ColumnFilter columnFilter = getColumnFilter();
+    // return new MapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, controller.getPageSize(),
+    // columnFilter);
+    // }
+    // }
     /**
      * Create columnFilter for current columnSet. It will be used when we can drill down both current column and whole
      * of the row

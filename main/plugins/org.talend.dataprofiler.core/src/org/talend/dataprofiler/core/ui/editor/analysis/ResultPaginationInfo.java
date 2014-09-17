@@ -80,6 +80,7 @@ import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
@@ -407,7 +408,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                                         .getContext().getConnection());
                                                 String query = itemEntity.getQuery();
                                                 String editorName = currentIndicator.getName();
-                                                CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                                SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                             }
 
                                         });

@@ -29,6 +29,7 @@ import net.sourceforge.sqlexplorer.history.SQLHistory;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
+import net.sourceforge.sqlexplorer.service.SqlexplorerService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,6 +47,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
+import org.talend.sqlexplorer.service.ISqlexplorerService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -106,6 +108,10 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+
+        // register the service
+        ISqlexplorerService service = new SqlexplorerService();
+        context.registerService(ISqlexplorerService.class.getName(), service, null);
 
         try {
             getLog().addLogListener(new ILogListener() {

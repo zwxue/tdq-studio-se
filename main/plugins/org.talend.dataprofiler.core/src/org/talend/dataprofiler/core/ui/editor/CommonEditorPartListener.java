@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
@@ -38,6 +36,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -104,7 +103,7 @@ public class CommonEditorPartListener extends PartListener {
         // TDQ-7888~
 
         // Added TDQ-7531 20130718 add unlock support for sql source file/jrxml file
-        if (part instanceof SQLEditor) {
+        if (part.getClass().getName().equals(SqlExplorerUtils.SQLEDITOR_ID)) {
             unlockFile(part);
             super.partClosed(part);
             return;
@@ -132,7 +131,7 @@ public class CommonEditorPartListener extends PartListener {
     @Override
     public void partOpened(IWorkbenchPart part) {
         // Added TDQ-7531 20130718 add lock support for sql source file/jrxml file
-        if (part instanceof SQLEditor) {
+        if (part.getClass().getName().equals(SqlExplorerUtils.SQLEDITOR_ID)) {
             lockFile(part);
             super.partOpened(part);
             return;
@@ -172,7 +171,7 @@ public class CommonEditorPartListener extends PartListener {
         if (editorInput instanceof TDQFileEditorInput) {
             Item item = ((TDQFileEditorInput) editorInput).getFileItem();
             if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item)) {
-                ((SQLEditor) part).setEditable(false);
+                SqlExplorerUtils.getDefault().setSqlEditorEditable(part, false);
                 return;
             }
             CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.SOURCE_FILES));

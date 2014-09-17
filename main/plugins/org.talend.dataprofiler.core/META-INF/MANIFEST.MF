@@ -7,7 +7,6 @@ Bundle-Activator: org.talend.dataprofiler.core.CorePlugin
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.eclipse.nebula.widgets.grid,
- net.sourceforge.sqlexplorer;resolution:=optional,
  org.eclipse.ui.ide,
  org.apache.commons.logging,
  org.apache.commons.collections,
@@ -45,7 +44,8 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.talend.libraries.jexcel,
  org.talend.core.ui,
  org.eclipse.nebula.widgets.pagination,
- org.talend.libraries.mapdb
+ org.talend.libraries.mapdb,
+ org.talend.sqlexplorer.service
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
@@ -112,3 +112,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.apache.log4j, org.talend.testutils
 Bundle-Localization: plugin
 Bundle-ClassPath: .
+Import-Package: org.talend.sqlexplorer.service

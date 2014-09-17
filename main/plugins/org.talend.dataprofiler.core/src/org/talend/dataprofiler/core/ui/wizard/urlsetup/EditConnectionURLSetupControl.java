@@ -13,11 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard.urlsetup;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.Driver;
-
-import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -45,6 +41,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.database.DatabaseWizardPage;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.SqlExplorerUtils;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -120,6 +117,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             selectJar.setText("..."); //$NON-NLS-1$
             selectJar.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent event) {
                     FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
                     String filename = dialog.open();
@@ -167,21 +165,19 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             listDriverBtn.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.ListDrivers")); //$NON-NLS-1$
             listDriverBtn.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     comboDriver.removeAll();
                     for (String stringToFile : jarText.getText().trim().split(";")) { //$NON-NLS-1$
                         File file = new File(stringToFile);
                         if (file != null) {
                             try {
-                                MyURLClassLoader cl = new MyURLClassLoader(file.toURL());
-                                Class[] classes = cl.getAssignableClasses(Driver.class);
+                                Class[] classes = SqlExplorerUtils.getDefault()
+                                        .getMyURLClassLoaderAssignableClasses(file.toURL());
                                 for (int i = 0; i < classes.length; ++i) {
                                     comboDriver.add(classes[i].getName());
                                 }
                             } catch (MalformedURLException ex) {
-                                log.error(ex, ex);
-
-                            } catch (IOException ex) {
                                 log.error(ex, ex);
 
                             }
@@ -236,7 +232,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             String dBUrl = SupportDBUrlStore.getInstance().getDBUrl(SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey(), "", "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     "", ""); //$NON-NLS-1$ //$NON-NLS-2$
             int index = jdbcUrl.indexOf(dBUrl);
-            String filePath = index > -1 ? jdbcUrl.substring(dBUrl.length() + index) : ""; //$NON-NLS-2$
+            String filePath = index > -1 ? jdbcUrl.substring(dBUrl.length() + index) : "";
 
             fileText.setText(filePath);
             fileText.addModifyListener(new ModifyListener() {
@@ -257,6 +253,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
 
             urlText3.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     setConnectionURL(urlText3.getText());
                 }
@@ -265,6 +262,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
 
             selectFile.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent event) {
                     FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
                     String filename = dialog.open();
@@ -344,6 +342,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             urlText.setText(getConnectionURL());
             urlText.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     setConnectionURL(urlText.getText());
                 }
@@ -384,6 +383,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             });
             portText.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     Long portValue = null;
                     try {
@@ -392,7 +392,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
                         // JUMP
                     }
                     if (portValue == null || portValue <= 0) {
-                        portText.setText(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+                        portText.setText(PluginConstant.EMPTY_STRING);
                     }
                 }
             });
@@ -481,6 +481,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             urlText.setText(getConnectionURL());
             urlText.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     setConnectionURL(urlText.getText());
                 }
@@ -520,6 +521,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             });
             portText.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     Long portValue = null;
                     try {
@@ -528,7 +530,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
                         // JUMP
                     }
                     if (portValue == null || portValue <= 0) {
-                        portText.setText(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+                        portText.setText(PluginConstant.EMPTY_STRING);
                     }
                 }
             });
