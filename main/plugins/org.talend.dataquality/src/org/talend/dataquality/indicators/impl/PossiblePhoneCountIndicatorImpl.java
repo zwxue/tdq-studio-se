@@ -214,7 +214,9 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
             PhoneNumber phoneNumeber = phoneUtil.parse(data.toString(), country);
             if (phoneUtil.isPossibleNumber(phoneNumeber)) {
                 this.possiblePhoneCount++;
-                this.mustStoreRow = true;
+                if (checkMustStorCurrentRow()) {
+                    this.mustStoreRow = true;
+                }
             }
         } catch (NumberParseException e) {
             return false;
