@@ -764,7 +764,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @return
      */
     private DBMap<Object, List<Object>> initValueForDBMap(String dbName) {
-        return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+        return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this),
+                dbName);
     }
 
     /**

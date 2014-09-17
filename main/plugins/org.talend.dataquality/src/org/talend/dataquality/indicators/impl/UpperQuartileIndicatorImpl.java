@@ -49,7 +49,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
      */
     private Map<Object, Long> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
         } else {
             return new TreeMap<Object, Long>();
         }

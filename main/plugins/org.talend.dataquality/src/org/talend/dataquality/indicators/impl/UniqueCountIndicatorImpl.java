@@ -77,7 +77,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      */
     private Set<Object> initValueForDBSet(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
         } else {
             return new HashSet<Object>();
         }

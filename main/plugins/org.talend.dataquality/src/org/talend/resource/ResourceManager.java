@@ -115,13 +115,13 @@ public final class ResourceManager {
     public static String getMapDBFilePath(Indicator indicator) {
         Analysis analysis = AnalysisHelper.getAnalysis(indicator);
         String analysisName = null;
-        String indicatorName = indicator.getName();
+        String indicatorName = indicator.eResource().getURIFragment(indicator);
         String modelElementName = Path.EMPTY.toString();
         if (analysis == null) {
             log.error(Messages.getString("ResourceManager.CanNotGetAnalysis"));
         } else {
-            analysisName = analysis.getName();
-            if (AnalysisType.COLUMN.equals(analysis.getParameters().getAnalysisType())) {
+            analysisName = analysis.eResource().getURIFragment(analysis);
+            if (AnalysisType.MULTIPLE_COLUMN.equals(analysis.getParameters().getAnalysisType())) {
                 modelElementName = indicator.getAnalyzedElement().getName();
             }
         }

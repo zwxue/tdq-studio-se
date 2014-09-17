@@ -83,8 +83,8 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      */
     private Map<Object, List<Object>> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
-
+            return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this),
+                    dbName);
         }
         return null;
     }

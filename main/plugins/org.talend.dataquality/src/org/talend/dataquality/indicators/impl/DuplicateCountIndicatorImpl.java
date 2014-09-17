@@ -80,7 +80,8 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     private Map<Object, List<Object[]>> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBValueListMap<Object>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+            return new DBValueListMap<Object>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this),
+                    dbName);
         } else {
             return new HashMap<Object, List<Object[]>>();
         }
@@ -93,7 +94,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     private Set<Object> initValueForDBSet(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
         } else {
             return new HashSet<Object>();
         }

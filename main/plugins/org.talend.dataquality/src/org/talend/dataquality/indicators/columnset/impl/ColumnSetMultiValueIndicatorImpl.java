@@ -280,7 +280,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     private ColumnSetDBMap initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+            return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
         }
         return null;
     }
