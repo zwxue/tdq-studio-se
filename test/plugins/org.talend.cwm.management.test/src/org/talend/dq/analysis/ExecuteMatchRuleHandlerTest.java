@@ -38,6 +38,7 @@ import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dq.analysis.match.ExecuteMatchRuleHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -56,7 +57,7 @@ public class ExecuteMatchRuleHandlerTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
+     * {@link org.talend.dq.analysis.match.org.talend.dq.analysis.match.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
      * .
      * 
      * no block key one match key
@@ -147,7 +148,7 @@ public class ExecuteMatchRuleHandlerTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
+     * {@link org.talend.dq.analysis.match.org.talend.dq.analysis.match.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
      * .
      * 
      * one block key one match key
@@ -235,7 +236,7 @@ public class ExecuteMatchRuleHandlerTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
+     * {@link org.talend.dq.analysis.match.org.talend.dq.analysis.match.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
      * .
      * 
      * one block key, two match rule
@@ -337,7 +338,7 @@ public class ExecuteMatchRuleHandlerTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
+     * {@link org.talend.dq.analysis.match.org.talend.dq.analysis.match.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
      * .
      * 
      * same to case 3 but the match rule order is exchange
