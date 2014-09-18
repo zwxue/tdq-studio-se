@@ -284,7 +284,6 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      */
     @Override
     public boolean isValid(Object inputData) {
-
         return true;
     }
 

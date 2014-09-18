@@ -248,7 +248,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      * 
      */
     private void clearDrillDownData() {
-        if (!isUsedMapDBMode()) {
+        if (!isUsedMapDBMode() || !checkAllowDrillDown()) {
             return;
         }
         Iterator<Object> iterator = duplicateObjects.iterator();

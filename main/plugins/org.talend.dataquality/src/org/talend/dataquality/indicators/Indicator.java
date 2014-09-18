@@ -535,4 +535,11 @@ public interface Indicator extends ModelElement, DataValidation, MapDBDrillDown 
      */
     public void setDrillDownLimitSize(Long dirllDownSize);
 
+    /**
+     * 
+     * Check whether drill down action is allow
+     * 
+     * @return true is allowed else false
+     */
+    public boolean checkAllowDrillDown();
 } // Indicator

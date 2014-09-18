@@ -549,8 +549,11 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         this.datePattern = null;
         if (isUsedMapDBMode()) {
             if (valueToFreqForMapDB != null) {
-                clearDrillDownMaps();
-                ((DBMap<Object, Long>) valueToFreqForMapDB).clear();
+                if (checkAllowDrillDown()) {
+                    clearDrillDownMaps();
+                } else {
+                    ((DBMap<Object, Long>) valueToFreqForMapDB).clear();
+                }
             }
             valueToFreqForMapDB = initValueForDBMap(StandardDBName.computeProcess.name() + FREQUENCYMAPNAME);
 

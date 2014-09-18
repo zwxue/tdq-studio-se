@@ -213,9 +213,6 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     @Override
     public boolean reset() {
         this.length = LENGTH_EDEFAULT;
-        if (isUsedMapDBMode()) {
-            clearDrillDownMaps();
-        }
         return super.reset();
     }
 
@@ -232,9 +229,12 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     /**
      * DOC talend Comment method "clearDrillDownMaps".
      */
-    private void clearDrillDownMaps() {
-        AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
-        mapDB.clearDB();
+    @Override
+    protected void clearDrillDownMap() {
+        if (checkAllowDrillDown()) {
+            AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
+            mapDB.clearDB();
+        }
     }
 
     /*

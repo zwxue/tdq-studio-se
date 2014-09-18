@@ -749,7 +749,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * DOC talend Comment method "clearDrillDownMap".
      */
     protected void clearDrillDownMap() {
-        if (this.isUsedMapDBMode()) {
+        if (this.isUsedMapDBMode() && checkAllowDrillDown()) {
             if (drillDownMap != null && !drillDownMap.isEmpty()) {
                 drillDownMap.clear();
             }
@@ -1280,7 +1280,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        if (isUsedMapDBMode()) {
+        if (isUsedMapDBMode() && checkAllowDrillDown()) {
             if (StandardDBName.drillDown.name().equals(dbName) && drillDownMap != null && !drillDownMap.isClosed()) {
                 return drillDownMap;
             }
@@ -1339,6 +1339,20 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             this.drillDownLimitSize = Long.valueOf(analysis.getParameters().getMaxNumberRows());
         }
         return this.drillDownLimitSize;
+    }
+
+    /**
+     * Check whether drill down action is allow
+     * 
+     * @return true is allowed else false
+     */
+    @Override
+    public boolean checkAllowDrillDown() {
+        Analysis analysis = AnalysisHelper.getAnalysis(this);
+        if (analysis != null) {
+            return analysis.getParameters().isStoreData();
+        }
+        return false;
     }
 
     /**

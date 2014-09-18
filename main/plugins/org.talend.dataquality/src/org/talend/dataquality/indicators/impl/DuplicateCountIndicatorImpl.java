@@ -303,7 +303,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @return
      */
     private boolean needStoreDrillDownData() {
-        return isUsedMapDBMode() && this.checkMustStorCurrentRow();
+        return isUsedMapDBMode() && this.checkMustStorCurrentRow() && this.checkAllowDrillDown();
     }
 
     @Override
