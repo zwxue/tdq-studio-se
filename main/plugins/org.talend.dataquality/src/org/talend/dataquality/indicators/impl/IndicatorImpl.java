@@ -750,7 +750,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     protected void clearDrillDownMap() {
         if (this.isUsedMapDBMode()) {
-            if (drillDownMap != null) {
+            if (drillDownMap != null && !drillDownMap.isEmpty()) {
                 drillDownMap.clear();
             }
             drillDownMap = initValueForDBMap(StandardDBName.drillDown.name());
