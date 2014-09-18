@@ -53,6 +53,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -604,7 +605,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 if (!analysis.getParameters().isStoreData()) {
                     break;
                 }
-                if (simpleIndicator.isUsedMapDBMode()) {
+                if (simpleIndicator.isUsedMapDBMode() && AnalysisHelper.isJavaExecutionEngine(analysis)) {
                     // nothing need to do
                 } else {
                     List<Object[]> listRows = simpleIndicator.getListRows();

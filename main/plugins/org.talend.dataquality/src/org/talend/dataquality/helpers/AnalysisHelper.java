@@ -124,6 +124,22 @@ public final class AnalysisHelper {
     }
 
     /**
+     * Current analysis whether is java engin
+     * 
+     * @param analysis the analysis
+     * @return true if is java engin else false
+     */
+    public static boolean isJavaExecutionEngine(Analysis analysis) {
+        AnalysisParameters parameters = analysis.getParameters();
+
+        if (parameters == null) {
+            return false;
+        }
+        ExecutionLanguage executionLanguage = parameters.getExecutionLanguage();
+        return ExecutionLanguage.JAVA == executionLanguage;
+    }
+
+    /**
      * Method "setAnalysisType".
      * 
      * @param analysis an analysis
@@ -226,7 +242,8 @@ public final class AnalysisHelper {
             } else {
                 Expression expression = expressions.getExpression();
                 if (expression == null) {
-                    expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE, datafilterString);
+                    expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
+                            datafilterString);
                     expressions.setExpression(expression);
                 } else {
                     expression.setBody(datafilterString);
@@ -266,7 +283,8 @@ public final class AnalysisHelper {
                 } else {
                     Expression expression = expressions.getExpression();
                     if (expression == null) {
-                        expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE, datafilterString);
+                        expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
+                                datafilterString);
                         expressions.setExpression(expression);
                     } else {
                         expression.setBody(datafilterString);
@@ -481,7 +499,8 @@ public final class AnalysisHelper {
      * @return
      */
     public static String getLastRunContext(Analysis analysis) {
-        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.ANA_LAST_RUN_CONTEXT, analysis.getTaggedValue());
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.ANA_LAST_RUN_CONTEXT,
+                analysis.getTaggedValue());
         if (taggedValue == null) {
             return PluginConstant.EMPTY_STRING;
         }

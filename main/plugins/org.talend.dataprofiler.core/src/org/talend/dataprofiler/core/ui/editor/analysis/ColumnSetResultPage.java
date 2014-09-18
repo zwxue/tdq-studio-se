@@ -79,6 +79,7 @@ import org.talend.dataprofiler.core.ui.wizard.patterns.DataFilterType;
 import org.talend.dataprofiler.core.ui.wizard.patterns.SelectPatternsWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
@@ -183,7 +184,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            if (simpleStaticIndicator.isUsedMapDBMode()) {
+            if (simpleStaticIndicator.isUsedMapDBMode() && AnalysisHelper.isJavaExecutionEngine(masterPage.getAnalysis())) {
                 this.createTableSectionPartForMapDB(sectionClient,
                         DefaultMessagesImpl.getString("ColumnSetResultPage.Data"), simpleStaticIndicator); //$NON-NLS-1$
             } else {
@@ -601,6 +602,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             int index = cell.getColumnIndex();
             cell.setText(getColumnText(element, index));
             cell.setForeground(getForeground(element, index));
+            cell.setBackground(getBackground(element, index));
         }
     }
 
