@@ -154,7 +154,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 Iterator<Record> resultSetIterator = sqlExecutor.getResultSetIterator(analysis.getContext().getConnection(),
                         anlayzedElements);
                 BlockAndMatchManager bAndmManager = new BlockAndMatchManager(resultSetIterator, matchResultConsumer, columnMap,
-                        recordMatchingIndicator, blockKeyIndicator);
+                        recordMatchingIndicator);
                 bAndmManager.run();
             } catch (SQLException e) {
                 log.error(e, e);
