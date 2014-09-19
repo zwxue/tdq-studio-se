@@ -591,5 +591,4 @@ public class AnalysisRecordGroupingUtils {
         }
         currentRuleMatcher.add(matchKeyMap);
     }
-
 }

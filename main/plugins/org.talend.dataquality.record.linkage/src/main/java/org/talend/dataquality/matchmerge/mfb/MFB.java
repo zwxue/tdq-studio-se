@@ -43,10 +43,10 @@ public class MFB implements MatchMergeAlgorithm {
      */
     public MFB(IRecordMatcher matcher, IRecordMerger merger) {
         if (matcher == null) {
-            throw new IllegalArgumentException("Matcher cannot be null."); //$NON-NLS-1$
+            throw new IllegalArgumentException("Matcher cannot be null.");
         }
         if (merger == null) {
-            throw new IllegalArgumentException("Merger cannot be null."); //$NON-NLS-1$
+            throw new IllegalArgumentException("Merger cannot be null.");
         }
         this.matcher = matcher;
         this.merger = merger;
@@ -86,7 +86,7 @@ public class MFB implements MatchMergeAlgorithm {
                 try {
                     attributeMatcher = AttributeMatcherFactory.createMatcher(algorithm, algorithmParameters[i]);
                 } catch (Exception e) {
-                    throw new RuntimeException("Could not instantiate match class '" + algorithmParameters[i] + "'.", e); //$NON-NLS-1$//$NON-NLS-2$
+                    throw new RuntimeException("Could not instantiate match class '" + algorithmParameters[i] + "'.", e);
                 }
             }
             attributeMatcher.setNullOption(nullOptions[i]); // Null handling
@@ -110,7 +110,7 @@ public class MFB implements MatchMergeAlgorithm {
     @Override
     public List<Record> execute(Iterator<Record> sourceRecords, Callback callback) {
         if (callback == null) {
-            throw new IllegalArgumentException("Callback cannot be null."); //$NON-NLS-1$
+            throw new IllegalArgumentException("Callback cannot be null.");
         }
         List<Record> mergedRecords = new ArrayList<Record>();
         int index = 0;
@@ -119,10 +119,37 @@ public class MFB implements MatchMergeAlgorithm {
         callback.onBeginProcessing();
         while (!queue.isEmpty() && !callback.isInterrupted()) {
             if (LOGGER.isDebugEnabled() && index % 10000 == 0) {
-                LOGGER.debug("Current index: " + index); //$NON-NLS-1$
+                LOGGER.debug("Current index: " + index);
             }
             Record currentRecord = queue.poll();
-            matchOneRecord(callback, mergedRecords, queue, currentRecord);
+            callback.onBeginRecord(currentRecord);
+            // Sanity checks
+            if (currentRecord == null) {
+                throw new IllegalArgumentException("Record cannot be null.");
+            }
+            // MFB algorithm
+            boolean hasCreatedNewMerge = false;
+            for (Record mergedRecord : mergedRecords) {
+                MatchResult matchResult = doMatch(mergedRecord, currentRecord);
+                if (matchResult.isMatch()) {
+                    callback.onMatch(mergedRecord, currentRecord, matchResult);
+                    Record newMergedRecord = merger.merge(currentRecord, mergedRecord);
+                    queue.offer(newMergedRecord);
+                    callback.onNewMerge(newMergedRecord);
+                    mergedRecords.remove(mergedRecord);
+                    callback.onRemoveMerge(mergedRecord);
+                    hasCreatedNewMerge = true;
+                    break;
+                } else {
+                    callback.onDifferent(mergedRecord, currentRecord, matchResult);
+                }
+            }
+            if (!hasCreatedNewMerge) {
+                currentRecord.getRelatedIds().add(currentRecord.getId());
+                mergedRecords.add(currentRecord);
+                callback.onNewMerge(currentRecord);
+            }
+            callback.onEndRecord(currentRecord);
             index++;
         }
         // Post merge processing (most common values...)
@@ -130,48 +157,9 @@ public class MFB implements MatchMergeAlgorithm {
         return mergedRecords;
     }
 
-    /**
-     * DOC yyin Comment method "matchOneRecord".
-     * 
-     * @param callback
-     * @param mergedRecords
-     * @param queue
-     * @param currentRecord
-     */
-    protected void matchOneRecord(Callback callback, List<Record> mergedRecords, Queue<Record> queue, Record currentRecord) {
-        callback.onBeginRecord(currentRecord);
-        // Sanity checks
-        if (currentRecord == null) {
-            throw new IllegalArgumentException("Record cannot be null."); //$NON-NLS-1$
-        }
-        // MFB algorithm
-        boolean hasCreatedNewMerge = false;
-        for (Record mergedRecord : mergedRecords) {
-            MatchResult matchResult = doMatch(mergedRecord, currentRecord);
-            if (matchResult.isMatch()) {
-                callback.onMatch(mergedRecord, currentRecord, matchResult);
-                Record newMergedRecord = merger.merge(currentRecord, mergedRecord);
-                queue.offer(newMergedRecord);
-                callback.onNewMerge(newMergedRecord);
-                mergedRecords.remove(mergedRecord);
-                callback.onRemoveMerge(mergedRecord);
-                hasCreatedNewMerge = true;
-                break;
-            } else {
-                callback.onDifferent(mergedRecord, currentRecord, matchResult);
-            }
-        }
-        if (!hasCreatedNewMerge) {
-            currentRecord.getRelatedIds().add(currentRecord.getId());
-            mergedRecords.add(currentRecord);
-            callback.onNewMerge(currentRecord);
-        }
-        callback.onEndRecord(currentRecord);
-    }
-
     private MatchResult doMatch(Record leftRecord, Record rightRecord) {
         if (leftRecord.getAttributes().size() != rightRecord.getAttributes().size()) {
-            throw new IllegalArgumentException("Records do not share same attribute count."); //$NON-NLS-1$
+            throw new IllegalArgumentException("Records do not share same attribute count.");
         }
         if (leftRecord.getGroupId() != null && rightRecord.getGroupId() != null) {
             if (!leftRecord.getGroupId().equals(rightRecord.getGroupId())) {
@@ -181,7 +169,7 @@ public class MFB implements MatchMergeAlgorithm {
                 }
             } else { // Two records of same group
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Merging already merged records (same group id)."); //$NON-NLS-1$
+                    LOGGER.debug("Merging already merged records (same group id).");
                 }
             }
         }
@@ -194,7 +182,7 @@ public class MFB implements MatchMergeAlgorithm {
      */
     protected boolean isMatchDiffGroups() {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Cannot match record: already different groups."); //$NON-NLS-1$
+            LOGGER.debug("Cannot match record: already different groups.");
         }
         return false;
     }
