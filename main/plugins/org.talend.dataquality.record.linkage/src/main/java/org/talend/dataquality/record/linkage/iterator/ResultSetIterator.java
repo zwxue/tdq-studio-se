@@ -42,8 +42,6 @@ public class ResultSetIterator implements Iterator<Record> {
 
     private List<String> columnNames;
 
-    private long index = 0;
-
     public ResultSetIterator(Connection sqlConnection, String sqlQuery, List<String> elementNames) throws SQLException {
         this.connection = sqlConnection;
         this.statement = sqlConnection.createStatement();
@@ -64,7 +62,7 @@ public class ResultSetIterator implements Iterator<Record> {
         try {
             return resultSet.next();
         } catch (SQLException e) {
-            throw new RuntimeException("Could not move to next result", e); //$NON-NLS-1$
+            throw new RuntimeException("Could not move to next result", e);
         }
     }
 
@@ -81,16 +79,20 @@ public class ResultSetIterator implements Iterator<Record> {
             if (metaData.getColumnCount() == 0) {
                 return null;
             }
+            String id = StringUtils.EMPTY;
             for (int i = 0; i < metaData.getColumnCount(); i++) {
-                Attribute attribute = new Attribute(columnNames.get(i), i);
+                Attribute attribute = new Attribute(columnNames.get(i));
 
                 String value = String.valueOf(resultSet.getObject(i + 1));
                 attribute.setValue(value);
                 attributes.add(attribute);
+                if (!metaData.isWritable(i + 1)) {
+                    id = value; // Consider first non-writable column as id
+                }
             }
-            return new RichRecord(attributes, String.valueOf(index++), 0, StringUtils.EMPTY);
+            return new RichRecord(attributes, id, 0, StringUtils.EMPTY);
         } catch (Exception e) {
-            throw new RuntimeException("Could not build next result", e); //$NON-NLS-1$
+            throw new RuntimeException("Could not build next result", e);
         }
     }
 
@@ -101,7 +103,7 @@ public class ResultSetIterator implements Iterator<Record> {
      */
     @Override
     public void remove() {
-        throw new UnsupportedOperationException("Read only iterator"); //$NON-NLS-1$
+        throw new UnsupportedOperationException("Read only iterator");
     }
 
     public void close() throws SQLException {
