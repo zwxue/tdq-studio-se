@@ -13,14 +13,12 @@
 package org.talend.cwm.db.connection;
 
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.matchmerge.Record;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -41,6 +39,4 @@ public interface ISQLExecutor {
     public Boolean getStoreOnDisk();
 
     public StoreOnDiskHandler getStoreOnDiskHandler();
-
-    public Iterator<Record> getResultSetIterator(DataManager connection, List<ModelElement> analysedElements) throws SQLException;
 }
