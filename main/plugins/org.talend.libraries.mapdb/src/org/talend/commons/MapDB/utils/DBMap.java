@@ -195,7 +195,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
     @Override
     public V remove(Object key) {
         if (key == null) {
-            return dbMap.remove(key);
+            return dbMap.remove(EMPTY);
         }
         return dbMap.remove(key);
     }
@@ -687,7 +687,14 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
                 break;
             }
             if (stratToRecord == true) {
-                returnList.add(((List) this.get(next)).toArray());
+                V v = this.get(next);
+                if (v.getClass().isArray()) {
+                    returnList.add((Object[]) v);
+                } else if (v instanceof String) {
+                    returnList.add(((String) v).split(",")); //$NON-NLS-1$
+                } else {
+                    returnList.add(((List) v).toArray());
+                }
             }
             index++;
 
