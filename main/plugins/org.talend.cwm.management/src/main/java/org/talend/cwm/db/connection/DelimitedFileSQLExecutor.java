@@ -70,10 +70,32 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
                 return null;
             }
 
+            // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
                 useCsvReader(file, delimitedFileconnection, analysedElements);
             } else {
-                useFileInputDelimited(analysedElements, delimitedFileconnection);
+                int[] analysedColumnIndex = getAnalysedColumnPositionInFileTable(analysedElements, delimitedFileconnection);
+                // use TOSDelimitedReader in FileInputDelimited to parse.
+                FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
+                // long currentRow = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
+                int index = 0;
+                while (fileInputDelimited.nextRecord()) {
+                    index++;
+                    int columsCount = analysedElements.size(); // fileInputDelimited.getColumnsCountOfCurrentRow();
+                    String[] rowValues = new String[columsCount];
+                    // only get the value of the analysed columns csvReader.getValues();
+
+                    for (int i = 0; i < columsCount; i++) {
+
+                        rowValues[i] = fileInputDelimited.get(analysedColumnIndex[i]);
+                    }
+                    handleRow(rowValues);
+                    if (limit > 0 && index >= limit) {
+                        break;
+                    }
+
+                }
+                fileInputDelimited.close();
             }
             endQuery();
         } catch (IOException e) {
@@ -84,40 +106,14 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
         return dataFromTable;
     }
 
-    /**
-     * DOC yyin Comment method "useFileInputDelimited".
-     * 
-     * @param analysedElements
-     * @param delimitedFileconnection
-     * @throws IOException
-     * @throws Exception
-     */
-    private void useFileInputDelimited(List<ModelElement> analysedElements, DelimitedFileConnection delimitedFileconnection)
-            throws IOException, Exception {
-        int[] analysedColumnIndex = getAnalysedColumnPositionInFileTable(analysedElements);
-        FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
-        int index = 0;
-        while (fileInputDelimited.nextRecord()) {
-            index++;
-            int columsCount = analysedElements.size();
-            String[] rowValues = new String[columsCount];
-            for (int i = 0; i < columsCount; i++) {
-                rowValues[i] = fileInputDelimited.get(analysedColumnIndex[i]);
-            }
-            handleRow(rowValues);
-            if (limit > 0 && index >= limit) {
-                break;
-            }
-
-        }
-        fileInputDelimited.close();
-    }
-
-    private int[] getAnalysedColumnPositionInFileTable(List<ModelElement> analysedElements) {
+    private int[] getAnalysedColumnPositionInFileTable(List<ModelElement> analysedElements,
+            DelimitedFileConnection delimitedFileconnection) {
         // find the position of the analysed elements in the file table's column
         int analysedColumnIndex[] = new int[analysedElements.size()];
         MetadataColumn mColumn = (MetadataColumn) analysedElements.get(0);
         MetadataTable metadataTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
+        // MetadataTable metadataTable = ConnectionHelper.getTables(delimitedFileconnection).toArray(new
+        // MetadataTable[0])[0];
         EList<MetadataColumn> columns = metadataTable.getColumns();
         int colIndex = 0;
         for (ModelElement analysedColumn : analysedElements) {
@@ -196,8 +192,8 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
      * , java.util.List)
      */
     public Iterator<Record> getResultSetIterator(DataManager connection, List<ModelElement> analysedElements) {
-
-        return new DelimitedFileIterator((DelimitedFileConnection) connection, analysedElements);
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
