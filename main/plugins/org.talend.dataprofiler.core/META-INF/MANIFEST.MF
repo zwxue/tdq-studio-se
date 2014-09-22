@@ -45,7 +45,9 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.talend.core.ui,
  org.eclipse.nebula.widgets.pagination,
  org.talend.libraries.mapdb,
- org.talend.sqlexplorer.service
+ org.talend.updates.runtime,
+ org.talend.dataprofiler.service,
+ org.talend.librariesmanager.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
@@ -112,4 +114,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.apache.log4j, org.talend.testutils
 Bundle-Localization: plugin
 Bundle-ClassPath: .
-Import-Package: org.talend.sqlexplorer.service
+Import-Package: org.talend.dataprofiler.service

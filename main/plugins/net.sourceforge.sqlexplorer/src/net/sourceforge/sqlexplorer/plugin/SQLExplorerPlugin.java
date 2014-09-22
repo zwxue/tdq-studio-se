@@ -47,7 +47,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
-import org.talend.sqlexplorer.service.ISqlexplorerService;
+import org.talend.dataprofiler.service.ISqlexplorerService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -145,6 +145,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             error("Exception during start", e);
             throw e;
         }
+        initAllDrivers();
     }
 
     /**

@@ -74,8 +74,8 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
-import org.talend.sqlexplorer.service.ISqlexplorerService;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -107,48 +107,65 @@ public class SqlexplorerService implements ISqlexplorerService {
     }
 
     public void runInDQViewer(DatabaseConnection databaseConnection, String editorName, String query) {
+        String lEditorName = editorName;
+        if (lEditorName == null) {
+            lEditorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
+        }
         Alias alias = SQLExplorerPlugin.getDefault().getAliasManager().getAlias(databaseConnection.getName());
-        if (alias != null) {
-            String url = JavaSqlFactory.getURL(databaseConnection);
-            String username = JavaSqlFactory.getUsername(databaseConnection);
-            String password = JavaSqlFactory.getPassword(databaseConnection);
-            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            User user = alias.getUser(username);
-            if (PluginConstant.EMPTY_STRING.equals(username)) {
-                // get the user both the dbtype and username are the same.
-                if (!alias.getUrl().equals(url)) {
-                    user = new net.sourceforge.sqlexplorer.dbproduct.User(username, password);
-                    user.setAlias(alias);
-                    alias.addUser(user);
-                }
-            } else {
-                if (user == null) {
-                    user = alias.getDefaultUser();
-                }
-            }
-            alias.setDefaultUser(user);
-
-            // set IMetadataConnection into the user, if the db type is hive, should use IMetadataConnection to
-            // create the hive connection
-            if (databaseConnection != null) {
-                user.setDatabaseConnection(databaseConnection);
-                // if ManagedDriver class is not Loaded,check if it lack jars then update the realted jar.
-                updateDriverIfClassNotLoad(databaseConnection);
-            }
-
-            input.setUser(user);
-            IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
-            try {
-                SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
-                editorPart.setText(query);
-                new ExecSQLAction(editorPart).run();
-            } catch (PartInitException e) {
-                log.error(e, e);
-            }
-        } else {
+        if (alias == null) {
             // add the connection to alias and call this method again
             addConnetionAliasToSQLPlugin(databaseConnection);
-            runInDQViewer(databaseConnection, editorName, query);
+            alias = SQLExplorerPlugin.getDefault().getAliasManager().getAlias(databaseConnection.getName());
+        }
+        if (alias != null) {
+            runInDQViewer(alias, databaseConnection, lEditorName, query);
+        }
+    }
+
+    /**
+     * open the sql editor and run it.
+     * 
+     * @param alias
+     * @param databaseConnection
+     * @param lEditorName
+     * @param query
+     */
+    private void runInDQViewer(Alias alias, DatabaseConnection databaseConnection, String lEditorName, String query) {
+        String url = JavaSqlFactory.getURL(databaseConnection);
+        String username = JavaSqlFactory.getUsername(databaseConnection);
+        String password = JavaSqlFactory.getPassword(databaseConnection);
+        SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + lEditorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        User user = alias.getUser(username);
+        if (PluginConstant.EMPTY_STRING.equals(username)) {
+            // get the user both the dbtype and username are the same.
+            if (!alias.getUrl().equals(url)) {
+                user = new net.sourceforge.sqlexplorer.dbproduct.User(username, password);
+                user.setAlias(alias);
+                alias.addUser(user);
+            }
+        } else {
+            if (user == null) {
+                user = alias.getDefaultUser();
+            }
+        }
+        alias.setDefaultUser(user);
+
+        // set IMetadataConnection into the user, if the db type is hive, should use IMetadataConnection to
+        // create the hive connection
+        if (databaseConnection != null) {
+            user.setDatabaseConnection(databaseConnection);
+            // if ManagedDriver class is not Loaded,check if it lack jars then update the realted jar.
+            updateDriverIfClassNotLoad(databaseConnection);
+        }
+
+        input.setUser(user);
+        IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
+        try {
+            SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
+            editorPart.setText(query);
+            new ExecSQLAction(editorPart).run();
+        } catch (PartInitException e) {
+            log.error(e, e);
         }
     }
 
@@ -349,7 +366,6 @@ public class SqlexplorerService implements ISqlexplorerService {
      * @param root
      * @param jarNames
      * @return if return an empty Set,indicate that it find failed.
-     * @throws MalformedURLException
      */
     private Set<String> findAllJarPath(File root, List<String> jarNames) {
         Set<String> jarPathes = new HashSet<String>();
@@ -388,7 +404,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.sqlexplorer.service.ISqlexplorerService#findSqlExplorerTableNode(org.talend.core.model.metadata.builder
+     * org.talend.dataprofiler.service.ISqlexplorerService#findSqlExplorerTableNode(org.talend.core.model.metadata.builder
      * .connection.Connection, orgomg.cwm.objectmodel.core.Package, java.lang.String, java.lang.String)
      */
     public void findSqlExplorerTableNode(Connection providerConnection, Package parentPackageElement, String tableName,
@@ -515,7 +531,7 @@ public class SqlexplorerService implements ISqlexplorerService {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.sqlexplorer.service.ISqlexplorerService#getDriver(java.lang.String, java.lang.String)
+     * @see org.talend.dataprofiler.service.ISqlexplorerService#getDriver(java.lang.String, java.lang.String)
      */
     public Driver getDriver(String driverClassName, String jarsPath) throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
@@ -642,7 +658,7 @@ public class SqlexplorerService implements ISqlexplorerService {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.sqlexplorer.service.ISqlexplorerService#getMyURLClassLoaderAssignableClasses(java.net.URL)
+     * @see org.talend.dataprofiler.service.ISqlexplorerService#getMyURLClassLoaderAssignableClasses(java.net.URL)
      */
     public Class[] getMyURLClassLoaderAssignableClasses(URL url) {
         Class[] classes = null;
@@ -657,7 +673,7 @@ public class SqlexplorerService implements ISqlexplorerService {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.sqlexplorer.service.ISqlexplorerService#getClassDriverFromSQLExplorer(java.lang.String,
+     * @see org.talend.dataprofiler.service.ISqlexplorerService#getClassDriverFromSQLExplorer(java.lang.String,
      * java.util.Properties)
      */
     public Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
@@ -687,7 +703,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.sqlexplorer.service.ISqlexplorerService#updateConnetionAliasByName(org.talend.core.model.metadata.
+     * org.talend.dataprofiler.service.ISqlexplorerService#updateConnetionAliasByName(org.talend.core.model.metadata.
      * builder.connection.Connection, java.lang.String)
      */
     public void updateConnetionAliasByName(Connection connection, String aliasName) {
@@ -723,7 +739,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.sqlexplorer.service.ISqlexplorerService#removeAliasInSQLExplorer(orgomg.cwm.foundation.softwaredeployment
+     * org.talend.dataprofiler.service.ISqlexplorerService#removeAliasInSQLExplorer(orgomg.cwm.foundation.softwaredeployment
      * .DataProvider[])
      */
     public void removeAliasInSQLExplorer(DataProvider... dataproviders) {
@@ -762,7 +778,7 @@ public class SqlexplorerService implements ISqlexplorerService {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.sqlexplorer.service.ISqlexplorerService#aliasExist(java.lang.String)
+     * @see org.talend.dataprofiler.service.ISqlexplorerService#aliasExist(java.lang.String)
      */
     public boolean aliasExist(String connectionName) {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();

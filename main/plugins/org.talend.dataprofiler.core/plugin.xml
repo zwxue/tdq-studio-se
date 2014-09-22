@@ -1824,5 +1824,13 @@
           </view>
        </perspectiveExtension>
     </extension>
+    <extension
+          point="org.talend.updates.runtime.extraUpdatesFactory">
+       <factory
+             class="org.talend.dataprofiler.core.DQRequiredMissingJarsExtraUpdatesFactory"
+             id="org.talend.dataprofiler.core.DownloadSqlexplorerPluginJar"
+             name="Download Sqlexplorer Plugin Jar">
+       </factory>
+    </extension>
 
 </plugin>

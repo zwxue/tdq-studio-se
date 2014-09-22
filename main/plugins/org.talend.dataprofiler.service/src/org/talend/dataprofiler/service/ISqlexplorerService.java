@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.sqlexplorer.service;
+package org.talend.dataprofiler.service;
 
 import java.net.URL;
 import java.sql.Driver;

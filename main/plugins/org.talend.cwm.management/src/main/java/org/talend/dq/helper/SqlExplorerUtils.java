@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.Driver;
 import java.util.ArrayList;
@@ -20,9 +21,19 @@ import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.database.EDatabaseTypeName;
@@ -38,8 +49,8 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.dq.CWMPlugin;
-import org.talend.sqlexplorer.service.ISqlexplorerService;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -54,11 +65,17 @@ public class SqlExplorerUtils {
 
     public static final String SQLEDITOR_ID = "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"; //$NON-NLS-1$
 
+    public static final String JAR_FILE_NAME = "net.sourceforge.sqlexplorer.jar"; //$NON-NLS-1$
+
+    public static final String COMMAND_ID = "org.talend.updates.show.wizard.command"; //$NON-NLS-1$
+
     private static SqlExplorerUtils sqlExplorerUtils;
 
     private ISqlexplorerService sqlexplorerService;
 
     private boolean initRootProject = false;
+
+    private boolean hasShowDownloadWizard = false;
 
     /**
      * Getter for sqlexplorerService.
@@ -69,24 +86,53 @@ public class SqlExplorerUtils {
         if (this.sqlexplorerService == null) {
             BundleContext context = CWMPlugin.getDefault().getContext();
             if (context != null) {
+                // show download jar dialog
+                ServiceReference serviceReference = context.getServiceReference(ISqlexplorerService.class.getName());
+                if (serviceReference == null) {
+                    // check the jar file has been donwload or not
+                    String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
+                    File movedfile = new File(pathToStore, JAR_FILE_NAME);
+                    if (movedfile.exists()) {
+                        log.warn(Messages.getString("SqlExplorerUtils.restartToLoadSqlexplorer")); //$NON-NLS-1$
+                        return null;
+                    }
+                    if (!hasShowDownloadWizard) {
+                        IServiceLocator serviceLocator = PlatformUI.getWorkbench();
+                        ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
+                        try {
+                            Command command = commandService.getCommand(COMMAND_ID);
+                            command.executeWithChecks(new ExecutionEvent());
+                            hasShowDownloadWizard = true;
+                        } catch (ExecutionException e) {
+                            log.error(e);
+                        } catch (NotDefinedException e) {
+                            log.error(e);
+                        } catch (NotEnabledException e) {
+                            log.error(e);
+                        } catch (NotHandledException e) {
+                            log.error(e);
+                        }
+                    }
+                }
                 Object obj = null;
-                try {
-                    obj = context.getService(context.getServiceReference(ISqlexplorerService.class.getName()));
-                } catch (Exception ee) {
-                    log.info(ee);
-                    // show download jar dialog
-                    return null;
+                if (serviceReference != null) {
+                    obj = context.getService(serviceReference);
                 }
                 if (obj != null && obj instanceof ISqlexplorerService) {
                     this.sqlexplorerService = (ISqlexplorerService) obj;
                 }
             }
         }
-        if (!initRootProject && this.sqlexplorerService != null) {
-            this.sqlexplorerService.initSqlExplorerRootProject(ReponsitoryContextBridge.getRootProject());
-            initRootProject = true;
+        if (this.sqlexplorerService == null) {
+            log.error(Messages.getString("SqlExplorerUtils.missingSqlexplorer")); //$NON-NLS-1$
+            return null;
+        } else {
+            if (!initRootProject) {
+                this.sqlexplorerService.initSqlExplorerRootProject(ReponsitoryContextBridge.getRootProject());
+                initRootProject = true;
+            }
+            return this.sqlexplorerService;
         }
-        return this.sqlexplorerService;
     }
 
     public static SqlExplorerUtils getDefault() {
@@ -116,7 +162,9 @@ public class SqlExplorerUtils {
                 MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         Messages.getString("SqlExplorerUtils.Warning"), Messages.getString("SqlExplorerUtils.cantPreview")); //$NON-NLS-1$ //$NON-NLS-2$
             } else {
-                getSqlexplorerService().runInDQViewer(dbConn, editorName, query);
+                if (getSqlexplorerService() != null) {
+                    getSqlexplorerService().runInDQViewer(dbConn, editorName, query);
+                }
             }
         } else {
             // if the connection is not database connection, do nothing
@@ -125,12 +173,17 @@ public class SqlExplorerUtils {
 
     public void findSqlExplorerTableNode(Connection providerConnection, Package parentPackageElement, String tableName,
             String activeTabName) {
-        getSqlexplorerService().findSqlExplorerTableNode(providerConnection, parentPackageElement, tableName, activeTabName);
+        if (getSqlexplorerService() != null) {
+            getSqlexplorerService().findSqlExplorerTableNode(providerConnection, parentPackageElement, tableName, activeTabName);
+        }
     }
 
     public Driver getDriver(IMetadataConnection metadataConnection) throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
-        return getSqlexplorerService().getDriver(metadataConnection.getDriverClass(), metadataConnection.getDriverJarPath());
+        if (getSqlexplorerService() != null) {
+            return getSqlexplorerService().getDriver(metadataConnection.getDriverClass(), metadataConnection.getDriverJarPath());
+        }
+        return null;
     }
 
     public void initAllConnectionsToSQLExplorer() {
@@ -150,7 +203,9 @@ public class SqlExplorerUtils {
                 }
             }
             if (!conns.isEmpty()) {
-                getSqlexplorerService().initAllConnectionsToSQLExplorer(conns);
+                if (getSqlexplorerService() != null) {
+                    getSqlexplorerService().initAllConnectionsToSQLExplorer(conns);
+                }
             }
         } catch (PersistenceException e) {
             log.error(e, e);
@@ -158,40 +213,62 @@ public class SqlExplorerUtils {
     }
 
     public void setSqlEditorEditable(Object part, boolean lock) {
-        getSqlexplorerService().setSqlEditorEditable(part, lock);
+        if (getSqlexplorerService() != null) {
+            getSqlexplorerService().setSqlEditorEditable(part, lock);
+        }
     }
 
     public boolean needAddDriverConnection(DatabaseConnection dbConn) {
-        return getSqlexplorerService().needAddDriverConnection(dbConn);
+        if (getSqlexplorerService() != null) {
+            return getSqlexplorerService().needAddDriverConnection(dbConn);
+        }
+        return false;
     }
 
     public Class[] getMyURLClassLoaderAssignableClasses(URL url) {
-        return getSqlexplorerService().getMyURLClassLoaderAssignableClasses(url);
+        if (getSqlexplorerService() != null) {
+            return getSqlexplorerService().getMyURLClassLoaderAssignableClasses(url);
+        }
+        return new Class[] {};
     }
 
     public Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
             IllegalAccessException {
-        return getSqlexplorerService().getClassDriverFromSQLExplorer(driverClassName, props);
+        if (getSqlexplorerService() != null) {
+            return getSqlexplorerService().getClassDriverFromSQLExplorer(driverClassName, props);
+        }
+        return null;
     }
 
     // ////////////////
     public void addConnetionAliasToSQLPlugin(ModelElement... dataproviders) {
-        getSqlexplorerService().addConnetionAliasToSQLPlugin(dataproviders);
+        if (getSqlexplorerService() != null) {
+            getSqlexplorerService().addConnetionAliasToSQLPlugin(dataproviders);
+        }
     }
 
     public void updateConnetionAliasByName(Connection connection, String aliasName) {
-        getSqlexplorerService().updateConnetionAliasByName(connection, aliasName);
+        if (getSqlexplorerService() != null) {
+            getSqlexplorerService().updateConnetionAliasByName(connection, aliasName);
+        }
     }
 
     public void loadDriverByLibManageSystem(DatabaseConnection connection) {
-        getSqlexplorerService().loadDriverByLibManageSystem(connection);
+        if (getSqlexplorerService() != null) {
+            getSqlexplorerService().loadDriverByLibManageSystem(connection);
+        }
     }
 
     public void removeAliasInSQLExplorer(DataProvider... dataproviders) {
-        getSqlexplorerService().removeAliasInSQLExplorer(dataproviders);
+        if (getSqlexplorerService() != null) {
+            getSqlexplorerService().removeAliasInSQLExplorer(dataproviders);
+        }
     }
 
     public boolean aliasExist(String connectionName) {
-        return getSqlexplorerService().aliasExist(connectionName);
+        if (getSqlexplorerService() != null) {
+            return getSqlexplorerService().aliasExist(connectionName);
+        }
+        return false;
     }
 }

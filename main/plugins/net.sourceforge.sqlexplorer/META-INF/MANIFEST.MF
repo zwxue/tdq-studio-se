@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.2.0",
  org.talend.core.runtime,
  org.talend.metadata.managment,
  org.talend.libraries.mapdb,
- org.talend.sqlexplorer.service
+ org.talend.dataprofiler.service
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: sqlexplorer.jar,
  lib/rowset.jar,
@@ -104,5 +104,5 @@ Export-Package: META-INF,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
 Bundle-Localization: plugin
-Import-Package: org.talend.sqlexplorer.service
+Import-Package: org.talend.dataprofiler.service
 Service-Component: OSGI-INF/component.xml

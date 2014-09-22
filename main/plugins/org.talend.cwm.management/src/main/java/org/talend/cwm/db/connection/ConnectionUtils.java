@@ -88,6 +88,7 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
@@ -553,8 +554,7 @@ public final class ConnectionUtils {
      */
     private static Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
             IllegalAccessException {
-        // TODO TDQ-9378
-        return null;
+        return SqlExplorerUtils.getDefault().getClassDriverFromSQLExplorer(driverClassName, props);
     }
 
     /**

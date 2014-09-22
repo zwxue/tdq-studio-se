@@ -224,30 +224,6 @@ public class DQRespositoryView extends CommonNavigator {
         // initialized resource persistence property.
         ResourceService.initResourcePersistence();
 
-        // initialized drivers in sql explorer.
-        // will init the drivers when active the sqlexplorer plugin
-        // SQLExplorerPlugin.getDefault().initAllDrivers();
-        // try {
-        // if (!SQLExplorerPlugin.getDefault().isInitedAllConnToSQLExpl()) {
-        // for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
-        // ERepositoryObjectType.METADATA_CONNECTIONS, true)) {
-        // if (viewObject == null || viewObject.getProperty() == null) {
-        // continue;
-        // }
-        // Item item = viewObject.getProperty().getItem();
-        // if (item != null && (item instanceof DatabaseConnectionItem)) {
-        // String username = JavaSqlFactory.getUsername(((DatabaseConnectionItem) item).getConnection());
-        //                        if (username != null && !"".equals(username.trim())) { //$NON-NLS-1$
-        // CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(((DatabaseConnectionItem) item).getConnection());
-        // }
-        // }
-        // }
-        // SQLExplorerPlugin.getDefault().setInitedAllConnToSQLExpl(true);
-        // }
-        // } catch (PersistenceException e) {
-        // log.error(e, e);
-        // }
-
         // MOD qiongli 2011-3-2 feature 17588.initilize all folder.
         initAllFolders();
     }

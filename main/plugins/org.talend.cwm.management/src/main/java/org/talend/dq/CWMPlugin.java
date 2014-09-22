@@ -127,10 +127,20 @@ public class CWMPlugin extends Plugin {
      * when you start TOP ,the 'lib/java' dosen't exist,should create it.
      */
     public void createLibFolderIfNotExist() {
-        String installLocation = LibrariesManagerUtils.getLibrariesPath(ECodeLanguage.JAVA);
+        String installLocation = getLibrariesPath();
         File libFile = new File(installLocation);
         if (!libFile.exists()) {
             org.talend.utils.io.FilesUtils.createFoldersIfNotExists(installLocation, false);
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "getLibrariesPath".
+     * 
+     * @return
+     */
+    public String getLibrariesPath() {
+        String installLocation = LibrariesManagerUtils.getLibrariesPath(ECodeLanguage.JAVA);
+        return installLocation;
     }
 }

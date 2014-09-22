@@ -28,7 +28,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.libraries.jboss,
  org.talend.repository.items.importexport,
  org.talend.libraries.mapdb,
- org.talend.sqlexplorer.service
+ org.talend.dataprofiler.service
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
  lib/advancedPersistentLookupLib-1.0.jar,
@@ -72,5 +72,5 @@ Export-Package: org.talend.commons.emf,
  org.talend.dq.sql.converters,
  org.talend.dq.writer,
  org.talend.dq.writer.impl
-Import-Package: org.talend.sqlexplorer.service
+Import-Package: org.talend.dataprofiler.service
 
