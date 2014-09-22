@@ -1240,13 +1240,14 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+         
 
-   <plugin
+   <!--plugin
          id="org.talend.libraries.mapdb"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="false"/-->
 
    <plugin
          id="org.eclipse.nebula.widgets.pagination"
