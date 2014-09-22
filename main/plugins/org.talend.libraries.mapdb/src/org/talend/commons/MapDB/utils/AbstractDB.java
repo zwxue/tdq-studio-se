@@ -29,9 +29,14 @@ import org.mapdb.DBMaker;
  */
 public abstract class AbstractDB<K> {
 
+    /**
+     * the cache size used to create db.
+     */
+    private static final int CACHE_SIZE = 12 * 1024;
+
     private DB db = null;
 
-    protected Long limiteSize = 0l;
+    protected Long limitSize = 0l;
 
     public static final Object EMPTY = new TupleEmpty();
 
@@ -43,20 +48,23 @@ public abstract class AbstractDB<K> {
     protected Logger log = Logger.getLogger(this.getClass());
 
     protected void initDefaultDB(String parentFullPathStr, String fileName) {
-        dbFile = createPath(parentFullPathStr, fileName);
-        db = MapDBFactory.getInstance().getDB(dbFile);
+        dbFile = MapDBManager.createPath(parentFullPathStr, fileName);
+        db = MapDBManager.getInstance().getDB(dbFile);
         if (db != null) {
             return;
         }
         DBMaker<?> fileDBMaker = DBMaker.newFileDB(dbFile);
-        if (limiteSize > 0) {
-            fileDBMaker = fileDBMaker.mmapFileEnablePartial();
-        } else {
-            fileDBMaker = fileDBMaker.mmapFileEnable();
-        }
-        db = fileDBMaker.sizeLimit(2).cacheSize(1024 * 1024).transactionDisable().closeOnJvmShutdown().make();
-        MapDBFactory.getInstance().putDB(dbFile, db);
+        fileDBMaker = fileDBMaker.mmapFileEnable();
+        db = fileDBMaker.cacheSize(CACHE_SIZE).transactionDisable().closeOnJvmShutdown().make();
+        MapDBManager.getInstance().putDB(dbFile, db);
 
+    }
+
+    public void clearDB() {
+        for (String catalogName : db.getAll().keySet()) {
+            db.delete(catalogName);
+        }
+        db.getEngine().clearCache();
     }
 
     protected void initDefaultDB() {
@@ -90,39 +98,10 @@ public abstract class AbstractDB<K> {
 
     /**
      * 
-     * Close the db
+     * Close the db after 5 minute
      */
     public void close() {
-        // Thread closeDBThread = new Thread("close db thread") {
-        //
-        // @Override
-        // public void run() {
-        // if (!db.isClosed()) {
-        // db.close();
-        // }
-        // }
-        //
-        // };
-        // closeDBThread.start();
-        if (db != null && !db.isClosed()) {
-            db.close();
-        }
-    }
-
-    /**
-     * Make sure the path of DB file is valid
-     * 
-     * @param parentPathStr the Path of parent folder
-     * @param fileName The name of db File
-     * @return The file of special path
-     */
-    private File createPath(String parentPathStr, String fileName) {
-        File parentFolder = new File(parentPathStr);
-        if (!parentFolder.exists()) {
-            parentFolder.mkdirs();
-        }
-        File file = new File(parentFolder.getPath() + File.separator + fileName);
-        return file;
+        MapDBManager.getInstance().closeDB(dbFile);
     }
 
     /**
@@ -264,7 +243,7 @@ public abstract class AbstractDB<K> {
      * @return the limiteSize
      */
     public Long getLimiteSize() {
-        return this.limiteSize;
+        return this.limitSize;
     }
 
     /**
@@ -273,7 +252,7 @@ public abstract class AbstractDB<K> {
      * @param limiteSize the limiteSize to set
      */
     public void setLimiteSize(Long limiteSize) {
-        this.limiteSize = limiteSize;
+        this.limitSize = limiteSize;
     }
 
     public abstract int size();
@@ -285,5 +264,7 @@ public abstract class AbstractDB<K> {
     public abstract NavigableSet<K> subSet(K fromElement, K inctoElementlusive);
 
     public abstract Iterator<K> iterator();
+
+    public abstract boolean isEmpty();
 
 }

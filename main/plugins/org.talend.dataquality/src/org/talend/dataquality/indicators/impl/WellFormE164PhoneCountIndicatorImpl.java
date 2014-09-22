@@ -207,7 +207,9 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
             String format = phoneUtil.format(phoneNumeber, PhoneNumberFormat.E164);
             if (data.toString().equals(format)) {
                 wellFormE164PhoneCount++;
-                this.mustStoreRow = true;
+                if (checkMustStoreCurrentRow()) {
+                    this.mustStoreRow = true;
+                }
             }
         } catch (NumberParseException e) {
             return false;

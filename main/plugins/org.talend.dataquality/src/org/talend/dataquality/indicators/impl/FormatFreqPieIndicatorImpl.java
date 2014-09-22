@@ -410,7 +410,9 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
 
     @Override
     public boolean handle(Object data) {
-        this.mustStoreRow = true;
+        if (checkMustStoreCurrentRow()) {
+            this.mustStoreRow = true;
+        }
         count++;
         boolean isInvalidForm = false;
         try {
@@ -429,15 +431,16 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
                 String format_national = phoneUtil.format(phoneNumeber, PhoneNumberFormat.NATIONAL);
                 if (data.toString().equals(format_E164)) {
                     wellFormE164Count++;
-                    valueToFreq.put(this.WELL_FORM_E164_KEY, wellFormE164Count);
+                    getMapForFreq().put(this.WELL_FORM_E164_KEY, wellFormE164Count);
                     setCurrentKey(WELL_FORM_E164_KEY);
+
                 } else if (data.toString().equals(format_inter)) {
                     wellFormInteCount++;
-                    valueToFreq.put(this.WELL_FORM_INTE_KEY, wellFormInteCount);
+                    getMapForFreq().put(this.WELL_FORM_INTE_KEY, wellFormInteCount);
                     setCurrentKey(WELL_FORM_INTE_KEY);
                 } else if (data.toString().equals(format_national)) {
                     wellFormNatiCount++;
-                    valueToFreq.put(this.WELL_FORM_NATI_KEY, wellFormNatiCount);
+                    getMapForFreq().put(this.WELL_FORM_NATI_KEY, wellFormNatiCount);
                     setCurrentKey(WELL_FORM_NATI_KEY);
                 } else {
                     isInvalidForm = true;
@@ -451,7 +454,7 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
         }
         if (isInvalidForm) {
             invalidFormCount++;
-            valueToFreq.put(this.INVALID_FORM_KEY, invalidFormCount);
+            getMapForFreq().put(this.INVALID_FORM_KEY, invalidFormCount);
             setCurrentKey(INVALID_FORM_KEY);
         }
         return true;
