@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -542,4 +543,18 @@ public interface Indicator extends ModelElement, DataValidation, MapDBDrillDown 
      * @return true is allowed else false
      */
     public boolean checkAllowDrillDown();
+
+    /**
+     * 
+     * Close db by uuid
+     */
+    public void closeMapDB();
+
+    /**
+     * 
+     * Get the path which used to create mapDB file
+     * 
+     * @return
+     */
+    public File getMapDBFile();
 } // Indicator

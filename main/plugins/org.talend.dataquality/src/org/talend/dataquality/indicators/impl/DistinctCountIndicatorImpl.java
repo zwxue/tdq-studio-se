@@ -265,10 +265,16 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
     @Override
     public boolean reset() {
         this.distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
-        if (distinctObjects != null) {
-            this.distinctObjects.clear();
+        if (isUsedMapDBMode()) {
+            if (shouldReconn((DBSet<Object>) distinctObjects)) {
+                distinctObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+            }
+            if (!isCleared((DBSet<Object>) distinctObjects)) {
+                distinctObjects.clear();
+            }
+        } else {
+            distinctObjects.clear();
         }
-        distinctObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
         return super.reset();
     }
 

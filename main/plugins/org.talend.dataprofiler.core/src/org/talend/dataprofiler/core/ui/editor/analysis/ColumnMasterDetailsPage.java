@@ -658,6 +658,13 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         if (dataFilterComp != null) {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
+        if (this.getCurrentModelElementIndicators() != null) {
+            for (ModelElementIndicator modelIndi : this.getCurrentModelElementIndicators()) {
+                for (Indicator indicator : modelIndi.getIndicators()) {
+                    indicator.closeMapDB();
+                }
+            }
+        }
     }
 
     /*

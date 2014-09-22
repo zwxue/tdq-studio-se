@@ -718,6 +718,9 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         if (bg != null) {
             bg.dispose();
         }
+        if (this.simpleStaticIndicator != null) {
+            this.simpleStaticIndicator.closeMapDB();
+        }
         super.dispose();
     }
 

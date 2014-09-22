@@ -1362,10 +1362,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     @Override
     public boolean reset() {
         if (isUsedMapDBMode()) {
-            if (valueByGroupMapForMapDB != null) {
+            if (shouldReconn(valueByGroupMapForMapDB)) {
+                valueByGroupMapForMapDB = initValueForDBMap(StandardDBName.dataSection.name());
+            }
+            if (!isCleared(valueByGroupMapForMapDB)) {
                 valueByGroupMapForMapDB.clear();
             }
-            valueByGroupMapForMapDB = initValueForDBMap(StandardDBName.dataSection.name());
         } else {
             this.valueByGroupMapForJavaMap.clear();
         }
@@ -1444,8 +1446,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     @Override
     public AbstractDB getMapDB(String dbName) {
         String requestDBName = dbName;
-        if (StandardDBName.dataSection.name().equals(dbName) && valueByGroupMapForMapDB != null
-                && !valueByGroupMapForMapDB.isClosed()) {
+        if (StandardDBName.dataSection.name().equals(dbName) && !shouldReconn(valueByGroupMapForMapDB)) {
             return valueByGroupMapForMapDB;
         }
 

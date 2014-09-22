@@ -483,8 +483,9 @@ public final class ChartTableFactory {
                 String selectValue = dataEntity.getLabel();
                 AnalysisType analysisType = analysis.getParameters().getAnalysisType();
                 String dbMapName = getDBMapName(analysisType, indicator, selectValue);
-                AbstractDB<Object> columnSetMapDB = getColumnSetAnalysisMapDB(analysisType);
-                if (columnSetMapDB != null) {
+                AbstractDB<Object> columnSetMapDB = null;
+                if (AnalysisType.COLUMN_SET == analysisType) {
+                    columnSetMapDB = getColumnSetAnalysisMapDB(analysisType);
                     return columnSetMapDB;
                 }
                 return indicator.getMapDB(dbMapName);

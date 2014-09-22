@@ -97,10 +97,13 @@ public class MapDBPageListHelper {
             toIndex = totalSize;
         }
         List<Object[]> content = db.subList(fromIndex, toIndex, indexMap);
+        if (content.size() < pageSize) {
+            totalSize = content.size();
+        }
         if (filter != null) {
             content = filter.filterArray(content);
         }
-        return new PageResult<Object[]>(content, content.size());
+        return new PageResult<Object[]>(content, totalSize);
     }
 
     public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, SortProcessor processor,
@@ -122,7 +125,10 @@ public class MapDBPageListHelper {
         }
 
         List<Object[]> content = db.subList(fromIndex, toIndex, indexMap, dataValidator);
-        return new PageResult<Object[]>(content, content.size());
+        if (content.size() < pageSize) {
+            totalSize = content.size();
+        }
+        return new PageResult<Object[]>(content, totalSize);
     }
 
 }

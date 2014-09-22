@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.io.File;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.DBMap;
+import org.talend.commons.MapDB.utils.MapDBManager;
 import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -750,12 +752,32 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     protected void clearDrillDownMap() {
         if (this.isUsedMapDBMode() && checkAllowDrillDown()) {
-            if (drillDownMap != null && !drillDownMap.isEmpty()) {
+            if (shouldReconn(drillDownMap)) {
+                drillDownMap = initValueForDBMap(StandardDBName.drillDown.name());
+            }
+            if (!isCleared(drillDownMap)) {
                 drillDownMap.clear();
             }
-            drillDownMap = initValueForDBMap(StandardDBName.drillDown.name());
             drillDownRowCount = 0l;
         }
+    }
+
+    /**
+     * Whether the map is contaion some dirty data
+     * 
+     * @return true if the map is clear else false
+     */
+    protected boolean isCleared(AbstractDB<?> map) {
+        return map.isEmpty();
+    }
+
+    /**
+     * Whether the map is not created or has been closed
+     * 
+     * @return true if map should be reconnection else false
+     */
+    protected boolean shouldReconn(AbstractDB<?> map) {
+        return map == null || map.isClosed();
     }
 
     /**
@@ -809,7 +831,17 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public boolean finalizeComputation() {
+        closeMapDB();
         return true;
+    }
+
+    /**
+     * close db by uuid
+     */
+    @Override
+    public void closeMapDB() {
+        MapDBManager.getInstance().closeDB(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this));
+
     }
 
     /**
@@ -1414,5 +1446,15 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         } else {
             return false;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.Indicator#getMapDBFile()
+     */
+    @Override
+    public File getMapDBFile() {
+        return MapDBManager.createPath(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this));
     }
 } // IndicatorImpl

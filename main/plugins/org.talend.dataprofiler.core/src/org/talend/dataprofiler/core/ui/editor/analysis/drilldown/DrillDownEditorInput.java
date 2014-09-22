@@ -382,6 +382,18 @@ public class DrillDownEditorInput implements IEditorInput {
 
     }
 
+    public Indicator getGenerateMapDBIndicator() {
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        if (AnalysisType.COLUMN_SET == analysisType) {
+            for (Indicator indicator : analysis.getResults().getIndicators()) {
+                if (SimpleStatIndicator.class.isInstance(indicator)) {
+                    return indicator;
+                }
+            }
+        }
+        return this.currIndicator;
+    }
+
     /**
      * Get MapDB which store the drill down data for columnSet analysis
      * 
