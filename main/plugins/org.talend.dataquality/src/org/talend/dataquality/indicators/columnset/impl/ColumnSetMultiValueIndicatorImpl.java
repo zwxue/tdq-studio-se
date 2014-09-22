@@ -279,8 +279,8 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @return
      */
     private ColumnSetDBMap initValueForDBMap(String dbName) {
-        if (saveTempDataToFile) {
-            return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+        if (isUsedMapDBMode()) {
+            return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
         }
         return null;
     }
@@ -1348,7 +1348,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     @Override
     public boolean finalizeComputation() {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             // MapDB mode will come here
             storeSqlResults(valueByGroupMapForMapDB);
             // valueByGroupMapForMapDB.close();
@@ -1361,12 +1361,11 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     @Override
     public boolean reset() {
-        if (saveTempDataToFile) {
-            if (valueByGroupMapForMapDB != null) {
-                valueByGroupMapForMapDB.clear();
-
+        if (isUsedMapDBMode()) {
+            if (needReconnect(valueByGroupMapForMapDB)) {
+                valueByGroupMapForMapDB = initValueForDBMap(StandardDBName.dataSection.name());
             }
-            valueByGroupMapForMapDB = initValueForDBMap(StandardDBName.all.name());
+            valueByGroupMapForMapDB.clear();
         } else {
             this.valueByGroupMapForJavaMap.clear();
         }
@@ -1394,7 +1393,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     @Override
     public boolean handle(EList<Object> datas) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             handleDataOnFile(datas);
         } else {
             handleDataOnMemory(datas);
@@ -1437,21 +1436,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     }
 
-    private String[] ConvertToStringArray(EList<Object> inputList) {
-        if (inputList == null) {
-            return null;
-        }
-        String[] strArray = new String[inputList.size()];
-        for (int index = 0; index < inputList.size(); index++) {
-            if (inputList.get(index) != null) {
-                strArray[index] = inputList.get(index).toString();
-            } else {
-                strArray[index] = null;
-            }
-        }
-        return strArray;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -1459,15 +1443,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        String requestDBName = dbName;
-        if (StandardDBName.dataSection.name().equals(dbName) || StandardDBName.computeProcess.name().equals(dbName)) {
-            requestDBName = StandardDBName.all.name();
-        }
-        if (StandardDBName.all.name().equals(requestDBName) && valueByGroupMapForMapDB != null
-                && !valueByGroupMapForMapDB.isClosed()) {
+        if (StandardDBName.dataSection.name().equals(dbName) && !needReconnect(valueByGroupMapForMapDB)) {
             return valueByGroupMapForMapDB;
         }
-
-        return initValueForDBMap(requestDBName);
+        return initValueForDBMap(dbName);
     }
 } // ColumnSetMultiValueIndicatorImpl

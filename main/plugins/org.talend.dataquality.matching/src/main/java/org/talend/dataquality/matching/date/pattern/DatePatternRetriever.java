@@ -93,11 +93,35 @@ public class DatePatternRetriever {
      * @param expression
      */
     public void handle(String expression) {
+        ModelMatcher findMatcher = findMatcher(expression);
+        if (findMatcher != null) {
+            findMatcher.increment();
+        }
+    }
+
+    /**
+     * @param expression
+     */
+    public String getModel(String expression) {
+        ModelMatcher findMatcher = findMatcher(expression);
+        if (findMatcher != null) {
+            return findMatcher.getModel();
+        }
+        return null;
+    }
+
+    /**
+     * Find the matcher whiche is match with expression
+     * 
+     * @param expression
+     */
+    public ModelMatcher findMatcher(String expression) {
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.matches(expression)) {
-                patternMatcher.increment();
+                return patternMatcher;
             }
         }
+        return null;
     }
 
     /**

@@ -12,35 +12,32 @@
 // ============================================================================
 package org.talend.commons.MapDB.utils;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.TimerTask;
 
 import org.mapdb.DB;
 
 /**
- * created by talend on Aug 19, 2014 Detailled comment
+ * created by talend on Sep 18, 2014 Detailled comment
  * 
  */
-public class MapDBFactory {
+public class CloseDBTimeTask extends TimerTask {
 
-    Map<File, DB> dbMap = new HashMap<File, DB>();
+    private DB db = null;
 
-    private static MapDBFactory instance = null;
+    public CloseDBTimeTask(DB closeDb) {
+        this.db = closeDb;
+    }
 
-    public static MapDBFactory getInstance() {
-        if (instance == null) {
-            instance = new MapDBFactory();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.util.TimerTask#run()
+     */
+    @Override
+    public void run() {
+        if (db != null && !db.isClosed()) {
+            db.close();
         }
-        return instance;
-    }
-
-    public DB getDB(File filePath) {
-        return dbMap.get(filePath);
-    }
-
-    public DB putDB(File filePath, DB db) {
-        return dbMap.put(filePath, db);
     }
 
 }

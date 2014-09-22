@@ -297,7 +297,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         EventManager.getInstance().unRegister(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,
                 registerDynamicRefreshEvent);
 
-        uiPagination.clearAllDynamicMapOfCurrentPage();
+        if (uiPagination != null) {
+            uiPagination.clearAllDynamicMapOfCurrentPage();
+        }
 
         masterPage.clearDynamicDatasets();
 

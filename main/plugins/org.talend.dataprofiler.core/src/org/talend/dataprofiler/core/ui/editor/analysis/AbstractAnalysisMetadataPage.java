@@ -32,7 +32,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
@@ -74,7 +73,6 @@ import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -823,81 +821,30 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
 
         ExecutionLanguage executionLanguage = analysisItem.getAnalysis().getParameters().getExecutionLanguage();
-        // MOD zshen feature 12919 : add allow drill down and max number row component for java engin.
-        final Composite javaEnginSection = createjavaEnginSection(comp2, anaParameters);
-        if (ExecutionLanguage.SQL.equals(executionLanguage)) {
-            javaEnginSection.setVisible(false);
-            showJavaEngineSection(javaEnginSection, 10);
-        }
+
         execLang = executionLanguage.getLiteral();
         execCombo.setText(execLang);
         // ADD xqliu 2009-08-24 bug 8776
         setLanguageToTreeViewer(ExecutionLanguage.get(execLang));
         // ~
-        addListenerToExecuteEngine(execCombo, javaEnginSection);
+
+        // MOD msjian TDQ-9467: this part is only for column analysis
+        createDrillDownPart(anaParameters, comp2, executionLanguage);
+
         analysisParamSection.setClient(sectionClient);
 
         return comp2;
     }
 
     /**
-     * add zshen feature 12919.
+     * DOC msjian Comment method "createDrillDownPart".
+     * 
+     * @param anaParameters
+     * @param comp2
+     * @param executionLanguage
      */
-    protected Composite createjavaEnginSection(Composite sectionClient, AnalysisParameters anaParameters) {
-        Composite javaEnginSection = toolkit.createComposite(sectionClient);
-        Composite checkSection = toolkit.createComposite(javaEnginSection);
-        Composite numberSection = toolkit.createComposite(javaEnginSection);
-        GridLayout gridLayout = new GridLayout(2, false);
-        gridLayout.marginWidth = 0;
-
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(javaEnginSection);
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(checkSection);
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(numberSection);
-
-        javaEnginSection.setLayout(gridLayout);
-        checkSection.setLayout(gridLayout);
-        numberSection.setLayout(gridLayout);
-        toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));//$NON-NLS-1$
-        drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);//$NON-NLS-1$
-        drillDownCheck.setSelection(true);
-        drillDownCheck.setSelection(anaParameters.isStoreData());
-        drillDownCheck.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                setStoreData(drillDownCheck.getSelection());
-                setDirty(true);
-            }
-
-        });
-        Label maxNumLabel = toolkit.createLabel(numberSection,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")); //$NON-NLS-1$
-        maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
-        maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
-        maxNumText.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                setDirty(true);
-            }
-
-        });
-        maxNumText.addVerifyListener(new VerifyListener() {
-
-            public void verifyText(VerifyEvent e) {
-                String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
-                char[] charArray = inputValue.toCharArray();
-                for (char c : charArray) {
-                    if (!pattern.matcher(String.valueOf(c)).matches()) {
-                        e.doit = false;
-                    }
-                }
-            }
-        });
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
-        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
-        GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).applyTo(drillDownCheck);
-        return javaEnginSection;
+    protected void createDrillDownPart(AnalysisParameters anaParameters, Composite comp2, ExecutionLanguage executionLanguage) {
+        // do nothing here, only ColumnMasterDetailsPage need to overwrite this
     }
 
     /**
@@ -926,48 +873,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         execCombo.setEnabled(true);
     }
 
-    private void addListenerToExecuteEngine(final CCombo execCombo1, final Composite javaEnginSection) {
-        execCombo1.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                // MOD xqliu 2009-08-24 bug 8776
-                execLang = execCombo1.getText();
-
-                // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
-                // "analyzed Columns",ExecutionLanguage only is Java.
-                ExecutionLanguage currentLanguage = ExecutionLanguage.get(execLang);
-                if (ExecutionLanguage.SQL.equals(currentLanguage) && includeDatePatternFreqIndicator()) {
-                    MessageUI.openWarning(DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
-                    execCombo1.setText(ExecutionLanguage.JAVA.getLiteral());
-                    execLang = execCombo1.getText();
-                    return;
-                }
-                // ~11104
-                // MOD zshen feature 12919 : hidden or display parameter of java engin.
-                if (ExecutionLanguage.SQL.equals(currentLanguage)) {
-                    javaEnginSection.setVisible(false);
-                    showJavaEngineSection(javaEnginSection, 10);
-                } else {
-                    javaEnginSection.setVisible(true);
-                    showJavaEngineSection(javaEnginSection, 100);
-                }
-                // 12919~
-                setDirty(true);
-                setLanguageToTreeViewer(currentLanguage);
-                // ~
-            }
-
-        });
-    }
-
-    private void showJavaEngineSection(Composite javaEnginSection, int height) {
-        GridData data = (GridData) javaEnginSection.getLayoutData();
-        data.heightHint = height;
-        javaEnginSection.setLayoutData(data);
-        analysisParamSection.setExpanded(true);
-    }
-
     protected boolean includeDatePatternFreqIndicator() {
         // only needed in column and column set master page
         return false;
@@ -978,10 +883,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     protected void setLanguageToTreeViewer(ExecutionLanguage executionLanguage) {
         // no need to implement there
-    }
-
-    protected void setStoreData(boolean selection) {
-        // no need to implement here, only column set master page needed
     }
 
     // ADD yyin 20131204 TDQ-8413, get the current selected value to judge, no need to use the related parameter in the

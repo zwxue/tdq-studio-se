@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 
 import net.sourceforge.sqlexplorer.dataset.actions.ExportCSVAction;
-import net.sourceforge.sqlexplorer.dataset.mapdb.TalendDataSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -68,12 +67,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.ColumnFilter;
+import org.talend.commons.MapDB.utils.MapDBManager;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.sqlexplorer.dataset.TalendDataSet;
 
 /**
  * 
@@ -152,7 +154,7 @@ public class DrillDownResultEditor extends EditorPart {
         GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(table);
         if (this.getEditorInput() instanceof DrillDownEditorInput) {
             DrillDownEditorInput ddEditorInput = (DrillDownEditorInput) this.getEditorInput();
-            if (ddEditorInput.getCurrIndicator().isSaveTempDataToFile()) {
+            if (ddEditorInput.getCurrIndicator().isUsedMapDBMode()) {
                 initTableViewerForMapDB(parent, table, ddEditorInput);
             } else {
                 initTableViewerForJava(table, ddEditorInput);
@@ -205,12 +207,15 @@ public class DrillDownResultEditor extends EditorPart {
         Analysis analysis = ddEditorInput.getAnalysis();
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
         IPageLoader<PageResult<Object[]>> pageLoader = null;
+        AbstractDB<Object> mapDB = ddEditorInput.getMapDB();
+        Indicator generateMapDBIndicator = ddEditorInput.getGenerateMapDBIndicator();
+        MapDBManager.getInstance().addDBRef(generateMapDBIndicator.getMapDBFile());
         if (AnalysisType.COLUMN_SET == analysisType) {
             Long itemsSize = ddEditorInput.getCurrentIndicatorResultSize();
-            pageLoader = new MapDBPageLoader<Object>(ddEditorInput.getMapDB(), ddEditorInput.getCurrIndicator(), itemsSize);
+            pageLoader = new MapDBPageLoader<Object>(mapDB, ddEditorInput.getCurrIndicator(), itemsSize);
         } else {
             // ~
-            AbstractDB<Object> mapDB = ddEditorInput.getMapDB();
+
             ColumnFilter filter = ddEditorInput.getColumnFilter();
             pageLoader = new MapDBPageLoader<Object>(mapDB, null, mapDB.size(), filter);
         }
@@ -692,6 +697,19 @@ public class DrillDownResultEditor extends EditorPart {
             // changeCoolBarState();
 
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+        DrillDownEditorInput ddEditorInput = (DrillDownEditorInput) this.getEditorInput();
+        Indicator generateMapDBIndicator = ddEditorInput.getGenerateMapDBIndicator();
+        MapDBManager.getInstance().removeDBRef(generateMapDBIndicator.getMapDBFile());
     }
 
 }

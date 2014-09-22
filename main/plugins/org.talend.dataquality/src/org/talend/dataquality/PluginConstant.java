@@ -61,6 +61,8 @@ public final class PluginConstant {
 
     public static final String DEFAULT_STRING = "Default";//$NON-NLS-1$
 
+    public static final String NULL_STRING = "<null>";//$NON-NLS-1$
+
     private PluginConstant() {
 
     }
