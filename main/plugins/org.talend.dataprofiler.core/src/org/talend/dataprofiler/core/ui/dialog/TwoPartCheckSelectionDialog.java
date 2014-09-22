@@ -57,7 +57,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.progress.UIJob;
 import org.talend.core.model.properties.Property;
-import org.talend.core.repository.model.ISubRepositoryObject;
+import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
