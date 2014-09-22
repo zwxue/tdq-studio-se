@@ -13,7 +13,7 @@
 package org.talend.dq.nodes;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ISubRepositoryObject;
+import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.repository.model.RepositoryNode;
 
 /**
