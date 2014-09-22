@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.DBSet;
 import org.talend.commons.MapDB.utils.StandardDBName;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
@@ -360,7 +361,8 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
             drillDownMap.put(masterObject, rowData);
             this.drillDownRowCount++;
         }
-        rowData.add(currentObject);
+        // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
+        rowData.add(currentObject == null ? PluginConstant.NULL_STRING : currentObject);
     }
 
 } // UniqueCountIndicatorImpl

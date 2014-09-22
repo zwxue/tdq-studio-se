@@ -23,6 +23,7 @@ import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.DBSet;
 import org.talend.commons.MapDB.utils.DBValueListMap;
 import org.talend.commons.MapDB.utils.StandardDBName;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -350,7 +351,9 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
         Object[] valueObject = new Object[columnSize];
 
         for (int i = 0; i < columnSize; i++) {
-            valueObject[i] = resultSet.getObject(i + 1);
+            Object object = resultSet.getObject(i + 1);
+            // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
+            valueObject[i] = object == null ? PluginConstant.NULL_STRING : object;
         }
 
         if (duplicateMap.containsKey(colValue)) {

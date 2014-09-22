@@ -28,6 +28,7 @@ import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -1346,7 +1347,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             drillDownMap.put(count, rowData);
             this.drillDownRowCount++;
         }
-        rowData.add(currentObject);
+        // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
+        rowData.add(currentObject == null ? PluginConstant.NULL_STRING : currentObject);
     }
 
     /**
