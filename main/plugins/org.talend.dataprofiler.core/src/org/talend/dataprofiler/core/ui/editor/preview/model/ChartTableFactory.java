@@ -479,15 +479,14 @@ public final class ChartTableFactory {
              * @return
              */
             private AbstractDB<Object> getMapDB(final ChartDataEntity dataEntity) {
+                AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+                if (AnalysisType.COLUMN_SET == analysisType) {
+                    return getColumnSetAnalysisMapDB(analysisType);
+                }
+
                 Indicator indicator = dataEntity.getIndicator();
                 String selectValue = dataEntity.getLabel();
-                AnalysisType analysisType = analysis.getParameters().getAnalysisType();
                 String dbMapName = getDBMapName(analysisType, indicator, selectValue);
-                AbstractDB<Object> columnSetMapDB = null;
-                if (AnalysisType.COLUMN_SET == analysisType) {
-                    columnSetMapDB = getColumnSetAnalysisMapDB(analysisType);
-                    return columnSetMapDB;
-                }
                 return indicator.getMapDB(dbMapName);
 
             }

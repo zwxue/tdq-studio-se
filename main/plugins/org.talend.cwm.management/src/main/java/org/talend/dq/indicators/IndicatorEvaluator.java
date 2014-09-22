@@ -188,10 +188,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
                                 }
                                 if (indicator.isUsedMapDBMode()) {
-                                    // AbstractDB<Object> mapDB = indicator.getMapDB(StandardDBName.drillDown.name());
-                                    // if (mapDB.size() > maxNumberRows) {
-                                    // break;
-                                    // }
 
                                     indicator.handleDrillDownData(object, newobject, columnCount, j, newcol);
                                     continue;

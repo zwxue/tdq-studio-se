@@ -207,7 +207,7 @@ public class WellFormIntePhoneCountIndicatorImpl extends IndicatorImpl implement
             String format = phoneUtil.format(phoneNumeber, PhoneNumberFormat.INTERNATIONAL);
             if (data.toString().equals(format)) {
                 wellFormIntePhoneCount++;
-                if (checkMustStorCurrentRow()) {
+                if (checkMustStoreCurrentRow()) {
                     this.mustStoreRow = true;
                 }
             }

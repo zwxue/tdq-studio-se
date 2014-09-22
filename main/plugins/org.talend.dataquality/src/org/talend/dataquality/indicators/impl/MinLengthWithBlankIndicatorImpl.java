@@ -51,7 +51,7 @@ public class MinLengthWithBlankIndicatorImpl extends MinLengthIndicatorImpl impl
             if (length > 0) {
                 changeLength(0);
             }
-            if (this.checkMustStorCurrentRow()) {
+            if (this.checkMustStoreCurrentRow()) {
                 mustStoreRow = true;
             }
         }

@@ -210,7 +210,7 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
         Set<String> supportedCountries = phoneUtil.getSupportedCountries();
         if (data != null && supportedCountries.contains(data.toString().toUpperCase())) {
             this.validRegCount++;
-            if (checkMustStorCurrentRow()) {
+            if (checkMustStoreCurrentRow()) {
                 this.mustStoreRow = true;
             }
         }

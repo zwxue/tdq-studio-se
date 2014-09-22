@@ -59,7 +59,7 @@ public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl imple
             if (length == LENGTH_EDEFAULT || length > 0) {
                 changeLength(0);
             }
-            if (this.checkMustStorCurrentRow()) {
+            if (this.checkMustStoreCurrentRow()) {
                 mustStoreRow = true;
             }
         }

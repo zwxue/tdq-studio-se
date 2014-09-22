@@ -44,12 +44,6 @@ public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         return IndicatorsPackage.Literals.PATTERN_FREQ_INDICATOR;
     }
 
-    @Override
-    public boolean finalizeComputation() {
-        // TODO Auto-generated method stub
-        return super.finalizeComputation();
-    }
-
     /**
      * add by zshen for feature 12919 to convertCharacter when save data into analysisDataSet with java engin
      */

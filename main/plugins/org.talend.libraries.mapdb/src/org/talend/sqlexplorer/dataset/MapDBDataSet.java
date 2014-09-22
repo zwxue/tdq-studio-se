@@ -63,7 +63,7 @@ public class MapDBDataSet extends TalendDataSet {
     @Override
     public int getRowCount() {
         if (rowSize != -1) {
-            return (int) rowSize;
+            return ((Long) rowSize).intValue();
         } else if (dataMap != null) {
             return dataMap.size();
         } else {
@@ -83,7 +83,7 @@ public class MapDBDataSet extends TalendDataSet {
             return super.getRow(index);
         } else {
             if (index < 0 || index >= dataMap.size()) {
-                throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index);
+                throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index); //$NON-NLS-1$
             }
             if (currentIndex > index) {
                 iterator = dataMap.iterator();
@@ -99,10 +99,8 @@ public class MapDBDataSet extends TalendDataSet {
             if (columnFilter != null) {
                 valueList = columnFilter.filter(valueList);
             }
-            Comparable[] comparable = new Comparable[valueList.size()];
-            for (int i = 0; i < valueList.size(); i++) {
-                comparable[i] = (Comparable) valueList.get(i);
-            }
+
+            Comparable[] comparable = valueList.toArray(new Comparable[valueList.size()]);
             if (comparable.length == 0) {
                 comparable = new Comparable[1];
                 comparable[0] = null;

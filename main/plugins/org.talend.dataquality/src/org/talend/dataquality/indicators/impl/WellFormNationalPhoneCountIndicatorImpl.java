@@ -206,7 +206,7 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
             String format = phoneUtil.format(phoneNumeber, PhoneNumberFormat.NATIONAL);
             if (data.toString().equals(format)) {
                 this.wellFormNatiPhoneCount++;
-                if (checkMustStorCurrentRow()) {
+                if (checkMustStoreCurrentRow()) {
                     this.mustStoreRow = true;
                 }
             }

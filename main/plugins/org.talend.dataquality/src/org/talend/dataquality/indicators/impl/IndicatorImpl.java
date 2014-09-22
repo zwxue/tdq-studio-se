@@ -753,23 +753,12 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     protected void clearDrillDownMap() {
         if (this.isUsedMapDBMode() && checkAllowDrillDown()) {
-            if (shouldReconn(drillDownMap)) {
+            if (needReconnect(drillDownMap)) {
                 drillDownMap = initValueForDBMap(StandardDBName.drillDown.name());
             }
-            if (!isCleared(drillDownMap)) {
-                drillDownMap.clear();
-            }
+            drillDownMap.clear();
             drillDownRowCount = 0l;
         }
-    }
-
-    /**
-     * Whether the map is contaion some dirty data
-     * 
-     * @return true if the map is clear else false
-     */
-    protected boolean isCleared(AbstractDB<?> map) {
-        return map.isEmpty();
     }
 
     /**
@@ -777,7 +766,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @return true if map should be reconnection else false
      */
-    protected boolean shouldReconn(AbstractDB<?> map) {
+    protected boolean needReconnect(AbstractDB<?> map) {
         return map == null || map.isClosed();
     }
 
@@ -837,12 +826,11 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
-     * close db by uuid
+     * close mapdb by uuid
      */
     @Override
     public void closeMapDB() {
-        MapDBManager.getInstance().closeDB(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this));
-
+        MapDBManager.getInstance().closeDB(getMapDBFile());
     }
 
     /**
@@ -1426,19 +1414,17 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
-     * 
-     * DirllDownRowCount if From the beginning of 0
+     * check the DrillDown if From the current DrillDownRowCount.
      */
-    protected boolean checkMustStorCurrentRow() {
-        return checkMustStorCurrentRow(getDrillDownRowCount());
+    protected boolean checkMustStoreCurrentRow() {
+        return checkMustStoreCurrentRow(getDrillDownRowCount());
 
     }
 
     /**
-     * 
-     * DirllDownRowCount if From the beginning of 0
+     * check the DrillDown if From the beginning of 0.
      */
-    protected boolean checkMustStorCurrentRow(Long rowCount) {
+    protected boolean checkMustStoreCurrentRow(Long rowCount) {
         Long currentDrillDownLimit = getDrillDownLimitSize();
         if (currentDrillDownLimit == null || currentDrillDownLimit == 0l) {
             return true;

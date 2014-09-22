@@ -46,16 +46,14 @@ public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLe
      */
     @Override
     public boolean handle(Object data) {
-
         boolean ok = super.handle(data);
         if (data != null) {
             String str = (String) data;
             final int strLength = str.length();
             if (strLength > 0) {
                 if ((length == LENGTH_EDEFAULT || length.intValue() == strLength)) {
-
                     length = Long.valueOf(strLength);
-                    if (this.checkMustStorCurrentRow()) {
+                    if (this.checkMustStoreCurrentRow()) {
                         mustStoreRow = true;
                     }
                 } else if (length.intValue() > strLength) {

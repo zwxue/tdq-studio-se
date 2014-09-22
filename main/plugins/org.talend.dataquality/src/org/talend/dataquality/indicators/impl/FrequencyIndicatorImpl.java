@@ -497,7 +497,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
                 this.uniqueValueCount--;
             }
         }
-        if (this.checkMustStorCurrentRow(freq)) {
+        if (this.checkMustStoreCurrentRow(freq)) {
             mustStoreRow = true;
         }
         freq++;
@@ -555,7 +555,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
                     ((DBMap<Object, Long>) valueToFreqForMapDB).clear();
                 }
             }
-            valueToFreqForMapDB = initValueForDBMap(StandardDBName.computeProcess.name() + FREQUENCYMAPNAME);
+            valueToFreqForMapDB = initValueForDBMap(FREQUENCYMAPNAME);
 
         } else {
             this.getValueToFreq().clear();

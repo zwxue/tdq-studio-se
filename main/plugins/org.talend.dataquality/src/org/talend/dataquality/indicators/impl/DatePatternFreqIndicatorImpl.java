@@ -159,6 +159,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         for (ModelMatcher matcher : modelMatchers) {
             map.put(matcher.getModel(), (long) matcher.getScore());
         }
+        // this clear is necessary, because in the map contains the parent'result.
         getMapForFreq().clear();
         getMapForFreq().putAll(map);
         return super.finalizeComputation();

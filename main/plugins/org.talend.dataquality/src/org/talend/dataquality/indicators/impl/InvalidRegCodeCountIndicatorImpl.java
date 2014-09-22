@@ -201,7 +201,7 @@ public class InvalidRegCodeCountIndicatorImpl extends IndicatorImpl implements I
         Set<String> supportedCountries = phoneUtil.getSupportedCountries();
         if (data == null || (data != null && !supportedCountries.contains(data.toString().toUpperCase()))) {
             this.invalidRegCount++;
-            if (checkMustStorCurrentRow()) {
+            if (checkMustStoreCurrentRow()) {
                 this.mustStoreRow = true;
             }
         }

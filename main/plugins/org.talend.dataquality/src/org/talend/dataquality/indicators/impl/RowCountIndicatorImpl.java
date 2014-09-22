@@ -41,7 +41,6 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
         return IndicatorsPackage.Literals.ROW_COUNT_INDICATOR;
     }
 
-
     /*
      * (non-Javadoc)
      * 

@@ -29,6 +29,11 @@ import org.mapdb.DBMaker;
  */
 public abstract class AbstractDB<K> {
 
+    /**
+     * the cache size used to create db.
+     */
+    private static final int CACHE_SIZE = 12 * 1024;
+
     private DB db = null;
 
     protected Long limitSize = 0l;
@@ -49,8 +54,8 @@ public abstract class AbstractDB<K> {
             return;
         }
         DBMaker<?> fileDBMaker = DBMaker.newFileDB(dbFile);
-        fileDBMaker = fileDBMaker.mmapFileEnablePartial();
-        db = fileDBMaker.cacheSize(12 * 1024).transactionDisable().closeOnJvmShutdown().make();
+        fileDBMaker = fileDBMaker.mmapFileEnable();
+        db = fileDBMaker.cacheSize(CACHE_SIZE).transactionDisable().closeOnJvmShutdown().make();
         MapDBManager.getInstance().putDB(dbFile, db);
 
     }
@@ -59,7 +64,7 @@ public abstract class AbstractDB<K> {
         for (String catalogName : db.getAll().keySet()) {
             db.delete(catalogName);
         }
-        this.getDB().getEngine().clearCache();
+        db.getEngine().clearCache();
     }
 
     protected void initDefaultDB() {

@@ -258,10 +258,10 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
             drillDownRowCount--;
         }
         // remove some items because limit
-        if (!this.checkMustStorCurrentRow()) {
+        if (!this.checkMustStoreCurrentRow()) {
             Iterator<Object> desIterator = drillDownMap.descendingKeySet().iterator();
             // Here is remove operation so that we need to use drillDownRowCount - 1 be parameter
-            while (desIterator.hasNext() && !this.checkMustStorCurrentRow(drillDownRowCount - 1)) {
+            while (desIterator.hasNext() && !this.checkMustStoreCurrentRow(drillDownRowCount - 1)) {
                 Object currenKey = desIterator.next();
                 drillDownMap.remove(currenKey);
                 drillDownRowCount--;
@@ -277,7 +277,6 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
             if (!this.uniqueObjects.add(data)) {
                 // store duplicate objects
                 duplicateObjects.add(data);
-
             } else {
                 this.mustStoreRow = true;
             }
@@ -333,12 +332,12 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
         if (isUsedMapDBMode()) {
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName)) {
-                // current set is valid
-                if (uniqueObjects != null && !((DBSet<Object>) uniqueObjects).isClosed()) {
-                    return (DBSet<Object>) uniqueObjects;
-                } else {
+                // current set is invalid
+                if (needReconnect((DBSet<Object>) uniqueObjects)) {
                     // create new DBSet
                     return ((DBSet<Object>) initValueForDBSet(StandardDBName.computeProcessSet.name()));
+                } else {
+                    return (DBSet<Object>) uniqueObjects;
                 }
             }
         }

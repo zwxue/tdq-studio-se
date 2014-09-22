@@ -410,7 +410,7 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
 
     @Override
     public boolean handle(Object data) {
-        if (checkMustStorCurrentRow()) {
+        if (checkMustStoreCurrentRow()) {
             this.mustStoreRow = true;
         }
         count++;

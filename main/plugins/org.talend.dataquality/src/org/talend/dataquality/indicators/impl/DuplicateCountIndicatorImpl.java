@@ -287,10 +287,9 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @param valuelist
      */
     private void addDrillDownData(List<Object[]> valuelist) {
-
         for (int i = 0; i < valuelist.size(); i++) {
             List<Object> rowData = Arrays.asList(valuelist.get(i));
-            if (this.checkMustStorCurrentRow()) {
+            if (this.checkMustStoreCurrentRow()) {
                 drillDownMap.put(this.drillDownRowCount++, rowData);
             }
         }
@@ -304,20 +303,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @return
      */
     private boolean needStoreDrillDownData() {
-        return isUsedMapDBMode() && this.checkMustStorCurrentRow() && this.checkAllowDrillDown();
-    }
-
-    @Override
-    public boolean handle(Object data) {
-        super.handle(data);
-        // MOD yyi 2009-09-22 8769
-        // if (!this.uniqueObjects.add(data)) {
-        // // store duplicate objects
-        // if (duplicateObjects.add(data)) {
-        // this.mustStoreRow = true;
-        // }
-        // }
-        return true;
+        return isUsedMapDBMode() && this.checkMustStoreCurrentRow() && this.checkAllowDrillDown();
     }
 
     @Override

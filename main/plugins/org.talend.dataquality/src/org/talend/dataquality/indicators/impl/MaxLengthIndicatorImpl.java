@@ -52,8 +52,8 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
             final int strLength = str.length();
             if (strLength > 0) {
                 if ((length == LENGTH_EDEFAULT || length.intValue() == strLength)) {
-                    length = Long.valueOf(str.length());
-                    if (this.checkMustStorCurrentRow()) {
+                    length = Long.valueOf(strLength);
+                    if (this.checkMustStoreCurrentRow()) {
                         mustStoreRow = true;
                     }
                 } else if (length.intValue() < strLength) {
@@ -82,7 +82,7 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
         if (length == LENGTH_EDEFAULT) {
             length = 0L;
         }
-        if (length == 0 && this.checkMustStorCurrentRow()) {
+        if (length == 0 && this.checkMustStoreCurrentRow()) {
             mustStoreRow = true;
         }
     }

@@ -242,7 +242,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
         // MOD msjian 2011-8-24 TDQ-1679: when run with java engine, the Duplicate count should contain "null"
         // if (data != null) {
         if (this.distinctObjects.add(data)) {
-            if (this.checkMustStorCurrentRow()) {
+            if (this.checkMustStoreCurrentRow()) {
                 this.mustStoreRow = true;
             }
         }
@@ -266,15 +266,11 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
     public boolean reset() {
         this.distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
         if (isUsedMapDBMode()) {
-            if (shouldReconn((DBSet<Object>) distinctObjects)) {
+            if (needReconnect((DBSet<Object>) distinctObjects)) {
                 distinctObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
             }
-            if (!isCleared((DBSet<Object>) distinctObjects)) {
-                distinctObjects.clear();
-            }
-        } else {
-            distinctObjects.clear();
         }
+        distinctObjects.clear();
         return super.reset();
     }
 
@@ -304,12 +300,12 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
         if (isUsedMapDBMode()) {
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName) || StandardDBName.computeProcessSet.name().equals(dbName)) {
-                // current set is valid
-                if (distinctObjects != null && !((DBSet<Object>) distinctObjects).isClosed()) {
-                    return (DBSet<Object>) distinctObjects;
-                } else {
+                // current set is invalid
+                if (needReconnect((DBSet<Object>) distinctObjects)) {
                     // create new DBSet
                     return ((DBSet<Object>) initValueForDBSet(StandardDBName.computeProcess.name()));
+                } else {
+                    return (DBSet<Object>) distinctObjects;
                 }
             }
         }

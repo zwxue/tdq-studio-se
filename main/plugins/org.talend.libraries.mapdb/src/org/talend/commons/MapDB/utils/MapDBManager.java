@@ -25,8 +25,14 @@ import org.mapdb.DB;
  */
 public class MapDBManager {
 
+    /**
+     * close db after 5 minute (5 * 60 * 1000).
+     */
+    private static final int CLOSE_TIME_DELAY = 300000;
+
     private Map<File, DB> dbMap = new HashMap<File, DB>();
 
+    // store the times the mapdb has been used.
     private Map<DB, Integer> dbRefCountMap = new HashMap<DB, Integer>();
 
     // store all of task which used to close db
@@ -61,18 +67,12 @@ public class MapDBManager {
             return;
         }
         removeDB(filePath);
-        timer.schedule(new CloseDBTimeTask(db), 1000);// close db after 5 minute
+        scheduleCloseTask(db);
     }
 
     public void closeDB(String parentPathStr, String fileName) {
         File filePath = createPath(parentPathStr, fileName);
-        DB db = dbMap.get(filePath);
-        if (db == null) {
-            return;
-        }
-        removeDB(filePath);
-
-        scheduleCloseTask(db);
+        closeDB(filePath);
     }
 
     /**
@@ -82,7 +82,7 @@ public class MapDBManager {
      */
     protected void scheduleCloseTask(DB db) {
         CloseDBTimeTask closeDBTimeTask = new CloseDBTimeTask(db);
-        timer.schedule(closeDBTimeTask, 1000);// close db after 5 minute
+        timer.schedule(closeDBTimeTask, CLOSE_TIME_DELAY);// close db after 5 minute 5*60*1000
         closeTaskMap.put(db, closeDBTimeTask);
     }
 

@@ -91,7 +91,7 @@ public class NullCountIndicatorImpl extends IndicatorImpl implements NullCountIn
     public boolean handle(Object data) {
         boolean returnValue = super.handle(data);
         if (data == null) {
-            if (checkMustStorCurrentRow()) {
+            if (checkMustStoreCurrentRow()) {
                 this.mustStoreRow = true;
             }
         }

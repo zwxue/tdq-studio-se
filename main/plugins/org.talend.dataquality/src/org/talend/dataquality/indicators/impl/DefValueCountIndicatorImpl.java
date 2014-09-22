@@ -261,7 +261,7 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
             }
         }
         if (isMatch) {
-            if (this.checkMustStorCurrentRow()) {
+            if (this.checkMustStoreCurrentRow()) {
                 mustStoreRow = true;
             }
             this.defaultValCount++;
