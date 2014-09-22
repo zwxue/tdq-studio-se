@@ -64,8 +64,12 @@ public class DQMFB extends MFB {
         return true;
     }
 
+    /**
+     * do the match on one record
+     * 
+     * @param oneRecord
+     */
     public void matchOneRecord(Record oneRecord) {
-        // queue.offer(oneRecord);
         matchOneRecord(callback, mergedRecords, queue, oneRecord);
     }
 

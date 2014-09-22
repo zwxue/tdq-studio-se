@@ -122,6 +122,7 @@ public class MFB implements MatchMergeAlgorithm {
                 LOGGER.debug("Current index: " + index); //$NON-NLS-1$
             }
             Record currentRecord = queue.poll();
+            // process the record one by one
             matchOneRecord(callback, mergedRecords, queue, currentRecord);
             index++;
         }
@@ -131,7 +132,7 @@ public class MFB implements MatchMergeAlgorithm {
     }
 
     /**
-     * DOC yyin Comment method "matchOneRecord".
+     * Extract the processing of one record into a single method.
      * 
      * @param callback
      * @param mergedRecords

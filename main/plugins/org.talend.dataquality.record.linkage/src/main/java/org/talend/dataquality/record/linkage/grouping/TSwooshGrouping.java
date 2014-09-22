@@ -51,6 +51,9 @@ public class TSwooshGrouping<TYPE> {
 
     BidiMultiMap<String, String> oldGID2New = new BidiMultiMap<String, String>();
 
+    // Added TDQ-9320: to use the algorithm handle the record one by one
+    private DQMFB algorithm;
+
     /**
      * DOC zhao TSwooshGrouping constructor comment.
      */
@@ -145,24 +148,24 @@ public class TSwooshGrouping<TYPE> {
                 surviorShipAlgos, survParams), callback);
     }
 
-    private DQMFB algorithm;
-
+    // init the algorithm before do matching.
     public void initialMFBForOneRecord(IRecordMatcher combinedRecordMatcher, SurvivorShipAlgorithmParams survParams) {
         algorithm = (DQMFB) createTswooshAlgorithm(combinedRecordMatcher, survParams, new GroupingCallBack());
     }
 
+    // do match on one single record
     public void oneRecordMatch(RichRecord printRcd) {
         algorithm.matchOneRecord(printRcd);
     }
 
+    // get and output all result after all records finished
     public void afterAllRecordFinished() {
         List<Record> result = algorithm.getResult();
         outputResult(result);
-
     }
 
     /**
-     * DOC yyin Comment method "outputResult".
+     * Output the result Result after all finished.
      * 
      * @param result
      */

@@ -24,6 +24,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.matchmerge.Attribute;
+import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.genkey.AbstractGenerateKey;
 import org.talend.dataquality.record.linkage.grouping.AnalysisMatchRecordGrouping;
@@ -42,7 +43,7 @@ public class BlockAndMatchManager {
     private Map<String, OneBlockMatching> blockMatchMap = new HashMap<String, OneBlockMatching>();
 
     // Used to read each record from the data source
-    private Iterator resultIterator;
+    private Iterator<Record> resultIterator;
 
     private MatchGroupResultConsumer matchResultConsumer;
 
@@ -58,7 +59,7 @@ public class BlockAndMatchManager {
 
     private List<Map<String, String>> blockKeyDefinition;
 
-    public BlockAndMatchManager(Iterator resultIterator, MatchGroupResultConsumer matchResultConsumer,
+    public BlockAndMatchManager(Iterator<Record> resultIterator, MatchGroupResultConsumer matchResultConsumer,
             Map<MetadataColumn, String> columnMap, RecordMatchingIndicator recordMatchingIndicator,
             BlockKeyIndicator blockKeyIndicator) {
         this.resultIterator = resultIterator;
@@ -121,7 +122,7 @@ public class BlockAndMatchManager {
     }
 
     /**
-     * DOC yyin Comment method "createBlockKeyManager".
+     * create the processing manager of one block
      * 
      * @param blockKey
      * @return
@@ -134,7 +135,7 @@ public class BlockAndMatchManager {
     }
 
     /**
-     * DOC yyin Comment method "getBlockKey".
+     * get the block key of one record
      * 
      * @param record
      * @return
@@ -175,7 +176,7 @@ public class BlockAndMatchManager {
         }
 
         /**
-         * DOC yyin Comment method "initGrouping".
+         * Init the algorithm
          * 
          * @throws BusinessException
          */
@@ -193,7 +194,7 @@ public class BlockAndMatchManager {
         }
 
         /*
-         * (non-Javadoc)
+         * Group on one record
          * 
          * @see java.lang.Thread#run()
          */

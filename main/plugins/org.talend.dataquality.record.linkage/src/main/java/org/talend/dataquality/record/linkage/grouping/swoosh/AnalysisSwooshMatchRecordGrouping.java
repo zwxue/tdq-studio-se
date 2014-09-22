@@ -52,7 +52,8 @@ public class AnalysisSwooshMatchRecordGrouping extends AnalysisMatchRecordGroupi
     }
 
     /**
-     * DOC yyin Comment method "translateRecordForSwoosh".
+     * To move all attributes into: OriginRow, and change the current attributes to only contains the column which is
+     * used to be the match keys.
      * 
      * @param currentRecord
      */
