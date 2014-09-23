@@ -121,7 +121,7 @@ public enum BlockingKeyPostAlgorithmEnum {
             }
         }
 
-        return null;
+        return NON_ALGO;
     }
 
     /**

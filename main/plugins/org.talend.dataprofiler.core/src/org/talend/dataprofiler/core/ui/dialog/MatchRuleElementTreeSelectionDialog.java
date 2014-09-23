@@ -93,6 +93,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     private int dialogType;
 
+    private MatchRuleDefinition matchRuleDefinitionInput;
+
     public static final String T_SWOOSH_ALGORITHM = "T_SwooshAlgorithm"; //$NON-NLS-1$
 
     public static final int GENKEY_TYPE = 0;
@@ -102,6 +104,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
     public static final int MATCH_ANALYSIS_TYPE = 2;
 
     public static final int RECORD_MATCHING_TYPE = 3;
+
+    public static final int SUGGEST_TYPE = 4;
 
     private Composite matchRulesTableComposite = null;
 
@@ -257,7 +261,9 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
      * DOC yyin Comment method "init".
      */
     private void init() {
-        setInput(ResourceManager.getRulesMatcherFolder());
+        if (dialogType != SUGGEST_TYPE) {
+            setInput(ResourceManager.getRulesMatcherFolder());
+        }
         setTitle(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.title")); //$NON-NLS-1$
         setMessage(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.rule")); //$NON-NLS-1$
     }
@@ -298,28 +304,30 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         getTreeViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                Object[] array = selection.toArray();
-                if (array.length == 1) {
-                    if (array[0] != null && array[0] instanceof IFile) {
-                        MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule(
-                                (IFile) array[0]);
-                        if (matchRuleDefinition != null) {
-                            if (blockingKeysTable != null) {
-                                blockingKeysTable.setInput(getBlockingKeysFromFiles(array, true));
-                            }
-                            if (matchingRulesTable != null) {
-                                matchRulesTableComposite.dispose();
-                                if (StringUtils.equals(RecordMatcherType.T_SwooshAlgorithm.name(),
-                                        matchRuleDefinition.getRecordLinkageAlgorithm())) {
-                                    createSelectMatchRulesTableTswoosh(form);
-                                } else {
-                                    createSelectMatchRulesTableVsr(form);
+                if (dialogType != SUGGEST_TYPE) {
+                    IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+                    Object[] array = selection.toArray();
+                    if (array.length == 1) {
+                        if (array[0] != null && array[0] instanceof IFile) {
+                            MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule(
+                                    (IFile) array[0]);
+                            if (matchRuleDefinition != null) {
+                                if (blockingKeysTable != null) {
+                                    blockingKeysTable.setInput(getBlockingKeysFromFiles(array, true));
                                 }
-                                matchingRulesTable.setInput(getMatchRulesFromFiles(array, true));
-                                // refresh the dialog
-                                matchRulesTableComposite.getParent().layout();
-                                matchRulesTableComposite.getParent().redraw();
+                                if (matchingRulesTable != null) {
+                                    matchRulesTableComposite.dispose();
+                                    if (StringUtils.equals(RecordMatcherType.T_SwooshAlgorithm.name(),
+                                            matchRuleDefinition.getRecordLinkageAlgorithm())) {
+                                        createSelectMatchRulesTableTswoosh(form);
+                                    } else {
+                                        createSelectMatchRulesTableVsr(form);
+                                    }
+                                    matchingRulesTable.setInput(getMatchRulesFromFiles(array, true));
+                                    // refresh the dialog
+                                    matchRulesTableComposite.getParent().layout();
+                                    matchRulesTableComposite.getParent().redraw();
+                                }
                             }
                         }
                     }
@@ -336,6 +344,17 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
             createSelectBlockingKeysTable(form);
             createSelectMatchRulesTableVsr(form);
             form.setWeights(new int[] { 5, 2, 3 });
+
+        } else if (dialogType == SUGGEST_TYPE) {
+            createSelectBlockingKeysTable(form);
+            createSelectMatchRulesTableVsr(form);
+            form.setWeights(new int[] { 5, 2, 3 });
+            if (blockingKeysTable != null) {
+                blockingKeysTable.setInput(getBlockingKeysFromRules(matchRuleDefinitionInput, true));
+            }
+            if (matchingRulesTable != null) {
+                matchingRulesTable.setInput(getMatchRulesFromRules(matchRuleDefinitionInput, true));
+            }
         }
         createCheckerArea(composite);
         return composite;
@@ -712,6 +731,15 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     public void setLookupColumnNames(List<String> lookupColumnNames) {
         this.lookupColumnNames = lookupColumnNames;
+    }
+
+    /**
+     * DOC sizhaoliu Comment method "setMatchRuleDefinitionInput".
+     * 
+     * @param mrDef
+     */
+    public void setMatchRuleDefinitionInput(MatchRuleDefinition matchRuleDefinitionInput) {
+        this.matchRuleDefinitionInput = matchRuleDefinitionInput;
     }
 
 }
