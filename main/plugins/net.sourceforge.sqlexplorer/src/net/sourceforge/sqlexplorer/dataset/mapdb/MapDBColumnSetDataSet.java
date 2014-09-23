@@ -13,13 +13,14 @@
 package net.sourceforge.sqlexplorer.dataset.mapdb;
 
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dataset.DataSetRow;
+import net.sourceforge.sqlexplorer.service.MapDBUtils;
 
-import org.talend.commons.MapDB.utils.ColumnSetDBMap;
-import org.talend.commons.MapDB.utils.DataValidation;
+import org.talend.cwm.indicator.DataValidation;
 
 /**
  * created by talend on Sep 1, 2014 Detailled comment
@@ -35,8 +36,8 @@ public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
      * @param size
      * @param dataItemValidator
      */
-    public MapDBColumnSetDataSet(String[] columnLabels, ColumnSetDBMap imputDBMap, Long size, DataValidation dataItemValidator,
-            int pageSize) {
+    public MapDBColumnSetDataSet(String[] columnLabels, Map<List<Object>, Long> imputDBMap, Long size,
+            DataValidation dataItemValidator, int pageSize) {
         super(columnLabels, imputDBMap, size, dataItemValidator, pageSize);
     }
 
@@ -55,7 +56,7 @@ public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
                 throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index);
             }
             if (currentIndex > index) {
-                iterator = dataMap.iterator();
+                iterator = dataMap.keySet().iterator();
                 currentIndex = 0;
             }
 
@@ -90,7 +91,8 @@ public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
     @Override
     public DataSet getCurrentPageDataSet() {
         Comparable[][] compareArray = new Comparable[(int) (endIndex - startIndex)][this.getColumns().length];
-        List<Object[]> subList = ((ColumnSetDBMap) this.dataMap).subList(startIndex, endIndex, null, dataValidator);
+        List<Object[]> subList = MapDBUtils.getDefault().getColumnSetDBMapSubList(this.dataMap, startIndex, endIndex, null,
+                dataValidator);
         for (int i = 0; i < endIndex - startIndex; i++) {
             Object[] objArray = subList.get(i);
             for (int j = 0; j < this.getColumns().length; j++) {

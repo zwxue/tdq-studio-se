@@ -14,13 +14,14 @@ package net.sourceforge.sqlexplorer.dataset.mapdb;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dataset.DataSetRow;
+import net.sourceforge.sqlexplorer.service.MapDBUtils;
 
-import org.talend.commons.MapDB.utils.ColumnFilter;
-import org.talend.commons.MapDB.utils.DBMap;
+import org.talend.cwm.indicator.ColumnFilter;
 
 /**
  * created by talend on Aug 27, 2014 Detailled comment
@@ -28,7 +29,7 @@ import org.talend.commons.MapDB.utils.DBMap;
  */
 public class MapDBDataSet extends TalendDataSet {
 
-    protected DBMap<Object, List<Object>> dataMap = null;
+    protected Map<Object, List<Object>> dataMap = null;
 
     protected int currentIndex = 0;
 
@@ -46,11 +47,11 @@ public class MapDBDataSet extends TalendDataSet {
         super(columnLabels, data, pageSize);
     }
 
-    public MapDBDataSet(String[] columnLabels, DBMap<Object, List<Object>> imputDBMap, int pageSize, ColumnFilter cfilter,
+    public MapDBDataSet(String[] columnLabels, Map<Object, List<Object>> imputDBMap, int pageSize, ColumnFilter cfilter,
             Long rowSize) {
         super(columnLabels, new Comparable[0][0], pageSize);
         this.dataMap = imputDBMap;
-        iterator = dataMap.iterator();
+        iterator = dataMap.keySet().iterator();
         this.columnFilter = cfilter;
         this.rowSize = rowSize;
     }
@@ -86,7 +87,7 @@ public class MapDBDataSet extends TalendDataSet {
                 throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index); //$NON-NLS-1$
             }
             if (currentIndex > index) {
-                iterator = dataMap.iterator();
+                iterator = dataMap.keySet().iterator();
                 currentIndex = 0;
             }
             while (currentIndex < index && iterator.hasNext()) {
@@ -119,7 +120,7 @@ public class MapDBDataSet extends TalendDataSet {
     public DataSet getCurrentPageDataSet() {
         long pageSize = endIndex - startIndex;
         Comparable[][] compareArray = new Comparable[(int) (pageSize)][this.getColumns().length];
-        List<Object[]> subList = this.dataMap.subList(startIndex, endIndex, null);
+        List<Object[]> subList = MapDBUtils.getDefault().getDataSetDBMapSubList(this.dataMap, startIndex, endIndex, null);
         if (columnFilter != null) {
             subList = columnFilter.filterArray(subList);
         }

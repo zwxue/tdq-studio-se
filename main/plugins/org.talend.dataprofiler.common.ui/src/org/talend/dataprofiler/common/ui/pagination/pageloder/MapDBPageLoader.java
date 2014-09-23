@@ -18,10 +18,10 @@ import java.util.Map;
 import org.eclipse.nebula.widgets.pagination.IPageLoader;
 import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.nebula.widgets.pagination.collections.PageResult;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.ColumnFilter;
-import org.talend.commons.MapDB.utils.DBValueMap;
-import org.talend.commons.MapDB.utils.DataValidation;
+import org.talend.cwm.indicator.ColumnFilter;
+import org.talend.cwm.indicator.DataValidation;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBValueMap;
 
 /**
  * created by talend on Aug 14, 2014 Detailled comment

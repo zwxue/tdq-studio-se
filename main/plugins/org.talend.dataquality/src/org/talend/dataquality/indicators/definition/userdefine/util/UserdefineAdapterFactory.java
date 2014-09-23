@@ -8,15 +8,11 @@ package org.talend.dataquality.indicators.definition.userdefine.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-
-import org.talend.dataquality.indicators.definition.userdefine.*;
-
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

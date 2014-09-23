@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * <!-- begin-user-doc -->

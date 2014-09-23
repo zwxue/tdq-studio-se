@@ -5,7 +5,6 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.talend.core.model.properties.PropertiesPackage;
-import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.category.CategoryPackage;
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;

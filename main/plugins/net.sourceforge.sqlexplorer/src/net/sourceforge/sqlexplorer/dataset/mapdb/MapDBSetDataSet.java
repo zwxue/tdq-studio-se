@@ -13,12 +13,12 @@
 package net.sourceforge.sqlexplorer.dataset.mapdb;
 
 import java.util.List;
+import java.util.Set;
 
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dataset.DataSetRow;
-
-import org.talend.commons.MapDB.utils.DBSet;
+import net.sourceforge.sqlexplorer.service.MapDBUtils;
 
 /**
  * created by talend on Aug 29, 2014 Detailled comment
@@ -26,7 +26,7 @@ import org.talend.commons.MapDB.utils.DBSet;
  */
 public class MapDBSetDataSet extends MapDBDataSet {
 
-    protected DBSet<Object> dataSet = null;
+    protected Set<Object> dataSet = null;
 
     /**
      * DOC talend MapDBSetDataSet constructor comment.
@@ -38,7 +38,7 @@ public class MapDBSetDataSet extends MapDBDataSet {
         super(columnLabels, data, pageSize);
     }
 
-    public MapDBSetDataSet(String[] columnLabels, DBSet<Object> imputDBSet, int pageSize) {
+    public MapDBSetDataSet(String[] columnLabels, Set<Object> imputDBSet, int pageSize) {
         super(columnLabels, new Comparable[0][0], pageSize);
         this.dataSet = imputDBSet;
         iterator = dataSet.iterator();
@@ -97,7 +97,7 @@ public class MapDBSetDataSet extends MapDBDataSet {
     @Override
     public DataSet getCurrentPageDataSet() {
         Comparable[][] compareArray = new Comparable[(int) (endIndex - startIndex)][this.getColumns().length];
-        List<Object[]> subList = this.dataSet.subList(startIndex, endIndex, null);
+        List<Object[]> subList = MapDBUtils.getDefault().getDataSetDBMapSubList(this.dataSet, startIndex, endIndex, null);
         for (int i = 0; i < endIndex - startIndex; i++) {
             Object[] objArray = subList.get(i);
             for (int j = 0; j < this.getColumns().length; j++) {
