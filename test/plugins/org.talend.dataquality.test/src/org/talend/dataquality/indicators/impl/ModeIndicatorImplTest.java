@@ -50,6 +50,7 @@ public class ModeIndicatorImplTest {
         tempMap.put("8", 8L); //$NON-NLS-1$
         tempMap.put(null, 7L);
         modeIndicator.setValueToFreq(tempMap);
+        modeIndicator.setUsedMapDBMode(false);
         this.modeIndicator.finalizeComputation();
         Assert.assertTrue("8".equals(modeIndicator.getMode())); //$NON-NLS-1$
 

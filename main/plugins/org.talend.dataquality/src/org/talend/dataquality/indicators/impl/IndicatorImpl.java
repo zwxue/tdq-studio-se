@@ -823,7 +823,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public boolean finalizeComputation() {
-        closeMapDB();
+        if (isUsedMapDBMode()) {
+            closeMapDB();
+        }
         return true;
     }
 
