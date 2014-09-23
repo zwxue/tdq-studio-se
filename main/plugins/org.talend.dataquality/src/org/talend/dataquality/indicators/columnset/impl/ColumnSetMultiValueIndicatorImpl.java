@@ -31,6 +31,7 @@ import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.ColumnSetDBMap;
 import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
@@ -280,7 +281,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     private ColumnSetDBMap initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
+            return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
         }
         return null;
     }
@@ -1365,7 +1366,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
             if (needReconnect(valueByGroupMapForMapDB)) {
                 valueByGroupMapForMapDB = initValueForDBMap(StandardDBName.dataSection.name());
             }
-            valueByGroupMapForMapDB.clear();
+            if (!valueByGroupMapForMapDB.isEmpty()) {
+                valueByGroupMapForMapDB.clear();
+            }
         } else {
             this.valueByGroupMapForJavaMap.clear();
         }

@@ -30,6 +30,7 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -114,19 +115,19 @@ public final class ResourceManager {
      */
     public static String getMapDBFilePath(Indicator indicator) {
         Analysis analysis = AnalysisHelper.getAnalysis(indicator);
-        String analysisName = null;
-        String indicatorName = indicator.eResource().getURIFragment(indicator);
+        String analysisUUID = null;
+        String indicatorUUID = ResourceHelper.getUUID(indicator);
         String modelElementName = Path.EMPTY.toString();
         if (analysis == null) {
             log.error(Messages.getString("ResourceManager.CanNotGetAnalysis"));
         } else {
-            analysisName = analysis.eResource().getURIFragment(analysis);
+            analysisUUID = ResourceHelper.getUUID(analysis);
             if (AnalysisType.MULTIPLE_COLUMN.equals(analysis.getParameters().getAnalysisType())) {
                 modelElementName = indicator.getAnalyzedElement().getName();
             }
         }
 
-        return getTempMapDBFolder().getLocation().append(analysisName).append(modelElementName).append(indicatorName)
+        return getTempMapDBFolder().getLocation().append(analysisUUID).append(modelElementName).append(indicatorUUID)
                 .toOSString();
 
     }

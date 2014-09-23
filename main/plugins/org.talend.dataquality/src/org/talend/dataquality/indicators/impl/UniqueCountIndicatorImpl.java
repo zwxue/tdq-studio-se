@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.DBSet;
 import org.talend.commons.MapDB.utils.StandardDBName;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -78,7 +79,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      */
     private Set<Object> initValueForDBSet(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
         } else {
             return new HashSet<Object>();
         }
