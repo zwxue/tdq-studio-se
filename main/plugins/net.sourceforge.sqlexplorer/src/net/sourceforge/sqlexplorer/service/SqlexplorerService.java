@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -67,11 +68,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.talend.commons.MapDB.utils.ColumnFilter;
-import org.talend.commons.MapDB.utils.ColumnSetDBMap;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.DBSet;
-import org.talend.commons.MapDB.utils.DataValidation;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.classloader.DynamicClassLoader;
@@ -87,6 +83,8 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.indicator.ColumnFilter;
+import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -853,7 +851,8 @@ public class SqlexplorerService implements ISqlexplorerService {
      * java.lang.Object, int)
      */
     public Object createMapDBColumnSetDataSet(String[] columnHeader, Object mapDB, Long size, Object currIndicator, int pageSize) {
-        return new MapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size, (DataValidation) currIndicator, pageSize);
+        return new MapDBColumnSetDataSet(columnHeader, (Map<List<Object>, Long>) mapDB, size, (DataValidation) currIndicator,
+                pageSize);
     }
 
     /*
@@ -863,7 +862,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * java.lang.Object, int)
      */
     public Object createMapDBSetDataSet(String[] columnHeader, Object mapDB, int pageSize) {
-        return new MapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, pageSize);
+        return new MapDBSetDataSet(columnHeader, (Set<Object>) mapDB, pageSize);
     }
 
     /*
@@ -873,8 +872,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * int, java.lang.Object, java.lang.Long)
      */
     public Object createMapDBDataSet(String[] columnHeader, Object mapDB, int pageSize, Object columnFilter, Long itemSize) {
-        return new MapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, pageSize, (ColumnFilter) columnFilter,
-                itemSize);
+        return new MapDBDataSet(columnHeader, (Map<Object, List<Object>>) mapDB, pageSize, (ColumnFilter) columnFilter, itemSize);
     }
 
     /*

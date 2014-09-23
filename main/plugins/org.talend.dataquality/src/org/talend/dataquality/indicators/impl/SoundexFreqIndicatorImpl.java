@@ -16,14 +16,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.collections.MapValueSorter;
 

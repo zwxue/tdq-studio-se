@@ -7,14 +7,10 @@
 package org.talend.dataquality.rules.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.RulesPackage;
-
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**

@@ -12,9 +12,7 @@
 // ============================================================================
 package net.sourceforge.sqlexplorer.dataset.mapdb;
 
-import net.sourceforge.sqlexplorer.dataset.mapdb.SqlExplorerTalendDataSet;
-
-import org.talend.commons.MapDB.utils.DataValidation;
+import org.talend.cwm.indicator.DataValidation;
 
 /**
  * created by talend on Sep 2, 2014 Detailled comment

@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.sql.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 

@@ -9,12 +9,19 @@ package org.talend.dataquality.properties.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import org.talend.dataquality.properties.*;
+import org.talend.dataquality.properties.PropertiesFactory;
+import org.talend.dataquality.properties.PropertiesPackage;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQFileItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQJrxmlItem;
+import org.talend.dataquality.properties.TDQMatchRuleItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 
 /**
  * <!-- begin-user-doc -->

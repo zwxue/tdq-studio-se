@@ -19,11 +19,11 @@ import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.nebula.widgets.pagination.collections.DefaultSortProcessor;
 import org.eclipse.nebula.widgets.pagination.collections.PageResult;
 import org.eclipse.nebula.widgets.pagination.collections.SortProcessor;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.ColumnFilter;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.DBValueMap;
-import org.talend.commons.MapDB.utils.DataValidation;
+import org.talend.cwm.indicator.ColumnFilter;
+import org.talend.cwm.indicator.DataValidation;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.DBValueMap;
 
 /**
  * created by talend on Aug 15, 2014 Detailled comment

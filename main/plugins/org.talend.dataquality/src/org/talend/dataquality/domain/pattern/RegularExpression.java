@@ -7,7 +7,6 @@
 package org.talend.dataquality.domain.pattern;
 
 import org.talend.cwm.relational.TdExpression;
-import orgomg.cwm.objectmodel.core.Expression;
 
 
 /**

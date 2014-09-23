@@ -10,21 +10,19 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.commons.MapDB.utils;
+package org.talend.dataquality.indicators.mapdb;
 
 /**
- * created by talend on Aug 22, 2014 Detailled comment
+ * created by talend on Aug 15, 2014 Detailled comment
  * 
  */
-public interface DataValidation {
+public enum StandardDBName {
+    all,
+    dataSection,
+    drillDown,
+    computeProcess,
+    computeProcessSet,
+    temp,
+    talendNull;
 
-    /**
-     * 
-     * When MapDB is used some different indicator maybe used same data file.then indicator need to implements it then
-     * we can know what data is for it
-     * 
-     * @param inputData
-     * @return
-     */
-    boolean isValid(Object inputData);
 }

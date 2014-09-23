@@ -7,9 +7,7 @@
 package org.talend.dataquality.indicators.definition.userdefine;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.talend.cwm.relational.TdExpression;
-
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
 /**

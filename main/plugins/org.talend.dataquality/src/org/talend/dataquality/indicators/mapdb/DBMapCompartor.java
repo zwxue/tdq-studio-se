@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.commons.MapDB.utils;
+package org.talend.dataquality.indicators.mapdb;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -26,7 +26,6 @@ public class DBMapCompartor implements Comparator<Object>, Serializable {
     private static final long serialVersionUID = -3201084133371388584L;
 
     @SuppressWarnings("unchecked")
-    @Override
     public int compare(Object o1, Object o2) {
         if (o1 == null && o2 == null) {
             return 0;

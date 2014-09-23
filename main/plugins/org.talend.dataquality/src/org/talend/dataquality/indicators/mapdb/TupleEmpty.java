@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.commons.MapDB.utils;
+package org.talend.dataquality.indicators.mapdb;
 
 import java.io.Serializable;
 
@@ -24,16 +24,6 @@ public final class TupleEmpty implements Comparable<Object>, Serializable {
      * 
      */
     private static final long serialVersionUID = -6654296341607063353L;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    @Override
-    public int compareTo(Object o) {
-        return 0;
-    }
 
     /*
      * (non-Javadoc)
@@ -66,6 +56,15 @@ public final class TupleEmpty implements Comparable<Object>, Serializable {
     @Override
     public int hashCode() {
         return this.toString().hashCode();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    public int compareTo(Object o) {
+        return 0;
     }
 
 }

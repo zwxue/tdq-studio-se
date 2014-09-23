@@ -9,7 +9,6 @@ package org.talend.dataquality.indicators.definition.userdefine;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 
 /**

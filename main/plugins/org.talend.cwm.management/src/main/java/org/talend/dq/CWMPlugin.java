@@ -24,6 +24,8 @@ import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.cwm.management.mapdb.MapDBService;
+import org.talend.dataprofiler.service.IMapDBService;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
@@ -58,6 +60,11 @@ public class CWMPlugin extends Plugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         this.context = context;
+
+        // register the service
+        IMapDBService service = new MapDBService();
+        context.registerService(IMapDBService.class.getName(), service, null);
+
         self = this;
         initPreferences(self);
     }

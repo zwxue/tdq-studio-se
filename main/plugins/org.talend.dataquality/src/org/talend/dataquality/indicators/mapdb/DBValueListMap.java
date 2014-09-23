@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.commons.MapDB.utils;
+package org.talend.dataquality.indicators.mapdb;
 
 import java.util.ArrayList;
 import java.util.Iterator;
