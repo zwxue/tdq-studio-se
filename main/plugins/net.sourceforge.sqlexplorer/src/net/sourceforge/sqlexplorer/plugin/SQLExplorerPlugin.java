@@ -94,6 +94,17 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
 
     private boolean isInitedAllConnToSQLExpl = false;
 
+    private BundleContext context;
+
+    /**
+     * Getter for context.
+     * 
+     * @return the context
+     */
+    public BundleContext getContext() {
+        return this.context;
+    }
+
     /**
      * The constructor. Moved previous logic to the start method.
      */
@@ -108,6 +119,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+        this.context = context;
 
         // register the service
         ISqlexplorerService service = new SqlexplorerService();

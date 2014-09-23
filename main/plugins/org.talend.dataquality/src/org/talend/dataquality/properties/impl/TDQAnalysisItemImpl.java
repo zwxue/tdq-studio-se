@@ -7,16 +7,12 @@
 package org.talend.dataquality.properties.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.impl.TDQItemImpl;
 import org.talend.dataquality.analysis.Analysis;
-
 import org.talend.dataquality.properties.PropertiesPackage;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 

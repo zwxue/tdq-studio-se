@@ -9,12 +9,11 @@ package org.talend.dataquality.indicators.definition.userdefine.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import org.talend.dataquality.indicators.definition.userdefine.*;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
 
 /**
  * <!-- begin-user-doc -->

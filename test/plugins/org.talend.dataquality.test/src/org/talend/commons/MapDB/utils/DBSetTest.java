@@ -19,6 +19,8 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.talend.dataquality.indicators.mapdb.DBMapParameter;
+import org.talend.dataquality.indicators.mapdb.DBSet;
 
 /**
  * created by talend on Aug 4, 2014 Detailled comment

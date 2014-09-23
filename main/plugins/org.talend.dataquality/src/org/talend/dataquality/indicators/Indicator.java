@@ -10,9 +10,9 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.commons.MapDB.utils.DataValidation;
-import org.talend.commons.MapDB.utils.MapDBDrillDown;
+import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.mapdb.MapDBDrillDown;
 import org.talend.dataquality.rules.JoinElement;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;

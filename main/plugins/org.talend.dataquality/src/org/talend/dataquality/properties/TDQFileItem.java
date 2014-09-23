@@ -6,7 +6,6 @@
 package org.talend.dataquality.properties;
 
 import org.talend.core.model.properties.FileItem;
-import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.TDQItem;
 
 /**

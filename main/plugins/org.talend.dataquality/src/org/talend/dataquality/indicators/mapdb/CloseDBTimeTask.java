@@ -10,17 +10,34 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.commons.MapDB.utils;
+package org.talend.dataquality.indicators.mapdb;
 
+import java.util.TimerTask;
+
+import org.mapdb.DB;
 
 /**
- * created by talend on Aug 25, 2014 Detailled comment
+ * created by talend on Sep 18, 2014 Detailled comment
  * 
  */
-public class DBValueMap<K, V> extends DBMap<K, V> {
+public class CloseDBTimeTask extends TimerTask {
 
-    public DBValueMap(String parentFullPathStr, String fileName, String mapName) {
-        super(parentFullPathStr, fileName, mapName);
+    private DB db = null;
+
+    public CloseDBTimeTask(DB closeDb) {
+        this.db = closeDb;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.util.TimerTask#run()
+     */
+    @Override
+    public void run() {
+        if (db != null && !db.isClosed()) {
+            db.close();
+        }
     }
 
 }

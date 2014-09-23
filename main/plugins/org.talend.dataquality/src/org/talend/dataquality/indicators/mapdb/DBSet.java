@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.commons.MapDB.utils;
+package org.talend.dataquality.indicators.mapdb;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -96,7 +96,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.AbstractCollection#iterator()
      */
-    @Override
     public Iterator<E> iterator() {
         return dbSet.iterator();
     }
@@ -106,7 +105,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.AbstractCollection#size()
      */
-    @Override
     public int size() {
         return dbSet.size();
     }
@@ -116,7 +114,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#isEmpty()
      */
-    @Override
     public boolean isEmpty() {
         return dbSet.isEmpty();
     }
@@ -126,7 +123,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#contains(java.lang.Object)
      */
-    @Override
     public boolean contains(Object o) {
         return dbSet.contains(o);
     }
@@ -136,7 +132,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#toArray()
      */
-    @Override
     public Object[] toArray() {
         return dbSet.toArray();
     }
@@ -146,7 +141,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#toArray(T[])
      */
-    @Override
     public <T> T[] toArray(T[] a) {
         return dbSet.toArray(a);
     }
@@ -157,7 +151,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * @see java.util.Set#add(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
-    @Override
     public boolean add(E e) {
         if (e == null) {
             return dbSet.add((E) EMPTY);
@@ -171,7 +164,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#remove(java.lang.Object)
      */
-    @Override
     public boolean remove(Object o) {
         return dbSet.remove(o);
     }
@@ -181,7 +173,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#containsAll(java.util.Collection)
      */
-    @Override
     public boolean containsAll(Collection<?> c) {
         return dbSet.containsAll(c);
     }
@@ -191,7 +182,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#addAll(java.util.Collection)
      */
-    @Override
     public boolean addAll(Collection<? extends E> c) {
         return dbSet.addAll(c);
     }
@@ -201,7 +191,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#retainAll(java.util.Collection)
      */
-    @Override
     public boolean retainAll(Collection<?> c) {
         return dbSet.retainAll(c);
     }
@@ -211,7 +200,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#removeAll(java.util.Collection)
      */
-    @Override
     public boolean removeAll(Collection<?> c) {
         return dbSet.removeAll(c);
     }
@@ -221,7 +209,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.Set#clear()
      */
-    @Override
     public void clear() {
         if (!getDB().isClosed()) {
             dbSet.clear();
@@ -244,7 +231,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.SortedSet#comparator()
      */
-    @Override
     public Comparator<? super E> comparator() {
         return dbSet.comparator();
     }
@@ -254,7 +240,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.SortedSet#first()
      */
-    @Override
     public E first() {
         return dbSet.first();
     }
@@ -264,7 +249,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.SortedSet#last()
      */
-    @Override
     public E last() {
         return dbSet.last();
     }
@@ -274,7 +258,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#lower(java.lang.Object)
      */
-    @Override
     public E lower(E e) {
         return dbSet.lower(e);
     }
@@ -284,7 +267,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#floor(java.lang.Object)
      */
-    @Override
     public E floor(E e) {
         return dbSet.floor(e);
     }
@@ -294,7 +276,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#ceiling(java.lang.Object)
      */
-    @Override
     public E ceiling(E e) {
         return dbSet.ceiling(e);
     }
@@ -304,7 +285,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#higher(java.lang.Object)
      */
-    @Override
     public E higher(E e) {
         return dbSet.higher(e);
     }
@@ -314,7 +294,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#pollFirst()
      */
-    @Override
     public E pollFirst() {
         return dbSet.pollFirst();
     }
@@ -324,7 +303,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#pollLast()
      */
-    @Override
     public E pollLast() {
         return dbSet.pollLast();
     }
@@ -334,7 +312,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#descendingSet()
      */
-    @Override
     public NavigableSet<E> descendingSet() {
         return dbSet.descendingSet();
     }
@@ -344,7 +321,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#descendingIterator()
      */
-    @Override
     public Iterator<E> descendingIterator() {
         return dbSet.descendingIterator();
     }
@@ -354,7 +330,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#subSet(java.lang.Object, boolean, java.lang.Object, boolean)
      */
-    @Override
     public NavigableSet<E> subSet(E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) {
         return dbSet.subSet(fromElement, fromInclusive, toElement, toInclusive);
     }
@@ -394,7 +369,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#headSet(java.lang.Object)
      */
-    @Override
     public SortedSet<E> headSet(E toElement) {
         return dbSet.headSet(toElement);
     }
@@ -404,7 +378,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      * 
      * @see java.util.NavigableSet#tailSet(java.lang.Object)
      */
-    @Override
     public SortedSet<E> tailSet(E fromElement) {
         return dbSet.tailSet(fromElement);
     }

@@ -19,6 +19,8 @@ import java.util.Map.Entry;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.DBMapParameter;
 
 /**
  * created by talend on Jul 15, 2014 Detailled comment
