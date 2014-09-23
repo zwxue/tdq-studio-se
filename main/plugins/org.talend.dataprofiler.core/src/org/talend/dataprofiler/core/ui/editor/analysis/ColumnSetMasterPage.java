@@ -389,8 +389,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
             // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java
-            // engine,show all match indicator in the
-            // Indicators section.
+            // engine,show all match indicator in the Indicators section.
             EventManager.getInstance().publish(getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
             // TDQ-8860~
         }
@@ -622,6 +621,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             storeDataCheck.setSelection(simpleStatIndicator.isStoreData());
             storeDataCheck.setEnabled(true);
         }
+        simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
+        allMatchIndicator.setStoreData(storeDataCheck.getSelection());
     }
 
     /**

@@ -549,15 +549,13 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         this.distinctComputed = false;
         this.datePattern = null;
         if (isUsedMapDBMode()) {
-            if (valueToFreqForMapDB != null) {
-                if (checkAllowDrillDown()) {
-                    clearDrillDownMaps();
-                } else {
-                    ((DBMap<Object, Long>) valueToFreqForMapDB).clear();
-                }
+            if (checkAllowDrillDown()) {
+                clearDrillDownMaps();
             }
             valueToFreqForMapDB = initValueForDBMap(FREQUENCYMAPNAME);
-
+            if (valueToFreqForMapDB != null && !valueToFreqForMapDB.isEmpty()) {
+                valueToFreqForMapDB.clear();
+            }
         } else {
             this.getValueToFreq().clear();
         }
@@ -572,8 +570,9 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     @SuppressWarnings("unchecked")
     protected void clearDrillDownMaps() {
         AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
-        mapDB.clearDB();
-
+        if (mapDB != null) {
+            mapDB.clearDB();
+        }
     }
 
     /**
