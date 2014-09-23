@@ -501,7 +501,13 @@ public final class ChartTableFactory {
                 if (FrequencyIndicator.class.isInstance(indicator)) {
                     dbMapName = selectValue;
                 } else if (LengthIndicator.class.isInstance(indicator)) {
-                    String selectValueLength = ((LengthIndicator) indicator).getLength().toString();
+                    String selectValueLength;
+                    Long length = ((LengthIndicator) indicator).getLength();
+                    if (length != null) {
+                        selectValueLength = length.toString();
+                    } else {
+                        selectValueLength = ((LengthIndicator) indicator).getRealValue().toString();
+                    }
                     dbMapName = selectValue + selectValueLength;
                 } else if (AnalysisType.COLUMN_SET == analysisType) {
                     dbMapName = StandardDBName.dataSection.name();
