@@ -17,8 +17,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
@@ -58,7 +56,6 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -77,6 +74,7 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -577,8 +575,8 @@ public class PatternTestView extends ViewPart {
             String selectRegexpTestString = dbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText.getText());
 
             // MOD sizhaoliu TDQ-5237 changed the way to open SQL Explorer for Pattern Test View
-            CorePlugin.getDefault().openInSqlEditor(getDBConnectionFromDBName(dbCombo.getText()), selectRegexpTestString,
-                    SQLEditor.EDITOR_ID);
+            SqlExplorerUtils.getDefault().runInDQViewer(getDBConnectionFromDBName(dbCombo.getText()), selectRegexpTestString,
+                    SqlExplorerUtils.SQLEDITOR_ID);
         } else {
             MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED); //$NON-NLS-1$
         }

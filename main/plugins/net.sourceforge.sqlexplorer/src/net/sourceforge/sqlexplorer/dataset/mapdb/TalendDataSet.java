@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.sqlexplorer.dataset;
+package net.sourceforge.sqlexplorer.dataset.mapdb;
 
 import net.sourceforge.sqlexplorer.dataset.mapdb.SqlExplorerTalendDataSet;
 

@@ -20,12 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -52,7 +51,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -70,6 +68,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
@@ -89,6 +88,7 @@ import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.SourceFileRepNode;
@@ -527,24 +527,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * TDQ-6166,Add this function for init all connections in DataExplorer perspective.
      */
     public void initAllConnectionsToSQLExplorer() {
-        try {
-            if (!SQLExplorerPlugin.getDefault().isInitedAllConnToSQLExpl()) {
-                for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
-                        ERepositoryObjectType.METADATA_CONNECTIONS, true)) {
-                    if (viewObject == null || viewObject.getProperty() == null) {
-                        continue;
-                    }
-                    Item item = viewObject.getProperty().getItem();
-                    if (item != null && (item instanceof DatabaseConnectionItem)) {
-                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(((DatabaseConnectionItem) item).getConnection());
-                    }
-
-                }
-                SQLExplorerPlugin.getDefault().setInitedAllConnToSQLExpl(true);
-            }
-        } catch (Exception e) {
-            log.error(e, e);
-        }
+        SqlExplorerUtils.getDefault().initAllConnectionsToSQLExplorer();
     }
 
     public void saveConnectionWithDependency(ConnectionItem connectionItem) {
@@ -662,19 +645,22 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         return CorePlugin.getDefault().getAllDataProviders();
     }
 
+    public void publishDynamicEvent(ModelElement indicator, Object value) {
+        EventManager.getInstance().publish(indicator, EventEnum.DQ_DYMANIC_CHART, value);
+    }
+
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.talend.core.ITDQRepositoryService#updateDriverIfClassNotLoad(org.talend.core.model.metadata.builder.connection
-     * .DatabaseConnection)
+     * @see org.talend.core.ITDQRepositoryService#createFile(java.lang.String, org.eclipse.core.runtime.IPath,
+     * java.lang.String, java.lang.String)
      */
-    public void updateDriverIfClassNotLoad(DatabaseConnection databaseConnection) {
-        CorePlugin.getDefault().updateDriverIfClassNotLoad(databaseConnection);
-    }
-
-    public void publishDynamicEvent(ModelElement indicator, Object value) {
-        EventManager.getInstance().publish(indicator, EventEnum.DQ_DYMANIC_CHART, value);
+    public Item createFile(String content, IPath path, String label, String extension) {
+        Item item = DQStructureManager.getInstance().createSourceFileItem(content, path, label, extension);
+        // Added TDQ-7532, 20130719 yyin: to lock the editor when creating the sql file from "preview table"
+        ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item);// ~
+        CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.SOURCE_FILES));
+        return item;
     }
 
 }

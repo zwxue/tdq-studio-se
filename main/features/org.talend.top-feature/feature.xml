@@ -20,6 +20,7 @@
    <includes
          id="org.talend.top.libraries_feature"
          version="0.0.0"/>
+
    <includes
          id="org.eclipse.rcp"
          version="0.0.0"/>
@@ -266,13 +267,6 @@
 
    <plugin
          id="org.talend.registration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="net.sourceforge.sqlexplorer"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -611,7 +605,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.talend.repository.items.importexport"
          download-size="0"
@@ -685,5 +679,11 @@
          version="0.0.0"
          unpack="false"/>
 
-      
+   <plugin
+         id="org.talend.dataprofiler.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>

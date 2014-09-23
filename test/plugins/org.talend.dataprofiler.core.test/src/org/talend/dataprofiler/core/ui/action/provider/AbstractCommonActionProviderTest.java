@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.actions.ActionContext;
 import org.jfree.util.Log;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

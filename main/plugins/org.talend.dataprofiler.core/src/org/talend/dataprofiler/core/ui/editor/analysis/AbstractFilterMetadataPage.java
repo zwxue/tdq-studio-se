@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import net.sourceforge.sqlexplorer.Messages;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.IMenuListener;
@@ -78,7 +76,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
-import org.talend.dataprofiler.core.model.SqlExplorerBridge;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
@@ -94,6 +91,7 @@ import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -134,19 +132,26 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             { new SchemaSorter(SchemaSorter.INDEXES), new SchemaSorter(-SchemaSorter.INDEXES) } };
 
     private CatalogWithSchemaSorter[][] catalogWithSchemaSorters = {
-            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.CATALOG), new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.CATALOG) },
-            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS), new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS) },
-            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.SCHEMAS), new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.SCHEMAS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.CATALOG),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.CATALOG) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.SCHEMAS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.SCHEMAS) },
             { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS_SCHEMAS),
                     new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS_SCHEMAS) },
-            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.TABLES), new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.TABLES) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.TABLES),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.TABLES) },
             { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS_TABLES),
                     new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS_TABLES) },
-            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.VIEWS), new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.VIEWS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.VIEWS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.VIEWS) },
             { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS_VIEWS),
                     new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS_VIEWS) },
-            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.KEYS), new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.KEYS) },
-            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.INDEXES), new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.INDEXES) } };
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.KEYS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.KEYS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.INDEXES),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.INDEXES) } };
 
     private static final int TABLE_COLUMN_INDEX = 0;
 
@@ -342,7 +347,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * @param topComp
      */
     private void createAnalysisParamSection(Composite topComp) {
-        analysisParamSection = createSection(form, topComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisParameter")); //$NON-NLS-1$
+        analysisParamSection = createSection(form, topComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisParameter")); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(1, false));
 
@@ -433,7 +439,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     private void createAnalysisSummarySection(Composite topComp) {
-        summarySection = this.createSection(form, topComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisSummary")); //$NON-NLS-1$
+        summarySection = this.createSection(form, topComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisSummary")); //$NON-NLS-1$
         sumSectionClient = toolkit.createComposite(summarySection);
         sumSectionClient.setLayout(new GridLayout(2, false));
         sumSectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -475,11 +482,13 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // MOD TDQ-8539, find the db type from the connection, not from the properties file
         toolkit.createLabel(leftComp, getDatabaseType(pameterProperties));
 
-        labelContent = pameterProperties.getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.HOSTNAME_PROPERTY);
+        labelContent = pameterProperties
+                .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.HOSTNAME_PROPERTY);
         toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.server")); //$NON-NLS-1$
         toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
 
-        labelContent = pameterProperties.getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.PORT_PROPERTY);
+        labelContent = pameterProperties
+                .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.PORT_PROPERTY);
         toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port")); //$NON-NLS-1$
         toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
 
@@ -491,10 +500,12 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // TDQ-6735 get the correct numbers of schema.
         // MOD TDQ-8539 , get the schemas size
         int schemaSize = getSchamas(tdCatalogs);
-        toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(leftComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + tdCatalogs.size());
 
-        toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(leftComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + schemaSize);
 
         ExecutionInformations resultMetadata = analysisItem.getAnalysis().getResults().getResultMetadata();
@@ -510,8 +521,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDuration", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getExecutionDuration() / 1000.0d + "s"); //$NON-NLS-1$
 
-        String executeStatus = (resultMetadata.isLastRunOk() ? DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure", resultMetadata.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
-        Label rightLabel = toolkit.createLabel(rightComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionStatus"));//$NON-NLS-1$  
+        String executeStatus = (resultMetadata.isLastRunOk() ? DefaultMessagesImpl
+                .getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure", resultMetadata.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+        Label rightLabel = toolkit.createLabel(rightComp,
+                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionStatus"));//$NON-NLS-1$  
         int executionNumber = resultMetadata.getExecutionNumber();
         if (!resultMetadata.isLastRunOk() && executionNumber != 0) {
             rightLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
@@ -541,8 +554,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     /**
-     * get the connection type from the connection, when the connection is DB. otherwise, just return the labelCOntent which get the value
-     * from the properties.
+     * get the connection type from the connection, when the connection is DB. otherwise, just return the labelCOntent
+     * which get the value from the properties.
      * 
      * @param labelContent
      * @return
@@ -635,7 +648,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                         if (catalogIndicator != null) {
                             EList<SchemaIndicator> schemaIndicators = catalogIndicator.getSchemaIndicators();
                             for (SchemaIndicator schemaIndicator : schemaIndicators) {
-                                RepositoryNode schemaNode = RepositoryNodeHelper.recursiveFind(schemaIndicator.getAnalyzedElement());
+                                RepositoryNode schemaNode = RepositoryNodeHelper.recursiveFind(schemaIndicator
+                                        .getAnalyzedElement());
                                 OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
                                 cataUIEle.setNode(schemaNode);
                                 cataUIEle.setOverviewIndicator(schemaIndicator);
@@ -888,7 +902,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         EList<TableIndicator> indicatorTableList = schemaIndicator.getTableIndicators();
         List<OverviewIndUIElement> tableElements = wapperInput(indicatorTableList, parentNode);
         if (tableOfCatalogOrSchemaViewer == null) {
-            tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE);
+            tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
+                    | SWT.SINGLE);
             final Table catalogOrSchemaTable = tableOfCatalogOrSchemaViewer.getTable();
             catalogOrSchemaTable.setHeaderVisible(true);
             catalogOrSchemaTable.setLinesVisible(true);
@@ -926,7 +941,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    runMenu(cursor, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
+                    runMenu(cursor, DefaultMessagesImpl.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
                 }
 
             });
@@ -935,7 +950,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    runMenu(cursor, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
+                    runMenu(cursor, DefaultMessagesImpl.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
                 }
 
             });
@@ -1059,7 +1074,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
         }
 
-        SqlExplorerBridge.findSqlExplorerTableNode(tdDataProvider, parentPack, tableName, message);
+        SqlExplorerUtils.getDefault().findSqlExplorerTableNode(tdDataProvider, parentPack, tableName, message);
     }
 
     /**
@@ -1100,7 +1115,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         return cataUIEleList;
     }
 
-    private void createSorterColumns(final TableViewer tableViewer, String[] columnTexts, ViewerSorter[][] sorters, int columnWidth) {
+    private void createSorterColumns(final TableViewer tableViewer, String[] columnTexts, ViewerSorter[][] sorters,
+            int columnWidth) {
         Table table = tableViewer.getTable();
         TableColumn[] columns = new TableColumn[columnTexts.length];
         for (int i = 0; i < columns.length; i++) {

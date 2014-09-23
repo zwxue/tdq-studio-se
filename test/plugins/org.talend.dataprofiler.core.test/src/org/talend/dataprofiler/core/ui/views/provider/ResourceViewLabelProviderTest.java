@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import junit.framework.Assert;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -240,7 +239,7 @@ public class ResourceViewLabelProviderTest {
         ReponsitoryContextBridge.initialized(project.getEmfProject(), project.getAuthor());
         // MOD zshen for bug tdq-4757 remove this init from corePlugin.start() to here because the initLocal command of
         // commandLine
-        SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
+        // SqlExplorerUtils.getDefault().initSqlExplorerRootProject();
     }
 
     /**
