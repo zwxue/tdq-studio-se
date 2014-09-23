@@ -23,6 +23,7 @@ import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.DBSet;
 import org.talend.commons.MapDB.utils.DBValueListMap;
 import org.talend.commons.MapDB.utils.StandardDBName;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -81,8 +82,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     private Map<Object, List<Object[]>> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBValueListMap<Object>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this),
-                    dbName);
+            return new DBValueListMap<Object>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
         } else {
             return new HashMap<Object, List<Object[]>>();
         }
@@ -95,7 +95,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     private Set<Object> initValueForDBSet(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
         } else {
             return new HashSet<Object>();
         }

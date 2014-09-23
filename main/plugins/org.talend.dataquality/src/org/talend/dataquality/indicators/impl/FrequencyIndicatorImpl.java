@@ -25,6 +25,7 @@ import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.DBMap;
 import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.commons.utils.SpecialValueDisplay;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DateGrain;
@@ -166,7 +167,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      */
     private Map<Object, Long> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
         }
         return null;
     }
@@ -851,7 +852,6 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
             String currentColumnName) {
         String dbName = getDBName(masterObject);
-
         drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
         super.handleDrillDownData(masterObject, currentObject, columnCount, currentIndex, currentColumnName);
     }
