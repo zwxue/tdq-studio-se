@@ -13,11 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard.urlsetup;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.Driver;
-
-import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -47,6 +43,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.MultipleSelectionCombo;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.database.DatabaseWizardPage;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.SqlExplorerUtils;
 
 /**
  * 
@@ -68,6 +65,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
         this.abstractWizardPage = abstractWizardPage;
     }
 
+    @Override
     protected void createPart(Composite parent, String dbLiteral, final DBConnectionParameter connectionParam) {
         if (dbLiteral.trim().equals("Generic JDBC")) { //$NON-NLS-1$
             GridLayout layout = new GridLayout();
@@ -90,6 +88,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             selectJar.setText("..."); //$NON-NLS-1$
             selectJar.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent event) {
                     FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
                     String filename = dialog.open();
@@ -135,23 +134,20 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             listDriverBtn.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.ListDrivers")); //$NON-NLS-1$
             listDriverBtn.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     comboDriver.removeAll();
                     for (String stringToFile : jarText.getText().trim().split(";")) { //$NON-NLS-1$
                         File file = new File(stringToFile);
                         if (file != null) {
                             try {
-                                MyURLClassLoader cl = new MyURLClassLoader(file.toURL());
-                                Class[] classes = cl.getAssignableClasses(Driver.class);
+                                Class[] classes = SqlExplorerUtils.getDefault()
+                                        .getMyURLClassLoaderAssignableClasses(file.toURL());
                                 for (int i = 0; i < classes.length; ++i) {
                                     comboDriver.add(classes[i].getName());
                                 }
-                            } catch (MalformedURLException ex) {
-                                log.error(ex, ex);
-
-                            } catch (IOException ex) {
-                                log.error(ex, ex);
-
+                            } catch (MalformedURLException e1) {
+                                log.error(e1, e1);
                             }
                         }
                     }
@@ -216,6 +212,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             urlText3.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     setConnectionURL(urlText3.getText());
                 }
@@ -224,10 +221,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             urlText3.addFocusListener(new FocusAdapter() {
 
+                @Override
                 public void focusGained(FocusEvent e) {
                     urlText3.setEditable(true);
                 }
 
+                @Override
                 public void focusLost(FocusEvent e) {
                     urlText3.setEditable(false);
                 }
@@ -235,6 +234,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             selectFile.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent event) {
                     FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
                     String filename = dialog.open();
@@ -319,10 +319,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             urlText.addFocusListener(new FocusAdapter() {
 
+                @Override
                 public void focusGained(FocusEvent e) {
                     urlText.setEditable(true);
                 }
 
+                @Override
                 public void focusLost(FocusEvent e) {
                     urlText.setEditable(false);
                 }
@@ -330,6 +332,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             urlText.setText(getConnectionURL());
             urlText.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     setConnectionURL(urlText.getText());
                 }
@@ -370,6 +373,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             });
             portText.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     Long portValue = null;
                     try {
@@ -378,7 +382,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                         // JUMP
                     }
                     if (portValue == null || portValue <= 0) {
-                        portText.setText(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+                        portText.setText(PluginConstant.EMPTY_STRING);
                     }
                 }
             });
@@ -480,10 +484,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             urlText.addFocusListener(new FocusAdapter() {
 
+                @Override
                 public void focusGained(FocusEvent e) {
                     urlText.setEditable(true);
                 }
 
+                @Override
                 public void focusLost(FocusEvent e) {
                     urlText.setEditable(false);
                 }
@@ -492,6 +498,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             urlText.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     setConnectionURL(urlText.getText());
                 }
@@ -534,6 +541,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             final boolean ingresdb = isIngres(dbLiteral);
             portText.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     if (!ingresdb) {
 
@@ -544,7 +552,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                             // JUMP
                         }
                         if (portValue == null || portValue <= 0) {
-                            portText.setText(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+                            portText.setText(PluginConstant.EMPTY_STRING);
                         }
                     }
                 }

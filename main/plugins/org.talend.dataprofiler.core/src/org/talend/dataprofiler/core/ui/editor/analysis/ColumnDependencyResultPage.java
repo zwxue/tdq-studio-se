@@ -44,7 +44,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
@@ -59,6 +58,7 @@ import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.explore.ColumnDependencyExplorer;
 import org.talend.dq.helper.ColumnDependencyHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.utils.format.StringFormatUtil;
@@ -269,7 +269,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
                                                     .getContext().getConnection());
                                             String query = itemEntity.getQuery();
                                             String editorName = ColumnDependencyHelper.getIndicatorName(indicator);
-                                            CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                            SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                         }
 
                                     });

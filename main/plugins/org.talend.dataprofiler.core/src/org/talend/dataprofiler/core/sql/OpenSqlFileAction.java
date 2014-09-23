@@ -14,8 +14,6 @@ package org.talend.dataprofiler.core.sql;
 
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -33,6 +31,7 @@ import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
+import org.talend.dq.helper.SqlExplorerUtils;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -81,7 +80,7 @@ public class OpenSqlFileAction extends Action {
             IWorkbenchPage ap = aww.getActivePage();
             for (IFile file : folder) {
                 try {
-                    IDE.openEditor(ap, file, SQLEditor.EDITOR_ID, true);
+                    IDE.openEditor(ap, file, SqlExplorerUtils.SQLEDITOR_ID, true);
                 } catch (PartInitException e) {
                     log.error(e, e);
                 }

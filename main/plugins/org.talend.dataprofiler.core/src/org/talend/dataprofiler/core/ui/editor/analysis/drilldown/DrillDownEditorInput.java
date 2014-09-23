@@ -17,10 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import net.sourceforge.sqlexplorer.dataset.DataSet;
-
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.talend.commons.MapDB.utils.AbstractDB;
@@ -53,11 +50,9 @@ import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
-import org.talend.sqlexplorer.dataset.MapDBColumnSetDataSet;
-import org.talend.sqlexplorer.dataset.MapDBDataSet;
-import org.talend.sqlexplorer.dataset.MapDBSetDataSet;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -210,7 +205,42 @@ public class DrillDownEditorInput implements IEditorInput {
         }
     }
 
-    public DataSet getDataSet() {
+    /**
+     * 
+     * DataSet is used to be the input on the export wizard. unchecked is for the type of mapDB else will have a warning
+     * 
+     * @param controller
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Object getDataSetForMapDB(int pageSize) {
+        List<String> columnElementList = filterAdaptColumnHeader();
+        columnHeader = new String[columnElementList.size()];
+        int headerIndex = 0;
+        for (String columnElement : columnElementList) {
+            columnHeader[headerIndex++] = columnElement;
+        }
+        AbstractDB<?> mapDB = getMapDB();
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        if (AnalysisType.COLUMN_SET == analysisType) {
+            Long size = getCurrentIndicatorResultSize();
+            if (ColumnSetDBMap.class.isInstance(mapDB)) {
+                return SqlExplorerUtils.getDefault().createMapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size,
+                        currIndicator, pageSize);
+            }
+        }
+
+        if (DBSet.class.isInstance(mapDB)) {
+            return SqlExplorerUtils.getDefault().createMapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, pageSize);
+        } else {
+            ColumnFilter columnFilter = getColumnFilter();
+            Long itemSize = getItemSize(mapDB);
+            return SqlExplorerUtils.getDefault().createMapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, pageSize,
+                    columnFilter, itemSize);
+        }
+    }
+
+    public Object getDataSet() {
         List<String> columnElementList = filterAdaptColumnHeader();
         columnHeader = new String[columnElementList.size()];
         int headerIndex = 0;
@@ -220,7 +250,7 @@ public class DrillDownEditorInput implements IEditorInput {
         List<Object[]> newColumnElementList = filterAdaptDataList();
         if (newColumnElementList.size() <= 0) {
             columnValue = new String[0][0];
-            return new DataSet(columnHeader, columnValue);
+            return SqlExplorerUtils.getDefault().createDataSet(columnHeader, columnValue);
         }
         // MOD qiongli 2011-4-8,bug 19192.delimited file may has diffrent number of columns for every row.
         if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
@@ -238,46 +268,11 @@ public class DrillDownEditorInput implements IEditorInput {
                         continue;
                     }
                 }// ~
-                columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
+                columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString(); //$NON-NLS-1$
             }
             rowIndex++;
         }
-        return new DataSet(columnHeader, columnValue);
-    }
-
-    /**
-     * 
-     * DataSet is used to be the input on the export wizard. unchecked is for the type of mapDB else will have a warning
-     * 
-     * @param controller
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public DataSet getDataSetForMapDB(PageableController controller) {
-        List<String> columnElementList = filterAdaptColumnHeader();
-        columnHeader = new String[columnElementList.size()];
-        int headerIndex = 0;
-        for (String columnElement : columnElementList) {
-            columnHeader[headerIndex++] = columnElement;
-        }
-        AbstractDB<?> mapDB = getMapDB();
-        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        if (AnalysisType.COLUMN_SET == analysisType) {
-            Long size = getCurrentIndicatorResultSize();
-            if (ColumnSetDBMap.class.isInstance(mapDB)) {
-                return new MapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size, currIndicator,
-                        controller.getPageSize());
-            }
-        }
-
-        if (DBSet.class.isInstance(mapDB)) {
-            return new MapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, controller.getPageSize());
-        } else {
-            ColumnFilter columnFilter = getColumnFilter();
-            Long itemSize = getItemSize(mapDB);
-            return new MapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, controller.getPageSize(), columnFilter,
-                    itemSize);
-        }
+        return SqlExplorerUtils.getDefault().createDataSet(columnHeader, columnValue);
     }
 
     /**

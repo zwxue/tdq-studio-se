@@ -17,8 +17,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
-import net.sourceforge.sqlexplorer.dataset.actions.ExportCSVAction;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -75,7 +73,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.sqlexplorer.dataset.TalendDataSet;
+import org.talend.dq.helper.SqlExplorerUtils;
 
 /**
  * 
@@ -87,7 +85,7 @@ public class DrillDownResultEditor extends EditorPart {
 
     private TableViewer tableView;
 
-    private ExportCSVAction exportAction;
+    private Action exportAction;
 
     private Hashtable<String, Action> actionList;
 
@@ -139,18 +137,19 @@ public class DrillDownResultEditor extends EditorPart {
         parent.setLayoutData(new GridData(GridData.FILL_BOTH));
         // layout.marginTop = 10;
         parent.setLayout(layout);
-        makeAction();
-        createCoolBar(parent);
         // createPopupMenu();
+        exportAction = SqlExplorerUtils.getDefault().createExportCSVAction();
+        createCoolBar(parent);
         tableView = new TableViewer(parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER);
         Table table = tableView.getTable();
+        SqlExplorerUtils.getDefault().setExportCSVActionTable(exportAction, table);
         MenuManager popupMenu = new MenuManager();
         // IAction newRowAction = new NewRowAction();
+        exportAction.setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPORT_WIZARD));
         popupMenu.add(exportAction);
         Menu menu = popupMenu.createContextMenu(table);
         table.setMenu(menu);
 
-        exportAction.setTable(table);
         GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(table);
         if (this.getEditorInput() instanceof DrillDownEditorInput) {
             DrillDownEditorInput ddEditorInput = (DrillDownEditorInput) this.getEditorInput();
@@ -179,7 +178,6 @@ public class DrillDownResultEditor extends EditorPart {
         addTableColumn(ddEditorInput, table);
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
-
         table.setData(ddEditorInput.getDataSet());
         tableView.setLabelProvider(new DrillDownResultLabelProvider());
         tableView.setContentProvider(new DrillDownResultContentProvider());
@@ -202,7 +200,7 @@ public class DrillDownResultEditor extends EditorPart {
         tableView.setContentProvider(new DrillDownResultContentProvider());
         // set page size
         final PageableController controller = new PageableController(100);
-        table.setData(ddEditorInput.getDataSetForMapDB(controller));
+        table.setData(ddEditorInput.getDataSetForMapDB(controller.getPageSize()));
         // for columnSet analysis here only have one db file need to support drill down and data section
         Analysis analysis = ddEditorInput.getAnalysis();
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
@@ -233,8 +231,7 @@ public class DrillDownResultEditor extends EditorPart {
             @Override
             public void pageIndexChanged(int oldPageIndex, int newPageIndex, PageableController controller) {
                 Object data = table.getData();
-                if (TalendDataSet.class.isInstance(data)) {
-                    TalendDataSet talendDataSet = (TalendDataSet) data;
+                if (SqlExplorerUtils.TALENDDATASET_CLASS_NAME.equals(data.getClass().getName())) {
                     long totalSize = controller.getTotalElements();
                     long pageSize = controller.getPageSize();
                     long pageIndex = controller.getPageOffset();
@@ -245,8 +242,7 @@ public class DrillDownResultEditor extends EditorPart {
                         toIndex = totalSize;
                     }
 
-                    talendDataSet.setStartIndex(fromIndex);
-                    talendDataSet.setEndIndex(toIndex);
+                    SqlExplorerUtils.getDefault().resetTalendDataSetIndex(data, fromIndex, toIndex);
                     parent.layout();
                 }
             }
@@ -446,17 +442,6 @@ public class DrillDownResultEditor extends EditorPart {
         coolEdit.setSize(p2);
 
         coolBar.setLocked(true);
-    }
-
-    /*
-     * init Action save as,export
-     */
-    private void makeAction() {
-
-        // export
-        exportAction = new ExportCSVAction();
-        exportAction.setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPORT_WIZARD));
-        exportAction.setEnabled(true);
     }
 
     private void addTableColumn(DrillDownEditorInput ddEditorInput, Table table) {

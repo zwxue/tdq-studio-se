@@ -30,10 +30,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.util.AliasAndManaDriverHelper;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
@@ -92,6 +88,7 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
@@ -557,26 +554,7 @@ public final class ConnectionUtils {
      */
     private static Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
             IllegalAccessException {
-        Driver driver = null;
-        if (Platform.isRunning()) {
-            SQLExplorerPlugin sqlExplorerPlugin = SQLExplorerPlugin.getDefault();
-            if (sqlExplorerPlugin != null) {
-                net.sourceforge.sqlexplorer.dbproduct.DriverManager driverModel = sqlExplorerPlugin.getDriverModel();
-                String dbType = props.getProperty(TaggedValueHelper.DBTYPE);
-                String dbVersion = props.getProperty(TaggedValueHelper.DB_PRODUCT_VERSION);
-                String managedDriverId = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(dbType, driverClassName,
-                        dbVersion);
-                ManagedDriver managedDriver = driverModel.getDriver(managedDriverId);
-                if (managedDriver != null) {
-                    if (!managedDriver.isDriverClassLoaded()) {
-                        CWMPlugin.getDefault().loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
-                    }
-                    driver = managedDriver.getJdbcDriver();
-                }
-
-            }
-        }
-        return driver;
+        return SqlExplorerUtils.getDefault().getClassDriverFromSQLExplorer(driverClassName, props);
     }
 
     /**

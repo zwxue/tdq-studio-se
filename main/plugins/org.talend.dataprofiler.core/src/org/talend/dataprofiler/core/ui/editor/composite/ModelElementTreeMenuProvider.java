@@ -60,6 +60,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -374,7 +375,7 @@ public abstract class ModelElementTreeMenuProvider {
                 return;
             }
 
-            CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(),
+            SqlExplorerUtils.getDefault().runInDQViewer(dataprovider, expression.getBody(),
                     meIndicator.getModelElementRepositoryNode().getObject().getProperty().getLabel());
         }
     }

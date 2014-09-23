@@ -59,6 +59,7 @@ import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 
@@ -311,7 +312,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
                                                         .getContext().getConnection());
                                                 String query = itemEntity.getQuery();
                                                 String editorName = currentIndicator.getName();
-                                                CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                                SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                             }
 
                                         });

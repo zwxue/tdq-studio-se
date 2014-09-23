@@ -17,8 +17,6 @@ package net.sourceforge.sqlexplorer.plugin.editors;
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.service.GlobalServiceRegister;
-import net.sourceforge.sqlexplorer.service.ISaveAsService;
 import net.sourceforge.sqlexplorer.sessiontree.model.utility.Dictionary;
 import net.sourceforge.sqlexplorer.sqleditor.SQLTextViewer;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
@@ -69,6 +67,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.properties.Item;
 
 /**
@@ -226,25 +226,29 @@ public class SQLTextEditor extends TextEditor {
      */
     private IFile createIFile(IFile file, String content) throws CoreException {
         // MOD qiongli 2011-4-21.bug 20205 .should create sql file and property.use extension of service mechanism.
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ISaveAsService.class)) {
-            ISaveAsService service = (ISaveAsService) GlobalServiceRegister.getDefault().getService(ISaveAsService.class);
-            String fName = StringUtils.removeEnd(StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION),
-                    DEFAULT_VERSION_STRING);
-            IWorkspace workspace = ResourcesPlugin.getWorkspace();
-            IPath rootPath = new Path("TDQ_Libraries/Source Files");
-            Item item = service.createFile(content, file.getProjectRelativePath().removeLastSegments(1).makeRelativeTo(rootPath),
-                    fName, file.getFileExtension());
-            // get the correct path(contain version info) for newInput file in editor.
-            IPath location = file.getLocation();
-            if (item != null && item.getProperty() != null && location != null) {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            ITDQRepositoryService service = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
+                    ITDQRepositoryService.class);
+            if (service != null) {
+                String fName = StringUtils.removeEnd(StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION),
+                        DEFAULT_VERSION_STRING);
+                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                IPath rootPath = new Path("TDQ_Libraries/Source Files");
+                Item item = service.createFile(content,
+                        file.getProjectRelativePath().removeLastSegments(1).makeRelativeTo(rootPath), fName,
+                        file.getFileExtension());
+                // get the correct path(contain version info) for newInput file in editor.
+                IPath location = file.getLocation();
+                if (item != null && item.getProperty() != null && location != null) {
 
-                location = location.removeLastSegments(1);
-                StringBuffer strb = new StringBuffer();
-                strb.append(location.toString());
-                String version = item.getProperty().getVersion() == null ? "" : "_" + item.getProperty().getVersion();
-                strb.append(Path.SEPARATOR).append(fName).append(version).append(DEFAULT_FILE_EXTENSION);
-                location = Path.fromOSString(strb.toString());
-                file = workspace.getRoot().getFileForLocation(location);
+                    location = location.removeLastSegments(1);
+                    StringBuffer strb = new StringBuffer();
+                    strb.append(location.toString());
+                    String version = item.getProperty().getVersion() == null ? "" : "_" + item.getProperty().getVersion();
+                    strb.append(Path.SEPARATOR).append(fName).append(version).append(DEFAULT_FILE_EXTENSION);
+                    location = Path.fromOSString(strb.toString());
+                    file = workspace.getRoot().getFileForLocation(location);
+                }
             }
         }
         return file;

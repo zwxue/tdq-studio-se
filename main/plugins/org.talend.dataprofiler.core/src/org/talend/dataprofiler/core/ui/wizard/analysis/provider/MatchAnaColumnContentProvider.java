@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFTableRepNode;

@@ -91,6 +91,7 @@ import org.talend.dq.analysis.explore.PatternExplorer;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
@@ -221,7 +222,7 @@ public final class ChartTableFactory {
                                                     DefaultMessagesImpl.getString("ChartTableFactory.NoSupportPatternTeradata"));//$NON-NLS-1$
                                             return;
                                         }
-                                        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                        SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                     }
                                 });
 

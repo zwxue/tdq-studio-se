@@ -15,11 +15,6 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import java.sql.Driver;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
-import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.util.AliasAndManaDriverHelper;
-
 import org.apache.log4j.Logger;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -53,7 +48,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataquality.rules.MatchRuleDefinition;
-import org.talend.dq.CWMPlugin;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
@@ -379,17 +374,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     if (driver != null) {
                         return false;
                     }
-                    DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
-                    String id = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(dbConn);
-                    ManagedDriver manDr = driverManager.getDriver(id);
-                    if (manDr == null) {
-                        isNeed = true;
-                    } else if (!manDr.isDriverClassLoaded()) {
-                        CWMPlugin.getDefault().loadDriverByLibManageSystem(dbConn);
-                        if (!manDr.isDriverClassLoaded()) {
-                            isNeed = true;
-                        }
-                    }
+                    isNeed = SqlExplorerUtils.getDefault().needAddDriverConnection(dbConn);
                 }
             }
 

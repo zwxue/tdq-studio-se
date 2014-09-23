@@ -25,10 +25,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
-
+import org.talend.dataquality.indicators.IndicatorsFactory;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @RunWith(PowerMockRunner.class)
 public class DuplicateCountIndicatorImplTest {
@@ -36,13 +36,16 @@ public class DuplicateCountIndicatorImplTest {
     private DuplicateCountIndicator dupIndicator;
 
     private ResultSet result;
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        dupIndicator = new DuplicateCountIndicatorImpl();
+        dupIndicator = IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator();
+        dupIndicator.setUsedMapDBMode(false);
         // init the resultset: columnsize:2, rowscount: 6
         result = mock(ResultSet.class);
         when(result.getObject(1)).thenReturn("1").thenReturn("2").thenReturn("3").thenReturn("4").thenReturn("5").thenReturn("6");
@@ -52,6 +55,7 @@ public class DuplicateCountIndicatorImplTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -73,6 +77,7 @@ public class DuplicateCountIndicatorImplTest {
      */
     @Test
     public void testFinalizeComputation() {
+        this.dupIndicator.reset();
         this.testHandle_1();
         this.dupIndicator.finalizeComputation();
         Assert.assertTrue(this.dupIndicator.getDuplicateValueCount() == 2);
@@ -80,18 +85,20 @@ public class DuplicateCountIndicatorImplTest {
 
     @Test
     public void testGetDuplicateValues() {
+        this.dupIndicator.reset();
         this.testHandle_1();
         this.dupIndicator.finalizeComputation();
         Set<Object> dupValues = dupIndicator.getDuplicateValues();
         Assert.assertTrue(dupValues.size() == 2);
     }
 
-
     /**
-     * Test method for {@link org.talend.dataquality.indicators.impl.DuplicateCountIndicatorImpl#getDuplicateValueCount()}.
+     * Test method for
+     * {@link org.talend.dataquality.indicators.impl.DuplicateCountIndicatorImpl#getDuplicateValueCount()}.
      */
     @Test
     public void testGetDuplicateValueCount() {
+        this.dupIndicator.reset();
         this.testHandle_1();
         Assert.assertNull(this.dupIndicator.getDuplicateValueCount());
         this.dupIndicator.finalizeComputation();
@@ -99,10 +106,13 @@ public class DuplicateCountIndicatorImplTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataquality.indicators.impl.DuplicateCountIndicatorImpl#handle(java.lang.Object, java.sql.ResultSet, int)}.
+     * Test method for
+     * {@link org.talend.dataquality.indicators.impl.DuplicateCountIndicatorImpl#handle(java.lang.Object, java.sql.ResultSet, int)}
+     * .
      */
     @Test
     public void testHandle_1() {
+        this.dupIndicator.reset();
         try {
             this.dupIndicator.handle("1000", result, 2);
             Assert.assertTrue(dupIndicator.getDuplicateMap().size() == 1);

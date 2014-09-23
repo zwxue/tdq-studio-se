@@ -20,11 +20,11 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.SqlExplorerUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -58,7 +58,7 @@ public class PreviewColumnAction extends Action {
                 String columnsWithPrefix = language.getQueryColumnsWithPrefix(columns);
                 String columnSetName = language.getQueryColumnSetWithPrefix(columnSetOwner);
                 String query = "select " + columnsWithPrefix + " from " + columnSetName; //$NON-NLS-1$ //$NON-NLS-2$ 
-                CorePlugin.getDefault().runInDQViewer(dataprovider, query, columnSetName);
+                SqlExplorerUtils.getDefault().runInDQViewer(dataprovider, query, columnSetName);
             } else {
                 MessageDialogWithToggle
                         .openWarning(
