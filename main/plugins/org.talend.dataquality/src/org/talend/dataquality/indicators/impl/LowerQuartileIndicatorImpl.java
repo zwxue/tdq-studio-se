@@ -10,6 +10,7 @@ import org.talend.algorithms.AlgoUtils;
 import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.DBMap;
 import org.talend.commons.MapDB.utils.StandardDBName;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.resource.ResourceManager;
@@ -44,7 +45,7 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
      */
     private Map<Object, Long> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
         } else {
             return new TreeMap<Object, Long>();
         }

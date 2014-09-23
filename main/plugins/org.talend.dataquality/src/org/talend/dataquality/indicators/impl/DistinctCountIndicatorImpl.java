@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.commons.MapDB.utils.AbstractDB;
 import org.talend.commons.MapDB.utils.DBSet;
 import org.talend.commons.MapDB.utils.StandardDBName;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -74,7 +75,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      */
     private Set<Object> initValueForDBSet(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this), dbName);
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
         } else {
             return new HashSet<Object>();
         }
@@ -269,8 +270,12 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
             if (needReconnect((DBSet<Object>) distinctObjects)) {
                 distinctObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
             }
+            if (!distinctObjects.isEmpty()) {
+                distinctObjects.clear();
+            }
+        } else {
+            distinctObjects.clear();
         }
-        distinctObjects.clear();
         return super.reset();
     }
 

@@ -26,6 +26,7 @@ import org.talend.commons.MapDB.utils.DBMap;
 import org.talend.commons.MapDB.utils.MapDBManager;
 import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
@@ -756,7 +757,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             if (needReconnect(drillDownMap)) {
                 drillDownMap = initValueForDBMap(StandardDBName.drillDown.name());
             }
-            drillDownMap.clear();
+            if (!drillDownMap.isEmpty()) {
+                drillDownMap.clear();
+            }
             drillDownRowCount = 0l;
         }
     }
@@ -776,8 +779,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @return
      */
     private DBMap<Object, List<Object>> initValueForDBMap(String dbName) {
-        return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this),
-                dbName);
+        return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
     }
 
     /**
@@ -1443,6 +1445,6 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public File getMapDBFile() {
-        return MapDBManager.createPath(ResourceManager.getMapDBFilePath(this), this.eResource().getURIFragment(this));
+        return MapDBManager.createPath(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this));
     }
 } // IndicatorImpl

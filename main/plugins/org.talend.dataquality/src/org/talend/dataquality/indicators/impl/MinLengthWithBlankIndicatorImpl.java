@@ -48,7 +48,7 @@ public class MinLengthWithBlankIndicatorImpl extends MinLengthIndicatorImpl impl
     public boolean handle(Object data) {
         boolean ok = super.handle(data);
         if (data != null && ((String) data).trim().length() == 0) {
-            if (length > 0) {
+            if (length == LENGTH_EDEFAULT || length > 0) {
                 changeLength(0);
             }
             if (this.checkMustStoreCurrentRow()) {
