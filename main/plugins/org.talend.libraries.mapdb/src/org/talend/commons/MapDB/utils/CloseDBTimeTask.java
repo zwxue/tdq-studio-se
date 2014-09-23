@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.commons.MapDB.utils;
 
+import java.io.File;
 import java.util.TimerTask;
 
 import org.mapdb.DB;
@@ -24,8 +25,11 @@ public class CloseDBTimeTask extends TimerTask {
 
     private DB db = null;
 
-    public CloseDBTimeTask(DB closeDb) {
+    private File dbFile = null;
+
+    public CloseDBTimeTask(DB closeDb, File filePath) {
         this.db = closeDb;
+        dbFile = filePath;
     }
 
     /*
@@ -36,6 +40,7 @@ public class CloseDBTimeTask extends TimerTask {
     @Override
     public void run() {
         if (db != null && !db.isClosed()) {
+            MapDBManager.getInstance().removeDB(dbFile);
             db.close();
         }
     }

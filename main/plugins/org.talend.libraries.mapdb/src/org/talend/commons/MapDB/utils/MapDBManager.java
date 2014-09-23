@@ -63,11 +63,7 @@ public class MapDBManager {
 
     public void closeDB(File filePath) {
         DB db = dbMap.get(filePath);
-        if (db == null) {
-            return;
-        }
-        removeDB(filePath);
-        scheduleCloseTask(db);
+        closeDB(db, filePath);
     }
 
     public void closeDB(String parentPathStr, String fileName) {
@@ -75,23 +71,22 @@ public class MapDBManager {
         closeDB(filePath);
     }
 
+    private void closeDB(DB db, File filePath) {
+        if (db == null) {
+            return;
+        }
+        scheduleCloseTask(db, filePath);
+    }
+
     /**
      * DOC talend Comment method "scheduleCloseTask".
      * 
      * @param db
      */
-    protected void scheduleCloseTask(DB db) {
-        CloseDBTimeTask closeDBTimeTask = new CloseDBTimeTask(db);
+    protected void scheduleCloseTask(DB db, File filePath) {
+        CloseDBTimeTask closeDBTimeTask = new CloseDBTimeTask(db, filePath);
         timer.schedule(closeDBTimeTask, CLOSE_TIME_DELAY);// close db after 5 minute 5*60*1000
         closeTaskMap.put(db, closeDBTimeTask);
-    }
-
-    private void closeDB(DB db) {
-        if (db == null) {
-            return;
-        }
-
-        scheduleCloseTask(db);
     }
 
     /**
@@ -149,8 +144,7 @@ public class MapDBManager {
             dbRefCountMap.put(db, refConut);
         } else {
             dbRefCountMap.remove(db);
-            dbMap.remove(filePath);
-            closeDB(db);
+            closeDB(db, filePath);
         }
     }
 
