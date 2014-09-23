@@ -121,9 +121,7 @@ public class MFB implements MatchMergeAlgorithm {
             if (LOGGER.isDebugEnabled() && index % 10000 == 0) {
                 LOGGER.debug("Current index: " + index); //$NON-NLS-1$
             }
-            Record currentRecord = queue.poll();
-            // process the record one by one
-            matchOneRecord(callback, mergedRecords, queue, currentRecord);
+            execute(queue.poll(), mergedRecords, queue, callback);
             index++;
         }
         // Post merge processing (most common values...)
@@ -132,26 +130,35 @@ public class MFB implements MatchMergeAlgorithm {
     }
 
     /**
-     * Extract the processing of one record into a single method.
+     * <p>
+     * Performs match & merge operation on <code>record</code>. For algorithm purposes, the list of previously merged
+     * records (<code>mergedRecords</code>) as well as the queue of records (<code>queue</code>) to be processed are
+     * needed.
+     * </p>
+     * <p>
+     * A <code>callback</code> is used to notify calling code about decisions the processing does.
+     * </p>
      * 
-     * @param callback
-     * @param mergedRecords
-     * @param queue
-     * @param currentRecord
+     * @param record The record to be compared to previously merged records.
+     * @param mergedRecords The previously merged records.
+     * @param queue Queue of records to be processed: in case of new merge, algorithm is expected to publish new merged
+     * record on this queue for later processing.
+     * @param callback A {@link org.talend.dataquality.matchmerge.MatchMergeAlgorithm.Callback} to notify callers of
+     * decisions the algorithm takes.
      */
-    protected void matchOneRecord(Callback callback, List<Record> mergedRecords, Queue<Record> queue, Record currentRecord) {
-        callback.onBeginRecord(currentRecord);
+    protected void execute(Record record, List<Record> mergedRecords, Queue<Record> queue, Callback callback) {
+        callback.onBeginRecord(record);
         // Sanity checks
-        if (currentRecord == null) {
+        if (record == null) {
             throw new IllegalArgumentException("Record cannot be null."); //$NON-NLS-1$
         }
         // MFB algorithm
         boolean hasCreatedNewMerge = false;
         for (Record mergedRecord : mergedRecords) {
-            MatchResult matchResult = doMatch(mergedRecord, currentRecord);
+            MatchResult matchResult = doMatch(mergedRecord, record);
             if (matchResult.isMatch()) {
-                callback.onMatch(mergedRecord, currentRecord, matchResult);
-                Record newMergedRecord = merger.merge(currentRecord, mergedRecord);
+                callback.onMatch(mergedRecord, record, matchResult);
+                Record newMergedRecord = merger.merge(record, mergedRecord);
                 queue.offer(newMergedRecord);
                 callback.onNewMerge(newMergedRecord);
                 mergedRecords.remove(mergedRecord);
@@ -159,15 +166,15 @@ public class MFB implements MatchMergeAlgorithm {
                 hasCreatedNewMerge = true;
                 break;
             } else {
-                callback.onDifferent(mergedRecord, currentRecord, matchResult);
+                callback.onDifferent(mergedRecord, record, matchResult);
             }
         }
         if (!hasCreatedNewMerge) {
-            currentRecord.getRelatedIds().add(currentRecord.getId());
-            mergedRecords.add(currentRecord);
-            callback.onNewMerge(currentRecord);
+            record.getRelatedIds().add(record.getId());
+            mergedRecords.add(record);
+            callback.onNewMerge(record);
         }
-        callback.onEndRecord(currentRecord);
+        callback.onEndRecord(record);
     }
 
     private MatchResult doMatch(Record leftRecord, Record rightRecord) {
@@ -191,7 +198,7 @@ public class MFB implements MatchMergeAlgorithm {
     }
 
     /**
-     * whether match records in different groups.
+     * @return <code>true</code> if algorithm should try to match records from different groups.
      */
     protected boolean isMatchDiffGroups() {
         if (LOGGER.isDebugEnabled()) {
