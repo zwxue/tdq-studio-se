@@ -53,6 +53,8 @@ public class FileDelimitedReader implements IFileReader {
     public FileDelimitedReader(File file, DelimitedFileConnection delimitedFileconnection, List<ModelElement> analysisElementList)
             throws IOException {
         fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
+        analysedColumnIndex = new int[analysisElementList.size()];
+        analysedColumnName = new String[analysisElementList.size()];
 
         findElementPositionByColumn(analysisElementList);
     }
@@ -69,7 +71,7 @@ public class FileDelimitedReader implements IFileReader {
             columnLabels.add(column.getLabel());
         }
         for (int j = 0; j < analysisElementList.size(); j++) {
-            analysedColumnName[j] = analysisElementList.get(j).getName();
+            analysedColumnName[j] = ((MetadataColumn) analysisElementList.get(j)).getLabel();
             analysedColumnIndex[j] = columnLabels.indexOf(analysedColumnName[j]);
         }
     }
