@@ -119,14 +119,18 @@ public class MapDBDataSet extends TalendDataSet {
     @Override
     public DataSet getCurrentPageDataSet() {
         long pageSize = endIndex - startIndex;
-        Comparable[][] compareArray = new Comparable[(int) (pageSize)][this.getColumns().length];
         List<Object[]> subList = MapDBUtils.getDefault().getDataSetDBMapSubList(this.dataMap, startIndex, endIndex, null);
         if (columnFilter != null) {
             subList = columnFilter.filterArray(subList);
         }
-        for (int i = 0; i < pageSize; i++) {
+
+        // the dataset count, we use the smallest one
+        int count = (int) (pageSize > subList.size() ? subList.size() : pageSize);
+        Comparable[][] compareArray = new Comparable[(count)][this.getColumns().length];
+        // use the smallest count to avoid the array out of size error
+        for (int i = 0; i < count; i++) {
             Object[] objArray = subList.get(i);
-            for (int j = 0; j < this.getColumns().length; j++) {
+            for (int j = 0; j < objArray.length; j++) {
                 compareArray[i][j] = (Comparable) objArray[j];
             }
         }
