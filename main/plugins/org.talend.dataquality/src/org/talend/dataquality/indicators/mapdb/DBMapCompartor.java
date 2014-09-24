@@ -14,6 +14,7 @@ package org.talend.dataquality.indicators.mapdb;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ public class DBMapCompartor implements Comparator<Object>, Serializable {
 
     private static final long serialVersionUID = -3201084133371388584L;
 
+    @Override
     @SuppressWarnings("unchecked")
     public int compare(Object o1, Object o2) {
         if (o1 == null && o2 == null) {
@@ -49,6 +51,12 @@ public class DBMapCompartor implements Comparator<Object>, Serializable {
 
         if (TupleEmpty.class.isInstance(o2)) {
             return -1;
+        }
+
+        // make sure the o1 and o2 have the same type, sometimes for example: o1 is Date, but o2 is String and vice
+        // versa.
+        if (Date.class.isInstance(o1) || String.class.isInstance(o1)) {
+            return o1.toString().compareTo(o2.toString());
         }
 
         if (Comparable.class.isInstance(o1)) {
