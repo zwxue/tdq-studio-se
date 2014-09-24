@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Talend Open Profiler" id="org.talend.rcp.branding.top.product" application="org.talend.rcp.branding.top.application" useFeatures="true" includeLaunchers="true">
+<product name="Talend Open Studio for Data Quality" id="org.talend.rcp.branding.top.product" application="org.talend.rcp.branding.top.application" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="icons/about.jpg"/>
@@ -29,7 +29,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
