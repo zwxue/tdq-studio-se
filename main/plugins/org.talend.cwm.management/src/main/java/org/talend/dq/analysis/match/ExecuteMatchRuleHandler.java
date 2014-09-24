@@ -135,6 +135,7 @@ public class ExecuteMatchRuleHandler {
         persistentLookupManager.endGet();
         blockKeyIndicator.setBlockSize2frequency(blockSize2Freq);
 
+        returnCode.setOk(true);
         return returnCode;
     }
 
