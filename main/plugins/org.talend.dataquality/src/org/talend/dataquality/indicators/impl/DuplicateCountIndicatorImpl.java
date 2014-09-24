@@ -308,15 +308,21 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
 
     @Override
     public boolean reset() {
-        this.duplicateValueCount = DUPLICATE_VALUE_COUNT_EDEFAULT;
-            if (duplicateMap != null) {
-                 duplicateMap.clear();
+        if (this.isUsedMapDBMode()) {
+            if (needReconnect((AbstractDB<?>) duplicateMap)) {
+                duplicateMap = initValueForDBMap(StandardDBName.computeProcess.name());
+                if (duplicateMap != null) {
+                    duplicateMap.clear();
+                }
             }
-            duplicateMap = initValueForDBMap(StandardDBName.computeProcess.name());
-            if (duplicateObjects != null) {
-                 duplicateObjects.clear();
+            if (needReconnect((AbstractDB<?>) duplicateMap)) {
+                duplicateObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+                if (duplicateObjects != null) {
+                    duplicateObjects.clear();
+                }
+
             }
-            duplicateObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+        }
         return super.reset();
     }
 
