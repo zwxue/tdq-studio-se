@@ -120,25 +120,6 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#close()}.
-     */
-    @Test
-    public void testClose() {
-        DBMap<String, Long> dbMap2 = new DBMap<String, Long>();
-        Assert.assertEquals(true, dbMap2.isEmpty());
-        dbMap2.put("key1", 100l); //$NON-NLS-1$
-        Assert.assertEquals(false, dbMap2.isEmpty());
-        dbMap2.close();
-        Assert.assertTrue(dbMap2.isClosed());
-        try {
-            dbMap2.put("key2", 100l); //$NON-NLS-1$
-        } catch (IllegalAccessError e) {
-            // nothing to do
-            Assert.assertEquals("already closed", e.getMessage()); //$NON-NLS-1$
-        }
-    }
-
-    /**
      * Test method for {@link org.talend.commons.MapDB.utils.DBMap#entrySet()}.
      */
     @Test
