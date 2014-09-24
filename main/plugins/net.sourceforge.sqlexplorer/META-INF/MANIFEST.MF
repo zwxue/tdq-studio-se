@@ -22,7 +22,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.2.0",
  org.talend.core.runtime,
  org.talend.metadata.managment,
  org.talend.dataprofiler.service
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: sqlexplorer.jar,
  lib/rowset.jar,
  lib/dom4j.jar,
