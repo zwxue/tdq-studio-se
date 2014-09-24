@@ -12,6 +12,12 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.grouping.swoosh;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
+import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.matchmerge.mfb.MFB;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.record.IRecordMerger;
@@ -23,6 +29,12 @@ import org.talend.dataquality.record.linkage.record.IRecordMerger;
  */
 public class DQMFB extends MFB {
 
+    private Callback callback;
+
+    private Queue<Record> queue;
+
+    private List<Record> mergedRecords = new ArrayList<Record>();
+
     /**
      * DOC zhao DQMFB constructor comment.
      * 
@@ -33,6 +45,15 @@ public class DQMFB extends MFB {
         super(matcher, merger);
     }
 
+    public DQMFB(IRecordMatcher matcher, IRecordMerger merger, Callback callback) {
+        super(matcher, merger);
+        this.callback = callback;
+        queue = new ArrayDeque<Record>();
+        if (callback != null) {
+            callback.onBeginProcessing();
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -41,6 +62,24 @@ public class DQMFB extends MFB {
     @Override
     protected boolean isMatchDiffGroups() {
         return true;
+    }
+
+    /**
+     * do the match on one record
+     * 
+     * @param oneRecord
+     */
+    public void matchOneRecord(Record oneRecord) {
+        execute(oneRecord, mergedRecords, queue, callback);
+    }
+
+    public List<Record> getResult() {
+        while (!queue.isEmpty() && !callback.isInterrupted()) {
+            Record currentRecord = queue.poll();
+            execute(currentRecord, mergedRecords, queue, callback);
+        }
+        callback.onEndProcessing();
+        return this.mergedRecords;
     }
 
 }

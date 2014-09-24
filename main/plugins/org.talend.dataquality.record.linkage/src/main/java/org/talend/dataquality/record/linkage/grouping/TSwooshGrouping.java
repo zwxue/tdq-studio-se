@@ -51,6 +51,9 @@ public class TSwooshGrouping<TYPE> {
 
     BidiMultiMap<String, String> oldGID2New = new BidiMultiMap<String, String>();
 
+    // Added TDQ-9320: to use the algorithm handle the record one by one
+    private DQMFB algorithm;
+
     /**
      * DOC zhao TSwooshGrouping constructor comment.
      */
@@ -117,6 +120,22 @@ public class TSwooshGrouping<TYPE> {
     }
 
     public void swooshMatch(IRecordMatcher combinedRecordMatcher, SurvivorShipAlgorithmParams survParams) {
+        MatchMergeAlgorithm malgorithm = createTswooshAlgorithm(combinedRecordMatcher, survParams, null);
+
+        Iterator<Record> iterator = new DQRecordIterator(totalCount, rcdsGenerators);
+        List<Record> mergedRecords = malgorithm.execute(iterator, new GroupingCallBack());
+        outputResult(mergedRecords);
+    }
+
+    /**
+     * DOC yyin Comment method "createTswooshAlgorithm".
+     * 
+     * @param combinedRecordMatcher
+     * @param survParams
+     * @return
+     */
+    private MatchMergeAlgorithm createTswooshAlgorithm(IRecordMatcher combinedRecordMatcher,
+            SurvivorShipAlgorithmParams survParams, MatchMergeAlgorithm.Callback callback) {
         SurvivorShipAlgorithmEnum[] surviorShipAlgos = new SurvivorShipAlgorithmEnum[survParams.getSurviorShipAlgos().length];
         String[] funcParams = new String[surviorShipAlgos.length];
         int idx = 0;
@@ -125,12 +144,33 @@ public class TSwooshGrouping<TYPE> {
             funcParams[idx] = func.getParameter();
             idx++;
         }
-        MatchMergeAlgorithm algorithm = new DQMFB(combinedRecordMatcher, new DQMFBRecordMerger("MFB", funcParams, //$NON-NLS-1$
-                surviorShipAlgos, survParams));
+        return new DQMFB(combinedRecordMatcher, new DQMFBRecordMerger("MFB", funcParams, //$NON-NLS-1$
+                surviorShipAlgos, survParams), callback);
+    }
 
-        Iterator<Record> iterator = new DQRecordIterator(totalCount, rcdsGenerators);
-        List<Record> mergedRecords = algorithm.execute(iterator, new GroupingCallBack());
-        for (Record rcd : mergedRecords) {
+    // init the algorithm before do matching.
+    public void initialMFBForOneRecord(IRecordMatcher combinedRecordMatcher, SurvivorShipAlgorithmParams survParams) {
+        algorithm = (DQMFB) createTswooshAlgorithm(combinedRecordMatcher, survParams, new GroupingCallBack());
+    }
+
+    // do match on one single record
+    public void oneRecordMatch(RichRecord printRcd) {
+        algorithm.matchOneRecord(printRcd);
+    }
+
+    // get and output all result after all records finished
+    public void afterAllRecordFinished() {
+        List<Record> result = algorithm.getResult();
+        outputResult(result);
+    }
+
+    /**
+     * Output the result Result after all finished.
+     * 
+     * @param result
+     */
+    private void outputResult(List<Record> result) {
+        for (Record rcd : result) {
             RichRecord printRcd = (RichRecord) rcd;
             output(printRcd);
         }

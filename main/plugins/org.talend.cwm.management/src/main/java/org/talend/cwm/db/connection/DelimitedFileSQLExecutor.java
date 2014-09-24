@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -28,6 +29,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.dataquality.matchmerge.Record;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.fileprocess.FileInputDelimited;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -68,32 +70,10 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
                 return null;
             }
 
-            // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
                 useCsvReader(file, delimitedFileconnection, analysedElements);
             } else {
-                int[] analysedColumnIndex = getAnalysedColumnPositionInFileTable(analysedElements, delimitedFileconnection);
-                // use TOSDelimitedReader in FileInputDelimited to parse.
-                FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
-                // long currentRow = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
-                int index = 0;
-                while (fileInputDelimited.nextRecord()) {
-                    index++;
-                    int columsCount = analysedElements.size(); // fileInputDelimited.getColumnsCountOfCurrentRow();
-                    String[] rowValues = new String[columsCount];
-                    // only get the value of the analysed columns csvReader.getValues();
-
-                    for (int i = 0; i < columsCount; i++) {
-
-                        rowValues[i] = fileInputDelimited.get(analysedColumnIndex[i]);
-                    }
-                    handleRow(rowValues);
-                    if (limit > 0 && index >= limit) {
-                        break;
-                    }
-
-                }
-                fileInputDelimited.close();
+                useFileInputDelimited(analysedElements, delimitedFileconnection);
             }
             endQuery();
         } catch (IOException e) {
@@ -104,14 +84,40 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
         return dataFromTable;
     }
 
-    private int[] getAnalysedColumnPositionInFileTable(List<ModelElement> analysedElements,
-            DelimitedFileConnection delimitedFileconnection) {
+    /**
+     * DOC yyin Comment method "useFileInputDelimited".
+     * 
+     * @param analysedElements
+     * @param delimitedFileconnection
+     * @throws IOException
+     * @throws Exception
+     */
+    private void useFileInputDelimited(List<ModelElement> analysedElements, DelimitedFileConnection delimitedFileconnection)
+            throws IOException, Exception {
+        int[] analysedColumnIndex = getAnalysedColumnPositionInFileTable(analysedElements);
+        FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
+        int index = 0;
+        while (fileInputDelimited.nextRecord()) {
+            index++;
+            int columsCount = analysedElements.size();
+            String[] rowValues = new String[columsCount];
+            for (int i = 0; i < columsCount; i++) {
+                rowValues[i] = fileInputDelimited.get(analysedColumnIndex[i]);
+            }
+            handleRow(rowValues);
+            if (limit > 0 && index >= limit) {
+                break;
+            }
+
+        }
+        fileInputDelimited.close();
+    }
+
+    private int[] getAnalysedColumnPositionInFileTable(List<ModelElement> analysedElements) {
         // find the position of the analysed elements in the file table's column
         int analysedColumnIndex[] = new int[analysedElements.size()];
         MetadataColumn mColumn = (MetadataColumn) analysedElements.get(0);
         MetadataTable metadataTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
-        // MetadataTable metadataTable = ConnectionHelper.getTables(delimitedFileconnection).toArray(new
-        // MetadataTable[0])[0];
         EList<MetadataColumn> columns = metadataTable.getColumns();
         int colIndex = 0;
         for (ModelElement analysedColumn : analysedElements) {
@@ -181,4 +187,17 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
         this.limit = limit;
 
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.cwm.db.connection.ISQLExecutor#getResultSetIterator(orgomg.cwm.foundation.softwaredeployment.DataManager
+     * , java.util.List)
+     */
+    public Iterator<Record> getResultSetIterator(DataManager connection, List<ModelElement> analysedElements) {
+
+        return new DelimitedFileIterator((DelimitedFileConnection) connection, analysedElements);
+    }
+
 }
