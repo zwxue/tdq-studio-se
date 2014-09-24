@@ -138,6 +138,15 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
 
         MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(recordMatchingIndicator);
         if (sqlExecutor.getStoreOnDisk()) {
+            // need to execute the query
+            try {
+                sqlExecutor.executeQuery(analysis.getContext().getConnection(), analysis.getContext().getAnalysedElements());
+            } catch (SQLException e) {
+                log.error(e, e);
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getMessage());
+                return rc;
+            }
 
             Map<BlockKey, String> blockKeys = sqlExecutor.getStoreOnDiskHandler().getBlockKeys();
             @SuppressWarnings("rawtypes")
@@ -146,7 +155,9 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 returnCode = execHandler.executeWithStoreOnDisk(columnMap, recordMatchingIndicator, blockKeyIndicator,
                         persistentLookupManager, blockKeys, matchResultConsumer);
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                log.error(e, e);
+                returnCode.setMessage(e.getMessage());
+                returnCode.setOk(false);
             }
         } else {
             // Added TDQ-9320 , use the result set iterator to replace the list of result in the memory.
@@ -170,19 +181,22 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         }
 
         if (!returnCode.isOk()) {
-            return returnCode;
+            rc.setOk(returnCode.isOk());
+            rc.setMessage(returnCode.getMessage());
         }
+
         monitor.worked(100);
         monitor.done();
-
         // --- set metadata information of analysis
-        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, true);
+        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, rc.isOk());
+
         if (isLowMemory) {
             rc.setMessage(Messages.getString("Evaluator.OutOfMomory", usedMemory));//$NON-NLS-1$
         }
 
         // nodify the master page
         refreshTableWithMatchFullResult(analysis);
+        AnalysisExecutorHelper.setExecuteErrorMessage(analysis, rc.getMessage());
 
         // --- compute execution duration
         if (this.continueRun()) {
