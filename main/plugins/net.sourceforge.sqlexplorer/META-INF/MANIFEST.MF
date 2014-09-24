@@ -104,3 +104,4 @@ Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
 Bundle-Localization: plugin
 Import-Package: org.talend.dataprofiler.service
 Service-Component: OSGI-INF/component.xml
+Bundle-ActivationPolicy: lazy
