@@ -289,14 +289,14 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     public boolean reset() {
         this.uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
         if (isUsedMapDBMode()) {
+            uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
             if (uniqueObjects != null) {
                 ((DBSet<Object>) uniqueObjects).clear();
             }
-            uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+            duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
             if (duplicateObjects != null) {
                 ((DBSet<Object>) duplicateObjects).clear();
             }
-            duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
         } else {
             this.uniqueObjects.clear();
             this.duplicateObjects.clear();
