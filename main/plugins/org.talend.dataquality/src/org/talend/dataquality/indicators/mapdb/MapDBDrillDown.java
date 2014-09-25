@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.indicators.mapdb;
 
+import java.util.List;
 
 /**
  * created by talend on Aug 28, 2014 Detailled comment
@@ -33,15 +34,11 @@ public interface MapDBDrillDown {
     public AbstractDB getMapDB(String dbName);
 
     /**
-     * DOC talend Comment method "handleDrillDownData".
+     * DOC msjian Comment method "handleDrillDownData".
      * 
      * @param masterObject
-     * @param currentObject
-     * @param columnCount
-     * @param currentIndex
-     * @param currentColumnName
+     * @param inputRowList
      */
-    void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
-            String currentColumnName);
+    void handleDrillDownData(Object masterObject, List<Object> inputRowList);
 
 }

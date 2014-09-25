@@ -34,6 +34,7 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
@@ -301,11 +302,12 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                         List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         recordIncrement = valueObjectList.size();
 
+                        List<Object> inputRowList = new ArrayList<Object>();
                         for (int j = 0; j < rowValues.length; j++) {
                             Object newobject = rowValues[j];
 
                             if (indicator.isUsedMapDBMode()) {
-                                indicator.handleDrillDownData(object, newobject, rowValues.length, j, mColumn.getLabel());
+                                inputRowList.add(newobject == null ? PluginConstant.NULL_STRING : newobject);
                                 continue;
                             } else {
                                 if (recordIncrement < maxNumberRows) {
@@ -320,6 +322,10 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                                     break;
                                 }
                             }
+                        }
+
+                        if (indicator.isUsedMapDBMode()) {
+                            indicator.handleDrillDownData(object, inputRowList);
                         }
                     } else if (indicator instanceof UniqueCountIndicator
                             && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
