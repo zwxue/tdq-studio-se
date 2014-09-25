@@ -240,15 +240,14 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.lang.Object,
-     * int, int, java.lang.String)
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
-            String currentColumnName) {
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
         String dbName = getDBName(masterObject);
         drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
-        super.handleDrillDownData(masterObject, currentObject, columnCount, currentIndex, currentColumnName);
+        super.handleDrillDownData(masterObject, inputRowList);
     }
 
     /**

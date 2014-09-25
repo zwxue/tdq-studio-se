@@ -175,7 +175,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement()
                                     .eContainer());
                             List<TdColumn> columnList = ColumnSetHelper.getColumns(doSwitch);
-
+                            List<Object> inputRowList = new ArrayList<Object>();
                             for (int j = 0; j < columnCount; j++) {
                                 String newcol = columnList.get(j).getName();
                                 Object newobject = null;
@@ -188,8 +188,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
                                 }
                                 if (indicator.isUsedMapDBMode()) {
-
-                                    indicator.handleDrillDownData(object, newobject, columnCount, j, newcol);
+                                    inputRowList.add(newobject == null ? PluginConstant.NULL_STRING : newobject);
                                     continue;
                                 } else {
                                     if (recordIncrement < maxNumberRows) {// decide whether current record is more than
@@ -210,6 +209,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                         break;
                                     }
                                 }
+                            }
+                            if (indicator.isUsedMapDBMode()) {
+                                indicator.handleDrillDownData(object, inputRowList);
                             }
                             // ~
                         } else if (indicator instanceof UniqueCountIndicator
