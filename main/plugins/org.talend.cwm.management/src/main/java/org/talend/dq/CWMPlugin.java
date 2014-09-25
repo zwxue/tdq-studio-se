@@ -14,7 +14,6 @@ package org.talend.dq;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -24,8 +23,7 @@ import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
-import org.talend.cwm.management.mapdb.MapDBService;
-import org.talend.dataprofiler.service.IMapDBService;
+import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
@@ -37,20 +35,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class CWMPlugin extends Plugin {
 
-    private static Logger log = Logger.getLogger(CWMPlugin.class);
-
     private static CWMPlugin self;
-
-    private BundleContext context;
-
-    /**
-     * Getter for context.
-     * 
-     * @return the context
-     */
-    public BundleContext getContext() {
-        return this.context;
-    }
 
     public CWMPlugin() {
         super();
@@ -59,14 +44,14 @@ public class CWMPlugin extends Plugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
-        this.context = context;
-
-        // register the service
-        IMapDBService service = new MapDBService();
-        context.registerService(IMapDBService.class.getName(), service, null);
 
         self = this;
         initPreferences(self);
+    }
+
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        super.stop(context);
     }
 
     /**
@@ -144,5 +129,13 @@ public class CWMPlugin extends Plugin {
     public String getLibrariesPath() {
         String installLocation = LibrariesManagerUtils.getLibrariesPath(ECodeLanguage.JAVA);
         return installLocation;
+    }
+
+    public void bind(ISqlexplorerService service) {
+        SqlExplorerUtils.getDefault().setSqlexplorerService(service);
+    }
+
+    public void unbind(ISqlexplorerService service) {
+        SqlExplorerUtils.getDefault().setSqlexplorerService(null);
     }
 }

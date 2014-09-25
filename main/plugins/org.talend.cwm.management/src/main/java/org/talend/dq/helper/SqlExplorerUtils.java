@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -33,15 +32,11 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IServiceLocator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -56,7 +51,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
-import org.talend.dq.CWMPlugin;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -83,69 +77,58 @@ public class SqlExplorerUtils {
 
     private boolean initRootProject = false;
 
+    private boolean initAllDrivers = false;
+
     private boolean hasShowDownloadWizard = false;
 
-    /**
-     * Getter for sqlexplorerService.
-     * 
-     * @return the sqlexplorerService
-     */
     public ISqlexplorerService getSqlexplorerService() {
         if (this.sqlexplorerService == null) {
-            BundleContext context = CWMPlugin.getDefault().getContext();
-            if (context != null) {
+            // check the jar file has been donwloaded or not
+            String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
+            File movedfile = new File(pathToStore, JAR_FILE_NAME);
+            if (movedfile.exists()) {
+                log.warn(Messages.getString("SqlExplorerUtils.restartToLoadSqlexplorer")); //$NON-NLS-1$
+            } else if (!hasShowDownloadWizard) {
                 // show download jar dialog
-                ServiceReference serviceReference = context.getServiceReference(ISqlexplorerService.class.getName());
-                if (serviceReference == null) {
-                    // check the jar file has been donwload or not
-                    String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-                    File movedfile = new File(pathToStore, JAR_FILE_NAME);
-                    if (movedfile.exists()) {
-                        log.warn(Messages.getString("SqlExplorerUtils.restartToLoadSqlexplorer")); //$NON-NLS-1$
-                        return null;
-                    }
-                    if (!hasShowDownloadWizard) {
-                        IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-                        ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
-                        try {
-                            Command command = commandService.getCommand(COMMAND_ID);
-                            command.executeWithChecks(new ExecutionEvent());
-                            hasShowDownloadWizard = true;
-                        } catch (ExecutionException e) {
-                            log.error(e);
-                        } catch (NotDefinedException e) {
-                            log.error(e);
-                        } catch (NotEnabledException e) {
-                            log.error(e);
-                        } catch (NotHandledException e) {
-                            log.error(e);
-                        }
-                    }
+                IServiceLocator serviceLocator = PlatformUI.getWorkbench();
+                ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
+                try {
+                    Command command = commandService.getCommand(COMMAND_ID);
+                    command.executeWithChecks(new ExecutionEvent());
+                    hasShowDownloadWizard = true;
+                } catch (ExecutionException e) {
+                    log.error(e);
+                } catch (NotDefinedException e) {
+                    log.error(e);
+                } catch (NotEnabledException e) {
+                    log.error(e);
+                } catch (NotHandledException e) {
+                    log.error(e);
                 }
-                Object obj = null;
-                if (serviceReference != null) {
-                    obj = context.getService(serviceReference);
-                }
-                if (obj != null && obj instanceof ISqlexplorerService) {
-                    this.sqlexplorerService = (ISqlexplorerService) obj;
-                }
+            } else {
+                log.error(Messages.getString("SqlExplorerUtils.missingSqlexplorer")); //$NON-NLS-1$
             }
-        }
-        if (this.sqlexplorerService == null) {
-            log.error(Messages.getString("SqlExplorerUtils.missingSqlexplorer")); //$NON-NLS-1$
-            return null;
         } else {
-            if (!initRootProject) {
+            if (!this.initRootProject) {
                 this.sqlexplorerService.initSqlExplorerRootProject(ReponsitoryContextBridge.getRootProject());
-                initRootProject = true;
+                this.initRootProject = true;
             }
-            return this.sqlexplorerService;
         }
+        return this.sqlexplorerService;
+    }
+
+    public void setSqlexplorerService(ISqlexplorerService sqlexplorerService) {
+        this.sqlexplorerService = sqlexplorerService;
     }
 
     public static SqlExplorerUtils getDefault() {
         if (sqlExplorerUtils == null) {
             sqlExplorerUtils = new SqlExplorerUtils();
+        }
+        // init all drivers at the first time when the sqlexplorer service is available
+        if (sqlExplorerUtils.sqlexplorerService != null && !sqlExplorerUtils.initAllDrivers) {
+            sqlExplorerUtils.initAllConnectionsToSQLExplorer();
+            sqlExplorerUtils.initAllDrivers = true;
         }
         return sqlExplorerUtils;
     }
@@ -162,10 +145,7 @@ public class SqlExplorerUtils {
         if (dbConn != null) { // open in sqlexplorer editor if it is database connection
             String dbType = dbConn.getDatabaseType();
             List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
-            String username = JavaSqlFactory.getUsername(tdDataProvider);
-            boolean isInvalidUserForMsSql = EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(dbType)
-                    && StringUtils.isEmpty(username);
-            if (isInvalidUserForMsSql || !tdqSupportDBType.contains(dbType)) {
+            if (!tdqSupportDBType.contains(dbType)) {
                 // the dbtype is unsupported, show warning dialog
                 MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         Messages.getString("SqlExplorerUtils.Warning"), Messages.getString("SqlExplorerUtils.cantPreview")); //$NON-NLS-1$ //$NON-NLS-2$
