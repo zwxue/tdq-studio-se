@@ -17,6 +17,8 @@ import org.talend.core.model.properties.Item;
 
 /**
  * Add qiongli class global comment. create item and propropty file.
+ * 
+ * @Deprecated using org.talend.core.ITDQRepositoryService
  */
 @Deprecated
 public interface ISaveAsService extends IService {
