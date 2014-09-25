@@ -7,7 +7,6 @@ package org.talend.dataquality.indicators.impl;
 
 import java.io.File;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -1327,20 +1325,12 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.Indicator#handleDrillDownData(java.lang.Object, java.lang.Object, int,
-     * int, java.lang.String)
+     * @see org.talend.dataquality.indicators.mapdb.MapDBDrillDown#handleDrillDownData(java.lang.Object, java.util.List)
      */
     @Override
-    public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
-            String currentColumnName) {
-        List<Object> rowData = drillDownMap.get(count);
-        if (rowData == null) {
-            rowData = new ArrayList<Object>();
-            drillDownMap.put(count, rowData);
-            this.drillDownRowCount++;
-        }
-        // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
-        rowData.add(currentObject == null ? PluginConstant.NULL_STRING : currentObject);
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        drillDownRowCount++;
+        drillDownMap.put(count, inputRowList);
     }
 
     /**

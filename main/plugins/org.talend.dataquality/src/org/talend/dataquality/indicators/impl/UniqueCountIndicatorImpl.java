@@ -5,7 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
@@ -348,21 +346,12 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.lang.Object,
-     * int, int, java.lang.String)
+     * @see org.talend.dataquality.indicators.mapdb.MapDBDrillDown#handleDrillDownData(java.lang.Object, java.util.List)
      */
     @Override
-    public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
-            String currentColumnName) {
-        // this key is a masterObject super method is Long so need override
-        List<Object> rowData = drillDownMap.get(masterObject);
-        if (rowData == null) {
-            rowData = new ArrayList<Object>();
-            drillDownMap.put(masterObject, rowData);
-            this.drillDownRowCount++;
-        }
-        // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
-        rowData.add(currentObject == null ? PluginConstant.NULL_STRING : currentObject);
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        drillDownRowCount++;
+        drillDownMap.put(masterObject, inputRowList);
     }
 
 } // UniqueCountIndicatorImpl
