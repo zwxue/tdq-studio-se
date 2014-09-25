@@ -311,12 +311,12 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
         if (this.isUsedMapDBMode()) {
             if (needReconnect((AbstractDB<?>) duplicateMap)) {
                 duplicateMap = initValueForDBMap(StandardDBName.computeProcess.name());
-                duplicateMap.clear();
             }
+            duplicateMap.clear();
             if (needReconnect((AbstractDB<?>) duplicateObjects)) {
                 duplicateObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
-                duplicateObjects.clear();
             }
+            duplicateObjects.clear();
             // java normal mode
         } else {
             duplicateMap = initValueForDBMap(StandardDBName.computeProcess.name());
