@@ -183,8 +183,7 @@
          id="com.ibm.icu"
          download-size="0"
          install-size="0"
-         version="4.2.1.v20100412"
-         unpack="false"/>
+         version="4.2.1.v20100412"/>
 
    <plugin
          id="org.eclipse.emf.common"
@@ -1254,4 +1253,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
 </feature>
