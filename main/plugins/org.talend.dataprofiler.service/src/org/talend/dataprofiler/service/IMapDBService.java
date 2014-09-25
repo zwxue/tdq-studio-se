@@ -27,7 +27,4 @@ public interface IMapDBService {
             Map<Long, List<Object>> indexMap, DataValidation dataValiator);
 
     public List<Object[]> getDataSetDBMapSubList(Object dbMap, long fromIndex, long toIndex, Map<Long, Object> indexMap);
-
-    // public List<Object[]> getDataSetDBMapForSetSubList(Object dbMap,long fromIndex, long toIndex, Map<Long, ObjectK>
-    // indexMap);
 }
