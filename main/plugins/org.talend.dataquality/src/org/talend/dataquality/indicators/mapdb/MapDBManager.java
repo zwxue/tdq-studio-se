@@ -120,7 +120,7 @@ public class MapDBManager {
         if (closeDBTimeTask != null) {
             closeDBTimeTask.cancel();
             timer.purge();
-            closeTaskMap.remove(closeDBTimeTask);
+            closeTaskMap.remove(db);
         }
     }
 
