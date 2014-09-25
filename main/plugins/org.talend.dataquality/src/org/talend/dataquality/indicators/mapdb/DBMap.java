@@ -137,6 +137,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
         return dbMap.isEmpty();
     }
 
+    @Override
     public boolean containsKey(Object key) {
         if (key == null) {
             return dbMap.containsKey(EMPTY);
@@ -149,6 +150,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#containsValue(java.lang.Object)
      */
+    @Override
     public boolean containsValue(Object value) {
         return dbMap.containsValue(value);
     }
@@ -158,6 +160,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#get(java.lang.Object)
      */
+    @Override
     public V get(Object key) {
         if (key == null) {
             return dbMap.get(EMPTY);
@@ -170,6 +173,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public V put(K key, V value) {
         if (key == null) {
@@ -183,6 +187,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#remove(java.lang.Object)
      */
+    @Override
     public V remove(Object key) {
         if (key == null) {
             return dbMap.remove(EMPTY);
@@ -195,6 +200,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#putAll(java.util.Map)
      */
+    @Override
     public void putAll(Map<? extends K, ? extends V> m) {
         dbMap.putAll(m);
 
@@ -205,10 +211,13 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#clear()
      */
+    @Override
     public void clear() {
-        // dbMap.clear();
-        this.getDB().delete(mapName);
-        this.getDB().getEngine().clearCache();
+        if (!getDB().isClosed()) {
+            dbMap.clear();
+            this.getDB().delete(mapName);
+            this.getDB().getEngine().clearCache();
+        }
     }
 
     /*
@@ -216,6 +225,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#keySet()
      */
+    @Override
     public NavigableSet<K> keySet() {
         return dbMap.keySet();
     }
@@ -225,6 +235,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#values()
      */
+    @Override
     public Collection<V> values() {
         return dbMap.values();
     }
@@ -234,6 +245,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.Map#entrySet()
      */
+    @Override
     public Set<java.util.Map.Entry<K, V>> entrySet() {
         return dbMap.entrySet();
     }
@@ -273,6 +285,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentMap#putIfAbsent(java.lang.Object, java.lang.Object)
      */
+    @Override
     public V putIfAbsent(K key, V value) {
         return dbMap.putIfAbsent(key, value);
     }
@@ -282,6 +295,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentMap#remove(java.lang.Object, java.lang.Object)
      */
+    @Override
     public boolean remove(Object key, Object value) {
         return dbMap.remove(key, value);
     }
@@ -291,6 +305,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentMap#replace(java.lang.Object, java.lang.Object, java.lang.Object)
      */
+    @Override
     public boolean replace(K key, V oldValue, V newValue) {
         return dbMap.replace(key, oldValue, newValue);
     }
@@ -300,6 +315,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentMap#replace(java.lang.Object, java.lang.Object)
      */
+    @Override
     public V replace(K key, V value) {
         return dbMap.replace(key, value);
     }
@@ -309,6 +325,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#lowerEntry(java.lang.Object)
      */
+    @Override
     public java.util.Map.Entry<K, V> lowerEntry(K key) {
         return dbMap.lowerEntry(key);
     }
@@ -318,6 +335,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#lowerKey(java.lang.Object)
      */
+    @Override
     public K lowerKey(K key) {
         return dbMap.lowerKey(key);
     }
@@ -327,6 +345,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#floorEntry(java.lang.Object)
      */
+    @Override
     public java.util.Map.Entry<K, V> floorEntry(K key) {
         return dbMap.floorEntry(key);
     }
@@ -336,6 +355,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#floorKey(java.lang.Object)
      */
+    @Override
     public K floorKey(K key) {
         return dbMap.floorKey(key);
     }
@@ -345,6 +365,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#ceilingEntry(java.lang.Object)
      */
+    @Override
     public java.util.Map.Entry<K, V> ceilingEntry(K key) {
         return dbMap.ceilingEntry(key);
     }
@@ -354,6 +375,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#ceilingKey(java.lang.Object)
      */
+    @Override
     public K ceilingKey(K key) {
         return dbMap.ceilingKey(key);
     }
@@ -363,6 +385,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#higherEntry(java.lang.Object)
      */
+    @Override
     public java.util.Map.Entry<K, V> higherEntry(K key) {
         return dbMap.higherEntry(key);
     }
@@ -372,6 +395,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#higherKey(java.lang.Object)
      */
+    @Override
     public K higherKey(K key) {
         return dbMap.higherKey(key);
     }
@@ -381,6 +405,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#firstEntry()
      */
+    @Override
     public java.util.Map.Entry<K, V> firstEntry() {
         return dbMap.firstEntry();
     }
@@ -390,6 +415,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#lastEntry()
      */
+    @Override
     public java.util.Map.Entry<K, V> lastEntry() {
         return dbMap.lastEntry();
     }
@@ -399,6 +425,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#pollFirstEntry()
      */
+    @Override
     public java.util.Map.Entry<K, V> pollFirstEntry() {
         return dbMap.pollFirstEntry();
     }
@@ -408,6 +435,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.NavigableMap#pollLastEntry()
      */
+    @Override
     public java.util.Map.Entry<K, V> pollLastEntry() {
         return dbMap.pollLastEntry();
     }
@@ -417,6 +445,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.SortedMap#comparator()
      */
+    @Override
     public Comparator<? super K> comparator() {
         return dbMap.comparator();
     }
@@ -426,6 +455,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.SortedMap#firstKey()
      */
+    @Override
     public K firstKey() {
         return dbMap.firstKey();
     }
@@ -435,6 +465,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.SortedMap#lastKey()
      */
+    @Override
     public K lastKey() {
         return dbMap.lastKey();
     }
@@ -444,6 +475,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#subMap(java.lang.Object, boolean, java.lang.Object, boolean)
      */
+    @Override
     public ConcurrentNavigableMap<K, V> subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) {
         return dbMap.subMap(fromKey, fromInclusive, toKey, toInclusive);
     }
@@ -453,6 +485,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#headMap(java.lang.Object, boolean)
      */
+    @Override
     public ConcurrentNavigableMap<K, V> headMap(K toKey, boolean inclusive) {
         return dbMap.headMap(toKey, inclusive);
     }
@@ -462,6 +495,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#tailMap(java.lang.Object, boolean)
      */
+    @Override
     public ConcurrentNavigableMap<K, V> tailMap(K fromKey, boolean inclusive) {
         return dbMap.tailMap(fromKey, inclusive);
     }
@@ -471,6 +505,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#subMap(java.lang.Object, java.lang.Object)
      */
+    @Override
     public ConcurrentNavigableMap<K, V> subMap(K fromKey, K toKey) {
         return dbMap.subMap(fromKey, toKey);
     }
@@ -480,6 +515,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#headMap(java.lang.Object)
      */
+    @Override
     public ConcurrentNavigableMap<K, V> headMap(K toKey) {
         return dbMap.headMap(toKey);
     }
@@ -489,6 +525,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#tailMap(java.lang.Object)
      */
+    @Override
     public ConcurrentNavigableMap<K, V> tailMap(K fromKey) {
         return dbMap.tailMap(fromKey);
     }
@@ -498,6 +535,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#descendingMap()
      */
+    @Override
     public ConcurrentNavigableMap<K, V> descendingMap() {
         return dbMap.descendingMap();
     }
@@ -507,6 +545,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#navigableKeySet()
      */
+    @Override
     public NavigableSet<K> navigableKeySet() {
         return dbMap.navigableKeySet();
     }
@@ -516,6 +555,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      * 
      * @see java.util.concurrent.ConcurrentNavigableMap#descendingKeySet()
      */
+    @Override
     public NavigableSet<K> descendingKeySet() {
         return dbMap.descendingKeySet();
     }
