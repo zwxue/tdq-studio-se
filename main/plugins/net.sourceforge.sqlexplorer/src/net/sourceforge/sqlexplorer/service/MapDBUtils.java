@@ -15,10 +15,6 @@ package net.sourceforge.sqlexplorer.service;
 import java.util.List;
 import java.util.Map;
 
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataprofiler.service.IMapDBService;
 
@@ -40,20 +36,11 @@ public class MapDBUtils {
     private IMapDBService mapDBService;
 
     public IMapDBService getMapDBService() {
-        if (this.mapDBService == null) {
-            BundleContext context = SQLExplorerPlugin.getDefault().getContext();
-            if (context != null) {
-                ServiceReference serviceReference = context.getServiceReference(IMapDBService.class.getName());
-                Object obj = null;
-                if (serviceReference != null) {
-                    obj = context.getService(serviceReference);
-                }
-                if (obj != null && obj instanceof IMapDBService) {
-                    this.mapDBService = (IMapDBService) obj;
-                }
-            }
-        }
         return this.mapDBService;
+    }
+
+    public void setMapDBService(IMapDBService mapDBService) {
+        this.mapDBService = mapDBService;
     }
 
     public List<Object[]> getColumnSetDBMapSubList(Object columnSetDBMap, long fromIndex, long toIndex,

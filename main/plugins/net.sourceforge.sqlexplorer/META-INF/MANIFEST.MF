@@ -103,5 +103,5 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
 Bundle-Localization: plugin
 Import-Package: org.talend.dataprofiler.service
-Service-Component: OSGI-INF/component.xml
+Service-Component: OSGI-INF/sqlexplorer.xml, OSGI-INF/mapdb.xml
 Bundle-ActivationPolicy: lazy
