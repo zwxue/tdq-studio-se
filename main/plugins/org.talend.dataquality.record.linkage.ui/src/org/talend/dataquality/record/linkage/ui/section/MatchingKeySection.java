@@ -754,7 +754,10 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
         // import survivorship keys
         for (SurvivorshipKeyDefinition skd : matchRuleDefinition.getSurvivorshipKeys()) {
-            getMatchRuleDefinition().getSurvivorshipKeys().add(EcoreUtil.copy(skd));
+            SurvivorshipKeyDefinition survivorshipKeyDefinition = EcoreUtil.copy(skd);
+            setColumnValueIfMatch(survivorshipKeyDefinition);
+            getMatchRuleDefinition().getSurvivorshipKeys().add(survivorshipKeyDefinition);
+
         }
         // create the tab from the parameter:matchRule
         for (MatchRule oneMatchRule : matchRuleDefinition.getMatchRules()) {
@@ -840,7 +843,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
         if (duplicateNameList.size() > 0) {
             returnCode.setMessage(DefaultMessagesImpl.getString(
-                    "BlockingKeySection.duplicateKeys.message", getSectionName() + "--" + duplicateNameList.get(0))); //$NON-NLS-1$
+                    "BlockingKeySection.duplicateKeys.message", getSectionName() + "--" + duplicateNameList.get(0))); //$NON-NLS-1$ //$NON-NLS-2$
             return returnCode;
         } else {
             returnCode.setOk(true);
@@ -868,25 +871,19 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                     case LARGEST:
                     case SMALLEST:
                         if (!JavaTypesManager.isNumber(metadataColumn.getTalendType())) {
-                            rc.setOk(false);
-                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
-                            return rc;
+                            return getFalseMessageWhenNotMatch(metadataColumn.getName(), survivorShipAlgorithm.getValue());
                         }
                         break;
                     case LONGEST:
                     case SHORTEST:
                         if (!JavaTypesManager.isString(metadataColumn.getTalendType())) {
-                            rc.setOk(false);
-                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
-                            return rc;
+                            return getFalseMessageWhenNotMatch(metadataColumn.getName(), survivorShipAlgorithm.getValue());
                         }
                         break;
                     case PREFER_TRUE:
                     case PREFER_FALSE:
                         if (!JavaTypesManager.isBoolean(metadataColumn.getTalendType())) {
-                            rc.setOk(false);
-                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
-                            return rc;
+                            return getFalseMessageWhenNotMatch(metadataColumn.getName(), survivorShipAlgorithm.getValue());
                         }
                         break;
                     default:
@@ -899,11 +896,25 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         return rc;
     }
 
+    /**
+     * get the return code with False and Messages When the survivorship functin Not Match.
+     * 
+     * @param rc
+     * @param string
+     * @param string2
+     * @return
+     */
+    private ReturnCode getFalseMessageWhenNotMatch(String columnName, String functionName) {
+        ReturnCode rc = new ReturnCode(false);
+        rc.setMessage(DefaultMessagesImpl.getString("MatchingKeySection.survivorshipFunctionNotMatch", columnName, functionName)); //$NON-NLS-1$ 
+        return rc;
+    }
+
     private MetadataColumn getMetadataColumnByName(String columnName) {
         if (columnMap != null) {
             Set<MetadataColumn> keySet = columnMap.keySet();
             for (MetadataColumn col : keySet) {
-                if (col != null && StringUtils.equals(columnName, col.getName())) {
+                if (col != null && StringUtils.endsWithIgnoreCase(columnName, col.getName())) {
                     return col;
                 }
             }
