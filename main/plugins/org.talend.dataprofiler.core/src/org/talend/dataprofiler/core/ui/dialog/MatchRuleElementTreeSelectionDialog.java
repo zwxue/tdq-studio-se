@@ -165,22 +165,22 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                                 }
 
                                 // check if exist duplicated Match Keys
-                                Set<String> duplicatedSurvivorshipKeys = new HashSet<String>();
-                                for (SurvivorshipKeyDefinition skDef : matchRuleDef.getSurvivorshipKeys()) {
-                                    if (!isOverwrite) {
+                                if (!isOverwrite) {
+                                    Set<String> duplicatedSurvivorshipKeys = new HashSet<String>();
+                                    for (SurvivorshipKeyDefinition skDef : matchRuleDef.getSurvivorshipKeys()) {
                                         if (skDef != null && getSurvivorshipKeys().contains(skDef.getName())) {
                                             duplicatedSurvivorshipKeys.add(skDef.getName());
                                         }
                                     }
-                                }
-                                if (!duplicatedSurvivorshipKeys.isEmpty()) {
-                                    status = new Status(
-                                            IStatus.ERROR,
-                                            CorePlugin.PLUGIN_ID,
-                                            DefaultMessagesImpl
-                                                    .getString(
-                                                            "MatchRuleCheckedTreeSelectionDialog.duplicatedMatchKey", duplicatedSurvivorshipKeys.toString())); //$NON-NLS-1$
-                                    return status;
+                                    if (!duplicatedSurvivorshipKeys.isEmpty()) {
+                                        status = new Status(
+                                                IStatus.ERROR,
+                                                CorePlugin.PLUGIN_ID,
+                                                DefaultMessagesImpl
+                                                        .getString(
+                                                                "MatchRuleCheckedTreeSelectionDialog.duplicatedMatchKey", duplicatedSurvivorshipKeys.toString())); //$NON-NLS-1$
+                                        return status;
+                                    }
                                 }
 
                                 // for component tMatchGroup and tRecordMatching when the imported rule's algorithm is
