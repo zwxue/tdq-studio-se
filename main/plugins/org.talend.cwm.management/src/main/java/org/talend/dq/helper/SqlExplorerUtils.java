@@ -301,6 +301,13 @@ public class SqlExplorerUtils {
         }
     }
 
+    public boolean isInstanceofTalendDataSet(Object talendDataSet) {
+        if (getSqlexplorerService() != null) {
+            return getSqlexplorerService().isInstanceofTalendDataSet(talendDataSet);
+        }
+        return false;
+    }
+
     public Object createDataSet(String[] columnHeader, String[][] columnValue) {
         if (getSqlexplorerService() != null) {
             return getSqlexplorerService().createDataSet(columnHeader, columnValue);

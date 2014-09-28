@@ -71,6 +71,8 @@ public interface ISqlexplorerService {
 
     public void resetTalendDataSetIndex(Object talendDataSet, long fromIndex, long toIndex);
 
+    public boolean isInstanceofTalendDataSet(Object talendDataSet);
+
     public Object createDataSet(String[] columnHeader, String[][] columnValue);
 
     public void setExportCSVActionTable(Object action, Object table);

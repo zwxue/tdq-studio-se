@@ -231,7 +231,7 @@ public class DrillDownResultEditor extends EditorPart {
             @Override
             public void pageIndexChanged(int oldPageIndex, int newPageIndex, PageableController controller) {
                 Object data = table.getData();
-                if (SqlExplorerUtils.TALENDDATASET_CLASS_NAME.equals(data.getClass().getName())) {
+                if (data != null && SqlExplorerUtils.getDefault().isInstanceofTalendDataSet(data)) {
                     long totalSize = controller.getTotalElements();
                     long pageSize = controller.getPageSize();
                     long pageIndex = controller.getPageOffset();

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.talend.cwm.indicator.DataValidation;
@@ -56,7 +57,12 @@ public abstract class AbstractDB<K> {
         }
         DBMaker<?> fileDBMaker = DBMaker.newFileDB(dbFile);
         fileDBMaker = fileDBMaker.mmapFileEnable();
+        // for job application the mapDB file should be remove no need to drill down after that
+        if (!Platform.isRunning()) {
+            fileDBMaker = fileDBMaker.deleteFilesAfterClose();
+        }
         db = fileDBMaker.cacheSize(CACHE_SIZE).transactionDisable().closeOnJvmShutdown().make();
+
         MapDBManager.getInstance().putDB(dbFile, db);
 
     }
