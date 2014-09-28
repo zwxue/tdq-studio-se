@@ -895,4 +895,16 @@ public class SqlexplorerService implements ISqlexplorerService {
         return new DataSet(columnHeader, columnValue);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.service.ISqlexplorerService#isInstanceofTalendDataSetIndex(java.lang.Object)
+     */
+    public boolean isInstanceofTalendDataSet(Object talendDataSet) {
+        if (TalendDataSet.class.isInstance(talendDataSet)) {
+            return true;
+        }
+        return false;
+    }
+
 }

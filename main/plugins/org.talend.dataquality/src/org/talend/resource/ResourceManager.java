@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -96,12 +97,28 @@ public final class ResourceManager {
     }
 
     /**
-     * get Temp MapDB Folder
+     * get Temp MapDB Path
      * 
      * @return
      */
-    public static IFolder getTempMapDBFolder() {
-        return getOneFolder(EResourceConstant.TEMP_MAPDB);
+    public static IPath getTempMapDBFolder() {
+        IPath worskpacePath = getWorskpacePath();
+
+        IPath TempMapDBFolder = worskpacePath.append(ReponsitoryContextBridge.getProjectName()).append(
+                EResourceConstant.TEMP_MAPDB.getPath());
+        if (!Platform.isRunning()) {
+            return TempMapDBFolder.append("jobApplication");//$NON-NLS-1$
+        }
+        return TempMapDBFolder;
+    }
+
+    public static IPath getWorskpacePath() {
+        if (Platform.isRunning()) {
+            return getRootFolderLocation();
+        } else {
+            String talendProjctPathFromReportApplication = System.getProperty("talend.project.path");//$NON-NLS-1$
+            return new Path(talendProjctPathFromReportApplication).removeLastSegments(1);
+        }
     }
 
     /**
@@ -119,7 +136,7 @@ public final class ResourceManager {
         String indicatorUUID = ResourceHelper.getUUID(indicator);
         String modelElementName = Path.EMPTY.toString();
         if (analysis == null) {
-            log.error(Messages.getString("ResourceManager.CanNotGetAnalysis"));
+            log.error(Messages.getString("ResourceManager.CanNotGetAnalysis")); //$NON-NLS-1$
         } else {
             analysisUUID = ResourceHelper.getUUID(analysis);
             if (AnalysisType.MULTIPLE_COLUMN.equals(analysis.getParameters().getAnalysisType())) {
@@ -127,8 +144,7 @@ public final class ResourceManager {
             }
         }
 
-        return getTempMapDBFolder().getLocation().append(analysisUUID).append(modelElementName).append(indicatorUUID)
-                .toOSString();
+        return getTempMapDBFolder().append(analysisUUID).append(modelElementName).append(indicatorUUID).toOSString();
 
     }
 
