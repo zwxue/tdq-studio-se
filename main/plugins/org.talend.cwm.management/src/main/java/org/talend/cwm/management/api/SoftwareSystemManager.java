@@ -194,7 +194,6 @@ public final class SoftwareSystemManager {
         try {
             isExisted = isExistedInSoftwareSystem(databaseConnection, softwareSystems);
         } catch (TalendException e) {
-            log.error(e.getMessage());
             return;
         }
         if (!isExisted) {
