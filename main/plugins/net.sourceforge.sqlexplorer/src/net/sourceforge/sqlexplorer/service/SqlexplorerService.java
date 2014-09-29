@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dataset.actions.ExportCSVAction;
 import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBColumnSetDataSet;
@@ -68,7 +69,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.classloader.DynamicClassLoader;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
@@ -438,8 +438,8 @@ public class SqlexplorerService implements ISqlexplorerService {
         // MOD qiongli bug 13093,2010-7-2,show the warning dialog when the table can't be found
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         if (currentUser == null) {
-            MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("SqlExplorerBridge.MissTable", tableName)); //$NON-NLS-1$
+            MessageDialog.openWarning(shell, Messages.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
+                    Messages.getString("SqlExplorerBridge.MissTable", tableName)); //$NON-NLS-1$
         }
         DatabaseNode root = currentUser.getMetaDataSession().getRoot();
         root.load();
@@ -484,7 +484,7 @@ public class SqlexplorerService implements ISqlexplorerService {
         }
         // find the table folder node.
         if (catalogOrSchemaNode == null) {
-            throw new NullPointerException(DefaultMessagesImpl.getString("SqlExplorerBridge.CATORSCHMISNULL")); //$NON-NLS-1$
+            throw new NullPointerException(Messages.getString("SqlExplorerBridge.CATORSCHMISNULL")); //$NON-NLS-1$
         }
         // Added 20130409 TDQ-6823 yyin when want to get some schema's tables, should give the schema name to the
         // catalog node.
@@ -521,7 +521,7 @@ public class SqlexplorerService implements ISqlexplorerService {
             }
         }
         if (tableFolderNode == null) {
-            log.fatal(DefaultMessagesImpl.getString("SqlExplorerBridge.TABLE_FOLDER_NULL0")); //$NON-NLS-1$
+            log.fatal(Messages.getString("SqlExplorerBridge.TABLE_FOLDER_NULL0")); //$NON-NLS-1$
         } else {
             INode[] tableNodes = tableFolderNode.getChildNodes();
             for (INode node : tableNodes) {
@@ -535,8 +535,8 @@ public class SqlexplorerService implements ISqlexplorerService {
                 }
             }
         }
-        MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable", tableName)); //$NON-NLS-1$
+        MessageDialog.openWarning(shell, Messages.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
+                Messages.getString("SqlExplorerBridge.NotFindCorrespondTable", tableName)); //$NON-NLS-1$
     }
 
     /*
