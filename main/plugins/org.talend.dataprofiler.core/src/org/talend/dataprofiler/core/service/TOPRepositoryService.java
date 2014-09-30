@@ -663,4 +663,13 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         return item;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#ChangePerspectiveAction(java.lang.String)
+     */
+    public void changePerspectiveAction(String perspectiveId) {
+        new org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction(perspectiveId).run();
+    }
+
 }

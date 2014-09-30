@@ -46,7 +46,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogAction;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
-import net.sourceforge.sqlexplorer.plugin.perspectives.OpenPerspectiveAction;
+import net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 import net.sourceforge.sqlexplorer.util.AliasAndManaDriverHelper;
@@ -70,6 +70,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.classloader.DynamicClassLoader;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -421,7 +423,15 @@ public class SqlexplorerService implements ISqlexplorerService {
     public void findSqlExplorerTableNode(Connection providerConnection, Package parentPackageElement, String tableName,
             String activeTabName) {
         // Open data explore perspective.
-        new OpenPerspectiveAction().run();
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            ITDQRepositoryService service = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
+                    ITDQRepositoryService.class);
+            if (service != null) {
+                service.changePerspectiveAction(SQLExplorerPluginPerspective.class.getName());
+            } else {
+                return;
+            }
+        }
         Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
         String url = JavaSqlFactory.getURL(providerConnection);
         User currentUser = null;
@@ -439,7 +449,8 @@ public class SqlexplorerService implements ISqlexplorerService {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         if (currentUser == null) {
             MessageDialog.openWarning(shell, Messages.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
-                    Messages.getString("SqlExplorerBridge.MissTable", tableName)); //$NON-NLS-1$
+                    Messages.getString("SqlExplorerBridge.MissTable") + tableName); //$NON-NLS-1$
+            return;
         }
         DatabaseNode root = currentUser.getMetaDataSession().getRoot();
         root.load();
@@ -462,11 +473,10 @@ public class SqlexplorerService implements ISqlexplorerService {
             } else {
                 catalogOrSchemaNode = root;
             }
-
         } else {
             // MOD by zshen for 20517
-            if (schemas.size() == 0) {// the case for mssql/postgrel(which have catalog and schema structor) schema
-                                      // analysis.
+            if (schemas.size() == 0) {
+                // the case for mssql/postgrel(which have catalog and schema structor) schema analysis.
                 Catalog shcmeaOfCatalogNode = CatalogHelper.getParentCatalog(parentPackageElement);
                 for (INode catalogNode : catalogs) {
                     if (shcmeaOfCatalogNode.getName().equalsIgnoreCase(catalogNode.getName())) {
@@ -532,11 +542,12 @@ public class SqlexplorerService implements ISqlexplorerService {
                     // MOD qiongli bug 13093,2010-7-2
                     SQLExplorerPlugin.getDefault().getConnectionsView().getTreeViewer()
                             .setSelection(new StructuredSelection(currentUser));
+                    return;
                 }
             }
         }
         MessageDialog.openWarning(shell, Messages.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
-                Messages.getString("SqlExplorerBridge.NotFindCorrespondTable", tableName)); //$NON-NLS-1$
+                Messages.getString("SqlExplorerBridge.MissTable") + tableName); //$NON-NLS-1$
     }
 
     /*
