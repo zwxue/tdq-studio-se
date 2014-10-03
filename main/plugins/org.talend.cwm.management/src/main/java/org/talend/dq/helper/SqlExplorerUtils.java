@@ -65,7 +65,9 @@ public class SqlExplorerUtils {
 
     public static final String SQLEDITOR_ID = "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"; //$NON-NLS-1$
 
-    public static final String JAR_FILE_NAME = "net.sourceforge.sqlexplorer.jar"; //$NON-NLS-1$
+    public static final String PLUGIN_NAME = "net.sourceforge.sqlexplorer"; //$NON-NLS-1$
+
+    public static final String JAR_FILE_NAME = PLUGIN_NAME + ".jar"; //$NON-NLS-1$
 
     public static final String COMMAND_ID = "org.talend.updates.show.wizard.command"; //$NON-NLS-1$
 
