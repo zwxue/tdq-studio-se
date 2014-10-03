@@ -40,7 +40,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.jfree.util.Log;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
@@ -193,7 +192,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 allDataProviders.add(connItem.getConnection());
             }
         } catch (PersistenceException e) {
-            Log.error(e, e);
+            log.error(e, e);
         }
         return allDataProviders;
     }
