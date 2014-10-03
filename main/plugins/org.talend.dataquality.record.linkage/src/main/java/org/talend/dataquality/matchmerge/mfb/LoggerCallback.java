@@ -73,10 +73,8 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
     @Override
     public void onDifferent(Record record1, Record record2, MatchResult matchResult) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("\t(-) Negative match: #" + record1.getId() + " <-/-> #" + record2.getId());
-        }
         if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("\t(-) Negative match: #" + record1.getId() + " <-/-> #" + record2.getId());
             StringBuilder messagesBuilder = new StringBuilder();
             int i = 0;
             for (MatchResult.Score score : matchResult.getScores()) {
