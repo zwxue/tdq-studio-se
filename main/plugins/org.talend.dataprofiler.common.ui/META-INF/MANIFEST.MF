@@ -28,4 +28,4 @@ Import-Package: org.eclipse.ui.actions,
  org.talend.core.repository.model,
  org.talend.repository
 Bundle-ClassPath: .,
- jar/org.talend.dataprofiler.common.ui.jar
+ dist/org.talend.dataprofiler.common.ui.jar
