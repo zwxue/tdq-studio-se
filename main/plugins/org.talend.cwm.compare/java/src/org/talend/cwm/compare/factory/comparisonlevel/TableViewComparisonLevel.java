@@ -45,6 +45,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
@@ -55,6 +56,7 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
@@ -169,14 +171,7 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
 
     @Override
     protected EObject getSavedReloadObject() throws ReloadCompareException {
-        // ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
-        ColumnSet selectedColumnSet = null;
-        if (selectedObj instanceof DBColumnFolderRepNode) {
-            DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
-            selectedColumnSet = columnFolderRepNode.getColumnSet();
-        } else if (selectedObj instanceof ColumnSet) {
-            selectedColumnSet = (ColumnSet) selectedObj;
-        }
+        ColumnSet selectedColumnSet = getCurrentColumnSet();
         ColumnSet toReloadcolumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
         // MOD scorreia 2009-01-29 clear content of findMatchedColumnSet
         ColumnSetHelper.setColumns(toReloadcolumnSet, EMPTY_COLUMN_LIST);
@@ -260,14 +255,7 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
         EObject rightElement = addElement.getRightElement();
         TdColumn columnSetSwitch = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement);
         if (columnSetSwitch != null) {
-            // ColumnSet columnSet = (ColumnSet) selectedObj;
-            ColumnSet columnSet = null;
-            if (selectedObj instanceof DBColumnFolderRepNode) {
-                DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
-                columnSet = columnFolderRepNode.getColumnSet();
-            } else if (selectedObj instanceof ColumnSet) {
-                columnSet = (ColumnSet) selectedObj;
-            }
+            ColumnSet columnSet = getCurrentColumnSet();
             ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
             // MOD zshen 2010.06.10 for feature 12842.
             // Case of pk
@@ -293,32 +281,73 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
                 parentColumn.setInitialValue(addedExpression);
             }
         }
+
+        // ADD msjian TDQ-8546:handle taggedValue
+        if (rightElement instanceof TaggedValue) {
+            TdColumn elementOwner = SwitchHelpers.COLUMN_SWITCH.doSwitch(addElement.getLeftParent());
+            if (elementOwner != null) {
+                TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) rightElement).getTag(),
+                        ((TaggedValue) rightElement).getValue());
+            }
+        }
+        // TDQ-8546~
+
     }
 
     @Override
     protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
         // MOD mzhao 13411, handle column changes 2010-08-23
-        TdColumn removeColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(removeElement.getLeftElement());
+        EObject leftElement = removeElement.getLeftElement();
+        TdColumn removeColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(leftElement);
         if (removeColumn != null) {
-            ColumnSet columnSet = null;
-            if (selectedObj instanceof DBColumnFolderRepNode) {
-                DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
-                columnSet = columnFolderRepNode.getColumnSet();
-            } else if (selectedObj instanceof ColumnSet) {
-                columnSet = (ColumnSet) selectedObj;
-            }
-
+            ColumnSet columnSet = getCurrentColumnSet();
             popRemoveElementConfirm();
             ColumnSetHelper.removeColumn(removeColumn, columnSet);
             return;
         }
         // MOD mzhao 13411, handle default value changes (TdExpression)
-        TdExpression removedExpression = DataqualitySwitchHelper.TDEXPRESSION_SWITCH.doSwitch(removeElement.getLeftElement());
+        TdExpression removedExpression = DataqualitySwitchHelper.TDEXPRESSION_SWITCH.doSwitch(leftElement);
         if (removedExpression != null) {
             TdColumn expressionOwner = SwitchHelpers.COLUMN_SWITCH.doSwitch(removedExpression.eContainer());
             if (expressionOwner != null) {
                 expressionOwner.setInitialValue(null);
             }
         }
+
+        // ADD msjian TDQ-8546:handle taggedValue
+        if (leftElement instanceof TaggedValue) {
+            TdColumn elementOwner = SwitchHelpers.COLUMN_SWITCH.doSwitch(leftElement.eContainer());
+            if (elementOwner != null) {
+                TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) leftElement).getTag(), null);
+            }
+        }
+        // TDQ-8546~
     }
+
+    /**
+     * DOC msjian Comment method "getCurrentColumnSet".
+     * 
+     * @return
+     */
+    private ColumnSet getCurrentColumnSet() {
+        ColumnSet columnSet = null;
+        if (selectedObj instanceof DBColumnFolderRepNode) {
+            DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
+            columnSet = columnFolderRepNode.getColumnSet();
+        } else if (selectedObj instanceof ColumnSet) {
+            columnSet = (ColumnSet) selectedObj;
+        }
+        return columnSet;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractTableComparisonLevel#saveReloadResult()
+     */
+    @Override
+    protected void saveReloadResult() {
+        super.saveReloadResult();
+    }
+
 }
