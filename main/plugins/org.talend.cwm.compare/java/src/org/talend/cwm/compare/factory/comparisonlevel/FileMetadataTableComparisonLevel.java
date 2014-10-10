@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -88,8 +87,7 @@ public class FileMetadataTableComparisonLevel extends AbstractTableComparisonLev
      */
     private EObject getTempTableFromOldFile() throws ReloadCompareException {
 
-        MetadataTable[] metadataTables = ConnectionHelper.getTables((DelimitedFileConnection) tempReloadProvider).toArray(
-                new MetadataTable[0]);
+        MetadataTable[] metadataTables = ConnectionHelper.getTables(tempReloadProvider).toArray(new MetadataTable[0]);
         String tableName = ((MetadataTable) selectedObj).getLabel();
         for (MetadataTable table : metadataTables) {
             if (table.getLabel().equals(tableName)) {
@@ -189,4 +187,13 @@ public class FileMetadataTableComparisonLevel extends AbstractTableComparisonLev
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#saveReloadResult()
+     */
+    @Override
+    protected void saveReloadResult() {
+        // no need to save here
+    }
 }

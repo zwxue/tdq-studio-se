@@ -41,6 +41,7 @@ import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -51,6 +52,7 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
@@ -329,11 +331,22 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
                 PackageHelper.addColumnSet(columnSetSwitch, getPackageFromObject(selectedObj));
             }
         }
+
+        // ADD msjian TDQ-8546:handle taggedValue
+        if (rightElement instanceof TaggedValue) {
+            TdTable elementOwner = SwitchHelpers.TABLE_SWITCH.doSwitch(addElement.getLeftParent());
+            if (elementOwner != null) {
+                TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) rightElement).getTag(),
+                        ((TaggedValue) rightElement).getValue());
+            }
+        }
+        // TDQ-8546~
     }
 
     @Override
     protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
-        ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(removeElement.getLeftElement());
+        EObject leftElement = removeElement.getLeftElement();
+        ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(leftElement);
         if (removeColumnSet != null) {
             popRemoveElementConfirm();
 
@@ -341,6 +354,15 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
                 PackageHelper.removeColumnSet(removeColumnSet, getPackageFromObject(selectedObj));
             }
         }
+
+        // ADD msjian TDQ-8546:handle taggedValue
+        if (leftElement instanceof TaggedValue) {
+            TdTable elementOwner = SwitchHelpers.TABLE_SWITCH.doSwitch(leftElement.eContainer());
+            if (elementOwner != null) {
+                TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) leftElement).getTag(), null);
+            }
+        }
+        // TDQ-8546~
     }
 
     /**
