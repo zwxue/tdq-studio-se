@@ -29,6 +29,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -43,7 +44,7 @@ public class MatchRuleDataChart extends Composite {
     private ChartComposite jfreeChartComp;
 
     // TDQ-9297: Set the default value of "hide groups less than" to 2 instead of 1
-    private int times = 2;
+    private int times = PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT;
 
     private Map<Object, Long> groupSize2GroupFrequency = null;
 
