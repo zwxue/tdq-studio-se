@@ -371,9 +371,14 @@ public final class DependenciesHandler {
             EList<Dependency> supplierDependency = modelElement.getSupplierDependency();
             for (Dependency supplier : supplierDependency) {
                 for (ModelElement depencyModelElement : supplier.getClient()) {
-                    Property property = PropertyHelper.getProperty(depencyModelElement);
-                    IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
-                    listViewObject.add(repositoryViewObject);
+                    if (depencyModelElement.eIsProxy()) {
+                        // the depency ModelElement is proxy means it is not exist in current project, so need not to do
+                        // anyting, just skip it
+                    } else {
+                        Property property = PropertyHelper.getProperty(depencyModelElement);
+                        IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
+                        listViewObject.add(repositoryViewObject);
+                    }
                 }
             }
         }
