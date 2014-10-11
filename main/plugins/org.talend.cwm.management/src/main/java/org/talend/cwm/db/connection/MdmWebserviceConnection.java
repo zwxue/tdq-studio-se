@@ -57,7 +57,7 @@ import org.talend.mdm.webservice.WSRegexDataModelPKs;
 import org.talend.mdm.webservice.WSRunQuery;
 import org.talend.mdm.webservice.WSVersion;
 import org.talend.mdm.webservice.XtentisBindingStub;
-import org.talend.mdm.webservice.XtentisPort;
+import org.talend.mdm.webservice.XtentisPort_PortType;
 import org.talend.mdm.webservice.XtentisServiceLocator;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -134,7 +134,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         // initialization Web Service calling
         XtentisServiceLocator xtentisService = new XtentisServiceLocator();
         xtentisService.setXtentisPortEndpointAddress(url);
-        XtentisPort xtentisWS = xtentisService.getXtentisPort();
+        XtentisPort_PortType xtentisWS = xtentisService.getXtentisPort();
         XtentisBindingStub stub = (XtentisBindingStub) xtentisWS;
 
         // authorization
@@ -225,7 +225,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
      * @throws RemoteException
      * @throws CoreException
      */
-    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort stub, String resName,
+    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort_PortType stub, String resName,
             String providerTechName, Connection dataProvider) throws RemoteException, CoreException {
         // MOD xqliu 2010-10-18 bug 16161
         String resXSD = null;
