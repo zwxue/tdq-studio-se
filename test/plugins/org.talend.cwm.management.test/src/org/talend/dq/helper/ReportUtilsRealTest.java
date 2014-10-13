@@ -12,7 +12,11 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 
@@ -21,6 +25,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -62,9 +67,11 @@ public class ReportUtilsRealTest {
 
     /**
      * Test method for {@link org.talend.dq.helper.ReportUtils#getTheLatestReport(org.eclipse.core.resources.IFile)}.
+     * 
+     * @throws Exception
      */
     @Test
-    public void testGetTheLatestReport() {
+    public void testGetTheLatestReport() throws Exception {
         if (this.realProject != null) {
             String folderName1 = ERepositoryObjectType.TDQ_DATA_PROFILING.getFolder();
             String folderName2 = ERepositoryObjectType.TDQ_REPORT_ELEMENT.getFolder();
@@ -76,8 +83,16 @@ public class ReportUtilsRealTest {
             assertTrue(iFile.exists());
             assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
 
-            ReportListParameters reportListParameters = ReportUtils.getTheLatestReport(iFile);
-            assertNotNull(reportListParameters);
+            ReportUtils.recordReportFiles(iFile, "s-20141011-1801-00013", "..s-20141011-1801-00013.pdf", //$NON-NLS-1$ //$NON-NLS-2$
+                    System.currentTimeMillis());
+            ReportUtils.recordReportFiles(iFile, "s-20141011-1802-00026", "..s-20141011-1802-00026.pdf", //$NON-NLS-1$ //$NON-NLS-2$
+                    System.currentTimeMillis());
+            ReportUtils.recordReportFiles(iFile, "s-20141011-1809-00004", "..s-20141011-1809-00004.pdf", //$NON-NLS-1$ //$NON-NLS-2$
+                    System.currentTimeMillis());
+
+            ReportListParameters lastest = ReportUtils.getTheLatestReport(iFile);
+            assertNotNull(lastest);
+            Assert.assertEquals("s-20141011-1809-00004", lastest.getName()); //$NON-NLS-1$
         } else {
             fail("project is null!"); //$NON-NLS-1$
         }
