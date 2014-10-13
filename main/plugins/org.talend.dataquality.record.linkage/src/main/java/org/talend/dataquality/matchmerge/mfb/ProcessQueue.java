@@ -84,7 +84,8 @@ class ProcessQueue<T> implements Queue<T> {
 
     @Override
     public Object[] toArray() {
-        throw new UnsupportedOperationException();
+        // Initial content is very likely very large, only returns additional content.
+        return additionalContent.toArray();
     }
 
     @Override
