@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
+import org.talend.core.model.metadata.types.JavaTypesManager;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -34,8 +35,10 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.table.ISortComparator;
 import org.talend.dataquality.record.linkage.ui.composite.table.SortComparator;
 import org.talend.dataquality.record.linkage.ui.composite.table.SortState;
+import org.talend.dataquality.record.linkage.utils.DefaultSurvivorShipDataTypeEnum;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.KeyDefinition;
@@ -329,5 +332,23 @@ public class MatchRuleAnlaysisUtils {
 
         java.util.Collections.sort(resultData, comparator);
         return resultData;
+    }
+
+    public static boolean isSurvivorShipFunctionConsistentWithType(String algorithmType, String dataType) {
+        SurvivorShipAlgorithmEnum survivorShipAlgorithm = SurvivorShipAlgorithmEnum.getTypeBySavedValue(algorithmType);
+        switch (survivorShipAlgorithm) {
+        case LARGEST:
+        case SMALLEST:
+            // compare column's talend type || compare DefaultSurvivorShipDataTypeEnum own type
+            return JavaTypesManager.isNumber(dataType) || DefaultSurvivorShipDataTypeEnum.NUMBER.getValue().equals(dataType);
+        case LONGEST:
+        case SHORTEST:
+            return JavaTypesManager.isString(dataType) || DefaultSurvivorShipDataTypeEnum.STRING.getValue().equals(dataType);
+        case PREFER_TRUE:
+        case PREFER_FALSE:
+            return JavaTypesManager.isBoolean(dataType) || DefaultSurvivorShipDataTypeEnum.BOOLEAN.getValue().equals(dataType);
+        default:
+            return true;
+        }
     }
 }
