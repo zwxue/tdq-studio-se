@@ -210,7 +210,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                 boolean needColumnWarning = false;
                 if (dialogType != MATCHGROUP_TYPE && dialogType != RECORD_MATCHING_TYPE) {
                     for (BlockKeyDefinition bkd : matchRuleDef.getBlockKeys()) {
-                        if (hasColumnMatchTheKey(bkd)) {
+                        if (!hasColumnMatchTheKey(bkd)) {
                             needColumnWarning = true;
                             break;
                         }
