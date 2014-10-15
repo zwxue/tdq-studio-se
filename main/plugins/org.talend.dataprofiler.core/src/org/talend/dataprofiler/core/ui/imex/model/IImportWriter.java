@@ -104,4 +104,11 @@ public interface IImportWriter {
      * @throws CoreException
      */
     public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException;
+
+    /**
+     * DOC xqliu Comment method "postFinish".
+     * 
+     * @throws IOException
+     */
+    public void postFinish() throws IOException;
 }

@@ -134,6 +134,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private List<File> allCopiedFiles = new ArrayList<File>();
 
+    private final Map<ModelElement, ModelElement> need2MergeModelElementMap = new HashMap<ModelElement, ModelElement>();
+
     /*
      * check the dependency and conflict; when the record is a indicator(system or user): if overwrite should not add
      * error in record(only check conflict, but not check dependency)
@@ -478,6 +480,8 @@ public class FileSystemImportWriter implements IImportWriter {
         final ItemRecord[] fRecords = records;
         final IProgressMonitor fMonitor = monitor;
 
+        need2MergeModelElementMap.clear();
+
         RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Import TDQ Element") {//$NON-NLS-1$
 
             @Override
@@ -517,11 +521,19 @@ public class FileSystemImportWriter implements IImportWriter {
                                         // do nothing here now
                                     } else {
                                         // System Indicator and UDI need merge
-                                        mergeSystemIndicator(record, (TDQIndicatorDefinitionItem) object.getProperty().getItem());
+                                        TDQIndicatorDefinitionItem indItem = (TDQIndicatorDefinitionItem) object.getProperty()
+                                                .getItem();
+                                        mergeSystemIndicator(record, indItem);
+                                        // only add it when it is UDIndicatorDefinition
+                                        if (record.getElement() instanceof UDIndicatorDefinition) {
+                                            need2MergeModelElementMap.put(indItem.getIndicatorDefinition(), record.getElement());
+                                        }
                                         isDelete = false;
                                     }
                                 } else if (isPattern(modEle)) {
-                                    mergePattern(record, (TDQPatternItem) object.getProperty().getItem());
+                                    TDQPatternItem patternItem = (TDQPatternItem) object.getProperty().getItem();
+                                    mergePattern(record, patternItem);
+                                    need2MergeModelElementMap.put(patternItem.getPattern(), record.getElement());
                                     isDelete = false;
                                 } else {
                                     // remove the dependency of the object
@@ -563,6 +575,22 @@ public class FileSystemImportWriter implements IImportWriter {
 
         workUnit.setAvoidUnloadResources(Boolean.TRUE);
         ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+
+        // after above workUnit executed, the imported items will worked, than can do merge/update about UDI and Pattern
+        RepositoryWorkUnit<Object> workUnitFinish = new RepositoryWorkUnit<Object>("Finish Import TDQ Element") { //$NON-NLS-1$
+
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                try {
+                    postFinish();
+                } catch (IOException e) {
+                    log.error(e, e);
+                }
+            }
+        };
+
+        workUnitFinish.setAvoidUnloadResources(Boolean.TRUE);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnitFinish);
     }
 
     /**
@@ -743,10 +771,6 @@ public class FileSystemImportWriter implements IImportWriter {
             siParameter.addAll(tempParameter);
         }
 
-        if (siDef instanceof UDIndicatorDefinition) {
-            isModified = mergeClientDependency2PatternOrUdi(isModified, siDef, indDef);
-        }
-
         // replace the name (using the imported name incase of modify the name), and save the SI
         // siDef.setName(record.getElement().getName());
 
@@ -819,10 +843,6 @@ public class FileSystemImportWriter implements IImportWriter {
         // replace the name (using the imported name incase of modify the name), and save the SI
         // siDef.setName(record.getElement().getName());
 
-        // ADD msjian TDQ-7534 2013-8-13: merge ClientDependency to pattern when import pattern
-        isModified = mergeClientDependency2PatternOrUdi(isModified, pattern, recordPattern);
-        // TDQ-7534~
-
         if (isModified) {
             ElementWriterFactory.getInstance().createPatternWriter().save(patternItem, false);
         }
@@ -834,10 +854,8 @@ public class FileSystemImportWriter implements IImportWriter {
      * @param isModified
      * @param systemModelElement
      * @param recordModelElement
-     * @return
      */
-    private boolean mergeClientDependency2PatternOrUdi(boolean isModified, ModelElement systemModelElement,
-            ModelElement recordModelElement) {
+    private void mergeClientDependency2PatternOrUdi(ModelElement systemModelElement, ModelElement recordModelElement) {
         EList<Dependency> supplierDependency = recordModelElement.getSupplierDependency();
         if (supplierDependency != null) {
             // TDQ-8105 should add dependces between the pattern and System's analyis,not the old analysis from the temp
@@ -860,15 +878,9 @@ public class FileSystemImportWriter implements IImportWriter {
                     } catch (PersistenceException e) {
                         log.warn(e);
                     }
-
                 }
-
-                isModified = true;
-
             }
-
         }
-        return isModified;
     }
 
     /**
@@ -911,17 +923,19 @@ public class FileSystemImportWriter implements IImportWriter {
 
             // remove old udi and set a new one in the analysis indicators.
             if (systemSupplyModelElement instanceof UDIndicatorDefinition) {
-                EList<Indicator> indicators = analysis.getResults().getIndicators();
-                Iterator<Indicator> itIndicators = indicators.iterator();
-                while (itIndicators.hasNext()) {
-                    Indicator indicator = itIndicators.next();
-                    IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-                    if (indicatorDefinition.eResource() == null) {
-                        URI indicatorDefURI = ((InternalEObject) indicatorDefinition).eProxyURI();
-                        if (supModeResource != null && UDIHelper.isUDI(indicator)
-                                && indicatorDefURI.lastSegment().equals(supModeResource.getURI().lastSegment())) {
-                            indicator.setIndicatorDefinition((UDIndicatorDefinition) systemSupplyModelElement);
-                            break;
+                if (analysis.getResults() != null) {
+                    EList<Indicator> indicators = analysis.getResults().getIndicators();
+                    Iterator<Indicator> itIndicators = indicators.iterator();
+                    while (itIndicators.hasNext()) {
+                        Indicator indicator = itIndicators.next();
+                        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+                        if (indicatorDefinition.eResource() == null) {
+                            URI indicatorDefURI = ((InternalEObject) indicatorDefinition).eProxyURI();
+                            if (supModeResource != null && UDIHelper.isUDI(indicator)
+                                    && indicatorDefURI.lastSegment().equals(supModeResource.getURI().lastSegment())) {
+                                indicator.setIndicatorDefinition((UDIndicatorDefinition) systemSupplyModelElement);
+                                break;
+                            }
                         }
                     }
                 }
@@ -940,19 +954,21 @@ public class FileSystemImportWriter implements IImportWriter {
      * @param analysis
      */
     private void updatePatternInAnaParams(ModelElement systemSupplyModelElement, Analysis analysis) {
-        EList<Indicator> indicators = analysis.getResults().getIndicators();
-        IndicatorParameters parameters = null;
-        for (Indicator indicator : indicators) {
-            // AllMatchIndicator is in column set analysis.
-            if (indicator instanceof AllMatchIndicator) {
-                EList<RegexpMatchingIndicator> list = ((AllMatchIndicator) indicator).getCompositeRegexMatchingIndicators();
-                for (RegexpMatchingIndicator regMatchIndicator : list) {
-                    parameters = regMatchIndicator.getParameters();
+        if (analysis.getResults() != null) {
+            EList<Indicator> indicators = analysis.getResults().getIndicators();
+            IndicatorParameters parameters = null;
+            for (Indicator indicator : indicators) {
+                // AllMatchIndicator is in column set analysis.
+                if (indicator instanceof AllMatchIndicator) {
+                    EList<RegexpMatchingIndicator> list = ((AllMatchIndicator) indicator).getCompositeRegexMatchingIndicators();
+                    for (RegexpMatchingIndicator regMatchIndicator : list) {
+                        parameters = regMatchIndicator.getParameters();
+                        removOldAddSysPatternInAnaParams(parameters, (Pattern) systemSupplyModelElement, analysis);
+                    }
+                } else if (indicator instanceof PatternMatchingIndicator) {
+                    parameters = ((PatternMatchingIndicator) indicator).getParameters();
                     removOldAddSysPatternInAnaParams(parameters, (Pattern) systemSupplyModelElement, analysis);
                 }
-            } else if (indicator instanceof PatternMatchingIndicator) {
-                parameters = ((PatternMatchingIndicator) indicator).getParameters();
-                removOldAddSysPatternInAnaParams(parameters, (Pattern) systemSupplyModelElement, analysis);
             }
         }
     }
@@ -1027,18 +1043,11 @@ public class FileSystemImportWriter implements IImportWriter {
      * [], org.eclipse.core.runtime.IProgressMonitor)
      */
     public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
-        ItemRecord.clear();
-
         checkImportItems();
-
         doMigration(monitor);
-
-        deleteTempProjectFolder();
         // MOD qiongli 2012-11-8 TDQ-6166.
         notifySQLExplorerForConnection();
-
         allCopiedFiles.clear();
-
     }
 
     /**
@@ -1332,5 +1341,24 @@ public class FileSystemImportWriter implements IImportWriter {
                 }
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImportWriter#postFinish()
+     */
+    public void postFinish() throws IOException {
+        // merging IndicatorDefinition and Pattern
+        if (!need2MergeModelElementMap.isEmpty()) {
+            for (ModelElement me : need2MergeModelElementMap.keySet()) {
+                ModelElement recordMe = need2MergeModelElementMap.get(me);
+                mergeClientDependency2PatternOrUdi(me, recordMe);
+            }
+        }
+
+        ItemRecord.clear();
+        // delete the temp folder
+        deleteTempProjectFolder();
     }
 }
