@@ -43,3 +43,4 @@ Export-Package: EDU.oswego.cs.dl.util.concurrent,
 Require-Bundle: org.talend.libraries.apache,
  org.apache.commons.collections
 Bundle-ActivationPolicy: lazy
+Eclipse-BundleShape: dir
