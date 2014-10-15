@@ -14,6 +14,8 @@ package org.talend.dataquality.indicators.mapdb;
 
 import org.apache.log4j.Logger;
 
+import com.sun.management.OperatingSystemMXBean;
+
 /**
  * created by talend on Oct 14, 2014 Detailled comment
  * 
@@ -34,7 +36,7 @@ public class MapDBContent {
     /**
      * the cache size used to create db.
      */
-    public static final int DEFAULE_CACHE_SIZE = 1024;
+    private static final int DEFAULE_CACHE_SIZE = 1024;
 
     /**
      * close db after 5 minute (5 * 60 * 1000).
@@ -104,6 +106,9 @@ public class MapDBContent {
             log.error("The size of free memory size is " + propertyValue + " should be 1 or 1.5 and so on");
         }
         // esle
-        return null;
+        OperatingSystemMXBean bean = (OperatingSystemMXBean) java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+        long max = bean.getTotalPhysicalMemorySize();
+        double formatMemoryInGB = max / 1024.0 / 1024.0 / 1024.0;
+        return formatMemoryInGB;
     }
 }
