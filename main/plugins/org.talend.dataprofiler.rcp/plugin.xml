@@ -671,14 +671,6 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="log4j-1.2.15.jar"
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.apache/lib/log4j-1.2.16.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
             name="hadoop-core-0.20.203.0.jar"
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hadoop-core-0.20.203.0.jar">
