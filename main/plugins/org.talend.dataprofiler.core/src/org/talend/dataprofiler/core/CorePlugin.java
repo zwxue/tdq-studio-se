@@ -687,6 +687,11 @@ public class CorePlugin extends AbstractUIPlugin {
                                 ILibrariesService.class);
                         if (librariesService != null) {
                             librariesService.syncLibrariesFromApp();
+                            // TDQ-9529 check libararies install status at here,so that "Optional third-party libraries"
+                            // is displayed in the "Additional Talend Package" dialog.
+                            if (org.talend.commons.utils.platform.PluginChecker.isOnlyTopLoaded()) {
+                                librariesService.checkLibraries();
+                            }
                             CWMPlugin.getDefault().createLibFolderIfNotExist();
                         }
                     }
