@@ -124,11 +124,6 @@ public class MFB implements MatchMergeAlgorithm {
             execute(queue.poll(), mergedRecords, queue, callback);
             index++;
         }
-        // In case callback asked for interruption, dumps all merged records to results (in case callback interrupted
-        // because it decided there would no longer be any interesting result).
-        if (callback.isInterrupted()) {
-            mergedRecords.addAll(queue);
-        }
         // Post merge processing (most common values...)
         callback.onEndProcessing();
         return mergedRecords;
