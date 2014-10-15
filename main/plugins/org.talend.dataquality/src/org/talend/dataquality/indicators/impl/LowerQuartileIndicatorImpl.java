@@ -7,7 +7,6 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.algorithms.AlgoUtils;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
@@ -45,7 +44,8 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
      */
     private Map<Object, Long> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         } else {
             return new TreeMap<Object, Long>();
         }

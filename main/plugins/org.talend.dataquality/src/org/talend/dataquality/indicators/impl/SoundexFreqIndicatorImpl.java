@@ -17,7 +17,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -84,7 +83,8 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      */
     private Map<Object, List<Object>> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
+            return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         }
         return null;
     }

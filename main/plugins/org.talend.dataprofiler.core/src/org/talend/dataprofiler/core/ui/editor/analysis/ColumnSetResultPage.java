@@ -84,6 +84,7 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl;
+import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.explore.DataExplorer;
@@ -718,9 +719,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         if (bg != null) {
             bg.dispose();
         }
-        if (this.simpleStaticIndicator != null) {
-            this.simpleStaticIndicator.closeMapDB();
-        }
+        MapDBManager.getInstance().closeDB(masterPage.getAnalysis());
         super.dispose();
     }
 

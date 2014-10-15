@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -91,6 +92,22 @@ public final class AnalysisHelper {
             return null;
         }
         return (Analysis) eContainer;
+    }
+
+    /**
+     * 
+     * Get Analysis uuid by indicator
+     * 
+     * @param indicator
+     * @return
+     */
+    public static String getAnalysisUUID(Indicator indicator) {
+        Analysis analysis = getAnalysis(indicator);
+        String analysisUUID = null;
+        if (analysis != null) {
+            analysisUUID = ResourceHelper.getUUID(analysis);
+        }
+        return analysisUUID;
     }
 
     /**

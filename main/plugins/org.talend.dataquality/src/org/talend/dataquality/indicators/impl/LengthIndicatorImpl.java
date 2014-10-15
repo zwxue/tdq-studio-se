@@ -21,6 +21,7 @@ import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
+import org.talend.resource.ResourceManager;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Length Indicator</b></em>'. <!-- end-user-doc
@@ -231,9 +232,11 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
      */
     @Override
     protected void clearDrillDownMap() {
-        if (checkAllowDrillDown()) {
+        if (isUsedMapDBMode() && checkAllowDrillDown()) {
             AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
-            mapDB.clearDB();
+            if (mapDB != null) {
+                mapDB.clearDB(ResourceManager.getMapDBCatalogName(this));
+            }
         }
     }
 

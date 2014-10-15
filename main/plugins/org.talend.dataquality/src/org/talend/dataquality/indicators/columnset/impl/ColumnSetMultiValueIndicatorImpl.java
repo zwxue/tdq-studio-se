@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.talend.algorithms.AlgoUtils;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
@@ -281,7 +280,8 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     private ColumnSetDBMap initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
+            return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         }
         return null;
     }

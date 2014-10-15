@@ -81,8 +81,8 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
         if (getDB().exists(mapName)) {
             dbMap = getDB().get(mapName);
         } else {
-            dbMap = getDB().createTreeMap(mapName).keySerializer(talendBasicKeySerializer).comparator(new DBMapCompartor())
-                    .valueSerializer(talendSerializerBase).make();
+            dbMap = getDB().createTreeMap(mapName).valuesOutsideNodesEnable().keySerializer(talendBasicKeySerializer)
+                    .comparator(new DBMapCompartor()).valueSerializer(talendSerializerBase).make();
         }
     }
 
@@ -216,7 +216,6 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
         if (!getDB().isClosed()) {
             dbMap.clear();
             this.getDB().delete(mapName);
-            this.getDB().getEngine().clearCache();
         }
     }
 
