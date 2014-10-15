@@ -19,7 +19,6 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -82,7 +81,8 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     private Map<Object, List<Object[]>> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBValueListMap<Object>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
+            return new DBValueListMap<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         } else {
             return new HashMap<Object, List<Object[]>>();
         }
@@ -95,7 +95,8 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     private Set<Object> initValueForDBSet(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         } else {
             return new HashSet<Object>();
         }

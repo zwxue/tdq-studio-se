@@ -546,12 +546,6 @@ public interface Indicator extends ModelElement, DataValidation, MapDBDrillDown 
 
     /**
      * 
-     * Close db by uuid
-     */
-    public void closeMapDB();
-
-    /**
-     * 
      * Get the path which used to create mapDB file
      * 
      * @return

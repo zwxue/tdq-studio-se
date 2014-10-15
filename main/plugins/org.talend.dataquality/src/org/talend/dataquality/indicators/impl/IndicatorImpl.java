@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
@@ -777,7 +776,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @return
      */
     private DBMap<Object, List<Object>> initValueForDBMap(String dbName) {
-        return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
+        return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                ResourceManager.getMapDBCatalogName(this, dbName));
     }
 
     /**
@@ -821,18 +821,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public boolean finalizeComputation() {
-        if (isUsedMapDBMode()) {
-            closeMapDB();
-        }
         return true;
-    }
-
-    /**
-     * close mapdb by uuid
-     */
-    @Override
-    public void closeMapDB() {
-        MapDBManager.getInstance().closeDB(getMapDBFile());
     }
 
     /**
@@ -1365,10 +1354,12 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     @Override
     public boolean checkAllowDrillDown() {
         Analysis analysis = AnalysisHelper.getAnalysis(this);
+        boolean isStoreData = false;
         if (analysis != null) {
-            return analysis.getParameters().isStoreData();
+            isStoreData = analysis.getParameters().isStoreData();
         }
-        return false;
+        boolean isJavaEngine = AnalysisHelper.isJavaExecutionEngine(analysis);
+        return isStoreData && isJavaEngine;
     }
 
     /**
@@ -1437,6 +1428,6 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public File getMapDBFile() {
-        return MapDBManager.createPath(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this));
+        return MapDBManager.createPath(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this));
     }
 } // IndicatorImpl

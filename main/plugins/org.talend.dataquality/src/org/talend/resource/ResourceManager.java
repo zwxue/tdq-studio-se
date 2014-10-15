@@ -122,15 +122,57 @@ public final class ResourceManager {
     }
 
     /**
-     * get the path of Map DB file. It should be full path.
+     * Get the path of Map DB file.
+     * 
+     * @return
+     */
+    public static String getMapDBFilePath() {
+        return getTempMapDBFolder().toOSString();
+    }
+
+    /**
+     * Get the name of Map DB file.
+     * 
+     * @param indicator we should find the name of mapDB file which should be the uuid of analysis
+     * 
+     * @return the name of mapDB file
+     */
+    public static String getMapDBFileName(Indicator indicator) {
+        String analysisUUID = AnalysisHelper.getAnalysisUUID(indicator);
+        if (analysisUUID == null) {
+            log.error(Messages.getString("ResourceManager.CanNotGetAnalysis")); //$NON-NLS-1$
+        }
+        return analysisUUID;
+    }
+
+    /**
+     * Get the catalog name of current indicator.
      * 
      * @param indicator we should find the name of analysis,analysisElement,indicatorDefinition.So that it should be
      * used by some one analysis
+     * @param dbName The name of mapDB catalog
      * 
      * ColumnAnalysis like(../analysisName/columnName/indicatorName) others like(../analysisName/indicatorName)
      * @return
      */
-    public static String getMapDBFilePath(Indicator indicator) {
+    public static String getMapDBCatalogName(Indicator indicator, String dbName) {
+        String mapDBCatalogPrefix = getMapDBCatalogName(indicator);
+        String mapDBCatalogName = mapDBCatalogPrefix + dbName;
+        return mapDBCatalogName;
+
+    }
+
+    /**
+     * Get the catalog name of current indicator.
+     * 
+     * @param indicator we should find the name of analysis,analysisElement,indicatorDefinition.So that it should be
+     * used by some one analysis
+     * 
+     * 
+     * ColumnAnalysis like(../analysisName/columnName/indicatorName) others like(../analysisName/indicatorName)
+     * @return
+     */
+    public static String getMapDBCatalogName(Indicator indicator) {
         Analysis analysis = AnalysisHelper.getAnalysis(indicator);
         String analysisUUID = null;
         String indicatorUUID = ResourceHelper.getUUID(indicator);
@@ -144,7 +186,7 @@ public final class ResourceManager {
             }
         }
 
-        return getTempMapDBFolder().append(analysisUUID).append(modelElementName).append(indicatorUUID).toOSString();
+        return getTempMapDBFolder().append(analysisUUID).append(modelElementName).append(indicatorUUID).append("_").toString();
 
     }
 

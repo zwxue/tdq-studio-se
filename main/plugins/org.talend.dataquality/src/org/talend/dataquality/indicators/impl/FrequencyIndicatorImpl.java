@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.talend.commons.utils.SpecialValueDisplay;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DateGrain;
@@ -167,7 +166,8 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      */
     private Map<Object, Long> initValueForDBMap(String dbName) {
         if (isUsedMapDBMode()) {
-            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), ResourceHelper.getUUID(this), dbName);
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         }
         return null;
     }
@@ -571,7 +571,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     protected void clearDrillDownMaps() {
         AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
         if (mapDB != null) {
-            mapDB.clearDB();
+            mapDB.clearDB(ResourceManager.getMapDBCatalogName(this));
         }
     }
 

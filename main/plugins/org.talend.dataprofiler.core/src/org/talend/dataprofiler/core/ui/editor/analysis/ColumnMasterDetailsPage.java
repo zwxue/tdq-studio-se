@@ -80,6 +80,7 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
@@ -658,13 +659,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         if (dataFilterComp != null) {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
-        if (this.getCurrentModelElementIndicators() != null) {
-            for (ModelElementIndicator modelIndi : this.getCurrentModelElementIndicators()) {
-                for (Indicator indicator : modelIndi.getIndicators()) {
-                    indicator.closeMapDB();
-                }
-            }
-        }
+        MapDBManager.getInstance().closeDB(getAnalysis());
     }
 
     /*

@@ -31,19 +31,11 @@ import org.talend.cwm.indicator.DataValidation;
  */
 public abstract class AbstractDB<K> {
 
-    /**
-     * the cache size used to create db.
-     */
-    private static final int CACHE_SIZE = 12 * 1024;
-
     private DB db = null;
 
     protected Long limitSize = 0l;
 
     public static final Object EMPTY = new TupleEmpty();
-
-    // if the name of db is same as "temp" we will think that the db should be delete after close.
-    public static final String TEMP_DB_NAME = "temp"; //$NON-NLS-1$
 
     private File dbFile = null;
 
@@ -56,26 +48,34 @@ public abstract class AbstractDB<K> {
             return;
         }
         DBMaker<?> fileDBMaker = DBMaker.newFileDB(dbFile);
-        fileDBMaker = fileDBMaker.mmapFileEnable();
+        if (MapDBContent.isMmapFileEnable()) {
+            fileDBMaker = fileDBMaker.mmapFileEnable();
+        } else {
+            fileDBMaker = fileDBMaker.mmapFileEnablePartial();
+        }
         // for job application the mapDB file should be remove no need to drill down after that
         if (!Platform.isRunning()) {
             fileDBMaker = fileDBMaker.deleteFilesAfterClose();
         }
-        db = fileDBMaker.cacheSize(CACHE_SIZE).transactionDisable().closeOnJvmShutdown().make();
+        if (MapDBContent.getFreeMemorySize() != null) {
+            fileDBMaker = fileDBMaker.sizeLimit(MapDBContent.getFreeMemorySize());
+        }
+        db = fileDBMaker.transactionDisable().closeOnJvmShutdown().cacheSize(MapDBContent.getCacheSize()).make();
 
         MapDBManager.getInstance().putDB(dbFile, db);
 
     }
 
-    public void clearDB() {
+    public void clearDB(String mapDBCatalogPrefix) {
         for (String catalogName : db.getAll().keySet()) {
-            db.delete(catalogName);
+            if (catalogName.startsWith(mapDBCatalogPrefix)) {
+                db.delete(catalogName);
+            }
         }
-        db.getEngine().clearCache();
     }
 
     protected void initDefaultDB() {
-        db = DBMaker.newTempFileDB().sizeLimit(2).mmapFileEnable().cacheSize(1024 * 1024).closeOnJvmShutdown()
+        db = DBMaker.newTempFileDB().sizeLimit(2).mmapFileEnable().cacheSize(12 * 1024).closeOnJvmShutdown()
                 .deleteFilesAfterClose().transactionDisable().make();
     }
 

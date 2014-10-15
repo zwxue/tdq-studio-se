@@ -226,7 +226,6 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
         if (!getDB().isClosed()) {
             dbSet.clear();
             this.getDB().delete(setName);
-            this.getDB().getEngine().clearCache();
         }
 
     }

@@ -35,6 +35,7 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -131,6 +132,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         boolean ok = false;
         try { // catch any exception
             if (this.continueRun()) {
+                // before run analysis need to clear old DB
+                if (needCheckMapDB(analysis)) {
+                    MapDBManager.getInstance().deleteDB(analysis);
+                }
                 ok = runAnalysis(analysis, sql);
             }
         } catch (Exception e) {
@@ -141,6 +146,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             // after run analysis, close connection at once when don't need it
             TdqAnalysisConnectionPool.closeConnectionPool(analysis);
             // TDQ-5952~
+            if (needCheckMapDB(analysis)) {
+                MapDBManager.getInstance().closeDB(analysis);
+            }
         }
 
         // --- set metadata information of analysis
@@ -566,5 +574,13 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // else when the user do generate report directly, will can not load udi jars
         UDIHelper.updateJUDIsForAnalysis(analysis);
         // TDQ-8202~
+    }
+
+    private boolean needCheckMapDB(Analysis analysis) {
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        if (indicators.size() > 0) {
+            return indicators.get(0).checkAllowDrillDown() && indicators.get(0).isUsedMapDBMode();
+        }
+        return false;
     }
 }
