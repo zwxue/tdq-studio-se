@@ -41,7 +41,7 @@ public class MapDBContent {
     /**
      * close db after 5 minute (5 * 60 * 1000).
      */
-    public static final int CLOSE_TIME_DELAY = 300000;
+    private static final int CLOSE_TIME_DELAY = 300000;
 
     /**
      * Waitting How long to close MapDB connect after execute analysis
