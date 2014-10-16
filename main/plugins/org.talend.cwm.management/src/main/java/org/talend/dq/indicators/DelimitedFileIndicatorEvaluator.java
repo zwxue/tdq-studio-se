@@ -43,12 +43,13 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * DOC qiongli class global comment. Detailled comment
@@ -150,7 +151,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             }// ~
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         return returnCode;
     }
@@ -159,18 +160,18 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
         int limitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
         int headValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
-        CsvReader csvReader = null;
+        CSVReader csvReader = null;
         try {
-            csvReader = AnalysisExecutorHelper.createCsvReader(file, delimitedFileconnection);
+            csvReader = FileUtils.createCsvReader(file, delimitedFileconnection);
 
-            AnalysisExecutorHelper.initializeCsvReader(delimitedFileconnection, csvReader);
+            FileUtils.initializeCsvReader(delimitedFileconnection, csvReader);
 
-            for (int i = 0; i < headValue && csvReader.readRecord(); i++) {
+            for (int i = 0; i < headValue && csvReader.readNext(); i++) {
                 // do nothing, just ignore the header part
             }
             String[] rowValues = null;
             long currentRecord = 0;
-            while (csvReader.readRecord()) {
+            while (csvReader.readNext()) {
                 currentRecord = csvReader.getCurrentRecord();
                 if (!continueRun() || limitValue != -1 && currentRecord > limitValue - 1) {
                     break;
@@ -183,10 +184,14 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 handleByARow(rowValues, currentRecord + 1, analysisElementList, columnElementList, indicToRowMap);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e, e);
         } finally {
             if (csvReader != null) {
-                csvReader.close();
+                try {
+                    csvReader.close();
+                } catch (IOException e) {
+                    log.error(e, e);
+                }
             }
         }
     }

@@ -13,6 +13,7 @@
 package org.talend.dq.indicators;
 
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,12 +64,13 @@ import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * DOC qiongli class global comment. Detailled comment
@@ -212,7 +214,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             returnCode.setReturnCode(Messages.getString("ColumnSetIndicatorEvaluator.FileNotFound", file.getName()), false); //$NON-NLS-1$ 
             return returnCode;
         }
-        CsvReader csvReader = null;
+        CSVReader csvReader = null;
         try {
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
@@ -220,7 +222,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
             if (Escape.CSV.equals(fileConnection.getEscapeType())) {
                 // use CsvReader to parse.
-                csvReader = AnalysisExecutorHelper.createCsvReader(file, fileConnection);
+                csvReader = FileUtils.createCsvReader(file, fileConnection);
                 this.useCsvReader(csvReader, file, fileConnection, analysisElementList);
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
@@ -250,22 +252,26 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             returnCode.setReturnCode(e.getMessage(), false);
         } finally {
             if (csvReader != null) {
-                csvReader.close();
+                try {
+                    csvReader.close();
+                } catch (IOException e) {
+                    log.error(e, e);
+                }
             }
         }
 
         return returnCode;
     }
 
-    private void useCsvReader(CsvReader csvReader, File file, DelimitedFileConnection dfCon,
+    private void useCsvReader(CSVReader csvReader, File file, DelimitedFileConnection dfCon,
             List<ModelElement> analysisElementList) throws Exception {
 
-        AnalysisExecutorHelper.initializeCsvReader(dfCon, csvReader);
+        FileUtils.initializeCsvReader(dfCon, csvReader);
 
         long currentRecord = 0;
         int limitValue = JavaSqlFactory.getLimitValue(dfCon);
 
-        while (csvReader.readRecord()) {
+        while (csvReader.readNext()) {
             currentRecord = csvReader.getCurrentRecord();
             if (!continueRun() || limitValue != 0 && currentRecord > limitValue - 1) {
                 break;

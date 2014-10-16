@@ -25,10 +25,10 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
-import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.dq.helper.FileUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * created by yyin on 2014-9-22 Detailled comment
@@ -36,7 +36,7 @@ import com.csvreader.CsvReader;
  */
 public class FileCSVReader implements IFileReader {
 
-    private CsvReader csvReader = null;
+    private CSVReader csvReader = null;
 
     private int analysedColumnIndex[];
 
@@ -61,8 +61,8 @@ public class FileCSVReader implements IFileReader {
 
         csvLimitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
         csvHeadValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
-        csvReader = AnalysisExecutorHelper.createCsvReader(file, delimitedFileconnection);
-        AnalysisExecutorHelper.initializeCsvReader(delimitedFileconnection, csvReader);
+        csvReader = FileUtils.createCsvReader(file, delimitedFileconnection);
+        FileUtils.initializeCsvReader(delimitedFileconnection, csvReader);
 
         findElementPosition(analysisElementList);
     }
@@ -75,7 +75,7 @@ public class FileCSVReader implements IFileReader {
      */
     private void findElementPosition(List<ModelElement> analysisElementList) throws IOException {
         List<String> columnLabels = new ArrayList<String>();
-        for (int i = 0; i < csvHeadValue && csvReader.readRecord(); i++) {
+        for (int i = 0; i < csvHeadValue && csvReader.readNext(); i++) {
             Collections.addAll(columnLabels, csvReader.getValues());
         }
         for (int j = 0; j < analysisElementList.size(); j++) {
@@ -90,7 +90,7 @@ public class FileCSVReader implements IFileReader {
      * @see org.talend.cwm.db.connection.file.IFileReader#hasNext()
      */
     public boolean hasNext() throws IOException {
-        return csvReader.readRecord();
+        return csvReader.readNext();
     }
 
     /*
@@ -129,7 +129,7 @@ public class FileCSVReader implements IFileReader {
         return new RichRecord(attributes, String.valueOf(index++), 0, StringUtils.EMPTY);
     }
 
-    public void close() {
+    public void close() throws IOException {
         this.csvReader.close();
     }
 

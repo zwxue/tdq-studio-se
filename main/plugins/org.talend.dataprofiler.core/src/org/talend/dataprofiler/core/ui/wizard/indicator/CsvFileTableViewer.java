@@ -13,8 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +31,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.pattern.PatternToExcelEnum;
+import org.talend.dq.helper.FileUtils;
 import org.talend.dq.helper.UDIHelper;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * CsvFileTableViewer is a table viewer for preview a simple csv file.
@@ -50,7 +49,7 @@ public class CsvFileTableViewer extends Composite {
 
     private static final Image WARN_IMG = ImageLib.getImage(ImageLib.LEVEL_WARNING);
 
-    private CsvReader reader;
+    private CSVReader reader;
 
     private TableViewer viewer;
 
@@ -79,12 +78,12 @@ public class CsvFileTableViewer extends Composite {
 
         public Object[] getElements(Object parent) {
 
-            CsvReader csvReader = (CsvReader) parent;
+            CSVReader csvReader = (CSVReader) parent;
 
             List<Object> rows = new ArrayList<Object>();
 
             try {
-                while (csvReader.readRecord()) {
+                while (csvReader.readNext()) {
                     rows.add(csvReader.getValues());
                 }
             } catch (IOException e) {
@@ -353,14 +352,8 @@ public class CsvFileTableViewer extends Composite {
         quotesError = false;
         hasPatternHeaders = false;
         try {
-            reader = new CsvReader(new FileReader(csvFile), CURRENT_SEPARATOR);
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-            return false;
-        }
-        // MOD zshen EscapeMode default is CsvReader.ESCAPE_MODE_DOUBLED
-        reader.setUseTextQualifier(useTextQualifier);
-        try {
+            reader = FileUtils.createCSVReader(csvFile);
+
             reader.readHeaders();
             String[] headers = reader.getHeaders();
             hasPatternHeaders = checkFileHeader(headers);

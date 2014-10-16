@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +30,6 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -68,6 +66,7 @@ import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefini
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.FileUtils;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -78,7 +77,7 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -86,12 +85,6 @@ import com.csvreader.CsvReader;
 public final class ImportFactory {
 
     protected static Logger log = Logger.getLogger(ImportFactory.class);
-
-    public static final boolean USE_TEXT_QUAL = true;
-
-    public static final char TEXT_QUAL = '"';
-
-    public static final char CURRENT_SEPARATOR = '\t';
 
     private ImportFactory() {
 
@@ -270,15 +263,12 @@ public final class ImportFactory {
 
         String fileExtName = getFileExtName(importFile);
 
-        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+        if (FileUtils.isCSV(fileExtName)) {
             try {
-                CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                reader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
-                reader.setTextQualifier(TEXT_QUAL);
-                reader.setUseTextQualifier(USE_TEXT_QUAL);
+                CSVReader reader = FileUtils.createCSVReader(importFile);
 
                 reader.readHeaders();
-                while (reader.readRecord()) {
+                while (reader.readNext()) {
 
                     String name = reader.get(PatternToExcelEnum.Label.getLiteral());
 
@@ -626,15 +616,11 @@ public final class ImportFactory {
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
             String name = PluginConstant.EMPTY_STRING;
             try {
-                CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                // MOD zshen EscapeMode default is CsvReader.ESCAPE_MODE_DOUBLED
-                reader.setTextQualifier(TEXT_QUAL);
-                reader.setUseTextQualifier(USE_TEXT_QUAL);
-                reader.readHeaders();
+                CSVReader reader = FileUtils.createCSVReader(importFile);
 
                 java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
 
-                while (reader.readRecord()) {
+                while (reader.readNext()) {
                     name = reader.get(PatternToExcelEnum.Label.getLiteral());
 
                     if (names.contains(name)) {
@@ -971,15 +957,12 @@ public final class ImportFactory {
             String name = ""; //$NON-NLS-1$
             boolean isNeedToCreate = true;
             try {
-                CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
-                reader.setTextQualifier(TEXT_QUAL);
-                reader.setUseTextQualifier(USE_TEXT_QUAL);
+                CSVReader reader = FileUtils.createCSVReader(importFile);
                 reader.readHeaders();
 
                 java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
 
-                while (reader.readRecord()) {
+                while (reader.readNext()) {
                     name = reader.get(ParserRuleToExcelEnum.Label.getLiteral());
 
                     if (names.contains(name)) {
@@ -1132,7 +1115,7 @@ public final class ImportFactory {
         File file = new File(componet.getInstalledLocation());
         File copiedFile = new File(
                 System.getProperty("java.io.tmpdir") + File.separator + new Path(componet.getInstalledLocation()).lastSegment()); //$NON-NLS-1$
-        FileUtils.copyFile(file, copiedFile); // copy the downloaded file out of the workspace
+        org.apache.commons.io.FileUtils.copyFile(file, copiedFile); // copy the downloaded file out of the workspace
         Wizard wizard = new ImportFromExchangeWizard(copiedFile.getAbsolutePath());
         WizardDialog dialog = new WizardDialog(null, wizard);
         if (WizardDialog.OK == dialog.open()) {

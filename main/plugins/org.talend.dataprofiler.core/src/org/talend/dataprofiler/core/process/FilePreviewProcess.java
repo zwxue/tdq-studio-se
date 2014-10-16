@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.process;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.eclipse.core.runtime.CoreException;
@@ -27,7 +28,7 @@ import org.talend.dq.helper.ParameterUtil;
 import org.talend.repository.preview.IPreview;
 import org.talend.repository.preview.IProcessDescription;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
@@ -55,7 +56,7 @@ public class FilePreviewProcess implements IPreview {
      */
     public CsvArray preview(IProcessDescription description, String type, boolean errorOutputAsException) throws CoreException {
         CsvArray csvArray = new CsvArray();
-        CsvReader csvReader = null;
+        CSVReader csvReader = null;
         try {
 
             if (description.getLoopLimit() == null) {
@@ -79,18 +80,18 @@ public class FilePreviewProcess implements IPreview {
                 MessageUI.openWarning(Messages.getString("System can not find the file specified"));
                 return csvArray;
             }
-            csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
+            csvReader = new CSVReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
                     encoding == null ? "UTF-8" : encoding)), ParameterUtil //$NON-NLS-1$
                     .trimParameter(fileSeparator).charAt(0));
 
             initCsvReader(csvReader, description);
-            for (int i = 0; i < headValue && csvReader.readRecord(); i++) {
+            for (int i = 0; i < headValue && csvReader.readNext(); i++) {
                 // do nothing, just ignore the header part
             }
             String[] rowValues = null;
             long currentRecord = csvReader.getCurrentRecord();
             // just preview the top of 50
-            while (csvReader.readRecord() && currentRecord < 50) {
+            while (csvReader.readNext() && currentRecord < 50) {
                 currentRecord = csvReader.getCurrentRecord();
                 rowValues = csvReader.getValues();
                 csvArray.add(rowValues);
@@ -100,7 +101,11 @@ public class FilePreviewProcess implements IPreview {
             e.printStackTrace();
         } finally {
             if (csvReader != null) {
-                csvReader.close();
+                try {
+                    csvReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -128,24 +133,22 @@ public class FilePreviewProcess implements IPreview {
      * @param csvReader
      * @param description
      */
-    private void initCsvReader(CsvReader csvReader, IProcessDescription description) {
+    private void initCsvReader(CSVReader csvReader, IProcessDescription description) {
         String rowSep = description.getRowSeparator();
         if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-            csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
+            csvReader.setSeparator(ParameterUtil.trimParameter(rowSep).charAt(0));
         }
 
         csvReader.setSkipEmptyRecords(true);
         String textEnclosure = description.getTextEnclosure();
         if (!textEnclosure.equals("\"\"") && textEnclosure.length() > 0) {
-            csvReader.setTextQualifier(ParameterUtil.trimParameter(textEnclosure).charAt(0));
+            csvReader.setQuoteChar(ParameterUtil.trimParameter(textEnclosure).charAt(0));
         } else {
-            csvReader.setUseTextQualifier(false);
+            csvReader.setQuoteChar('z');
         }
         String escapeChar = description.getEscapeCharacter();
         if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
-        } else {
-            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
+            csvReader.setEscapeChar('\\');
         }
     }
 

@@ -14,10 +14,8 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,6 +40,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.rules.ParserRule;
+import org.talend.dq.helper.FileUtils;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.resource.EResourceConstant;
@@ -49,7 +48,7 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
-import com.csvreader.CsvWriter;
+import com.talend.csv.CSVWriter;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -57,12 +56,6 @@ import com.csvreader.CsvWriter;
 public final class ExportFactory {
 
     private static Logger log = Logger.getLogger(ExportFactory.class);
-
-    private static final boolean USE_TEXT_QUAL = ImportFactory.USE_TEXT_QUAL;
-
-    private static final char TEXT_QUAL = ImportFactory.TEXT_QUAL;
-
-    private static final char CURRENT_SEPARATOR = ImportFactory.CURRENT_SEPARATOR;
 
     private ExportFactory() {
     }
@@ -82,10 +75,7 @@ public final class ExportFactory {
 
             try {
 
-                CsvWriter out = new CsvWriter(new FileOutputStream(exportFile), CURRENT_SEPARATOR, Charset.defaultCharset());
-                out.setEscapeMode(CsvWriter.ESCAPE_MODE_DOUBLED);
-                out.setTextQualifier(TEXT_QUAL);
-                out.setForceQualifier(USE_TEXT_QUAL);
+                CSVWriter out = FileUtils.createCSVWriter(exportFile);
 
                 PatternToExcelEnum[] values = PatternToExcelEnum.values();
                 String[] temp = new String[values.length];
@@ -106,7 +96,7 @@ public final class ExportFactory {
                         }
                     }
 
-                    out.writeRecord(temp);
+                    out.writeNext(temp);
                 }
 
                 out.flush();
@@ -137,10 +127,7 @@ public final class ExportFactory {
 
             try {
 
-                CsvWriter out = new CsvWriter(new FileOutputStream(exportFile), CURRENT_SEPARATOR, Charset.defaultCharset());
-                out.setEscapeMode(CsvWriter.ESCAPE_MODE_DOUBLED);
-                out.setTextQualifier(TEXT_QUAL);
-                out.setForceQualifier(USE_TEXT_QUAL);
+                CSVWriter out = FileUtils.createCSVWriter(exportFile);
                 List<TdExpression> expressions = parserRules[0].getExpression();
                 ParserRuleToExcelEnum[] values = getParserRuleEnumValues();
                 String[] temp = new String[values.length];
@@ -156,7 +143,7 @@ public final class ExportFactory {
                         }
                     }
 
-                    out.writeRecord(temp);
+                    out.writeNext(temp);
                 }
                 out.flush();
                 out.close();
@@ -202,11 +189,7 @@ public final class ExportFactory {
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
 
             try {
-
-                CsvWriter out = new CsvWriter(new FileOutputStream(exportFile), CURRENT_SEPARATOR, Charset.defaultCharset());
-                out.setEscapeMode(CsvWriter.ESCAPE_MODE_DOUBLED);
-                out.setTextQualifier(TEXT_QUAL);
-                out.setForceQualifier(USE_TEXT_QUAL);
+                CSVWriter out = FileUtils.createCSVWriter(exportFile);
 
                 PatternToExcelEnum[] values = PatternToExcelEnum.values();
                 String[] temp = new String[values.length];
@@ -221,7 +204,7 @@ public final class ExportFactory {
                         }
                     }
 
-                    out.writeRecord(temp);
+                    out.writeNext(temp);
                 }
 
                 out.flush();
