@@ -21,6 +21,7 @@ import junit.framework.Assert;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
+import org.talend.ResourceUtils;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -160,14 +161,15 @@ public class ColumnSetMultiValueIndicatorImplTest {
     }
 
     /**
-     * Test method for
+     * when do not use mapdb Test method for
      * {@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#handle(EList)}.
      */
     @Test
-    public void testHandleElist() {
+    public void testHandleElist_1() {
 
         ColumnSetMultiValueIndicatorImpl createColumnSetMultiValueIndicator = (ColumnSetMultiValueIndicatorImpl) ColumnsetFactory.eINSTANCE
                 .createColumnSetMultiValueIndicator();
+        createColumnSetMultiValueIndicator.setUsedMapDBMode(false);
         for (EList<Object> datas : initdatas()) {
             createColumnSetMultiValueIndicator.handle(datas);
         }
@@ -180,14 +182,64 @@ public class ColumnSetMultiValueIndicatorImplTest {
     }
 
     /**
-     * Test method for
+     * when use mapdb Test method for
      * {@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#handle(EList)}.
      */
     @Test
-    public void testHandleElistIsEmpty() {
+    public void testHandleElist_2() {
 
         ColumnSetMultiValueIndicatorImpl createColumnSetMultiValueIndicator = (ColumnSetMultiValueIndicatorImpl) ColumnsetFactory.eINSTANCE
                 .createColumnSetMultiValueIndicator();
+        createColumnSetMultiValueIndicator.setUsedMapDBMode(true);
+        ResourceUtils.createAnalysis(createColumnSetMultiValueIndicator);
+        createColumnSetMultiValueIndicator.reset();
+
+        for (EList<Object> datas : initdatas()) {
+            createColumnSetMultiValueIndicator.handle(datas);
+        }
+        boolean computeResult = createColumnSetMultiValueIndicator.finalizeComputation();
+        Assert.assertEquals(true, computeResult);
+        Assert.assertEquals(6l, createColumnSetMultiValueIndicator.getCount().longValue());
+        Assert.assertEquals(3l, createColumnSetMultiValueIndicator.getDistinctCount().longValue());
+        Assert.assertEquals(2l, createColumnSetMultiValueIndicator.getDuplicateCount().longValue());
+        Assert.assertEquals(1l, createColumnSetMultiValueIndicator.getUniqueCount().longValue());
+    }
+
+    /**
+     * when do not use mapdb Test method for
+     * {@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#handle(EList)}. when
+     * setUsedMapDBMode
+     */
+    @Test
+    public void testHandleElistIsEmpty_1() {
+
+        ColumnSetMultiValueIndicatorImpl createColumnSetMultiValueIndicator = (ColumnSetMultiValueIndicatorImpl) ColumnsetFactory.eINSTANCE
+                .createColumnSetMultiValueIndicator();
+        createColumnSetMultiValueIndicator.setUsedMapDBMode(false);
+        EList<Object> elist = new BasicEList<Object>();
+        createColumnSetMultiValueIndicator.handle(elist);
+
+        boolean computeResult = createColumnSetMultiValueIndicator.finalizeComputation();
+        Assert.assertEquals(true, computeResult);
+        Assert.assertEquals(1l, createColumnSetMultiValueIndicator.getCount().longValue());
+        Assert.assertEquals(1l, createColumnSetMultiValueIndicator.getDistinctCount().longValue());
+        Assert.assertEquals(0l, createColumnSetMultiValueIndicator.getDuplicateCount().longValue());
+        Assert.assertEquals(1l, createColumnSetMultiValueIndicator.getUniqueCount().longValue());
+    }
+
+    /**
+     * when use mapdb Test method for
+     * {@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#handle(EList)}.
+     */
+    @Test
+    public void testHandleElistIsEmpty_2() {
+
+        ColumnSetMultiValueIndicatorImpl createColumnSetMultiValueIndicator = (ColumnSetMultiValueIndicatorImpl) ColumnsetFactory.eINSTANCE
+                .createColumnSetMultiValueIndicator();
+        createColumnSetMultiValueIndicator.setUsedMapDBMode(true);
+        ResourceUtils.createAnalysis(createColumnSetMultiValueIndicator);
+        createColumnSetMultiValueIndicator.reset();
+
         EList<Object> elist = new BasicEList<Object>();
         createColumnSetMultiValueIndicator.handle(elist);
 
