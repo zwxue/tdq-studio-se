@@ -23,7 +23,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
@@ -246,8 +245,8 @@ public class SetJDBCDriverPreferencePage extends PreferencePage implements IWork
                         try {
                             MyURLClassLoader cl = new MyURLClassLoader(file.toURL());
                             Class[] classes = cl.getAssignableClasses(Driver.class);
-                            for (int i = 0; i < classes.length; ++i) {
-                                generalJdbcClassNameText.add(classes[i].getName());
+                            for (Class classe : classes) {
+                                generalJdbcClassNameText.add(classe.getName());
                             }
                         } catch (Exception ex) {
                             ExceptionHandler.process(ex);
@@ -295,8 +294,8 @@ public class SetJDBCDriverPreferencePage extends PreferencePage implements IWork
 
     private CheckedTreeSelectionDialog createConnSelectDialog() {
         RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
-        CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(getShell(),
-                (ILabelProvider) new DQRepositoryViewLabelProvider(), new ResourceViewContentProvider());
+        CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(getShell(), new DQRepositoryViewLabelProvider(),
+                new ResourceViewContentProvider());
         dialog.setInput(node);
         dialog.addFilter(new ViewerFilter() {
 
@@ -323,7 +322,7 @@ public class SetJDBCDriverPreferencePage extends PreferencePage implements IWork
                                 && nodeObject.getProperty().getItem() != null
                                 && (nodeObject.getRepositoryStatus() == ERepositoryStatus.LOCK_BY_OTHER
                                         || nodeObject.getRepositoryStatus() == ERepositoryStatus.LOCK_BY_USER || RepositoryManager
-                                        .isOpenedItemInEditor(nodeObject))) {
+                                            .isOpenedItemInEditor(nodeObject))) {
 
                             String displayName = nodeObject.getProperty().getDisplayName();
                             String version = nodeObject.getProperty().getVersion();
@@ -409,7 +408,7 @@ public class SetJDBCDriverPreferencePage extends PreferencePage implements IWork
                         connection.setDriverJarPath(generalJdbcDriverjarText.getText());
                         connection.setURL(generalJdbcUrlText.getText());
                         connection.setUsername(generalJdbcUserText.getText());
-                        connection.setPassword(generalJdbcPasswordText.getText());
+                        connection.setRawPassword(generalJdbcPasswordText.getText());
                         String mapFileText = generalMappingFileText.getText();
                         if (mapFileText != null && !PluginConstant.EMPTY_STRING.equals(mapFileText.trim())) {
                             connection.setDbmsId(mapFileText);

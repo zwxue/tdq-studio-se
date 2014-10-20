@@ -558,7 +558,7 @@ public class DQStructureComparerTest {
         dbProvider.setId("_9bw28cccEeGQNaw_qcyMFw");
         dbProvider.setLabel("jdbcmysql1");
         dbProvider.setNullChar("");
-        dbProvider.setPassword("shenze");
+        dbProvider.setRawPassword("shenze");
         dbProvider.setPort("3306");
         dbProvider.setServerName("");
         dbProvider.setSqlSynthax("SQL Syntax");
@@ -590,7 +590,7 @@ public class DQStructureComparerTest {
         dbProvider.setId("_9bw28cccEeGQNaw_qcyMFw");
         dbProvider.setLabel("jdbcmysql1");
         dbProvider.setNullChar("");
-        dbProvider.setPassword("shenze");
+        dbProvider.setRawPassword("shenze");
         dbProvider.setPort("3306");
         dbProvider.setServerName("");
         dbProvider.setSqlSynthax("SQL Syntax");
@@ -621,7 +621,7 @@ public class DQStructureComparerTest {
         dbProvider.setId("_9bw28cccEeGQNaw_qcyMFw");
         dbProvider.setLabel("jdbcmysql1");
         dbProvider.setNullChar("");
-        dbProvider.setPassword("shenze");
+        dbProvider.setRawPassword("shenze");
         dbProvider.setPort("3306");
         dbProvider.setServerName("");
         dbProvider.setSqlSynthax("SQL Syntax");
