@@ -67,7 +67,6 @@
       <import plugin="org.apache.commons.discovery" version="0.2.0" match="compatible"/>
       <import plugin="org.eclipse.core.net" version="1.0.0" match="compatible"/>
       <import plugin="org.talend.libraries.jackson"/>
-      <import plugin="org.junit"/>
       <import plugin="org.apache.commons.httpclient"/>
       <import plugin="org.eclipse.jdt.core" version="3.6.0" match="compatible"/>
       <import plugin="org.eclipse.jdt.launching" version="3.5.0" match="compatible"/>
@@ -267,13 +266,6 @@
 
    <plugin
          id="org.talend.registration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="net.sourceforge.sqlexplorer"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -612,7 +604,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.talend.repository.items.importexport"
          download-size="0"
@@ -677,6 +669,20 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.updates.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataprofiler.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

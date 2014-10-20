@@ -88,7 +88,6 @@
       <import plugin="org.eclipse.core.databinding" version="1.2.0" match="compatible"/>
       <import plugin="org.eclipse.emf"/>
       <import plugin="org.apache.commons.httpclient"/>
-      <import plugin="org.junit4"/>
       <import plugin="org.apache.xerces"/>
       <import plugin="javax.mail"/>
    </requires>
@@ -396,12 +395,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.apache.xerces"
          download-size="0"
          install-size="0"
@@ -460,12 +453,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.talend.libraries.jasperreport"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.talend.libraries.javacsv"
          download-size="0"
          install-size="0"
@@ -482,13 +469,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.jdbc.h2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.talend.libraries.jdbc.hsql"
@@ -1251,8 +1231,7 @@
          id="org.talend.libraries.mapdb"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.nebula.widgets.pagination"
@@ -1260,4 +1239,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
 </feature>
