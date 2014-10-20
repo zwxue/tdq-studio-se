@@ -34,6 +34,7 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 
 import com.talend.csv.CSVReader;
 import com.talend.csv.CSVWriter;
+import com.talend.csv.CSVWriter.QuoteStatus;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
@@ -43,13 +44,23 @@ import com.talend.csv.CSVWriter;
  */
 public final class FileUtils {
 
+    public static final String ESCAPECHAR2 = "\"\""; //$NON-NLS-1$
+
+    public static final String ESCAPECHAR1 = "\"\\\\\""; //$NON-NLS-1$
+
+    public static final char QUOTECHAR_NOTVALID = 'z';
+
+    public static final String ROW_SEPARATOR_R = "\"\\r\""; //$NON-NLS-1$
+
+    public static final String ROW_SEPARATOR_N = "\"\\n\""; //$NON-NLS-1$
+
+    public static final String CSV = "csv"; //$NON-NLS-1$
+
     private static final char TEXT_QUAL = '\"';
 
     private static final char ESCAPE_CHAR = '\\';
 
     private static final char CURRENT_SEPARATOR = '\t';
-
-    private static final char SEPARATOR = ',';
 
     /**
      * DOC bZhou Comment method "getName".
@@ -139,7 +150,7 @@ public final class FileUtils {
         out.setSeparator(CURRENT_SEPARATOR);
         out.setEscapeChar(ESCAPE_CHAR);
         out.setQuoteChar(TEXT_QUAL);
-        // out.setForceQualifier(USE_TEXT_QUAL);
+        out.setQuoteStatus(QuoteStatus.FORCE);
         return out;
     }
 
@@ -160,7 +171,7 @@ public final class FileUtils {
     }
 
     public static boolean isCSV(String fileExtName) {
-        return "csv".equalsIgnoreCase(fileExtName); //$NON-NLS-1$
+        return CSV.equalsIgnoreCase(fileExtName);
     }
 
     /**
@@ -172,7 +183,7 @@ public final class FileUtils {
      */
     public static void initializeCsvReader(DelimitedFileConnection delimitedFileconnection, CSVReader csvReader) {
         String rowSep = JavaSqlFactory.getRowSeparatorValue(delimitedFileconnection);
-        if (rowSep != null && !rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (rowSep != null && !rowSep.equals(ROW_SEPARATOR_N) && !rowSep.equals(ROW_SEPARATOR_R)) {
             csvReader.setSeparator(ParameterUtil.trimParameter(rowSep).charAt(0));
         }
 
@@ -181,10 +192,10 @@ public final class FileUtils {
         if (textEnclosure != null && textEnclosure.length() > 0) {
             csvReader.setQuoteChar(ParameterUtil.trimParameter(textEnclosure).charAt(0));
         } else {
-            csvReader.setQuoteChar('z');
+            csvReader.setQuoteChar(QUOTECHAR_NOTVALID);
         }
         String escapeChar = delimitedFileconnection.getEscapeChar();
-        if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (escapeChar == null || escapeChar.equals(ESCAPECHAR1) || escapeChar.equals(ESCAPECHAR2)) {
             csvReader.setEscapeChar(ESCAPE_CHAR);
         }
 

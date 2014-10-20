@@ -200,6 +200,8 @@ public class CsvFileTableViewer extends Composite {
         hasPatternHeaders = false;
         try {
             reader = FileUtils.createCSVReader(csvFile);
+            reader.setSkipEmptyRecords(true);
+
             reader.readHeaders();
             String[] headers = reader.getHeaders();
             hasPatternHeaders = checkFileHeader(headers);

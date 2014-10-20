@@ -266,7 +266,7 @@ public final class ImportFactory {
         if (FileUtils.isCSV(fileExtName)) {
             try {
                 CSVReader reader = FileUtils.createCSVReader(importFile);
-
+                reader.setSkipEmptyRecords(true);
                 reader.readHeaders();
                 while (reader.readNext()) {
 
@@ -613,10 +613,11 @@ public final class ImportFactory {
 
         String fileExtName = getFileExtName(importFile);
 
-        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+        if (FileUtils.isCSV(fileExtName)) {
             String name = PluginConstant.EMPTY_STRING;
             try {
                 CSVReader reader = FileUtils.createCSVReader(importFile);
+                reader.setSkipEmptyRecords(true);
 
                 java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
 
@@ -953,11 +954,13 @@ public final class ImportFactory {
         File importFile = importObject.getObjFile();
         String fileExtName = getFileExtName(importFile);
 
-        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+        if (FileUtils.isCSV(fileExtName)) {
             String name = ""; //$NON-NLS-1$
             boolean isNeedToCreate = true;
             try {
                 CSVReader reader = FileUtils.createCSVReader(importFile);
+                reader.setSkipEmptyRecords(true);
+
                 reader.readHeaders();
 
                 java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$

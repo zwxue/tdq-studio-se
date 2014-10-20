@@ -270,10 +270,14 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
         long currentRecord = 0;
         int limitValue = JavaSqlFactory.getLimitValue(dfCon);
+        int headValue = JavaSqlFactory.getHeadValue(dfCon);
+        for (int i = 0; i < headValue && csvReader.readNext(); i++) {
+            // do nothing, just ignore the header part
+        }
 
         while (csvReader.readNext()) {
             currentRecord = csvReader.getCurrentRecord();
-            if (!continueRun() || limitValue != 0 && currentRecord > limitValue - 1) {
+            if (!continueRun() || limitValue != -1 && currentRecord > limitValue - 1) {
                 break;
             }
             if (dfCon.isFirstLineCaption() && currentRecord == 0) {

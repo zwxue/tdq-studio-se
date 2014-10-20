@@ -71,7 +71,7 @@ public final class ExportFactory {
 
         String fileExtName = getFileExtName(exportFile);
 
-        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+        if (FileUtils.isCSV(fileExtName)) {
 
             try {
 
@@ -123,7 +123,7 @@ public final class ExportFactory {
 
         String fileExtName = getFileExtName(exportFile);
 
-        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+        if (FileUtils.isCSV(fileExtName)) {
 
             try {
 
@@ -186,7 +186,7 @@ public final class ExportFactory {
 
         String fileExtName = getFileExtName(exportFile);
 
-        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+        if (FileUtils.isCSV(fileExtName)) {
 
             try {
                 CSVWriter out = FileUtils.createCSVWriter(exportFile);
