@@ -173,12 +173,17 @@ public class TableAnalysisSqlExecutorTest {
         createJoinElement.setTableAliasB("tabB"); //$NON-NLS-1$
         TdColumn createTdColumnA = RelationalFactory.eINSTANCE.createTdColumn();
         createTdColumnA.setName("colA"); //$NON-NLS-1$
+        TdTable createTdTableA = RelationalFactory.eINSTANCE.createTdTable();
+        createTdTableA.setName("tableA"); //$NON-NLS-1$
+        createTdColumnA.setOwner(createTdTableA);
         TdColumn createTdColumnB = RelationalFactory.eINSTANCE.createTdColumn();
         createTdColumnB.setName("colB"); //$NON-NLS-1$
+        TdTable createTdTableB = RelationalFactory.eINSTANCE.createTdTable();
+        createTdTableB.setName("tableB"); //$NON-NLS-1$
+        createTdColumnB.setOwner(createTdTableB);
         createJoinElement.setColA(createTdColumnA);
         createJoinElement.setColB(createTdColumnB);
         testWhereRuleAideIndicatorDefinition.getJoins().add(createJoinElement);
-        testWhereRuleAideIndicator.getJoinConditions().add(createJoinElement);
 
         TableAnalysisSqlExecutor tableAnalysisSqlExecutor = new TableAnalysisSqlExecutor();
         String actualSqlStatement = tableAnalysisSqlExecutor.createSqlStatement(testAnalysis);

@@ -29,6 +29,7 @@ import net.sourceforge.sqlexplorer.history.SQLHistory;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
+import net.sourceforge.sqlexplorer.service.MapDBUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,8 +45,7 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.talend.core.GlobalServiceRegister;
-import org.talend.core.ITDQRepositoryService;
+import org.talend.dataprofiler.service.IMapDBService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -138,19 +138,6 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
         } catch (Exception e) {
             error("Exception during start", e);
             throw e;
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "initAllDrivers".
-     */
-    public void initAllDrivers() {
-        ITDQRepositoryService tdqRepService = null;
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
-            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
-            if (tdqRepService != null) {
-                tdqRepService.initAllConnectionsToSQLExplorer();
-            }
         }
     }
 
@@ -456,4 +443,11 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
         this.isInitedAllConnToSQLExpl = isInitedAllConnToSQLExpl;
     }
 
+    public void bind(IMapDBService service) {
+        MapDBUtils.getDefault().setMapDBService(service);
+    }
+
+    public void unbind(IMapDBService service) {
+        MapDBUtils.getDefault().setMapDBService(null);
+    }
 }

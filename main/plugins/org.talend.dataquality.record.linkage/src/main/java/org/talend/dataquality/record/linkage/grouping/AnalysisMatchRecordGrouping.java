@@ -18,14 +18,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
 import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
+import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams;
 
 /**
  * created by zshen on Aug 7, 2013 Detailled comment
  * 
  */
 public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> {
+
+    /**
+     * 
+     */
+    private static final String ISMASTER = "true"; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(AnalysisMatchRecordGrouping.class);
 
@@ -39,6 +46,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
 
     private MatchGroupResultConsumer matchResultConsumer = null;
 
+    @SuppressWarnings("deprecation")
     public AnalysisMatchRecordGrouping(MatchGroupResultConsumer matchResultConsumer) {
         this.matchResultConsumer = matchResultConsumer;
         setColumnDelimiter(columnDelimiter);
@@ -49,6 +57,18 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
     public void addRuleMatcher(List<Map<String, String>> ruleMatcherConvertResult) {
         addMatchRule(ruleMatcherConvertResult);
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#setSurvivorShipAlgorithmParams(org.talend
+     * .dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams)
+     */
+    @Override
+    public void setSurvivorShipAlgorithmParams(SurvivorShipAlgorithmParams survivorShipAlgorithmParams) {
+        super.setSurvivorShipAlgorithmParams(survivorShipAlgorithmParams);
     }
 
     /**
@@ -85,6 +105,22 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    /**
+     * When running the match analysis, use the Record when do group.
+     * 
+     * @param currentRecord
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void doGroup(RichRecord currentRecord) throws IOException, InterruptedException {
+        String[] inputStrRow = new String[currentRecord.getAttributes().size()];
+        int index = 0;
+        for (Attribute obj : currentRecord.getAttributes()) {
+            inputStrRow[index++] = obj.getValue() == null ? null : obj.getValue().toString();
+        }
+        doGroup(inputStrRow);
     }
 
     /**
@@ -164,7 +200,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
      */
     @Override
     protected boolean isMaster(String col) {
-        return "true".equals(col);
+        return ISMASTER.equals(col);
     }
 
     /*

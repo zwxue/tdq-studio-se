@@ -26,7 +26,6 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import junit.framework.Assert;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
@@ -371,7 +370,7 @@ public class UnitTestBuildHelper {
         ReponsitoryContextBridge.initialized(project.getEmfProject(), project.getAuthor());
         // MOD zshen for bug tdq-4757 remove this init from corePlugin.start() to here because the initLocal command of
         // commandLine
-        SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
+        // SqlExplorerUtils.getDefault().initSqlExplorerRootProject();
     }
 
     /**

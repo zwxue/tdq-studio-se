@@ -9,7 +9,6 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,15 +21,15 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.collections.MapValueSorter;
 
@@ -62,6 +61,8 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     private static final DecimalFormat F2_DIGIT = new DecimalFormat("00");
 
     protected String datePattern = null;
+
+    private final String FREQUENCYMAPNAME = StandardDBName.computeProcess.name() + "frequency";
 
     /**
      * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list. <!-- begin-user-doc
@@ -159,13 +160,14 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     }
 
     /**
-     * DOC talend Comment method "initValueByGroupMap".
+     * init the ValueByGroupMap.
      * 
      * @return
      */
     private Map<Object, Long> initValueForDBMap(String dbName) {
-        if (saveTempDataToFile) {
-            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+        if (isUsedMapDBMode()) {
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         }
         return null;
     }
@@ -349,7 +351,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * @return
      */
     public Map<Object, Long> getMapForFreq() {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             return valueToFreqForMapDB;
         }
         return getValueToFreq();
@@ -480,21 +482,24 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     @Override
     public boolean handle(Object data) {
         super.handle(data);
-        mustStoreRow = true;
+
         Long freq = getMapForFreq().get(data);
         if (freq == null) { // new data
             freq = 0L;
-            if (!saveTempDataToFile) {
+            if (!isUsedMapDBMode()) {
                 this.getUniqueValues().add(data);
             }
             this.uniqueValueCount++;
         } else { // data not new
-            if (!saveTempDataToFile) {
+            if (!isUsedMapDBMode()) {
                 this.getUniqueValues().remove(data);
             }
             if (freq.compareTo(1L) == 0) { // decrement when data is seen twice
                 this.uniqueValueCount--;
             }
+        }
+        if (this.checkMustStoreCurrentRow(freq)) {
+            mustStoreRow = true;
         }
         freq++;
         // TODO scorreia compute distinct values ?
@@ -504,6 +509,11 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#finalizeComputation()
+     */
     @Override
     public boolean finalizeComputation() {
         final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
@@ -517,49 +527,60 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         return super.finalizeComputation();
     }
 
+    /**
+     * get Reduced Values after reduce until n(the topN value).
+     * 
+     * @param n
+     * @return
+     */
     protected List<Object> getReducedValues(int n) {
         return new MapValueSorter().getMostFrequent(getMapForFreq(), n);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#reset()
+     */
     @Override
     public boolean reset() {
         this.uniqueValueCount = 0L;
         this.distinctValueCount = 0L;
         this.distinctComputed = false;
         this.datePattern = null;
-        if (saveTempDataToFile) {
-            if (valueToFreqForMapDB != null) {
-
-                ((DBMap<Object, Long>) valueToFreqForMapDB).clear();
+        if (isUsedMapDBMode()) {
+            if (checkAllowDrillDown()) {
+                clearDrillDownMaps();
             }
-            valueToFreqForMapDB = initValueForDBMap(StandardDBName.computeProcess.name());
-            clearDrillDownMaps();
+            valueToFreqForMapDB = initValueForDBMap(FREQUENCYMAPNAME);
+            if (valueToFreqForMapDB != null && !valueToFreqForMapDB.isEmpty()) {
+                valueToFreqForMapDB.clear();
+            }
+        } else {
+            this.getValueToFreq().clear();
         }
-        this.getValueToFreq().clear();
         return super.reset();
     }
 
     /**
-     * DOC talend Comment method "clearDrillDownMaps".
+     * clear DrillDown Maps.
      * 
      * @param valueToFreqForMapDB2
      */
     @SuppressWarnings("unchecked")
     protected void clearDrillDownMaps() {
-        Iterator<Object> iterator = valueToFreqForMapDB.keySet().iterator();
-        while (iterator.hasNext()) {
-            Object next = iterator.next();
-            String dbName = getDBName(next);
-            Map<Object, List<Object>> mapDB = (Map<Object, List<Object>>) getMapDB(dbName);
-            mapDB.clear();
+        AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
+        if (mapDB != null) {
+            mapDB.clearDB(ResourceManager.getMapDBCatalogName(this));
         }
-
     }
 
     /**
-     * DOC talend Comment method "getDBName".
+     * get Map DB Name.
      * 
-     * @param next
+     * @param name
+     * 
+     * @return String
      */
     private String getDBName(Object name) {
         String dbName = null;
@@ -571,11 +592,21 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             if (datePattern != null) {
                 dbName = getFormatName(name);
             } else {
-                dbName = name.toString();
+                dbName = specialName(name);
             }
         }
         return dbName;
 
+    }
+
+    /**
+     * DOC talend Comment method "specialName".
+     * 
+     * @param name
+     * @return
+     */
+    protected String specialName(Object name) {
+        return name.toString();
     }
 
     /**
@@ -588,6 +619,11 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         return DateFormatUtils.format((Date) name, datePattern);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#toString()
+     */
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer(this.getName());
@@ -789,15 +825,15 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             // is get computeProcess map
-            if (StandardDBName.computeProcess.name().equals(dbName)) {
+            if (FREQUENCYMAPNAME.equals(dbName)) {
                 // current set is valid
                 if (valueToFreqForMapDB != null && !((DBMap<Object, Long>) valueToFreqForMapDB).isClosed()) {
                     return (DBMap<Object, Long>) valueToFreqForMapDB;
                 } else {
                     // create new DBSet
-                    return ((DBMap<Object, Long>) initValueForDBMap(StandardDBName.computeProcess.name()));
+                    return ((DBMap<Object, Long>) initValueForDBMap(FREQUENCYMAPNAME));
                 }
             }
         }
@@ -807,17 +843,14 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.lang.Object,
-     * int, int, java.lang.String)
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
-            String currentColumnName) {
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
         String dbName = getDBName(masterObject);
-
-        drillDownMap = (Map<Object, List<Object>>) getMapDB(dbName);
-        super.handleDrillDownData(masterObject, currentObject, columnCount, currentIndex, currentColumnName);
+        drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
+        super.handleDrillDownData(masterObject, inputRowList);
     }
 
 } // FrequencyIndicatorImpl

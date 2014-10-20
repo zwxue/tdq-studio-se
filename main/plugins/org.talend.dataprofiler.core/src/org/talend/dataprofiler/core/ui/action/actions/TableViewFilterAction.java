@@ -18,7 +18,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.database.TableViewFilterWizard;
 import org.talend.repository.model.RepositoryNode;
-
 import orgomg.cwm.objectmodel.core.Package;
 
 /**

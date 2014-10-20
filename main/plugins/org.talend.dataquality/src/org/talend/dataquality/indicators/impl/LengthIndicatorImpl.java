@@ -6,9 +6,7 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +18,10 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LengthIndicator;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
+import org.talend.resource.ResourceManager;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Length Indicator</b></em>'. <!-- end-user-doc
@@ -212,38 +214,43 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     @Override
     public boolean reset() {
         this.length = LENGTH_EDEFAULT;
-        if (saveTempDataToFile) {
-            clearDrillDownMaps();
-        }
         return super.reset();
+    }
+
+    /**
+     * Change length attribute
+     * 
+     * @param strLength
+     */
+    protected void changeLength(final int strLength) {
+        this.resetDrillDownRowCount();
+        length = Long.valueOf(strLength);
     }
 
     /**
      * DOC talend Comment method "clearDrillDownMaps".
      */
-    private void clearDrillDownMaps() {
-        Iterator<String> iterator = dbNameSet.iterator();
-        while (iterator.hasNext()) {
-            String dbName = iterator.next();
-            Map<Object, List<Object>> mapDB = (Map<Object, List<Object>>) getMapDB(dbName);
-            mapDB.clear();
+    @Override
+    protected void clearDrillDownMap() {
+        if (isUsedMapDBMode() && checkAllowDrillDown()) {
+            AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
+            if (mapDB != null) {
+                mapDB.clearDB(ResourceManager.getMapDBCatalogName(this));
+            }
         }
-
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.lang.Object,
-     * int, int, java.lang.String)
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
-            String currentColumnName) {
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
         String dbName = getDBName(masterObject);
-        dbNameSet.add(dbName);
-        drillDownMap = (Map<Object, List<Object>>) getMapDB(dbName);
-        super.handleDrillDownData(masterObject, currentObject, columnCount, currentIndex, currentColumnName);
+        drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
+        super.handleDrillDownData(masterObject, inputRowList);
     }
 
     /**

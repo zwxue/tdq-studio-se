@@ -12,9 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.perspective;
 
-import static org.talend.dataprofiler.core.PluginConstant.CHEAT_SHEET_VIEW;
-import static org.talend.dataprofiler.core.PluginConstant.PERSPECTIVE_ID;
-import static org.talend.dataprofiler.core.PluginConstant.SE_ID;
+import static org.talend.dataprofiler.core.PluginConstant.*;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;

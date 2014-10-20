@@ -15,6 +15,7 @@ package org.talend.resource;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -22,6 +23,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -29,16 +31,20 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public final class ResourceManager {
+
+    private static final Logger log = Logger.getLogger(ResourceManager.class);
 
     private ResourceManager() {
     }
@@ -91,33 +97,96 @@ public final class ResourceManager {
     }
 
     /**
-     * get Temp MapDB Folder
+     * get Temp MapDB Path
      * 
      * @return
      */
-    public static IFolder getTempMapDBFolder() {
-        return getOneFolder(EResourceConstant.TEMP_MAPDB);
+    public static IPath getTempMapDBFolder() {
+        IPath worskpacePath = getWorskpacePath();
+
+        IPath TempMapDBFolder = worskpacePath.append(ReponsitoryContextBridge.getProjectName()).append(
+                EResourceConstant.TEMP_MAPDB.getPath());
+        if (!Platform.isRunning()) {
+            return TempMapDBFolder.append("jobApplication");//$NON-NLS-1$
+        }
+        return TempMapDBFolder;
+    }
+
+    public static IPath getWorskpacePath() {
+        if (Platform.isRunning()) {
+            return getRootFolderLocation();
+        } else {
+            String talendProjctPathFromReportApplication = System.getProperty("talend.project.path");//$NON-NLS-1$
+            return new Path(talendProjctPathFromReportApplication).removeLastSegments(1);
+        }
     }
 
     /**
-     * get the path of Map DB file. It should be full path.
+     * Get the path of Map DB file.
+     * 
+     * @return
+     */
+    public static String getMapDBFilePath() {
+        return getTempMapDBFolder().toOSString();
+    }
+
+    /**
+     * Get the name of Map DB file.
+     * 
+     * @param indicator we should find the name of mapDB file which should be the uuid of analysis
+     * 
+     * @return the name of mapDB file
+     */
+    public static String getMapDBFileName(Indicator indicator) {
+        String analysisUUID = AnalysisHelper.getAnalysisUUID(indicator);
+        if (analysisUUID == null) {
+            log.error(Messages.getString("ResourceManager.CanNotGetAnalysis")); //$NON-NLS-1$
+        }
+        return analysisUUID;
+    }
+
+    /**
+     * Get the catalog name of current indicator.
      * 
      * @param indicator we should find the name of analysis,analysisElement,indicatorDefinition.So that it should be
      * used by some one analysis
+     * @param dbName The name of mapDB catalog
+     * 
+     * ColumnAnalysis like(../analysisName/columnName/indicatorName) others like(../analysisName/indicatorName)
      * @return
      */
-    public static String getMapDBFilePath(Indicator indicator) {
-        Analysis analysis = AnalysisHelper.getAnalysis(indicator);
-        String analysisName = analysis.getName();
-        String indicatorName = indicator.getName();
-        String modelElementName = Path.EMPTY.toString();
-        if (indicator instanceof ColumnSetMultiValueIndicator) {
+    public static String getMapDBCatalogName(Indicator indicator, String dbName) {
+        String mapDBCatalogPrefix = getMapDBCatalogName(indicator);
+        String mapDBCatalogName = mapDBCatalogPrefix + dbName;
+        return mapDBCatalogName;
 
+    }
+
+    /**
+     * Get the catalog name of current indicator.
+     * 
+     * @param indicator we should find the name of analysis,analysisElement,indicatorDefinition.So that it should be
+     * used by some one analysis
+     * 
+     * 
+     * ColumnAnalysis like(../analysisName/columnName/indicatorName) others like(../analysisName/indicatorName)
+     * @return
+     */
+    public static String getMapDBCatalogName(Indicator indicator) {
+        Analysis analysis = AnalysisHelper.getAnalysis(indicator);
+        String analysisUUID = null;
+        String indicatorUUID = ResourceHelper.getUUID(indicator);
+        String modelElementName = Path.EMPTY.toString();
+        if (analysis == null) {
+            log.error(Messages.getString("ResourceManager.CanNotGetAnalysis")); //$NON-NLS-1$
         } else {
-            modelElementName = indicator.getAnalyzedElement().getName();
+            analysisUUID = ResourceHelper.getUUID(analysis);
+            if (AnalysisType.MULTIPLE_COLUMN.equals(analysis.getParameters().getAnalysisType())) {
+                modelElementName = indicator.getAnalyzedElement().getName();
+            }
         }
-        return getTempMapDBFolder().getLocation().append(analysisName).append(modelElementName).append(indicatorName)
-                .toOSString();
+
+        return getTempMapDBFolder().append(analysisUUID).append(modelElementName).append(indicatorUUID).append("_").toString();
 
     }
 

@@ -12,11 +12,11 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.algorithms.AlgoUtils;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -48,8 +48,9 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
      * @return
      */
     private Map<Object, Long> initValueForDBMap(String dbName) {
-        if (saveTempDataToFile) {
-            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+        if (isUsedMapDBMode()) {
+            return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         } else {
             return new TreeMap<Object, Long>();
         }
@@ -117,7 +118,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
     public boolean reset() {
         this.computed = COMPUTED_EDEFAULT;
         this.setValue(VALUE_EDEFAULT);
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             if (frequenceTable != null) {
                 ((DBMap<Object, Long>) frequenceTable).clear();
             }
@@ -148,7 +149,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             if (StandardDBName.computeProcess.name().equals(dbName) && frequenceTable != null
                     && !((DBMap<Object, Long>) frequenceTable).isClosed()) {
                 return (DBMap<Object, Long>) frequenceTable;

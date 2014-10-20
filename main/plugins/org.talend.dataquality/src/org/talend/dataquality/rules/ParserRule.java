@@ -9,7 +9,6 @@ package org.talend.dataquality.rules;
 import java.util.List;
 
 import org.talend.cwm.relational.TdExpression;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * <!-- begin-user-doc -->

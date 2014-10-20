@@ -116,7 +116,8 @@ public class DataSampleTable {
     // record the columns which is used as match keys
     private List<String> markedAsMatchKey = null;
 
-    private int minGrpSize;
+    // TDQ-9297 msjian: set the default value the same as lessSpin default value.
+    private int minGrpSize = PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT;
 
     private SortState sortState = new SortState();
 

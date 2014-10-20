@@ -16,13 +16,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.collections.MapValueSorter;
 
@@ -82,9 +82,9 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      * @return
      */
     private Map<Object, List<Object>> initValueForDBMap(String dbName) {
-        if (saveTempDataToFile) {
-            return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
-
+        if (isUsedMapDBMode()) {
+            return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         }
         return null;
     }
@@ -294,7 +294,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     @Override
     public boolean handle(Object data) {
 
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             if (data == null) {
                 List<Object> valueList = soundexFreqMap.get(data);
                 if (valueList == null) {
@@ -466,7 +466,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     @Override
     public boolean finalizeComputation() {
         final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             computeSoundexFreqByMapDB(true);
         } else {
             soundexForJavaEngine();
@@ -523,7 +523,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      */
     @Override
     public boolean reset() {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             if (soundexFreqMap != null) {
                 soundexFreqMap.clear();
             }

@@ -44,20 +44,6 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handle(java.lang.Object)
-     * 
-     * @generated NOT
-     */
-    @Override
-    public boolean handle(Object value) {
-        boolean returnValue = super.handle(value);
-        mustStoreRow = true;
-        return returnValue;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#storeSqlResults(java.lang.Object[])
      * 
      * ADDED scorreia 2008-04-30 storeSqlResults(List<Object[]> objects)

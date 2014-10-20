@@ -18,8 +18,6 @@ import java.util.List;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;

@@ -11,3 +11,5 @@ Require-Bundle: org.talend.testutils,
 Export-Package: org.talend.dataquality.indicators.impl,
  org.talend.dataquality.test;uses:="org.eclipse.swtbot.eclipse.finder.widgets,org.eclipse.swtbot.swt.finder.widgets,org.eclipse.swtbot.eclipse.finder"
 Bundle-ClassPath: .
+Import-Package: org.talend.core.repository.model,
+ org.talend.core.repository.utils

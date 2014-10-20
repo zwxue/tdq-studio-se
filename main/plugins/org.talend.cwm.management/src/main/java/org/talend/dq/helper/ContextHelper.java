@@ -72,7 +72,7 @@ public final class ContextHelper {
                         for (Object obj : ct.getContextParameter()) {
                             ContextParameterType cpt = (ContextParameterType) obj;
                             if (cpt.getName().equals(contextName)) {
-                                value = cpt.getValue();
+                                value = cpt.getRawValue();
                                 findContext = true;
                                 break;
                             }
@@ -151,7 +151,7 @@ public final class ContextHelper {
             if (contextType.getName().equals(contextGroupName)) {
                 for (Object obj : contextType.getContextParameter()) {
                     ContextParameterType cpt = (ContextParameterType) obj;
-                    contextValues.put(ContextParameterUtils.getNewScriptCode(cpt.getName(), LANGUAGE), cpt.getValue());
+                    contextValues.put(ContextParameterUtils.getNewScriptCode(cpt.getName(), LANGUAGE), cpt.getRawValue());
                 }
                 break;
             }
@@ -194,7 +194,8 @@ public final class ContextHelper {
         Map<String, String> contextValues = new HashMap<String, String>();
         EList<ContextParameterType> contextParameter = contextType.getContextParameter();
         for (ContextParameterType ctxPara : contextParameter) {
-            contextValues.put(ContextParameterUtils.getNewScriptCode(ctxPara.getName(), LANGUAGE), ctxPara.getValue());
+            // specially for Password type.
+            contextValues.put(ContextParameterUtils.getNewScriptCode(ctxPara.getName(), LANGUAGE), ctxPara.getRawValue());
         }
         return contextValues;
     }

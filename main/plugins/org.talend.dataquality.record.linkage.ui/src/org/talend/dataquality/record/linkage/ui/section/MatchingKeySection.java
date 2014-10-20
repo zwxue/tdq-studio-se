@@ -47,7 +47,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.core.model.metadata.types.JavaTypesManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite;
@@ -547,7 +546,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     /*
-     * (non-Javadoc)
+     * The policy of comparing the key's name is: case INsensitive
      * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded()
      */
@@ -754,7 +753,10 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
         // import survivorship keys
         for (SurvivorshipKeyDefinition skd : matchRuleDefinition.getSurvivorshipKeys()) {
-            getMatchRuleDefinition().getSurvivorshipKeys().add(EcoreUtil.copy(skd));
+            SurvivorshipKeyDefinition survivorshipKeyDefinition = EcoreUtil.copy(skd);
+            setColumnValueIfMatch(survivorshipKeyDefinition);
+            getMatchRuleDefinition().getSurvivorshipKeys().add(survivorshipKeyDefinition);
+
         }
         // create the tab from the parameter:matchRule
         for (MatchRule oneMatchRule : matchRuleDefinition.getMatchRules()) {
@@ -840,7 +842,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
         if (duplicateNameList.size() > 0) {
             returnCode.setMessage(DefaultMessagesImpl.getString(
-                    "BlockingKeySection.duplicateKeys.message", getSectionName() + "--" + duplicateNameList.get(0))); //$NON-NLS-1$
+                    "BlockingKeySection.duplicateKeys.message", getSectionName() + "--" + duplicateNameList.get(0))); //$NON-NLS-1$ //$NON-NLS-2$
             return returnCode;
         } else {
             returnCode.setOk(true);
@@ -860,40 +862,18 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         EList<SurvivorshipKeyDefinition> survivorshipKeys = mrDef.getSurvivorshipKeys();
         for (SurvivorshipKeyDefinition skDef : survivorshipKeys) {
             if (StringUtils.equals(mkDef.getName(), skDef.getName())) {
-                MetadataColumn metadataColumn = getMetadataColumnByName(skDef.getColumn());
+                MetadataColumn metadataColumn = getMetadataColumnByName(mkDef.getColumn());
                 if (metadataColumn != null) {
-                    SurvivorShipAlgorithmEnum survivorShipAlgorithm = SurvivorShipAlgorithmEnum.getTypeBySavedValue(skDef
-                            .getFunction().getAlgorithmType());
-                    switch (survivorShipAlgorithm) {
-                    case LARGEST:
-                    case SMALLEST:
-                        if (!JavaTypesManager.isNumber(metadataColumn.getTalendType())) {
-                            rc.setOk(false);
-                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
-                            return rc;
-                        }
-                        break;
-                    case LONGEST:
-                    case SHORTEST:
-                        if (!JavaTypesManager.isString(metadataColumn.getTalendType())) {
-                            rc.setOk(false);
-                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
-                            return rc;
-                        }
-                        break;
-                    case PREFER_TRUE:
-                    case PREFER_FALSE:
-                        if (!JavaTypesManager.isBoolean(metadataColumn.getTalendType())) {
-                            rc.setOk(false);
-                            rc.setMessage("ColumnName: " + metadataColumn.getName() + " ; SurvivorshipFunction: " + survivorShipAlgorithm.name()); //$NON-NLS-1$ //$NON-NLS-2$
-                            return rc;
-                        }
-                        break;
-                    default:
-                        break;
+                    String algorithmType = skDef.getFunction().getAlgorithmType();
+                    if (!MatchRuleAnlaysisUtils.isSurvivorShipFunctionConsistentWithType(algorithmType,
+                            metadataColumn.getTalendType())) {
+                        rc.setOk(false);
+                        rc.setMessage(DefaultMessagesImpl.getString(
+                                "MatchingKeySection.survivorshipFunctionNotMatch", metadataColumn.getName(), //$NON-NLS-1$
+                                SurvivorShipAlgorithmEnum.getTypeBySavedValue(algorithmType).getValue()));
+                        return rc;
                     }
                 }
-                break;
             }
         }
         return rc;
@@ -903,7 +883,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         if (columnMap != null) {
             Set<MetadataColumn> keySet = columnMap.keySet();
             for (MetadataColumn col : keySet) {
-                if (col != null && StringUtils.equals(columnName, col.getName())) {
+                if (col != null && StringUtils.endsWithIgnoreCase(columnName, col.getName())) {
                     return col;
                 }
             }

@@ -14,12 +14,12 @@ package net.sourceforge.sqlexplorer.dataset.mapdb;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSetRow;
 
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.DataValidation;
+import org.talend.cwm.indicator.DataValidation;
 
 /**
  * created by talend on Aug 28, 2014 Detailled comment
@@ -27,13 +27,11 @@ import org.talend.commons.MapDB.utils.DataValidation;
  */
 public class MapDBkeyListDataSet extends TalendDataSet {
 
-    protected DBMap<List<Object>, Long> dataMap = null;
+    protected Map<List<Object>, Long> dataMap = null;
 
     protected int currentIndex = 0;
 
     protected Iterator<List<Object>> iterator = null;
-
-    protected long rowSize = 0;
 
     /**
      * DOC talend MapDBValueListDataSet constructor comment.
@@ -41,11 +39,11 @@ public class MapDBkeyListDataSet extends TalendDataSet {
      * @param columnLabels
      * @param imputDBMap
      */
-    public MapDBkeyListDataSet(String[] columnLabels, DBMap<List<Object>, Long> imputDBMap, Long size,
+    public MapDBkeyListDataSet(String[] columnLabels, Map<List<Object>, Long> imputDBMap, Long size,
             DataValidation dataItemValidator, int pageSize) {
         super(columnLabels, new Comparable[0][0], pageSize);
         dataMap = imputDBMap;
-        iterator = imputDBMap.iterator();
+        iterator = imputDBMap.keySet().iterator();
         rowSize = size;
         dataValidator = dataItemValidator;
     }
@@ -75,7 +73,7 @@ public class MapDBkeyListDataSet extends TalendDataSet {
                 throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index);
             }
             if (currentIndex > index) {
-                iterator = dataMap.iterator();
+                iterator = dataMap.keySet().iterator();
                 currentIndex = 0;
             }
             findNextOne(index);

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import net.sourceforge.sqlexplorer.ExplorerException;
@@ -22,10 +23,13 @@ import net.sourceforge.squirrel_sql.fw.util.beanwrapper.StringWrapper;
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.talend.core.database.EDatabase4DriverClassName;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.DriverShim;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.HotClassLoader;
 import org.talend.core.model.metadata.builder.database.JDBCDriverLoader;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
@@ -209,6 +213,43 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
+    public void registerSQLDriver(DatabaseConnection dbConn) throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException {
+        String dbType = dbConn.getDatabaseType();
+        String dbVersion = dbConn.getDbVersionString();
+        String userName = dbConn.getUsername();
+        userName = userName != null ? userName : PluginConstant.EMPTY_STRING;
+        String message = "fail to regist jdbc driver in SQLExplorer";
+        if (driverClassName == null || dbType == null || dbType.equalsIgnoreCase(EDatabaseTypeName.HIVE.getXmlName())) {
+            log.error(message);
+            return;
+        }
+        boolean isODBC = dbType.equalsIgnoreCase(EDatabaseTypeName.GODBC.getXmlName());
+        if (isODBC || isValidatedJars()) {
+            // the jtds mode to connect sqlserver database only Instance driver once.
+            if (dbType.equalsIgnoreCase(EDatabaseTypeName.MSSQL.getDisplayName()) && PluginConstant.EMPTY_STRING.equals(userName)) {
+                instanceMSSqlJdbcDriver(dbType, dbVersion);
+            } else {
+                instanceJdbcDriver(dbType, dbVersion);
+            }
+        }
+        if (jdbcDriver == null) {
+            log.error(message);
+        }
+
+    }
+
+    /**
+     * regist jdbc driver except Hive by HotClassLoader.
+     * 
+     * @param dbConnection
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @deprecated using registerSQLDriver(DatabaseConnection dbConn) instead of.
+     */
+    @Deprecated
     public void registerSQLDriver(String dbType, String dbVersion) throws ClassNotFoundException, InstantiationException,
             IllegalAccessException {
         boolean isODBC = dbType.equalsIgnoreCase(EDatabaseTypeName.GODBC.getXmlName());
@@ -228,6 +269,51 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
             log.error("fail to regist jdbc driver in SQLExplorer");
         }
 
+    }
+
+    /**
+     * use jtds SSO mode to connect sqlserver database, only allow to instance driver once.
+     * 
+     * @param dbType
+     * @param dbVersion
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private void instanceMSSqlJdbcDriver(String dbType, String dbVersion) throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException {
+        Map<String, DriverShim> driverCache = ExtractMetaDataUtils.getInstance().getDriverCache();
+        if (driverCache.containsKey(EDatabase4DriverClassName.MSSQL.getDriverClass())) {
+            DriverShim driverShim = driverCache.get(EDatabase4DriverClassName.MSSQL.getDriverClass());
+            jdbcDriver = driverShim;
+        } else {
+            instanceJdbcDriver(dbType, dbVersion);
+            if (jdbcDriver != null) {
+                DriverShim driverShim = new DriverShim(jdbcDriver);
+                ExtractMetaDataUtils.getInstance().setDriverCache(driverShim);
+            }
+        }
+    }
+
+    /**
+     * create a new jdbc instance.
+     * 
+     * @param dbType
+     * @param dbVersion
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private void instanceJdbcDriver(String dbType, String dbVersion) throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException {
+        unregisterSQLDriver();
+        JDBCDriverLoader jdbcDriverClassLoader = new JDBCDriverLoader();
+        HotClassLoader hotClassLoader = jdbcDriverClassLoader.getHotClassLoader(jars.toArray(new String[jars.size()]), dbType,
+                dbVersion);
+        Class<?> classDriver = Class.forName(driverClassName, true, hotClassLoader);
+        if (classDriver != null) {
+            jdbcDriver = (Driver) classDriver.newInstance();
+        }
     }
 
     /**
@@ -288,7 +374,7 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
             try {
                 DatabaseConnection dbConn = user.getDatabaseConnection();
                 if (dbConn != null) {
-                    registerSQLDriver(dbConn.getDatabaseType(), dbConn.getDbVersionString());
+                    registerSQLDriver(dbConn);
                 }
             } catch (Exception e) {
                 throw new SQLException(Messages.getString("ManagedDriver.CannotLoadDriver1", driverClassName) + " "//$NON-NLS-1$ //$NON-NLS-2$

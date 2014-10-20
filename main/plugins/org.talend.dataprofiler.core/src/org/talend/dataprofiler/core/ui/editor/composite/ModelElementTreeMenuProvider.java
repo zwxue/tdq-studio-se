@@ -34,7 +34,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
-import org.talend.core.repository.model.ISubRepositoryObject;
+import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -60,6 +60,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -374,7 +375,7 @@ public abstract class ModelElementTreeMenuProvider {
                 return;
             }
 
-            CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(),
+            SqlExplorerUtils.getDefault().runInDQViewer(dataprovider, expression.getBody(),
                     meIndicator.getModelElementRepositoryNode().getObject().getProperty().getLabel());
         }
     }

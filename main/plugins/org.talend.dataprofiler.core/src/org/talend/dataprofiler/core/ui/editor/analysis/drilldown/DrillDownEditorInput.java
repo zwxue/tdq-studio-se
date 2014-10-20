@@ -17,21 +17,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import net.sourceforge.sqlexplorer.dataset.DataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBColumnSetDataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBDataSet;
-import net.sourceforge.sqlexplorer.dataset.mapdb.MapDBSetDataSet;
-
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.ColumnFilter;
-import org.talend.commons.MapDB.utils.ColumnSetDBMap;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.DBSet;
-import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
@@ -40,6 +28,7 @@ import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.XmlElementHelper;
+import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
@@ -56,6 +45,12 @@ import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.DBSet;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -210,7 +205,42 @@ public class DrillDownEditorInput implements IEditorInput {
         }
     }
 
-    public DataSet getDataSet() {
+    /**
+     * 
+     * DataSet is used to be the input on the export wizard. unchecked is for the type of mapDB else will have a warning
+     * 
+     * @param controller
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Object getDataSetForMapDB(int pageSize) {
+        List<String> columnElementList = filterAdaptColumnHeader();
+        columnHeader = new String[columnElementList.size()];
+        int headerIndex = 0;
+        for (String columnElement : columnElementList) {
+            columnHeader[headerIndex++] = columnElement;
+        }
+        AbstractDB<?> mapDB = getMapDB();
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        if (AnalysisType.COLUMN_SET == analysisType) {
+            Long size = getCurrentIndicatorResultSize();
+            if (ColumnSetDBMap.class.isInstance(mapDB)) {
+                return SqlExplorerUtils.getDefault().createMapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size,
+                        currIndicator, pageSize);
+            }
+        }
+
+        if (DBSet.class.isInstance(mapDB)) {
+            return SqlExplorerUtils.getDefault().createMapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, pageSize);
+        } else {
+            ColumnFilter columnFilter = getColumnFilter();
+            Long itemSize = getItemSize(mapDB);
+            return SqlExplorerUtils.getDefault().createMapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, pageSize,
+                    columnFilter, itemSize);
+        }
+    }
+
+    public Object getDataSet() {
         List<String> columnElementList = filterAdaptColumnHeader();
         columnHeader = new String[columnElementList.size()];
         int headerIndex = 0;
@@ -220,7 +250,7 @@ public class DrillDownEditorInput implements IEditorInput {
         List<Object[]> newColumnElementList = filterAdaptDataList();
         if (newColumnElementList.size() <= 0) {
             columnValue = new String[0][0];
-            return new DataSet(columnHeader, columnValue);
+            return SqlExplorerUtils.getDefault().createDataSet(columnHeader, columnValue);
         }
         // MOD qiongli 2011-4-8,bug 19192.delimited file may has diffrent number of columns for every row.
         if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
@@ -238,43 +268,24 @@ public class DrillDownEditorInput implements IEditorInput {
                         continue;
                     }
                 }// ~
-                columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
+                columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString(); //$NON-NLS-1$
             }
             rowIndex++;
         }
-        return new DataSet(columnHeader, columnValue);
+        return SqlExplorerUtils.getDefault().createDataSet(columnHeader, columnValue);
     }
 
     /**
-     * 
-     * DataSet is used to be the input on the export wizard. unchecked is for the type of mapDB else will have a warning
+     * DOC talend Comment method "getPageSize".
      * 
      * @param controller
      * @return
      */
-    @SuppressWarnings("unchecked")
-    public DataSet getDataSetForMapDB(PageableController controller) {
-        List<String> columnElementList = filterAdaptColumnHeader();
-        columnHeader = new String[columnElementList.size()];
-        int headerIndex = 0;
-        for (String columnElement : columnElementList) {
-            columnHeader[headerIndex++] = columnElement;
-        }
-        AbstractDB<?> mapDB = getMapDB();
-        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        if (AnalysisType.COLUMN_SET == analysisType) {
-            Long size = getCurrentIndicatorResultSize();
-            if (ColumnSetDBMap.class.isInstance(mapDB)) {
-                return new MapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size, currIndicator,
-                        controller.getPageSize());
-            }
-        }
-
-        if (DBSet.class.isInstance(mapDB)) {
-            return new MapDBSetDataSet(columnHeader, (DBSet<Object>) mapDB, controller.getPageSize());
+    private Long getItemSize(AbstractDB<?> mapDB) {
+        if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+            return getCurrentIndicatorResultSize();
         } else {
-            ColumnFilter columnFilter = getColumnFilter();
-            return new MapDBDataSet(columnHeader, (DBMap<Object, List<Object>>) mapDB, controller.getPageSize(), columnFilter);
+            return Long.valueOf(mapDB.size());
         }
     }
 
@@ -299,6 +310,33 @@ public class DrillDownEditorInput implements IEditorInput {
      * @return
      */
     public Long getCurrentIndicatorResultSize() {
+        Long itemsSize = 0l;
+        if (isColumnSetIndicator()) {
+            itemsSize = getColumnSetIndicatorResultSize();
+        } else {
+            itemsSize = currIndicator.getIntegerValue();
+        }
+        return itemsSize;
+    }
+
+    /**
+     * DOC talend Comment method "isColumnSetIndicator".
+     * 
+     * @return
+     */
+    private boolean isColumnSetIndicator() {
+        Analysis analysis = this.getAnalysis();
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        return AnalysisType.COLUMN_SET == analysisType;
+    }
+
+    /**
+     * DOC talend Comment method "getColumnSetIndicatorResultSize".
+     * 
+     * @param itemsSize
+     * @return
+     */
+    private Long getColumnSetIndicatorResultSize() {
         Long itemsSize = 0l;
         SimpleStatIndicator simpleStatIndicator = null;
         // Find simpleStatIndicator from result of analysis
@@ -330,13 +368,25 @@ public class DrillDownEditorInput implements IEditorInput {
      */
     public AbstractDB<Object> getMapDB() {
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        String dbMapName = getDBMapName(analysisType);
         AbstractDB<Object> columnSetMapDB = getColumnSetAnalysisMapDB(analysisType);
         if (columnSetMapDB != null) {
             return columnSetMapDB;
         }
+        String dbMapName = getDBMapName(analysisType);
         return this.currIndicator.getMapDB(dbMapName);
 
+    }
+
+    public Indicator getGenerateMapDBIndicator() {
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        if (AnalysisType.COLUMN_SET == analysisType) {
+            for (Indicator indicator : analysis.getResults().getIndicators()) {
+                if (SimpleStatIndicator.class.isInstance(indicator)) {
+                    return indicator;
+                }
+            }
+        }
+        return this.currIndicator;
     }
 
     /**
@@ -354,7 +404,7 @@ public class DrillDownEditorInput implements IEditorInput {
                 }
             }
             if (simpleStatIndicator != null) {
-                return simpleStatIndicator.getMapDB(StandardDBName.computeProcess.name());
+                return simpleStatIndicator.getMapDB(StandardDBName.dataSection.name());
             }
         }
         return null;
@@ -373,7 +423,7 @@ public class DrillDownEditorInput implements IEditorInput {
             String selectValue = ((LengthIndicator) currIndicator).getLength().toString();
             dbMapName = this.getSelectValue() + selectValue;
         } else if (AnalysisType.COLUMN_SET == analysisType) {
-            dbMapName = StandardDBName.computeProcess.name();
+            dbMapName = StandardDBName.dataSection.name();
         }
 
         return dbMapName;

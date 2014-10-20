@@ -61,6 +61,13 @@ public final class PluginConstant {
 
     public static final String DEFAULT_STRING = "Default";//$NON-NLS-1$
 
+    public static final String NULL_STRING = "<null>";//$NON-NLS-1$
+
+    /**
+     * TDQ-9297 msjian: the default value of "hide groups less than".
+     */
+    public static final int HIDDEN_GROUP_LESS_THAN_DEFAULT = 2;
+
     private PluginConstant() {
 
     }

@@ -25,8 +25,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -144,6 +142,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
                 // --- give row to handle to indicators
                 for (Indicator indicator : indicators) {
+                    indicator.setDrillDownLimitSize(Long.valueOf(maxNumberRows));
                     // MOD xqliu 2009-02-09 bug 6237
                     if (!continueRun()) {
                         break label;
@@ -176,7 +175,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement()
                                     .eContainer());
                             List<TdColumn> columnList = ColumnSetHelper.getColumns(doSwitch);
-
+                            List<Object> inputRowList = new ArrayList<Object>();
                             for (int j = 0; j < columnCount; j++) {
                                 String newcol = columnList.get(j).getName();
                                 Object newobject = null;
@@ -188,12 +187,8 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                     }
 
                                 }
-                                if (indicator.isSaveTempDataToFile()) {
-                                    AbstractDB<Object> mapDB = indicator.getMapDB(StandardDBName.drillDown.name());
-                                    if (mapDB.size() > maxNumberRows) {
-                                        break;
-                                    }
-                                    indicator.handleDrillDownData(object, newobject, columnCount, j, newcol);
+                                if (indicator.isUsedMapDBMode()) {
+                                    inputRowList.add(newobject == null ? PluginConstant.NULL_STRING : newobject);
                                     continue;
                                 } else {
                                     if (recordIncrement < maxNumberRows) {// decide whether current record is more than
@@ -214,6 +209,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                         break;
                                     }
                                 }
+                            }
+                            if (indicator.isUsedMapDBMode()) {
+                                indicator.handleDrillDownData(object, inputRowList);
                             }
                             // ~
                         } else if (indicator instanceof UniqueCountIndicator
@@ -242,7 +240,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
             String col = columnlist.get(i);
             List<Indicator> indicators = getIndicators(col);
             // mapDB mode don't need this part
-            if (indicators.size() > 0 && indicators.get(0).isSaveTempDataToFile()) {
+            if (indicators.size() > 0 && indicators.get(0).isUsedMapDBMode()) {
                 break;
             }
             for (Indicator indicator : indicators) {

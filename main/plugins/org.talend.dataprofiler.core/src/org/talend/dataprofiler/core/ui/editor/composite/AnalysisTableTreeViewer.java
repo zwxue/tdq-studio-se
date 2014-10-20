@@ -100,6 +100,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -1266,7 +1267,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                         return;
                     }
 
-                    CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(), set.getName());
+                    SqlExplorerUtils.getDefault().runInDQViewer(dataprovider, expression.getBody(), set.getName());
                 }
             }
         }

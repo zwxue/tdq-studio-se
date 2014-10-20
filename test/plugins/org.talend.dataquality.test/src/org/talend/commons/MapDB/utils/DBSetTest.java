@@ -19,6 +19,8 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.talend.dataquality.indicators.mapdb.DBMapParameter;
+import org.talend.dataquality.indicators.mapdb.DBSet;
 
 /**
  * created by talend on Aug 4, 2014 Detailled comment
@@ -130,9 +132,8 @@ public class DBSetTest {
         dbSet2.add("key1"); //$NON-NLS-1$
         try {
             dbSet2.add(null);
-            Assert.fail("should have a NullPointerException be throw"); //$NON-NLS-1$
-        } catch (IllegalArgumentException e) {
-            // nothing to do
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof NullPointerException);
         }
         dbSet2.close();
     }

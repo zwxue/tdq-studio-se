@@ -209,7 +209,9 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
             if (phoneUtil.isValidNumberForRegion(phoneNumber, country)) {
                 // if (phoneUtil.isValidNumber(phoneNumber)) {
                 validPhoneNumCount++;
-                this.mustStoreRow = true;
+                if (checkMustStoreCurrentRow()) {
+                    this.mustStoreRow = true;
+                }
             }
 
         } catch (NumberParseException e) {

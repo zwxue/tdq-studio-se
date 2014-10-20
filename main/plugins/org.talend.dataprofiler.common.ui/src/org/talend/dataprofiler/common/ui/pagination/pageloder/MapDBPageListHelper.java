@@ -19,11 +19,11 @@ import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.nebula.widgets.pagination.collections.DefaultSortProcessor;
 import org.eclipse.nebula.widgets.pagination.collections.PageResult;
 import org.eclipse.nebula.widgets.pagination.collections.SortProcessor;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.ColumnFilter;
-import org.talend.commons.MapDB.utils.DBMap;
-import org.talend.commons.MapDB.utils.DBValueMap;
-import org.talend.commons.MapDB.utils.DataValidation;
+import org.talend.cwm.indicator.ColumnFilter;
+import org.talend.cwm.indicator.DataValidation;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.DBValueMap;
 
 /**
  * created by talend on Aug 15, 2014 Detailled comment
@@ -76,7 +76,7 @@ public class MapDBPageListHelper {
         if (filter != null) {
             content = filter.filterArray(content);
         }
-        return new PageResult<Object[]>(content, totalSize);
+        return new PageResult<Object[]>(content, content.size());
     }
 
     public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, SortProcessor processor,
@@ -97,6 +97,9 @@ public class MapDBPageListHelper {
             toIndex = totalSize;
         }
         List<Object[]> content = db.subList(fromIndex, toIndex, indexMap);
+        if (content.size() < pageSize) {
+            totalSize = content.size();
+        }
         if (filter != null) {
             content = filter.filterArray(content);
         }
@@ -122,6 +125,9 @@ public class MapDBPageListHelper {
         }
 
         List<Object[]> content = db.subList(fromIndex, toIndex, indexMap, dataValidator);
+        if (content.size() < pageSize) {
+            totalSize = content.size();
+        }
         return new PageResult<Object[]>(content, totalSize);
     }
 

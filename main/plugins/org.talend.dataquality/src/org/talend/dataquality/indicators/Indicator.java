@@ -5,13 +5,14 @@
  */
 package org.talend.dataquality.indicators;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.commons.MapDB.utils.DataValidation;
-import org.talend.commons.MapDB.utils.MapDBDrillDown;
+import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.mapdb.MapDBDrillDown;
 import org.talend.dataquality.rules.JoinElement;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -511,13 +512,43 @@ public interface Indicator extends ModelElement, DataValidation, MapDBDrillDown 
      * 
      * @return where we will save temp data on a file
      */
-    public boolean isSaveTempDataToFile();
+    public boolean isUsedMapDBMode();
 
     /**
-     * Sets the saveTempDataToFile.
      * 
-     * @param saveTempDataToFile the saveTempDataToFile to set
+     * Set current indicator is belong to MapDB mode
+     * 
+     * @param usedMapDBMode
      */
-    public void setSaveTempDataToFile(boolean saveTempDataToFile);
+    public void setUsedMapDBMode(boolean usedMapDBMode);
 
+    /**
+     * Getter for drillDownLimitSize.
+     * 
+     * @return the drillDownLimitSize
+     */
+    public Long getDrillDownLimitSize();
+
+    /**
+     * Sets the drillDownLimitSize.
+     * 
+     * @param drillDownLimitSize the drillDownLimitSize to set
+     */
+    public void setDrillDownLimitSize(Long dirllDownSize);
+
+    /**
+     * 
+     * Check whether drill down action is allow
+     * 
+     * @return true is allowed else false
+     */
+    public boolean checkAllowDrillDown();
+
+    /**
+     * 
+     * Get the path which used to create mapDB file
+     * 
+     * @return
+     */
+    public File getMapDBFile();
 } // Indicator

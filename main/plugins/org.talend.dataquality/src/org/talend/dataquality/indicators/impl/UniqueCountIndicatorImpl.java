@@ -5,7 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -14,12 +13,12 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.DBSet;
-import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBSet;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -76,8 +75,9 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      * @return
      */
     private Set<Object> initValueForDBSet(String dbName) {
-        if (saveTempDataToFile) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+        if (isUsedMapDBMode()) {
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         } else {
             return new HashSet<Object>();
         }
@@ -248,12 +248,23 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      * 
      */
     private void clearDrillDownData() {
-        if (!isSaveTempDataToFile()) {
+        if (!isUsedMapDBMode() || !checkAllowDrillDown()) {
             return;
         }
         Iterator<Object> iterator = duplicateObjects.iterator();
         while (iterator.hasNext()) {
             drillDownMap.remove(iterator.next());
+            drillDownRowCount--;
+        }
+        // remove some items because limit
+        if (!this.checkMustStoreCurrentRow()) {
+            Iterator<Object> desIterator = drillDownMap.descendingKeySet().iterator();
+            // Here is remove operation so that we need to use drillDownRowCount - 1 be parameter
+            while (desIterator.hasNext() && !this.checkMustStoreCurrentRow(drillDownRowCount - 1)) {
+                Object currenKey = desIterator.next();
+                drillDownMap.remove(currenKey);
+                drillDownRowCount--;
+            }
         }
 
     }
@@ -265,9 +276,8 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
             if (!this.uniqueObjects.add(data)) {
                 // store duplicate objects
                 duplicateObjects.add(data);
-
             } else {
-                mustStoreRow = true;
+                this.mustStoreRow = true;
             }
         }
         return true;
@@ -276,15 +286,15 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     @Override
     public boolean reset() {
         this.uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
+            uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
             if (uniqueObjects != null) {
                 ((DBSet<Object>) uniqueObjects).clear();
             }
-            uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+            duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
             if (duplicateObjects != null) {
                 ((DBSet<Object>) duplicateObjects).clear();
             }
-            duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
         } else {
             this.uniqueObjects.clear();
             this.duplicateObjects.clear();
@@ -318,15 +328,15 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName)) {
-                // current set is valid
-                if (uniqueObjects != null && !((DBSet<Object>) uniqueObjects).isClosed()) {
-                    return (DBSet<Object>) uniqueObjects;
-                } else {
+                // current set is invalid
+                if (needReconnect((DBSet<Object>) uniqueObjects)) {
                     // create new DBSet
                     return ((DBSet<Object>) initValueForDBSet(StandardDBName.computeProcessSet.name()));
+                } else {
+                    return (DBSet<Object>) uniqueObjects;
                 }
             }
         }
@@ -336,18 +346,12 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.lang.Object,
-     * int, int, java.lang.String)
+     * @see org.talend.dataquality.indicators.mapdb.MapDBDrillDown#handleDrillDownData(java.lang.Object, java.util.List)
      */
     @Override
-    public void handleDrillDownData(Object masterObject, Object currentObject, int columnCount, int currentIndex,
-            String currentColumnName) {
-        List<Object> rowData = drillDownMap.get(masterObject);
-        if (rowData == null) {
-            rowData = new ArrayList<Object>();
-            drillDownMap.put(masterObject, rowData);
-        }
-        rowData.add(currentObject);
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        drillDownRowCount++;
+        drillDownMap.put(masterObject, inputRowList);
     }
 
 } // UniqueCountIndicatorImpl

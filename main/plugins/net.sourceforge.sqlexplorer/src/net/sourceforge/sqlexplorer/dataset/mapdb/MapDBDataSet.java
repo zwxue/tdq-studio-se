@@ -14,13 +14,14 @@ package net.sourceforge.sqlexplorer.dataset.mapdb;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dataset.DataSetRow;
+import net.sourceforge.sqlexplorer.service.MapDBUtils;
 
-import org.talend.commons.MapDB.utils.ColumnFilter;
-import org.talend.commons.MapDB.utils.DBMap;
+import org.talend.cwm.indicator.ColumnFilter;
 
 /**
  * created by talend on Aug 27, 2014 Detailled comment
@@ -28,7 +29,7 @@ import org.talend.commons.MapDB.utils.DBMap;
  */
 public class MapDBDataSet extends TalendDataSet {
 
-    protected DBMap<Object, List<Object>> dataMap = null;
+    protected Map<Object, List<Object>> dataMap = null;
 
     protected int currentIndex = 0;
 
@@ -46,11 +47,13 @@ public class MapDBDataSet extends TalendDataSet {
         super(columnLabels, data, pageSize);
     }
 
-    public MapDBDataSet(String[] columnLabels, DBMap<Object, List<Object>> imputDBMap, int pageSize, ColumnFilter cfilter) {
+    public MapDBDataSet(String[] columnLabels, Map<Object, List<Object>> imputDBMap, int pageSize, ColumnFilter cfilter,
+            Long rowSize) {
         super(columnLabels, new Comparable[0][0], pageSize);
         this.dataMap = imputDBMap;
-        iterator = dataMap.iterator();
+        iterator = dataMap.keySet().iterator();
         this.columnFilter = cfilter;
+        this.rowSize = rowSize;
     }
 
     /*
@@ -60,7 +63,9 @@ public class MapDBDataSet extends TalendDataSet {
      */
     @Override
     public int getRowCount() {
-        if (dataMap != null) {
+        if (rowSize != -1) {
+            return ((Long) rowSize).intValue();
+        } else if (dataMap != null) {
             return dataMap.size();
         } else {
             return super.getRowCount();
@@ -79,10 +84,10 @@ public class MapDBDataSet extends TalendDataSet {
             return super.getRow(index);
         } else {
             if (index < 0 || index >= dataMap.size()) {
-                throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index);
+                throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index); //$NON-NLS-1$
             }
             if (currentIndex > index) {
-                iterator = dataMap.iterator();
+                iterator = dataMap.keySet().iterator();
                 currentIndex = 0;
             }
             while (currentIndex < index && iterator.hasNext()) {
@@ -95,10 +100,8 @@ public class MapDBDataSet extends TalendDataSet {
             if (columnFilter != null) {
                 valueList = columnFilter.filter(valueList);
             }
-            Comparable[] comparable = new Comparable[valueList.size()];
-            for (int i = 0; i < valueList.size(); i++) {
-                comparable[i] = (Comparable) valueList.get(i);
-            }
+
+            Comparable[] comparable = valueList.toArray(new Comparable[valueList.size()]);
             if (comparable.length == 0) {
                 comparable = new Comparable[1];
                 comparable[0] = null;
@@ -116,12 +119,18 @@ public class MapDBDataSet extends TalendDataSet {
     @Override
     public DataSet getCurrentPageDataSet() {
         long pageSize = endIndex - startIndex;
-        Comparable[][] compareArray = new Comparable[(int) (pageSize)][this.getColumns().length];
-        List<Object[]> subList = this.dataMap.subList(startIndex, endIndex, null);
-        subList = columnFilter.filterArray(subList);
-        for (int i = 0; i < pageSize; i++) {
+        List<Object[]> subList = MapDBUtils.getDefault().getDataSetDBMapSubList(this.dataMap, startIndex, endIndex, null);
+        if (columnFilter != null) {
+            subList = columnFilter.filterArray(subList);
+        }
+
+        // the dataset count, we use the smallest one
+        int count = (int) (pageSize > subList.size() ? subList.size() : pageSize);
+        Comparable[][] compareArray = new Comparable[(count)][this.getColumns().length];
+        // use the smallest count to avoid the array out of size error
+        for (int i = 0; i < count; i++) {
             Object[] objArray = subList.get(i);
-            for (int j = 0; j < this.getColumns().length; j++) {
+            for (int j = 0; j < objArray.length; j++) {
                 compareArray[i][j] = (Comparable) objArray[j];
             }
         }

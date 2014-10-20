@@ -112,6 +112,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
      */
     @Override
     public boolean handle(Object data) {
+        ModelMatcher findMatcher = null;
         if (data != null) {
             // MOD qiongli 2011-11-11 TDQ-3864,format the date for file connection.
             if (data instanceof Date && isDelimtedFile) {
@@ -123,11 +124,18 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
                     data = sdf.format((Date) data);
                 }
             }
-            dateRetriever.handle(String.valueOf(data));
+            findMatcher = dateRetriever.findMatcher(String.valueOf(data));
+            if (findMatcher != null) {
+                data = findMatcher.getModel();
+                findMatcher.increment();
+            }
         }
         boolean returnValue = super.handle(data);
+        // Mean that current data is not need to drill down
+        if (findMatcher == null) {
+            mustStoreRow = false;
+        }
         // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
-        this.mustStoreRow = true;
         return returnValue;
     }
 
@@ -151,7 +159,9 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         for (ModelMatcher matcher : modelMatchers) {
             map.put(matcher.getModel(), (long) matcher.getScore());
         }
-        setValueToFreq(map);
+        // this clear is necessary, because in the map contains the parent'result.
+        getMapForFreq().clear();
+        getMapForFreq().putAll(map);
         return super.finalizeComputation();
     }
 
@@ -205,6 +215,16 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     @Override
     public String getRegex(String model) {
         return this.dateRetriever.getRegex(model);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#specialName(java.lang.Object)
+     */
+    @Override
+    protected String specialName(Object name) {
+        return dateRetriever.getModel(String.valueOf(name));
     }
 
     /*

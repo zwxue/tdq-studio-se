@@ -12,12 +12,12 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.talend.commons.MapDB.utils.AbstractDB;
-import org.talend.commons.MapDB.utils.DBSet;
-import org.talend.commons.MapDB.utils.StandardDBName;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBSet;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -73,8 +73,9 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      * @return
      */
     private Set<Object> initValueForDBSet(String dbName) {
-        if (saveTempDataToFile) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(this), this.getName(), dbName);
+        if (isUsedMapDBMode()) {
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
         } else {
             return new HashSet<Object>();
         }
@@ -242,7 +243,9 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
         // MOD msjian 2011-8-24 TDQ-1679: when run with java engine, the Duplicate count should contain "null"
         // if (data != null) {
         if (this.distinctObjects.add(data)) {
-            this.mustStoreRow = true;
+            if (this.checkMustStoreCurrentRow()) {
+                this.mustStoreRow = true;
+            }
         }
         // }
         // TDQ-1679 ~
@@ -263,10 +266,16 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
     @Override
     public boolean reset() {
         this.distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
-        if (distinctObjects != null) {
-            this.distinctObjects.clear();
+        if (isUsedMapDBMode()) {
+            if (needReconnect((DBSet<Object>) distinctObjects)) {
+                distinctObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+            }
+            if (!distinctObjects.isEmpty()) {
+                distinctObjects.clear();
+            }
+        } else {
+            distinctObjects.clear();
         }
-        distinctObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
         return super.reset();
     }
 
@@ -282,7 +291,6 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      */
     @Override
     public boolean isValid(Object inputData) {
-
         return true;
     }
 
@@ -294,15 +302,15 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
     @Override
     public AbstractDB getMapDB(String dbName) {
         // is mapDB mode
-        if (saveTempDataToFile) {
+        if (isUsedMapDBMode()) {
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName) || StandardDBName.computeProcessSet.name().equals(dbName)) {
-                // current set is valid
-                if (distinctObjects != null && !((DBSet<Object>) distinctObjects).isClosed()) {
-                    return (DBSet<Object>) distinctObjects;
-                } else {
+                // current set is invalid
+                if (needReconnect((DBSet<Object>) distinctObjects)) {
                     // create new DBSet
                     return ((DBSet<Object>) initValueForDBSet(StandardDBName.computeProcess.name()));
+                } else {
+                    return (DBSet<Object>) distinctObjects;
                 }
             }
         }

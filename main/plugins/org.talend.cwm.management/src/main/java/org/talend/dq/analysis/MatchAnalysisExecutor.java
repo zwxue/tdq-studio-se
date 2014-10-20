@@ -14,8 +14,8 @@ package org.talend.dq.analysis;
 
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.talend.commons.exception.BusinessException;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
@@ -40,8 +41,11 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
 import org.talend.designer.components.lookup.persistent.IPersistentLookupManager;
+import org.talend.dq.analysis.match.BlockAndMatchManager;
+import org.talend.dq.analysis.match.ExecuteMatchRuleHandler;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.analysis.persistent.BlockKey;
 import org.talend.dq.helper.AnalysisExecutorHelper;
@@ -118,19 +122,6 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             rc.setOk(Boolean.FALSE);
             return rc;
         }
-
-        List<Object[]> matchRows = new ArrayList<Object[]>();
-        try {
-            monitor.beginTask(Messages.getString("MatchAnalysisExecutor.FETCH_DATA"), 0); //$NON-NLS-1$
-            matchRows = sqlExecutor.executeQuery(analysis.getContext().getConnection(), analysis.getContext()
-                    .getAnalysedElements());
-        } catch (SQLException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
-            return rc;
-        }
-
         monitor.worked(20);
 
         // Set schema for match key.
@@ -147,6 +138,16 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
 
         MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(recordMatchingIndicator);
         if (sqlExecutor.getStoreOnDisk()) {
+            // need to execute the query
+            try {
+                sqlExecutor.executeQuery(analysis.getContext().getConnection(), analysis.getContext().getAnalysedElements());
+            } catch (SQLException e) {
+                log.error(e, e);
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getMessage());
+                return rc;
+            }
+
             Map<BlockKey, String> blockKeys = sqlExecutor.getStoreOnDiskHandler().getBlockKeys();
             @SuppressWarnings("rawtypes")
             IPersistentLookupManager persistentLookupManager = (sqlExecutor.getStoreOnDiskHandler()).getPersistentLookupManager();
@@ -154,27 +155,48 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 returnCode = execHandler.executeWithStoreOnDisk(columnMap, recordMatchingIndicator, blockKeyIndicator,
                         persistentLookupManager, blockKeys, matchResultConsumer);
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                log.error(e, e);
+                returnCode.setMessage(e.getMessage());
+                returnCode.setOk(false);
             }
         } else {
-            returnCode = execHandler.execute(columnMap, recordMatchingIndicator, matchRows, blockKeyIndicator,
-                    matchResultConsumer);
+            // Added TDQ-9320 , use the result set iterator to replace the list of result in the memory.
+            try {
+                Iterator<Record> resultSetIterator = sqlExecutor.getResultSetIterator(analysis.getContext().getConnection(),
+                        anlayzedElements);
+                BlockAndMatchManager bAndmManager = new BlockAndMatchManager(resultSetIterator, matchResultConsumer, columnMap,
+                        recordMatchingIndicator, blockKeyIndicator);
+                bAndmManager.run();
+            } catch (SQLException e) {
+                log.error(e, e);
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getMessage());
+                return rc;
+            } catch (BusinessException e) {
+                log.error(e, e);
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getMessage());
+                return rc;
+            }
         }
 
         if (!returnCode.isOk()) {
-            return returnCode;
+            rc.setOk(returnCode.isOk());
+            rc.setMessage(returnCode.getMessage());
         }
+
         monitor.worked(100);
         monitor.done();
-
         // --- set metadata information of analysis
-        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, true);
+        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, rc.isOk());
+
         if (isLowMemory) {
             rc.setMessage(Messages.getString("Evaluator.OutOfMomory", usedMemory));//$NON-NLS-1$
         }
 
         // nodify the master page
         refreshTableWithMatchFullResult(analysis);
+        AnalysisExecutorHelper.setExecuteErrorMessage(analysis, rc.getMessage());
 
         // --- compute execution duration
         if (this.continueRun()) {

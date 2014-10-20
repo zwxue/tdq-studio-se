@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
@@ -36,7 +37,7 @@ import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysi
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dq.analysis.AnalysisRecordGroupingUtils;
-import org.talend.dq.analysis.ExecuteMatchRuleHandler;
+import org.talend.dq.analysis.match.ExecuteMatchRuleHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -96,7 +97,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
             }
         });
-        lessSpin.setSelection(2);
+        lessSpin.setSelection(PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT);
 
         Label lessText2 = new Label(toolComp, SWT.NONE);
         lessText2.setText(DefaultMessagesImpl.getString("AbstractMatchKeyWithChartTableSection.items")); //$NON-NLS-1$

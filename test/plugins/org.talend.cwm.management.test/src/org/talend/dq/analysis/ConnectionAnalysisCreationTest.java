@@ -12,9 +12,9 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import static org.mockito.Mockito.mock;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -127,7 +127,7 @@ public class ConnectionAnalysisCreationTest {
         DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         createConnection.setName(name);
         createConnection.setUsername("UserName"); //$NON-NLS-1$
-        createConnection.setPassword("Password"); //$NON-NLS-1$
+        createConnection.setRawPassword("Password"); //$NON-NLS-1$
         createConnection.setURL("URL"); //$NON-NLS-1$
         createConnection.setDatabaseType(EDatabaseTypeName.MYSQL.getXmlName());
         createConnection.setContextMode(true);
