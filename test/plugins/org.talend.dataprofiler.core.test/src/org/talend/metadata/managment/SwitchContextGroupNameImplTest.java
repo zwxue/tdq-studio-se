@@ -264,7 +264,7 @@ public class SwitchContextGroupNameImplTest {
         DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         createConnection.setName(name);
         createConnection.setUsername("UserName"); //$NON-NLS-1$
-        createConnection.setPassword("Password"); //$NON-NLS-1$
+        createConnection.setRawPassword("Password"); //$NON-NLS-1$
         createConnection.setURL("URL"); //$NON-NLS-1$
         createConnection.setDatabaseType(EDatabaseTypeName.MYSQL.getXmlName());
         createConnection.setContextMode(true);

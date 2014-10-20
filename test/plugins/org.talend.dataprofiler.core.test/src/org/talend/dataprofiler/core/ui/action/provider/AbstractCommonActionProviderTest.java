@@ -93,7 +93,6 @@ public class AbstractCommonActionProviderTest {
         UnitTestBuildHelper.initProjectStructure("testForDeleteActionTDQ"); //$NON-NLS-1$
     }
 
-
     @BeforeClass
     public static void beforeAllTests() {
         Context ctx = CoreRuntimePlugin.getInstance().getContext();
@@ -177,7 +176,7 @@ public class AbstractCommonActionProviderTest {
         DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         createConnection.setName(name);
         createConnection.setUsername("UserName"); //$NON-NLS-1$
-        createConnection.setPassword("Password"); //$NON-NLS-1$
+        createConnection.setRawPassword("Password"); //$NON-NLS-1$
         createConnection.setURL("URL"); //$NON-NLS-1$
         createConnection.setDatabaseType(EDatabaseTypeName.MYSQL.getXmlName());
         createConnection.setContextMode(true);

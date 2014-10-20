@@ -1181,7 +1181,7 @@ public final class ConnectionUtils {
         // fill database structure
         Properties properties = new Properties();
         properties.put(TaggedValueHelper.USER, mdmConn.getUsername());
-        properties.put(TaggedValueHelper.PASSWORD, mdmConn.getPassword());
+        properties.put(TaggedValueHelper.PASSWORD, mdmConn.getValue(mdmConn.getPassword(), false));
         properties.put(TaggedValueHelper.UNIVERSE,
                 mdmConn.getUniverse() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : mdmConn.getUniverse());
         MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), properties);

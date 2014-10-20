@@ -772,7 +772,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         String version = null;
         Properties props = new Properties();
         props.put(TaggedValueHelper.USER, mdmConn.getUsername());
-        props.put(TaggedValueHelper.PASSWORD, mdmConn.getPassword());
+        props.put(TaggedValueHelper.PASSWORD, mdmConn.getValue(mdmConn.getPassword(), false));
         props.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse()); //$NON-NLS-1$
         MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), props);
         version = mdmWsConn.getVersion();
