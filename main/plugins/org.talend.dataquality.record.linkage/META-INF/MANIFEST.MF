@@ -18,5 +18,5 @@ Export-Package: org.talend.dataquality.record.linkage.attribute,
  org.talend.dataquality.record.linkage.utils,
  org.talend.utils.classloader
 Bundle-ClassPath: .,
- jar/org.talend.dataquality.record.linkage.jar
+ dist/org.talend.dataquality.record.linkage.jar
 Import-Package: org.apache.commons.lang
