@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Nl Fragment
 Bundle-SymbolicName: org.talend.dataprofiler.common.ui.nl
-Bundle-Version: 5.6.0.qualifier
+Bundle-Version: 6.0.0.qualifier
 Fragment-Host: org.talend.dataprofiler.common.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: .Talend SA.
