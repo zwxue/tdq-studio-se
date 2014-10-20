@@ -1,3 +1,252 @@
+change logs from talend
+
+
+1. from https://github.com/Talend/tdq-studio-se/commits/master/main/plugins/net.sourceforge.sqlexplorer
+======================================
+Commits on Oct 16, 2014
+
+    zshen-talend
+
+    fixed bug TDQ-9498 unify compile enviroment on the tdq-stdio-se
+    zshen-talend authored a day ago
+
+Commits on Sep 30, 2014
+
+    Liu Xinquan
+
+    TDQ-9492 "view keys" and "view index" function in overview anlaysis g… …
+    xqliu-talend authored 17 days ago
+
+Commits on Sep 29, 2014
+
+    Liu Xinquan
+
+    TDQ-9492 "view keys" and "view index" function in overview anlaysis g… …
+    xqliu-talend authored 18 days ago
+
+Commits on Sep 28, 2014
+
+    zshen-talend
+
+    TDQ-9504 when analysis is java engine, job with tDqReportRun can not run …
+    zshen-talend authored 19 days ago
+
+Commits on Sep 25, 2014
+
+    Liu Xinquan
+
+    TDQ-9378 Make TOS DQ compatible with Apache license …
+    xqliu-talend authored 22 days ago
+    Liu Xinquan
+
+    TDQ-9378 Make TOS DQ compatible with Apache license …
+    xqliu-talend authored 22 days ago
+
+Commits on Sep 24, 2014
+
+    msjian
+
+    TDQ-9488: fix the export csv get error
+    msjian authored 23 days ago
+    Liu Xinquan
+
+    TDQ-9378 Make TOS DQ compatible with Apache license …
+    xqliu-talend authored 23 days ago
+    Liu Xinquan
+
+    TDQ-9378 Make TOS DQ compatible with Apache license …
+    xqliu-talend authored 23 days ago
+
+Commits on Sep 23, 2014
+
+    Liu Xinquan
+
+    TDQ-9378 Make TOS DQ compatible with Apache license …
+    xqliu-talend authored 24 days ago
+    Liu Xinquan
+
+    TDQ-9378 Make TOS DQ compatible with Apache license …
+    xqliu-talend authored 24 days ago
+
+Commits on Sep 22, 2014
+
+    msjian
+
+    Merge branch 'feature/TDQ-9405_improve_mapdb' into maintenance/5.6
+    msjian authored 25 days ago
+    Liu Xinquan
+
+    TDQ-9378 Make TOS DQ compatible with Apache license …
+    xqliu-talend authored 25 days ago
+
+Commits on Sep 17, 2014
+
+    Liu Xinquan
+
+    TDQ-9378 Make TOS DQ compatible with Apache license …
+    xqliu-talend authored on 17 Sep
+    zshen-talend
+
+    TDQ-9405: commit for drill down and remove nebula pagation …
+    zshen-talend authored on 17 Sep
+    msjian
+
+    TDQ-9441: remove org.talend.libraries.mapdb dependency from the …
+    msjian authored on 17 Sep
+
+Commits on Sep 16, 2014
+
+    msjian
+
+    TDQ-9441: fix some code issues
+    msjian authored on 16 Sep
+
+Commits on Sep 15, 2014
+
+    qiongli
+
+    TDQ-9411 1.Support to preview on MSSQL with sso mode. 2.code refactor.
+    qiongli authored on 15 Sep
+    msjian
+
+    TDQ-9414:fix export csv failed by fix a NPE
+    msjian authored on 15 Sep
+
+Commits on Sep 03, 2014
+
+    zshen-talend
+
+    TDQ-8788 Add mapDB and pagination libraries.
+    zshen-talend authored on 3 Sep
+    zshen-talend
+
+    TDQ-8788 Improve the memory management of the java engine computation …
+    zshen-talend authored on 3 Sep
+
+Commits on Aug 04, 2014
+
+    qiongli
+
+    TDQ-9245 get original value for context mode.
+    qiongli authored on 4 Aug
+
+Commits on Jun 22, 2014
+
+    sgandon
+
+    [GIT Migration] Refactor main,test and i18n plugins and features for … …
+    sgandon authored on 22 Jun 
+
+
+
+2. from http://talendforge.org/trac/top/log/trunk/net.sourceforge.sqlexplorer
+======================================
+		Rev 			Chgset 		Date 								Author 		Log Message
+		@117724 	[117724] 	05/21/14 05:53:05 	qiongli 	TDQ-8893 code refactor: 1.no need to handler 'default_drver.xml' to …
+		@117144 	[117144] 	05/06/14 11:03:57 	xqliu 	Fix Bug TDQ-8827 save source file dialog from the preview table editor …
+		@116998 	[116998] 	04/29/14 10:17:26 	qiongli 	Fix Bug TDQ-8769 : preview function can not get exact correct result with …
+		@116951 	[116951] 	04/28/14 09:44:07 	msjian 	TDQ-8535: fix the View Database Structure can not show table and view for …
+		@116597 	[116597] 	04/18/14 12:28:01 	zshen 	Fix Work Item TDQ-8833 Support Profiling with Vertica 7 TDQ-8865 …
+		@115457 	[115457] 	03/25/14 17:58:55 	mhirt 	Update copyright to 2014
+		@115148 	[115148] 	03/18/14 09:28:32 	xqliu 	Fix Bug TDQ-8377 Technical - Refine commit of TDQ-8068 Support hive …
+		@114307 	[114307] 	02/21/14 11:10:01 	msjian 	TDQ-8661: fix the hsql preview get error and refact some code
+		@113584 	[113584] 	01/22/14 10:56:13 	msjian 	TDQ-8463: fixed when in frence envirement do drill down get error
+		@112879 	[112879] 	01/02/14 09:40:50 	msjian 	TDQ-8072: fix error when save the sql file and refact some code
+		@111240 	[111240] 	11/21/13 05:09:14 	xqliu 	Fix New Feature TDQ-8068 : Support hive profiling for MapR 3.0 …
+		@110656 	[110656] 	11/08/13 04:09:15 	qiongli 	TDQ-8067 make preview work well for HDP2.0 with hive2 standlone.
+		@109594 	[109594] 	10/18/13 09:40:24 	scorreia 	TDQ-8191 synchronization of swtbot messages.properties
+		@107910 	[107910] 	09/12/13 15:12:56 	mhirt 	Fix bug TUP-1013 : Add eclipse.inf to all plugins in top repository
+		@107227 	[107227] 	08/28/13 10:28:15 	qiongli 	TDQ-7318 use 'resultSet.getDate(int)' for Date type,instead of …
+		@107062 	[107062] 	08/26/13 05:21:10 	qiongli 	TDQ-7821: update the called method name 'getJarPath(...)'.
+		@107023 	[107023] 	08/23/13 12:00:48 	qiongli 	TDQ-7821 TDQ-2104 use same API with retrieve connection when add driver …
+		@106852 	[106852] 	08/21/13 08:58:16 	qiongli 	Fix Backlog Task TDQ-7312 : Fix the driver not found issue. …
+		@105492 	[105492] 	07/22/13 05:19:56 	yyin 	TDQ-7289: close the report editor without save, some items still be saved …
+		@105264 	[105264] 	07/15/13 12:45:27 	msjian 	TDQ-7422: make the warning message path correctly
+		@104531 	[104531] 	06/26/13 09:42:50 	qiongli 	Fix Bug TDQ-7205 : backport to trunk.
+		@104065 	[104065] 	06/20/13 04:24:10 	xqliu 	Fix Bug TDQ-7401 : Data explorer perspective issues …
+		@103428 	[103428] 	05/28/13 05:54:47 	msjian 	TDQ-7368: fixed a NPE
+		@103310 	[103310] 	05/24/13 10:09:40 	msjian 	TDQ-5927: fix the preview table fuction for sqlserver connection which no …
+		@103240 	[103240] 	05/23/13 12:15:13 	scorreia 	TDQ-7104 synchronize Default properties files with English files
+		@102927 	[102927] 	05/17/13 11:56:01 	scorreia 	TDQ-7104 TOS-DQ default properties files synchronized with Babili + …
+		@102259 	[102259] 	05/06/13 08:52:20 	msjian 	TDQ-7100: unify the items' display name both in the DQ Repository view and …
+		@101982 	[101982] 	04/27/13 12:04:48 	msjian 	TDQ-7171: update the use driver version from …
+		@101953 	[101953] 	04/27/13 06:03:13 	msjian 	TDQ-6830: fix a NPE at DatabaseStructureView?.java:455
+		@101794 	[101794] 	04/24/13 12:51:13 	jyhu 	Fix Work Item TDI-25649: Revert the code on commit version …
+		@101783 	[101783] 	04/24/13 11:20:47 	jyhu 	Share project "org.talend.core" into …
+		@101782 	[101782] 	04/24/13 11:20:18 	jyhu 	Share project "org.talend.designer.components.bigdata" into …
+		@101781 	[101781] 	04/24/13 11:18:44 	jyhu 	Share project "net.sourceforge.sqlexplorer" into …
+		@101691 	[101691] 	04/23/13 09:57:13 	msjian 	TDQ-5927: fix error "preview table of sqlite, show error dialog" and also …
+		@101447 	[101447] 	04/18/13 10:57:58 	yyin 	TDQ-6823 fix: do NOT show the index whose type = statistic.(make the …
+		@101083 	[101083] 	04/12/13 05:44:27 	yyin 	TDQ-6823: "view key" and "view indiex" in explorer sometimes can not get …
+		@100896 	[100896] 	04/09/13 12:30:38 	xqliu 	TDQ-6823 resolve the complie error
+		@100883 	[100883] 	04/09/13 11:38:37 	yyin 	TDQ-6823: "view key" and "view indiex" in explorer sometimes can not get …
+		@100846 	[100846] 	04/09/13 09:22:50 	xqliu 	TUP-629 resolve the problem that can't create mysql connection …
+		@100766 	[100766] 	04/08/13 11:08:41 	xqliu 	TUP-629 remove the dependency on the plugin …
+		@100680 	[100680] 	04/05/13 18:06:41 	sizhaoliu 	TDQ-7078 TDQ-6965 Manage i18n for component mode
+		@100594 	[100594] 	04/03/13 11:00:40 	xqliu 	TDQ-7003 call HiveConnectionManager?.createConnection() method to create …
+		@100340 	[100340] 	03/28/13 05:21:15 	xqliu 	TDQ-6484 use DynamicClassLoader? for hive embedded
+		@98957 	[98957] 	03/01/13 08:01:59 	wchen 	feature TUP-502 added:Need to reuse a maximum of orbit libraries
+		@98931 	[98931] 	03/01/13 02:33:08 	wchen 	feature TUP-502 added:Need to reuse a maximum of orbit libraries
+		@97706 	[97706] 	02/02/13 02:13:30 	sizhaoliu 	TDQ-6617 TDQ-6817 Merge org.talend.commons into org.talend.core.runtime …
+		@96909 	[96909] 	01/16/13 14:40:44 	scorreia 	TDQ-6468 cast to String required by compiler added
+		@96899 	[96899] 	01/16/13 11:15:19 	zshen 	TDQ-6468 upgrade the hive libraries to 0.9.0
+		@96655 	[96655] 	01/10/13 13:45:34 	mhirt 	Update copyright to 2013
+		@94553 	[94553] 	11/28/12 15:22:16 	mzhao 	TDQ-6160 Profiling hive feature in embedded mode.
+		@93594 	[93594] 	11/12/12 10:27:18 	qiongli 	TDQ-6166 fix the last two issues in the comment(xwang and me).
+		@93335 	[93335] 	11/07/12 05:29:18 	zshen 	TDQ-6356 upgrate jtds.jar from 1.2 to 1.2.5 to resolve getSchema is user …
+		@92350 	[92350] 	10/18/12 10:03:34 	yyin 	TDQ-6167 support unsupported db using General JDBC , after adding this …
+		@91888 	[91888] 	10/10/12 11:43:41 	xqliu 	TDQ-6096 TDQ-6277 modify the driver class name for Ingres
+		@90786 	[90786] 	09/17/12 11:20:27 	xqliu 	TDQ-5381 TDQ-6133 1) modify Median.definition; 2) create …
+		@90759 	[90759] 	09/17/12 08:02:39 	cli 	TDI-21185: change the technical name for local and svn project.
+		@90142 	[90142] 	09/04/12 12:13:11 	qiongli 	TDQ-5898 TDQ-5965 pop a message dialog when unfold column on odbc teradata …
+		@90113 	[90113] 	09/04/12 10:59:35 	xqliu 	TDQ-5453 TDQ-6059 1) fix this problem; 2) on trunk
+		@89630 	[89630] 	08/24/12 08:02:20 	qiongli 	TDQ-5898 TDQ-5965:avoid NPE for ODBC Teradata connection.
+		@88874 	[88874] 	08/09/12 11:12:00 	msjian 	TDQ-5953 (TDQ-5952): we should close connections always on trunk
+		@88749 	[88749] 	08/07/12 11:42:10 	qiongli 	TDQ-5950 TDQ-5907 make DQ support hive connection and column analysis run …
+		@88081 	[88081] 	07/25/12 14:00:15 	xqliu 	merge r88036 from branch 5.1 to trunk TDQ-5853 TDQ-5892 1) revert the …
+		@84875 	[84875] 	06/06/12 19:52:43 	sizhaoliu 	TDQ-5453 fixed: sql source file does not exist after I click on save …
+		@84712 	[84712] 	06/05/12 11:54:30 	yyi 	TDQ-5460 : Fix getString of JConnector(sybase).
+		@81834 	[81834] 	04/17/12 12:13:46 	sizhaoliu 	merge r81687 from branch 4.2 to trunk TDQ-5042 fixed: avoid empty result …
+		@81806 	[81806] 	04/17/12 09:55:48 	yyi 	TDQ-5117:Change get string to get bytes for mess decode in tables.
+		@81040 	[81040] 	04/05/12 18:30:31 	sizhaoliu 	fixed TDQ-4958 : in the sql editor click "save as" pop-up error, can not …
+		@81000 	[81000] 	04/05/12 11:47:07 	sizhaoliu 	merge r80887 from branch 4.2 to trunk fixed TDQ-5070 : Encoding issue …
+		@80778 	[80778] 	03/31/12 11:10:51 	qiongli 	TDQ-4773 TDQ-5032 Optimize code(avoid NPE for junit test).
+		@80754 	[80754] 	03/31/12 06:16:28 	qiongli 	TDQ-5032 TDQ-4773:Optimize code(avoid NPE for junit test).
+		@77218 	[77218] 	01/24/12 02:07:00 	mhirt 	Update copyright to 2012
+		@72936 	[72936] 	11/23/11 08:11:17 	cli 	bug TDI-18621 fixed: add the new version key talend.studio.version for …
+		@72052 	[72052] 	11/10/11 10:33:14 	xqliu 	TDQ-3689 analysis run failed with db2 z/os connection
+		@69477 	[69477] 	10/09/11 05:06:21 	zwzhao 	bug TDI-17597 fixed : tSQLite fails Out of Memory when trying to guess …
+		@64253 	[64253] 	07/13/11 05:43:05 	zshen 	bug 20716: add externalizing the strings.
+		@63379 	[63379] 	06/27/11 11:47:33 	xqliu 	bug 22065: backport on trunk
+		@62196 	[62196] 	06/13/11 07:05:28 	gdbu 	bug 21854 : Externalize the string.
+		@62005 	[62005] 	06/09/11 12:05:46 	gdbu 	bug 21854 : Cause of the error and bug18975 similar.
+		@60018 	[60018] 	05/09/11 08:58:21 	yyi 	bug 20716 fixed:remove quotes for Sybase ASE query
+		@59551 	[59551] 	04/29/11 12:10:01 	gdbu 	bug 20960 : I can not reproduce this error, but found another error, and …
+		@59300 	[59300] 	04/27/11 05:13:28 	mzhao 	bug 20905: externalize the strings into the messages.properties
+		@59283 	[59283] 	04/26/11 16:21:29 	scorreia 	fixed a compilation error
+		@59086 	[59086] 	04/25/11 06:06:20 	qiongli 	bug 20205:fixed: save as a file under user creating folder.
+		@58968 	[58968] 	04/21/11 09:36:36 	gdbu 	bug 19539 : modify 'readme.txt'
+		@58957 	[58957] 	04/21/11 08:57:55 	qiongli 	bug 20205:fixed the "Save Editor as" button can not create file under …
+		@58934 	[58934] 	04/21/11 05:29:43 	xqliu 	bug 20530: don't let username and password be null
+		@58908 	[58908] 	04/20/11 13:43:46 	gdbu 	bug 18975 : Create a special database container (provided we have to fill …
+		@58576 	[58576] 	04/15/11 04:20:37 	gdbu 	bug 20578 : I added the catch is also flawed, so fix it again
+		@58464 	[58464] 	04/13/11 14:58:51 	gdbu 	bug 20578 : 1. The schema can be used when create odbc(oracle) ; 2. fix …
+		@57853 	[57853] 	04/02/11 05:29:28 	gdbu 	bug 19539: fix on v4.2
+		@56872 	[56872] 	03/17/11 13:01:41 	gdbu 	bug 19539: To ensure the same encryption method with TOP's other modules, …
+		@56666 	[56666] 	03/15/11 04:04:53 	gdbu 	bug 19539: I make a mistake of braces in the wrong place , sorry .
+		@56659 	[56659] 	03/15/11 02:48:47 	gdbu 	bug 19539:change 'Required Plug-ins' state in plugin.xml
+		@56642 	[56642] 	03/14/11 11:06:43 	gdbu 	bug 19539: Only the password is encrypted, the encryption method used …
+		@54933 	[54933] 	02/11/11 02:17:13 	mhirt 	Change copyright to 2011
+		@52295 	[52295] 	12/07/10 08:25:12 	zshen 	bug 17291: fixed a exception when sort data in sql engin.
+		@52145 	[52145] 	12/03/10 05:05:35 	yyi 	bug 17143 fixed:Remove the error message of Cannot get database version
+		@50586 	[50586] 	10/27/10 09:19:15 	qiongli 	bug 16349: Deleted connection still visible and accessable in Connection …
+		@49239 	[49239] 	09/30/10 04:34:48 	klliu 	bug 14742: recognize the Netezza regular expressions
+		@49068 	[49068] 	09/28/10 10:30:44 	zshen 	bug 15760: views Schema do not appear in TOS repo when retreived in TOP …
+
+//mzhao feature 11110, remove not used jars from sourceforge sqlexplorer 
+commons-logging.jar  
+log4j.jar
+
 3.5.0.RC5 - John Spackman, Zenesis Ltd
 ======================================
 +. Fixed problem with creating Oracle triggers
