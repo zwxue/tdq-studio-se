@@ -13,7 +13,9 @@
 package org.talend.dataquality.standardization.index;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -72,11 +74,8 @@ public class IndexBuilder {
         IndexWriter w = new IndexWriter(index, analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
         // read the data (this will be the input data of a component called
         // tFirstNameStandardize)
-        CSVReader csvReader = new CSVReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
-                csvFileToIndex.toString()), "windows-1252")), ',');//$NON-NLS-1$
-        csvReader.setQuoteChar('"');
+        CSVReader csvReader = createCSVReader(csvFileToIndex, ',');
 
-        csvReader.readNext();//skip header
         while (csvReader.readNext()) {
             String name = csvReader.get(columnsToBeIndexed[0]);
             String country = csvReader.get(columnsToBeIndexed[1]);
@@ -119,11 +118,7 @@ public class IndexBuilder {
         IndexWriter w = new IndexWriter(index, analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
         // read the data (this will be the input data of a component called
         // tFirstNameStandardize)
-        CSVReader csvReader = new CSVReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
-                csvFileToIndex.toString()), "windows-1252")), ';');//$NON-NLS-1$
-        csvReader.setQuoteChar('"');
-
-        csvReader.readNext();//skip header
+        CSVReader csvReader = createCSVReader(csvFileToIndex, ';');
 
         while (csvReader.readNext()) {
 
@@ -149,6 +144,25 @@ public class IndexBuilder {
         w.close();
 
         return true;
+    }
+
+    /**
+     * DOC yyin Comment method "createCSVReader".
+     * 
+     * @param csvFileToIndex
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    private CSVReader createCSVReader(String csvFileToIndex, char seperator) throws UnsupportedEncodingException,
+            FileNotFoundException, IOException {
+        CSVReader csvReader = new CSVReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
+                csvFileToIndex.toString()), "windows-1252")), seperator);//$NON-NLS-1$
+        csvReader.setQuoteChar('"');
+
+        csvReader.readNext();// skip header
+        return csvReader;
     }
 
     private static void createSynonymIndex(String indexPath, String sourceFile) {

@@ -13,8 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.parserrule;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +29,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dq.helper.FileUtils;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * CsvFileTableViewer is a table viewer for preview a simple csv file.
@@ -45,7 +44,7 @@ public class CsvFileTableViewer extends Composite {
 
     private static final Image WARN_IMG = ImageLib.getImage(ImageLib.LEVEL_WARNING);
 
-    private static CsvReader reader;
+    private static CSVReader reader;
 
     private TableViewer viewer;
 
@@ -66,16 +65,16 @@ public class CsvFileTableViewer extends Composite {
 
         public Object[] getElements(Object parent) {
 
-            CsvReader csvReader = (CsvReader) parent;
+            CSVReader csvReader = (CSVReader) parent;
 
             List<Object> rows = new ArrayList<Object>();
 
             try {
-                while (csvReader.readRecord()) {
-                    char delimiter = reader.getDelimiter();
+                csvReader.setStoreRawRecord(true);
+                while (csvReader.readNext()) {
                     String rawRecord = reader.getRawRecord();
 
-                    String[] columnsValue = rawRecord.split(String.valueOf(delimiter));
+                    String[] columnsValue = rawRecord.split(String.valueOf(reader.getSeperator()));
                     rows.add(columnsValue);
                     // rows.add(csvReader.getValues());
                 }
@@ -102,6 +101,7 @@ public class CsvFileTableViewer extends Composite {
             return index < values.length ? getImage(values[index]) : null;
         }
 
+        @Override
         public Image getImage(Object obj) {
             if (!checkQuoteMarks(obj.toString())) {
                 quotesError = true;
@@ -144,14 +144,17 @@ public class CsvFileTableViewer extends Composite {
     }
 
     private boolean checkQuoteMarks(String text) {
-        if (0 == text.length())
+        if (0 == text.length()) {
             return true;
+        }
 
-        if ('\"' == text.charAt(0) && '\"' == text.charAt(text.length() - 1))
+        if ('\"' == text.charAt(0) && '\"' == text.charAt(text.length() - 1)) {
             return true;
+        }
 
-        if ('\"' != text.charAt(0) && '\"' != text.charAt(text.length() - 1))
+        if ('\"' != text.charAt(0) && '\"' != text.charAt(text.length() - 1)) {
             return true;
+        }
 
         return false;
     }
@@ -164,15 +167,17 @@ public class CsvFileTableViewer extends Composite {
         }
 
         for (String header : headers) {
-            if (!parserRuleEnums.contains(trimQuote(header)))
+            if (!parserRuleEnums.contains(trimQuote(header))) {
                 return false;
+            }
         }
         return true;
     }
 
     private String trimQuote(String text) {
-        if (text.length() < 2)
+        if (text.length() < 2) {
             return text;
+        }
 
         int beginLen = 0;
         int endLen = text.length();
@@ -194,14 +199,13 @@ public class CsvFileTableViewer extends Composite {
         quotesError = false;
         hasPatternHeaders = false;
         try {
-            reader = new CsvReader(new FileReader(csvFile), CURRENT_SEPARATOR);
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-            return false;
-        }
-        reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
-        reader.setUseTextQualifier(useTextQualifier);
-        try {
+            if (useTextQualifier) {
+                reader = FileUtils.createCSVReader(csvFile, FileUtils.TEXT_QUAL, FileUtils.ESCAPE_CHAR);
+            } else {
+                reader = FileUtils.createCSVReader(csvFile, FileUtils.QUOTECHAR_NOTVALID, FileUtils.ESCAPE_CHAR);
+            }
+            reader.setSkipEmptyRecords(true);
+
             reader.readHeaders();
             String[] headers = reader.getHeaders();
             hasPatternHeaders = checkFileHeader(headers);

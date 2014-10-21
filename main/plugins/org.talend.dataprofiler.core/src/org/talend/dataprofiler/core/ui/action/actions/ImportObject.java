@@ -24,6 +24,7 @@ import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.ecos.jobs.ComponentInstaller;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
+import org.talend.dq.helper.FileUtils;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -62,7 +63,7 @@ public class ImportObject {
             List<File> objFiles = FilesUtils.getAllFilesFromFolder(componentFileFolder, new FilenameFilter() {
 
                 public boolean accept(File dir, String name) {
-                    return !FilesUtils.isSVNFolder(dir) && name.endsWith("csv"); //$NON-NLS-1$
+                    return !FilesUtils.isSVNFolder(dir) && name.endsWith(FileUtils.CSV);
                 }
             });
             if (objFiles.isEmpty()) {

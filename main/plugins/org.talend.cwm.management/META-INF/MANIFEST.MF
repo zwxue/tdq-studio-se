@@ -19,7 +19,6 @@ Require-Bundle: org.eclipse.ui,
  org.talend.core.runtime,
  org.talend.libraries.mdm,
  org.talend.metadata.managment,
- org.talend.libraries.javacsv,
  org.talend.common.ui.runtime,
  org.talend.metadata.managment.ui,
  org.apache.log4j,
@@ -28,7 +27,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.libraries.jboss,
  org.talend.repository.items.importexport,
  org.talend.libraries.mapdb,
- org.talend.dataprofiler.service
+ org.talend.dataprofiler.service,
+ org.talend.libraries.csv
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
  lib/advancedPersistentLookupLib-1.0.jar,

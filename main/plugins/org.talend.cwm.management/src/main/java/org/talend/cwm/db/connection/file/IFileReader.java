@@ -26,5 +26,5 @@ public interface IFileReader {
 
     Record next() throws IOException;
 
-    void close();
+    void close() throws IOException;
 }
