@@ -345,14 +345,15 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
             // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
             valueObject[i] = object == null ? PluginConstant.NULL_STRING : object;
         }
-
+        List<Object[]> duplicateValueList = null;
         if (duplicateMap.containsKey(colValue)) {
-            duplicateMap.get(colValue).add(valueObject);
+            duplicateValueList = duplicateMap.get(colValue);
         } else {
-            List<Object[]> temp = new ArrayList<Object[]>();
-            temp.add(valueObject);
-            duplicateMap.put(colValue, temp);
+            duplicateValueList = new ArrayList<Object[]>();
         }
+
+        duplicateValueList.add(valueObject);
+        duplicateMap.put(colValue, duplicateValueList);
 
     }
 
@@ -375,13 +376,14 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     @Override
     public void handle(Object object, String[] rowValues) {
         super.handle(object);
+        List<Object[]> duplicateValueList = null;
         if (duplicateMap.containsKey(object)) {
-            duplicateMap.get(object).add(rowValues);
+            duplicateValueList = duplicateMap.get(object);
         } else {
-            List<Object[]> temp = new ArrayList<Object[]>();
-            temp.add(rowValues);
-            duplicateMap.put(object, temp);
+            duplicateValueList = new ArrayList<Object[]>();
         }
+        duplicateValueList.add(rowValues);
+        duplicateMap.put(object, duplicateValueList);
     }
 
     /*

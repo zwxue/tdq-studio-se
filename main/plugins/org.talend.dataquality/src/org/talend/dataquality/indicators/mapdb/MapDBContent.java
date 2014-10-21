@@ -36,7 +36,7 @@ public class MapDBContent {
     /**
      * the cache size used to create db.
      */
-    private static final int DEFAULE_CACHE_SIZE = 1024;
+    private static final int DEFAULE_CACHE_SIZE = 8192;
 
     /**
      * close db after 5 minute (5 * 60 * 1000).

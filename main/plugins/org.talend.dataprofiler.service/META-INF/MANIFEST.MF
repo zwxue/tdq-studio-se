@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Sqlexplorer Service Plug-in
 Bundle-SymbolicName: org.talend.dataprofiler.service
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.eclipse.equinox.util,

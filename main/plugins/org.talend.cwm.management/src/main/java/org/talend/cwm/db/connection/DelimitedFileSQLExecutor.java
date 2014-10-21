@@ -31,11 +31,12 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -134,15 +135,15 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
     private void useCsvReader(File file, DelimitedFileConnection delimitedFileconnection, List<ModelElement> analysisElementList) {
         int limitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
         int headValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
-        CsvReader csvReader = null;
+        CSVReader csvReader = null;
         try {
-            csvReader = AnalysisExecutorHelper.createCsvReader(file, delimitedFileconnection);
-            AnalysisExecutorHelper.initializeCsvReader(delimitedFileconnection, csvReader);
+            csvReader = FileUtils.createCsvReader(file, delimitedFileconnection);
+            FileUtils.initializeCsvReader(delimitedFileconnection, csvReader);
 
             int analysedColumnIndex[] = new int[analysisElementList.size()];
             // need to find the analysed element position , and only get these analysed column's values.
             List<String> columnLabels = new ArrayList<String>();
-            for (int i = 0; i < headValue && csvReader.readRecord(); i++) {
+            for (int i = 0; i < headValue && csvReader.readNext(); i++) {
                 Collections.addAll(columnLabels, csvReader.getValues());
             }
             for (int j = 0; j < analysisElementList.size(); j++) {
@@ -150,7 +151,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
             }// ~
 
             long currentRecord = 0;
-            while (csvReader.readRecord()) {
+            while (csvReader.readNext()) {
                 currentRecord = csvReader.getCurrentRecord();
                 if (limitValue != -1 && currentRecord > limitValue - 1) {
                     break;
@@ -173,7 +174,11 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
             log.error(e.getMessage(), e);
         } finally {
             if (csvReader != null) {
-                csvReader.close();
+                try {
+                    csvReader.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage(), e);
+                }
             }
         }
     }

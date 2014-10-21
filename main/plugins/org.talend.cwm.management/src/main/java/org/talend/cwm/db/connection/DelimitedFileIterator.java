@@ -74,7 +74,11 @@ public class DelimitedFileIterator implements Iterator<Record> {
                 return false;
             }
         } catch (IOException e) {
-            close();
+            try {
+                close();
+            } catch (IOException e1) {
+                return false;
+            }
             return false;
         }
     }
@@ -104,7 +108,7 @@ public class DelimitedFileIterator implements Iterator<Record> {
         throw new UnsupportedOperationException("Read only iterator"); //$NON-NLS-1$
     }
 
-    public void close() {
+    public void close() throws IOException {
         this.fileReader.close();
     }
 

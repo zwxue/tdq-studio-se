@@ -39,7 +39,6 @@
       <import plugin="org.eclipse.xsd"/>
       <import plugin="org.apache.axis"/>
       <import plugin="javax.xml.rpc" version="1.1.0" match="compatible"/>
-      <import plugin="org.talend.libraries.javacsv" version="2.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore" version="2.6.0" match="compatible"/>
       <import plugin="org.eclipse.emf.edit" version="2.6.0" match="compatible"/>
       <import plugin="org.eclipse.ui.ide" version="3.6.0" match="compatible"/>
