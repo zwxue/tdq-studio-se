@@ -23,6 +23,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.DuplicateRecordTableLabelProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 
@@ -54,8 +55,8 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
      * DOC zhao Comment method "initHeaders".
      */
     private void initHeaders() {
-        tableHeaders.add(MatchAnalysisConstant.LABEL);
-        tableHeaders.add(MatchAnalysisConstant.COUNT);
+        tableHeaders.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.LABEL));
+        tableHeaders.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.COUNT));
         tableHeaders.add(MatchAnalysisConstant.PERCENTAGE);
     }
 

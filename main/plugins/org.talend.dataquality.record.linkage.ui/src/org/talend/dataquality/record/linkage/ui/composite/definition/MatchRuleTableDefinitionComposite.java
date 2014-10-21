@@ -16,20 +16,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchRuleDefinitionTableViewer;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
 
-
 /**
- * created by zshen on Aug 26, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 26, 2013 Detailled comment
+ * 
  */
 public class MatchRuleTableDefinitionComposite extends MatchRuleTableComposite {
 
     /**
      * DOC zshen MatchRuleTableDefinitionComposite constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      * @param matchRule
@@ -40,32 +39,29 @@ public class MatchRuleTableDefinitionComposite extends MatchRuleTableComposite {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#initHeaders()
      */
     @Override
     protected void initHeaders() {
-        headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
-        headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
-        headers.add(MatchAnalysisConstant.CUSTOM_MATCHER); // 20
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.MATCH_KEY_NAME)); // 14
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.MATCHING_TYPE)); // 12
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.CUSTOM_MATCHER)); // 20
         if (isAddColumn()) {
-            headers.add(MatchAnalysisConstant.THRESHOLD); // 14
+            headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.THRESHOLD)); // 14
         }
-        headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
-        headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.CONFIDENCE_WEIGHT)); // 17
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.HANDLE_NULL)); // 11
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#createTableViewer()
      */
     @Override
     protected AbstractMatchAnalysisTableViewer createTableViewer() {
         return new MatchRuleDefinitionTableViewer(this, getTableStyle(), isAddColumn());
     }
-
-
-
 
 }

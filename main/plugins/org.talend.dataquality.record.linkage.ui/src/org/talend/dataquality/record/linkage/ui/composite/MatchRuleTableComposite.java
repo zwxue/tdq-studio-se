@@ -63,12 +63,12 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
      */
     @Override
     protected void initHeaders() {
-        headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
-        headers.add(MatchAnalysisConstant.INPUT_COLUMN); // 14
-        headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
-        headers.add(MatchAnalysisConstant.CUSTOM_MATCHER); // 20
-        headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
-        headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.MATCH_KEY_NAME)); // 14
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.INPUT_COLUMN)); // 14
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.MATCHING_TYPE)); // 12
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.CUSTOM_MATCHER)); // 20
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.CONFIDENCE_WEIGHT)); // 17
+        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.HANDLE_NULL)); // 11
     }
 
     /**
