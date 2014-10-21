@@ -150,6 +150,8 @@ public class FilePreviewProcess implements IPreview {
         String escapeChar = description.getEscapeCharacter();
         if (escapeChar == null || escapeChar.equals(FileUtils.ESCAPECHAR1) || escapeChar.equals(FileUtils.ESCAPECHAR2)) {
             csvReader.setEscapeChar('\\');
+        } else {
+            csvReader.setEscapeChar(FileUtils.TEXT_QUAL);
         }
     }
 

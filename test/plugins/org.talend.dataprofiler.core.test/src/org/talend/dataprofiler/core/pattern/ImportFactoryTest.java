@@ -153,9 +153,9 @@ public class ImportFactoryTest {
         ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule(parserRuleFile);
         List<TdExpression> expressions = parserRule.getExpression();
         for (TdExpression expression : expressions) {
-            assertTrue(name.equals(expression.getName()));
-            assertTrue(lang.equals(expression.getLanguage()));
-            assertTrue(body.equals(expression.getBody()));
+            assertEquals(name, expression.getName());
+            assertEquals(lang, expression.getLanguage());
+            assertEquals(body, expression.getBody());
         }
     }
 
@@ -213,9 +213,9 @@ public class ImportFactoryTest {
         ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule(parserRuleFile);
         List<TdExpression> expressions = parserRule.getExpression();
         for (TdExpression expression : expressions) {
-            assertTrue(name.equals(expression.getName()));
-            assertTrue(lang.equals(expression.getLanguage()));
-            assertTrue(body.equals(expression.getBody()));
+            assertEquals(name, expression.getName());
+            assertEquals(lang, expression.getLanguage());
+            assertEquals(body, expression.getBody());
         }
     }
 
@@ -273,9 +273,9 @@ public class ImportFactoryTest {
         ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule(parserRuleFile);
         List<TdExpression> expressions = parserRule.getExpression();
         for (TdExpression expression : expressions) {
-            assertTrue(name.equals(expression.getName()));
-            assertTrue(lang.equals(expression.getLanguage()));
-            assertTrue(body.equals(expression.getBody()));
+            assertEquals(name, expression.getName());
+            assertEquals(lang, expression.getLanguage());
+            assertEquals(body, expression.getBody());
         }
     }
 
@@ -385,6 +385,7 @@ public class ImportFactoryTest {
                 assertTrue(IND_DEF_PARA_STRING.indexOf(temp) > -1);
             }
         }
+        importFile.delete();
     }
 
     /**
@@ -406,6 +407,7 @@ public class ImportFactoryTest {
         List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
         assertTrue(rc.size() == 1);
         assertFalse(rc.get(0).isOk());
+        importFile.delete();
     }
 
     /**
@@ -427,6 +429,7 @@ public class ImportFactoryTest {
         List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
         assertTrue(rc.size() == 1);
         assertFalse(rc.get(0).isOk());
+        importFile.delete();
     }
 
     /**
@@ -455,6 +458,7 @@ public class ImportFactoryTest {
         List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
         assertTrue(rc.size() == 1);
         assertFalse(rc.get(0).isOk());
+        importFile.delete();
     }
 
     /**

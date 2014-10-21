@@ -153,7 +153,7 @@ public final class ReportUtils {
             @Override
             protected void run() throws LoginException, PersistenceException {
                 try {
-                    CSVWriter out = FileUtils.createCSVWriter(reportListFile);
+                    CSVWriter out = FileUtils.createCSVWriter(reportListFile, FileUtils.TEXT_QUAL, FileUtils.BACKSLASH);
 
                     ReportListEnum[] values = ReportListEnum.values();
                     String[] temp = new String[values.length];
@@ -633,8 +633,7 @@ public final class ReportUtils {
 
         if (reportListFile != null && reportListFile.exists()) {
             try {
-                CSVReader reader = FileUtils.createCSVReader(reportListFile);
-                reader.setEscapeChar(FileUtils.BACKSLASH);
+                CSVReader reader = FileUtils.createCSVReader(reportListFile, FileUtils.TEXT_QUAL, FileUtils.ESCAPE_CHAR);
                 reader.readHeaders();
                 while (reader.readNext()) {
                     repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()),

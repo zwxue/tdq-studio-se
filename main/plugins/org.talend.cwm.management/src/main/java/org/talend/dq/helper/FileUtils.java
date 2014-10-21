@@ -58,9 +58,9 @@ public final class FileUtils {
 
     public static final char BACKSLASH = '/';
 
-    private static final char TEXT_QUAL = '\"';
+    public static final char TEXT_QUAL = '\"';
 
-    private static final char ESCAPE_CHAR = '\\';
+    public static final char ESCAPE_CHAR = '\\';
 
     private static final char CURRENT_SEPARATOR = '\t';
 
@@ -146,12 +146,13 @@ public final class FileUtils {
      * @return
      * @throws FileNotFoundException
      */
-    public static CSVWriter createCSVWriter(final File reportListFile) throws FileNotFoundException {
+    public static CSVWriter createCSVWriter(final File reportListFile, char quoteChar, char escapeChar)
+            throws FileNotFoundException {
         CSVWriter out = new CSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(reportListFile),
                 Charset.defaultCharset())));
         out.setSeparator(CURRENT_SEPARATOR);
-        out.setEscapeChar(ESCAPE_CHAR);
-        out.setQuoteChar(TEXT_QUAL);
+        out.setEscapeChar(escapeChar);
+        out.setQuoteChar(quoteChar);
         out.setQuoteStatus(QuoteStatus.FORCE);
         return out;
     }
@@ -165,10 +166,11 @@ public final class FileUtils {
                 .trimParameter(separator).charAt(0));
     }
 
-    public static CSVReader createCSVReader(File file) throws UnsupportedEncodingException, FileNotFoundException {
+    public static CSVReader createCSVReader(File file, char quoteChar, char escapeChar) throws UnsupportedEncodingException,
+            FileNotFoundException {
         CSVReader csvReader = new CSVReader(new FileReader(file), CURRENT_SEPARATOR);
-        csvReader.setQuoteChar(TEXT_QUAL);
-        csvReader.setEscapeChar(ESCAPE_CHAR);
+        csvReader.setQuoteChar(quoteChar);
+        csvReader.setEscapeChar(escapeChar);
         return csvReader;
     }
 

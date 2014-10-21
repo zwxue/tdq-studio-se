@@ -75,7 +75,7 @@ public final class ExportFactory {
 
             try {
 
-                CSVWriter out = FileUtils.createCSVWriter(exportFile);
+                CSVWriter out = FileUtils.createCSVWriter(exportFile, FileUtils.TEXT_QUAL, FileUtils.TEXT_QUAL);
 
                 PatternToExcelEnum[] values = PatternToExcelEnum.values();
                 String[] temp = new String[values.length];
@@ -127,7 +127,7 @@ public final class ExportFactory {
 
             try {
 
-                CSVWriter out = FileUtils.createCSVWriter(exportFile);
+                CSVWriter out = FileUtils.createCSVWriter(exportFile, FileUtils.TEXT_QUAL, FileUtils.TEXT_QUAL);
                 List<TdExpression> expressions = parserRules[0].getExpression();
                 ParserRuleToExcelEnum[] values = getParserRuleEnumValues();
                 String[] temp = new String[values.length];
@@ -189,7 +189,7 @@ public final class ExportFactory {
         if (FileUtils.isCSV(fileExtName)) {
 
             try {
-                CSVWriter out = FileUtils.createCSVWriter(exportFile);
+                CSVWriter out = FileUtils.createCSVWriter(exportFile, FileUtils.TEXT_QUAL, FileUtils.TEXT_QUAL);
 
                 PatternToExcelEnum[] values = PatternToExcelEnum.values();
                 String[] temp = new String[values.length];

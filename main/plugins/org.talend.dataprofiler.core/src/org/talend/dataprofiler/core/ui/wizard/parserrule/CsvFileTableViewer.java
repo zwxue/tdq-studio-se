@@ -199,7 +199,11 @@ public class CsvFileTableViewer extends Composite {
         quotesError = false;
         hasPatternHeaders = false;
         try {
-            reader = FileUtils.createCSVReader(csvFile);
+            if (useTextQualifier) {
+                reader = FileUtils.createCSVReader(csvFile, FileUtils.TEXT_QUAL, FileUtils.ESCAPE_CHAR);
+            } else {
+                reader = FileUtils.createCSVReader(csvFile, FileUtils.QUOTECHAR_NOTVALID, FileUtils.ESCAPE_CHAR);
+            }
             reader.setSkipEmptyRecords(true);
 
             reader.readHeaders();

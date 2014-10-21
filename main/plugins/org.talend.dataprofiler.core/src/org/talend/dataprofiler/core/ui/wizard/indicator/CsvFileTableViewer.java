@@ -352,7 +352,11 @@ public class CsvFileTableViewer extends Composite {
         quotesError = false;
         hasPatternHeaders = false;
         try {
-            reader = FileUtils.createCSVReader(csvFile);
+            if (useTextQualifier) {
+                reader = FileUtils.createCSVReader(csvFile, FileUtils.TEXT_QUAL, FileUtils.TEXT_QUAL);
+            } else {
+                reader = FileUtils.createCSVReader(csvFile, FileUtils.QUOTECHAR_NOTVALID, FileUtils.TEXT_QUAL);
+            }
             reader.setSkipEmptyRecords(true);
             reader.readHeaders();
             String[] headers = reader.getHeaders();

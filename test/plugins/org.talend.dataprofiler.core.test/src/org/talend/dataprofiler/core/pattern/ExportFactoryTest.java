@@ -93,7 +93,7 @@ public class ExportFactoryTest {
         assertTrue(exportFile.isFile());
         assertTrue(exportFile.length() > 0);
 
-        CSVReader reader = FileUtils.createCSVReader(exportFile);
+        CSVReader reader = FileUtils.createCSVReader(exportFile, FileUtils.TEXT_QUAL, FileUtils.TEXT_QUAL);
         reader.setSkipEmptyRecords(true);
         reader.readHeaders();
 
@@ -112,6 +112,7 @@ public class ExportFactoryTest {
         }
         reader.close();
         assertTrue(haveRecord);
+        exportFile.delete();
     }
 
     /**
@@ -135,7 +136,7 @@ public class ExportFactoryTest {
         assertTrue(exportFile.isFile());
         assertTrue(exportFile.length() > 0);
 
-        CSVReader reader = FileUtils.createCSVReader(exportFile);
+        CSVReader reader = FileUtils.createCSVReader(exportFile, FileUtils.TEXT_QUAL, FileUtils.TEXT_QUAL);
         reader.setSkipEmptyRecords(true);
         reader.readHeaders();
 
@@ -187,6 +188,7 @@ public class ExportFactoryTest {
         ExportFactory.export(exportFile, udiFolder, indDef);
 
         assertFalse(exportFile.exists());
+
     }
 
     /**
