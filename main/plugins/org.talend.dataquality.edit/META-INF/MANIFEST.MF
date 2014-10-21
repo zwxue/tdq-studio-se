@@ -7,7 +7,6 @@ Bundle-ClassPath: .
 Bundle-Activator: org.talend.dataquality.analysis.provider.DataqualityEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.talend.dataquality.analysis.category.provider,
  org.talend.dataquality.analysis.provider,
  org.talend.dataquality.domain.pattern.provider,
