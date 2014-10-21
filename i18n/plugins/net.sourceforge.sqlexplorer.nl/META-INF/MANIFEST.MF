@@ -4,5 +4,4 @@ Bundle-Name: Nl Fragment
 Bundle-SymbolicName: net.sourceforge.sqlexplorer.nl
 Bundle-Version: 6.0.0.qualifier
 Fragment-Host: net.sourceforge.sqlexplorer
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: .Talend SA.

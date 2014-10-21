@@ -4,7 +4,6 @@ Bundle-Name: Jung Plug-in
 Bundle-SymbolicName: org.talend.libraries.jung;singleton:=true
 Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: lib/collections-generic-4.01.jar,
  lib/colt.jar,
  lib/concurrent.jar,

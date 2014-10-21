@@ -12,12 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -49,8 +44,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
-
-import com.csvreader.CsvReader;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -124,44 +117,6 @@ public final class AnalysisExecutorHelper {
     public static String getQuotedSchemaName(ModelElement columnSetOwner, DbmsLanguage dbmsLanguage) {
         final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
         return (parentSchema == null) ? null : dbmsLanguage.quote(parentSchema.getName());
-    }
-
-    public static CsvReader createCsvReader(File file, DelimitedFileConnection delimitedFileconnection)
-            throws UnsupportedEncodingException, FileNotFoundException {
-        String separator = JavaSqlFactory.getFieldSeparatorValue(delimitedFileconnection);
-        String encoding = JavaSqlFactory.getEncoding(delimitedFileconnection);
-        return new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
-                encoding == null ? "UTF-8" : encoding)), ParameterUtil //$NON-NLS-1$
-                .trimParameter(separator).charAt(0));
-    }
-
-    /**
-     * 
-     * DOC qiongli Comment method "initializeCsvReader".
-     * 
-     * @param csvReader
-     * @param connection
-     */
-    public static void initializeCsvReader(DelimitedFileConnection delimitedFileconnection, CsvReader csvReader) {
-        String rowSep = JavaSqlFactory.getRowSeparatorValue(delimitedFileconnection);
-        if (rowSep != null && !rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-            csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
-        }
-
-        csvReader.setSkipEmptyRecords(true);
-        String textEnclosure = delimitedFileconnection.getTextEnclosure();
-        if (textEnclosure != null && textEnclosure.length() > 0) {
-            csvReader.setTextQualifier(ParameterUtil.trimParameter(textEnclosure).charAt(0));
-        } else {
-            csvReader.setUseTextQualifier(false);
-        }
-        String escapeChar = delimitedFileconnection.getEscapeChar();
-        if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
-        } else {
-            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
-        }
-
     }
 
     public static FileInputDelimited createFileInputDelimited(DelimitedFileConnection delimitedFileconnection) throws IOException {
