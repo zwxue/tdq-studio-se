@@ -618,7 +618,7 @@ public final class ImportFactory {
             try {
                 CSVReader reader = FileUtils.createCSVReader(importFile);
                 reader.setSkipEmptyRecords(true);
-
+                reader.readHeaders();
                 java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
 
                 while (reader.readNext()) {

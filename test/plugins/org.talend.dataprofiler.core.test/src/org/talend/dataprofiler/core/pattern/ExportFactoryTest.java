@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.pattern;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,13 +28,14 @@ import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
+import org.talend.dq.helper.FileUtils;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.string.StringUtilities;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * Junit test case for the class org.talend.dataprofiler.core.pattern.ExportFactoryTest.
@@ -93,13 +93,12 @@ public class ExportFactoryTest {
         assertTrue(exportFile.isFile());
         assertTrue(exportFile.length() > 0);
 
-        CsvReader reader = new CsvReader(new FileReader(exportFile), ImportFactory.CURRENT_SEPARATOR);
-        reader.setTextQualifier(ImportFactory.TEXT_QUAL);
-        reader.setUseTextQualifier(ImportFactory.USE_TEXT_QUAL);
+        CSVReader reader = FileUtils.createCSVReader(exportFile);
+        reader.setSkipEmptyRecords(true);
         reader.readHeaders();
 
         boolean haveRecord = false;
-        while (reader.readRecord()) {
+        while (reader.readNext()) {
             haveRecord = true;
             String name = reader.get(PatternToExcelEnum.Label.getLiteral());
             assertEquals(name, indDef.getName());
@@ -136,13 +135,12 @@ public class ExportFactoryTest {
         assertTrue(exportFile.isFile());
         assertTrue(exportFile.length() > 0);
 
-        CsvReader reader = new CsvReader(new FileReader(exportFile), ImportFactory.CURRENT_SEPARATOR);
-        reader.setTextQualifier(ImportFactory.TEXT_QUAL);
-        reader.setUseTextQualifier(ImportFactory.USE_TEXT_QUAL);
+        CSVReader reader = FileUtils.createCSVReader(exportFile);
+        reader.setSkipEmptyRecords(true);
         reader.readHeaders();
 
         boolean haveRecord = false;
-        while (reader.readRecord()) {
+        while (reader.readNext()) {
             haveRecord = true;
             String name = reader.get(PatternToExcelEnum.Label.getLiteral());
             assertEquals(name, indDef.getName());
