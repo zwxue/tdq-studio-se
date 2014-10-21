@@ -318,7 +318,6 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
                     valueList.add(soundexValue);// soundex value
                     valueList.add(1);// distinct count
                     valueList.add(0);// duplicate count
-                    soundexFreqMap.put(soundexValue, valueList);
                 } else if (!getMapForFreq().containsKey(data)) {
                     // if already contain then soundex value but input valie is different then distinct count +1
                     Long distinctCount = Long.valueOf(valueList.get(2).toString()) + 1;
@@ -332,6 +331,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
                     Long duplicateCount = Long.valueOf(valueList.get(3).toString()) + 1;
                     valueList.set(3, duplicateCount);
                 }
+                soundexFreqMap.put(soundexValue, valueList);
             }
         }
         boolean returnValue = super.handle(data);
