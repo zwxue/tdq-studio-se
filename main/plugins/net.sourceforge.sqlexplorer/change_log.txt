@@ -243,9 +243,55 @@ Commits on Jun 22, 2014
 		@49239 	[49239] 	09/30/10 04:34:48 	klliu 	bug 14742: recognize the Netezza regular expressions
 		@49068 	[49068] 	09/28/10 10:30:44 	zshen 	bug 15760: views Schema do not appear in TOS repo when retreived in TOP …
 
+some change details:
+======================================
+2010-06-01 klliu Data explorer perspective display error 
+---------------------------------------------------------------------------------------
+In this case you must check "messages.properties" in "net.sourceforge.sqlexplorer\src",and 
+you can find the about oracle's bundle key.
+
+NOTE: Add the content of "text.properties" to "messages.properties", the path of  "text.properties" like so:
+net.sourceforge.sqlexplorer.oracle_3.5.0.jar\net\sourceforge\sqlexplorer\oracle\text.properties
+
+
+2010-7-2 qiongli bug 13093:the function in Data Explorer for view the information of data structure not work well 
+---------------------------------------------------------------------------------------------------
+The method in class of "net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView" has been modified:
+1.Delete the condition : 'if(_tabFolder == null)'
+2.Add line 379 to 388: select correct item as active item.
+
+2011-4-21qiongli bug 20205: the "Save Editor as" button can not create file under "Sourse file" 
+---------------------------------------------------------------------------------------------------
+1.Add a extension named 'saveAs'
+2.Add Pacake 'service',contain:2 interface (ISaveAsService,IService) and a class GlobalServiceRegister.java.
+3.Modify method createIFile of class SQLTextEditor.we should create propery file and item file by model.
+
+2011-4-21 gdbu bug 19539 : unecrypted passwords in workspace\.metadata\.plugins\net.sourceforge.sqlexplorer
+---------------------------------------------------------------------------------------------------
+1. modified class 'AliasManager' : create method to get decrypt password.
+2. modified class 'User' : line 110 , chenge to get encrypt password.
+3. modified 'MANIFEST.MF' : add org.talend.model and org.talend.utils
+
+2011-6-9 gdbu bug 21854 : TOP gives an error with Oracle db connection when viewing profiled data
+---------------------------------------------------------------------------------------------------
+1.  modified class 'EDriverName' : Repair the product on the jdbc-oracle's driver class support problems.
+
+2012-8-6 qiongli feature TDQ-5907 Enable Hive profiling 
+---------------------------------------------------------------------------------------------------
+1.  modified default_drivers.xml : Add a driver tag with Hive.
+2.  modified class EDriverName  : Add driver information for Hive.
+3.  modified class ExecutionResultImpl  : modified line 107,HivePreparedStatement dosenot support method 'getResultSet()'.
+4.  modified fiel MANIFEST.MF  : add plugin dependencies with 'org.talend.libraries.apache.hive'.
+
+2012-11-12 qiongli TDQ-6166 Deleted connections still show up in Connections view
+1.modified class User : line 288. Avoid ConcurrentModificationException,repalce for with Iterator while
+2.modified fiel MANIFEST.MF : add plugin dependencies with 'org.talend.core.runtime'.
+3.modified class SQLExplorerPlugin : Add a variable 'isInitedAllConnToSQLExpl' to judge if init all connections for SQLExploere.
+
 //mzhao feature 11110, remove not used jars from sourceforge sqlexplorer 
 commons-logging.jar  
 log4j.jar
+
 
 3.5.0.RC5 - John Spackman, Zenesis Ltd
 ======================================
