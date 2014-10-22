@@ -34,6 +34,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RemoveMatchKeyDefinitionAction;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 
@@ -109,7 +110,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
         innerTable.setLayoutData(gd);
 
         for (int index = 0; index < headers.size(); index++) {
-            String columnLabel = headers.get(index);
+            String columnLabel = getInternationalizedLabel(headers.get(index));
             if (columnLabel != null) {
                 if (columnLabel.length() == 1) {
                     columnLabel = columnLabel + PluginConstant.SPACE_STRING + PluginConstant.SPACE_STRING;
@@ -134,6 +135,11 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
         GridData tableGD = new GridData(GridData.FILL_BOTH);
         tableGD.heightHint = getTableHeightHint();
         innerTable.setLayoutData(tableGD);
+
+    }
+
+    private String getInternationalizedLabel(String str) {
+        return DefaultMessagesImpl.getString(str);
     }
 
     /**
