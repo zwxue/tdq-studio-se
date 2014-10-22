@@ -300,7 +300,7 @@ public class DQStructureComparerTest {
         // mock MetadataFillFactory
         PowerMockito.mockStatic(MetadataFillFactory.class);
         MetadataFillFactory mockMetadataFillFactory = Mockito.mock(MetadataFillFactory.class);
-        Mockito.when(MetadataFillFactory.getDBInstance(EDatabaseTypeName.MYSQL)).thenCallRealMethod();// .thenReturn(mockMetadataFillFactory);
+        Mockito.when(MetadataFillFactory.getDBInstance(EDatabaseTypeName.MYSQL)).thenReturn(mockMetadataFillFactory);
         Mockito.when(mockMetadataFillFactory.createConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
         Mockito.when(mockMetadataFillFactory.fillUIConnParams((IMetadataConnection) Mockito.any(), (Connection) Mockito.isNull()))
                 .thenReturn(dbProvider);
@@ -410,7 +410,7 @@ public class DQStructureComparerTest {
         // mock MetadataFillFactory
         MetadataFillFactory mockMetadataFillFactory = Mockito.mock(MetadataFillFactory.class);
         PowerMockito.mockStatic(MetadataFillFactory.class);
-        Mockito.when(MetadataFillFactory.getDBInstance(EDatabaseTypeName.MYSQL)).thenReturn(mockMetadataFillFactory);
+        Mockito.when(MetadataFillFactory.getDBInstance(EDatabaseTypeName.IBMDB2ZOS)).thenReturn(mockMetadataFillFactory);
         Mockito.when(mockMetadataFillFactory.createConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
         Mockito.when(mockMetadataFillFactory.fillUIConnParams((IMetadataConnection) Mockito.any(), (Connection) Mockito.isNull()))
                 .thenReturn(dbProvider);
@@ -523,7 +523,7 @@ public class DQStructureComparerTest {
         // mock MetadataFillFactory
         MetadataFillFactory mockMetadataFillFactory = Mockito.mock(MetadataFillFactory.class);
         PowerMockito.mockStatic(MetadataFillFactory.class);
-        Mockito.when(MetadataFillFactory.getDBInstance(EDatabaseTypeName.MYSQL)).thenReturn(mockMetadataFillFactory);
+        Mockito.when(MetadataFillFactory.getDBInstance(EDatabaseTypeName.IBMDB2)).thenReturn(mockMetadataFillFactory);
         Mockito.when(mockMetadataFillFactory.createConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
         Mockito.when(mockMetadataFillFactory.fillUIConnParams((IMetadataConnection) Mockito.any(), (Connection) Mockito.isNull()))
                 .thenReturn(dbProvider);
