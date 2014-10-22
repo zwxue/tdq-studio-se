@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -443,14 +444,18 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
 
             // add pagation control
             final PageableController controller = new PageableController(100);
-            final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(
-                    ssIndicator.getMapDB(StandardDBName.dataSection.name()));
-            controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
-                    columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null));
-            ResultAndNavigationPageGraphicsRenderer resultAndPageButtonsDecorator = new ResultAndNavigationPageGraphicsRenderer(
-                    sectionTableComp, SWT.NONE, controller);
-            resultAndPageButtonsDecorator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            try {
+                final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(
+                        ssIndicator.getMapDB(StandardDBName.dataSection.name()));
 
+                controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
+                        columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null));
+                ResultAndNavigationPageGraphicsRenderer resultAndPageButtonsDecorator = new ResultAndNavigationPageGraphicsRenderer(
+                        sectionTableComp, SWT.NONE, controller);
+                resultAndPageButtonsDecorator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            } catch (IOError error) {
+                log.warn(error.getMessage(), error);
+            }
             createColumns(controller, ssIndicator);
             // Set current page to 0 to refresh the table
             controller.setCurrentPage(0);
