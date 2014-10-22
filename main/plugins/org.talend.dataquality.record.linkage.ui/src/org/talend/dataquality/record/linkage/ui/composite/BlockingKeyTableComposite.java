@@ -15,7 +15,6 @@ package org.talend.dataquality.record.linkage.ui.composite;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer;
-import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 
@@ -42,14 +41,14 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<Bl
      */
     @Override
     protected void initHeaders() {
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.BLOCKING_KEY_NAME)); // 14
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.PRECOLUMN)); // 14
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.PRE_ALGO)); // 12
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.PRE_VALUE)); // 20
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.KEY_ALGO)); // 17
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.KEY_VALUE)); // 11
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.POST_ALGO)); // 11
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.POST_VALUE)); // 11
+        headers.add(MatchAnalysisConstant.BLOCKING_KEY_NAME); // 14
+        headers.add(MatchAnalysisConstant.PRECOLUMN); // 14
+        headers.add(MatchAnalysisConstant.PRE_ALGO); // 12
+        headers.add(MatchAnalysisConstant.PRE_VALUE); // 20
+        headers.add(MatchAnalysisConstant.KEY_ALGO); // 17
+        headers.add(MatchAnalysisConstant.KEY_VALUE); // 11
+        headers.add(MatchAnalysisConstant.POST_ALGO); // 11
+        headers.add(MatchAnalysisConstant.POST_VALUE); // 11
 
     }
 
@@ -60,6 +59,7 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<Bl
      */
     @Override
     protected void createTable() {
+
         tableViewer = createTableViewer();
         tableViewer.addPropertyChangeListener(this);
         ((BlockingKeyTableViewer) tableViewer).initTable(headers, columnList);
