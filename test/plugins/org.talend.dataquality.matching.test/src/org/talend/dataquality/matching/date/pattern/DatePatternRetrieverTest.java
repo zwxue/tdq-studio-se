@@ -81,7 +81,7 @@ public class DatePatternRetrieverTest {
         patt.initModel2Regex(file);
         parseFile(filedates, patt);
 
-        final int[] EXPECTED_SCORE = { 1, 4, 3, 1, 2, 1, 1, 40, 1 };
+        final int[] EXPECTED_SCORE = { 1, 4, 1, 2, 1, 1, 40, 1 };
 
         for (int i = 0, j = 0; i < patt.getModelMatchers().size(); i++) {
             ModelMatcher patternMatcher = patt.getModelMatchers().get(i);
