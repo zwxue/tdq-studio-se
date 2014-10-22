@@ -139,7 +139,8 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     private String getInternationalizedLabel(String str) {
-        return DefaultMessagesImpl.getString(str);
+        // if the str is %, just return it, need not to do internationalization
+        return MatchAnalysisConstant.PERCENTAGE.equals(str) ? str : DefaultMessagesImpl.getString(str);
     }
 
     /**
