@@ -1,7 +1,9 @@
 package org.talend.dataquality.matchmerge.mfb;
 
+import java.util.Collections;
 import java.util.Iterator;
 
+import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.dataquality.matchmerge.Attribute;
@@ -82,12 +84,11 @@ public class MFBRecordMatcher extends AbstractRecordMatcher {
             return score;
         }
         // 2- Compare using values that build attribute value (if any)
-        Iterator<String> leftValues = leftAttribute.getValues().iterator();
-        Iterator<String> rightValues = rightAttribute.getValues().iterator();
+        Iterator<String> leftValues = new IteratorChain(Collections.singleton(left).iterator(), leftAttribute.getValues().iterator());
         double maxScore = 0;
-        String leftValue = left;
         while (leftValues.hasNext()) {
-            leftValue = leftValues.next();
+            String leftValue = leftValues.next();
+            Iterator<String> rightValues = new IteratorChain(Collections.singleton(right).iterator(), rightAttribute.getValues().iterator());
             while (rightValues.hasNext()) {
                 String rightValue = rightValues.next();
                 score = matcher.getMatchingWeight(leftValue, rightValue);
@@ -98,18 +99,6 @@ public class MFBRecordMatcher extends AbstractRecordMatcher {
                     // Can't go higher, no need to perform other checks.
                     return maxScore;
                 }
-            }
-        }
-        // Process remaining values in right (if any).
-        while (rightValues.hasNext()) {
-            String rightValue = rightValues.next();
-            score = matcher.getMatchingWeight(leftValue, rightValue);
-            if (score > maxScore) {
-                maxScore = score;
-            }
-            if (maxScore == MAX_SCORE) {
-                // Can't go higher, no need to perform other checks.
-                return maxScore;
             }
         }
         return maxScore;
