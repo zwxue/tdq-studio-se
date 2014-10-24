@@ -15,7 +15,6 @@ package org.talend.dataprofiler.common.ui.pagination.pageloder;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.nebula.widgets.pagination.collections.PageResult;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.indicator.DataValidation;
@@ -29,66 +28,33 @@ import org.talend.dataquality.indicators.mapdb.DBValueMap;
  */
 public class MapDBPageListHelper {
 
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, Map<Long, T> indexMap) {
-        return createPage(db, controller, indexMap, db.size(), (ColumnFilter) null);
-    }
-
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, Map<Long, T> indexMap,
-            long itemsSize) {
-        return createPage(db, controller, indexMap, itemsSize, (ColumnFilter) null);
-    }
-
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, Map<Long, T> indexMap,
-            long itemsSize, DataValidation dataValidator) {
-        long totalSize = itemsSize;
-        long pageSize = controller.getPageSize();
-        long pageIndex = controller.getPageOffset();
-
-        long fromIndex = pageIndex;
-        long toIndex = pageIndex + pageSize;
-        if (toIndex > totalSize) {
-            toIndex = totalSize;
-        }
+    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, Map<Long, T> indexMap, DataValidation dataValidator,
+            long fromIndex, long toIndex, long totalSize) {
 
         List<Object[]> content = db.subList(fromIndex, toIndex, indexMap, dataValidator);
 
         return new PageResult<Object[]>(content, totalSize);
     }
 
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, Map<Long, T> indexMap,
-            long itemsSize, ColumnFilter filter) {
-        long totalSize = itemsSize;
-        long pageSize = controller.getPageSize();
-        long pageIndex = controller.getPageOffset();
-
-        long fromIndex = pageIndex;
-        long toIndex = pageIndex + pageSize;
-        if (toIndex > totalSize) {
-            toIndex = totalSize;
-        }
+    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, Map<Long, T> indexMap, ColumnFilter filter,
+            long fromIndex, long toIndex, long totalSize) {
 
         List<Object[]> content = db.subList(fromIndex, toIndex, indexMap);
         if (filter != null) {
             content = filter.filterArray(content);
         }
 
-        if (content.size() < totalSize) {
-            totalSize = content.size();
+        // this is different from another createPage method
+        long total = totalSize;
+        if (content.size() < total) {
+            total = content.size();
         }
-        return new PageResult<Object[]>(content, totalSize);
+        return new PageResult<Object[]>(content, total);
     }
 
-    public static <K, V> PageResult<Object[]> createPageByValue(DBValueMap<K, V> db, PageableController controller,
-            Map<Long, K> indexMap, long itemsSize, ColumnFilter filter) {
-        long totalSize = itemsSize;
-        long pageSize = controller.getPageSize();
-        long pageIndex = controller.getPageOffset();
+    public static <K, V> PageResult<Object[]> createPageByValue(DBValueMap<K, V> db, Map<Long, K> indexMap, ColumnFilter filter,
+            long fromIndex, long toIndex) {
 
-        long fromIndex = pageIndex;
-        long toIndex = pageIndex + pageSize;
-        if (toIndex > totalSize) {
-            toIndex = totalSize;
-        }
         List<Object[]> content = ((DBMap<K, V>) db).subValueList(fromIndex, toIndex, indexMap);
         if (filter != null) {
             content = filter.filterArray(content);
