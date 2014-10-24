@@ -93,35 +93,41 @@ public class DatePatternRetriever {
      * @param expression
      */
     public void handle(String expression) {
-        ModelMatcher findMatcher = findMatcher(expression);
-        if (findMatcher != null) {
-            findMatcher.increment();
+        for (ModelMatcher patternMatcher : this.modelMatchers) {
+            if (patternMatcher.matches(expression)) {
+                patternMatcher.increment();
+            }
         }
     }
 
     /**
+     * DOC msjian Comment method "getModels".
+     * 
      * @param expression
+     * @return
      */
-    public String getModel(String expression) {
-        ModelMatcher findMatcher = findMatcher(expression);
-        if (findMatcher != null) {
-            return findMatcher.getModel();
+    public List<String> getModels(String expression) {
+        List<String> models = new ArrayList<String>();
+        for (ModelMatcher findMatcher : findMatchers(expression)) {
+            models.add(findMatcher.getModel());
         }
-        return null;
+        return models;
     }
 
     /**
-     * Find the matcher whiche is match with expression
+     * Find the matcher whiche is match with expression notice: sometimes, when expression may have more than one
+     * matchers for example: 2000-04-05 matches both "yyyy MM dd" and "yyyy dd MM"
      * 
      * @param expression
      */
-    public ModelMatcher findMatcher(String expression) {
+    public List<ModelMatcher> findMatchers(String expression) {
+        List<ModelMatcher> matchers = new ArrayList<ModelMatcher>();
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.matches(expression)) {
-                return patternMatcher;
+                matchers.add(patternMatcher);
             }
         }
-        return null;
+        return matchers;
     }
 
     /**

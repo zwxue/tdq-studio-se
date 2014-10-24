@@ -68,8 +68,9 @@ public class MapDBPageLoader<T> implements IPageLoader<PageResult<Object[]>> {
         if (dataValidator == null) {
             if (DBValueMap.class.isInstance(db)) {
                 return MapDBPageListHelper.createPageByValue((DBValueMap) db, controller, indexMap, itemsSize, columnFilter);
+            } else {
+                return MapDBPageListHelper.createPage(db, controller, indexMap, itemsSize, columnFilter);
             }
-            return MapDBPageListHelper.createPage(db, controller, indexMap, itemsSize, columnFilter);
         } else {
             return MapDBPageListHelper.createPage(db, controller, indexMap, itemsSize, dataValidator);
         }
