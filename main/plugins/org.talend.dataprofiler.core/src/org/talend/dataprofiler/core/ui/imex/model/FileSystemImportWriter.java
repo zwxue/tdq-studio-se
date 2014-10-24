@@ -50,6 +50,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -93,6 +94,7 @@ import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -134,7 +136,9 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private List<File> allCopiedFiles = new ArrayList<File>();
 
-    private final Map<ModelElement, ModelElement> need2MergeModelElementMap = new HashMap<ModelElement, ModelElement>();
+    private final Map<TDQItem, ModelElement> need2MergeModelElementMap = new HashMap<TDQItem, ModelElement>();
+
+    private final List<IPath> allDeletedItems = new ArrayList<IPath>();
 
     /*
      * check the dependency and conflict; when the record is a indicator(system or user): if overwrite should not add
@@ -404,7 +408,6 @@ public class FileSystemImportWriter implements IImportWriter {
         FileUtils.copyFile(resFile, desFile);
 
         update(desFile, isCovered);
-
     }
 
     /**
@@ -481,6 +484,7 @@ public class FileSystemImportWriter implements IImportWriter {
         final IProgressMonitor fMonitor = monitor;
 
         need2MergeModelElementMap.clear();
+        allDeletedItems.clear();
 
         RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Import TDQ Element") {//$NON-NLS-1$
 
@@ -526,14 +530,14 @@ public class FileSystemImportWriter implements IImportWriter {
                                         mergeSystemIndicator(record, indItem);
                                         // only add it when it is UDIndicatorDefinition
                                         if (record.getElement() instanceof UDIndicatorDefinition) {
-                                            need2MergeModelElementMap.put(indItem.getIndicatorDefinition(), record.getElement());
+                                            need2MergeModelElementMap.put(indItem, record.getElement());
                                         }
                                         isDelete = false;
                                     }
                                 } else if (isPattern(modEle)) {
                                     TDQPatternItem patternItem = (TDQPatternItem) object.getProperty().getItem();
                                     mergePattern(record, patternItem);
-                                    need2MergeModelElementMap.put(patternItem.getPattern(), record.getElement());
+                                    need2MergeModelElementMap.put(patternItem, record.getElement());
                                     isDelete = false;
                                 } else {
                                     // remove the dependency of the object
@@ -552,6 +556,7 @@ public class FileSystemImportWriter implements IImportWriter {
                                         write(resPath, desPath);
                                         allCopiedFiles.add(desPath.toFile());
                                     }
+                                    allDeletedItems.add(desPath);
                                 }
                             }
 
@@ -852,10 +857,10 @@ public class FileSystemImportWriter implements IImportWriter {
      * merge ClientDependency to Pattern.
      * 
      * @param isModified
-     * @param systemModelElement
+     * @param tdqItem
      * @param recordModelElement
      */
-    private void mergeClientDependency2PatternOrUdi(ModelElement systemModelElement, ModelElement recordModelElement) {
+    private void mergeClientDependency2PatternOrUdi(TDQItem tdqItem, ModelElement recordModelElement) {
         EList<Dependency> supplierDependency = recordModelElement.getSupplierDependency();
         if (supplierDependency != null) {
             // TDQ-8105 should add dependces between the pattern and System's analyis,not the old analysis from the temp
@@ -872,7 +877,7 @@ public class FileSystemImportWriter implements IImportWriter {
                             IRepositoryViewObject viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(
                                     ProjectManager.getInstance().getCurrentProject(), property.getId());
                             if (viewObject != null) {
-                                updateAnalysisClientDependence(systemModelElement, viewObject.getProperty());
+                                updateAnalysisClientDependence(tdqItem, viewObject.getProperty());
                             }
                         }
                     } catch (PersistenceException e) {
@@ -886,18 +891,18 @@ public class FileSystemImportWriter implements IImportWriter {
     /**
      * remove the old client dependency add a new one in Anlaysis.
      * 
-     * @param systemSupplyModelElement
+     * @param supplierItem
      * @param modelElement
      * @throws PersistenceException
      */
-    private void updateAnalysisClientDependence(ModelElement systemSupplyModelElement, Property property)
-            throws PersistenceException {
+    private void updateAnalysisClientDependence(TDQItem supplierItem, Property property) throws PersistenceException {
         ModelElement anaModelElement = PropertyHelper.getModelElement(property);
         if (anaModelElement != null) {
             Analysis analysis = (Analysis) anaModelElement;
             EList<Dependency> clientDependency = anaModelElement.getClientDependency();
             Iterator<Dependency> it = clientDependency.iterator();
-            Resource supModeResource = systemSupplyModelElement.eResource();
+            ModelElement supplierModelElement = RepositoryNodeHelper.getResourceModelElement(supplierItem);
+            Resource supModeResource = supplierModelElement.eResource();
             while (it.hasNext()) {
                 Dependency clientDep = it.next();
                 // when the client dependence is proxy and its lastSegment of uri is same as
@@ -915,14 +920,15 @@ public class FileSystemImportWriter implements IImportWriter {
                     }
                 }
             }
-            DependenciesHandler.getInstance().setUsageDependencyOn(anaModelElement, systemSupplyModelElement);
+            DependenciesHandler.getInstance().setUsageDependencyOn(anaModelElement, supplierModelElement);
             // TDQ-8436 remove the old pattern and add the new pattern in analysis Indicator Parameters.
-            if (isPattern(systemSupplyModelElement)) {
-                updatePatternInAnaParams(systemSupplyModelElement, analysis);
+            if (isPattern(supplierModelElement)) {
+                updatePatternInAnaParams(supplierModelElement, analysis);
+                ElementWriterFactory.getInstance().createPatternWriter().save(supplierItem, true);
             }
 
             // remove old udi and set a new one in the analysis indicators.
-            if (systemSupplyModelElement instanceof UDIndicatorDefinition) {
+            if (supplierModelElement instanceof UDIndicatorDefinition) {
                 if (analysis.getResults() != null) {
                     EList<Indicator> indicators = analysis.getResults().getIndicators();
                     Iterator<Indicator> itIndicators = indicators.iterator();
@@ -933,11 +939,12 @@ public class FileSystemImportWriter implements IImportWriter {
                             URI indicatorDefURI = ((InternalEObject) indicatorDefinition).eProxyURI();
                             if (supModeResource != null && UDIHelper.isUDI(indicator)
                                     && indicatorDefURI.lastSegment().equals(supModeResource.getURI().lastSegment())) {
-                                indicator.setIndicatorDefinition((UDIndicatorDefinition) systemSupplyModelElement);
+                                indicator.setIndicatorDefinition((UDIndicatorDefinition) supplierModelElement);
                                 break;
                             }
                         }
                     }
+                    ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(supplierItem, true);
                 }
             }
 
@@ -1043,7 +1050,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * [], org.eclipse.core.runtime.IProgressMonitor)
      */
     public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
-        checkImportItems();
+        cleanImportedItems();
         doMigration(monitor);
         // MOD qiongli 2012-11-8 TDQ-6166.
         notifySQLExplorerForConnection();
@@ -1051,9 +1058,9 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /**
-     * DOC talend Comment method "checkImportItems".
+     * removeInvalidDependency and removeLockStatus.
      */
-    private void checkImportItems() {
+    private void cleanImportedItems() {
         for (File file : allCopiedFiles) {
             if (!file.exists()) {
                 continue;
@@ -1069,7 +1076,6 @@ public class FileSystemImportWriter implements IImportWriter {
             removeLockStatus(property);
             // TDQ-7534~
         }
-
     }
 
     private void doMigration(IProgressMonitor monitor) {
@@ -1349,11 +1355,26 @@ public class FileSystemImportWriter implements IImportWriter {
      * @see org.talend.dataprofiler.core.ui.imex.model.IImportWriter#postFinish()
      */
     public void postFinish() throws IOException {
+        // save all deleted items
+        for (IPath path : this.allDeletedItems) {
+            IFile desIFile = ResourceService.file2IFile(path.toFile());
+            if (desIFile != null && desIFile.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                Property property = PropertyHelper.getProperty(desIFile);
+                if (property != null) {
+                    try {
+                        ProxyRepositoryFactory.getInstance().save(property.getItem(), true);
+                    } catch (PersistenceException e) {
+                        log.error(e);
+                    }
+                }
+            }
+        }
+
         // merging IndicatorDefinition and Pattern
         if (!need2MergeModelElementMap.isEmpty()) {
-            for (ModelElement me : need2MergeModelElementMap.keySet()) {
-                ModelElement recordMe = need2MergeModelElementMap.get(me);
-                mergeClientDependency2PatternOrUdi(me, recordMe);
+            for (TDQItem item : need2MergeModelElementMap.keySet()) {
+                ModelElement recordMe = need2MergeModelElementMap.get(item);
+                mergeClientDependency2PatternOrUdi(item, recordMe);
             }
         }
 
