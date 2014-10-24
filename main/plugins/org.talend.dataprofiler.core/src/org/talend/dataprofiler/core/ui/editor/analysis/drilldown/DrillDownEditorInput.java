@@ -32,6 +32,7 @@ import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
+import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
@@ -39,7 +40,6 @@ import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
-import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -49,7 +49,6 @@ import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
-import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -67,6 +66,24 @@ public class DrillDownEditorInput implements IEditorInput {
     private MenuItemEntity menuItemEntity;
 
     private ChartDataEntity dataEntity;
+
+    /**
+     * Getter for dataEntity.
+     * 
+     * @return the dataEntity
+     */
+    public ChartDataEntity getDataEntity() {
+        return this.dataEntity;
+    }
+
+    /**
+     * Sets the dataEntity.
+     * 
+     * @param dataEntity the dataEntity to set
+     */
+    public void setDataEntity(ChartDataEntity dataEntity) {
+        this.dataEntity = dataEntity;
+    }
 
     private String[] columnHeader = null;
 
@@ -220,7 +237,7 @@ public class DrillDownEditorInput implements IEditorInput {
         for (String columnElement : columnElementList) {
             columnHeader[headerIndex++] = columnElement;
         }
-        AbstractDB<?> mapDB = getMapDB();
+        AbstractDB<?> mapDB = DrillDownUtils.getMapDB(dataEntity, analysis);
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
         if (AnalysisType.COLUMN_SET == analysisType) {
             Long size = getCurrentIndicatorResultSize();
@@ -361,22 +378,6 @@ public class DrillDownEditorInput implements IEditorInput {
         return itemsSize;
     }
 
-    /**
-     * Get MapDB which store the drill down data for current indicator
-     * 
-     * @return
-     */
-    public AbstractDB<Object> getMapDB() {
-        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        AbstractDB<Object> columnSetMapDB = getColumnSetAnalysisMapDB(analysisType);
-        if (columnSetMapDB != null) {
-            return columnSetMapDB;
-        }
-        String dbMapName = getDBMapName(analysisType);
-        return this.currIndicator.getMapDB(dbMapName);
-
-    }
-
     public Indicator getGenerateMapDBIndicator() {
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
         if (AnalysisType.COLUMN_SET == analysisType) {
@@ -387,46 +388,6 @@ public class DrillDownEditorInput implements IEditorInput {
             }
         }
         return this.currIndicator;
-    }
-
-    /**
-     * Get MapDB which store the drill down data for columnSet analysis
-     * 
-     * @param analysisType
-     */
-    private AbstractDB<Object> getColumnSetAnalysisMapDB(AnalysisType analysisType) {
-        if (AnalysisType.COLUMN_SET == analysisType) {
-            SimpleStatIndicator simpleStatIndicator = null;
-            for (Indicator indicator : analysis.getResults().getIndicators()) {
-                if (SimpleStatIndicator.class.isInstance(indicator)) {
-                    simpleStatIndicator = (SimpleStatIndicator) indicator;
-                    break;
-                }
-            }
-            if (simpleStatIndicator != null) {
-                return simpleStatIndicator.getMapDB(StandardDBName.dataSection.name());
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Get the name of MapDB
-     * 
-     * @return
-     */
-    private String getDBMapName(AnalysisType analysisType) {
-        String dbMapName = StandardDBName.drillDown.name();
-        if (FrequencyIndicator.class.isInstance(currIndicator)) {
-            dbMapName = this.getSelectValue();
-        } else if (LengthIndicator.class.isInstance(currIndicator)) {
-            String selectValue = ((LengthIndicator) currIndicator).getLength().toString();
-            dbMapName = this.getSelectValue() + selectValue;
-        } else if (AnalysisType.COLUMN_SET == analysisType) {
-            dbMapName = StandardDBName.dataSection.name();
-        }
-
-        return dbMapName;
     }
 
     public boolean computeColumnValueLength(List<Object[]> newColumnElementList) {

@@ -44,7 +44,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
@@ -53,11 +52,10 @@ import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDuplicatesAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsMapSelectionDialog;
-import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
+import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -66,12 +64,10 @@ import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
-import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
@@ -79,10 +75,7 @@ import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
-import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
-import org.talend.dataquality.indicators.mapdb.AbstractDB;
-import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dataquality.rules.JoinElement;
@@ -97,18 +90,12 @@ import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public final class ChartTableFactory {
-
-    /**
-     * 
-     */
-    private static final String DRILL_DOWN_EDITOR = "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"; //$NON-NLS-1$
 
     private ChartTableFactory() {
     }
@@ -173,9 +160,6 @@ public final class ChartTableFactory {
         final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
         final boolean isJAVALanguage = ExecutionLanguage.JAVA == currentEngine;
         final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
-        final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
-        final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
-        final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
 
         final Table table = tbViewer.getTable();
 
@@ -199,7 +183,6 @@ public final class ChartTableFactory {
                         table.setMenu(menu);
 
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
-                        Long rowCount = getRowCount(analysis, dataEntity.getIndicator().getAnalyzedElement());
 
                         if (!isJAVALanguage) {
                             boolean showExtraMenu = false;
@@ -207,13 +190,10 @@ public final class ChartTableFactory {
                                 MenuItem item = new MenuItem(menu, SWT.PUSH);
                                 item.setText(itemEntity.getLabel());
                                 item.setImage(itemEntity.getIcon());
-
                                 item.addSelectionListener(new SelectionAdapter() {
 
                                     @Override
                                     public void widgetSelected(SelectionEvent e) {
-                                        String query = itemEntity.getQuery();
-                                        String editorName = indicator.getName();
                                         // TDQ-8637 pop a message when it is pattern and no implemnt Regex function in
                                         // DBMSLanguage.
                                         if (isPatternMatchingIndicator(indicator)
@@ -222,6 +202,9 @@ public final class ChartTableFactory {
                                                     DefaultMessagesImpl.getString("ChartTableFactory.NoSupportPatternTeradata"));//$NON-NLS-1$
                                             return;
                                         }
+
+                                        String query = itemEntity.getQuery();
+                                        String editorName = indicator.getName();
                                         SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                     }
                                 });
@@ -389,9 +372,9 @@ public final class ChartTableFactory {
 
                             if (analysis.getParameters().isStoreData()) { // if allow drill down
                                 if (indicator.isUsedMapDBMode()) {
-                                    createDrillDownMenuForMapDB(dataEntity, menu, itemEntities);
+                                    DrillDownUtils.createDrillDownMenuForMapDB(dataEntity, menu, itemEntities, analysis);
                                 } else {
-                                    createDrillDownMenuForJava(dataEntity, menu, itemEntities);
+                                    DrillDownUtils.createDrillDownMenuForJava(dataEntity, menu, itemEntities, analysis);
                                 }
                                 if (isPatternFrequencyIndicator(indicator)) {
                                     for (final MenuItemEntity itemEntity : itemEntities) {
@@ -452,153 +435,6 @@ public final class ChartTableFactory {
                 }
             }
 
-            private void createDrillDownMenuForMapDB(final ChartDataEntity dataEntity, Menu menu, MenuItemEntity[] itemEntities) {
-                final Indicator indicator = dataEntity != null ? dataEntity.getIndicator() : null;
-                if (dataEntity == null || indicator == null || this.getMapDB(dataEntity).size() == 0) {
-                    return;
-                }
-                for (final MenuItemEntity itemEntity : itemEntities) {
-                    MenuItem item = new MenuItem(menu, SWT.PUSH);
-                    item.setText(itemEntity.getLabel());
-                    item.setImage(itemEntity.getIcon());
-                    item.addSelectionListener(new SelectionAdapter() {
-
-                        @Override
-                        public void widgetSelected(SelectionEvent e) {
-                            CorePlugin.getDefault().openEditor(new DrillDownEditorInput(analysis, dataEntity, itemEntity),
-                                    ChartTableFactory.DRILL_DOWN_EDITOR);
-                        }
-
-                    });
-                }
-
-            }
-
-            /**
-             * Get MapDB which store the drill down data for current indicator
-             * 
-             * @return
-             */
-            private AbstractDB<Object> getMapDB(final ChartDataEntity dataEntity) {
-                AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-                if (AnalysisType.COLUMN_SET == analysisType) {
-                    return getColumnSetAnalysisMapDB(analysisType);
-                }
-
-                Indicator indicator = dataEntity.getIndicator();
-                String selectValue = dataEntity.getLabel();
-                String dbMapName = getDBMapName(analysisType, indicator, selectValue);
-                return indicator.getMapDB(dbMapName);
-
-            }
-
-            /**
-             * Get the name of MapDB
-             * 
-             * @return
-             */
-            private String getDBMapName(AnalysisType analysisType, Indicator indicator, String selectValue) {
-                String dbMapName = StandardDBName.drillDown.name();
-                if (FrequencyIndicator.class.isInstance(indicator)) {
-                    dbMapName = selectValue;
-                } else if (LengthIndicator.class.isInstance(indicator)) {
-                    String selectValueLength;
-                    Long length = ((LengthIndicator) indicator).getLength();
-                    if (length != null) {
-                        selectValueLength = length.toString();
-                    } else {
-                        selectValueLength = ((LengthIndicator) indicator).getRealValue().toString();
-                    }
-                    dbMapName = selectValue + selectValueLength;
-                } else if (AnalysisType.COLUMN_SET == analysisType) {
-                    dbMapName = StandardDBName.dataSection.name();
-                }
-
-                return dbMapName;
-            }
-
-            /**
-             * Get MapDB which store the drill down data for columnSet analysis
-             * 
-             * @param analysisType
-             */
-            private AbstractDB<Object> getColumnSetAnalysisMapDB(AnalysisType analysisType) {
-                if (AnalysisType.COLUMN_SET == analysisType) {
-                    SimpleStatIndicator simpleStatIndicator = null;
-                    for (Indicator indicator : analysis.getResults().getIndicators()) {
-                        if (SimpleStatIndicator.class.isInstance(indicator)) {
-                            simpleStatIndicator = (SimpleStatIndicator) indicator;
-                            break;
-                        }
-                    }
-                    if (simpleStatIndicator != null) {
-                        return simpleStatIndicator.getMapDB(StandardDBName.dataSection.name());
-                    }
-                }
-                return null;
-            }
-
-            /**
-             * DOC talend Comment method "createDrillDownMenu".
-             * 
-             * @param analysis
-             * @param dataEntity
-             * @param menu
-             * @param itemEntities
-             */
-            private void createDrillDownMenuForJava(final ChartDataEntity dataEntity, Menu menu, MenuItemEntity[] itemEntities) {
-                final Indicator indicator = dataEntity != null ? dataEntity.getIndicator() : null;
-                AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
-                boolean hasData = analyDataSet != null
-                        && (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
-                                || analyDataSet.getFrequencyData() != null && analyDataSet.getFrequencyData().size() > 0 || analyDataSet
-                                .getPatternData() != null && analyDataSet.getPatternData().size() > 0);
-
-                if (hasData) {
-                    for (final MenuItemEntity itemEntity : itemEntities) {
-                        MenuItem item = new MenuItem(menu, SWT.PUSH);
-                        item.setText(itemEntity.getLabel());
-                        item.setImage(itemEntity.getIcon());
-                        item.addSelectionListener(new SelectionAdapter() {
-
-                            @Override
-                            public void widgetSelected(SelectionEvent e) {
-                                CorePlugin.getDefault().openEditor(new DrillDownEditorInput(analysis, dataEntity, itemEntity),
-                                        ChartTableFactory.DRILL_DOWN_EDITOR);
-                            }
-
-                        });
-                    }
-                }
-            }
-
-            /**
-             * DOC xqliu Comment method "getRowCount".
-             * 
-             * @param analysis
-             * @param analyzedElement
-             * @return
-             */
-            private Long getRowCount(Analysis analysis, ModelElement analyzedElement) {
-                Long rowCount = 0L;
-                EList<Indicator> indicators = analysis.getResults().getIndicators();
-                for (Indicator ind : indicators) {
-                    if (ind instanceof RowCountIndicator && ind.getAnalyzedElement().equals(analyzedElement)) {
-                        rowCount = ind.getCount();
-                    }
-                }
-                return rowCount;
-            }
-
-            private SelectionAdapter getAdapter(final IDatabaseJobService service) {
-                return new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        service.executeJob();
-                    }
-                };
-            }
         });
 
         // add tool tip

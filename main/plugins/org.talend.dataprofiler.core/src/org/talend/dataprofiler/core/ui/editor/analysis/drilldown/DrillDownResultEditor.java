@@ -68,6 +68,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
@@ -205,7 +206,7 @@ public class DrillDownResultEditor extends EditorPart {
         Analysis analysis = ddEditorInput.getAnalysis();
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
         IPageLoader<PageResult<Object[]>> pageLoader = null;
-        AbstractDB<Object> mapDB = ddEditorInput.getMapDB();
+        AbstractDB<Object> mapDB = DrillDownUtils.getMapDB(ddEditorInput.getDataEntity(), ddEditorInput.getAnalysis());
         Indicator generateMapDBIndicator = ddEditorInput.getGenerateMapDBIndicator();
         MapDBManager.getInstance().addDBRef(generateMapDBIndicator.getMapDBFile());
         if (AnalysisType.COLUMN_SET == analysisType) {
@@ -213,13 +214,11 @@ public class DrillDownResultEditor extends EditorPart {
             pageLoader = new MapDBPageLoader<Object>(mapDB, ddEditorInput.getCurrIndicator(), itemsSize);
         } else {
             // ~
-
             ColumnFilter filter = ddEditorInput.getColumnFilter();
             pageLoader = new MapDBPageLoader<Object>(mapDB, null, mapDB.size(), filter);
         }
-        final IPageLoader<PageResult<Object[]>> finalPageLoader = pageLoader;
         controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller, tableView,
-                finalPageLoader, PageResultContentProvider.getInstance(), null));
+                pageLoader, PageResultContentProvider.getInstance(), null));
         controller.addPageChangedListener(new PageChangedAdapter() {
 
             /*

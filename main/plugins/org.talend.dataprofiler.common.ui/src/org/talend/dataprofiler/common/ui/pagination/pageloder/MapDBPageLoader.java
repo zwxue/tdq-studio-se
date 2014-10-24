@@ -65,13 +65,24 @@ public class MapDBPageLoader<T> implements IPageLoader<PageResult<Object[]>> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public PageResult<Object[]> loadPage(PageableController controller) {
+        long totalSize = itemsSize;
+        long pageSize = controller.getPageSize();
+        long pageIndex = controller.getPageOffset();
+
+        long fromIndex = pageIndex;
+        long toIndex = pageIndex + pageSize;
+        if (toIndex > totalSize) {
+            toIndex = totalSize;
+        }
+
         if (dataValidator == null) {
             if (DBValueMap.class.isInstance(db)) {
-                return MapDBPageListHelper.createPageByValue((DBValueMap) db, controller, indexMap, itemsSize, columnFilter);
+                return MapDBPageListHelper.createPageByValue((DBValueMap) db, indexMap, columnFilter, fromIndex, toIndex);
+            } else {
+                return MapDBPageListHelper.createPage(db, indexMap, columnFilter, fromIndex, toIndex, totalSize);
             }
-            return MapDBPageListHelper.createPage(db, controller, indexMap, itemsSize, columnFilter);
         } else {
-            return MapDBPageListHelper.createPage(db, controller, indexMap, itemsSize, dataValidator);
+            return MapDBPageListHelper.createPage(db, indexMap, dataValidator, fromIndex, toIndex, totalSize);
         }
     }
 

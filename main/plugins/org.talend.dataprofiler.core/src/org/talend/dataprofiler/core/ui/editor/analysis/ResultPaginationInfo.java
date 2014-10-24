@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -69,6 +70,7 @@ import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.IEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -91,6 +93,8 @@ import org.talend.repository.model.IRepositoryNode;
  * DOC mzhao UIPagination.MasterPaginationInfo class global comment. Detailled comment
  */
 public class ResultPaginationInfo extends IndicatorPaginationInfo {
+
+    private static Logger log = Logger.getLogger(ResultPaginationInfo.class);
 
     private ColumnMasterDetailsPage masterPage;
 
@@ -322,17 +326,26 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
             public void chartMouseClicked(ChartMouseEvent event) {
                 boolean flag = event.getTrigger().getButton() != MouseEvent.BUTTON3;
-
                 chartComp.setDomainZoomable(flag);
                 chartComp.setRangeZoomable(flag);
-
-                final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
                 // MOD xqliu 2010-09-26 bug 15745
                 // if (flag || ExecutionLanguage.JAVA == currentEngine) {
                 if (flag) {
                     return;
                 }
                 // ~ 15745
+
+                final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
+                // MOD gdbu 2011-7-12 bug : 22524
+                if (ExecutionLanguage.JAVA == currentEngine && 0 == analysis.getResults().getIndicToRowMap().size()) {
+                    return;
+                }
+                // ~22524
+                // ADD msjian TDQ-7275 2013-5-21: when allow drill down is not checked, no menu display
+                if (ExecutionLanguage.JAVA == currentEngine && !analysis.getParameters().isStoreData()) {
+                    return;
+                }
+                // TDQ-7275~
 
                 ChartEntity chartEntity = event.getEntity();
                 if (chartEntity != null && chartEntity instanceof CategoryItemEntity) {
@@ -342,33 +355,31 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     // MOD xqliu 2010-09-26 bug 15745
                     final ChartDataEntity currentDataEntity = getCurrentChartDateEntity(cateEntity, dataEntity);
                     // ~ 15745
-
                     if (currentDataEntity != null) {
-                        // MOD gdbu 2011-7-12 bug : 22524
-                        if (ExecutionLanguage.JAVA == currentEngine && 0 == analysis.getResults().getIndicToRowMap().size()) {
-                            return;
-                        }
-                        // ~22524
-                        // ADD msjian TDQ-7275 2013-5-21: when allow drill down is not checked, no menu display
-                        if (ExecutionLanguage.JAVA == currentEngine && !analysis.getParameters().isStoreData()) {
-                            return;
-                        }
-                        // TDQ-7275~
-
-                        // create menu
-                        Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
-                        chartComp.setMenu(menu);
-
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
-                        int createPatternFlag = 0;
-                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
-
                         // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
                         if (currentIndicator instanceof DatePatternFreqIndicator
                                 && null == analysis.getResults().getIndicToRowMap().get(currentIndicator).getFrequencyData()) {
                             return;
                         }
 
+                        // ADD msjian TDQ-9592: let the averagelengthXX indicators don't show the drilldown menu
+                        if (ExecutionLanguage.JAVA == currentEngine && analysis.getParameters().isStoreData()) {
+                            if (currentIndicator.isUsedMapDBMode()) {
+                                if (dataEntity == null || currentIndicator == null
+                                        || DrillDownUtils.getMapDB(currentDataEntity, analysis).size() == 0) {
+                                    return;
+                                }
+                            }
+                        }
+                        // TDQ-9592~
+
+                        // create menu
+                        Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
+                        chartComp.setMenu(menu);
+
+                        int createPatternFlag = 0;
+                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
                         for (final MenuItemEntity itemEntity : itemEntities) {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
@@ -398,7 +409,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                             }
 
                                         } catch (PartInitException e1) {
-                                            e1.printStackTrace();
+                                            log.error(e1, e1);
                                         }
                                     } else {
                                         Display.getDefault().asyncExec(new Runnable() {
