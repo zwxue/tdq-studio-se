@@ -119,14 +119,18 @@ public class DataSampleTable {
     // TDQ-9297 msjian: set the default value the same as lessSpin default value.
     private int minGrpSize = PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT;
 
-    private SortState sortState = new SortState();
+    private SortState sortState = new SortState(-1);
 
     // <groupid, related color>
     private Map<String, Integer> rowOfGIDWithColor = new HashMap<String, Integer>();
 
     private int masterColumn;
 
+    private boolean isContainGID = false;
+
     private final static Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForSwt();
+
+    private ColumnPosition additionalColumnPosition;
 
     public DataSampleTable() {
     }
@@ -139,29 +143,71 @@ public class DataSampleTable {
      */
     public TControl createTable(Composite parentContainer, ModelElement[] columns, List<Object[]> listOfData) {
         reset();
-        String[] columnsName = createColumnLabel(columns);
 
-        Map<String, String> columnToLabelMap = new HashMap<String, String>();
-        for (String label : columnsName) {
-            columnToLabelMap.put(label, label);
-        }
-        initTableProperty(columnsName, columnToLabelMap);
+        initTableProperty(columns);
 
         // initial the data if it is empty
-        if (listOfData == null) {
-            listOfData = new ArrayList<Object[]>();
+        List<Object[]> results = listOfData == null ? new ArrayList<Object[]>() : listOfData;
+        if (results.size() < 1) {
+            results.add(getEmptyRow());
         }
-        if (listOfData.size() < 1) {
-            listOfData.add(getEmptyRow());
-        }
-        if (listOfData.get(0).length > sortState.getGrpSizeIndex()) {
-            initGIDMap(listOfData);
+        // Two kinds of result for listOfData : 1) is coming from match: the result contains GID
+        // 2) is coming from the query without match/or from block:the result did not contain GID
+        isContainGID = results.get(0).length > additionalColumnPosition.GIDindex;
+
+        if (isContainGID) {
+            initGIDMap(results);
             if (minGrpSize > 1) {
-                return hideGroup(parentContainer, listOfData);
+                return hideGroup(parentContainer, results);
             }
         }
-        return createTableControl(parentContainer, listOfData);
+        return createTableControl(parentContainer, results);
 
+    }
+
+    /**
+     * before create the table control, need to init the property name and name to label map
+     * 
+     * @param proNames
+     */
+    private void initTableProperty(ModelElement[] columns) {
+        propertyNames = createColumnLabel(columns);
+
+        Map<String, String> columnToLabelMap = new HashMap<String, String>();
+        for (String label : propertyNames) {
+            columnToLabelMap.put(label, label);
+        }
+        this.propertyToLabels = columnToLabelMap;
+
+    }
+
+    private String[] createColumnLabel(ModelElement[] columns) {
+        int columnCount = MatchAnalysisConstant.DEFAULT_COLUMN_COUNT;
+        if (columns != null) {
+            columnCount = columns.length + columnCount;
+        }
+        String[] columnsName = new String[columnCount];
+
+        int i = 0;
+        if (columns != null) {
+            for (ModelElement column : columns) {
+                columnsName[i++] = column.getName();
+            }
+        }
+        columnsName[i++] = MatchAnalysisConstant.BLOCK_KEY;
+        // remember the index of the GID;
+        additionalColumnPosition = new ColumnPosition(i);
+        columnsName[i++] = MatchAnalysisConstant.GID;
+        // record the index of the GRP_SIZE
+        sortState = new SortState(i);
+        columnsName[i++] = MatchAnalysisConstant.GRP_SIZE;
+        this.masterColumn = i;
+
+        columnsName[i++] = MatchAnalysisConstant.MASTER;
+        columnsName[i++] = MatchAnalysisConstant.SCORE;
+        columnsName[i++] = MatchAnalysisConstant.GRP_QUALITY;
+        columnsName[i++] = MatchAnalysisConstant.ATTRIBUTE_SCORES;
+        return columnsName;
     }
 
     /**
@@ -171,18 +217,26 @@ public class DataSampleTable {
      */
     private void initGIDMap(List<Object[]> listOfData) {
         for (Object[] row : listOfData) {
-            String currentGrpSize = (String) row[sortState.getGrpSizeIndex()];
-            if (currentGrpSize.length() > 0) {
-                int grpSize = Integer.valueOf(currentGrpSize);
-                if (grpSize > 0) {
-                    String groupId = (String) row[sortState.getGrpSizeIndex() - 1];
-                    String[] gids = StringUtils.splitByWholeSeparatorPreserveAllTokens(groupId, PluginConstant.COMMA_STRING);
-                    for (String gid : gids) {
-                        this.rowOfGIDWithColor.put(gid, grpSize);
-                    }
-                    this.rowOfGIDWithColor.put(groupId, grpSize);
-                }
+            int grpSize = getGroupSize(row);
+            if (grpSize == 0) {
+                return;
             }
+            String groupId = (String) row[additionalColumnPosition.GIDindex];
+            String[] gids = StringUtils.splitByWholeSeparatorPreserveAllTokens(groupId, PluginConstant.COMMA_STRING);
+            for (String gid : gids) {
+                this.rowOfGIDWithColor.put(gid, grpSize);
+            }
+            this.rowOfGIDWithColor.put(groupId, grpSize);
+        }
+
+    }
+
+    private int getGroupSize(Object[] row) {
+        try {
+            return Integer.valueOf((String) row[sortState.getGrpSizeIndex()]);
+        } catch (java.lang.NumberFormatException nfe) {
+            // no need to handle--when no column given
+            return 0;
         }
 
     }
@@ -191,8 +245,7 @@ public class DataSampleTable {
      * DOC yyin Comment method "reset".
      */
     private void reset() {
-        // reset some properties: sort state, GID-Grpsize map,
-        this.sortState.reset();
+        // reset some properties: GID-Grpsize map,
         this.rowOfGIDWithColor.clear();
     }
 
@@ -200,19 +253,16 @@ public class DataSampleTable {
         List<Object[]> filteredList = new ArrayList<Object[]>();
         boolean flag = false;
         for (Object[] row : listOfData) {
-            String currentGrpSize = (String) row[sortState.getGrpSizeIndex()];
-            if (currentGrpSize.length() > 0) {
-                int grpSize = Integer.valueOf(currentGrpSize);
-                if (grpSize == 0) {
-                    if (flag) {
-                        filteredList.add(row);
-                    }
-                } else if (grpSize >= minGrpSize) {
-                    flag = true;
+            int grpSize = getGroupSize(row);
+            if (grpSize == 0) {
+                if (flag) {
                     filteredList.add(row);
-                } else {
-                    flag = false;
                 }
+            } else if (grpSize >= minGrpSize) {
+                flag = true;
+                filteredList.add(row);
+            } else {
+                flag = false;
             }
         }
         return createTableControl(parentContainer, filteredList);
@@ -261,7 +311,7 @@ public class DataSampleTable {
         SortDirectionEnum nextSortDirection = sortState.getNextSortDirection();
 
         List<Object[]> sortedData = bodyDataProvider.getList();
-        if (SortDirectionEnum.NONE.equals(nextSortDirection) && sortedData.get(0).length > sortState.getGrpSizeIndex()) {
+        if (SortDirectionEnum.NONE.equals(nextSortDirection) && isContainGID) {
             // if the data has GID, back to order by GID
             sortedData = MatchRuleAnlaysisUtils.sortResultByGID(propertyNames, sortedData);
         } else {
@@ -292,44 +342,6 @@ public class DataSampleTable {
             emptyRow[i] = StringUtils.EMPTY;
         }
         return emptyRow;
-    }
-
-    private String[] createColumnLabel(ModelElement[] columns) {
-        int columnCount = MatchAnalysisConstant.DEFAULT_COLUMN_COUNT;
-        if (columns != null) {
-            columnCount = columns.length + columnCount;
-        }
-        String[] columnsName = new String[columnCount];
-
-        int i = 0;
-        if (columns != null) {
-            for (ModelElement column : columns) {
-                columnsName[i++] = column.getName();
-            }
-        }
-        columnsName[i++] = MatchAnalysisConstant.BLOCK_KEY;
-        columnsName[i++] = MatchAnalysisConstant.GID;
-        // record the index of the GRP_SIZE
-        this.sortState.setGrpSizeIndex(i);
-        columnsName[i++] = MatchAnalysisConstant.GRP_SIZE;
-        this.masterColumn = i;
-
-        columnsName[i++] = MatchAnalysisConstant.MASTER;
-        columnsName[i++] = MatchAnalysisConstant.SCORE;
-        columnsName[i++] = MatchAnalysisConstant.GRP_QUALITY;
-        columnsName[i++] = MatchAnalysisConstant.ATTRIBUTE_SCORES;
-        return columnsName;
-    }
-
-    /**
-     * before create the table control, need to init the property name and name to label map
-     * 
-     * @param proNames
-     * @param proToLabels : <property name, display label>
-     */
-    public void initTableProperty(String[] proNames, Map<String, String> proToLabels) {
-        this.propertyNames = proNames;
-        this.propertyToLabels = proToLabels;
     }
 
     public void changeColumnHeaderLabelColor(String columnName, Color color, String keyName) {
@@ -581,21 +593,15 @@ public class DataSampleTable {
         private int getGrpSize(ILayerCell cell) {
             Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
             // if the row record contains the group size info, continue
-            if (rowObject != null && rowObject.length > sortState.getGrpSizeIndex()) {
+            if (rowObject != null && isContainGID) {
                 // find the group size from the map first, GID index = grp_size_index-1
-                Integer groupSize = rowOfGIDWithColor.get(rowObject[sortState.getGrpSizeIndex() - 1]);
-
+                Integer groupSize = rowOfGIDWithColor.get(rowObject[additionalColumnPosition.GIDindex]);
                 if (groupSize != null) {
                     return groupSize;
-                }
-                try {
+                } else {
                     // if the group id has no related group size, get it
-                    groupSize = Integer.valueOf((String) rowObject[sortState.getGrpSizeIndex()]);
-                } catch (java.lang.NumberFormatException nfe) {
-                    // no need to handle--when no column given
-                    return 0;
+                    return getGroupSize(rowObject);
                 }
-                return groupSize;
             }
             return 0;
         }
@@ -604,8 +610,8 @@ public class DataSampleTable {
         private String getGID(ILayerCell cell) {
             Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
             // if the row record contains the group size info, continue
-            if (rowObject != null && rowObject.length > sortState.getGrpSizeIndex()) {
-                return (String) rowObject[sortState.getGrpSizeIndex() - 1];
+            if (rowObject != null && isContainGID) {
+                return (String) rowObject[additionalColumnPosition.GIDindex];
             } else {
                 return null;
             }
@@ -685,6 +691,7 @@ public class DataSampleTable {
                     case DESC:
                         configLabels.addLabelOnTop(DefaultSortConfiguration.SORT_DOWN_CONFIG_TYPE);
                         break;
+                    default:
                     }
                 }
             }
@@ -716,7 +723,7 @@ public class DataSampleTable {
     /**
      * check if the current column is marked as block/match keys.
      * 
-     * @param columnPosition
+     * @param additionalColumnPosition
      * @return
      */
     public boolean isColumnMarkedAsKeys(String column) {
@@ -790,6 +797,15 @@ public class DataSampleTable {
          */
         public void setWidth(Integer width) {
             this.width = width;
+        }
+    }
+
+    private class ColumnPosition {
+
+        protected final int GIDindex;
+
+        public ColumnPosition(int GIDIndex) {
+            GIDindex = GIDIndex;
         }
     }
 }
