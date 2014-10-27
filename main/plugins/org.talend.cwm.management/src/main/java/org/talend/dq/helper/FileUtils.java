@@ -48,7 +48,7 @@ public final class FileUtils {
 
     public static final String ESCAPECHAR1 = "\"\\\\\""; //$NON-NLS-1$
 
-    public static final char QUOTECHAR_NOTVALID = 'z';
+    public static final char QUOTECHAR_NOTVALID = '\0';
 
     public static final String ROW_SEPARATOR_R = "\"\\r\""; //$NON-NLS-1$
 
@@ -195,8 +195,6 @@ public final class FileUtils {
         String textEnclosure = delimitedFileconnection.getTextEnclosure();
         if (textEnclosure != null && textEnclosure.length() > 0) {
             csvReader.setQuoteChar(ParameterUtil.trimParameter(textEnclosure).charAt(0));
-        } else {
-            csvReader.setQuoteChar(QUOTECHAR_NOTVALID);
         }
         String escapeChar = delimitedFileconnection.getEscapeChar();
         if (escapeChar == null || escapeChar.equals(ESCAPECHAR1) || escapeChar.equals(ESCAPECHAR2)) {

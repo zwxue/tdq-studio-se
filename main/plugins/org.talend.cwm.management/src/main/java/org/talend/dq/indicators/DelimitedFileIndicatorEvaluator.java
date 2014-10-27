@@ -172,16 +172,12 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             String[] rowValues = null;
             long currentRecord = 0;
             while (csvReader.readNext()) {
-                currentRecord = csvReader.getCurrentRecord();
-                if (!continueRun() || limitValue != -1 && currentRecord > limitValue - 1) {
+                currentRecord++;
+                if (!continueRun() || limitValue != -1 && currentRecord > limitValue) {
                     break;
                 }
-
-                if (delimitedFileconnection.isFirstLineCaption() && currentRecord == 0) {
-                    continue;
-                }
                 rowValues = csvReader.getValues();
-                handleByARow(rowValues, currentRecord + 1, analysisElementList, columnElementList, indicToRowMap);
+                handleByARow(rowValues, currentRecord, analysisElementList, columnElementList, indicToRowMap);
             }
         } catch (IOException e) {
             log.error(e, e);

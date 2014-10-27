@@ -152,13 +152,9 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
             long currentRecord = 0;
             while (csvReader.readNext()) {
-                currentRecord = csvReader.getCurrentRecord();
-                if (limitValue != -1 && currentRecord > limitValue - 1) {
+                currentRecord++;
+                if (limitValue != -1 && currentRecord > limitValue) {
                     break;
-                }
-
-                if (delimitedFileconnection.isFirstLineCaption() && currentRecord == 0) {
-                    continue;
                 }
                 // only get the analysed columns' values
                 String[] values = csvReader.getValues();

@@ -159,7 +159,7 @@ public class IndexBuilder {
             FileNotFoundException, IOException {
         CSVReader csvReader = new CSVReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
                 csvFileToIndex.toString()), "windows-1252")), seperator);//$NON-NLS-1$
-        csvReader.setQuoteChar('"');
+        csvReader.setQuoteChar('\"');
 
         csvReader.readNext();// skip header
         return csvReader;
