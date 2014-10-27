@@ -152,13 +152,21 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected IRepositoryNode getCurrentRepNodeOnUI() {
         // MOD klliu 2010-12-10
-        IRepositoryNode connectionNode = null;
         IEditorInput editorInput = getEditor().getEditorInput();
         if (editorInput instanceof AnalysisItemEditorInput) {
             AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) editorInput;
-            connectionNode = fileEditorInput.getConnectionNode();
+            return fileEditorInput.getConnectionNode();
+        } else {
+            // ADD TDQ-9613 msjian: when the user do something from the other views for example: from task view
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+            Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(fileEditorInput.getFile());
+            DataManager connection = findAnalysis.getContext().getConnection();
+            if (connection != null) {
+                return RepositoryNodeHelper.recursiveFind(connection);
+            }
+            // TDQ-9613~
         }
-        return connectionNode;
+        return null;
     }
 
     @Override
