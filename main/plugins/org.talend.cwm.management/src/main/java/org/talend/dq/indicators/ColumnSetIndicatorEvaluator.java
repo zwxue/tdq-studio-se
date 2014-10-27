@@ -276,15 +276,12 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         }
 
         while (csvReader.readNext()) {
-            currentRecord = csvReader.getCurrentRecord();
-            if (!continueRun() || limitValue != -1 && currentRecord > limitValue - 1) {
+            currentRecord++;
+            if (!continueRun() || limitValue != -1 && currentRecord > limitValue) {
                 break;
             }
-            if (dfCon.isFirstLineCaption() && currentRecord == 0) {
-                continue;
-            }
             String[] rowValues = csvReader.getValues();
-            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord + 1, analysisElementList,
+            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord, analysisElementList,
                     dfCon.getFieldSeparatorValue());
 
         }
