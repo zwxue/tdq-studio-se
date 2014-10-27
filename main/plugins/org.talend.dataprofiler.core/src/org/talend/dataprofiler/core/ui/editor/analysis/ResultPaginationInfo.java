@@ -336,11 +336,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                 // ~ 15745
 
                 final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
-                // MOD gdbu 2011-7-12 bug : 22524
-                if (ExecutionLanguage.JAVA == currentEngine && 0 == analysis.getResults().getIndicToRowMap().size()) {
-                    return;
-                }
-                // ~22524
+
                 // ADD msjian TDQ-7275 2013-5-21: when allow drill down is not checked, no menu display
                 if (ExecutionLanguage.JAVA == currentEngine && !analysis.getParameters().isStoreData()) {
                     return;
@@ -357,22 +353,29 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     // ~ 15745
                     if (currentDataEntity != null) {
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
-                        // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
-                        if (currentIndicator instanceof DatePatternFreqIndicator
-                                && null == analysis.getResults().getIndicToRowMap().get(currentIndicator).getFrequencyData()) {
-                            return;
-                        }
 
-                        // ADD msjian TDQ-9592: let the averagelengthXX indicators don't show the drilldown menu
-                        if (ExecutionLanguage.JAVA == currentEngine && analysis.getParameters().isStoreData()) {
-                            if (currentIndicator.isUsedMapDBMode()) {
+                        if (currentIndicator.isUsedMapDBMode()) {
+                            // ADD msjian TDQ-9592: let the averagelengthXX indicators don't show the drilldown menu
+                            if (ExecutionLanguage.JAVA == currentEngine && analysis.getParameters().isStoreData()) {
                                 if (dataEntity == null || currentIndicator == null
                                         || DrillDownUtils.getMapDB(currentDataEntity, analysis).size() == 0) {
                                     return;
                                 }
                             }
+                            // TDQ-9592~
+                        } else {
+                            // MOD gdbu 2011-7-12 bug : 22524
+                            if (ExecutionLanguage.JAVA == currentEngine && 0 == analysis.getResults().getIndicToRowMap().size()) {
+                                return;
+                            }
+                            // ~22524
+
+                            // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
+                            if (currentIndicator instanceof DatePatternFreqIndicator
+                                    && null == analysis.getResults().getIndicToRowMap().get(currentIndicator).getFrequencyData()) {
+                                return;
+                            }
                         }
-                        // TDQ-9592~
 
                         // create menu
                         Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
