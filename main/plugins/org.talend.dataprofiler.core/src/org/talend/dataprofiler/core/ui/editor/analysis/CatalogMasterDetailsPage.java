@@ -76,16 +76,18 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
         catalogIndicatorList.clear();
         IRepositoryNode connNode = getCurrentRepNodeOnUI();
         for (Indicator indicator : indicators) {
-            for (IRepositoryNode catalogNode : connNode.getChildren()) {
-                String nodeUuid = ResourceHelper
-                        .getUUID(((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog());
-                String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
-                if (nodeUuid.equals(anaUuid)) {
-                    OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
-                    cataUIEle.setNode(catalogNode);
-                    cataUIEle.setOverviewIndicator(indicator);
-                    cataUIEleList.add(cataUIEle);
-                    break;
+            if (connNode != null) {
+                for (IRepositoryNode catalogNode : connNode.getChildren()) {
+                    String nodeUuid = ResourceHelper.getUUID(((MetadataCatalogRepositoryObject) catalogNode.getObject())
+                            .getCatalog());
+                    String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+                    if (nodeUuid.equals(anaUuid)) {
+                        OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+                        cataUIEle.setNode(catalogNode);
+                        cataUIEle.setOverviewIndicator(indicator);
+                        cataUIEleList.add(cataUIEle);
+                        break;
+                    }
                 }
             }
         }
