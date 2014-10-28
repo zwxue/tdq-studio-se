@@ -327,9 +327,9 @@ public final class DQStructureComparer {
                 copyedConnection = EObjectHelper.deepCopy(prevDataProvider);
                 copyedConnection.getDataPackage().clear();
                 // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
-                MetadataFillFactory.getDBInstance().fillCatalogs(copyedConnection, dbJDBCMetadata,
+                MetadataFillFactory.getDBInstance().fillCatalogs(copyedConnection, dbJDBCMetadata, metadataConnection,
                         MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, true));
-                MetadataFillFactory.getDBInstance().fillSchemas(copyedConnection, dbJDBCMetadata,
+                MetadataFillFactory.getDBInstance().fillSchemas(copyedConnection, dbJDBCMetadata, metadataConnection,
                         MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, false));
 
                 ConnectionUtils.closeConnection(sqlConn);
