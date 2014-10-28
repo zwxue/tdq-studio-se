@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp.intro;
 
+
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -38,7 +40,7 @@ import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.perspective.PerspectiveMenuManager;
 import org.talend.dataprofiler.rcp.i18n.Messages;
-import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4CoolBar;
+import org.talend.dataprofiler.rcp.intro.linksbar.LinksToolbarItem;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>
@@ -197,6 +199,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(ActionFactory.SAVE.create(window));
 
         // add feature:15174
-        Workbench3xImplementation4CoolBar.createLinksToolbarItem(coolBar);
+        //Workbench3xImplementation4CoolBar.createLinksToolbarItem(coolBar);
+        IToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
+        toolBarManager.add(new LinksToolbarItem());
+        coolBar.add(new ToolBarContributionItem(toolBarManager, LinksToolbarItem.COOLITEM_LINKS_ID));
     }
 }

@@ -427,16 +427,6 @@ public class TopService implements ICoreService {
     }
 
     /*
-     * (non-Jsdoc)
-     * 
-     * @see org.talend.core.ICoreService#resetUniservLibraries()
-     */
-    @Override
-    public void resetUniservLibraries() {
-        throw new UnsupportedOperationException();
-    }
-
-    /*
      * (non-Javadoc)
      * 
      * @see org.talend.core.ICoreService#deleteBeanfile(org.talend.core.model.repository.IRepositoryViewObject)
