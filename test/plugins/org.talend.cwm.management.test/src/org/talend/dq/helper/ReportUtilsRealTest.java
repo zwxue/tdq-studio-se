@@ -12,11 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.File;
 
@@ -84,11 +80,11 @@ public class ReportUtilsRealTest {
             assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
 
             ReportUtils.recordReportFiles(iFile, "s-20141011-1801-00013", "..s-20141011-1801-00013.pdf", //$NON-NLS-1$ //$NON-NLS-2$
-                    System.currentTimeMillis());
+                    1);
             ReportUtils.recordReportFiles(iFile, "s-20141011-1802-00026", "..s-20141011-1802-00026.pdf", //$NON-NLS-1$ //$NON-NLS-2$
-                    System.currentTimeMillis());
+                    2);
             ReportUtils.recordReportFiles(iFile, "s-20141011-1809-00004", "..s-20141011-1809-00004.pdf", //$NON-NLS-1$ //$NON-NLS-2$
-                    System.currentTimeMillis());
+                    3);
 
             ReportListParameters lastest = ReportUtils.getTheLatestReport(iFile);
             assertNotNull(lastest);
