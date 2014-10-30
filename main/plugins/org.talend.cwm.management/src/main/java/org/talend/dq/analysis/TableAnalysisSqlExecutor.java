@@ -424,10 +424,9 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
      */
     private List<List<Indicator>> groupAideRule(List<Indicator> indicators) {
         List<List<Indicator>> orderedIndicators = new ArrayList<List<Indicator>>();
-        // no need to consider the row count
-        int index = 1;
+        // no need to consider the row count,to let the index start at 1
         // each aide and rule are put in one list, as the order aide, rule.
-        for (; index < indicators.size(); index = index + 2) {
+        for (int index = 1; (index + 1) < indicators.size(); index = index + 2) {
             List<Indicator> pairOfRule = new ArrayList<Indicator>();
             Indicator indicator = indicators.get(index);
             if (indicator instanceof WhereRuleIndicator && indicator.getName().equals(indicators.get(index + 1).getName())) {
