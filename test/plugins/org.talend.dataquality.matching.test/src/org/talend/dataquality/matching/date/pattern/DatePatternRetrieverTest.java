@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.matching.date.pattern;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -81,7 +82,7 @@ public class DatePatternRetrieverTest {
         patt.initModel2Regex(file);
         parseFile(filedates, patt);
 
-        final int[] EXPECTED_SCORE = { 1, 4, 1, 2, 1, 1, 40, 1 };
+        final int[] EXPECTED_SCORE = { 1, 4, 3, 1, 2, 1, 1, 40, 1 };
 
         for (int i = 0, j = 0; i < patt.getModelMatchers().size(); i++) {
             ModelMatcher patternMatcher = patt.getModelMatchers().get(i);
