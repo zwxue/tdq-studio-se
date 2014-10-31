@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -22,6 +25,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -45,6 +49,15 @@ import org.talend.utils.sugars.TypedReturnCode;
  * 
  */
 abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatchAnaysisTableSection {
+
+    /**
+     * the computation starts 500ms after the user has changed the value.
+     */
+    private static final int DELAY_RUN_GROUP_LESS_THEN = 500;
+
+    private List<RunModifyTimerTask> taskList = new ArrayList<RunModifyTimerTask>();
+
+    private Timer timer = new Timer();
 
     protected MatchRuleDataChart matchRuleChartComp = null;
 
@@ -79,28 +92,82 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
         Label lessText = new Label(toolComp, SWT.NONE);
         lessText.setText(DefaultMessagesImpl.getString("AbstractMatchKeyWithChartTableSection.hide_groups")); //$NON-NLS-1$
 
-        // change spin to combo
+        // create a spinner with min value 1 and max value
         final Spinner lessSpin = new Spinner(toolComp, SWT.BORDER);
+        lessSpin.setMinimum(1);
+        lessSpin.setMaximum(Integer.MAX_VALUE);
+        lessSpin.setTextLimit(9);
+        lessSpin.setSelection(PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT);
+
         lessSpin.addModifyListener(new ModifyListener() {
 
             @Override
             public void modifyText(ModifyEvent e) {
-                if (matchRuleChartComp != null) {
-                    int oldValue = matchRuleChartComp.getTimes();
-                    String text = lessSpin.getText().trim();
-                    int times = StringUtils.isEmpty(text) ? 0 : Integer.parseInt(text);
-                    matchRuleChartComp.setTimes(times);
-                    matchRuleChartComp.refresh();
-                    listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE, oldValue, times);
-                    matchRows.clear();
+                Long currentRunTime = System.currentTimeMillis();
+                if (taskList.size() > 0) {
+                    RunModifyTimerTask oldRunTask = taskList.get(0);
+                    if (currentRunTime - oldRunTask.getTaskRunTime() < DELAY_RUN_GROUP_LESS_THEN) {
+                        oldRunTask.cancel();
+                        taskList.clear();
+                    }
                 }
 
+                // run current after 500ms
+                RunModifyTimerTask runModifyTimerTask = new RunModifyTimerTask(currentRunTime, lessSpin.getText().trim());
+                timer.schedule(runModifyTimerTask, DELAY_RUN_GROUP_LESS_THEN);
+                taskList.add(runModifyTimerTask);
             }
         });
-        lessSpin.setSelection(PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT);
 
         Label lessText2 = new Label(toolComp, SWT.NONE);
         lessText2.setText(DefaultMessagesImpl.getString("AbstractMatchKeyWithChartTableSection.items")); //$NON-NLS-1$
+    }
+
+    class RunModifyTimerTask extends TimerTask {
+
+        Long taskRunTime = 0l;
+
+        /**
+         * Getter for taskRunTime.
+         * 
+         * @return the taskRunTime
+         */
+        public Long getTaskRunTime() {
+            return this.taskRunTime;
+        }
+
+        private String text;
+
+        public RunModifyTimerTask(Long runTime, String text) {
+            this.taskRunTime = runTime;
+            this.text = text;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.util.TimerTask#run()
+         */
+        @Override
+        public void run() {
+            Display.getDefault().syncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (matchRuleChartComp != null) {
+                        int oldValue = matchRuleChartComp.getTimes();
+                        int times = StringUtils.isEmpty(text) ? 1 : Integer.parseInt(text);
+                        matchRuleChartComp.setTimes(times);
+                        matchRuleChartComp.refresh();
+                        listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE, oldValue, times);
+                    }
+
+                    // when run this, it means 500ms later,so we can clear the cache.
+                    taskList.clear();
+
+                }
+            });
+        }
     }
 
     protected TypedReturnCode<RecordMatchingIndicator> computeMatchResult() {
