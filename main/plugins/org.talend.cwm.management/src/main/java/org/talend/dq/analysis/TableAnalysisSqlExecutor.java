@@ -46,7 +46,6 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesPackage;
@@ -155,7 +154,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             AnalysisExecutionException {
         // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
         // so just return true and get the row count from RowCount indicator
-        if (isAideAndJoinEmpty(indicator)) {
+        if (isJoinConditionEmpty(indicator)) {
             return true;
         }// ~ TDQ-9294
 
@@ -182,7 +181,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
-            if (!wr.getJoins().isEmpty()) {
+            if (!isJoinConditionEmpty(indicator)) {
                 for (JoinElement joinelt : wr.getJoins()) {
                     JoinElement joinCopy = EcoreUtil.copy(joinelt);
                     joinConditions.add(joinCopy);
@@ -232,14 +231,13 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     }
 
     /**
-     * DOC yyin Comment method "isAideAndJoinEmpty".
+     * is there are any join confition
      * 
      * @param indicator
-     * @return
+     * @return false: when no join conditions set
      */
-    private boolean isAideAndJoinEmpty(Indicator indicator) {
-        return indicator instanceof WhereRuleAideIndicator
-                && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty();
+    private boolean isJoinConditionEmpty(Indicator indicator) {
+        return ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty();
     }
 
     protected TypedReturnCode<Boolean> belongToSameSchemata(final TdTable tdTable) {
@@ -345,32 +343,18 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             // remember the row count
             rowCount = rowIndicator.getCount();
 
-            // After execute the row count, group the rules before executing
-            List<List<Indicator>> indicators = groupAideRule(indicatorList);
+            // After execute the row count, execute the rules if any
+            if (indicatorList.size() == 1) {
+                return isSuccess;
+            }
 
             // execute the sql statement for each group of aide and rule
-            for (final List<Indicator> aideAndRule : indicators) {
-                Long aideCount = -1L;
-
-                Indicator aide = aideAndRule.get(0);
-                final Indicator rule = aideAndRule.get(1);
-                // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
-                // row count, so will not generate query for it
-                // if (!isAideAndJoinEmpty(aide)) {
-                // isSuccess = executeIndicator(aide, connection);
-                // aideCount = ((WhereRuleAideIndicator) aide).getUserCount();
-                // }
+            for (int i = 1; i < indicatorList.size(); i++) {
+                final Indicator rule = indicatorList.get(i);
 
                 isSuccess = executeRule((WhereRuleIndicator) rule, connection);
-                // TDQ-9300-- if the join condition is not empty, use the usercount in aide indicator for rule's
-                // count; otherwise give the row count to the rule,because the rule can not compute the count by itself
-                // if (aideCount > -1) {
-                // rule.setCount(aideCount);
-                // } else {
-                // rule.setCount(rowCount);
-                // }
                 // if there's no joins, should use the row count as the count.
-                if (!((WhereRule) rule.getIndicatorDefinition()).getJoins().isEmpty()) {
+                if (isJoinConditionEmpty(rule)) {
                     rule.setCount(rowCount);
                 }
 
@@ -407,17 +391,16 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                     + "query is null");//$NON-NLS-1$
             return Boolean.FALSE;
         } else {
-            WhereRule wr = (WhereRule) rule.getIndicatorDefinition();
             try {
-                // the current query donot contains where condition, if there're some join condition, execute the query
-                // directly, and use this result as the count
-                if (!wr.getJoins().isEmpty()) {
+                // the current query donot contains where condition, if there're some join condition, execute this query
+                // and use this result as the count
+                if (!isJoinConditionEmpty(rule)) {
                     List<Object[]> myResultSet = executeQuery(catalogName, connection, query.getBody());
                     rule.setCount(myResultSet);
                 }
 
-                // add the where condition to the query
-                String whereExpression = wr.getWhereExpression();
+                // add the where condition to the query, and execute it
+                String whereExpression = ((WhereRule) rule.getIndicatorDefinition()).getWhereExpression();
                 String queryWithWhere = query.getBody();
                 if (StringUtils.isNotBlank(whereExpression)) {
                     queryWithWhere = dbms().addWhereToStatement(query.getBody(), surroundWith('(', whereExpression, ')'));
@@ -493,6 +476,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return Boolean.TRUE;
     }
 
+<<<<<<< OURS
     /**
      * Added TDQ-9300 : Group the rule and its aide together as one pair in one list; and reorder to move the aide rule
      * upper the rule : old order : rule, aiderule--> new order: aiderule, rule.
@@ -517,6 +501,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return orderedIndicators;
     }
 
+=======
+>>>>>>> THEIRS
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
@@ -548,24 +534,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
             return Boolean.FALSE;
         }
-    }
-
-    private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
-        // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
-        // row count, so needn't to execute query for it
-        // if (isAideAndJoinEmpty(indicator)) {
-        // return true;
-        // }
-        // ~ TDQ-9294
-        String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
-        if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName())//$NON-NLS-1$
-                    + "\t" + Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$ //$NON-NLS-2$
-        }
-        List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
-
-        // give result to indicator so that it handles the results
-        return indicator.storeSqlResults(myResultSet);
     }
 
     protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
@@ -641,7 +609,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
-            if (!wr.getJoins().isEmpty()) {
+            if (!isJoinConditionEmpty(indicator)) {
                 for (JoinElement joinelt : wr.getJoins()) {
                     JoinElement joinCopy = EcoreUtil.copy(joinelt);
                     joinConditions.add(joinCopy);
