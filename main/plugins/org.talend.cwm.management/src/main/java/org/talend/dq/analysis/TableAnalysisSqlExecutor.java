@@ -152,12 +152,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
             AnalysisExecutionException {
-        // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
-        // so just return true and get the row count from RowCount indicator
-        if (isJoinConditionEmpty(indicator)) {
-            return true;
-        }// ~ TDQ-9294
-
         if (!isAnalyzedElementValid(indicator)) {
             return Boolean.FALSE;
         }
@@ -210,11 +204,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         String completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
-        // ADD xqliu 2012-04-23 TDQ-5057
-        // if (indicator instanceof WhereRuleAideIndicator) {
-        // whereExpressionDQRule.clear();
-        // }
-        // ~ TDQ-5057
         List<String> whereExpressionAnalysis = new ArrayList<String>();
         if (StringUtils.isNotBlank(dataFilterAsString)) {
             whereExpressionAnalysis.add(dataFilterAsString);
@@ -403,7 +392,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 String whereExpression = ((WhereRule) rule.getIndicatorDefinition()).getWhereExpression();
                 String queryWithWhere = query.getBody();
                 if (StringUtils.isNotBlank(whereExpression)) {
-                    queryWithWhere = dbms().addWhereToStatement(query.getBody(), surroundWith('(', whereExpression, ')'));
+                    queryWithWhere = query.getBody() + dbms().where() + surroundWith('(', whereExpression, ')');
                 }
 
                 List<Object[]> myResultSet = executeQuery(catalogName, connection, queryWithWhere);
