@@ -149,7 +149,7 @@ public class DataSampleTable {
         // initial the data if it is empty
         List<Object[]> results = listOfData == null ? new ArrayList<Object[]>() : listOfData;
         if (results.size() < 1) {
-            results.add(getEmptyRow());
+            results.add(getEmptyRow(columns.length));
         }
         // Two kinds of result for listOfData : 1) is coming from match: the result contains GID
         // 2) is coming from the query without match/or from block:the result did not contain GID
@@ -333,12 +333,14 @@ public class DataSampleTable {
     /**
      * when the data is empty, the column can not response the click event, so we need to add an empty row to it.
      * 
+     * @param length
+     * 
      * @return
      */
-    private Object[] getEmptyRow() {
-        Object[] emptyRow = new Object[propertyNames.length];
+    private Object[] getEmptyRow(int length) {
+        Object[] emptyRow = new Object[length];
 
-        for (int i = 0; i < propertyNames.length; i++) {
+        for (int i = 0; i < length; i++) {
             emptyRow[i] = StringUtils.EMPTY;
         }
         return emptyRow;
