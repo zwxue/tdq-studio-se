@@ -18,7 +18,7 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements WhereRuleIndicator {
@@ -27,7 +27,6 @@ public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements Wher
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected WhereRuleIndicatorImpl() {
@@ -36,7 +35,6 @@ public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements Wher
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
