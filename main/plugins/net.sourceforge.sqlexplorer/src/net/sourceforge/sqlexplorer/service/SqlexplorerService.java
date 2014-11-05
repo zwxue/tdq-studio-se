@@ -41,6 +41,7 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.DatabaseNode;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.INode;
+import net.sourceforge.sqlexplorer.dbstructure.nodes.SchemaNode;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.TableFolderNode;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogAction;
@@ -119,6 +120,7 @@ public class SqlexplorerService implements ISqlexplorerService {
         return INSTANCE;
     }
 
+    @Override
     public void runInDQViewer(DatabaseConnection databaseConnection, String editorName, String query) {
         String lEditorName = editorName;
         if (lEditorName == null) {
@@ -202,12 +204,14 @@ public class SqlexplorerService implements ISqlexplorerService {
         }
     }
 
+    @Override
     public void initSqlExplorerRootProject(IProject rootProject) {
         if (SQLExplorerPlugin.getDefault().getRootProject() == null) {
             SQLExplorerPlugin.getDefault().setRootProject(rootProject);
         }
     }
 
+    @Override
     public void addConnetionAliasToSQLPlugin(ModelElement... dataproviders) {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
@@ -290,6 +294,7 @@ public class SqlexplorerService implements ISqlexplorerService {
         }
     }
 
+    @Override
     public void loadDriverByLibManageSystem(DatabaseConnection connection) {
         if (ConnectionHelper.isHive(connection)) {
             loadManagedDriverForHive(connection);
@@ -420,6 +425,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * org.talend.dataprofiler.service.ISqlexplorerService#findSqlExplorerTableNode(org.talend.core.model.metadata.builder
      * .connection.Connection, orgomg.cwm.objectmodel.core.Package, java.lang.String, java.lang.String)
      */
+    @Override
     public void findSqlExplorerTableNode(Connection providerConnection, Package parentPackageElement, String tableName,
             String activeTabName) {
         // Open data explore perspective.
@@ -523,6 +529,15 @@ public class SqlexplorerService implements ISqlexplorerService {
 
         INode[] childNodes = catalogOrSchemaNode.getChildNodes();
 
+        // TDQ-9543 if import netezza from 5.6.0 or lower version, the structure of it will include the catalog only, so
+        // need to find the schema and load the table nodes
+        if (isNetezza(url)) {
+            SchemaNode sNode = getNetezzaSchema(childNodes, JavaSqlFactory.getUsername(providerConnection));
+            if (sNode != null) {
+                childNodes = sNode.getChildNodes();
+            }
+        }
+
         TableFolderNode tableFolderNode = null;
         for (INode node : childNodes) {
             if ("TABLE".equals(node.getQualifiedName())) { //$NON-NLS-1$
@@ -550,11 +565,41 @@ public class SqlexplorerService implements ISqlexplorerService {
                 Messages.getString("SqlExplorerBridge.MissTable") + tableName); //$NON-NLS-1$
     }
 
+    /**
+     * DOC xqliu Comment method "getNetezzaSchema".
+     * 
+     * @param childNodes
+     * @param username
+     * @return
+     */
+    private SchemaNode getNetezzaSchema(INode[] childNodes, String username) {
+        for (INode node : childNodes) {
+            if (node != null && node instanceof SchemaNode) {
+                SchemaNode sNode = (SchemaNode) node;
+                if (StringUtils.equalsIgnoreCase(username, sNode.getName())) {
+                    return sNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "isNetezza".
+     * 
+     * @param url
+     * @return
+     */
+    private boolean isNetezza(String url) {
+        return StringUtils.startsWithIgnoreCase(url, "jdbc:netezza");
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dataprofiler.service.ISqlexplorerService#getDriver(java.lang.String, java.lang.String)
      */
+    @Override
     public Driver getDriver(String driverClassName, String jarsPath) throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
         Driver driver = null;
@@ -626,6 +671,7 @@ public class SqlexplorerService implements ISqlexplorerService {
         return driver;
     }
 
+    @Override
     public void initAllConnectionsToSQLExplorer(List<Connection> conns) {
         try {
             if (!SQLExplorerPlugin.getDefault().isInitedAllConnToSQLExpl()) {
@@ -639,6 +685,7 @@ public class SqlexplorerService implements ISqlexplorerService {
         }
     }
 
+    @Override
     public void setSqlEditorEditable(Object part, boolean lock) {
         if (part instanceof SQLEditor) {
             ((SQLEditor) part).setEditable(lock);
@@ -646,6 +693,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     }
 
+    @Override
     public boolean needAddDriverConnection(DatabaseConnection dbConn) {
         boolean isNeed = false;
         DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
@@ -667,6 +715,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * 
      * @see org.talend.dataprofiler.service.ISqlexplorerService#getMyURLClassLoaderAssignableClasses(java.net.URL)
      */
+    @Override
     public Class[] getMyURLClassLoaderAssignableClasses(URL url) {
         Class[] classes = null;
         try {
@@ -683,6 +732,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * @see org.talend.dataprofiler.service.ISqlexplorerService#getClassDriverFromSQLExplorer(java.lang.String,
      * java.util.Properties)
      */
+    @Override
     public Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
             IllegalAccessException {
         Driver driver = null;
@@ -749,6 +799,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * org.talend.dataprofiler.service.ISqlexplorerService#updateConnetionAliasByName(org.talend.core.model.metadata.
      * builder.connection.Connection, java.lang.String)
      */
+    @Override
     public void updateConnetionAliasByName(Connection connection, String aliasName) {
         if (connection == null || aliasName == null) {
             return;
@@ -785,6 +836,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * org.talend.dataprofiler.service.ISqlexplorerService#removeAliasInSQLExplorer(orgomg.cwm.foundation.softwaredeployment
      * .DataProvider[])
      */
+    @Override
     public void removeAliasInSQLExplorer(DataProvider... dataproviders) {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
@@ -823,6 +875,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * 
      * @see org.talend.dataprofiler.service.ISqlexplorerService#aliasExist(java.lang.String)
      */
+    @Override
     public boolean aliasExist(String connectionName) {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
@@ -835,6 +888,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * 
      * @see org.talend.dataprofiler.service.ISqlexplorerService#createExportCSVAction()
      */
+    @Override
     public Action createExportCSVAction() {
         ExportCSVAction exportAction = new ExportCSVAction();
         exportAction.setEnabled(true);
@@ -847,6 +901,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * @see org.talend.dataprofiler.service.ISqlexplorerService#setExportCSVActionTable(java.lang.Object,
      * java.lang.Object)
      */
+    @Override
     public void setExportCSVActionTable(Object action, Object table) {
         if (action instanceof ExportCSVAction && table instanceof Table) {
             ExportCSVAction exportAction = (ExportCSVAction) action;
@@ -861,6 +916,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * @see org.talend.dataprofiler.service.ISqlexplorerService#create(java.lang.String[], java.lang.Object, int,
      * java.lang.Object, int)
      */
+    @Override
     public Object createMapDBColumnSetDataSet(String[] columnHeader, Object mapDB, Long size, Object currIndicator, int pageSize) {
         return new MapDBColumnSetDataSet(columnHeader, (Map<List<Object>, Long>) mapDB, size, (DataValidation) currIndicator,
                 pageSize);
@@ -872,6 +928,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * @see org.talend.dataprofiler.service.ISqlexplorerService#createMapDBSetDataSet(java.lang.String[],
      * java.lang.Object, int)
      */
+    @Override
     public Object createMapDBSetDataSet(String[] columnHeader, Object mapDB, int pageSize) {
         return new MapDBSetDataSet(columnHeader, (Set<Object>) mapDB, pageSize);
     }
@@ -882,6 +939,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * @see org.talend.dataprofiler.service.ISqlexplorerService#createMapDBDataSet(java.lang.String[], java.lang.Object,
      * int, java.lang.Object, java.lang.Long)
      */
+    @Override
     public Object createMapDBDataSet(String[] columnHeader, Object mapDB, int pageSize, Object columnFilter, Long itemSize) {
         return new MapDBDataSet(columnHeader, (Map<Object, List<Object>>) mapDB, pageSize, (ColumnFilter) columnFilter, itemSize);
     }
@@ -891,6 +949,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * 
      * @see org.talend.dataprofiler.service.ISqlexplorerService#resetTalendDataSetIndex(java.lang.Object, int, int)
      */
+    @Override
     public void resetTalendDataSetIndex(Object talendDataSet, long fromIndex, long toIndex) {
         TalendDataSet tds = (TalendDataSet) talendDataSet;
         tds.setStartIndex(fromIndex);
@@ -902,6 +961,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * 
      * @see org.talend.dataprofiler.service.ISqlexplorerService#createDataSet(java.lang.String[], java.lang.String[][])
      */
+    @Override
     public Object createDataSet(String[] columnHeader, String[][] columnValue) {
         return new DataSet(columnHeader, columnValue);
     }
@@ -911,6 +971,7 @@ public class SqlexplorerService implements ISqlexplorerService {
      * 
      * @see org.talend.dataprofiler.service.ISqlexplorerService#isInstanceofTalendDataSetIndex(java.lang.Object)
      */
+    @Override
     public boolean isInstanceofTalendDataSet(Object talendDataSet) {
         if (TalendDataSet.class.isInstance(talendDataSet)) {
             return true;
