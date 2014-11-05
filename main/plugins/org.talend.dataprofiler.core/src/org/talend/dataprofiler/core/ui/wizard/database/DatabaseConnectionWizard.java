@@ -136,7 +136,11 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         if (connectionParam.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
             instance = MetadataFillFactory.getMDMInstance();
         } else {
-            instance = MetadataFillFactory.getDBInstance();
+            if (this.modelElement != null && this.modelElement instanceof Connection) {
+                instance = MetadataFillFactory.getDBInstance((Connection) this.modelElement);
+            } else {
+                instance = MetadataFillFactory.getDBInstance();
+            }
         }
 
         IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(connectionParam));
