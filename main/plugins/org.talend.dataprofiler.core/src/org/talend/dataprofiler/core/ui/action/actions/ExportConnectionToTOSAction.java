@@ -265,7 +265,7 @@ public class ExportConnectionToTOSAction extends Action {
      */
     @Deprecated
     protected DatabaseConnection fillCatalogSchema(IMetadataConnection newMetadataConn) {
-        MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
+        MetadataFillFactory instance = MetadataFillFactory.getDBInstance(newMetadataConn);
 
         ReturnCode rc = instance.createConnection(newMetadataConn);
         DatabaseConnection dbConn = null;

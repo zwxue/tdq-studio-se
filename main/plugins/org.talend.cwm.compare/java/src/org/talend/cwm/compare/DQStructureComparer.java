@@ -312,8 +312,8 @@ public final class DQStructureComparer {
             MetadataFillFactory.getMDMInstance().fillSchemas(copyedConnection, null, null);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
-            TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance()
-                    .createConnection(metadataConnection);
+            MetadataFillFactory dbInstance = MetadataFillFactory.getDBInstance(metadataConnection);
+            TypedReturnCode<?> trc = (TypedReturnCode<?>) dbInstance.createConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
             if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
@@ -327,9 +327,9 @@ public final class DQStructureComparer {
                 copyedConnection = EObjectHelper.deepCopy(prevDataProvider);
                 copyedConnection.getDataPackage().clear();
                 // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
-                MetadataFillFactory.getDBInstance().fillCatalogs(copyedConnection, dbJDBCMetadata, metadataConnection,
+                dbInstance.fillCatalogs(copyedConnection, dbJDBCMetadata, metadataConnection,
                         MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, true));
-                MetadataFillFactory.getDBInstance().fillSchemas(copyedConnection, dbJDBCMetadata, metadataConnection,
+                dbInstance.fillSchemas(copyedConnection, dbJDBCMetadata, metadataConnection,
                         MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, false));
 
                 ConnectionUtils.closeConnection(sqlConn);

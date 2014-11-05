@@ -1448,15 +1448,14 @@ public final class ConnectionUtils {
                                      // Map<String, String> paramMap =
                                      // ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
                 IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
-                dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
+                MetadataFillFactory dbInstance = MetadataFillFactory.getDBInstance(dbConn);
+                dbConn = (DatabaseConnection) dbInstance.fillUIConnParams(metaConnection, dbConn);
                 sqlConn = MetadataConnectionUtils.createConnection(metaConnection).getObject();
 
                 if (sqlConn != null) {
                     DatabaseMetaData dm = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn, dbConn, false);
-                    MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, dm,
-                            MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
-                    MetadataFillFactory.getDBInstance().fillSchemas(dbConn, dm,
-                            MetadataConnectionUtils.getPackageFilter(dbConn, dm, false));
+                    dbInstance.fillCatalogs(dbConn, dm, MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
+                    dbInstance.fillSchemas(dbConn, dm, MetadataConnectionUtils.getPackageFilter(dbConn, dm, false));
                 }
 
             }
@@ -1996,7 +1995,8 @@ public final class ConnectionUtils {
                 if (item != null) {
                     DatabaseConnection dbConn = (DatabaseConnection) dataProvider;
                     IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
-                    dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
+                    dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance(dataProvider).fillUIConnParams(
+                            metaConnection, dbConn);
                     if (dbConn != null && Platform.isRunning()) {
                         try {
                             ProxyRepositoryFactory.getInstance().save(item);

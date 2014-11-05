@@ -156,9 +156,9 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 dbcp.setDriverClassName(driverClassName);
                 dbcp.setJdbcUrl(dbUrl);
                 dbcp.setParameters(parameters);
-                IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance().fillUIParams(
+                IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance(connection).fillUIParams(
                         ParameterUtil.toMap(dbcp));
-                newConn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
+                newConn = MetadataFillFactory.getDBInstance(connection).fillUIConnParams(metadataConnection, null);
             }
             if (newConn == null) {
                 log.error(Messages.getString(

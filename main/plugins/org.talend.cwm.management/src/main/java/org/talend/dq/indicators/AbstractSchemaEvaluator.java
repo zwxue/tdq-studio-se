@@ -672,7 +672,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             Collection<Schema> schemas = new ArrayList<Schema>();
             try {
                 schemas = ListUtils.castList(Schema.class,
-                        MetadataFillFactory.getDBInstance().fillSchemas(null, getConnection().getMetaData(), null));
+                        MetadataFillFactory.getDBInstance(getDataManager())
+                                .fillSchemas(null, getConnection().getMetaData(), null));
             } catch (SQLException e) {
                 log.error(e, e);
             }
@@ -701,8 +702,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             if (catalog != null) {
                 try {
                     getConnection().setCatalog(catalog.getName());
-                    List<Schema> schemas = MetadataFillFactory.getDBInstance().fillSchemaToCatalog(getDataManager(),
-                            getConnection().getMetaData(), catalog, null);
+                    List<Schema> schemas = MetadataFillFactory.getDBInstance(getDataManager()).fillSchemaToCatalog(
+                            getDataManager(), getConnection().getMetaData(), catalog, null);
                     if (schemas != null) {
                         for (Schema tdSchema : schemas) {
                             if (tdSchema.getName().equals(schema.getName())) {

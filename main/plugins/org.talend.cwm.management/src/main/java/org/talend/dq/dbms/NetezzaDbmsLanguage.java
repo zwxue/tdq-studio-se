@@ -191,4 +191,20 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
         return NYSIIS_PREFIX;
     }
 
+    @Override
+    public String toQualifiedName(String catalog, String schema, String table) {
+        String c = catalog;
+        String s = schema;
+        // TDQ-9543: the correct structure of Netezza include both catalog and schema, if the catalog is not blank but
+        // schema is blank, should set catalog with empty by force, otherwise the generate sql should be like
+        // "select * from catalog.table", this will cause error; another point is that catalog is blank but schema is
+        // not blank, don't need to do anything for this because the sql like "select * from schema.table" is ok
+        if (!StringUtils.isBlank(c) && StringUtils.isBlank(s)) {
+            c = StringUtils.EMPTY;
+        }
+        // the catalog and schema of Netezza must be UpperCase
+        c = StringUtils.upperCase(c);
+        s = StringUtils.upperCase(s);
+        return super.toQualifiedName(c, s, table);
+    }
 }
