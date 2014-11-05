@@ -332,11 +332,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             // remember the row count
             rowCount = rowIndicator.getCount();
 
-            // After execute the row count, execute the rules if any
-            if (indicatorList.size() == 1) {
-                return isSuccess;
-            }
-
             // execute the sql statement for each group of aide and rule
             for (int i = 1; i < indicatorList.size(); i++) {
                 final Indicator rule = indicatorList.get(i);
