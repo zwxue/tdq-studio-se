@@ -460,30 +460,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return Boolean.TRUE;
     }
 
-    /**
-     * Added TDQ-9300 : Group the rule and its aide together as one pair in one list; and reorder to move the aide rule
-     * upper the rule : old order : rule, aiderule--> new order: aiderule, rule.
-     * 
-     * @param indicators
-     */
-    private List<List<Indicator>> groupAideRule(List<Indicator> indicators) {
-        List<List<Indicator>> orderedIndicators = new ArrayList<List<Indicator>>();
-        // no need to consider the row count,to let the index start at 1
-        // each aide and rule are put in one list, as the order aide, rule.
-        for (int index = 1; (index + 1) < indicators.size(); index = index + 2) {
-            List<Indicator> pairOfRule = new ArrayList<Indicator>();
-            Indicator indicator = indicators.get(index);
-            if (indicator instanceof WhereRuleIndicator && indicator.getName().equals(indicators.get(index + 1).getName())) {
-                // position: index+1 is the Aide
-                pairOfRule.add(indicators.get(index + 1));
-                // Rule 's position is index
-                pairOfRule.add(indicator);
-                orderedIndicators.add(pairOfRule);
-            }
-        }
-        return orderedIndicators;
-    }
-
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
