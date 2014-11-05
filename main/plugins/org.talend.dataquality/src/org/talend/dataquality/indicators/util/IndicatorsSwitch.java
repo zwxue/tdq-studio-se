@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.dataquality.indicators.*;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;

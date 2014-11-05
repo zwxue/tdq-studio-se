@@ -193,7 +193,7 @@ public final class ChartTableFactory {
                                 item.addSelectionListener(new SelectionAdapter() {
 
                                     @Override
-                                    public void widgetSelected(SelectionEvent e) {
+                                    public void widgetSelected(SelectionEvent e1) {
                                         // TDQ-8637 pop a message when it is pattern and no implemnt Regex function in
                                         // DBMSLanguage.
                                         if (isPatternMatchingIndicator(indicator)
@@ -211,12 +211,11 @@ public final class ChartTableFactory {
 
                                 // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join
                                 // condition columns
-                                if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
+                                if (IndicatorHelper.isWhereRuleIndicator(indicator)) {
                                     // MOD yyin 20121126 TDQ-6477,show the menu only when Join condition exists
                                     WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
                                     EList<JoinElement> joinConditions = ind.getJoinConditions();
                                     if (joinConditions.size() > 0) {
-                                        // if (rowCount.doubleValue() < ind.getUserCount().doubleValue()) {
                                         showExtraMenu = true;
                                     }
                                 }
@@ -230,7 +229,7 @@ public final class ChartTableFactory {
                                     itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
                                         @Override
-                                        public void widgetSelected(SelectionEvent e) {
+                                        public void widgetSelected(SelectionEvent e1) {
                                             DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
                                             PatternTransformer pattTransformer = new PatternTransformer(language);
                                             createPattern(analysis, itemEntity, pattTransformer);
@@ -246,7 +245,7 @@ public final class ChartTableFactory {
                                 itemCreateWhereRule.addSelectionListener(new SelectionAdapter() {
 
                                     @Override
-                                    public void widgetSelected(SelectionEvent e) {
+                                    public void widgetSelected(SelectionEvent e1) {
                                         final StructuredSelection selectionOne = (StructuredSelection) tbViewer.getSelection();
                                         // MOD xqliu 2012-05-11 TDQ-5314
                                         Object firstElement = selectionOne.getFirstElement();
@@ -393,7 +392,7 @@ public final class ChartTableFactory {
                                         itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
                                             @Override
-                                            public void widgetSelected(SelectionEvent e) {
+                                            public void widgetSelected(SelectionEvent e1) {
                                                 DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
                                                 PatternTransformer pattTransformer = new PatternTransformer(language);
                                                 createPattern(analysis, itemEntity, pattTransformer);
@@ -412,7 +411,7 @@ public final class ChartTableFactory {
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
                                     @Override
-                                    public void widgetSelected(SelectionEvent e) {
+                                    public void widgetSelected(SelectionEvent e1) {
                                         DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
                                         IFolder folder = ResourceManager.getPatternRegexFolder();
                                         String model = dataEntity.getLabel();
@@ -605,7 +604,7 @@ public final class ChartTableFactory {
             return false;
         }
         // only support 3 kinds of db: mysql, oracle, postgressql
-        String[] supportDB = { "MySQL", "Oracle with SID", "PostgreSQL" };
+        String[] supportDB = { "MySQL", "Oracle with SID", "PostgreSQL" }; //$NON-NLS-2$ //$NON-NLS-3$
         TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (table == null) {
             return false;

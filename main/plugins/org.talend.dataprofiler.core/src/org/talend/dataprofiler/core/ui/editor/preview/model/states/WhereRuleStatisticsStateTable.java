@@ -45,7 +45,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTablePro
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.PatternLabelProvider;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
-import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -258,7 +257,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      */
     public static int getSizeOfDQRulePerChart() {
         String dqruleSize = EditorPreferencePage.getDQRuleSize();
-        int maxSize = 999999;
+        int maxSize = Integer.MAX_VALUE;
         int size = maxSize;
         try {
             size = Integer.parseInt(dqruleSize);
@@ -338,10 +337,6 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      */
     private void addDataEntity2CustomerDataset(CustomerDefaultCategoryDataset customerDataset, TableIndicatorUnit unit) {
         if (IndicatorEnum.WhereRuleIndicatorEnum.equals(unit.getType())) {
-            // Added TDQ-7547 20140107 yyin: when the value is null, no need to proceed
-            // if (unit.getValue() == null) {
-            // return;
-            // }// ~
             String columnKey = unit.getIndicatorName();
             double value = getMatchValue(unit.getValue());
             double valueNotM = getNotMatchValue(unit.getValue(), value, unit.geIndicatorCount());
@@ -474,9 +469,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
                 Indicator indicator = ((WhereRuleChartDataEntity) element).getIndicator();
 
                 if (!Double.isNaN(Double.parseDouble(((WhereRuleChartDataEntity) element).getNumMatch()))) {
-                    if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
-                        largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getUserCount();
-                    }
+                    largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getUserCount();
                 }
 
                 if (3 == columnIndex && largeThanRowCount) {
@@ -498,9 +491,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
                 if (!Double.isNaN(Double.parseDouble(((WhereRuleChartDataEntity) element).getNumMatch()))) {
                     // MOD yyin 20121031 TDQ-6194, when: match+no match>row count, highlight
-                    if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
-                        largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getCount();
-                    }
+                    largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getCount();
                 }
 
                 if ((3 == columnIndex || 4 == columnIndex) && largeThanRowCount) {

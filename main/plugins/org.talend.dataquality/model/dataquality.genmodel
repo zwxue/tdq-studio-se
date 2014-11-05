@@ -589,7 +589,11 @@
             <genParameters ecoreParameter="dataquality.ecore#//indicators/sql/UserDefIndicator/getCount/dataValue"/>
           </genOperations>
         </genClasses>
-        <genClasses ecoreClass="dataquality.ecore#//indicators/sql/WhereRuleIndicator"/>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/sql/WhereRuleIndicator">
+          <genOperations ecoreOperation="dataquality.ecore#//indicators/sql/WhereRuleIndicator/setCount">
+            <genParameters ecoreParameter="dataquality.ecore#//indicators/sql/WhereRuleIndicator/setCount/objects"/>
+          </genOperations>
+        </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/sql/JavaUserDefIndicator">
           <genOperations ecoreOperation="dataquality.ecore#//indicators/sql/JavaUserDefIndicator/setJavaUserDefObject">
             <genParameters ecoreParameter="dataquality.ecore#//indicators/sql/JavaUserDefIndicator/setJavaUserDefObject/javaUDIObj"/>
@@ -599,7 +603,6 @@
           </genOperations>
           <genOperations ecoreOperation="dataquality.ecore#//indicators/sql/JavaUserDefIndicator/getJavaUserDefObject"/>
         </genClasses>
-        <genClasses ecoreClass="dataquality.ecore#//indicators/sql/WhereRuleAideIndicator"/>
       </nestedGenPackages>
       <nestedGenPackages prefix="Columnset" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/columnset">
