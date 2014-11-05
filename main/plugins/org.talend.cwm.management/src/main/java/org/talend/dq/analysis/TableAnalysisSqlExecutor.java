@@ -460,7 +460,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return Boolean.TRUE;
     }
 
-<<<<<<< OURS
     /**
      * Added TDQ-9300 : Group the rule and its aide together as one pair in one list; and reorder to move the aide rule
      * upper the rule : old order : rule, aiderule--> new order: aiderule, rule.
@@ -485,8 +484,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return orderedIndicators;
     }
 
-=======
->>>>>>> THEIRS
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
