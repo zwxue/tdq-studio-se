@@ -22,7 +22,7 @@
    </url>
 
    <includes
-         id="org.talend.top_feature"
+         id="org.talend.top-feature"
          version="0.0.0"/>
 
    <includes
