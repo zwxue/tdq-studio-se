@@ -5,7 +5,10 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.eclipse.emf.ecore.EClass;
@@ -88,11 +91,10 @@ public class WeekLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
      * @return
      */
     private int getWeekOfYear(Date date) {
-        String weekStr = DateFormatUtils.format(date, weekSign);
-        int weekOfYear = Integer.parseInt(weekStr);
-        if (weekOfYear > 0) {
-            weekOfYear--;
-        }
+        // 'setFirstDayOfWeek(int)' and 'setMinimalDaysInFirstWeek(Locale)' will set by these 2 default parametes.
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
+        cal.setTime(date);
+        int weekOfYear = cal.get(Calendar.WEEK_OF_YEAR);
         return weekOfYear;
     }
 
