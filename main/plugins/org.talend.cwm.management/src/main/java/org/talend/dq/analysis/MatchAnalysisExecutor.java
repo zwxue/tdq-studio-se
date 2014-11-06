@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -23,7 +24,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.commons.exception.BusinessException;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -78,17 +78,17 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
      * @see org.talend.dq.analysis.IAnalysisExecutor#execute(org.talend.dataquality.analysis.Analysis)
      */
     public ReturnCode execute(Analysis analysis) {
-        // --- preconditions
-        ReturnCode preRC = AnalysisExecutorHelper.check(analysis);
-        if (!preRC.isOk()) {
-            return preRC;
-        }
         assert analysis != null;
+
+        // --- preconditions
+        ReturnCode rc = AnalysisExecutorHelper.check(analysis);
+        if (!rc.isOk()) {
+            return rc;
+        }
 
         // --- creation time
         final long startime = AnalysisExecutorHelper.setExecutionDateInAnalysisResult(analysis);
 
-        ReturnCode rc = new ReturnCode(Boolean.TRUE);
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         RecordMatchingIndicator recordMatchingIndicator = null;
         BlockKeyIndicator blockKeyIndicator = null;
@@ -107,17 +107,25 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         List<ModelElement> anlayzedElements = analysis.getContext().getAnalysedElements();
         if (anlayzedElements == null || anlayzedElements.size() == 0) {
             rc.setOk(Boolean.FALSE);
-            // popup message to notify empty analyzed element
-            MessageDialog.openWarning(null, Messages.getString("MatchAnalysisExecutor.warning"), //$NON-NLS-1$
-                    Messages.getString("MatchAnalysisExecutor.EmptyAnalyzedElement")); //$NON-NLS-1$
-
+            rc.setMessage(Messages.getString("MatchAnalysisExecutor.EmptyAnalyzedElement")); //$NON-NLS-1$
             return rc;
         }
 
-        Map<MetadataColumn, String> columnMap = getColumn2IndexMap(anlayzedElements);
+        // TDQ-9664 msjian: check the store on disk path.
+        Boolean isStoreOnDisk = TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY, analysis);
+        if (isStoreOnDisk) {
+            String tempDataPath = TaggedValueHelper.getValueString(SQLExecutor.TEMP_DATA_DIR, analysis);
+            File file = new File(tempDataPath);
+            if (!file.exists() || !file.isDirectory()) {
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(Messages.getString("MatchAnalysisExecutor.InvalidPath", file.getPath())); //$NON-NLS-1$
+                return rc;
+            }
+        }
+        // TDQ-9664~
 
-        ISQLExecutor sqlExecutor = null;
-        sqlExecutor = getSQLExectutor(analysis, recordMatchingIndicator, columnMap);
+        Map<MetadataColumn, String> columnMap = getColumn2IndexMap(anlayzedElements);
+        ISQLExecutor sqlExecutor = getSQLExectutor(analysis, recordMatchingIndicator, columnMap);
         if (sqlExecutor == null) {
             rc.setOk(Boolean.FALSE);
             return rc;
