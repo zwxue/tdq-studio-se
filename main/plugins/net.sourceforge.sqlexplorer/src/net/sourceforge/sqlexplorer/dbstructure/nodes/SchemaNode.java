@@ -292,8 +292,9 @@ public class SchemaNode extends AbstractNode {
             try {
                 // MOD qiongli 2012-8-22 TDQ-5898,get tables should without catalog name for odbc teradata.
                 SQLDatabaseMetaData metaData = _session.getMetaData();
-                boolean isODBCTeradata = ConnectionUtils.isOdbcTeradata(metaData.getJDBCMetaData()) ? true : false;
-                if (isODBCTeradata) {
+                boolean isODBCTeradata = ConnectionUtils.isOdbcTeradata(metaData.getJDBCMetaData());
+                boolean isNetezza = ConnectionUtils.isNetezza(metaData.getJDBCMetaData());
+                if (isODBCTeradata || isNetezza) {
                     tables = metaData.getTables(null, _name, "%", tableTypes, null);
                 } else {
                     tables = metaData.getTables(_name, _name, "%", tableTypes, null);
