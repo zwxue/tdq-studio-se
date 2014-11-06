@@ -156,6 +156,18 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#handle(java.lang.Object)
+     */
+    @Override
+    public boolean handle(Object data) {
+        boolean handle = super.handle(data);
+        mustStoreRow = false;
+        return handle;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#storeSqlResults(java.util.List)
      * 
      * ADDED scorreia 2008-05-02 storeSqlResults(List<Object[]> objects)

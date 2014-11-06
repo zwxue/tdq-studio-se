@@ -19,8 +19,6 @@ import org.eclipse.nebula.widgets.pagination.collections.PageResult;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
-import org.talend.dataquality.indicators.mapdb.DBMap;
-import org.talend.dataquality.indicators.mapdb.DBValueMap;
 
 /**
  * created by talend on Aug 15, 2014 Detailled comment
@@ -44,22 +42,7 @@ public class MapDBPageListHelper {
             content = filter.filterArray(content);
         }
 
-        // this is different from another createPage method
-        long total = totalSize;
-        if (content.size() < total) {
-            total = content.size();
-        }
-        return new PageResult<Object[]>(content, total);
-    }
-
-    public static <K, V> PageResult<Object[]> createPageByValue(DBValueMap<K, V> db, Map<Long, K> indexMap, ColumnFilter filter,
-            long fromIndex, long toIndex) {
-
-        List<Object[]> content = ((DBMap<K, V>) db).subValueList(fromIndex, toIndex, indexMap);
-        if (filter != null) {
-            content = filter.filterArray(content);
-        }
-        return new PageResult<Object[]>(content, content.size());
+        return new PageResult<Object[]>(content, totalSize);
     }
 
 }

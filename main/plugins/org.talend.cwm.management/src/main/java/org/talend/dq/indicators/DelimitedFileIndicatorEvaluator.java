@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
@@ -199,27 +200,27 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
      * @param indicToRowMap
      */
     private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
-        Map<Object, List<Object[]>> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
+        Map<Object, Object[]> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
+        Set<Object> duplicateValues = ((DuplicateCountIndicator) indicator).getDuplicateValues();
 
-        Iterator<Object> iterator = dupMap.keySet().iterator();
+        Iterator<Object> iterator = duplicateValues.iterator();
         int maxNumberRows = analysis.getParameters().getMaxNumberRows();
 
         while (iterator.hasNext()) {
             Object key = iterator.next();
 
-            List<Object[]> valuelist = dupMap.get(key);
-            if (valuelist.size() > 1) {
-                List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
-                // MOD zshen add another loop to insert all of columnValue on the row into indicator.
-                int recordIncrement = valueObjectList.size();
+            Object[] valueArray = dupMap.get(key);
+            if (valueArray == null) {
+                continue;
+            }
+            List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
+            // MOD zshen add another loop to insert all of columnValue on the row into indicator.
+            int NumberOfRecord = valueObjectList.size();
 
-                for (Object[] row : valuelist) {
-                    if (recordIncrement < maxNumberRows) {
-                        valueObjectList.add(row);
-                    } else {
-                        break;
-                    }
-                }
+            if (NumberOfRecord < maxNumberRows) {
+                valueObjectList.add(valueArray);
+            } else {
+                break;
             }
         }
     }

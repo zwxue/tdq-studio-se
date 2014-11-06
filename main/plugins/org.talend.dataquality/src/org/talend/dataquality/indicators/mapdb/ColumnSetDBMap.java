@@ -30,6 +30,10 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
         super(parentFullPathStr, fileName, mapName);
     }
 
+    public ColumnSetDBMap() {
+        super();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -39,6 +43,9 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
     public List<Object[]> subList(long fromIndex, long toIndex, Map<Long, List<Object>> indexMap) {
         boolean stratToRecord = false;
         List<Object[]> returnList = new ArrayList<Object[]>();
+        if (!checkIndex(fromIndex, toIndex)) {
+            return returnList;
+        }
         List<Object> fromKey = null;
         List<Object> toKey = null;
         if (indexMap != null) {
@@ -46,16 +53,16 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
             toKey = indexMap.get(toIndex);
         }
         Iterator<List<Object>> iterator = null;
-        int index = 0;
+        long index = 0;
         if (fromKey == null) {
             iterator = this.iterator();
         } else if (toKey == null) {
             NavigableSet<List<Object>> tailSet = tailSet(fromKey, true);
-            stratToRecord = true;
+            index = fromIndex;
             iterator = tailSet.iterator();
         } else {
             NavigableSet<List<Object>> tailSet = subSet(fromKey, toKey);
-            stratToRecord = true;
+            index = fromIndex;
             iterator = tailSet.iterator();
         }
 
@@ -67,8 +74,8 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
             if (index == fromIndex) {
                 stratToRecord = true;
             }
-            if (index == toIndex && indexMap != null) {
-                if (toKey == null) {
+            if (index == toIndex) {
+                if (toKey == null && indexMap != null) {
                     indexMap.put(toIndex, next);
                 }
                 break;
@@ -99,6 +106,9 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
     public List<Object[]> subList(long fromIndex, long toIndex, Map<Long, List<Object>> indexMap, DataValidation dataValiator) {
         boolean stratToRecord = false;
         List<Object[]> returnList = new ArrayList<Object[]>();
+        if (!checkIndex(fromIndex, toIndex)) {
+            return returnList;
+        }
         List<Object> fromKey = null;
         List<Object> toKey = null;
         if (indexMap != null) {
@@ -106,17 +116,17 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
             toKey = indexMap.get(toIndex);
         }
         Iterator<List<Object>> iterator = null;
-        int index = 0;
+        long index = 0l;
         if (fromKey == null) {
             iterator = this.iterator();
         } else if (toKey == null) {
             NavigableSet<List<Object>> tailSet = tailSet(fromKey, true);
             iterator = tailSet.iterator();
-            index = (int) fromIndex;
+            index = fromIndex;
         } else {
             NavigableSet<List<Object>> tailSet = subSet(fromKey, toKey);
             iterator = tailSet.iterator();
-            index = (int) fromIndex;
+            index = fromIndex;
         }
 
         while (iterator.hasNext()) {
@@ -129,13 +139,9 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
             }
             if (index == fromIndex) {
                 stratToRecord = true;
-                if (fromKey == null && indexMap != null) {
-                    indexMap.put(fromIndex, next);
-                }
-
             }
-            if (index == toIndex && indexMap != null) {
-                if (toKey == null) {
+            if (index == toIndex) {
+                if (toKey == null && indexMap != null) {
                     indexMap.put(toIndex, next);
                 }
                 break;
