@@ -13,12 +13,15 @@
 package org.talend.commons.MapDB.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBMapParameter;
 
@@ -29,7 +32,7 @@ import org.talend.dataquality.indicators.mapdb.DBMapParameter;
 public class DBMapTest {
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#hashCode()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#hashCode()}.
      */
     @Test
     public void testHashCode() {
@@ -45,7 +48,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#size()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#size()}.
      */
     @Test
     public void testSize() {
@@ -66,7 +69,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#isEmpty()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#isEmpty()}.
      */
     @Test
     public void testIsEmpty() {
@@ -87,7 +90,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#clear()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#clear()}.
      */
     @Test
     public void testClear() {
@@ -108,7 +111,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#DBMap(DBMapParameter, boolean)} .
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#DBMap(DBMapParameter, boolean)} .
      */
     @Test
     public void testDBMapDBMapParameter() {
@@ -120,7 +123,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#entrySet()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#entrySet()}.
      */
     @Test
     public void testEntrySet() {
@@ -135,7 +138,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#containsValue(java.lang.Object)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#containsValue(java.lang.Object)}.
      */
     @Test
     public void testContainsValueObject() {
@@ -150,7 +153,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#containsKey(java.lang.Object)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#containsKey(java.lang.Object)}.
      */
     @Test
     public void testContainsKeyObject() {
@@ -165,7 +168,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#get(java.lang.Object)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#get(java.lang.Object)}.
      */
     @Test
     public void testGetObject() {
@@ -180,7 +183,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#put(java.lang.String, java.lang.Long)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#put(java.lang.String, java.lang.Long)}.
      */
     @Test
     public void testPutStringLong() {
@@ -202,7 +205,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#remove(java.lang.Object)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#remove(java.lang.Object)}.
      */
     @Test
     public void testRemoveObject() {
@@ -214,7 +217,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#putAll(java.util.Map)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#putAll(java.util.Map)}.
      */
     @Test
     public void testPutAllMapOfQextendsStringQextendsLong() {
@@ -230,7 +233,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#keySet()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#keySet()}.
      */
     @Test
     public void testKeySet() {
@@ -245,7 +248,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#values()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#values()}.
      */
     @Test
     public void testValues() {
@@ -259,7 +262,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#equals(java.lang.Object)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#equals(java.lang.Object)}.
      */
     @Test
     public void testEqualsObject() {
@@ -283,7 +286,7 @@ public class DBMapTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBMap#toString()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#toString()}.
      */
     @Test
     public void testToString() {
@@ -294,4 +297,68 @@ public class DBMapTest {
         Assert.assertEquals("{name1=1, name2=2}", dbMap1.toString()); //$NON-NLS-1$
     }
 
+    /**
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#subList(long, long, Map)}. case 1 normal
+     * 
+     */
+    @Test
+    public void testSubListLongLongMapCase1() {
+        DBMap<String, Long> dbMap1 = new DBMap<String, Long>();
+        Assert.assertEquals("{}", dbMap1.toString()); //$NON-NLS-1$
+        dbMap1.put("name1", 1l); //$NON-NLS-1$
+        dbMap1.put("name2", 2l); //$NON-NLS-1$
+        Assert.assertEquals("{name1=1, name2=2}", dbMap1.toString()); //$NON-NLS-1$
+        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, String>());
+        Assert.assertEquals(2, subList.size());
+    }
+
+    /**
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#subList(long, long, Map)}. case 2 indexMap
+     * is null
+     * 
+     */
+    @Test
+    public void testSubListLongLongMapCase2() {
+        DBMap<String, Long> dbMap1 = new DBMap<String, Long>();
+        Assert.assertEquals("{}", dbMap1.toString()); //$NON-NLS-1$
+        dbMap1.put("name1", 1l); //$NON-NLS-1$
+        dbMap1.put("name2", 2l); //$NON-NLS-1$
+        Assert.assertEquals("{name1=1, name2=2}", dbMap1.toString()); //$NON-NLS-1$
+        List<Object[]> subList = dbMap1.subList(0, 2, null);
+        Assert.assertEquals(2, subList.size());
+    }
+
+    /**
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#subList(long, long, Map)}. Case 3 fromIndex
+     * more than toIndex
+     * 
+     */
+    @Test
+    public void testSubListLongLongMapCase3() {
+        DBMap<String, Long> dbMap1 = new DBMap<String, Long>();
+        Assert.assertEquals("{}", dbMap1.toString()); //$NON-NLS-1$
+        dbMap1.put("name1", 1l); //$NON-NLS-1$
+        dbMap1.put("name2", 2l); //$NON-NLS-1$
+        Assert.assertEquals("{name1=1, name2=2}", dbMap1.toString()); //$NON-NLS-1$
+        List<Object[]> subList = dbMap1.subList(2, 0, null);
+        Assert.assertEquals(0, subList.size());
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dataquality.indicators.mapdb.DBMap#subList(long, long, Map, org.talend.cwm.indicator.DataValidation)}
+     * Case 1 fromIndex more than toIndex
+     * 
+     */
+    @Test
+    public void testSubListLongLongMapDataValidationCase() {
+        DBMap<String, Long> dbMap1 = new DBMap<String, Long>();
+        Assert.assertEquals("{}", dbMap1.toString()); //$NON-NLS-1$
+        dbMap1.put("name1", 1l); //$NON-NLS-1$
+        dbMap1.put("name2", 2l); //$NON-NLS-1$
+        Assert.assertEquals("{name1=1, name2=2}", dbMap1.toString()); //$NON-NLS-1$
+        UniqueCountIndicator uniqueCountIndicator = IndicatorsFactory.eINSTANCE.createUniqueCountIndicator();
+        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, String>(), uniqueCountIndicator);
+        Assert.assertEquals(1, subList.size());
+    }
 }

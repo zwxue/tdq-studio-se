@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NavigableSet;
+import java.util.Random;
 import java.util.SortedSet;
 
 import org.mapdb.BTreeKeySerializer;
@@ -29,7 +30,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     private NavigableSet<E> dbSet = null;
 
-    protected String setName = null;
+    protected String setName = "testDBSet" + new Random().nextLong(); //$NON-NLS-1$;
 
     public DBSet(DBMapParameter parameter) {
         if (parameter == null) {
@@ -72,7 +73,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
     private void initSet() {
         TalendSerializerBase talendSerializerBase = new TalendSerializerBase();
         BasicKeySerializer talendBasicKeySerializer = new BTreeKeySerializer.BasicKeySerializer(talendSerializerBase);
-        dbSet = getDB().createTreeSet("testSet").serializer(talendBasicKeySerializer).comparator(new DBMapCompartor()).make();//$NON-NLS-1$
+        dbSet = getDB().createTreeSet(setName).serializer(talendBasicKeySerializer).comparator(new DBMapCompartor()).make();
 
     }
 
@@ -128,6 +129,9 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      */
     @Override
     public boolean contains(Object o) {
+        if (o == null) {
+            return dbSet.contains(EMPTY);
+        }
         return dbSet.contains(o);
     }
 
@@ -173,6 +177,9 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
      */
     @Override
     public boolean remove(Object o) {
+        if (o == null) {
+            return dbSet.remove(EMPTY);
+        }
         return dbSet.remove(o);
     }
 

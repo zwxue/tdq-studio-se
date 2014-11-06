@@ -145,34 +145,53 @@ public abstract class AbstractDB<K> {
      * @return
      */
     public List<Object[]> subList(long fromIndex, long toIndex, Map<Long, K> indexMap) {
+        return subList(fromIndex, toIndex, indexMap, null);
+    }
+
+    /**
+     * 
+     * get subList from fromIndex to toIndex
+     * 
+     * @param fromIndex
+     * @param toIndex
+     * @param indexMap
+     * @return
+     */
+    public List<Object[]> subList(long fromIndex, long toIndex, Map<Long, K> indexMap, DataValidation dataValiator) {
         boolean stratToRecord = false;
         List<Object[]> returnList = new ArrayList<Object[]>();
+        if (!checkIndex(fromIndex, toIndex)) {
+            return returnList;
+        }
         K fromKey = indexMap.get(fromIndex);
         K toKey = indexMap.get(toIndex);
         Iterator<K> iterator = null;
-        int index = 0;
+        long index = 0;
         if (fromKey == null) {
             iterator = this.iterator();
         } else if (toKey == null) {
             NavigableSet<K> tailSet = tailSet(fromKey, true);
-            stratToRecord = true;
+            index = fromIndex;
             iterator = tailSet.iterator();
         } else {
             NavigableSet<K> tailSet = subSet(fromKey, toKey);
-            stratToRecord = true;
+            index = fromIndex;
             iterator = tailSet.iterator();
         }
 
         while (iterator.hasNext()) {
             K next = iterator.next();
-            if (index == 0 && fromKey == null) {
+            if (dataValiator != null && !dataValiator.isValid(next)) {
+                continue;
+            }
+            if (index == 0 && fromKey == null && indexMap != null) {
                 indexMap.put(0l, next);
             }
             if (index == fromIndex) {
                 stratToRecord = true;
             }
             if (index == toIndex) {
-                if (toKey == null) {
+                if (toKey == null && indexMap != null) {
                     indexMap.put(toIndex, next);
                 }
                 break;
@@ -189,59 +208,17 @@ public abstract class AbstractDB<K> {
 
     /**
      * 
-     * get subList from fromIndex to toIndex
+     * Check whether fromIndex is less than toIndex
      * 
      * @param fromIndex
      * @param toIndex
-     * @param indexMap
      * @return
      */
-    public List<Object[]> subList(long fromIndex, long toIndex, Map<Long, K> indexMap, DataValidation dataValiator) {
-        boolean stratToRecord = false;
-        List<Object[]> returnList = new ArrayList<Object[]>();
-        K fromKey = indexMap.get(fromIndex);
-        K toKey = indexMap.get(toIndex);
-        Iterator<K> iterator = null;
-        int index = 0;
-        if (fromKey == null) {
-            iterator = this.iterator();
-        } else if (toKey == null) {
-            NavigableSet<K> tailSet = tailSet(fromKey, true);
-            iterator = tailSet.iterator();
-        } else {
-            NavigableSet<K> tailSet = subSet(fromKey, toKey);
-            iterator = tailSet.iterator();
+    protected boolean checkIndex(long fromIndex, long toIndex) {
+        if (fromIndex >= toIndex) {
+            return false;
         }
-
-        while (iterator.hasNext()) {
-            K next = iterator.next();
-            if (dataValiator != null && !dataValiator.isValid(next)) {
-                continue;
-            }
-            if (index == 0 && fromKey == null) {
-                indexMap.put(0l, next);
-            }
-            if (index == fromIndex) {
-                stratToRecord = true;
-                if (fromKey == null) {
-                    indexMap.put(fromIndex, next);
-                }
-
-            }
-            if (index == toIndex) {
-                if (toKey == null) {
-                    indexMap.put(toIndex, next);
-                }
-                break;
-            }
-            if (stratToRecord == true) {
-                returnList.add(new Object[] { next });
-            }
-            index++;
-
-        }
-
-        return returnList;
+        return true;
     }
 
     /**

@@ -10,17 +10,14 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.indicators.mapdb;
-
+package org.talend.dataprofiler.common.ui.pagination.pageloder;
 
 /**
- * created by talend on Aug 25, 2014 Detailled comment
+ * The Constant of Pageable page
  * 
  */
-public class DBValueMap<K, V> extends DBMap<K, V> {
+public class MapDBPageConstant {
 
-    public DBValueMap(String parentFullPathStr, String fileName, String mapName) {
-        super(parentFullPathStr, fileName, mapName);
-    }
+    public static final int NUMBER_PER_PAGE = 100;
 
 }

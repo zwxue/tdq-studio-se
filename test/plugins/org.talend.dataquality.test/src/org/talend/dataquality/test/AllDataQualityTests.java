@@ -15,6 +15,9 @@ package org.talend.dataquality.test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.talend.commons.MapDB.utils.ColumnSetDBMapTest;
+import org.talend.commons.MapDB.utils.DBMapTest;
+import org.talend.commons.MapDB.utils.DBSetTest;
 import org.talend.dataquality.helpers.IndicatorHelperTest;
 import org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImplTest;
 import org.talend.dataquality.indicators.columnset.impl.RecordMatchingIndicatorImplTest;
@@ -39,7 +42,7 @@ import org.talend.dataquality.properties.impl.TDQSourceFileItemImplTest;
         RegexpMatchingIndicatorImplTest.class, WellFormE164PhoneCountIndicatorImplTest.class,
         WellFormIntePhoneCountIndicatorImplTest.class, WellFormNationalPhoneCountIndicatorImplTest.class,
         IndicatorHelperTest.class, ColumnSetMultiValueIndicatorImplTest.class, RecordMatchingIndicatorImplTest.class,
-        TDQJrxmlItemImplTest.class, TDQSourceFileItemImplTest.class })
+        TDQJrxmlItemImplTest.class, TDQSourceFileItemImplTest.class, DBMapTest.class, DBSetTest.class, ColumnSetDBMapTest.class })
 public class AllDataQualityTests {
 
 }

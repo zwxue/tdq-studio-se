@@ -27,9 +27,11 @@ import java.util.concurrent.ConcurrentNavigableMap;
 import org.mapdb.BTreeKeySerializer;
 import org.mapdb.BTreeKeySerializer.BasicKeySerializer;
 import org.mapdb.BTreeMap;
+import org.mapdb.DB.BTreeMapMaker;
 import org.mapdb.Fun;
 import org.mapdb.Pump;
 import org.mapdb.Serializer;
+import org.talend.cwm.indicator.DataValidation;
 
 /**
  * created by talend on Aug 5, 2014 Detailled comment
@@ -81,8 +83,12 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
         if (getDB().exists(mapName)) {
             dbMap = getDB().get(mapName);
         } else {
-            dbMap = getDB().createTreeMap(mapName).valuesOutsideNodesEnable().keySerializer(talendBasicKeySerializer)
-                    .comparator(new DBMapCompartor()).valueSerializer(talendSerializerBase).make();
+            BTreeMapMaker treeMapMaker = getDB().createTreeMap(mapName);
+            if (MapDBContent.isValuesOutsideNodesEnable()) {
+                treeMapMaker = treeMapMaker.valuesOutsideNodesEnable();
+            }
+            dbMap = treeMapMaker.keySerializer(talendBasicKeySerializer).comparator(new DBMapCompartor())
+                    .valueSerializer(talendSerializerBase).make();
         }
     }
 
@@ -599,46 +605,6 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
         return dbMap.keySet().subSet(fromElement, true, toElement, false);
     }
 
-    public List<Object[]> subValueList(long fromIndex, long toIndex, Map<Long, K> indexMap) {
-        boolean stratToRecord = false;
-        List<Object[]> returnList = new ArrayList<Object[]>();
-        K fromKey = indexMap.get(fromIndex);
-        K toKey = indexMap.get(toIndex);
-        Iterator<K> iterator = null;
-        int index = 0;
-        if (fromKey == null) {
-            iterator = this.iterator();
-        } else if (toKey == null) {
-            NavigableSet<K> tailSet = tailSet(fromKey, true);
-            iterator = tailSet.iterator();
-        } else {
-            NavigableSet<K> tailSet = subSet(fromKey, toKey);
-            iterator = tailSet.iterator();
-        }
-
-        while (iterator.hasNext()) {
-            K next = iterator.next();
-            if (index == 0 && fromKey == null) {
-                indexMap.put(0l, next);
-            }
-            if (index == fromIndex) {
-                stratToRecord = true;
-            }
-            if (index == toIndex) {
-                if (toKey == null) {
-                    indexMap.put(toIndex, next);
-                }
-                break;
-            }
-            if (stratToRecord == true) {
-                returnList.add(new Object[] { this.get(next) });
-            }
-            index++;
-
-        }
-        return returnList;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -646,8 +612,22 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
      */
     @Override
     public List<Object[]> subList(long fromIndex, long toIndex, Map<Long, K> indexMap) {
+        return subList(fromIndex, toIndex, indexMap, null);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.mapdb.AbstractDB#subList(long, long, java.util.Map,
+     * org.talend.cwm.indicator.DataValidation)
+     */
+    @Override
+    public List<Object[]> subList(long fromIndex, long toIndex, Map<Long, K> indexMap, DataValidation dataValiator) {
         boolean stratToRecord = false;
         List<Object[]> returnList = new ArrayList<Object[]>();
+        if (!checkIndex(fromIndex, toIndex)) {
+            return returnList;
+        }
         K fromKey = null;
         K toKey = null;
         if (indexMap != null) {
@@ -655,29 +635,35 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
             toKey = indexMap.get(toIndex);
         }
         Iterator<K> iterator = null;
-        int index = 0;
+        long index = 0l;
         if (fromKey == null) {
             iterator = this.iterator();
         } else if (toKey == null) {
             NavigableSet<K> tailSet = tailSet(fromKey, true);
-            index = (int) fromIndex;
+            index = fromIndex;
             iterator = tailSet.iterator();
         } else {
             NavigableSet<K> tailSet = subSet(fromKey, toKey);
-            index = (int) fromIndex;
+            index = fromIndex;
             iterator = tailSet.iterator();
         }
 
         while (iterator.hasNext()) {
             K next = iterator.next();
+            if (dataValiator != null) {
+                V v = this.get(next);
+                if (!dataValiator.isValid(v)) {
+                    continue;
+                }
+            }
             if (index == 0 && fromKey == null && indexMap != null) {
                 indexMap.put(0l, next);
             }
             if (index == fromIndex) {
                 stratToRecord = true;
             }
-            if (index == toIndex && indexMap != null) {
-                if (toKey == null) {
+            if (index == toIndex) {
+                if (toKey == null && indexMap != null) {
                     indexMap.put(toIndex, next);
                 }
                 break;
@@ -686,10 +672,10 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
                 V v = this.get(next);
                 if (v.getClass().isArray()) {
                     returnList.add((Object[]) v);
-                } else if (v instanceof String) {
-                    returnList.add(((String) v).split(",")); //$NON-NLS-1$
+                } else if (List.class.isInstance(v)) {
+                    returnList.add(((List<?>) v).toArray());
                 } else {
-                    returnList.add(((List) v).toArray());
+                    returnList.add(new Object[] { v });
                 }
             }
             index++;

@@ -65,10 +65,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageConstant;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
@@ -200,22 +200,22 @@ public class DrillDownResultEditor extends EditorPart {
         tableView.setLabelProvider(new DrillDownResultLabelProvider());
         tableView.setContentProvider(new DrillDownResultContentProvider());
         // set page size
-        final PageableController controller = new PageableController(100);
+        final PageableController controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
         table.setData(ddEditorInput.getDataSetForMapDB(controller.getPageSize()));
         // for columnSet analysis here only have one db file need to support drill down and data section
         Analysis analysis = ddEditorInput.getAnalysis();
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
         IPageLoader<PageResult<Object[]>> pageLoader = null;
-        AbstractDB<Object> mapDB = DrillDownUtils.getMapDB(ddEditorInput.getDataEntity(), ddEditorInput.getAnalysis());
+        AbstractDB<Object> mapDB = ddEditorInput.getMapDB();
         Indicator generateMapDBIndicator = ddEditorInput.getGenerateMapDBIndicator();
         MapDBManager.getInstance().addDBRef(generateMapDBIndicator.getMapDBFile());
+        Long itemsSize = ddEditorInput.getItemSize(mapDB);
         if (AnalysisType.COLUMN_SET == analysisType) {
-            Long itemsSize = ddEditorInput.getCurrentIndicatorResultSize();
             pageLoader = new MapDBPageLoader<Object>(mapDB, ddEditorInput.getCurrIndicator(), itemsSize);
         } else {
             // ~
             ColumnFilter filter = ddEditorInput.getColumnFilter();
-            pageLoader = new MapDBPageLoader<Object>(mapDB, null, mapDB.size(), filter);
+            pageLoader = new MapDBPageLoader<Object>(mapDB, null, itemsSize, filter);
         }
         controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller, tableView,
                 pageLoader, PageResultContentProvider.getInstance(), null));
