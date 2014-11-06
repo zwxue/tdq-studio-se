@@ -408,4 +408,20 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         }
         return super.isDirty();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateTreeView()
+     */
+    @Override
+    protected void updateAnalysisTree() {
+        if (anaColumnCompareViewer != null) {
+            boolean beforeUpdateDirty = anaColumnCompareViewer.isDirty();
+            anaColumnCompareViewer.updateModelViewer();
+            if (!beforeUpdateDirty) {
+                anaColumnCompareViewer.setDirty(false);
+            }
+        }
+    }
 }

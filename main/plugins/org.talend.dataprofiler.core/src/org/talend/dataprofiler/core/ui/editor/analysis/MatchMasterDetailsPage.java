@@ -333,16 +333,17 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridLayout layout = new GridLayout(2, Boolean.TRUE);
         titleComposite.setLayout(layout);
         analyzeDataLabel = new Label(titleComposite, SWT.NONE);
-        final RepositoryNode firstColumnNode = analysisHandler.getAnalyzedColumns().size() > 0 ? RepositoryNodeHelper
-                .recursiveFind(analysisHandler.getAnalyzedColumns().get(0)) : null;
         // register: refresh the dataprovider combobox when the name of the data provider is changed.
         refreshDataProiverLabel = new EventReceiver() {
 
             @Override
             public boolean handle(Object data) {
-                if (firstColumnNode != null) {
-                    updateAnalyzeDataLabel(firstColumnNode);
+                RepositoryNode fColumnNode = analysisHandler.getAnalyzedColumns().size() > 0 ? RepositoryNodeHelper
+                        .recursiveFind(analysisHandler.getAnalyzedColumns().get(0)) : null;
+                if (fColumnNode != null) {
+                    updateAnalyzeDataLabel(fColumnNode);
                 }
+
                 return true;
             }
         };
@@ -866,12 +867,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private List<IRepositoryNode> findAllSelectedRepositoryNode() {
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
-        if (selectedNodes != null) {
-            for (IRepositoryNode node : selectedNodes) {
-                reposViewObjList.add(node);
-            }
-        } else if (analysisHandler.getSelectedColumns() != null) {// find the related nodes of the selected columns,
-                                                                  // when the first opened
+        // TDQ-9354 get selected columns from Anlaysis not form "selectedNodes".avoid to get an old instance when rename
+        // the related connection then click "select data".
+        if (analysisHandler.getSelectedColumns() != null) {
             // analysis has noe selected nodes
             for (ModelElement selectedColumn : analysisHandler.getSelectedColumns()) {
                 RepositoryNode node = RepositoryNodeHelper.recursiveFind(selectedColumn);
