@@ -5,6 +5,9 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -410,9 +413,7 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
 
     @Override
     public boolean handle(Object data) {
-        if (checkMustStoreCurrentRow()) {
-            this.mustStoreRow = true;
-        }
+        this.mustStoreRow = checkMustStoreCurrentRow();
         count++;
         boolean isInvalidForm = false;
         try {
@@ -431,16 +432,16 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
                 String format_national = phoneUtil.format(phoneNumeber, PhoneNumberFormat.NATIONAL);
                 if (data.toString().equals(format_E164)) {
                     wellFormE164Count++;
-                    getMapForFreq().put(this.WELL_FORM_E164_KEY, wellFormE164Count);
+
                     setCurrentKey(WELL_FORM_E164_KEY);
 
                 } else if (data.toString().equals(format_inter)) {
                     wellFormInteCount++;
-                    getMapForFreq().put(this.WELL_FORM_INTE_KEY, wellFormInteCount);
+
                     setCurrentKey(WELL_FORM_INTE_KEY);
                 } else if (data.toString().equals(format_national)) {
                     wellFormNatiCount++;
-                    getMapForFreq().put(this.WELL_FORM_NATI_KEY, wellFormNatiCount);
+
                     setCurrentKey(WELL_FORM_NATI_KEY);
                 } else {
                     isInvalidForm = true;
@@ -454,7 +455,7 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
         }
         if (isInvalidForm) {
             invalidFormCount++;
-            getMapForFreq().put(this.INVALID_FORM_KEY, invalidFormCount);
+
             setCurrentKey(INVALID_FORM_KEY);
         }
         return true;
@@ -466,7 +467,6 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
         wellFormInteCount = WELL_FORM_INTE_COUNT_EDEFAULT;
         wellFormNatiCount = WELL_FORM_NATI_COUNT_EDEFAULT;
         invalidFormCount = INVALID_FORM_COUNT_EDEFAULT;
-        valueToFreq.clear();
         return super.reset();
     }
 
@@ -488,11 +488,23 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
      */
     @Override
     public boolean finalizeComputation() {
-        // valueToFreq.put(this.WELL_FORM_E164_KEY, wellFormE164Count);
-        // valueToFreq.put(this.WELL_FORM_INTE_KEY, wellFormInteCount);
-        // valueToFreq.put(this.WELL_FORM_NATI_KEY, wellFormNatiCount);
-        // valueToFreq.put(this.INVALID_FORM_KEY, invalidFormCount);
+        getMapForFreq().put(this.WELL_FORM_E164_KEY, wellFormE164Count);
+        getMapForFreq().put(this.WELL_FORM_INTE_KEY, wellFormInteCount);
+        getMapForFreq().put(this.WELL_FORM_NATI_KEY, wellFormNatiCount);
+        getMapForFreq().put(this.INVALID_FORM_KEY, invalidFormCount);
         return super.finalizeComputation();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDBNames(java.lang.Object)
+     */
+    @Override
+    protected List<String> getDBNames(Object name) {
+        List<String> dbNames = new ArrayList<String>();
+        dbNames.add(this.getCurrentKey());
+        return dbNames;
     }
 
 } // FormatFreqPieIndicatorImpl

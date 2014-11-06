@@ -583,7 +583,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @return String
      */
-    private List<String> getDBNames(Object name) {
+    protected List<String> getDBNames(Object name) {
         List<String> dbNames = new ArrayList<String>();
         if (null == name) {
             dbNames.add(SpecialValueDisplay.NULL_FIELD);

@@ -62,6 +62,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageConstant;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -443,7 +444,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             setupTableGridDataLimitedSize(table, pageSize);
 
             // add pagation control
-            final PageableController controller = new PageableController(100);
+            final PageableController controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
             try {
                 final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(
                         ssIndicator.getMapDB(StandardDBName.dataSection.name()));

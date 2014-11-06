@@ -10,28 +10,14 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.indicators.datavalidation;
-
-import org.talend.cwm.indicator.DataValidation;
+package org.talend.dataprofiler.common.ui.pagination.pageloder;
 
 /**
- * created by talend on Oct 17, 2014 Detailled comment
+ * The Constant of Pageable page
  * 
  */
-public class RowDataValidationImpl implements DataValidation {
+public class MapDBPageConstant {
 
-    RowDataValidationImpl() {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.indicator.DataValidation#isValid(java.lang.Object)
-     */
-    @Override
-    public boolean isValid(Object inputData) {
-        return true;
-    }
+    public static final int NUMBER_PER_PAGE = 100;
 
 }
