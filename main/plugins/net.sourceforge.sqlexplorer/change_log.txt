@@ -3,6 +3,11 @@ change logs from talend
 
 1. from https://github.com/Talend/tdq-studio-se/commits/master/main/plugins/net.sourceforge.sqlexplorer
 ======================================
+
+2014-11-7 qiongli bug TDQ-9692:The "Connections" view opens up when I do "Data Preview" on a table
+--------------------------------------------------------------------------------------------------
+Only open the connections view when the current perspective is SQLExplorer perspective.
+
 Commits on Oct 16, 2014
 
     zshen-talend

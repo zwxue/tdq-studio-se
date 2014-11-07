@@ -28,6 +28,7 @@ import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
 import net.sourceforge.sqlexplorer.history.SQLHistory;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
+import net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 import net.sourceforge.sqlexplorer.service.MapDBUtils;
 
@@ -40,6 +41,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
@@ -110,6 +112,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
         try {
             getLog().addLogListener(new ILogListener() {
 
+                @Override
                 public void logging(IStatus status, String plugin) {
                     Throwable t = status.getException();
                     if (t != null) {
@@ -351,16 +354,19 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     }
 
     public ConnectionsView getConnectionsView() {
-        if (connectionsView == null) {
-            IWorkbenchPage page = getActivePage();
-            if (page != null) {
-                connectionsView = (ConnectionsView) page.findView(ConnectionsView.class.getName());
-                if (connectionsView == null) {
-                    try {
-                        connectionsView = (ConnectionsView) page.showView(ConnectionsView.class.getName());
-                    } catch (PartInitException e) {
-                        error(e);
-                    }
+        if (findConnectionsView() != null) {
+            return connectionsView;
+        }
+        // TDQ-9692 MOD qiongli, only when the current prespective is SQLExplorer, the Connections View is opened.or
+        // else,we don't open this view.
+        IWorkbenchPage page = getActivePage();
+        if (page != null) {
+            boolean isCurrSQLExplPerspective = isSqlExplorerCurrentPerspective(page);
+            if (isCurrSQLExplPerspective) {
+                try {
+                    connectionsView = (ConnectionsView) page.showView(ConnectionsView.class.getName());
+                } catch (PartInitException e) {
+                    error(e);
                 }
             }
         }
@@ -368,23 +374,68 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
         return connectionsView;
     }
 
+    /**
+     * 
+     * only find this view,no open it.
+     * 
+     * @return
+     */
+    public ConnectionsView findConnectionsView() {
+        if (connectionsView != null) {
+            return connectionsView;
+        }
+        IWorkbenchPage page = getActivePage();
+        if (page != null) {
+            connectionsView = (ConnectionsView) page.findView(ConnectionsView.class.getName());
+        }
+        return connectionsView;
+    }
+
+    /**
+     * if the current perspective is sql explorer?
+     * 
+     * @param page
+     * @return
+     */
+    private boolean isSqlExplorerCurrentPerspective(IWorkbenchPage page) {
+        boolean isCurrSQLExplorerPerspective = false;
+        if (page != null) {
+            isCurrSQLExplorerPerspective = SQLExplorerPluginPerspective.class.getName().equals(page.getPerspective().getId());
+        }
+        return isCurrSQLExplorerPerspective;
+    }
+
     public void setConnectionsView(ConnectionsView connectionsView) {
         this.connectionsView = connectionsView;
     }
 
     public DatabaseStructureView getDatabaseStructureView() {
-        if (databaseStructureView == null) {
+        if (findDatabaseStructureView() == null) {
             IWorkbenchPage page = getActivePage();
             if (page != null) {
-                databaseStructureView = (DatabaseStructureView) page.findView(DatabaseStructureView.class.getName());
-                if (databaseStructureView == null) {
-                    try {
-                        databaseStructureView = (DatabaseStructureView) page.showView(DatabaseStructureView.class.getName());
-                    } catch (PartInitException e) {
-                        error(e);
-                    }
+                try {
+                    databaseStructureView = (DatabaseStructureView) page.showView(DatabaseStructureView.class.getName());
+                } catch (PartInitException e) {
+                    error(e);
                 }
             }
+        }
+        return databaseStructureView;
+    }
+
+    /**
+     * 
+     * only find this view,no open it.
+     * 
+     * @return
+     */
+    public DatabaseStructureView findDatabaseStructureView() {
+        if (databaseStructureView != null) {
+            return databaseStructureView;
+        }
+        IWorkbenchPage page = getActivePage();
+        if (page != null) {
+            databaseStructureView = (DatabaseStructureView) page.findView(DatabaseStructureView.class.getName());
         }
         return databaseStructureView;
     }
@@ -394,10 +445,17 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     }
 
     public IWorkbenchSite getSite() {
-        if (getConnectionsView() == null) {
-            return null;
+        if (findConnectionsView() != null) {
+            return connectionsView.getSite();
         }
-        return connectionsView.getSite();
+
+        // if connectionsView is not opened,find DQView.
+        IViewPart DQView = null;
+        IWorkbenchPage page = getActivePage();
+        if (page != null) {
+            DQView = page.findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView");
+        }
+        return DQView == null ? null : DQView.getSite();
     }
 
     /**
