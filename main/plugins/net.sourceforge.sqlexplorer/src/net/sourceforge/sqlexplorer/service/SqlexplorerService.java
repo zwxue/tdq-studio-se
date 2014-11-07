@@ -806,15 +806,9 @@ public class SqlexplorerService implements ISqlexplorerService {
         }
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         // if the ctabItem is open,close it.
-        IWorkbenchPage page = sqlPlugin.getActivePage();
-        if (page != null) {
-            DatabaseStructureView view = (DatabaseStructureView) page.findView(DatabaseStructureView.class.getName());
-            if (view != null) {
-                view.closeCurrentCabItem(aliasName);
-            }
-        } else {
-            // print the error log when page is null(command line environment or other cases).
-            log.error("Workebench page is null!"); //$NON-NLS-1$
+        DatabaseStructureView view = sqlPlugin.findDatabaseStructureView();
+        if (view != null) {
+            view.closeCurrentCabItem(aliasName);
         }
 
         AliasManager aliasManager = sqlPlugin.getAliasManager();
@@ -841,7 +835,7 @@ public class SqlexplorerService implements ISqlexplorerService {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
-        DatabaseStructureView dsView = sqlPlugin.getDatabaseStructureView();
+        DatabaseStructureView dsView = sqlPlugin.findDatabaseStructureView();
         // MOD qiongli 2012-11-12 TDQ-6166,only load aliases from file when AliasManager'Aliases is empty.should remove
         // alias from propertyFile map at the same time.
         try {
