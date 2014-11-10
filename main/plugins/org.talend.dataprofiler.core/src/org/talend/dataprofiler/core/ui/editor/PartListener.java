@@ -77,7 +77,7 @@ public class PartListener implements IPartListener {
     }
 
     public void partClosed(IWorkbenchPart part) {
-        ContextViewHelper.hideContextView(part);
+        // do nothing here
     }
 
     public void partDeactivated(IWorkbenchPart part) {
