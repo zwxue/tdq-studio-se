@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.talend.dataquality.matching.test
 Bundle-SymbolicName: org.talend.dataquality.matching.test
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
-Fragment-Host: org.talend.dataquality.matching;bundle-version="1.0.0"
+Fragment-Host: org.talend.dataquality.matching;bundle-version="6.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4,
  org.eclipse.core.runtime,
