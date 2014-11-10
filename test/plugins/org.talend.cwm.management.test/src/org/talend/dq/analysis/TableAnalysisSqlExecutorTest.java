@@ -17,9 +17,7 @@ import junit.framework.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -35,7 +33,7 @@ import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
-import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
@@ -50,29 +48,9 @@ public class TableAnalysisSqlExecutorTest {
 
     Analysis testAnalysis = null;
 
-    WhereRuleAideIndicator testWhereRuleAideIndicator = null;
+    WhereRule testWhereRuleIndicatorDefinition = null;
 
-    WhereRule testWhereRuleAideIndicatorDefinition = null;
-
-    /**
-     * DOC xqliu Comment method "setUpBeforeClass".
-     * 
-     * @throws java.lang.Exception
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        // do nothing here
-    }
-
-    /**
-     * DOC xqliu Comment method "tearDownAfterClass".
-     * 
-     * @throws java.lang.Exception
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-        // do nothing here
-    }
+    WhereRuleIndicator testWhereRuleIndicator = null;
 
     /**
      * DOC xqliu Comment method "setUp".
@@ -114,14 +92,14 @@ public class TableAnalysisSqlExecutorTest {
         testAnalysisContext.setConnection(testDatabaseConnection);
 
         // create WhereRuleAide indicatorDefinition
-        testWhereRuleAideIndicatorDefinition = RulesFactory.eINSTANCE.createWhereRule();
-        testWhereRuleAideIndicatorDefinition.setLabel("rule1"); //$NON-NLS-1$
+        testWhereRuleIndicatorDefinition = RulesFactory.eINSTANCE.createWhereRule();
+        testWhereRuleIndicatorDefinition.setLabel("rule1"); //$NON-NLS-1$
 
-        // create WhereRuleAide indicator
-        testWhereRuleAideIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleAideIndicator();
-        testAnalysisResult.getIndicators().add(testWhereRuleAideIndicator);
-        testWhereRuleAideIndicator.setAnalyzedElement(testTdTable);
-        testWhereRuleAideIndicator.setIndicatorDefinition(testWhereRuleAideIndicatorDefinition);
+        // create WhereRule indicator
+        testWhereRuleIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
+        testAnalysisResult.getIndicators().add(testWhereRuleIndicator);
+        testWhereRuleIndicator.setAnalyzedElement(testTdTable);
+        testWhereRuleIndicator.setIndicatorDefinition(testWhereRuleIndicatorDefinition);
     }
 
     /**
@@ -143,14 +121,14 @@ public class TableAnalysisSqlExecutorTest {
         TdExpression expression = RelationalFactory.eINSTANCE.createTdExpression();
         expression.setBody("SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__JOIN_CLAUSE__%> &lt;%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
         expression.setLanguage("SQL"); //$NON-NLS-1$
-        testWhereRuleAideIndicatorDefinition.getSqlGenericExpression().add(expression);
+        testWhereRuleIndicatorDefinition.getSqlGenericExpression().add(expression);
 
         TableAnalysisSqlExecutor tableAnalysisSqlExecutor = new TableAnalysisSqlExecutor();
         String actualSqlStatement = tableAnalysisSqlExecutor.createSqlStatement(testAnalysis);
         Assert.assertEquals(StringUtils.EMPTY, actualSqlStatement);
-        EList<Expression> instantiatedExpressions = testWhereRuleAideIndicator.getInstantiatedExpressions();
+        EList<Expression> instantiatedExpressions = testWhereRuleIndicator.getInstantiatedExpressions();
         Assert.assertNotNull(instantiatedExpressions);
-        Assert.assertEquals(0, instantiatedExpressions.size());
+        Assert.assertEquals(1, instantiatedExpressions.size());
     }
 
     /**
@@ -164,7 +142,7 @@ public class TableAnalysisSqlExecutorTest {
         TdExpression expression = RelationalFactory.eINSTANCE.createTdExpression();
         expression.setBody(sql);
         expression.setLanguage("SQL"); //$NON-NLS-1$
-        testWhereRuleAideIndicatorDefinition.getSqlGenericExpression().add(expression);
+        testWhereRuleIndicatorDefinition.getSqlGenericExpression().add(expression);
 
         JoinElement createJoinElement = RulesFactory.eINSTANCE.createJoinElement();
         createJoinElement.setColumnAliasA("colA"); //$NON-NLS-1$
@@ -183,12 +161,12 @@ public class TableAnalysisSqlExecutorTest {
         createTdColumnB.setOwner(createTdTableB);
         createJoinElement.setColA(createTdColumnA);
         createJoinElement.setColB(createTdColumnB);
-        testWhereRuleAideIndicatorDefinition.getJoins().add(createJoinElement);
+        testWhereRuleIndicatorDefinition.getJoins().add(createJoinElement);
 
         TableAnalysisSqlExecutor tableAnalysisSqlExecutor = new TableAnalysisSqlExecutor();
         String actualSqlStatement = tableAnalysisSqlExecutor.createSqlStatement(testAnalysis);
         Assert.assertEquals(StringUtils.EMPTY, actualSqlStatement);
-        EList<Expression> instantiatedExpressions = testWhereRuleAideIndicator.getInstantiatedExpressions();
+        EList<Expression> instantiatedExpressions = testWhereRuleIndicator.getInstantiatedExpressions();
         Assert.assertNotNull(instantiatedExpressions);
         Assert.assertEquals(1, instantiatedExpressions.size());
         Assert.assertEquals(sql, instantiatedExpressions.get(0).getBody());

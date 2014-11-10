@@ -48,8 +48,9 @@ public class MatchRuleAnlaysisUtilsTest extends TestCase {
      * 
      * @throws java.lang.Exception
      */
+    @Override
     protected void setUp() throws Exception {
-        sortState = new SortState();
+        sortState = new SortState(0);
         sortState.setSelectedColumnIndex(0);
         sortState.setSelectedColumnName("column_0");//$NON-NLS-1$ 
 
@@ -65,6 +66,7 @@ public class MatchRuleAnlaysisUtilsTest extends TestCase {
      * 
      * @throws java.lang.Exception
      */
+    @Override
     protected void tearDown() throws Exception {
         sortData = null;
         columns = null;
@@ -342,7 +344,6 @@ public class MatchRuleAnlaysisUtilsTest extends TestCase {
     public void testSortDataByColumn_GroupSize() {
         // when the sort column is the group size, should compare as int
         sortState.getNextSortDirection();// ASC
-        sortState.setGrpSizeIndex(0);
 
         String[] array = { "1" };
         String[] array2 = { "5" };
@@ -378,7 +379,6 @@ public class MatchRuleAnlaysisUtilsTest extends TestCase {
     public void testSortDataByColumn_StringAsDouble() {
         // when the sort column is the group size, should compare as int
         sortState.getNextSortDirection();// ASC
-        sortState.setGrpSizeIndex(0);
 
         String[] array = { "1.33" };
         String[] array2 = { "5.22" };

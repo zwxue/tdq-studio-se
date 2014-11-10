@@ -31,6 +31,8 @@ public class MapDBContent {
     // The size which how many free memory can be used 1 mean that 1GB
     private static final String FREE_MEMORY_SIZE_PROPERTY_KEY = "talend.mapdb.freeMemoryLimitSize";//$NON-NLS-1$
 
+    private static final String IS_VALUES_OUTSIDE_NODES_PROPERTY_KEY = "talend.mapdb.valuesOutsideNodesEnable";//$NON-NLS-1$
+
     private static Logger log = Logger.getLogger(MapDBContent.class);
 
     /**
@@ -65,6 +67,21 @@ public class MapDBContent {
      */
     public static boolean isMmapFileEnable() {
         String property = System.getProperty(MapDBContent.IS_MMAP_FILE_PROPERTY_KEY);
+        // if parameter has been defined
+        if (property != null) {
+            return Boolean.valueOf(property);
+        }
+        // else
+        return true;
+    }
+
+    /**
+     * Judge the MapDB should ued valuesOutsideNodesEnable or not Default it is false
+     * 
+     * @return
+     */
+    public static boolean isValuesOutsideNodesEnable() {
+        String property = System.getProperty(MapDBContent.IS_VALUES_OUTSIDE_NODES_PROPERTY_KEY);
         // if parameter has been defined
         if (property != null) {
             return Boolean.valueOf(property);

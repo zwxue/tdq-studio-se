@@ -26,6 +26,7 @@ public class MatchAnalysisConstant {
 
     public static final String COUNT = "MatchAnalysisConstant.Count"; //$NON-NLS-1$
 
+    // this field need not to do internationalization
     public static final String PERCENTAGE = "%"; //$NON-NLS-1$
 
     public static final String GROUP_SIZE = "MatchAnalysisConstant.Group_Size"; //$NON-NLS-1$

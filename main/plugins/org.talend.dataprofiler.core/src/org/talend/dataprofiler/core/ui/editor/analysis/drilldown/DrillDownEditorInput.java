@@ -30,8 +30,10 @@ import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
+import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
@@ -39,7 +41,6 @@ import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
-import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -67,6 +68,24 @@ public class DrillDownEditorInput implements IEditorInput {
     private MenuItemEntity menuItemEntity;
 
     private ChartDataEntity dataEntity;
+
+    /**
+     * Getter for dataEntity.
+     * 
+     * @return the dataEntity
+     */
+    public ChartDataEntity getDataEntity() {
+        return this.dataEntity;
+    }
+
+    /**
+     * Sets the dataEntity.
+     * 
+     * @param dataEntity the dataEntity to set
+     */
+    public void setDataEntity(ChartDataEntity dataEntity) {
+        this.dataEntity = dataEntity;
+    }
 
     private String[] columnHeader = null;
 
@@ -240,6 +259,19 @@ public class DrillDownEditorInput implements IEditorInput {
         }
     }
 
+    /**
+     * Get the MapDB which used to drill down data
+     * 
+     * @return
+     */
+    public AbstractDB<Object> getMapDB() {
+        if (judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)
+                && DuplicateCountIndicator.class.isInstance(currIndicator)) {
+            return currIndicator.getMapDB(StandardDBName.drillDownValues.name());
+        }
+        return DrillDownUtils.getMapDB(dataEntity, analysis);
+    }
+
     public Object getDataSet() {
         List<String> columnElementList = filterAdaptColumnHeader();
         columnHeader = new String[columnElementList.size()];
@@ -276,13 +308,12 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     /**
-     * DOC talend Comment method "getPageSize".
+     * Get the result of current indicator.
      * 
-     * @param controller
-     * @return
+     * @return if view values then return result of current indicator else return the size of the mapDB
      */
-    private Long getItemSize(AbstractDB<?> mapDB) {
-        if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+    public Long getItemSize(AbstractDB<?> mapDB) {
+        if (judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
             return getCurrentIndicatorResultSize();
         } else {
             return Long.valueOf(mapDB.size());
@@ -305,18 +336,27 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     /**
-     * Get the result of current indicator. Which only be used by column Set analysis
+     * Get the result of current indicator.
      * 
      * @return
      */
-    public Long getCurrentIndicatorResultSize() {
+    private Long getCurrentIndicatorResultSize() {
         Long itemsSize = 0l;
         if (isColumnSetIndicator()) {
             itemsSize = getColumnSetIndicatorResultSize();
         } else {
-            itemsSize = currIndicator.getIntegerValue();
+            itemsSize = getColumnIndicatorResultsize();
         }
         return itemsSize;
+    }
+
+    /**
+     * DOC talend Comment method "getColumnIndicatorResultsize".
+     * 
+     * @return
+     */
+    private Long getColumnIndicatorResultsize() {
+        return currIndicator.getIntegerValue();
     }
 
     /**
@@ -361,22 +401,6 @@ public class DrillDownEditorInput implements IEditorInput {
         return itemsSize;
     }
 
-    /**
-     * Get MapDB which store the drill down data for current indicator
-     * 
-     * @return
-     */
-    public AbstractDB<Object> getMapDB() {
-        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        AbstractDB<Object> columnSetMapDB = getColumnSetAnalysisMapDB(analysisType);
-        if (columnSetMapDB != null) {
-            return columnSetMapDB;
-        }
-        String dbMapName = getDBMapName(analysisType);
-        return this.currIndicator.getMapDB(dbMapName);
-
-    }
-
     public Indicator getGenerateMapDBIndicator() {
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
         if (AnalysisType.COLUMN_SET == analysisType) {
@@ -387,46 +411,6 @@ public class DrillDownEditorInput implements IEditorInput {
             }
         }
         return this.currIndicator;
-    }
-
-    /**
-     * Get MapDB which store the drill down data for columnSet analysis
-     * 
-     * @param analysisType
-     */
-    private AbstractDB<Object> getColumnSetAnalysisMapDB(AnalysisType analysisType) {
-        if (AnalysisType.COLUMN_SET == analysisType) {
-            SimpleStatIndicator simpleStatIndicator = null;
-            for (Indicator indicator : analysis.getResults().getIndicators()) {
-                if (SimpleStatIndicator.class.isInstance(indicator)) {
-                    simpleStatIndicator = (SimpleStatIndicator) indicator;
-                    break;
-                }
-            }
-            if (simpleStatIndicator != null) {
-                return simpleStatIndicator.getMapDB(StandardDBName.dataSection.name());
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Get the name of MapDB
-     * 
-     * @return
-     */
-    private String getDBMapName(AnalysisType analysisType) {
-        String dbMapName = StandardDBName.drillDown.name();
-        if (FrequencyIndicator.class.isInstance(currIndicator)) {
-            dbMapName = this.getSelectValue();
-        } else if (LengthIndicator.class.isInstance(currIndicator)) {
-            String selectValue = ((LengthIndicator) currIndicator).getLength().toString();
-            dbMapName = this.getSelectValue() + selectValue;
-        } else if (AnalysisType.COLUMN_SET == analysisType) {
-            dbMapName = StandardDBName.dataSection.name();
-        }
-
-        return dbMapName;
     }
 
     public boolean computeColumnValueLength(List<Object[]> newColumnElementList) {
@@ -648,12 +632,17 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     /**
-     * Get index of column whiche will be used on the dirll down
+     * Get index of column whiche will be used on the dirll down. Note that One indicator only belong one column so that
+     * the array of retrun value just contain one element.
+     * 
+     * And if we create new map for view values menu rather than used same map with view rows menu then method can be
+     * removed
      * 
      * @return
      */
     public Integer[] getColumnIndexArray() {
-        if (!DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+        if (!DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)
+                || DuplicateCountIndicator.class.isInstance(currIndicator)) {
             return null;
         }
         List<Integer> indexArray = new ArrayList<Integer>();
@@ -661,10 +650,13 @@ public class DrillDownEditorInput implements IEditorInput {
         ModelElement analysisElement = indicator.getAnalyzedElement();
         int index = 0;
         if (analysisElement instanceof TdColumn) {
-            for (TdColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
-                    .eContainer()))) {
+            TdTable tdTable = ColumnHelper.getColumnOwnerAsTdTable((TdColumn) analysisElement);
+            for (TdColumn column : TableHelper.getColumns(tdTable)) {
                 if (column.getName().equals(analysisElement.getName())) {
                     indexArray.add(index);
+                    // Note that One indicator only belong one column so that
+                    // break at here.
+                    break;
                 }
                 index++;
             }
@@ -674,6 +666,9 @@ public class DrillDownEditorInput implements IEditorInput {
             for (MetadataColumn mColumn : mTable.getColumns()) {
                 if (mColumn.getLabel().equals(analysisElement.getName())) {
                     indexArray.add(index);
+                    // Note that One indicator only belong one column so that
+                    // break at here.
+                    break;
                 }
                 index++;
             }

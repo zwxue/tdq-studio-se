@@ -89,13 +89,15 @@ public class FilePreviewProcess implements IPreview {
             for (int i = 0; i < headValue && csvReader.readNext(); i++) {
                 // do nothing, just ignore the header part
             }
-            String[] rowValues = null;
-            long currentRecord = csvReader.getCurrentRecord();
+            int limitRows = description.getLimitRows();
+            int currentRecord = 0;
             // just preview the top of 50
             while (csvReader.readNext() && currentRecord < 50) {
-                currentRecord = csvReader.getCurrentRecord();
-                rowValues = csvReader.getValues();
-                csvArray.add(rowValues);
+                currentRecord++;
+                if (limitRows != -1 && currentRecord > limitRows) {
+                    break;
+                }
+                csvArray.add(csvReader.getValues());
             }
 
         } catch (Exception e) {
@@ -144,8 +146,6 @@ public class FilePreviewProcess implements IPreview {
         String textEnclosure = description.getTextEnclosure();
         if (!textEnclosure.equals("\"\"") && textEnclosure.length() > 0) { //$NON-NLS-1$
             csvReader.setQuoteChar(ParameterUtil.trimParameter(textEnclosure).charAt(0));
-        } else {
-            csvReader.setQuoteChar(FileUtils.QUOTECHAR_NOTVALID);
         }
         String escapeChar = description.getEscapeCharacter();
         if (escapeChar == null || escapeChar.equals(FileUtils.ESCAPECHAR1) || escapeChar.equals(FileUtils.ESCAPECHAR2)) {

@@ -112,7 +112,6 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
      */
     @Override
     public boolean handle(Object data) {
-        ModelMatcher findMatcher = null;
         if (data != null) {
             // MOD qiongli 2011-11-11 TDQ-3864,format the date for file connection.
             if (data instanceof Date && isDelimtedFile) {
@@ -124,19 +123,9 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
                     data = sdf.format((Date) data);
                 }
             }
-            findMatcher = dateRetriever.findMatcher(String.valueOf(data));
-            if (findMatcher != null) {
-                data = findMatcher.getModel();
-                findMatcher.increment();
-            }
+            dateRetriever.handle(String.valueOf(data));
         }
-        boolean returnValue = super.handle(data);
-        // Mean that current data is not need to drill down
-        if (findMatcher == null) {
-            mustStoreRow = false;
-        }
-        // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
-        return returnValue;
+        return super.handle(data);
     }
 
     @Override
@@ -220,11 +209,11 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#specialName(java.lang.Object)
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#specialNames(java.lang.Object)
      */
     @Override
-    protected String specialName(Object name) {
-        return dateRetriever.getModel(String.valueOf(name));
+    protected List<String> specialNames(Object name) {
+        return dateRetriever.getModels(String.valueOf(name));
     }
 
     /*

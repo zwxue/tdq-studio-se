@@ -796,13 +796,12 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     @Override
     public ReturnCode checkResultStatus() {
         ReturnCode returnCode = new ReturnCode(false);
-        List<String> uniqueNameList = new ArrayList<String>();
-        List<String> duplicateNameList = new ArrayList<String>();
         if (!hasMatchKey(false)) {
-
             returnCode.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$
             return returnCode;
         }
+
+        List<String> uniqueNameList = new ArrayList<String>();
         for (MatchRule currentRule : getMatchRuleList()) {
             EList<MatchKeyDefinition> matchKeys = currentRule.getMatchKeys();
             for (MatchKeyDefinition mdk : matchKeys) {
@@ -812,42 +811,39 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                             "BlockingKeySection.emptyKeys.message", getSectionName() + " , " + currentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
                     return returnCode;
                 }
+
+                if (uniqueNameList.contains(currentName)) {
+                    returnCode.setMessage(DefaultMessagesImpl.getString(
+                            "BlockingKeySection.duplicateKeys.message", getSectionName() + "--" + currentName)); //$NON-NLS-1$ //$NON-NLS-2$
+                    return returnCode;
+                }
+                uniqueNameList.add(currentName);
+
                 if (checkColumnNameIsEmpty(mdk)) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
                             "BlockingKeySection.emptyColumn.message", getSectionName() + " , " + currentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
                     return returnCode;
                 }
+
                 if (mdk.getConfidenceWeight() <= 0) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
                             "BlockingKeySection.invalidConfidenceWeight.message", getSectionName())); //$NON-NLS-1$
                     return returnCode;
                 }
+
                 ReturnCode checkSurvivorshipFunction = checkSurvivorshipFunction(mdk, this.getMatchRuleDefinition());
                 if (!checkSurvivorshipFunction.isOk()) {
                     returnCode.setMessage(DefaultMessagesImpl.getString("MatchingKeySection.invalidSurvivorshipFunction", //$NON-NLS-1$
                             getSectionName(), checkSurvivorshipFunction.getMessage()));
                     return returnCode;
                 }
-                boolean currentNameIsDuplicate = false;
-                for (String uniqueName : uniqueNameList) {
-                    if (currentName.equals(uniqueName)) {
-                        duplicateNameList.add(currentName);
-                        currentNameIsDuplicate = true;
-                    }
-                }
-                if (!currentNameIsDuplicate) {
-                    uniqueNameList.add(currentName);
-                }
+
             }
         }
-        if (duplicateNameList.size() > 0) {
-            returnCode.setMessage(DefaultMessagesImpl.getString(
-                    "BlockingKeySection.duplicateKeys.message", getSectionName() + "--" + duplicateNameList.get(0))); //$NON-NLS-1$ //$NON-NLS-2$
-            return returnCode;
-        } else {
-            returnCode.setOk(true);
-            return returnCode;
-        }
+
+        returnCode.setOk(true);
+        return returnCode;
+
     }
 
     /**

@@ -52,17 +52,17 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
 
     @Override
     protected void initHeaders() {
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.MATCH_KEY_NAME)); // 14
+        headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
         if (isShowInputColumn) {
-            headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.INPUT_COLUMN));
+            headers.add(MatchAnalysisConstant.INPUT_COLUMN);
         }
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.MATCHING_TYPE)); // 12
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.CUSTOM_MATCHER)); // 20
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.THRESHOLD)); // 14
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.CONFIDENCE_WEIGHT)); // 17
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.HANDLE_NULL)); // 11
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.FUNCTION));
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.PARAMETER));
+        headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
+        headers.add(MatchAnalysisConstant.CUSTOM_MATCHER); // 20
+        headers.add(MatchAnalysisConstant.THRESHOLD); // 14
+        headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
+        headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
+        headers.add(MatchAnalysisConstant.FUNCTION);
+        headers.add(MatchAnalysisConstant.PARAMETER);
     }
 
     @SuppressWarnings("unchecked")

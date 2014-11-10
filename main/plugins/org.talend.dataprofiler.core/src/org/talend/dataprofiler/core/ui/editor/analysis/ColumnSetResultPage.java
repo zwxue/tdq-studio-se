@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageConstant;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -442,15 +444,19 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             setupTableGridDataLimitedSize(table, pageSize);
 
             // add pagation control
-            final PageableController controller = new PageableController(100);
-            final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(
-                    ssIndicator.getMapDB(StandardDBName.dataSection.name()));
-            controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
-                    columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null));
-            ResultAndNavigationPageGraphicsRenderer resultAndPageButtonsDecorator = new ResultAndNavigationPageGraphicsRenderer(
-                    sectionTableComp, SWT.NONE, controller);
-            resultAndPageButtonsDecorator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            final PageableController controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
+            try {
+                final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(
+                        ssIndicator.getMapDB(StandardDBName.dataSection.name()));
 
+                controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
+                        columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null));
+                ResultAndNavigationPageGraphicsRenderer resultAndPageButtonsDecorator = new ResultAndNavigationPageGraphicsRenderer(
+                        sectionTableComp, SWT.NONE, controller);
+                resultAndPageButtonsDecorator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            } catch (IOError error) {
+                log.warn(error.getMessage(), error);
+            }
             createColumns(controller, ssIndicator);
             // Set current page to 0 to refresh the table
             controller.setCurrentPage(0);

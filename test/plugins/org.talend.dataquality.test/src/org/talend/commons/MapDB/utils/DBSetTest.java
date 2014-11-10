@@ -29,7 +29,7 @@ import org.talend.dataquality.indicators.mapdb.DBSet;
 public class DBSetTest {
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#hashCode()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#hashCode()}.
      */
     @Test
     public void testHashCode() {
@@ -46,7 +46,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#iterator()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#iterator()}.
      */
     @Test
     public void testIterator() {
@@ -61,7 +61,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#size()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#size()}.
      */
     @Test
     public void testSize() {
@@ -87,7 +87,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#contains(java.lang.Object)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#contains(java.lang.Object)}.
      */
     @Test
     public void testContains() {
@@ -103,7 +103,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#toArray()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#toArray()}.
      */
     @Test
     public void testToArray() {
@@ -122,7 +122,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#add(java.lang.Object)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#add(java.lang.Object)}.
      */
     @Test
     public void testAdd() {
@@ -139,7 +139,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#remove(java.lang.Object)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#remove(java.lang.Object)}.
      */
     @Test
     public void testRemove() {
@@ -152,7 +152,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#addAll(java.util.Collection)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#addAll(java.util.Collection)}.
      */
     @Test
     public void testAddAll() {
@@ -167,7 +167,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#removeAll(java.util.Collection)}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#removeAll(java.util.Collection)}.
      */
     @Test
     public void testRemoveAll() {
@@ -184,7 +184,7 @@ public class DBSetTest {
     }
 
     /**
-     * Test method for {@link org.talend.commons.MapDB.utils.DBSet#clear()}.
+     * Test method for {@link org.talend.dataquality.indicators.mapdb.DBSet#clear()}.
      */
     @Test
     public void testClear() {
@@ -204,5 +204,4 @@ public class DBSetTest {
         dbSet1.close();
         dbSet2.close();
     }
-
 }

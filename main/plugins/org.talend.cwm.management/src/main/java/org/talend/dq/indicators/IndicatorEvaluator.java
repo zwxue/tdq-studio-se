@@ -253,7 +253,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         analyzedDataSet.setRecordSize(0);
                     }
                     // indicator.finalizeComputation();
-                    addResultToIndicatorToRowMap(indicator, indicToRowMap, maxNumberRows, columnCount);
+                    addResultToIndicatorToRowMap(indicator, indicToRowMap);
                 }
             }
         }// ~
@@ -270,27 +270,25 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
     // get the final result from duplicate indicator and set it into indicatorToRowMap
     // Added yyin 20120608 TDQ-3589
-    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap,
-            int maxNumberRows, int columnCount) {
-        Map<Object, List<Object[]>> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
-
-        Iterator<Object> iterator = dupMap.keySet().iterator();
+    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+        Map<Object, Object[]> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
+        Set<Object> duplicateValues = ((DuplicateCountIndicator) indicator).getDuplicateValues();
+        Iterator<Object> iterator = duplicateValues.iterator();
+        int maxNumberRows = analysis.getParameters().getMaxNumberRows();
 
         while (iterator.hasNext()) {
             Object key = iterator.next();
 
-            List<Object[]> valuelist = dupMap.get(key);
-            if (valuelist.size() > 1) {
+            Object[] valueArray = dupMap.get(key);
+            if (valueArray != null) {
                 List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
                 // MOD zshen add another loop to insert all of columnValue on the row into indicator.
-                int recordIncrement = valueObjectList.size();
+                int NumberOfRecord = valueObjectList.size();
 
-                for (Object[] row : valuelist) {
-                    if (recordIncrement < maxNumberRows) {
-                        valueObjectList.add(row);
-                    } else {
-                        break;
-                    }
+                if (NumberOfRecord < maxNumberRows) {
+                    valueObjectList.add(valueArray);
+                } else {
+                    break;
                 }
             }
         }

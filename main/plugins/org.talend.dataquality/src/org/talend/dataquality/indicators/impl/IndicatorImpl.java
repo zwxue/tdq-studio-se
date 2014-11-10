@@ -1416,9 +1416,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         }
         if (rowCount < currentDrillDownLimit) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /*

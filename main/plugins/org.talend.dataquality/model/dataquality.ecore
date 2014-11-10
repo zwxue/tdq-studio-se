@@ -1012,6 +1012,9 @@
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
           <details key="documentation" value="Indicator defined by a where clause."/>
         </eAnnotations>
+        <eOperations name="setCount" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean">
+          <eParameters name="objects" eType="#//indicators/ObjectArray"/>
+        </eOperations>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="JavaUserDefIndicator" eSuperTypes="#//indicators/sql/UserDefIndicator">
         <eOperations name="setJavaUserDefObject">
@@ -1022,7 +1025,6 @@
         </eOperations>
         <eOperations name="getJavaUserDefObject" eType="#//indicators/sql/UserDefIndicator"/>
       </eClassifiers>
-      <eClassifiers xsi:type="ecore:EClass" name="WhereRuleAideIndicator" eSuperTypes="#//indicators/sql/WhereRuleIndicator"/>
     </eSubpackages>
     <eSubpackages name="columnset" nsURI="http://dataquality.indicators.columnset"
         nsPrefix="dataquality.indicators.columnset">

@@ -65,6 +65,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageConstant;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -199,7 +200,7 @@ public class DrillDownResultEditor extends EditorPart {
         tableView.setLabelProvider(new DrillDownResultLabelProvider());
         tableView.setContentProvider(new DrillDownResultContentProvider());
         // set page size
-        final PageableController controller = new PageableController(100);
+        final PageableController controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
         table.setData(ddEditorInput.getDataSetForMapDB(controller.getPageSize()));
         // for columnSet analysis here only have one db file need to support drill down and data section
         Analysis analysis = ddEditorInput.getAnalysis();
@@ -208,18 +209,16 @@ public class DrillDownResultEditor extends EditorPart {
         AbstractDB<Object> mapDB = ddEditorInput.getMapDB();
         Indicator generateMapDBIndicator = ddEditorInput.getGenerateMapDBIndicator();
         MapDBManager.getInstance().addDBRef(generateMapDBIndicator.getMapDBFile());
+        Long itemsSize = ddEditorInput.getItemSize(mapDB);
         if (AnalysisType.COLUMN_SET == analysisType) {
-            Long itemsSize = ddEditorInput.getCurrentIndicatorResultSize();
             pageLoader = new MapDBPageLoader<Object>(mapDB, ddEditorInput.getCurrIndicator(), itemsSize);
         } else {
             // ~
-
             ColumnFilter filter = ddEditorInput.getColumnFilter();
-            pageLoader = new MapDBPageLoader<Object>(mapDB, null, mapDB.size(), filter);
+            pageLoader = new MapDBPageLoader<Object>(mapDB, null, itemsSize, filter);
         }
-        final IPageLoader<PageResult<Object[]>> finalPageLoader = pageLoader;
         controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller, tableView,
-                finalPageLoader, PageResultContentProvider.getInstance(), null));
+                pageLoader, PageResultContentProvider.getInstance(), null));
         controller.addPageChangedListener(new PageChangedAdapter() {
 
             /*

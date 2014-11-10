@@ -16,7 +16,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.DefaultSurvivorShipTableViewer;
-import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
@@ -40,9 +39,9 @@ public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComp
 
     @Override
     protected void initHeaders() {
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.DATA_TYPE));
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.FUNCTION));
-        headers.add(DefaultMessagesImpl.getString(MatchAnalysisConstant.PARAMETER));
+        headers.add(MatchAnalysisConstant.DATA_TYPE);
+        headers.add(MatchAnalysisConstant.FUNCTION);
+        headers.add(MatchAnalysisConstant.PARAMETER);
     }
 
     @Override

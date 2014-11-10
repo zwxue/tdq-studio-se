@@ -56,6 +56,7 @@ public class ImportWizard extends Wizard {
 
         try {
             writer.finish(records, null);
+            writer.postFinish();
         } catch (Exception e) {
             ExceptionHandler.process(e);
         }

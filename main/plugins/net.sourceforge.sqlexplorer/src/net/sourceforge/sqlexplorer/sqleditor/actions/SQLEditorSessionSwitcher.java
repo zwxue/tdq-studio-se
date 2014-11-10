@@ -17,6 +17,7 @@ package net.sourceforge.sqlexplorer.sqleditor.actions;
 import java.util.HashMap;
 
 import net.sourceforge.sqlexplorer.Messages;
+import net.sourceforge.sqlexplorer.connections.ConnectionsView;
 import net.sourceforge.sqlexplorer.connections.SessionEstablishedListener;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.ConnectionJob;
@@ -135,10 +136,12 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
         }
     }
 
+    @Override
     public void modelChanged() {
         if (_sessionCombo != null && !_sessionCombo.isDisposed()) {
             _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 
+                @Override
                 public void run() {
                     setSessionOptions();
                 }
@@ -146,12 +149,14 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
         }
     }
 
+    @Override
     public void cannotEstablishSession(User user) {
         if (_sessionCombo.isDisposed()) {
             return;
         }
         _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 
+            @Override
             public void run() {
                 _sessionCombo.deselectAll();
                 _editor.refreshToolbars();
@@ -159,16 +164,21 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
         });
     }
 
+    @Override
     public void sessionEstablished(final Session session) {
         if (_sessionCombo.isDisposed()) {
             return;
         }
         _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 
+            @Override
             public void run() {
                 _editor.setSession(session);
                 setSessionOptions();
-                SQLExplorerPlugin.getDefault().getConnectionsView().setDefaultUser(session.getUser());
+                ConnectionsView connectionsView = SQLExplorerPlugin.getDefault().getConnectionsView();
+                if (connectionsView != null) {
+                    connectionsView.setDefaultUser(session.getUser());
+                }
                 _editor.refreshToolbars();
             }
         });

@@ -6,6 +6,7 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -582,21 +583,20 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @return String
      */
-    private String getDBName(Object name) {
-        String dbName = null;
+    protected List<String> getDBNames(Object name) {
+        List<String> dbNames = new ArrayList<String>();
         if (null == name) {
-            dbName = SpecialValueDisplay.NULL_FIELD;
+            dbNames.add(SpecialValueDisplay.NULL_FIELD);
         } else if (StringUtils.EMPTY.equals(name)) {
-            dbName = SpecialValueDisplay.EMPTY_FIELD;
+            dbNames.add(SpecialValueDisplay.EMPTY_FIELD);
         } else {
             if (datePattern != null) {
-                dbName = getFormatName(name);
+                dbNames.add(getFormatName(name));
             } else {
-                dbName = specialName(name);
+                dbNames.addAll(specialNames(name));
             }
         }
-        return dbName;
-
+        return dbNames;
     }
 
     /**
@@ -605,8 +605,10 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * @param name
      * @return
      */
-    protected String specialName(Object name) {
-        return name.toString();
+    protected List<String> specialNames(Object name) {
+        List<String> specialNames = new ArrayList<String>();
+        specialNames.add(name.toString());
+        return specialNames;
     }
 
     /**
@@ -848,9 +850,12 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     @SuppressWarnings("unchecked")
     @Override
     public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
-        String dbName = getDBName(masterObject);
-        drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
-        super.handleDrillDownData(masterObject, inputRowList);
+        List<String> dbNames = getDBNames(masterObject);
+        for (String dbName : dbNames) {
+            drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
+
     }
 
 } // FrequencyIndicatorImpl

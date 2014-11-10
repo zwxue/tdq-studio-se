@@ -21,7 +21,6 @@ import org.eclipse.nebula.widgets.pagination.collections.PageResult;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
-import org.talend.dataquality.indicators.mapdb.DBValueMap;
 
 /**
  * created by talend on Aug 14, 2014 Detailled comment
@@ -65,13 +64,21 @@ public class MapDBPageLoader<T> implements IPageLoader<PageResult<Object[]>> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public PageResult<Object[]> loadPage(PageableController controller) {
+        int dbSize = db.size();
+        long totalSize = dbSize < itemsSize ? dbSize : itemsSize;
+        long pageSize = controller.getPageSize();
+        long pageIndex = controller.getPageOffset();
+
+        long fromIndex = pageIndex;
+        long toIndex = pageIndex + pageSize;
+        if (toIndex > totalSize) {
+            toIndex = totalSize;
+        }
+
         if (dataValidator == null) {
-            if (DBValueMap.class.isInstance(db)) {
-                return MapDBPageListHelper.createPageByValue((DBValueMap) db, controller, indexMap, itemsSize, columnFilter);
-            }
-            return MapDBPageListHelper.createPage(db, controller, indexMap, itemsSize, columnFilter);
+            return MapDBPageListHelper.createPage(db, indexMap, columnFilter, fromIndex, toIndex, totalSize);
         } else {
-            return MapDBPageListHelper.createPage(db, controller, indexMap, itemsSize, dataValidator);
+            return MapDBPageListHelper.createPage(db, indexMap, dataValidator, fromIndex, toIndex, totalSize);
         }
     }
 

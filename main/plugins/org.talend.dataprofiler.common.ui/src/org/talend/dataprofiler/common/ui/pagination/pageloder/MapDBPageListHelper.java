@@ -15,15 +15,10 @@ package org.talend.dataprofiler.common.ui.pagination.pageloder;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.nebula.widgets.pagination.PageableController;
-import org.eclipse.nebula.widgets.pagination.collections.DefaultSortProcessor;
 import org.eclipse.nebula.widgets.pagination.collections.PageResult;
-import org.eclipse.nebula.widgets.pagination.collections.SortProcessor;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
-import org.talend.dataquality.indicators.mapdb.DBMap;
-import org.talend.dataquality.indicators.mapdb.DBValueMap;
 
 /**
  * created by talend on Aug 15, 2014 Detailled comment
@@ -31,103 +26,22 @@ import org.talend.dataquality.indicators.mapdb.DBValueMap;
  */
 public class MapDBPageListHelper {
 
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, Map<Long, T> indexMap) {
-        return createPage(db, controller, DefaultSortProcessor.getInstance(), indexMap, db.size(), (ColumnFilter) null);
-    }
+    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, Map<Long, T> indexMap, DataValidation dataValidator,
+            long fromIndex, long toIndex, long totalSize) {
 
-    public static <K, V> PageResult<Object[]> createPageByValue(DBValueMap<K, V> db, PageableController controller,
-            Map<Long, K> indexMap, long itemsSize, ColumnFilter filter) {
-        return createPageByValue(db, controller, DefaultSortProcessor.getInstance(), indexMap, itemsSize, filter);
-    }
+        List<Object[]> content = db.subList(fromIndex, toIndex, indexMap, dataValidator);
 
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, Map<Long, T> indexMap,
-            long itemsSize) {
-        return createPage(db, controller, DefaultSortProcessor.getInstance(), indexMap, itemsSize, (ColumnFilter) null);
-    }
-
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, Map<Long, T> indexMap,
-            long itemsSize, ColumnFilter columnFilter) {
-        return createPage(db, controller, DefaultSortProcessor.getInstance(), indexMap, itemsSize, columnFilter);
-    }
-
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, Map<Long, T> indexMap,
-            long itemsSize, DataValidation dataValidator) {
-        return createPage(db, controller, DefaultSortProcessor.getInstance(), indexMap, itemsSize, dataValidator);
-    }
-
-    public static <K, V> PageResult<Object[]> createPageByValue(DBValueMap<K, V> db, PageableController controller,
-            SortProcessor processor, Map<Long, K> indexMap, long itemsSize, ColumnFilter filter) {
-        // sort is can not finished
-        // int sortDirection = controller.getSortDirection();
-        // if (sortDirection != SWT.NONE) {
-        // // Sort the list
-        // processor.sort(list, controller.getSortPropertyName(), sortDirection);
-        // }
-        long totalSize = itemsSize;
-        long pageSize = controller.getPageSize();
-        long pageIndex = controller.getPageOffset();
-
-        long fromIndex = pageIndex;
-        long toIndex = pageIndex + pageSize;
-        if (toIndex > totalSize) {
-            toIndex = totalSize;
-        }
-        List<Object[]> content = ((DBMap<K, V>) db).subValueList(fromIndex, toIndex, indexMap);
-        if (filter != null) {
-            content = filter.filterArray(content);
-        }
-        return new PageResult<Object[]>(content, content.size());
-    }
-
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, SortProcessor processor,
-            Map<Long, T> indexMap, long itemsSize, ColumnFilter filter) {
-        // sort is can not finished
-        // int sortDirection = controller.getSortDirection();
-        // if (sortDirection != SWT.NONE) {
-        // // Sort the list
-        // processor.sort(list, controller.getSortPropertyName(), sortDirection);
-        // }
-        long totalSize = itemsSize;
-        long pageSize = controller.getPageSize();
-        long pageIndex = controller.getPageOffset();
-
-        long fromIndex = pageIndex;
-        long toIndex = pageIndex + pageSize;
-        if (toIndex > totalSize) {
-            toIndex = totalSize;
-        }
-        List<Object[]> content = db.subList(fromIndex, toIndex, indexMap);
-        if (content.size() < pageSize) {
-            totalSize = content.size();
-        }
-        if (filter != null) {
-            content = filter.filterArray(content);
-        }
         return new PageResult<Object[]>(content, totalSize);
     }
 
-    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, PageableController controller, SortProcessor processor,
-            Map<Long, T> indexMap, long itemsSize, DataValidation dataValidator) {
-        // sort is can not finished
-        // int sortDirection = controller.getSortDirection();
-        // if (sortDirection != SWT.NONE) {
-        // // Sort the list
-        // processor.sort(list, controller.getSortPropertyName(), sortDirection);
-        // }
-        long totalSize = itemsSize;
-        long pageSize = controller.getPageSize();
-        long pageIndex = controller.getPageOffset();
+    public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, Map<Long, T> indexMap, ColumnFilter filter,
+            long fromIndex, long toIndex, long totalSize) {
 
-        long fromIndex = pageIndex;
-        long toIndex = pageIndex + pageSize;
-        if (toIndex > totalSize) {
-            toIndex = totalSize;
+        List<Object[]> content = db.subList(fromIndex, toIndex, indexMap);
+        if (filter != null) {
+            content = filter.filterArray(content);
         }
 
-        List<Object[]> content = db.subList(fromIndex, toIndex, indexMap, dataValidator);
-        if (content.size() < pageSize) {
-            totalSize = content.size();
-        }
         return new PageResult<Object[]>(content, totalSize);
     }
 
