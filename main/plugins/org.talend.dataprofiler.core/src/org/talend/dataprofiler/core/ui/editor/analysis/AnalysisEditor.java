@@ -21,7 +21,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.IFormPage;
@@ -107,17 +106,6 @@ public class AnalysisEditor extends SupportContextEditor {
      */
     public AnalysisEditor() {
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.forms.editor.FormEditor#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
-     */
-    @Override
-    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        super.init(site, input);
-        showContextView();
     }
 
     @Override
