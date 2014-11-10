@@ -4,7 +4,7 @@ Bundle-Name: org.talend.cwm.management.test
 Bundle-SymbolicName: org.talend.cwm.management.test
 Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
-Fragment-Host: org.talend.cwm.management;bundle-version="1.0.0"
+Fragment-Host: org.talend.cwm.management;bundle-version="6.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4,
  org.talend.testutils,
