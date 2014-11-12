@@ -288,8 +288,9 @@ public class SqlexplorerService implements ISqlexplorerService {
                     aliasManager.modelChanged();
 
                 }
-            } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
+            } catch (Throwable e) { // MOD scorreia 2010-07-24 catch all exceptions
                 log.error(e, e);
+                continue;
             }
         }
     }
@@ -673,15 +674,8 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     @Override
     public void initAllConnectionsToSQLExplorer(List<Connection> conns) {
-        try {
-            if (!SQLExplorerPlugin.getDefault().isInitedAllConnToSQLExpl()) {
-                for (Connection conn : conns) {
-                    addConnetionAliasToSQLPlugin(conn);
-                }
-                SQLExplorerPlugin.getDefault().setInitedAllConnToSQLExpl(true);
-            }
-        } catch (Exception e) {
-            log.error(e, e);
+        for (Connection conn : conns) {
+            addConnetionAliasToSQLPlugin(conn);
         }
     }
 
