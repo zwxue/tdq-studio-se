@@ -45,84 +45,107 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
 
     public class SQLDriver implements ISQLDriver {
 
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
         }
 
+        @Override
         public void assignFrom(ISQLDriver rhs) throws ValidationException {
             throw new ValidationException(Messages.getString("ManagedDriver.NotSupported")); //$NON-NLS-1$
         }
 
+        @Override
         public int compareTo(ISQLDriver rhs) {
             return ManagedDriver.this.getDriverClassName().compareTo(rhs.getDriverClassName());
         }
 
+        @Override
         public String getDriverClassName() {
             return ManagedDriver.this.getDriverClassName();
         }
 
+        @Override
         public IIdentifier getIdentifier() {
             return null;
         }
 
+        @Override
         public String getJarFileName() {
             return null;
         }
 
+        @Override
         public String[] getJarFileNames() {
             return (String[]) ManagedDriver.this.getJars().toArray();
         }
 
+        @Override
         public StringWrapper getJarFileNameWrapper(int idx) throws ArrayIndexOutOfBoundsException {
             return null;
         }
 
+        @Override
         public StringWrapper[] getJarFileNameWrappers() {
             return null;
         }
 
+        @Override
         public String getName() {
             return ManagedDriver.this.getDriverClassName();
         }
 
+        @Override
         public String getUrl() {
             return ManagedDriver.this.getUrl();
         }
 
+        @Override
         public String getWebSiteUrl() {
             return null;
         }
 
+        @Override
         public boolean isJDBCDriverClassLoaded() {
             return ManagedDriver.this.isDriverClassLoaded();
         }
 
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
         }
 
+        @Override
         public void setDriverClassName(String driverClassName) throws ValidationException {
         }
 
+        @Override
         public void setJarFileName(String value) throws ValidationException {
         }
 
+        @Override
         public void setJarFileNames(String[] values) {
         }
 
+        @Override
         public void setJarFileNameWrapper(int idx, StringWrapper value) throws ArrayIndexOutOfBoundsException {
         }
 
+        @Override
         public void setJarFileNameWrappers(StringWrapper[] value) {
         }
 
+        @Override
         public void setJDBCDriverClassLoaded(boolean cl) {
         }
 
+        @Override
         public void setName(String name) throws ValidationException {
         }
 
+        @Override
         public void setUrl(String url) throws ValidationException {
         }
 
+        @Override
         public void setWebSiteUrl(String url) throws ValidationException {
         }
     }
@@ -225,16 +248,23 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
             return;
         }
         boolean isODBC = dbType.equalsIgnoreCase(EDatabaseTypeName.GODBC.getXmlName());
-        if (isODBC || isValidatedJars()) {
-            // the jtds mode to connect sqlserver database only Instance driver once.
-            if (dbType.equalsIgnoreCase(EDatabaseTypeName.MSSQL.getDisplayName()) && PluginConstant.EMPTY_STRING.equals(userName)) {
-                instanceMSSqlJdbcDriver(dbType, dbVersion);
-            } else {
-                instanceJdbcDriver(dbType, dbVersion);
+        try {
+            if (isODBC || isValidatedJars()) {
+                // the jtds mode to connect sqlserver database only Instance driver once.
+                if (dbType.equalsIgnoreCase(EDatabaseTypeName.MSSQL.getDisplayName())
+                        && PluginConstant.EMPTY_STRING.equals(userName)) {
+                    instanceMSSqlJdbcDriver(dbType, dbVersion);
+                } else {
+                    instanceJdbcDriver(dbType, dbVersion);
+                }
             }
-        }
-        if (jdbcDriver == null) {
-            log.error(message);
+        } catch (Throwable e) {
+            // TDQ-9711 catch all exceptions and errors.
+            throw new RuntimeException(e);
+        } finally {
+            if (jdbcDriver == null) {
+                log.error(message);
+            }
         }
 
     }
@@ -461,6 +491,7 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
         return DatabaseProductFactory.getInstance(this);
     }
 
+    @Override
     public int compareTo(ManagedDriver that) {
         return name.compareTo(that.name);
     }

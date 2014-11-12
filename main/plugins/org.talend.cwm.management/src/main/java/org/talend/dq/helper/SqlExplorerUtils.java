@@ -129,11 +129,6 @@ public class SqlExplorerUtils {
         if (sqlExplorerUtils == null) {
             sqlExplorerUtils = new SqlExplorerUtils();
         }
-        // init all drivers at the first time when the sqlexplorer service is available
-        if (sqlExplorerUtils.sqlexplorerService != null && !sqlExplorerUtils.initAllDrivers) {
-            sqlExplorerUtils.initAllConnectionsToSQLExplorer();
-            sqlExplorerUtils.initAllDrivers = true;
-        }
         return sqlExplorerUtils;
     }
 
@@ -179,8 +174,11 @@ public class SqlExplorerUtils {
     }
 
     public void initAllConnectionsToSQLExplorer() {
+        if (this.initAllDrivers) {
+            return;
+        }
+        List<Connection> conns = new ArrayList<Connection>();
         try {
-            List<Connection> conns = new ArrayList<Connection>();
             for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
                     ERepositoryObjectType.METADATA_CONNECTIONS, true)) {
                 if (viewObject == null || viewObject.getProperty() == null) {
@@ -194,14 +192,16 @@ public class SqlExplorerUtils {
                     }
                 }
             }
-            if (!conns.isEmpty()) {
-                if (getSqlexplorerService() != null) {
-                    getSqlexplorerService().initAllConnectionsToSQLExplorer(conns);
-                }
-            }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
+        if (!conns.isEmpty()) {
+            if (getSqlexplorerService() != null) {
+                getSqlexplorerService().initAllConnectionsToSQLExplorer(conns);
+            }
+        }
+        initAllDrivers = true;
+
     }
 
     public void setSqlEditorEditable(Object part, boolean lock) {

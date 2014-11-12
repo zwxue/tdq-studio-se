@@ -92,8 +92,6 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash bin
     private static HashMap<Alias, IFile> propertyFile = new HashMap<Alias, IFile>();
 
-    private boolean isInitedAllConnToSQLExpl = false;
-
     /**
      * The constructor. Moved previous logic to the start method.
      */
@@ -491,14 +489,6 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash bin
     public HashMap<Alias, IFile> getPropertyFile() {
         return propertyFile;
-    }
-
-    public boolean isInitedAllConnToSQLExpl() {
-        return this.isInitedAllConnToSQLExpl;
-    }
-
-    public void setInitedAllConnToSQLExpl(boolean isInitedAllConnToSQLExpl) {
-        this.isInitedAllConnToSQLExpl = isInitedAllConnToSQLExpl;
     }
 
     public void bind(IMapDBService service) {
