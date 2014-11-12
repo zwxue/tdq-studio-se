@@ -98,6 +98,8 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
             object.setLength(c.getLength());
             // MOD klliu update the c.getJavaType()
             object.getSqlDataType().setJavaDataType(c.getSqlDataType().getJavaDataType());
+            // ADD msjian TDQ-8546: fix the oracle nullable wrong after reload column list
+            object.setNullable(c.isNullable());
             return true;
         }
         return false;
