@@ -21,9 +21,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
-import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.collections.MapValueSorter;
 
 /**
@@ -74,19 +72,6 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      */
     protected SoundexFreqIndicatorImpl() {
         super();
-    }
-
-    /**
-     * init DBMap
-     * 
-     * @return
-     */
-    private Map<Object, List<Object>> initValueForDBMap(String dbName) {
-        if (isUsedMapDBMode()) {
-            return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
-                    ResourceManager.getMapDBCatalogName(this, dbName));
-        }
-        return null;
     }
 
     /**

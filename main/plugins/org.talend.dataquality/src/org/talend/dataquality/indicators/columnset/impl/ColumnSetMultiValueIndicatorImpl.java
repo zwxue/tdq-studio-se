@@ -44,6 +44,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.CompositeIndicatorImpl;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
+import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.collections.Tuple;
@@ -257,7 +258,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * store the value of group like use sql 'select a ,b from table group by a,b' when use MapDB.
      */
 
-    protected ColumnSetDBMap valueByGroupMapForMapDB = null;
+    protected DBMap<List<Object>, Long> valueByGroupMapForMapDB = null;
 
     /**
      * make 'valueByGroupMap' convert to a List<Object[]>
@@ -278,7 +279,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @return
      */
-    private ColumnSetDBMap initValueForDBMap(String dbName) {
+    private DBMap<List<Object>, Long> initValueForColumnSetDBMap(String dbName) {
         if (isUsedMapDBMode()) {
             return new ColumnSetDBMap(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                     ResourceManager.getMapDBCatalogName(this, dbName));
@@ -1364,7 +1365,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     public boolean reset() {
         if (isUsedMapDBMode()) {
             if (needReconnect(valueByGroupMapForMapDB)) {
-                valueByGroupMapForMapDB = initValueForDBMap(StandardDBName.dataSection.name());
+                valueByGroupMapForMapDB = initValueForColumnSetDBMap(StandardDBName.dataSection.name());
             }
             if (!valueByGroupMapForMapDB.isEmpty()) {
                 valueByGroupMapForMapDB.clear();
@@ -1449,6 +1450,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         if (StandardDBName.dataSection.name().equals(dbName) && !needReconnect(valueByGroupMapForMapDB)) {
             return valueByGroupMapForMapDB;
         }
-        return initValueForDBMap(dbName);
+        return initValueForColumnSetDBMap(dbName);
     }
 } // ColumnSetMultiValueIndicatorImpl

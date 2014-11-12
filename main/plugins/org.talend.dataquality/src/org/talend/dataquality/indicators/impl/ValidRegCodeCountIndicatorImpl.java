@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -49,8 +50,6 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
      * @ordered
      */
     protected Long validRegCount = VALID_REG_COUNT_EDEFAULT;
-
-    // private Set<Object> validRegPhoneObjects = new HashSet<Object>();
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -210,7 +209,7 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
         Set<String> supportedCountries = phoneUtil.getSupportedCountries();
         if (data != null && supportedCountries.contains(data.toString().toUpperCase())) {
             this.validRegCount++;
-            if (checkMustStoreCurrentRow()) {
+            if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
                 this.mustStoreRow = true;
             }
         }
@@ -221,12 +220,32 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
     @Override
     public boolean reset() {
         this.validRegCount = VALID_REG_COUNT_EDEFAULT;
+        drillDownValueCount = 0l;
         return super.reset();
     }
 
     @Override
     public Long getIntegerValue() {
         return this.getValidRegCount();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        if (checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
+        }
     }
 
 } // ValidRegCodeCountIndicatorImpl

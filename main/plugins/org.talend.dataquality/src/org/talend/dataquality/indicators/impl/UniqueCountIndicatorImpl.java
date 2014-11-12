@@ -74,7 +74,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      * 
      * @return
      */
-    private Set<Object> initValueForDBSet(String dbName) {
+    private Set<Object> initValueForSet(String dbName) {
         if (isUsedMapDBMode()) {
             return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                     ResourceManager.getMapDBCatalogName(this, dbName));
@@ -287,11 +287,11 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     public boolean reset() {
         this.uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
         if (isUsedMapDBMode()) {
-            uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+            uniqueObjects = initValueForSet(StandardDBName.computeProcessSet.name());
             if (uniqueObjects != null) {
                 ((DBSet<Object>) uniqueObjects).clear();
             }
-            duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
+            duplicateObjects = initValueForSet(StandardDBName.temp.name());
             if (duplicateObjects != null) {
                 ((DBSet<Object>) duplicateObjects).clear();
             }
@@ -334,10 +334,13 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
                 // current set is invalid
                 if (needReconnect((DBSet<Object>) uniqueObjects)) {
                     // create new DBSet
-                    return ((DBSet<Object>) initValueForDBSet(StandardDBName.computeProcessSet.name()));
+                    return initValueForDBSet(StandardDBName.computeProcessSet.name());
                 } else {
                     return (DBSet<Object>) uniqueObjects;
                 }
+                // the key is view values case so do this translate
+            } else if (StandardDBName.drillDownValues.name().equals(dbName)) {
+                return super.getMapDB(StandardDBName.drillDown.name());
             }
         }
         return super.getMapDB(dbName);

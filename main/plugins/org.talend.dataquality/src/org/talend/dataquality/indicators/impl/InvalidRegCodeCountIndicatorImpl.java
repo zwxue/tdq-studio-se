@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -201,7 +202,7 @@ public class InvalidRegCodeCountIndicatorImpl extends IndicatorImpl implements I
         Set<String> supportedCountries = phoneUtil.getSupportedCountries();
         if (data == null || (data != null && !supportedCountries.contains(data.toString().toUpperCase()))) {
             this.invalidRegCount++;
-            if (checkMustStoreCurrentRow()) {
+            if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
                 this.mustStoreRow = true;
             }
         }
@@ -212,12 +213,30 @@ public class InvalidRegCodeCountIndicatorImpl extends IndicatorImpl implements I
     @Override
     public boolean reset() {
         this.invalidRegCount = INVALID_REG_COUNT_EDEFAULT;
+        drillDownValueCount = 0l;
         return super.reset();
     }
 
     @Override
     public Long getIntegerValue() {
         return this.getInvalidRegCount();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        super.handleDrillDownData(masterObject, inputRowList);
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
+        }
     }
 
 } // InvalidRegCodeCountIndicatorImpl

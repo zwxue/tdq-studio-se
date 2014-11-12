@@ -42,7 +42,7 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
      * 
      * @return
      */
-    private Map<Object, Long> initValueForDBMap(String dbName) {
+    private Map<Object, Long> initValueForLowerQuartileDBMap(String dbName) {
         if (isUsedMapDBMode()) {
             return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                     ResourceManager.getMapDBCatalogName(this, dbName));
@@ -79,7 +79,7 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
             if (frequenceTable != null) {
                 ((DBMap<Object, Long>) frequenceTable).clear();
             }
-            frequenceTable = initValueForDBMap(StandardDBName.computeProcess.name());
+            frequenceTable = initValueForLowerQuartileDBMap(StandardDBName.computeProcess.name());
         } else {
             this.frequenceTable.clear();
         }
@@ -149,7 +149,7 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
                     && !((DBMap<Object, Long>) frequenceTable).isClosed()) {
                 return (DBMap<Object, Long>) frequenceTable;
             }
-            return ((DBMap<Object, Long>) initValueForDBMap(StandardDBName.computeProcess.name()));
+            return ((DBMap<Object, Long>) initValueForLowerQuartileDBMap(StandardDBName.computeProcess.name()));
         } else {
             return super.getMapDB(dbName);
         }

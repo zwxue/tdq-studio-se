@@ -58,7 +58,9 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
                     }
                 } else if (length.intValue() < strLength) {
                     changeLength(strLength);
-                    mustStoreRow = true;
+                    if (this.checkMustStoreCurrentRow()) {
+                        mustStoreRow = true;
+                    }
                 }
             }
         }
@@ -79,6 +81,7 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
     }
 
     protected void zeroIsMax() {
+        // first data is zero
         if (length == LENGTH_EDEFAULT) {
             length = 0L;
         }

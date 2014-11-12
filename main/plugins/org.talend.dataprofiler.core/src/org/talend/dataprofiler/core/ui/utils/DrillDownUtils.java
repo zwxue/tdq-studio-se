@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import java.io.IOError;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -38,6 +40,12 @@ public class DrillDownUtils {
 
     private static final String DRILL_DOWN_EDITOR = "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"; //$NON-NLS-1$
 
+    public static final int MENU_VALUE_TYPE = 1;
+
+    public static final int MENU_VALID_TYPE = 2;
+
+    public static final int MENU_INVALID_TYPE = 3;
+
     /**
      * Get MapDB which store the drill down data for current indicator
      * 
@@ -45,7 +53,7 @@ public class DrillDownUtils {
      * 
      * @return
      */
-    public static AbstractDB<Object> getMapDB(final ChartDataEntity dataEntity, Analysis analysis) {
+    public static AbstractDB<Object> getMapDB(final ChartDataEntity dataEntity, Analysis analysis, MenuItemEntity itemEntitie) {
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
         if (AnalysisType.COLUMN_SET == analysisType) {
             return getColumnSetAnalysisMapDB(analysis);
@@ -53,7 +61,7 @@ public class DrillDownUtils {
 
         Indicator indicator = dataEntity.getIndicator();
         String selectValue = dataEntity.getLabel();
-        String dbMapName = getDBMapName(analysisType, indicator, selectValue);
+        String dbMapName = getDBMapName(analysisType, indicator, selectValue, itemEntitie);
         return indicator.getMapDB(dbMapName);
     }
 
@@ -62,8 +70,9 @@ public class DrillDownUtils {
      * 
      * @return
      */
-    public static String getDBMapName(AnalysisType analysisType, Indicator indicator, String selectValue) {
-        String dbMapName = StandardDBName.drillDown.name();
+    public static String getDBMapName(AnalysisType analysisType, Indicator indicator, String selectValue,
+            MenuItemEntity itemEntitie) {
+        String dbMapName = getDefaultMapName(analysisType, itemEntitie);
         if (FrequencyIndicator.class.isInstance(indicator)) {
             dbMapName = selectValue;
         } else if (LengthIndicator.class.isInstance(indicator)) {
@@ -72,7 +81,11 @@ public class DrillDownUtils {
             if (length != null) {
                 selectValueLength = length.toString();
             } else {
-                selectValueLength = ((LengthIndicator) indicator).getRealValue().toString();
+                Double realValue = ((LengthIndicator) indicator).getRealValue();
+                if (realValue == null) {
+                    return dbMapName;
+                }
+                selectValueLength = realValue.toString();
             }
             dbMapName = selectValue + selectValueLength;
         } else if (AnalysisType.COLUMN_SET == analysisType) {
@@ -80,6 +93,57 @@ public class DrillDownUtils {
         }
 
         return dbMapName;
+    }
+
+    /**
+     * DOC talend Comment method "getDefaultMapName".
+     * 
+     * @return
+     */
+    private static String getDefaultMapName(AnalysisType analysisType, MenuItemEntity itemEntitie) {
+        if (AnalysisType.MULTIPLE_COLUMN == analysisType) {
+            // unique duplicate phoneNumber indicator
+            if (judgeMenuType(itemEntitie.getLabel(), MENU_VALUE_TYPE)) {
+
+                // pattern
+                if (judgeMenuType(itemEntitie.getLabel(), MENU_INVALID_TYPE)) {
+                    return StandardDBName.invalidDrillDownValues.name();
+                } else {
+                    return StandardDBName.drillDownValues.name();
+                }
+            } else {
+                // pattern
+                if (judgeMenuType(itemEntitie.getLabel(), MENU_INVALID_TYPE)) {
+                    return StandardDBName.invalidDrillDown.name();
+                }
+            }
+
+        }
+        return StandardDBName.drillDown.name();
+    }
+
+    /**
+     * 
+     * Judge current name of menu whether is same to menuType
+     * 
+     * @param menuStr is the name of the menu
+     * @param menuType is the type which we think it should be
+     * @return return true if menuStr is adapt to menuType, else return false
+     */
+    public static boolean judgeMenuType(String menuStr, int menuType) {
+        if (menuStr == null) {
+            return false;
+        }
+        switch (menuType) {
+        case MENU_VALUE_TYPE:
+            return menuStr.toLowerCase().indexOf("values") > -1;//$NON-NLS-1$
+        case MENU_VALID_TYPE:
+            return menuStr.toLowerCase().indexOf("valid") > -1;//$NON-NLS-1$
+        case MENU_INVALID_TYPE:
+            return menuStr.toLowerCase().indexOf("invalid") > -1;//$NON-NLS-1$
+        default:
+            return false;
+        }
     }
 
     /**
@@ -128,7 +192,7 @@ public class DrillDownUtils {
     public static void createDrillDownMenuForMapDB(final ChartDataEntity dataEntity, Menu menu, MenuItemEntity[] itemEntities,
             final Analysis analysis) {
         final Indicator indicator = dataEntity != null ? dataEntity.getIndicator() : null;
-        if (dataEntity == null || indicator == null || getMapDB(dataEntity, analysis).size() == 0) {
+        if (dataEntity == null || indicator == null) {
             return;
         }
 
@@ -149,6 +213,12 @@ public class DrillDownUtils {
             MenuItem item = new MenuItem(menu, SWT.PUSH);
             item.setText(itemEntity.getLabel());
             item.setImage(itemEntity.getIcon());
+            try {
+                int mapSize = DrillDownUtils.getMapDB(dataEntity, analysis, itemEntity).size();
+                item.setEnabled(mapSize > 0);
+            } catch (IOError e) {
+                item.setEnabled(false);
+            }
             item.addSelectionListener(new SelectionAdapter() {
 
                 @Override

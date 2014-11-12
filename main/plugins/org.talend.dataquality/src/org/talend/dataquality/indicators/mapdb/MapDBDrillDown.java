@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.indicators.mapdb;
 
+import java.io.IOError;
 import java.util.List;
 
 /**
@@ -28,10 +29,10 @@ public interface MapDBDrillDown {
      * db have a name)
      * 
      * @return null when MapDB can not be used by current indicator
-     * 
+     * @exception when the DB colsed by abnormal way in last exit, then call this method will throws IOError
      */
     @SuppressWarnings("rawtypes")
-    public AbstractDB getMapDB(String dbName);
+    public AbstractDB getMapDB(String dbName) throws IOError;
 
     /**
      * DOC msjian Comment method "handleDrillDownData".

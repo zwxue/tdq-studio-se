@@ -50,7 +50,6 @@ import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
-import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -90,12 +89,6 @@ public class DrillDownEditorInput implements IEditorInput {
     private String[] columnHeader = null;
 
     private String[][] columnValue = null;
-
-    public static final int MENU_VALUE_TYPE = 1;
-
-    public static final int MENU_VALID_TYPE = 2;
-
-    public static final int MENU_INVALID_TYPE = 3;
 
     public DrillDownEditorInput() {
 
@@ -192,36 +185,12 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     public String getComputeValue() {
-        if (judgeMenuType(this.getMenuType(), MENU_INVALID_TYPE)) {
+        if (DrillDownUtils.judgeMenuType(this.getMenuType(), DrillDownUtils.MENU_INVALID_TYPE)) {
             return ((PatternChartDataEntity) this.dataEntity).getNumNoMatch();
-        } else if (judgeMenuType(this.getMenuType(), MENU_VALID_TYPE)) {
+        } else if (DrillDownUtils.judgeMenuType(this.getMenuType(), DrillDownUtils.MENU_VALID_TYPE)) {
             return ((PatternChartDataEntity) this.dataEntity).getNumMatch();
         }
         return this.dataEntity.getValue();
-    }
-
-    /**
-     * 
-     * Judge current name of menu whether is same to menuType
-     * 
-     * @param menuStr is the name of the menu
-     * @param menuType is the type which we think it should be
-     * @return return true if menuStr is adapt to menuType, else return false
-     */
-    public static boolean judgeMenuType(String menuStr, int menuType) {
-        if (menuStr == null) {
-            return false;
-        }
-        switch (menuType) {
-        case MENU_VALUE_TYPE:
-            return menuStr.toLowerCase().indexOf("values") > -1;//$NON-NLS-1$
-        case MENU_VALID_TYPE:
-            return menuStr.toLowerCase().indexOf("valid") > -1;//$NON-NLS-1$
-        case MENU_INVALID_TYPE:
-            return menuStr.toLowerCase().indexOf("invalid") > -1;//$NON-NLS-1$
-        default:
-            return false;
-        }
     }
 
     /**
@@ -265,11 +234,7 @@ public class DrillDownEditorInput implements IEditorInput {
      * @return
      */
     public AbstractDB<Object> getMapDB() {
-        if (judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)
-                && DuplicateCountIndicator.class.isInstance(currIndicator)) {
-            return currIndicator.getMapDB(StandardDBName.drillDownValues.name());
-        }
-        return DrillDownUtils.getMapDB(dataEntity, analysis);
+        return DrillDownUtils.getMapDB(dataEntity, analysis, menuItemEntity);
     }
 
     public Object getDataSet() {
@@ -285,7 +250,7 @@ public class DrillDownEditorInput implements IEditorInput {
             return SqlExplorerUtils.getDefault().createDataSet(columnHeader, columnValue);
         }
         // MOD qiongli 2011-4-8,bug 19192.delimited file may has diffrent number of columns for every row.
-        if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+        if (DrillDownUtils.judgeMenuType(getMenuType(), DrillDownUtils.MENU_VALUE_TYPE)) {
             columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
         } else {
             columnValue = new String[newColumnElementList.size()][columnElementList.size()];
@@ -313,8 +278,8 @@ public class DrillDownEditorInput implements IEditorInput {
      * @return if view values then return result of current indicator else return the size of the mapDB
      */
     public Long getItemSize(AbstractDB<?> mapDB) {
-        if (judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
-            return getCurrentIndicatorResultSize();
+        if (isColumnSetIndicator()) {
+            return getColumnSetIndicatorResultSize();
         } else {
             return Long.valueOf(mapDB.size());
         }
@@ -458,10 +423,10 @@ public class DrillDownEditorInput implements IEditorInput {
                 // TDQ-4617 ~
             }
         } else if (analysisDataSet.getPatternData() != null && analysisDataSet.getPatternData().size() > 0) {
-            if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_INVALID_TYPE)) {
+            if (DrillDownUtils.judgeMenuType(getMenuType(), DrillDownUtils.MENU_INVALID_TYPE)) {
                 newColumnElementList.addAll(getDesignatedData((List<Object[]>) analysisDataSet.getPatternData().get(
                         AnalyzedDataSetImpl.INVALID_VALUE)));
-            } else if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALID_TYPE)) {
+            } else if (DrillDownUtils.judgeMenuType(getMenuType(), DrillDownUtils.MENU_VALID_TYPE)) {
                 newColumnElementList.addAll(getDesignatedData((List<Object[]>) analysisDataSet.getPatternData().get(
                         AnalyzedDataSetImpl.VALID_VALUE)));
             }
@@ -483,7 +448,7 @@ public class DrillDownEditorInput implements IEditorInput {
         if (dataList == null || dataList.size() < 0) {
             return returnDataList;
         }
-        if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+        if (DrillDownUtils.judgeMenuType(this.getMenuType(), DrillDownUtils.MENU_VALUE_TYPE)) {
             int offset = 0;
             // MOD qiongli 2011-3-3 feature 19192 drill down for columnSet with jave engine.
             if (analysisElement == null && currIndicator.eContainer() instanceof SimpleStatIndicator) {
@@ -543,7 +508,7 @@ public class DrillDownEditorInput implements IEditorInput {
             return columnElementList;
         }
         TdXmlElementType tdXmeElement = null;
-        if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+        if (DrillDownUtils.judgeMenuType(this.getMenuType(), DrillDownUtils.MENU_VALUE_TYPE)) {
             for (ModelElement mod : simpInd.getAnalyzedColumns()) {
                 tdXmeElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
                 if (tdXmeElement != null) {
@@ -611,7 +576,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
         } else {
             // MOD qiongli 2011-1-9 feature 16796
-            if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALUE_TYPE)) {
+            if (DrillDownUtils.judgeMenuType(menuType, DrillDownUtils.MENU_VALUE_TYPE)) {
 
                 columnElementList.add(ModelElementHelper.getName(indicator.getAnalyzedElement()));
             } else if (analysisElement instanceof TdColumn) {
@@ -641,8 +606,8 @@ public class DrillDownEditorInput implements IEditorInput {
      * @return
      */
     public Integer[] getColumnIndexArray() {
-        if (!DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)
-                || DuplicateCountIndicator.class.isInstance(currIndicator)) {
+        if (!DrillDownUtils.judgeMenuType(this.getMenuType(), DrillDownUtils.MENU_VALUE_TYPE)
+                || !UniqueCountIndicator.class.isInstance(currIndicator)) {
             return null;
         }
         List<Integer> indexArray = new ArrayList<Integer>();

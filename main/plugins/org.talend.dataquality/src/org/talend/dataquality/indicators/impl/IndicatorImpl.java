@@ -6,6 +6,7 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.io.File;
+import java.io.IOError;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.DBSet;
 import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dataquality.rules.JoinElement;
@@ -89,9 +91,19 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected Long drillDownRowCount = 0l;
 
     /**
+     * store view values count
+     */
+    protected Long drillDownValueCount = 0l;
+
+    /**
      * store drill down rows.
      */
     protected DBMap<Object, List<Object>> drillDownMap = null;
+
+    /**
+     * store drill down value.
+     */
+    protected DBSet<Object> drillDownValuesSet = null;
 
     /**
      * The default value of the '{@link #getCount() <em>Count</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -134,6 +146,11 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected Long nullCount = NULL_COUNT_EDEFAULT;
 
     // MOD mzhao feature 12919
+    /**
+     * This field should only be used by java engin. When this field is true mean that currnt data should be store for
+     * drill down action {@link #handleDrillDownData(Object, List)} method will do that. Else it should be false. And
+     * default it is false. It should be decided in {@link #handle(Object)} method.
+     */
     protected boolean mustStoreRow = false;
 
     /**
@@ -743,6 +760,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         nullCount = NULL_COUNT_EDEFAULT;
         // for MapDB init
         clearDrillDownMap();
+        clearDrillDownSet();
         return true;
     }
 
@@ -762,6 +780,21 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
+     * DOC talend Comment method "clearDrillDownMap".
+     */
+    protected void clearDrillDownSet() {
+        if (this.isUsedMapDBMode() && checkAllowDrillDown()) {
+            if (needReconnect(drillDownValuesSet)) {
+                drillDownValuesSet = initValueForDBSet(StandardDBName.drillDownValues.name());
+            }
+            if (!drillDownValuesSet.isEmpty()) {
+                drillDownValuesSet.clear();
+            }
+            drillDownValueCount = 0l;
+        }
+    }
+
+    /**
      * Whether the map is not created or has been closed
      * 
      * @return true if map should be reconnection else false
@@ -775,8 +808,18 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @return
      */
-    private DBMap<Object, List<Object>> initValueForDBMap(String dbName) {
+    protected DBMap<Object, List<Object>> initValueForDBMap(String dbName) {
         return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                ResourceManager.getMapDBCatalogName(this, dbName));
+    }
+
+    /**
+     * Create a new DBSet
+     * 
+     * @return
+     */
+    protected DBSet<Object> initValueForDBSet(String dbName) {
+        return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                 ResourceManager.getMapDBCatalogName(this, dbName));
     }
 
@@ -1291,10 +1334,17 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @return null when current is not support MapDB
      */
     @Override
-    public AbstractDB getMapDB(String dbName) {
+    public AbstractDB getMapDB(String dbName) throws IOError {
         if (isUsedMapDBMode() && checkAllowDrillDown()) {
-            if (StandardDBName.drillDown.name().equals(dbName) && drillDownMap != null && !drillDownMap.isClosed()) {
-                return drillDownMap;
+            if (StandardDBName.drillDown.name().equals(dbName)) {
+                if (drillDownMap != null && !drillDownMap.isClosed()) {
+                    return drillDownMap;
+                }
+            } else if (StandardDBName.drillDownValues.name().equals(dbName)) {
+                if (drillDownValuesSet != null && !drillDownValuesSet.isClosed()) {
+                    return drillDownValuesSet;
+                }
+                return initValueForDBSet(StandardDBName.drillDownValues.name());
             }
             return initValueForDBMap(dbName);
         }

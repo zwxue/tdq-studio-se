@@ -165,7 +165,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @return
      */
-    private Map<Object, Long> initValueForDBMap(String dbName) {
+    private Map<Object, Long> initValueForFrequencyDBMap(String dbName) {
         if (isUsedMapDBMode()) {
             return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                     ResourceManager.getMapDBCatalogName(this, dbName));
@@ -553,7 +553,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             if (checkAllowDrillDown()) {
                 clearDrillDownMaps();
             }
-            valueToFreqForMapDB = initValueForDBMap(FREQUENCYMAPNAME);
+            valueToFreqForMapDB = initValueForFrequencyDBMap(FREQUENCYMAPNAME);
             if (valueToFreqForMapDB != null && !valueToFreqForMapDB.isEmpty()) {
                 valueToFreqForMapDB.clear();
             }
@@ -835,7 +835,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
                     return (DBMap<Object, Long>) valueToFreqForMapDB;
                 } else {
                     // create new DBSet
-                    return ((DBMap<Object, Long>) initValueForDBMap(FREQUENCYMAPNAME));
+                    return ((DBMap<Object, Long>) initValueForFrequencyDBMap(FREQUENCYMAPNAME));
                 }
             }
         }

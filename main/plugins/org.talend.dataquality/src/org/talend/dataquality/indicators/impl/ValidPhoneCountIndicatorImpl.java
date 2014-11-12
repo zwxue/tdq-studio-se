@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -209,7 +210,7 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
             if (phoneUtil.isValidNumberForRegion(phoneNumber, country)) {
                 // if (phoneUtil.isValidNumber(phoneNumber)) {
                 validPhoneNumCount++;
-                if (checkMustStoreCurrentRow()) {
+                if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
                     this.mustStoreRow = true;
                 }
             }
@@ -229,6 +230,7 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
     @Override
     public boolean reset() {
         this.validPhoneNumCount = VALID_PHONE_NUM_COUNT_EDEFAULT;
+        drillDownValueCount = 0l;
         return super.reset();
     }
 
@@ -245,6 +247,25 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
     @Override
     public Long getIntegerValue() {
         return this.getValidPhoneNumCount();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        if (checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
+        }
     }
 
 } // ValidPhoneCountIndicatorImpl
