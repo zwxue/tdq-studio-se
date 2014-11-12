@@ -49,15 +49,19 @@ public class TextStatisticsExplorer extends DataExplorer {
                 // MOD msjian 2011-7-1 22549:change Sql for average length indicator
                 // MOD qiongli 2011-8-10 TDQ-2474:change Sql for kinds of average length indicator
             case AverageLengthWithBlankIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getAverageLengthWithBlankRowsStatement()
-                        : null);
+                if (isSqlEngine) {
+                    map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getAverageLengthWithBlankRowsStatement());
+                }
                 break;
             case AverageLengthWithNullBlankIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getAverageLengthWithNullBlankRowsStatement()
-                        : null);
+                if (isSqlEngine) {
+                    map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getAverageLengthWithNullBlankRowsStatement());
+                }
                 break;
             case AverageLengthWithNullIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getAverageLengthWithNullRowsStatement() : null);
+                if (isSqlEngine) {
+                    map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getAverageLengthWithNullRowsStatement());
+                }
                 break;
             case MinLengthIndicatorEnum:
             case MaxLengthIndicatorEnum:
@@ -72,8 +76,21 @@ public class TextStatisticsExplorer extends DataExplorer {
             default:
             }
         } else {
+            // java engin is not support to all of Average indicator
             if (!isSqlEngine) {
-                map.put(MENU_VIEW_ROWS, null);
+                switch (this.indicatorEnum) {
+                case MinLengthIndicatorEnum:
+                case MinLengthWithBlankIndicatorEnum:
+                case MinLengthWithBlankNullIndicatorEnum:
+                case MinLengthWithNullIndicatorEnum:
+                case MaxLengthIndicatorEnum:
+                case MaxLengthWithBlankIndicatorEnum:
+                case MaxLengthWithBlankNullIndicatorEnum:
+                case MaxLengthWithNullIndicatorEnum:
+                    map.put(MENU_VIEW_ROWS, null);
+                    break;
+                default:
+                }
             }
         }
         return map;

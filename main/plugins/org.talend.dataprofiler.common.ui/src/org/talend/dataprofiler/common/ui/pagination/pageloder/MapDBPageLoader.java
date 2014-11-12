@@ -61,11 +61,9 @@ public class MapDBPageLoader<T> implements IPageLoader<PageResult<Object[]>> {
      * org.eclipse.nebula.widgets.pagination.IPageLoader#loadPage(org.eclipse.nebula.widgets.pagination.PageableController
      * )
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public PageResult<Object[]> loadPage(PageableController controller) {
-        int dbSize = db.size();
-        long totalSize = dbSize < itemsSize ? dbSize : itemsSize;
+        long totalSize = itemsSize;
         long pageSize = controller.getPageSize();
         long pageIndex = controller.getPageOffset();
 

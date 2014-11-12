@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.event.MouseEvent;
+import java.io.IOError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -354,16 +355,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     if (currentDataEntity != null) {
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
 
-                        if (currentIndicator.isUsedMapDBMode()) {
-                            // ADD msjian TDQ-9592: let the averagelengthXX indicators don't show the drilldown menu
-                            if (ExecutionLanguage.JAVA == currentEngine && analysis.getParameters().isStoreData()) {
-                                if (dataEntity == null || currentIndicator == null
-                                        || DrillDownUtils.getMapDB(currentDataEntity, analysis).size() == 0) {
-                                    return;
-                                }
-                            }
-                            // TDQ-9592~
-                        } else {
+                        if (!currentIndicator.isUsedMapDBMode()) {
                             // MOD gdbu 2011-7-12 bug : 22524
                             if (ExecutionLanguage.JAVA == currentEngine && 0 == analysis.getResults().getIndicToRowMap().size()) {
                                 return;
@@ -387,6 +379,12 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
                             item.setImage(itemEntity.getIcon());
+                            try {
+                                int mapSize = DrillDownUtils.getMapDB(currentDataEntity, analysis, itemEntity).size();
+                                item.setEnabled(mapSize > 0);
+                            } catch (IOError e) {
+                                item.setEnabled(false);
+                            }
                             item.addSelectionListener(new SelectionAdapter() {
 
                                 @Override

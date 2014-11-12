@@ -72,7 +72,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      * 
      * @return
      */
-    private Set<Object> initValueForDBSet(String dbName) {
+    private Set<Object> initValueForDistinctDBSet(String dbName) {
         if (isUsedMapDBMode()) {
             return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                     ResourceManager.getMapDBCatalogName(this, dbName));
@@ -243,7 +243,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
         // MOD msjian 2011-8-24 TDQ-1679: when run with java engine, the Duplicate count should contain "null"
         // if (data != null) {
         if (this.distinctObjects.add(data)) {
-            if (this.checkMustStoreCurrentRow()) {
+            if (checkMustStoreCurrentRow(drillDownValueCount)) {
                 this.mustStoreRow = true;
             }
         }
@@ -268,7 +268,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
         this.distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
         if (isUsedMapDBMode()) {
             if (needReconnect((DBSet<Object>) distinctObjects)) {
-                distinctObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+                distinctObjects = initValueForDistinctDBSet(StandardDBName.computeProcessSet.name());
             }
             if (!distinctObjects.isEmpty()) {
                 distinctObjects.clear();
@@ -308,13 +308,29 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
                 // current set is invalid
                 if (needReconnect((DBSet<Object>) distinctObjects)) {
                     // create new DBSet
-                    return ((DBSet<Object>) initValueForDBSet(StandardDBName.computeProcess.name()));
+                    return initValueForDBSet(StandardDBName.computeProcessSet.name());
                 } else {
                     return (DBSet<Object>) distinctObjects;
                 }
             }
         }
         return super.getMapDB(dbName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.mapdb.MapDBDrillDown#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
+        }
     }
 
 } // DistinctCountIndicatorImpl

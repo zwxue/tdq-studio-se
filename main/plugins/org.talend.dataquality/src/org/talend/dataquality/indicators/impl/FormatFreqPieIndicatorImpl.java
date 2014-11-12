@@ -413,7 +413,6 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
 
     @Override
     public boolean handle(Object data) {
-        this.mustStoreRow = checkMustStoreCurrentRow();
         count++;
         boolean isInvalidForm = false;
         try {
@@ -431,17 +430,17 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
                 String format_inter = phoneUtil.format(phoneNumeber, PhoneNumberFormat.INTERNATIONAL);
                 String format_national = phoneUtil.format(phoneNumeber, PhoneNumberFormat.NATIONAL);
                 if (data.toString().equals(format_E164)) {
+                    this.mustStoreRow = checkMustStoreCurrentRow(wellFormE164Count);
                     wellFormE164Count++;
-
                     setCurrentKey(WELL_FORM_E164_KEY);
 
                 } else if (data.toString().equals(format_inter)) {
+                    this.mustStoreRow = checkMustStoreCurrentRow(wellFormInteCount);
                     wellFormInteCount++;
-
                     setCurrentKey(WELL_FORM_INTE_KEY);
                 } else if (data.toString().equals(format_national)) {
+                    this.mustStoreRow = checkMustStoreCurrentRow(wellFormNatiCount);
                     wellFormNatiCount++;
-
                     setCurrentKey(WELL_FORM_NATI_KEY);
                 } else {
                     isInvalidForm = true;
@@ -454,8 +453,8 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
             isInvalidForm = true;
         }
         if (isInvalidForm) {
+            this.mustStoreRow = checkMustStoreCurrentRow(invalidFormCount);
             invalidFormCount++;
-
             setCurrentKey(INVALID_FORM_KEY);
         }
         return true;

@@ -12,10 +12,13 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -77,4 +80,22 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         String group = matcher.group(1);
         return group;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.explore.FrequencyStatisticsExplorer#getQueryMap()
+     */
+    @Override
+    public Map<String, String> getQueryMap() {
+        Map<String, String> map = new HashMap<String, String>();
+        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
+        if (!isSqlEngine) {
+            return map;
+        }
+        map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getFreqRowsStatement());
+
+        return map;
+    }
+
 }

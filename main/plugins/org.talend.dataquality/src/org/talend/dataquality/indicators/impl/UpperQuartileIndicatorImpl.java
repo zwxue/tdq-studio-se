@@ -47,7 +47,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
      * 
      * @return
      */
-    private Map<Object, Long> initValueForDBMap(String dbName) {
+    private Map<Object, Long> initValueForUpperQuartileDBMap(String dbName) {
         if (isUsedMapDBMode()) {
             return new DBMap<Object, Long>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                     ResourceManager.getMapDBCatalogName(this, dbName));
@@ -122,7 +122,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
             if (frequenceTable != null) {
                 ((DBMap<Object, Long>) frequenceTable).clear();
             }
-            frequenceTable = initValueForDBMap(StandardDBName.computeProcess.name());
+            frequenceTable = initValueForUpperQuartileDBMap(StandardDBName.computeProcess.name());
         } else {
             this.frequenceTable.clear();
         }
@@ -154,7 +154,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
                     && !((DBMap<Object, Long>) frequenceTable).isClosed()) {
                 return (DBMap<Object, Long>) frequenceTable;
             }
-            return ((DBMap<Object, Long>) initValueForDBMap(StandardDBName.computeProcess.name()));
+            return ((DBMap<Object, Long>) initValueForUpperQuartileDBMap(StandardDBName.computeProcess.name()));
         } else {
             return super.getMapDB(dbName);
         }

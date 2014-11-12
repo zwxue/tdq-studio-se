@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -192,6 +193,7 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
     @Override
     public boolean reset() {
         this.possiblePhoneCount = POSSIBLE_PHONE_COUNT_EDEFAULT;
+        drillDownValueCount = 0l;
         return super.reset();
     }
 
@@ -214,7 +216,7 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
             PhoneNumber phoneNumeber = phoneUtil.parse(data.toString(), country);
             if (phoneUtil.isPossibleNumber(phoneNumeber)) {
                 this.possiblePhoneCount++;
-                if (checkMustStoreCurrentRow()) {
+                if (checkMustStoreCurrentRow() || this.checkMustStoreCurrentRow(drillDownValueCount)) {
                     this.mustStoreRow = true;
                 }
             }
@@ -222,6 +224,25 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
             return false;
         }
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        if (this.checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
+        }
     }
 
 } // PossiblePhoneCountIndicatorImpl

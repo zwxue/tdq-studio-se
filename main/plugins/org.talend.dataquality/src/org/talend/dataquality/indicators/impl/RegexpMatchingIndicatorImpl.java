@@ -5,6 +5,9 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
@@ -15,6 +18,8 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.i18n.Messages;
 
 /**
@@ -32,6 +37,12 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
     // FIXME never use now. error message should not be specific to this indicator.
     // add klliu 2010-06-12 bug 13695
     private String javaPatternMessage;
+
+    private Long invalidCount = 0l;
+
+    private Long invalidValueCount = 0l;
+
+    private Long validValueCount = 0l;
 
     public String getJavaPatternMessage() {
         return javaPatternMessage;
@@ -150,7 +161,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
      */
     @Override
     public boolean handle(Object data) {
-        this.mustStoreRow = true;
+        boolean ok = super.handle(data);
         this.setValidRow(false);
         this.setInValidRow(false);
         if (data != null) {
@@ -166,9 +177,90 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
         } else {
             this.setInValidRow(true);
         }
-        boolean ok = super.handle(data);
-
+        if (checkDrillDownCount()) {
+            this.mustStoreRow = true;
+        }
         return ok;
+    }
+
+    /**
+     * "checkDrillDownCount".
+     * 
+     * @return
+     */
+    private boolean checkDrillDownCount() {
+        if (this.validRow) {
+            return this.checkMustStoreCurrentRow(matchingValueCount - 1) || this.checkMustStoreCurrentRow(validValueCount);
+        } else {
+            return this.checkMustStoreCurrentRow(invalidValueCount) || this.checkMustStoreCurrentRow(invalidCount);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getMapDB(java.lang.String)
+     */
+    @Override
+    public AbstractDB getMapDB(String dbName) {
+        if (isUsedMapDBMode()) {
+            // get invalidDrillDownValues set
+            if (StandardDBName.invalidDrillDownValues.name().equals(dbName)) {
+                // create new DBSet
+                return initValueForDBSet(StandardDBName.invalidDrillDownValues.name());
+            }
+        }
+        return super.getMapDB(dbName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        if (validRow) {
+            // store drill dwon data for view valid values
+            if (this.checkMustStoreCurrentRow(matchingValueCount - 1)) {
+                super.handleDrillDownData(masterObject, inputRowList);
+            }
+            // store drill dwon data for view valid values
+            if (this.checkMustStoreCurrentRow(validValueCount)) {
+                if (!drillDownValuesSet.contains(masterObject)) {
+                    validValueCount++;
+                    drillDownValuesSet.add(masterObject);
+                }
+            }
+        } else {
+            // store drill dwon data for view invalid values
+            if (this.checkMustStoreCurrentRow(invalidValueCount)) {
+                Set<Object> drillDownValuesSet = initValueForDBSet(StandardDBName.invalidDrillDownValues.name());
+                if (!drillDownValuesSet.contains(masterObject)) {
+                    invalidValueCount++;
+                    drillDownValuesSet.add(masterObject);
+                }
+            }
+            // store drill dwon data for view invalid rows
+            if (this.checkMustStoreCurrentRow(invalidCount)) {
+                invalidCount++;
+                Map<Object, List<Object>> drillDownRowsMap = initValueForDBMap(StandardDBName.invalidDrillDown.name());
+                drillDownRowsMap.put(invalidCount - 1, inputRowList);
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.MatchingIndicatorImpl#reset()
+     */
+    @Override
+    public boolean reset() {
+        invalidCount = 0l;
+        invalidValueCount = 0l;
+        validValueCount = 0l;
+        return super.reset();
     }
 
 } // RegexpMatchingIndicatorImpl

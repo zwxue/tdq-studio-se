@@ -86,6 +86,7 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dq.analysis.AnalysisHandler;
@@ -395,10 +396,16 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             sectionTableComp.setLayout(new GridLayout());
             // MOD zshen for feature 14000
+            AbstractDB<Object[]> mapDB = null;
+            try {
+                mapDB = ssIndicator.getMapDB(StandardDBName.dataSection.name());
+            } catch (IOError error) {
+                log.warn(error.getMessage(), error);
+            }
             Button filterDataBt = new Button(sectionTableComp, SWT.NONE);
             filterDataBt.setText(DefaultMessagesImpl.getString("ColumnSetResultPage.filterData"));//$NON-NLS-1$
             filterDataBt.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-            filterDataBt.setEnabled(containAllMatchIndicator());
+            filterDataBt.setEnabled(containAllMatchIndicator() && mapDB != null);
             filterDataBt.addMouseListener(new MouseListener() {
 
                 public void mouseDoubleClick(MouseEvent e) {
@@ -445,17 +452,14 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
 
             // add pagation control
             final PageableController controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
-            try {
-                final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(
-                        ssIndicator.getMapDB(StandardDBName.dataSection.name()));
+            if (mapDB != null) {
+                final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(mapDB);
 
                 controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
                         columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null));
                 ResultAndNavigationPageGraphicsRenderer resultAndPageButtonsDecorator = new ResultAndNavigationPageGraphicsRenderer(
                         sectionTableComp, SWT.NONE, controller);
                 resultAndPageButtonsDecorator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            } catch (IOError error) {
-                log.warn(error.getMessage(), error);
             }
             createColumns(controller, ssIndicator);
             // Set current page to 0 to refresh the table

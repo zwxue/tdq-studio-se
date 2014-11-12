@@ -21,6 +21,8 @@ public enum StandardDBName {
     dataSection,
     drillDown,
     drillDownValues,
+    invalidDrillDown,
+    invalidDrillDownValues,
     computeProcess,
     computeProcessSet,
     temp,

@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -206,7 +207,7 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
             String format = phoneUtil.format(phoneNumeber, PhoneNumberFormat.NATIONAL);
             if (data.toString().equals(format)) {
                 this.wellFormNatiPhoneCount++;
-                if (checkMustStoreCurrentRow()) {
+                if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
                     this.mustStoreRow = true;
                 }
             }
@@ -219,12 +220,32 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
     @Override
     public boolean reset() {
         this.wellFormNatiPhoneCount = WELL_FORM_NATI_PHONE_COUNT_EDEFAULT;
+        drillDownValueCount = 0l;
         return super.reset();
     }
 
     @Override
     public Long getIntegerValue() {
         return this.getWellFormNatiPhoneCount();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        if (checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
+        }
     }
 
 } // WellFormNationalPhoneCountIndicatorImpl

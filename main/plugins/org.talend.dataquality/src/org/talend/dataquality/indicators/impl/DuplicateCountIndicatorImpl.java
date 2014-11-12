@@ -75,7 +75,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * 
      * @return
      */
-    private Map<Object, Object[]> initValueForDBMap(String dbName) {
+    private Map<Object, Object[]> initValueForMap(String dbName) {
         if (isUsedMapDBMode()) {
             return new DBMap<Object, Object[]>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                     ResourceManager.getMapDBCatalogName(this, dbName));
@@ -89,7 +89,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * 
      * @return
      */
-    private Set<Object> initValueForDBSet(String dbName) {
+    private Set<Object> initValueForSet(String dbName) {
         if (isUsedMapDBMode()) {
             return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
                     ResourceManager.getMapDBCatalogName(this, dbName));
@@ -300,17 +300,18 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     public boolean reset() {
         if (this.isUsedMapDBMode()) {
             if (needReconnect((AbstractDB<?>) distinctMap)) {
-                distinctMap = initValueForDBMap(StandardDBName.computeProcess.name());
+                distinctMap = initValueForMap(StandardDBName.computeProcess.name());
             }
             distinctMap.clear();
             if (needReconnect((AbstractDB<?>) duplicateObjects)) {
-                duplicateObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+                duplicateObjects = initValueForSet(StandardDBName.computeProcessSet.name());
             }
             duplicateObjects.clear();
+            drillDownValueCount = 0l;
             // java normal mode
         } else {
-            distinctMap = initValueForDBMap(StandardDBName.computeProcess.name());
-            duplicateObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+            distinctMap = initValueForMap(StandardDBName.computeProcess.name());
+            duplicateObjects = initValueForSet(StandardDBName.computeProcessSet.name());
             distinctMap.clear();
             duplicateObjects.clear();
         }
@@ -338,7 +339,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
             if (!duplicateObjects.contains(colValue)) {
                 duplicateObjects.add(colValue);
             }
-            if (checkMustStoreCurrentRow()) {
+            if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
                 this.mustStoreRow = true;
             }
         } else {
@@ -370,7 +371,9 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
             if (!duplicateObjects.contains(object)) {
                 duplicateObjects.add(object);
             }
-            this.mustStoreRow = true;
+            if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
+                this.mustStoreRow = true;
+            }
         } else {
             distinctMap.put(object, rowValues);
         }
@@ -391,21 +394,18 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
                     return (DBMap<Object, Object[]>) distinctMap;
                 } else {
                     // create new DBSet
-                    return ((DBMap<Object, Object[]>) initValueForDBMap(StandardDBName.computeProcess.name()));
+                    return ((DBMap<Object, Object[]>) initValueForMap(StandardDBName.computeProcess.name()));
                 }
-            }
-            if (StandardDBName.computeProcessSet.name().equals(dbName)) {
+            } else if (StandardDBName.computeProcessSet.name().equals(dbName)) {
                 // current set is valid
                 if (duplicateObjects != null && !((DBSet<Object>) duplicateObjects).isClosed()) {
                     return (DBSet<Object>) duplicateObjects;
                 } else {
                     // create new DBSet
-                    return ((DBSet<Object>) initValueForDBSet(StandardDBName.computeProcessSet.name()));
+                    return ((DBSet<Object>) initValueForSet(StandardDBName.computeProcessSet.name()));
                 }
             }
-            if (StandardDBName.drillDownValues.name().equals(dbName)) {
-                return ((DBSet<Object>) initValueForDBSet(StandardDBName.drillDownValues.name()));
-            }
+
         }
         return super.getMapDB(dbName);
     }
@@ -435,11 +435,15 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     @Override
     public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
-        super.handleDrillDownData(masterObject, inputRowList);
+        if (checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
         // store drill dwon data for view values
-        Set<Object> drillDownValuesSet = initValueForDBSet(StandardDBName.drillDownValues.name());
-        if (!drillDownValuesSet.contains(masterObject)) {
-            drillDownValuesSet.add(masterObject);
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
         }
     }
 

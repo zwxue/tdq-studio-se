@@ -58,7 +58,9 @@ public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLe
                     }
                 } else if (length.intValue() > strLength) {
                     changeLength(strLength);
-                    mustStoreRow = true;
+                    if (this.checkMustStoreCurrentRow()) {
+                        mustStoreRow = true;
+                    }
                 }
             }
         }
