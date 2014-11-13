@@ -3,5 +3,5 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Nl
 Bundle-SymbolicName: org.talend.dataquality.standardization.nl
 Bundle-Version: 6.0.0.qualifier
-Fragment-Host: org.talend.dataquality.standardization;bundle-version="6.0.0"
+Fragment-Host: org.talend.dataquality.standardization
 Bundle-Vendor: .Talend SA.

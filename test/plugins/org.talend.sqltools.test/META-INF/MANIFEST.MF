@@ -4,5 +4,5 @@ Bundle-Name: org.talend.sqltools.test
 Bundle-SymbolicName: org.talend.sqltools.test
 Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
-Fragment-Host: org.talend.sqltools;bundle-version="6.0.0"
+Fragment-Host: org.talend.sqltools
 Require-Bundle: org.junit4
