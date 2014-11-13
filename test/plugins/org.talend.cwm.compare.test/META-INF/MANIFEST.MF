@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.talend.cwm.compare.test
 Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.cwm.compare;bundle-version="6.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.talend.testutils,
  org.talend.common.ui.runtime
 Bundle-ClassPath: .

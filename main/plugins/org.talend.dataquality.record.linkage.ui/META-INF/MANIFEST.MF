@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Record linkage UI
 Bundle-SymbolicName: org.talend.dataquality.record.linkage.ui;singleton:=true
 Bundle-Version: 6.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: .Talend SA.
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.swt,

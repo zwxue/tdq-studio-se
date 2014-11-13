@@ -7,7 +7,6 @@ Bundle-ClassPath: .,
  dist/org.talend.dataquality.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.talend.algorithms,
  org.talend.commons.emf,
  org.talend.commons.utils,
