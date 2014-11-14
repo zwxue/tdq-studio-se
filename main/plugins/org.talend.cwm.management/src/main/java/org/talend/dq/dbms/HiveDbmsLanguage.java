@@ -15,6 +15,8 @@ package org.talend.dq.dbms;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.lang.StringUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -142,5 +144,24 @@ public class HiveDbmsLanguage extends DbmsLanguage {
     @Override
     public String getQueryColumnsWithPrefix(TdColumn[] columns) {
         return getQueryColumns(columns);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.dbms.DbmsLanguage#getQueryColumnSetWithPrefixFromContext(org.talend.core.model.metadata.builder
+     * .connection.DatabaseConnection, java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Override
+    protected String getQueryColumnSetWithPrefixFromContext(DatabaseConnection dbConn, String catalogName, String schemaName,
+            String tableName) {
+        String catalogNameFromContext = getCatalogNameFromContext(dbConn);
+        String schemaNameFromContext = getSchemaNameFromContext(dbConn);
+        if (StringUtils.isBlank(catalogNameFromContext) && StringUtils.isBlank(schemaNameFromContext)) {
+            catalogNameFromContext = catalogName;
+            schemaNameFromContext = schemaName;
+        }
+        return toQualifiedName(catalogNameFromContext, schemaNameFromContext, tableName);
     }
 }
