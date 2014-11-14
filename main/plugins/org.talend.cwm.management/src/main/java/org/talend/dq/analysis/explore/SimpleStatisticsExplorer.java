@@ -50,6 +50,12 @@ public class SimpleStatisticsExplorer extends DataExplorer {
 
             switch (this.indicatorEnum) {
             case RowCountIndicatorEnum:
+                // for columnset/column and jave engine, we didn't show the view rows menu
+                if (isSqlEngine) {
+                    // when user define indicator
+                    map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getRowsStatement());
+                }
+                break;
             case NullCountIndicatorEnum:
             case BlankCountIndicatorEnum:
             case DefValueCountIndicatorEnum:
