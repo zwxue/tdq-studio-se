@@ -66,11 +66,8 @@ import org.talend.dq.helper.UDIHelperTest;
 import org.talend.dq.indicators.AbstractSchemaEvaluatorTest;
 import org.talend.dq.indicators.ColumnSetIndicatorEvaluatorTest;
 import org.talend.dq.indicators.DelimitedFileIndicatorEvaluatorTest;
-import org.talend.dq.indicators.SchemaEvaluatorTest;
 import org.talend.dq.indicators.SqlIndicatorHandlerTest;
 import org.talend.dq.indicators.definitions.LowerUpperQuantileForDB2Test;
-import org.talend.dq.indicators.definitions.TextIndicatorForNetezzaTest;
-import org.talend.dq.indicators.preview.table.PatternChartDataEntityTest;
 import org.talend.dq.nodes.AnalysisFolderRepNodeTest;
 import org.talend.dq.nodes.ReportSubFolderRepNodeTest;
 import org.talend.dq.sql.converters.CwmZExpressionTest;
@@ -97,7 +94,6 @@ import org.talend.dq.writer.AElementPersistanceTest;
         MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, StoreOnDiskHandlerTest.class,
         MdmStatementTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class,
         EObjectHelperTest.class, AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class,
-        TextIndicatorForNetezzaTest.class, PatternChartDataEntityTest.class, SchemaEvaluatorTest.class,
         SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, })
 public class AllCwmManagementTests {
 
