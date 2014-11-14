@@ -10,14 +10,17 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.indicators.definitions;
+package org.talend.dq.indicators;
 
 import junit.framework.Assert;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * Check if every related sql expression for Netezza db has been added into related text indicators, benford indicator,
@@ -82,6 +85,16 @@ public class TextIndicatorForNetezzaTest {
     private static final String PATTERN_FREQUENCY_SQL = "SELECT <%=__COLUMN_NAMES__%>, COUNT(*) AS c FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> ORDER BY c DESC";//$NON-NLS-1$
 
     private final String Netezza = SupportDBUrlType.NETEZZADEFAULTURL.getLanguage();
+
+    /**
+     * init TDQ_Libraries folder
+     * 
+     * @throws java.lang.Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        DQStructureManager.getInstance().createDQStructure();
+    }
 
     @Test
     public void testAverageLength() {
