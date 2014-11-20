@@ -138,7 +138,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             traceError(rc.getMessage());
         }
 
-        return true;
+        return rc.isOk();
     }
 
     /*
