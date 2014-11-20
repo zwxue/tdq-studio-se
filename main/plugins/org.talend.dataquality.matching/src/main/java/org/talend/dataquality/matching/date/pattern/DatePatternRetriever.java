@@ -164,4 +164,20 @@ public class DatePatternRetriever {
         }
         return null;
     }
+
+    /**
+     * 
+     * method "get Matcher by model".
+     * 
+     * @param model the model of matcher.
+     * @return if can find corresponding to matcher return it else return null;
+     */
+    public ModelMatcher getMatcher(String model) {
+        for (ModelMatcher matcher : this.getModelMatchers()) {
+            if (matcher.getModel().equals(model)) {
+                return matcher;
+            }
+        }
+        return null;
+    }
 }

@@ -331,7 +331,16 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
         Object[] valueObject = new Object[columnSize];
 
         for (int i = 0; i < columnSize; i++) {
-            Object object = resultSet.getObject(i + 1);
+            Object object = null;
+            try {
+                object = resultSet.getObject(i + 1);
+            } catch (SQLException e) {
+                if ("0000-00-00 00:00:00".equals(resultSet.getString(i + 1))) { //$NON-NLS-1$
+                    object = null;
+                }
+
+            }
+
             // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
             valueObject[i] = object == null ? PluginConstant.NULL_STRING : object;
         }

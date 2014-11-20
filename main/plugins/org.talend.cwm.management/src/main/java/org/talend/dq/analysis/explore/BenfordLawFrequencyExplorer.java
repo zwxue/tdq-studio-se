@@ -12,7 +12,11 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.dataquality.helpers.AnalysisHelper;
 
 /**
  * return the where clause for benford law indicator, but for different DB type, the clause is different.
@@ -54,6 +58,24 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
      */
     private String getColumnName() {
         return dbmsLanguage.castColumnNameToChar(columnName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.explore.FrequencyStatisticsExplorer#getQueryMap()
+     */
+    @Override
+    public Map<String, String> getQueryMap() {
+        Map<String, String> map = new HashMap<String, String>();
+        boolean isJavaEngine = AnalysisHelper.isJavaExecutionEngine(this.analysis);
+        if (isJavaEngine) {
+            return map;
+        }
+
+        map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getFreqRowsStatement());
+
+        return map;
     }
 
 }

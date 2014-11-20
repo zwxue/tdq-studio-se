@@ -24,6 +24,7 @@ import org.talend.dataquality.indicators.columnset.impl.RecordMatchingIndicatorI
 import org.talend.dataquality.indicators.impl.BenfordLawFrequencyIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.DuplicateCountIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImplTest;
+import org.talend.dataquality.indicators.impl.FrequencyIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.MeanIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.ModeIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImplTest;
@@ -42,7 +43,8 @@ import org.talend.dataquality.properties.impl.TDQSourceFileItemImplTest;
         RegexpMatchingIndicatorImplTest.class, WellFormE164PhoneCountIndicatorImplTest.class,
         WellFormIntePhoneCountIndicatorImplTest.class, WellFormNationalPhoneCountIndicatorImplTest.class,
         IndicatorHelperTest.class, ColumnSetMultiValueIndicatorImplTest.class, RecordMatchingIndicatorImplTest.class,
-        TDQJrxmlItemImplTest.class, TDQSourceFileItemImplTest.class, DBMapTest.class, DBSetTest.class, ColumnSetDBMapTest.class })
+        TDQJrxmlItemImplTest.class, TDQSourceFileItemImplTest.class, DBMapTest.class, DBSetTest.class, ColumnSetDBMapTest.class,
+        FrequencyIndicatorImplTest.class })
 public class AllDataQualityTests {
 
 }

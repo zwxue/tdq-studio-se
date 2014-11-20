@@ -5,9 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.PluginConstant;
@@ -59,7 +56,7 @@ public class BinFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
         if (parameters != null) {
             Domain bins = parameters.getBins();
             if (bins != null) {
-                String binFreqKey = getFormatName(data);
+                String binFreqKey = getGroupLabel(data);
                 // except null if the bin parameteris set.
                 if (binFreqKey == null) {
                     return true;
@@ -74,18 +71,16 @@ public class BinFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#specialNames(java.lang.Object)
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#specialName(java.lang.Object)
      */
     @Override
-    protected List<String> specialNames(Object name) {
-        List<String> ls = new ArrayList<String>();
-        String specialName = getFormatName(name);
+    protected String getFrequencyLabel(Object name) {
+        String specialName = getGroupLabel(name);
         if (specialName != null) {
-            ls.add(specialName);
+            return specialName;
         } else {
-            ls.add(name.toString());
+            return super.getFrequencyLabel(name);
         }
-        return ls;
     }
 
     /*
@@ -93,8 +88,7 @@ public class BinFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
      * 
      * if the bin parameter is set,look range name as a new name.
      */
-    @Override
-    protected String getFormatName(Object name) {
+    protected String getGroupLabel(Object name) {
         if (name == null) {
             return null;
         }

@@ -237,6 +237,7 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
             if (mapDB != null) {
                 mapDB.clearDB(ResourceManager.getMapDBCatalogName(this));
             }
+            resetDrillDownRowCount();
         }
     }
 

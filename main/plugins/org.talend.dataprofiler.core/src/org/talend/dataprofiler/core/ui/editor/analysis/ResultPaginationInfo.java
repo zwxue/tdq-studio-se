@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.event.MouseEvent;
-import java.io.IOError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -379,12 +378,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
                             item.setImage(itemEntity.getIcon());
-                            try {
-                                int mapSize = DrillDownUtils.getMapDB(currentDataEntity, analysis, itemEntity).size();
-                                item.setEnabled(mapSize > 0);
-                            } catch (IOError e) {
-                                item.setEnabled(false);
-                            }
+                            item.setEnabled(DrillDownUtils.isMenuItemEnable(currentDataEntity, itemEntity, analysis));
                             item.addSelectionListener(new SelectionAdapter() {
 
                                 @Override
