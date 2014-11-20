@@ -29,8 +29,6 @@ import org.talend.dataquality.indicators.WeekLowFrequencyIndicator;
  */
 public class WeekLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements WeekLowFrequencyIndicator {
 
-    private final String weekSign = "w"; //$NON-NLS-1$ 
-
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -96,6 +94,7 @@ public class WeekLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
         cal.setTime(date);
         int weekOfYear = cal.get(Calendar.WEEK_OF_YEAR);
         return weekOfYear;
+
     }
 
     /*
@@ -106,7 +105,11 @@ public class WeekLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
     @Override
     protected String getFormatName(Object data) {
         Date date = (Date) data;
-        return DateFormatUtils.format(date, datePattern + getWeekOfYear(date));
+        int weekOfYear = getWeekOfYear(date);
+        if (weekOfYear < 10) {
+            return DateFormatUtils.format(date, datePattern + "0" + weekOfYear);
+        }
+        return DateFormatUtils.format(date, datePattern + weekOfYear);
     }
 
     /*

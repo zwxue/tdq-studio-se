@@ -107,15 +107,7 @@ public class BinFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
                     double maxRealValue = DomainHelper.getRealValue(range.getUpperValue());
                     double inputValue = Double.valueOf(name.toString());
                     if (minRealValue <= inputValue && inputValue < maxRealValue) {
-                        String rangeName = range.getName();
-                        if (rangeName == null) {
-                            rangeName = analyzedElement.getName() + PluginConstant.SPACE_STRING
-                                    + SqlPredicate.GREATER_EQUAL.getLiteral() + PluginConstant.SPACE_STRING + minRealValue
-                                    + " AND " + analyzedElement.getName() + PluginConstant.SPACE_STRING
-                                    + SqlPredicate.LESS.getLiteral() + PluginConstant.SPACE_STRING + maxRealValue;
-                            range.setName(rangeName);
-                        }
-                        return rangeName;
+                        return range.getName();
                     }
                 }
                 // if the data(name) is not in these ranges,return null and ignor it.
@@ -123,6 +115,48 @@ public class BinFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
             }
         }
         return name.toString();
+    }
+
+    /**
+     * if this range isn't computed by any data,put it(value is 0) to the map.so that it is displayed in result page.
+     */
+    @Override
+    public boolean finalizeComputation() {
+        if (parameters == null || parameters.getBins() == null) {
+            return super.finalizeComputation();
+        }
+        EList<RangeRestriction> ranges = parameters.getBins().getRanges();
+        for (RangeRestriction range : ranges) {
+            String rangeName = range.getName();
+            if (getMapForFreq().get(rangeName) == null) {
+                getMapForFreq().put(rangeName, 0l);
+            }
+        }
+        return super.finalizeComputation();
+    }
+
+    /**
+     * if it has bin parameters and the range name is null,set it by concating min/max values.
+     */
+    @Override
+    public boolean reset() {
+
+        if (parameters == null || parameters.getBins() == null) {
+            return super.reset();
+        }
+        EList<RangeRestriction> ranges = parameters.getBins().getRanges();
+        for (RangeRestriction range : ranges) {
+            if (range.getName() == null) {
+                double minRealValue = DomainHelper.getRealValue(range.getLowerValue());
+                double maxRealValue = DomainHelper.getRealValue(range.getUpperValue());
+                String rangeName = analyzedElement.getName() + PluginConstant.SPACE_STRING
+                        + SqlPredicate.GREATER_EQUAL.getLiteral() + PluginConstant.SPACE_STRING + minRealValue + " AND "
+                        + analyzedElement.getName() + PluginConstant.SPACE_STRING + SqlPredicate.LESS.getLiteral()
+                        + PluginConstant.SPACE_STRING + maxRealValue;
+                range.setName(rangeName);
+            }
+        }
+        return super.reset();
     }
 
 } // BinFrequencyIndicatorImpl

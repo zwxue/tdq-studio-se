@@ -55,6 +55,7 @@ public class BinFrequencyIndicatorImplTest {
         Domain domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", 2, 1, 9); //$NON-NLS-1$
         parameters.setBins(domain);
         binFreqIndicator.setParameters(parameters);
+        binFreqIndicator.reset();
         int i = 1;
         binFreqIndicator.handle(i);
         HashMap<Object, Long> valueToFreq = binFreqIndicator.getValueToFreq();
@@ -118,6 +119,7 @@ public class BinFrequencyIndicatorImplTest {
         Domain domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", 2, 1, 9); //$NON-NLS-1$
         parameters.setBins(domain);
         binFreqIndicator.setParameters(parameters);
+        binFreqIndicator.reset();
         int i = 1;
         String formatName = binFreqIndicator.getFormatName(i);
         assertEquals(formatName, "id >= 1.0 AND id < 5.0");

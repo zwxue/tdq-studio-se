@@ -49,12 +49,12 @@ public class WeekFrequencyIndicatorImplTest {
         init();
         Date date = dFormat.parse("2012-01-04"); //$NON-NLS-1$
         weekFreqIndicator.handle(date);
-        Long value = weekFreqIndicator.getValueToFreq().get("2012011"); //$NON-NLS-1$
+        Long value = weekFreqIndicator.getValueToFreq().get("20120101"); //$NON-NLS-1$
         assertEquals(value.longValue(), 1l);
 
         date = dFormat.parse("2012-01-07"); //$NON-NLS-1$
         weekFreqIndicator.handle(date);
-        value = weekFreqIndicator.getValueToFreq().get("2012011"); //$NON-NLS-1$
+        value = weekFreqIndicator.getValueToFreq().get("20120101"); //$NON-NLS-1$
         assertEquals(value.longValue(), 2l);
 
     }
@@ -70,11 +70,11 @@ public class WeekFrequencyIndicatorImplTest {
         init();
         Date date = dFormat.parse("2012-01-04"); //$NON-NLS-1$
         String formatName = weekFreqIndicator.getFormatName(date);
-        assertEquals(formatName, "2012011"); //$NON-NLS-1$
+        assertEquals(formatName, "20120101"); //$NON-NLS-1$
 
         date = dFormat.parse("2011-01-04"); //$NON-NLS-1$
         formatName = weekFreqIndicator.getFormatName(date);
-        assertEquals(formatName, "2011012"); //$NON-NLS-1$
+        assertEquals(formatName, "20110102"); //$NON-NLS-1$
 
         date = dFormat.parse("1987-11-13"); //$NON-NLS-1$
         formatName = weekFreqIndicator.getFormatName(date);

@@ -91,7 +91,11 @@ public class WeekFrequencyIndicatorImpl extends FrequencyIndicatorImpl implement
     @Override
     protected String getFormatName(Object data) {
         Date date = (Date) data;
-        return DateFormatUtils.format(date, datePattern + getWeekOfYear(date));
+        int weekOfYear = getWeekOfYear(date);
+        if (weekOfYear < 10) {
+            return DateFormatUtils.format(date, datePattern + "0" + weekOfYear);
+        }
+        return DateFormatUtils.format(date, datePattern + weekOfYear);
     }
 
     /**
