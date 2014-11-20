@@ -219,13 +219,13 @@ public class DataSampleTable {
         for (Object[] row : listOfData) {
             int grpSize = getGroupSize(row);
             if (grpSize == 0) {
-                return;
+                continue;
             }
             String groupId = (String) row[additionalColumnPosition.GIDindex];
-            String[] gids = StringUtils.splitByWholeSeparatorPreserveAllTokens(groupId, PluginConstant.COMMA_STRING);
-            for (String gid : gids) {
-                this.rowOfGIDWithColor.put(gid, grpSize);
-            }
+            // String[] gids = StringUtils.splitByWholeSeparatorPreserveAllTokens(groupId, PluginConstant.COMMA_STRING);
+            // for (String gid : gids) {
+            // this.rowOfGIDWithColor.put(gid, grpSize);
+            // }
             this.rowOfGIDWithColor.put(groupId, grpSize);
         }
 
@@ -563,8 +563,7 @@ public class DataSampleTable {
                 // line is master.
                 Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
                 Boolean isMaster = Boolean.parseBoolean(rowObject[masterColumn].toString());
-                if (isMaster && !MatchRuleAnlaysisUtils.isSameGroup(previousGID, currentGID)
-                        && isEqualGroupSize(previousGID, currentGID)) {
+                if (isMaster && !StringUtils.equals(previousGID, currentGID) && isEqualGroupSize(previousGID, currentGID)) {
                     gc.setLineWidth(gc.getLineWidth() * 2);
                     gc.setLineStyle(SWT.LINE_DOT);
                     gc.setForeground(GUIHelper.COLOR_BLUE);
