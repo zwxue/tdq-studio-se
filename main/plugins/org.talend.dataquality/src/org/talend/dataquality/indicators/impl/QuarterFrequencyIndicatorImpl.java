@@ -21,7 +21,7 @@ import org.talend.dataquality.indicators.QuarterFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class QuarterFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements QuarterFrequencyIndicator {
@@ -30,6 +30,7 @@ public class QuarterFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected QuarterFrequencyIndicatorImpl() {
@@ -38,6 +39,7 @@ public class QuarterFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -73,8 +75,11 @@ public class QuarterFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
         if (data instanceof Date) {
             // add the quater pattern for each data.
             String monthStr = DateFormatUtils.format((Date) data, monthSign);
-            int month = Integer.parseInt(monthStr) / 4 + 1;
-            String format = DateFormatUtils.format((Date) data, datePattern + month);
+            int month = Integer.parseInt(monthStr);
+            int quotient = month / 3;
+            int remainder = month % 3;
+            int quarter = remainder == 0 ? quotient : quotient + 1;
+            String format = DateFormatUtils.format((Date) data, datePattern + quarter);
             return super.handle(format);
         }
         return super.handle(data);
