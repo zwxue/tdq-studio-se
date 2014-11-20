@@ -180,8 +180,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 }
                 handleObjects(objectLs, resultSet);
             }
-        } catch (Exception exc) {
-            log.error(exc, exc);
         } finally {
             if (resultSet != null) {
                 resultSet.close();

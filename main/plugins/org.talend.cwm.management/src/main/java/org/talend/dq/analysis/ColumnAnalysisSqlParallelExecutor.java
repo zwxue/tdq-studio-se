@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -29,6 +30,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC xqliu class global comment. Detailled comment
  */
 public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor {
+
+    private static Logger log = Logger.getLogger(ColumnAnalysisSqlParallelExecutor.class);
 
     protected Connection connection;
 
@@ -103,6 +106,7 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
                     return Boolean.FALSE;
                 }
             } catch (SQLException e) {
+                log.error(e, e);
                 traceError(getErrorMessageForQuery(query));
                 return Boolean.FALSE;
             }
