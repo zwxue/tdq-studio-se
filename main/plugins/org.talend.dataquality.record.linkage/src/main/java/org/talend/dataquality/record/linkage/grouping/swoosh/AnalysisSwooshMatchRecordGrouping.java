@@ -13,20 +13,24 @@
 package org.talend.dataquality.record.linkage.grouping.swoosh;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.matchmerge.Attribute;
-import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.grouping.AnalysisMatchRecordGrouping;
+import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
 import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
-import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 
 /**
  * created by yyin on 2014-9-15 Detailled comment
  * 
  */
 public class AnalysisSwooshMatchRecordGrouping extends AnalysisMatchRecordGrouping {
+
+    private Map<Integer, Attribute> attributesAsMatchKey;
 
     /**
      * DOC yyin AnalysisSwooshMatchRecordGrouping constructor comment.
@@ -41,6 +45,24 @@ public class AnalysisSwooshMatchRecordGrouping extends AnalysisMatchRecordGroupi
     public void setSurvivorShipAlgorithmParams(SurvivorShipAlgorithmParams survivorShipAlgorithmParams) {
         super.setSurvivorShipAlgorithmParams(survivorShipAlgorithmParams);
         swooshGrouping.initialMFBForOneRecord(getCombinedRecordMatcher(), survivorShipAlgorithmParams);
+    }
+
+    @Override
+    public void initialize() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        super.initialize();
+        // get the match keys attributes, and put them in the map, no need to do this again for each record
+        attributesAsMatchKey = new HashMap<Integer, Attribute>();
+        for (List<Map<String, String>> matchRule : getMultiMatchRules()) {
+            for (Map<String, String> mkDef : matchRule) {
+                String matcherType = mkDef.get(IRecordGrouping.MATCHING_TYPE);
+                if (AttributeMatcherType.DUMMY.name().equals(matcherType)) {
+                    continue;
+                }
+                int columnIndex = Integer.parseInt(mkDef.get(IRecordGrouping.COLUMN_IDX));
+                Attribute attribute = new Attribute(mkDef.get(IRecordGrouping.ATTRIBUTE_NAME), columnIndex);
+                attributesAsMatchKey.put(columnIndex, attribute);
+            }
+        }
     }
 
     @Override
@@ -64,15 +86,10 @@ public class AnalysisSwooshMatchRecordGrouping extends AnalysisMatchRecordGroupi
             DQAttribute<String> attri = new DQAttribute<String>(attribute.getLabel(), attribute.getColumnIndex(),
                     attribute.getValue());
             rowList.add(attri);
-        }
-        // clear the current attributes to only contain match keys
-        IRecordMatcher recordMatcher = this.getCombinedRecordMatcher().getMatchers().get(0);
-        for (IAttributeMatcher matcher : recordMatcher.getAttributeMatchers()) {
-            for (Attribute attribute : currentRecord.getAttributes()) {
-                if (StringUtils.equalsIgnoreCase(attribute.getLabel(), matcher.getAttributeName())) {
-                    matchAttrs.add(attribute);
-                    break;
-                }
+            // if the current attribute is definde as a match key.
+            Attribute matchkey = attributesAsMatchKey.get(attribute.getColumnIndex());
+            if (matchkey != null && StringUtils.equalsIgnoreCase(matchkey.getLabel(), attri.getLabel())) {
+                matchAttrs.add(attri);
             }
         }
         currentRecord.getAttributes().clear();
