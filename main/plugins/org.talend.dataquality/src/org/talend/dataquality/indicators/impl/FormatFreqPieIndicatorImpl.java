@@ -5,9 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -497,13 +494,11 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDBNames(java.lang.Object)
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDBName(java.lang.Object)
      */
     @Override
-    protected List<String> getDBNames(Object name) {
-        List<String> dbNames = new ArrayList<String>();
-        dbNames.add(this.getCurrentKey());
-        return dbNames;
+    protected String getDBName(Object name) {
+        return this.getCurrentKey();
     }
 
 } // FormatFreqPieIndicatorImpl

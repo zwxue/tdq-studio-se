@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
@@ -200,6 +201,28 @@ public class DrillDownUtils {
     }
 
     /**
+     * get whether the MenuItem is Enable.
+     * 
+     * @param dataEntity
+     * @param itemEntity
+     * @param analysis
+     * @return
+     */
+    public static boolean isMenuItemEnable(ChartDataEntity dataEntity, MenuItemEntity itemEntity, Analysis analysis) {
+        try {
+            ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
+            if (ExecutionLanguage.JAVA == currentEngine) {
+                int mapSize = DrillDownUtils.getMapDB(dataEntity, analysis, itemEntity).size();
+                return mapSize > 0;
+            } else {
+                return true;
+            }
+        } catch (IOError e) {
+            return false;
+        }
+    }
+
+    /**
      * DOC msjian Comment method "createDrillDownMenu".
      * 
      * @param dataEntity
@@ -213,12 +236,7 @@ public class DrillDownUtils {
             MenuItem item = new MenuItem(menu, SWT.PUSH);
             item.setText(itemEntity.getLabel());
             item.setImage(itemEntity.getIcon());
-            try {
-                int mapSize = DrillDownUtils.getMapDB(dataEntity, analysis, itemEntity).size();
-                item.setEnabled(mapSize > 0);
-            } catch (IOError e) {
-                item.setEnabled(false);
-            }
+            item.setEnabled(isMenuItemEnable(dataEntity, itemEntity, analysis));
             item.addSelectionListener(new SelectionAdapter() {
 
                 @Override

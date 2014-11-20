@@ -6,6 +6,7 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
@@ -47,7 +48,7 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
      * </ul>
      */
     private void handleSpecialCharacterAndMissingValues() {
-        if (isChecked && this.getMapForFreq().size() < 1) {
+        if (isChecked && this.valueToFreq.size() < 1) {
             return;
         }
 
@@ -55,10 +56,10 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         long counted = 0L;
         List<Object> invalid = new ArrayList<Object>();
         List<Object> lengthMore = new ArrayList<Object>();
-        for (Object val : this.getMapForFreq().keySet()) {
+        for (Object val : this.valueToFreq.keySet()) {
             if (isInvalid(val) < 0) {
                 invalid.add(val);
-                Long freq = this.getMapForFreq().get(val);
+                Long freq = this.valueToFreq.get(val);
                 counted = (freq == null) ? counted : counted + freq;
             } else if (String.valueOf(val).length() > 1) { // check the length, should only = 1, if >1, cut it
                 lengthMore.add(val);
@@ -68,26 +69,26 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         // combine all invalid into one <"invalid",counted>
         if (invalid.size() > 0) {
             for (Object val : invalid) {
-                this.getMapForFreq().remove(val);
+                this.valueToFreq.remove(val);
             }
-            this.getMapForFreq().put(INVALID, counted);
+            this.valueToFreq.put(INVALID, counted);
         }
 
         // check the length, should only = 1, if >1, cut it
         if (lengthMore.size() > 0) {
             for (Object val : lengthMore) {
                 String k = String.valueOf(val).substring(0, 1);
-                Long freq = this.getMapForFreq().get(val);
-                this.getMapForFreq().remove(val);
-                this.getMapForFreq().put(k, freq);
+                Long freq = this.valueToFreq.get(val);
+                this.valueToFreq.remove(val);
+                this.valueToFreq.put(k, freq);
             }
         }
 
         // check from 1~9, if miss, add it as <number, 0L>
         for (int i = 1; i < 10; i++) {
-            Long value = this.getMapForFreq().get(String.valueOf(i));
+            Long value = this.valueToFreq.get(String.valueOf(i));
             if (value == null) {
-                this.getMapForFreq().put(String.valueOf(i), 0L);
+                this.valueToFreq.put(String.valueOf(i), 0L);
             }
         }
 
@@ -156,12 +157,12 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
 
     private void setValue(String key) {
         // increment frequency of leading digit in data
-        Long c = this.getMapForFreq().get(key);
+        Long c = this.valueToFreq.get(key);
         if (c == null) {
-            this.getMapForFreq().put(key, 1L);
+            this.valueToFreq.put(key, 1L);
         } else {
             c++;
-            this.getMapForFreq().put(key, c);
+            this.valueToFreq.put(key, c);
         }
     }
 
@@ -201,7 +202,7 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         boolean ok = super.reset();
         // initialize map with expected digits 1..9
         for (int i = 1; i <= 9; i++) {
-            valueToFreq.put(String.valueOf(i), 0L);
+            this.valueToFreq.put(String.valueOf(i), 0L);
         }
         return ok;
     }
@@ -209,11 +210,26 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#isUsedMapDBMode()
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#finalizeComputation()
      */
     @Override
-    public boolean isUsedMapDBMode() {
-        return false;
+    public boolean finalizeComputation() {
+        HashMap<Object, Long> map = new HashMap<Object, Long>();
+        for (int i = 0; i < 10; i++) {
+            Long value = this.valueToFreq.get(String.valueOf(i));
+            if (value == null) {
+                continue;
+            } else {
+                map.put(String.valueOf(i), value);
+            }
+        }
+        Long value = this.valueToFreq.get(INVALID);
+        if (value != null) {
+            map.put(INVALID, value);
+        }
+        this.valueToFreq.clear();
+        this.setValueToFreq(map);
+        return true;
     }
 
 } // BenfordLawFrequencyIndicatorImpl

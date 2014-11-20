@@ -775,7 +775,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             if (!drillDownMap.isEmpty()) {
                 drillDownMap.clear();
             }
-            drillDownRowCount = 0l;
+            resetDrillDownRowCount();
         }
     }
 

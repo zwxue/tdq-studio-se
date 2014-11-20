@@ -19,9 +19,9 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.PluginConstant;
-import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
@@ -162,8 +162,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             }
             // no break
         case MONTH:
-            clause = concatWhereClause(clause,
-                    dbmsLanguage.extractMonth(this.columnName) + dbmsLanguage.equal() + getMonthCharacters(dateGrain, entity.getLabel()));
+            clause = concatWhereClause(clause, dbmsLanguage.extractMonth(this.columnName) + dbmsLanguage.equal()
+                    + getMonthCharacters(dateGrain, entity.getLabel()));
             // no break
         case QUARTER:
             if (clause.length() == 0) { // need quarter to identify the row
@@ -172,8 +172,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             }
             // no break
         case YEAR:
-            clause = concatWhereClause(clause,
-                    dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.equal() + getYearCharacters(entity.getLabel()));
+            clause = concatWhereClause(clause, dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.equal()
+                    + getYearCharacters(entity.getLabel()));
             break;
         case NONE:
         default:
@@ -192,13 +192,14 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
     private String createWhereClause(RangeRestriction rangeRestriction) {
         double max = Double.valueOf(DomainHelper.getMaxValue(rangeRestriction));
         double min = Double.valueOf(DomainHelper.getMinValue(rangeRestriction));
-        String whereClause = columnName + dbmsLanguage.greaterOrEqual() + min + dbmsLanguage.and() + columnName + dbmsLanguage.less() + max;
+        String whereClause = columnName + dbmsLanguage.greaterOrEqual() + min + dbmsLanguage.and() + columnName
+                + dbmsLanguage.less() + max;
         return whereClause;
     }
 
     private String getDefaultQuotedStatement(String quote) {
-        return entity.isLabelNull() ? dbmsLanguage.quote(this.columnName) + dbmsLanguage.isNull() : dbmsLanguage.quote(this.columnName)
-                + dbmsLanguage.equal() + quote + entity.getLabel() + quote;
+        return entity.isLabelNull() ? dbmsLanguage.quote(this.columnName) + dbmsLanguage.isNull() : dbmsLanguage
+                .quote(this.columnName) + dbmsLanguage.equal() + quote + entity.getLabel() + quote;
     }
 
     /**
@@ -287,8 +288,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
-        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
-        map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getFreqRowsStatement() : null);
+        boolean isJavaEngine = AnalysisHelper.isJavaExecutionEngine(this.analysis);
+        map.put(MENU_VIEW_ROWS, !isJavaEngine ? getComment(MENU_VIEW_ROWS) + getFreqRowsStatement() : null);
 
         return map;
     }

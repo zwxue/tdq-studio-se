@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.event.MouseEvent;
-import java.io.IOError;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -289,12 +288,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
                             item.setImage(itemEntity.getIcon());
-                            try {
-                                int mapSize = DrillDownUtils.getMapDB(currentDataEntity, analysis, itemEntity).size();
-                                item.setEnabled(mapSize > 0);
-                            } catch (IOError e) {
-                                item.setEnabled(false);
-                            }
+                            item.setEnabled(DrillDownUtils.isMenuItemEnable(currentDataEntity, itemEntity, analysis));
                             item.addSelectionListener(new SelectionAdapter() {
 
                                 @Override

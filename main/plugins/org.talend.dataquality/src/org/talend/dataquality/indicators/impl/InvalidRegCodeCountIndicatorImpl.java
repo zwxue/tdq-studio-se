@@ -229,7 +229,9 @@ public class InvalidRegCodeCountIndicatorImpl extends IndicatorImpl implements I
      */
     @Override
     public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
-        super.handleDrillDownData(masterObject, inputRowList);
+        if (this.checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
         // store drill dwon data for view values
         if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
             if (!drillDownValuesSet.contains(masterObject)) {
