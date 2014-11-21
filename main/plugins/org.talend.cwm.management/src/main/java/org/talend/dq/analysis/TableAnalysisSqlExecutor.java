@@ -387,7 +387,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 String whereExpression = ((WhereRule) rule.getIndicatorDefinition()).getWhereExpression();
                 String queryWithWhere = query.getBody();
                 if (StringUtils.isNotBlank(whereExpression)) {
-                    queryWithWhere = query.getBody() + dbms().where() + surroundWith('(', whereExpression, ')');
+                    queryWithWhere = addwhereExpression(query.getBody(), surroundWith('(', whereExpression, ')'));
                 }
 
                 List<Object[]> myResultSet = executeQuery(catalogName, connection, queryWithWhere);
@@ -406,6 +406,22 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
         rule.setComputed(true);
         return Boolean.TRUE;
+    }
+
+    /**
+     * check if the body already contains where, if contains --> add "and" + subClause ; else --> add "where" +
+     * subClause
+     * 
+     * @param body
+     * @param subClause
+     * @return
+     */
+    private String addwhereExpression(String body, String subClause) {
+        if (body.contains(dbms().where())) {
+            return body + dbms().and() + subClause;
+        } else {
+            return body + dbms().where() + subClause;
+        }
     }
 
     /**
