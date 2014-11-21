@@ -52,7 +52,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenera
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
@@ -268,19 +267,12 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
                         if (!analysis.getParameters().isStoreData()) {
                             return;
                         }
-                        if (0 == analysis.getResults().getIndicToRowMap().size()) {
-                            return;
-                        }
                         // ~22524
                         // create menu
                         Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
                         chartComp.setMenu(menu);
 
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
-                        AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(currentIndicator);
-                        if (analyDataSet == null || analyDataSet.getData() == null || analyDataSet.getData().size() == 0) {
-                            return;
-                        }
 
                         int createPatternFlag = 0;
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
