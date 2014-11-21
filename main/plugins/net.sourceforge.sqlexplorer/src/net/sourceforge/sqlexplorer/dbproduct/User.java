@@ -33,7 +33,6 @@ import org.talend.core.ITDQRepositoryService;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.utils.sql.ConnectionUtils;
 
 /**
  * Represents a username and password combo used to connect to an alias; contains a list of all connections made
@@ -494,7 +493,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
      * @throws ExplorerException
      * @throws SQLException
      */
-    protected SQLConnection createNewConnection() throws SQLException {
+    protected synchronized SQLConnection createNewConnection() throws SQLException {
         SQLConnection connection = null;
         // if it is hive connection, should call tdqRepService.createHiveConnection() to create the connection, because
         // need use DynamicClassLoader to deal with it
