@@ -239,6 +239,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
      * Callback when a session cannot be established; notifies all listeners and then clears down the list on the basis
      * that it was a terminal login error
      */
+    @Override
     public synchronized void cannotEstablishSession(User user) {
         for (SessionEstablishedListener listener : newSessionsQueue) {
             listener.cannotEstablishSession(this);
@@ -250,6 +251,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
      * Callback when a session has been established; notifies the next listener in the queue and then starts to
      * establish a new session
      */
+    @Override
     public synchronized void sessionEstablished(Session session) {
         SessionEstablishedListener listener = newSessionsQueue.removeFirst();
         listener.sessionEstablished(session);
@@ -504,7 +506,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
      * @throws ExplorerException
      * @throws SQLException
      */
-    protected SQLConnection createNewConnection() throws SQLException {
+    protected synchronized SQLConnection createNewConnection() throws SQLException {
         SQLConnection connection = null;
         // if it is hive connection, should call tdqRepService.createHiveConnection() to create the connection, because
         // need use DynamicClassLoader to deal with it
@@ -587,6 +589,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
         this.commitOnClose = commitOnClose;
     }
 
+    @Override
     public int compareTo(User that) {
         return userName.compareToIgnoreCase(that.getUserName());
     }
