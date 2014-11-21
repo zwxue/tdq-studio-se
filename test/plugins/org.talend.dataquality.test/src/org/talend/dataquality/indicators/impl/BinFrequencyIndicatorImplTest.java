@@ -113,7 +113,7 @@ public class BinFrequencyIndicatorImplTest {
      * domain parameter is set in this case.
      */
     @Test
-    public void testGetFormatName_1() {
+    public void testGetGroupLabel_1() {
         init();
         IndicatorParameters parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         Domain domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", 2, 1, 9); //$NON-NLS-1$
@@ -121,15 +121,15 @@ public class BinFrequencyIndicatorImplTest {
         binFreqIndicator.setParameters(parameters);
         binFreqIndicator.reset();
         int i = 1;
-        String formatName = binFreqIndicator.getFormatName(i);
+        String formatName = binFreqIndicator.getGroupLabel(i);
         assertEquals(formatName, "id >= 1.0 AND id < 5.0");
 
         i = 6;
-        formatName = binFreqIndicator.getFormatName(i);
+        formatName = binFreqIndicator.getGroupLabel(i);
         assertEquals(formatName, "id >= 5.0 AND id < 9.0");
 
         i = 12;
-        formatName = binFreqIndicator.getFormatName(i);
+        formatName = binFreqIndicator.getGroupLabel(i);
         assertNull(formatName);
 
     }
@@ -140,17 +140,17 @@ public class BinFrequencyIndicatorImplTest {
      * {@link org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl#getFormatName(java.lang.Object)}.
      * the domain parameter isn't set in this case.
      */
-    public void testGetFormatName_2() {
+    public void testGetGroupLabel_2() {
         init();
         int i = 1;
-        String formatName = binFreqIndicator.getFormatName(i);
+        String formatName = binFreqIndicator.getGroupLabel(i);
         assertEquals(formatName, "1");
 
         i = 2;
-        formatName = binFreqIndicator.getFormatName(i);
+        formatName = binFreqIndicator.getGroupLabel(i);
         assertEquals(formatName, "2");
 
-        formatName = binFreqIndicator.getFormatName(null);
+        formatName = binFreqIndicator.getGroupLabel(null);
         assertNull(formatName);
 
     }
