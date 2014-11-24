@@ -107,6 +107,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
             public void widgetSelected(SelectionEvent e) {
                 handleVSRButtonSelection();
             }
+
         });
         section.setClient(mainComp);
 
@@ -136,9 +137,6 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         notifyOtherSections();
         algorithmName = RecordMatcherType.T_SwooshAlgorithm.name();
         matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
-        if (!isShowBlockingKeySection(isVSRMode)) {
-            blockKeySection.removeAllBlockingKey();
-        }
         listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.simpleVSRMatcher.name(),
                 RecordMatcherType.T_SwooshAlgorithm.name());
     }
@@ -157,6 +155,8 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * DOC zhao Comment method "removeAllSurvivorship".
+     * 
+     * @param redrawn whether needed redrawn the section after remove All of survivorship
      */
     protected void removeAllSurvivorship() {
         matchAndSurvivorKeySection.removeAllSurvivorship();
