@@ -32,6 +32,8 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IServiceLocator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -51,6 +53,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
+import org.talend.dq.CWMPlugin;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -87,30 +90,36 @@ public class SqlExplorerUtils {
 
     public ISqlexplorerService getSqlexplorerService() {
         if (this.sqlexplorerService == null) {
-            // check the jar file has been donwloaded or not
-            String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-            File movedfile = new File(pathToStore, JAR_FILE_NAME);
-            if (movedfile.exists()) {
-                log.warn(Messages.getString("SqlExplorerUtils.restartToLoadSqlexplorer")); //$NON-NLS-1$
-            } else if (!hasShowDownloadWizard) {
-                // show download jar dialog
-                IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-                ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
-                try {
-                    Command command = commandService.getCommand(COMMAND_ID);
-                    command.executeWithChecks(new ExecutionEvent());
-                    hasShowDownloadWizard = true;
-                } catch (ExecutionException e) {
-                    log.error(e);
-                } catch (NotDefinedException e) {
-                    log.error(e);
-                } catch (NotEnabledException e) {
-                    log.error(e);
-                } catch (NotHandledException e) {
-                    log.error(e);
+            BundleContext context = CWMPlugin.getDefault().getContext();
+            if (context != null) {
+                ServiceReference serviceReference = context.getServiceReference(ISqlexplorerService.class.getName());
+                if (serviceReference == null) {
+                    // check the jar file has been donwloaded or not
+                    String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
+                    File movedfile = new File(pathToStore, JAR_FILE_NAME);
+                    if (movedfile.exists()) {
+                        log.warn(Messages.getString("SqlExplorerUtils.restartToLoadSqlexplorer")); //$NON-NLS-1$
+                    } else if (!hasShowDownloadWizard) {
+                        // show download jar dialog
+                        IServiceLocator serviceLocator = PlatformUI.getWorkbench();
+                        ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
+                        try {
+                            Command command = commandService.getCommand(COMMAND_ID);
+                            command.executeWithChecks(new ExecutionEvent());
+                            hasShowDownloadWizard = true;
+                        } catch (ExecutionException e) {
+                            log.error(e);
+                        } catch (NotDefinedException e) {
+                            log.error(e);
+                        } catch (NotEnabledException e) {
+                            log.error(e);
+                        } catch (NotHandledException e) {
+                            log.error(e);
+                        }
+                    } else {
+                        log.error(Messages.getString("SqlExplorerUtils.missingSqlexplorer")); //$NON-NLS-1$
+                    }
                 }
-            } else {
-                log.error(Messages.getString("SqlExplorerUtils.missingSqlexplorer")); //$NON-NLS-1$
             }
         } else {
             if (!this.initRootProject) {
