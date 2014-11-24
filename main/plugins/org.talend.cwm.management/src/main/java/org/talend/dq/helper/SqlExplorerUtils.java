@@ -85,6 +85,10 @@ public class SqlExplorerUtils {
 
     private boolean hasShowDownloadWizard = false;
 
+    public boolean isSqlexplorerInstalled() {
+        return this.sqlexplorerService != null;
+    }
+
     public ISqlexplorerService getSqlexplorerService() {
         if (this.sqlexplorerService == null) {
             // check the jar file has been donwloaded or not
