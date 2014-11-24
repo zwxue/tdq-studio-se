@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.utils.ProductVersion;
 
@@ -131,4 +135,16 @@ public class IngresDbmsLanguage extends DbmsLanguage {
     public String getCatalogNameFromContext(DatabaseConnection dbConn) {
         return null;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
+     */
+    @Override
+    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
+        Statement statement = connection.createStatement();
+        return statement;
+    }
+
 }
