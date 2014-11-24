@@ -174,13 +174,13 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
     // when switch to t_swoosh, call this method, to recompute the input
     public void initTableInput(boolean isClearSurvivor) {
-        List<MatchKeyAndSurvivorDefinition> keyList = new ArrayList<MatchKeyAndSurvivorDefinition>();
+        List<MatchKeyAndSurvivorDefinition> generatedSurvivorKeyList = new ArrayList<MatchKeyAndSurvivorDefinition>();
         EList<MatchRule> matchRules = matchRuleDef.getMatchRules();
         if (!matchRules.isEmpty()) {
-            keyList = getKeyList(matchRules.get(0), isClearSurvivor);
+            generatedSurvivorKeyList = generateSurvivorKeyByMatchKey(matchRules.get(0), isClearSurvivor);
             matchAndSurvivorKeyList = matchRuleWithSurvMap.get(matchRules.get(0));
         }
-        tableComposite.setInput(keyList);
+        tableComposite.setInput(generatedSurvivorKeyList);
         if (!matchRules.isEmpty()) {
             tableComposite.setMatchIntervalText(String.valueOf(matchRules.get(0).getMatchInterval()));
         }

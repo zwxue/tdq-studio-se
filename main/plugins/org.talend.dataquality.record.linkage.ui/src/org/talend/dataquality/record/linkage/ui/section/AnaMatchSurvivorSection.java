@@ -100,11 +100,11 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
      */
     @Override
     protected void setInput(MatchRule matchRule, AbsMatchAnalysisTableComposite<?> matchRuleComposite) {
-        List<MatchKeyAndSurvivorDefinition> keyList = getKeyList(matchRule, Boolean.FALSE);
-        ((MatchKeyAndSurvivorTableComposite) matchRuleComposite).setInput(keyList);
+        List<MatchKeyAndSurvivorDefinition> generatedSurvivorKeyList = generateSurvivorKeyByMatchKey(matchRule, Boolean.FALSE);
+        ((MatchKeyAndSurvivorTableComposite) matchRuleComposite).setInput(generatedSurvivorKeyList);
     }
 
-    protected List<MatchKeyAndSurvivorDefinition> getKeyList(MatchRule matchRule, boolean isClearSurvivor) {
+    protected List<MatchKeyAndSurvivorDefinition> generateSurvivorKeyByMatchKey(MatchRule matchRule, boolean isMustCreateSurvivor) {
 
         List<MatchKeyAndSurvivorDefinition> matchAndSurvivorKeyList = matchRuleWithSurvMap.get(matchRule);
         if (matchAndSurvivorKeyList == null) {
@@ -121,19 +121,19 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
                 if (StringUtils.equals(matchKey.getName(), definition.getMatchKey().getName())) {
                     // update the current match key
                     definition.setMatchKey(matchKey);
-                    updateSurvivorKey(isClearSurvivor, matchKey.getName(), definition);
+                    updateSurvivorKey(isMustCreateSurvivor, matchKey.getName(), definition);
                 } else {
                     // the position of the current match key moved, need to find its related mAndS key in list,
                     MatchKeyAndSurvivorDefinition oldDefinition = findPositionOfCurrentMatchkey(matchKey, matchAndSurvivorKeyList);
                     // if can't find, means that it is a new one
                     if (oldDefinition == null) {
-                        createMatchAndSurvivorKey(matchKey, isClearSurvivor, matchAndSurvivorKeyList);
+                        createMatchAndSurvivorKey(matchKey, isMustCreateSurvivor, matchAndSurvivorKeyList);
                     } else {
                         // delete the old definition in current list
                         matchAndSurvivorKeyList.remove(oldDefinition);
                         // set new match key to it
                         oldDefinition.setMatchKey(matchKey);
-                        updateSurvivorKey(isClearSurvivor, matchKey.getName(), oldDefinition);
+                        updateSurvivorKey(isMustCreateSurvivor, matchKey.getName(), oldDefinition);
                         // insert it in the new position
                         matchAndSurvivorKeyList.add(index, oldDefinition);
                     }
@@ -141,7 +141,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
             } else {
                 // need to create a MatchAndSurvivorKey
-                createMatchAndSurvivorKey(matchKey, isClearSurvivor, matchAndSurvivorKeyList);
+                createMatchAndSurvivorKey(matchKey, isMustCreateSurvivor, matchAndSurvivorKeyList);
             }
             index++;
         }
@@ -227,7 +227,6 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     public void removeAllSurvivorship() {
         matchRuleDef.getSurvivorshipKeys().clear();
-        redrawnSubTableContent();
     }
 
     /*
