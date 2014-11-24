@@ -113,7 +113,6 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
-import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -215,8 +214,7 @@ public class DQRespositoryView extends CommonNavigator {
             initWorkspace();
 
             // TDQ-9711 init all ManagedDrivers and alias.
-            ISqlexplorerService sqlexplorerService = SqlExplorerUtils.getDefault().getSqlexplorerService();
-            if (sqlexplorerService != null) {
+            if (SqlExplorerUtils.getDefault().isSqlexplorerInstalled()) {
                 SqlExplorerUtils.getDefault().initAllConnectionsToSQLExplorer();
             }
 
