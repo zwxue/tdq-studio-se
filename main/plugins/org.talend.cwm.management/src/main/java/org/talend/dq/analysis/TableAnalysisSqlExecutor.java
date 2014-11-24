@@ -75,6 +75,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     private DbmsLanguage dbmsLanguage;
 
+    private String stringDataFilter;
+
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
@@ -82,12 +84,12 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         assert results != null;
         try {
             // --- get data filter
-            String stringDataFilter = ContextHelper.getDataFilterWithoutContext(analysis);
+            stringDataFilter = ContextHelper.getDataFilterWithoutContext(analysis);
             // --- get all the leaf indicators used for the sql computation
             Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
-                if (!createSqlQuery(stringDataFilter, indicator)) {
+                if (!createSqlQuery(stringDataFilter, indicator, false)) {
                     log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName()); //$NON-NLS-1$
                     return null;
                 }
@@ -150,8 +152,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
     }
 
-    private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
-            AnalysisExecutionException {
+    private boolean createSqlQuery(String dataFilterAsString, Indicator indicator, boolean withWhereOfRule)
+            throws ParseException, AnalysisExecutionException {
         if (!isAnalyzedElementValid(indicator)) {
             return Boolean.FALSE;
         }
@@ -171,8 +173,9 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
-            // whereExpressionDQRule.add(wr.getWhereExpression());
-
+            if (withWhereOfRule) {
+                whereExpressionDQRule.add(wr.getWhereExpression());
+            }
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
             if (!isJoinConditionEmpty(indicator)) {
@@ -384,13 +387,9 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 }
 
                 // add the where condition to the query, and execute it
-                String whereExpression = ((WhereRule) rule.getIndicatorDefinition()).getWhereExpression();
-                String queryWithWhere = query.getBody();
-                if (StringUtils.isNotBlank(whereExpression)) {
-                    queryWithWhere = addwhereExpression(query.getBody(), surroundWith('(', whereExpression, ')'));
-                }
-
-                List<Object[]> myResultSet = executeQuery(catalogName, connection, queryWithWhere);
+                createSqlQuery(stringDataFilter, rule, true);
+                query = dbms().getInstantiatedExpression(rule);
+                List<Object[]> myResultSet = executeQuery(catalogName, connection, query.getBody());
                 // give result to indicator so that it handles the results
                 Boolean isExecSuccess = rule.storeSqlResults(myResultSet);
                 if (!isExecSuccess) {
@@ -406,22 +405,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
         rule.setComputed(true);
         return Boolean.TRUE;
-    }
-
-    /**
-     * check if the body already contains where, if contains --> add "and" + subClause ; else --> add "where" +
-     * subClause
-     * 
-     * @param body
-     * @param subClause
-     * @return
-     */
-    private String addwhereExpression(String body, String subClause) {
-        if (body.contains(dbms().where())) {
-            return body + dbms().and() + subClause;
-        } else {
-            return body + dbms().where() + subClause;
-        }
     }
 
     /**
