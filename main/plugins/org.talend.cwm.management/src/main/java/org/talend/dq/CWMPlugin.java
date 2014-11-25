@@ -19,7 +19,6 @@ import org.osgi.framework.BundleContext;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -39,7 +38,7 @@ public class CWMPlugin extends Plugin {
      * 
      * @return the context
      */
-    public BundleContext getContext() {
+    public BundleContext getBundleContext() {
         return this.bundleContext;
     }
 
@@ -122,13 +121,5 @@ public class CWMPlugin extends Plugin {
     public String getLibrariesPath() {
         String installLocation = LibrariesManagerUtils.getLibrariesPath(ECodeLanguage.JAVA);
         return installLocation;
-    }
-
-    public void bind(ISqlexplorerService service) {
-        SqlExplorerUtils.getDefault().setSqlexplorerService(service);
-    }
-
-    public void unbind(ISqlexplorerService service) {
-        SqlExplorerUtils.getDefault().setSqlexplorerService(null);
     }
 }

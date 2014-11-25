@@ -22,10 +22,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -88,46 +84,66 @@ public class SqlExplorerUtils {
 
     private boolean hasShowDownloadWizard = false;
 
+    public boolean isSqlexplorerInstalled() {
+        initSqlExplorerService(false);
+        return this.sqlexplorerService != null;
+    }
+
     public ISqlexplorerService getSqlexplorerService() {
         if (this.sqlexplorerService == null) {
-            BundleContext context = CWMPlugin.getDefault().getContext();
-            if (context != null) {
-                ServiceReference serviceReference = context.getServiceReference(ISqlexplorerService.class.getName());
-                if (serviceReference == null) {
-                    // check the jar file has been donwloaded or not
-                    String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-                    File movedfile = new File(pathToStore, JAR_FILE_NAME);
-                    if (movedfile.exists()) {
-                        log.warn(Messages.getString("SqlExplorerUtils.restartToLoadSqlexplorer")); //$NON-NLS-1$
-                    } else if (!hasShowDownloadWizard) {
-                        // show download jar dialog
-                        IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-                        ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
-                        try {
-                            Command command = commandService.getCommand(COMMAND_ID);
-                            command.executeWithChecks(new ExecutionEvent());
-                            hasShowDownloadWizard = true;
-                        } catch (ExecutionException e) {
-                            log.error(e);
-                        } catch (NotDefinedException e) {
-                            log.error(e);
-                        } catch (NotEnabledException e) {
-                            log.error(e);
-                        } catch (NotHandledException e) {
-                            log.error(e);
-                        }
-                    } else {
-                        log.error(Messages.getString("SqlExplorerUtils.missingSqlexplorer")); //$NON-NLS-1$
-                    }
-                }
-            }
-        } else {
-            if (!this.initRootProject) {
-                this.sqlexplorerService.initSqlExplorerRootProject(ReponsitoryContextBridge.getRootProject());
-                this.initRootProject = true;
-            }
+            initSqlExplorerService(true);
         }
         return this.sqlexplorerService;
+    }
+
+    /**
+     * 
+     * init the sqlexplorerService.
+     * 
+     * @param isNeedDownload. if the service is not found, "isNeedDownload" will pop the downlaoding dialog.
+     * 
+     */
+    private void initSqlExplorerService(boolean isNeedDownload) {
+
+        if (this.sqlexplorerService == null) {
+            BundleContext context = CWMPlugin.getDefault().getBundleContext();
+            if (context == null) {
+                return;
+            }
+
+            ServiceReference serviceReference = context.getServiceReference(ISqlexplorerService.class.getName());
+            if (serviceReference != null) {
+                Object obj = context.getService(serviceReference);
+                if (obj != null) {
+                    this.sqlexplorerService = (ISqlexplorerService) obj;
+                }
+            } else if (isNeedDownload) {
+                // check the jar file has been donwloaded or not
+                String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
+                File movedfile = new File(pathToStore, JAR_FILE_NAME);
+                if (movedfile.exists()) {
+                    log.warn(Messages.getString("SqlExplorerUtils.restartToLoadSqlexplorer")); //$NON-NLS-1$
+                } else if (!hasShowDownloadWizard) {
+                    // show download jar dialog
+                    IServiceLocator serviceLocator = PlatformUI.getWorkbench();
+                    ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
+                    try {
+                        Command command = commandService.getCommand(COMMAND_ID);
+                        command.executeWithChecks(new ExecutionEvent());
+                        hasShowDownloadWizard = true;
+                    } catch (Exception e) {
+                        log.error(e);
+                    }
+                } else {
+                    log.error(Messages.getString("SqlExplorerUtils.missingSqlexplorer")); //$NON-NLS-1$
+                }
+            }
+        }
+
+        if (!this.initRootProject && sqlexplorerService != null) {
+            this.sqlexplorerService.initSqlExplorerRootProject(ReponsitoryContextBridge.getRootProject());
+            this.initRootProject = true;
+        }
     }
 
     public void setSqlexplorerService(ISqlexplorerService sqlexplorerService) {
@@ -205,8 +221,8 @@ public class SqlExplorerUtils {
             log.error(e, e);
         }
         if (!conns.isEmpty()) {
-            if (getSqlexplorerService() != null) {
-                getSqlexplorerService().initAllConnectionsToSQLExplorer(conns);
+            if (this.sqlexplorerService != null) {
+                sqlexplorerService.initAllConnectionsToSQLExplorer(conns);
             }
         }
         initAllDrivers = true;
