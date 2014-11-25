@@ -86,6 +86,7 @@ public class SqlExplorerUtils {
     private boolean hasShowDownloadWizard = false;
 
     public boolean isSqlexplorerInstalled() {
+        initSqlExplorerService(false);
         return this.sqlexplorerService != null;
     }
 
