@@ -32,6 +32,7 @@ import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
@@ -241,8 +242,10 @@ public class DrillDownUtils {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    CorePlugin.getDefault().openEditor(new DrillDownEditorInput(analysis, dataEntity, itemEntity),
-                            DRILL_DOWN_EDITOR);
+                    if (SqlExplorerUtils.getDefault().getSqlexplorerService() != null) {
+                        CorePlugin.getDefault().openEditor(new DrillDownEditorInput(analysis, dataEntity, itemEntity),
+                                DRILL_DOWN_EDITOR);
+                    }
                 }
 
             });

@@ -287,14 +287,16 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
                                 public void widgetSelected(SelectionEvent e) {
                                     if (ExecutionLanguage.JAVA == currentEngine) {
                                         try {
-                                            CorePlugin
-                                                    .getDefault()
-                                                    .getWorkbench()
-                                                    .getActiveWorkbenchWindow()
-                                                    .getActivePage()
-                                                    .openEditor(
-                                                            new DrillDownEditorInput(analysis, currentDataEntity, itemEntity),
-                                                            "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
+                                            if (SqlExplorerUtils.getDefault().getSqlexplorerService() != null) {
+                                                CorePlugin
+                                                        .getDefault()
+                                                        .getWorkbench()
+                                                        .getActiveWorkbenchWindow()
+                                                        .getActivePage()
+                                                        .openEditor(
+                                                                new DrillDownEditorInput(analysis, currentDataEntity, itemEntity),
+                                                                "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
+                                            }
                                         } catch (PartInitException e1) {
                                             e1.printStackTrace();
                                         }
