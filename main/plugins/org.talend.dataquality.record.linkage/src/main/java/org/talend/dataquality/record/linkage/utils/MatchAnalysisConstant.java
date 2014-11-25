@@ -41,7 +41,7 @@ public class MatchAnalysisConstant {
 
     public static final String NEED_REFRESH_DATA = "Need_Refresh_Data"; //$NON-NLS-1$
 
-    public static final String NEED_REFRESH_DATA_SAMPLE_TABLE = "NEED_REFRESH_DATA_SAMPLE_TABLE"; //$NON-NLS-1$
+    public static final String HIDE_GROUPS = "HIDE_GROUPS"; //$NON-NLS-1$
 
     // match key need
     public static final String MATCH_KEY_NAME = "MatchAnalysisConstant.MATCH_KEY_NAME"; //$NON-NLS-1$

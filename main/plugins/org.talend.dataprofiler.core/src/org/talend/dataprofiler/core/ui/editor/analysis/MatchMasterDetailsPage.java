@@ -1308,13 +1308,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             refreshDataFromConnection();
         } else if (MatchAnalysisConstant.DATA_SAMPLE_TABLE_COLUMN_SELECTION.equals(evt.getPropertyName())) {
             handleColumnSelectionChange();
-        } else if (MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE.equals(evt.getPropertyName())) {
+        } else if (MatchAnalysisConstant.HIDE_GROUPS.equals(evt.getPropertyName())) {
             String minGrpSizeText = evt.getNewValue().toString();
             sampleTable.setMinGroupSize(Integer.valueOf(minGrpSizeText));
             if (selectAlgorithmSection.isVSRMode()) {
-                matchingKeySection.refreshChart();
+                matchingKeySection.refreshChart(false);
             } else {
-                matchAndSurvivorKeySection.refreshChart();
+                matchAndSurvivorKeySection.refreshChart(false);
             }
         }
     }

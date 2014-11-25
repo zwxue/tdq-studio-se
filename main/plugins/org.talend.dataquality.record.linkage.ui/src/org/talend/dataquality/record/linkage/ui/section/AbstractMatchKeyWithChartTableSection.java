@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -60,6 +61,10 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
     private Timer timer = new Timer();
 
     protected MatchRuleDataChart matchRuleChartComp = null;
+
+    private List<Object[]> tableResult = null;
+
+    private TreeMap<Object, Long> groupSize2groupFrequency = null;
 
     /**
      * DOC zshen AbstractMatchKeyWithChartTableSection constructor comment.
@@ -159,7 +164,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                         int times = StringUtils.isEmpty(text) ? 1 : Integer.parseInt(text);
                         matchRuleChartComp.setTimes(times);
                         matchRuleChartComp.refresh();
-                        listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE, oldValue, times);
+                        listeners.firePropertyChange(MatchAnalysisConstant.HIDE_GROUPS, oldValue, times);
                     }
 
                     // when run this, it means 500ms later,so we can clear the cache.
@@ -197,15 +202,22 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
             if (execute.getObject().getFullMatchResult() == null) {
                 return rc;
             }
-            // sort the result before refresh
-            List<Object[]> results = MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute
-                    .getObject().getFullMatchResult());
-            MatchRuleAnlaysisUtils.refreshDataTable(analysis, results);
+            // TDQ-9741, the "chart" result must be stored for hiding group(not compute again)
+            tableResult = execute.getObject().getFullMatchResult();
+            groupSize2groupFrequency = recordMatchingIndicator.getGroupSize2groupFrequency();
         }
         rc.setOk(true);
         rc.setObject(recordMatchingIndicator);
         return rc;
 
+    }
+
+    protected List<Object[]> getTableResult() {
+        return tableResult;
+    }
+
+    protected TreeMap<Object, Long> getChartResult() {
+        return groupSize2groupFrequency;
     }
 
     /**
