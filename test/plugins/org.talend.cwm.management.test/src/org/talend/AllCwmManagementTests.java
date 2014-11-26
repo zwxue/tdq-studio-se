@@ -37,6 +37,7 @@ import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPoolTest;
 import org.talend.dq.analysis.explore.BenfordLawFrequencyExplorerTest;
 import org.talend.dq.analysis.explore.DataPatternMatchingTest;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorerTest;
+import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorerTest;
 import org.talend.dq.analysis.explore.PatternExplorerTest;
 import org.talend.dq.analysis.explore.RowMatchExplorerTest;
 import org.talend.dq.analysis.explore.SQLPatternExplorerTest;
@@ -94,7 +95,8 @@ import org.talend.dq.writer.AElementPersistanceTest;
         MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, StoreOnDiskHandlerTest.class,
         MdmStatementTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class,
         EObjectHelperTest.class, AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class,
-        SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, })
+        SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class,
+        FunctionFrequencyStatExplorerTest.class })
 public class AllCwmManagementTests {
 
 }
