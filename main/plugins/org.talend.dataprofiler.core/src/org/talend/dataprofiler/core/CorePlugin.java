@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import net.sourceforge.sqlexplorer.EDriverName;
+import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
@@ -293,6 +294,12 @@ public class CorePlugin extends AbstractUIPlugin {
                     }
 
                     input.setUser(user);
+                    // TDQ-9533 append a "limit X" in sql query for vertica database.
+                    if (query != null && EDatabaseTypeName.VERTICA.getDisplayName().equalsIgnoreCase(dbType)) {
+                        String maxPref = SQLExplorerPlugin.getDefault().getPreferenceStore().getString(IConstants.MAX_SQL_ROWS);
+                        int maxNum = maxPref == null ? 100 : Integer.parseInt(maxPref);
+                        query = query + " limit " + maxNum; //$NON-NLS-1$
+                    }
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
                     SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
                     editorPart.setText(query);
