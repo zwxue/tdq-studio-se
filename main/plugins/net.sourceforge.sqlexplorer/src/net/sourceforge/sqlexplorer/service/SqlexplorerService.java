@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dataset.actions.ExportCSVAction;
@@ -74,6 +75,7 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.classloader.DynamicClassLoader;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -174,6 +176,12 @@ public class SqlexplorerService implements ISqlexplorerService {
         }
 
         input.setUser(user);
+        // TDQ-9533 append a "limit X" in sql query for vertica database.
+        if (EDatabaseTypeName.VERTICA.getProduct().equals(databaseConnection.getProductId())) {
+            String maxPref = SQLExplorerPlugin.getDefault().getPreferenceStore().getString(IConstants.MAX_SQL_ROWS);
+            int maxNum = maxPref == null ? 100 : Integer.parseInt(maxPref);
+            query = query + " limit " + maxNum;
+        }
         IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
         try {
             SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());

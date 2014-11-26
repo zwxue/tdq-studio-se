@@ -3,6 +3,9 @@ change logs from talend
 
 1. from https://github.com/Talend/tdq-studio-se/commits/master/main/plugins/net.sourceforge.sqlexplorer
 ======================================
+2014-11-26 qiongli bug TDQ-9533 Need to put a limit or limit by default the preview of tables in DQ respository
+append "limit x" in sql query for vertica database.
+------------------------------------------------------------------------------------------------------------- 
 
 2014-11-25 qiongli bug TDQ-9756:Studio switch workspace failed cause of early loading of cwm.management bundle
 delete 2 consumers xml(sqlexplore.xml and mapdb.xml),replace it with java code.
