@@ -163,8 +163,12 @@ public abstract class AbstractDB<K> {
         if (!checkIndex(fromIndex, toIndex)) {
             return returnList;
         }
-        K fromKey = indexMap.get(fromIndex);
-        K toKey = indexMap.get(toIndex);
+        K fromKey = null;
+        K toKey = null;
+        if (indexMap != null) {
+            fromKey = indexMap.get(fromIndex);
+            toKey = indexMap.get(toIndex);
+        }
         Iterator<K> iterator = null;
         long index = 0;
         if (fromKey == null) {

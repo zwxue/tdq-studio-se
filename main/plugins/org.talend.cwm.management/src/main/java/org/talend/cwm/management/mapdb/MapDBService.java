@@ -17,8 +17,8 @@ import java.util.Map;
 
 import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataprofiler.service.IMapDBService;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
-import org.talend.dataquality.indicators.mapdb.DBMap;
 
 /**
  * created by xqliu on 2014-9-23 Detailled comment
@@ -45,7 +45,7 @@ public class MapDBService implements IMapDBService {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<Object[]> getDataSetDBMapSubList(Object dbMap, long fromIndex, long toIndex, Map<Long, Object> indexMap) {
-        return ((DBMap) dbMap).subList(fromIndex, toIndex, indexMap);
+        return ((AbstractDB) dbMap).subList(fromIndex, toIndex, indexMap);
     }
 
 }
