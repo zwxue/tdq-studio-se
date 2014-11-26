@@ -66,15 +66,11 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.PatternFreqIndicator;
-import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
-import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.dq.pattern.PatternTransformer;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -329,25 +325,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                 }
                             });
 
-                            if ((currentIndicator instanceof PatternFreqIndicator || currentIndicator instanceof PatternLowFreqIndicator)
-                                    && createPatternFlag == 0) {
-                                MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                itemCreatePatt.setText(DefaultMessagesImpl
-                                        .getString("ColumnAnalysisResultPage.GenerateRegularPattern")); //$NON-NLS-1$
-                                final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
-                                        .createDbmsLanguage(analysis));
-                                itemCreatePatt.addSelectionListener(new SelectionAdapter() {
-
-                                    @Override
-                                    public void widgetSelected(SelectionEvent e) {
-                                        Display.getDefault().asyncExec(new Runnable() {
-
-                                            public void run() {
-                                                ChartTableFactory.createPattern(analysis, itemEntity, pattTransformer);
-                                            }
-                                        });
-                                    }
-                                });
+                            if (ChartTableFactory.isPatternFrequencyIndicator(currentIndicator) && createPatternFlag == 0) {
+                                ChartTableFactory.createMenuOfGenerateRegularPattern(analysis, menu, currentDataEntity);
                             }
 
                             createPatternFlag++;
