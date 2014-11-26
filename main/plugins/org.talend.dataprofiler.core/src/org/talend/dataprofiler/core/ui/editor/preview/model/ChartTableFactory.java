@@ -222,19 +222,7 @@ public final class ChartTableFactory {
                                 // TDQ-4470~
 
                                 if (isPatternFrequencyIndicator(indicator)) {
-                                    MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                    itemCreatePatt.setText(DefaultMessagesImpl
-                                            .getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
-                                    itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
-                                    itemCreatePatt.addSelectionListener(new SelectionAdapter() {
-
-                                        @Override
-                                        public void widgetSelected(SelectionEvent e1) {
-                                            DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                                            PatternTransformer pattTransformer = new PatternTransformer(language);
-                                            createPattern(analysis, itemEntity, pattTransformer);
-                                        }
-                                    });
+                                    createMenuOfGenerateRegularPattern(analysis, menu, dataEntity);
                                 }
                             }
                             // show extra menu to create simple analysis, help user to find the duplicated rows
@@ -377,27 +365,7 @@ public final class ChartTableFactory {
                                 }
                                 if (isPatternFrequencyIndicator(indicator)) {
                                     for (final MenuItemEntity itemEntity : itemEntities) {
-
-                                        if (itemEntity.getQuery() == null) {
-                                            if (dataEntity.getKey() == null) {
-                                                itemEntity.setQuery(dataEntity.getLabel());
-                                            } else {
-                                                itemEntity.setQuery(dataEntity.getKey().toString());
-                                            }
-                                        }
-                                        MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                        itemCreatePatt.setText(DefaultMessagesImpl
-                                                .getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
-                                        itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
-                                        itemCreatePatt.addSelectionListener(new SelectionAdapter() {
-
-                                            @Override
-                                            public void widgetSelected(SelectionEvent e1) {
-                                                DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                                                PatternTransformer pattTransformer = new PatternTransformer(language);
-                                                createPattern(analysis, itemEntity, pattTransformer);
-                                            }
-                                        });
+                                        createMenuOfGenerateRegularPattern(analysis, menu, dataEntity);
                                     }
                                 }
 
@@ -441,19 +409,37 @@ public final class ChartTableFactory {
     }
 
     /**
+     * DOC yyin Comment method "createMenuOfGenerateRegularPattern".
+     * 
+     * @param analysis
+     * @param menu
+     * @param itemEntity
+     */
+    public static void createMenuOfGenerateRegularPattern(final Analysis analysis, Menu menu, final ChartDataEntity dataEntity) {
+        final String query = dataEntity.getKey() == null ? dataEntity.getLabel() : dataEntity.getKey().toString();
+        MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
+        itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
+        itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
+        itemCreatePatt.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e1) {
+                DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
+                PatternTransformer pattTransformer = new PatternTransformer(language);
+                createPattern(analysis, query, pattTransformer);
+            }
+        });
+    }
+
+    /**
      * DOC bZhou Comment method "createPattern".
      * 
      * @param analysis
      * @param itemEntity
      * @param pattTransformer
      */
-    public static void createPattern(Analysis analysis, MenuItemEntity itemEntity, final PatternTransformer pattTransformer) {
+    public static void createPattern(Analysis analysis, String query, final PatternTransformer pattTransformer) {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
-        String query = itemEntity.getQuery();
-
-        if (analysis.getParameters().getExecutionLanguage().compareTo(ExecutionLanguage.SQL) == 0) {
-            query = query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1);
-        }
         String regex = pattTransformer.getRegexp(query);
         IFolder folder = ResourceManager.getPatternRegexFolder();
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
