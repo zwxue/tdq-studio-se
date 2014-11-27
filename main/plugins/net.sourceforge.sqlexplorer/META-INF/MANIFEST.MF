@@ -102,5 +102,5 @@ Export-Package: META-INF,
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
 Bundle-Localization: plugin
 Import-Package: org.talend.dataprofiler.service
-Service-Component: OSGI-INF/sqlexplorer.xml, OSGI-INF/mapdb.xml
+Service-Component: OSGI-INF/sqlexplorer.xml
 Bundle-ActivationPolicy: lazy
