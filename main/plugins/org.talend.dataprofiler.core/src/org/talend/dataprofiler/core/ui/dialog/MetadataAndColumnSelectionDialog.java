@@ -29,7 +29,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.MatchAnaColumnContentProvider;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -149,7 +149,7 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
         if (repNode != null) {
             RepositoryNode parent = repNode.getParent();
             if (parent != null) {
-                if (parent instanceof DBConnectionRepNode) {
+                if (parent instanceof ConnectionRepNode) {
                     return parent;
                 } else {
                     return getConnectionNode(parent);
