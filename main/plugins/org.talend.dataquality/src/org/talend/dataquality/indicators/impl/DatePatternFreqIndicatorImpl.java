@@ -148,12 +148,12 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
             return Double.NaN;
         }
         ModelMatcher matcher = null;
-        if (!(dataValue instanceof ModelMatcher)) {
-            matcher = dateRetriever.getMatcher(dataValue.toString());
-        } else {
+        if (dataValue instanceof ModelMatcher) {
             matcher = (ModelMatcher) dataValue;
+            return ((double) matcher.getScore()) / this.getCount().longValue();
+        } else {
+            return super.getFrequency(dataValue);
         }
-        return ((double) matcher.getScore()) / this.getCount().longValue();
 
     }
 
