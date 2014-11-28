@@ -226,7 +226,7 @@ public class FrequencyIndicatorImplTest {
         java.text.SimpleDateFormat timeformat = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); //$NON-NLS-1$
         java.util.Date inputDate = timeformat.parse(normalStr);
         dbName = createFrequencyIndicator.getDBName(inputDate);
-        Assert.assertEquals("20080937", dbName); //$NON-NLS-1$
+        Assert.assertEquals("20080938", dbName); //$NON-NLS-1$
     }
 
     /**
@@ -251,7 +251,7 @@ public class FrequencyIndicatorImplTest {
         java.text.SimpleDateFormat timeformat = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); //$NON-NLS-1$
         java.util.Date inputDate = timeformat.parse(normalStr);
         dbName = createFrequencyIndicator.getDBName(inputDate);
-        Assert.assertEquals("20080937", dbName); //$NON-NLS-1$
+        Assert.assertEquals("20080938", dbName); //$NON-NLS-1$
     }
 
 }
