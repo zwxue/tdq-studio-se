@@ -69,7 +69,7 @@ public class MapDBSetDataSet extends MapDBDataSet {
         if (iterator == null) {
             return super.getRow(index);
         } else {
-            if (index < 0 || index >= dataMap.size()) {
+            if (index < 0 || index >= dataSet.size()) {
                 throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index);
             }
             if (currentIndex > index) {
@@ -83,7 +83,7 @@ public class MapDBSetDataSet extends MapDBDataSet {
             Object currentData = iterator.next();
             currentIndex++;
             Comparable[] comparable = new Comparable[1];
-            comparable[1] = (Comparable) currentData;
+            comparable[0] = (Comparable) currentData;
             returnDataSetRow = new DataSetRow(this, comparable);
             return returnDataSetRow;
         }
