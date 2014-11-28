@@ -35,10 +35,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.classloader.DynamicClassLoader;
@@ -59,7 +56,6 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
 import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
@@ -84,19 +80,6 @@ public class CWMPlugin extends Plugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         self = this;
-        initPreferences(self);
-    }
-
-    /**
-     * DOC xqliu Comment method "initPreferences".
-     * 
-     * @param cwm
-     */
-    private void initPreferences(CWMPlugin cwm) {
-        IEclipsePreferences prefs = new DefaultScope().getNode(cwm.getBundle().getSymbolicName());
-        prefs.putBoolean(PluginConstant.CONNECTION_TIMEOUT, false);
-        prefs.putBoolean(PluginConstant.FILTER_TABLE_VIEW_COLUMN, true);
-        PlatformUI.getPreferenceStore().setDefault(AnalysisThreadMemoryChangeNotifier.ANALYSIS_AUTOMATIC_MEMORY_CONTROL, false);
     }
 
     /**
