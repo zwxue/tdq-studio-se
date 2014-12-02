@@ -18,15 +18,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.DatabaseMetaData;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
@@ -41,7 +37,6 @@ import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.IRepositoryContextService;
-import org.talend.core.database.EDatabase4DriverClassName;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -53,14 +48,12 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.database.XMLSchemaBuilder;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
@@ -88,7 +81,6 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
@@ -103,9 +95,7 @@ import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.objectmodel.core.TaggedValue;
-import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * Utility class for database connection handling.
@@ -148,63 +138,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * Method "createConnection".
-     * 
-     * @param url the database url
-     * @param driverClassName the Driver classname
-     * @param props properties passed to the driver manager for getting the connection (normally at least a "user" and
-     * "password" property should be included)
-     * @return the connection
-     * @throws SQLException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @deprecated @{@link ExtractMetaDataUtils#connect(String, String, String, String, String, String, String, String)}
-     */
-    @Deprecated
-    public static java.sql.Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
-            InstantiationException, IllegalAccessException, ClassNotFoundException {
-        Driver driver = getClassDriverFromSQLExplorer(driverClassName, props);
-
-        if (driver != null) {
-            DriverManager.registerDriver(driver);
-            if (log.isDebugEnabled()) {
-                log.debug("SQL driver found and registered: " + driverClassName);//$NON-NLS-1$
-                log.debug("Enumerating all drivers:");//$NON-NLS-1$
-                Enumeration<Driver> drivers = DriverManager.getDrivers();
-                while (drivers.hasMoreElements()) {
-                    log.debug(drivers.nextElement());
-                }
-            }
-            java.sql.Connection connection = null;
-            if (driverClassName.equals(EDatabase4DriverClassName.HSQLDB.getDriverClass())) {
-                // getClassDriver
-                // MOD mzhao 2009-04-13, Try to load driver first as there will
-                // cause exception: No suitable driver
-                // found... if not load.
-                try {
-                    Class.forName(EDatabase4DriverClassName.HSQLDB.getDriverClass());
-                } catch (ClassNotFoundException e) {
-                    log.error(e, e);
-                }
-                // MOD xqliu 2009-02-02 bug 5261
-                if (isTimeout()) {
-                    DriverManager.setLoginTimeout(LOGIN_TIMEOUT_SECOND);
-                }
-                connection = DriverManager.getConnection(url, props);
-            } else {
-                // MOD xqliu 2009-02-02 bug 5261
-                connection = createConnectionWithTimeout(driver, url, props);
-            }
-
-            return connection;
-        }
-        return null;
-
-    }
-
-    /**
      * check whether the connection is available.
      * 
      * @param datamanager
@@ -225,62 +158,11 @@ public final class ConnectionUtils {
     }
 
     /**
-     * Method "checkConnection".
-     * 
-     * @param url the database url
-     * @param driverClassName the driver class name to use for connection
-     * @param props the properties of the connection
-     * @return a return code with a message (not null when error)
-     * @deprecated use {@link ManagerConnection#check(IMetadataConnection, boolean...)} instead.
-     */
-    @Deprecated
-    public static ReturnCode checkConnection(String url, String driverClassName, Properties props) {
-        ReturnCode rc = new ReturnCode();
-
-        java.sql.Connection connection = null;
-        try {
-            connection = ConnectionUtils.createConnection(url, driverClassName, props);
-            rc = (ConnectionUtils.isValid(connection));
-            // ADD xqliu 2012-01-05 TDQ-4162
-            String dbType = props.getProperty(TaggedValueHelper.DBTYPE);
-            String dbName = props.getProperty(TaggedValueHelper.DBNAME);
-            if (!StringUtils.isBlank(dbType) && !StringUtils.isBlank(dbName)) {
-                boolean checkSchemaOK = ExtractMetaDataFromDataBase.checkSchemaConnection(dbName, connection, true, dbType);
-                if (!checkSchemaOK) {
-                    rc.setReturnCode(Messages.getString("ConnectionUtils.SchemaNotFound"), false); //$NON-NLS-1$
-                }
-            }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-            rc.setReturnCode(Messages.getString("ConnectionUtils.SQLException", e.getMessage(), url), false); //$NON-NLS-1$
-        } catch (InstantiationException e) {
-            log.error(e.getMessage(), e);
-            rc.setReturnCode(e.getMessage(), false);
-        } catch (IllegalAccessException e) {
-            log.error(e.getMessage(), e);
-            rc.setReturnCode(e.getMessage(), false);
-        } catch (ClassNotFoundException e) {
-            log.error(e.getMessage(), e);
-            rc.setReturnCode(Messages.getString("ConnectionService.DriverNotFound", e.getMessage()), false); //$NON-NLS-1$
-        } finally {
-            if (connection != null) {
-                ReturnCode closed = ConnectionUtils.closeConnection(connection);
-                if (!closed.isOk()) {
-                    log.warn(closed.getMessage());
-                }
-            }
-        }
-
-        return rc;
-    }
-
-    /**
      * This method is used to check conectiton is avalible for analysis or report ,when analysis or report runs.
      * 
      * @param analysisDataProvider
      * @return
      */
-
     public static ReturnCode isConnectionAvailable(Connection analysisDataProvider) {
         ReturnCode returnCode = new ReturnCode();
 
@@ -352,7 +234,6 @@ public final class ConnectionUtils {
         Properties props = new Properties();
         String userName = JavaSqlFactory.getUsername(analysisDataProvider);
         String password = JavaSqlFactory.getPassword(analysisDataProvider);
-        String url = JavaSqlFactory.getURL(analysisDataProvider);
         props.put(TaggedValueHelper.USER, userName);
         props.put(TaggedValueHelper.PASSWORD, password);
         if (analysisDataProvider instanceof MDMConnection) {
@@ -470,94 +351,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC xqliu Comment method "createConnectionWithTimeout".
-     * 
-     * @param driver
-     * @param url
-     * @param props
-     * @return
-     * @throws SQLException
-     * @deprecated use @
-     * {@link ExtractMetaDataUtils#connect(String, String, String, String, String, String, String, String)} instead.
-     */
-    @Deprecated
-    public static synchronized java.sql.Connection createConnectionWithTimeout(Driver driver, String url, Properties props)
-            throws SQLException {
-        java.sql.Connection ret = null;
-        if (isTimeout()) {
-            ConnectionCreator cc = new ConnectionCreator(driver, url, props);
-            Thread t = new Thread(cc);
-            t.start();
-            long begin = System.currentTimeMillis();
-            boolean isTimeout = false;
-            boolean isOK = false;
-            boolean isException = false;
-            while (true) {
-                if (cc.getConnection() != null) {
-                    isOK = true;
-                    ret = cc.getConnection();
-                    break;
-                }
-                if (cc.getExecption() != null) {
-                    isException = true;
-                    break;
-                }
-                if (System.currentTimeMillis() - begin > LOGIN_TEMEOUT_MILLISECOND) {
-                    isTimeout = true;
-                    break;
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // do nothing
-                }
-            }
-            if (isTimeout) {
-                cc = null;
-                throw new SQLException(Messages.getString("ConnectionUtils.ConnectionTimeout")); //$NON-NLS-1$
-            }
-            if (isException) {
-                SQLException e = cc.getExecption();
-                cc = null;
-                throw e;
-            }
-            if (isOK) {
-                ret = cc.getConnection();
-                cc = null;
-            }
-        } else {
-            // MOD klliu TDQ-4659 sso could not check passed.2012-02-10
-            try {
-                ret = org.talend.utils.sql.ConnectionUtils.createConnection(url, driver, props);
-            } catch (InstantiationException e) {
-                log.error(e.getMessage(), e);
-            } catch (IllegalAccessException e) {
-                log.error(e.getMessage(), e);
-            } catch (ClassNotFoundException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        return ret;
-    }
-
-    /**
-     * 
-     * abstract this function from getClassDriver(String driverClassName, String url, Properties props). load the jdbc
-     * driver based on ManagedDrivr.if it is registed,return the driver.else load jars from lib manage system and
-     * regist.
-     * 
-     * @param driverClassName
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
-     */
-    private static Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
-            IllegalAccessException {
-        return SqlExplorerUtils.getDefault().getClassDriverFromSQLExplorer(driverClassName, props);
-    }
-
-    /**
      * Method "isValid".
      * 
      * @param connection the connection to test
@@ -577,53 +370,6 @@ public final class ConnectionUtils {
     public static ReturnCode closeConnection(final java.sql.Connection connection) {
         return org.talend.utils.sql.ConnectionUtils.closeConnection(connection);
     }
-
-    // ADD xqliu 2009-11-09 bug 9403
-    private static final String DEFAULT_TABLE_NAME = "TDQ_PRODUCT";//$NON-NLS-1$
-
-    /**
-     * DOC xqliu Comment method "existTable".
-     * 
-     * @param url
-     * @param driver
-     * @param props
-     * @param tableName
-     * @param schema
-     * @return
-     * @deprecated
-     */
-    @Deprecated
-    public static boolean existTable(String url, String driver, Properties props, String tableName, String schema) {
-        java.sql.Connection connection = null;
-        if (tableName == null || org.talend.dataquality.PluginConstant.EMPTY_STRING.equals(tableName.trim())) {
-            tableName = DEFAULT_TABLE_NAME;
-        }
-        try {
-            connection = ConnectionUtils.createConnection(url, driver, props);
-            if (connection != null) {
-                Statement stat = connection.createStatement();
-                if (!org.talend.dataquality.PluginConstant.EMPTY_STRING.equals(schema)) {
-                    stat.executeQuery("Select * from " + schema.toUpperCase() + org.talend.dataquality.PluginConstant.DOT_STRING + tableName); //$NON-NLS-1$
-                } else {
-                    stat.executeQuery("Select * from " + tableName);//$NON-NLS-1$
-                }
-                stat.close();
-            }
-        } catch (Exception e) {
-            return false;
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    log.warn(e);
-                }
-            }
-        }
-        return true;
-    }
-
-    // ~
 
     /**
      * DOC xqliu Comment method "isOdbcMssql". bug 9822
@@ -1109,69 +855,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC connection created by TOS need to fill the basic information for useing in TOP.<br>
-     * 
-     * @deprecated Not be useful anymore later, TOS should use the common filler API to create the metadata objects,
-     * then TOP don't complement again. Use MetadataFillFactory.java
-     * 
-     * @param conn
-     * @return
-     */
-    @Deprecated
-    public static Connection fillConnectionInformation(Connection conn) {
-        boolean saveFlag = false;
-        // fill metadata of connection
-        if (conn.getName() == null || conn.getLabel() == null) {
-            saveFlag = true;
-            conn = fillConnectionMetadataInformation(conn);
-        }
-        // fill structure of connection
-        List<Catalog> catalogs = ConnectionHelper.getCatalogs(conn);
-        List<Schema> schemas = ConnectionHelper.getSchema(conn);
-        // MOD xqliu 2010-10-19 bug 16441: case insensitive
-        if ((catalogs.isEmpty() && schemas.isEmpty())
-                || (ConnectionHelper.getAllSchemas(conn).isEmpty() && (ConnectionUtils.isMssql(conn)
-                        || ConnectionUtils.isPostgresql(conn) || ConnectionUtils.isAs400(conn)))) {
-            // ~ 16441
-            DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
-            if (dbConn != null) {
-                saveFlag = true;
-
-                conn = fillDbConnectionInformation(dbConn);
-            } else {
-                MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
-                if (mdmConn != null) {
-                    if (mdmConn.getDataPackage().isEmpty()) {
-                        saveFlag = true;
-                        conn = fillMdmConnectionInformation(mdmConn);
-                    }
-                }
-            }
-        }
-        if (saveFlag && conn != null) {
-            ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
-        }
-        return conn;
-    }
-
-    /**
-     * DOC xqliu Comment method "fillConnectionInformation".
-     * 
-     * @param conns
-     * @return
-     * @deprecated Is Replaced By DBConnectionFiller.fillUIConnParams
-     */
-    @Deprecated
-    public static List<Connection> fillConnectionInformation(List<Connection> conns) {
-        List<Connection> results = new ArrayList<Connection>();
-        for (Connection conn : conns) {
-
-            results.add(fillConnectionInformation(conn));
-        }
-        return results;
-    }
-
-    /**
      * DOC xqliu Comment method "fillMdmConnectionInformation".
      * 
      * @param mdmConn
@@ -1187,46 +870,6 @@ public final class ConnectionUtils {
         MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), properties);
         ConnectionHelper.addXMLDocuments(mdmWsConn.createConnection(mdmConn));
         return mdmConn;
-    }
-
-    /**
-     * DOC xqliu Comment method "fillDbConnectionInformation".
-     * 
-     * @deprecated Is Replaced By DBConnectionFiller.fillUIConnParams
-     * 
-     * @param dbConn
-     * @return
-     */
-    @Deprecated
-    public static DatabaseConnection fillDbConnectionInformation(DatabaseConnection dbConn) {
-        // fill database structure
-        boolean noStructureExists = ConnectionHelper.getAllCatalogs(dbConn).isEmpty()
-                && ConnectionHelper.getAllSchemas(dbConn).isEmpty();
-        java.sql.Connection sqlConn = null;
-        try {
-            if (noStructureExists) { // do no override existing catalogs or
-                                     // schemas
-                                     // Map<String, String> paramMap =
-                                     // ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
-                IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
-                MetadataFillFactory dbInstance = MetadataFillFactory.getDBInstance(dbConn);
-                dbConn = (DatabaseConnection) dbInstance.fillUIConnParams(metaConnection, dbConn);
-                sqlConn = MetadataConnectionUtils.createConnection(metaConnection).getObject();
-
-                if (sqlConn != null) {
-                    DatabaseMetaData dm = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn, dbConn, false);
-                    dbInstance.fillCatalogs(dbConn, dm, MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
-                    dbInstance.fillSchemas(dbConn, dm, MetadataConnectionUtils.getPackageFilter(dbConn, dm, false));
-                }
-
-            }
-        } finally {
-            if (sqlConn != null) {
-                ConnectionUtils.closeConnection(sqlConn);
-            }
-
-        }
-        return dbConn;
     }
 
     /**
@@ -1384,34 +1027,6 @@ public final class ConnectionUtils {
         for (MetadataTable currColumnSet : tdTableList) {
             retrieveColumn(currColumnSet);
         }
-    }
-
-    /**
-     * method "fillAttributeBetweenConnection".
-     * 
-     * @param target the connection which will be filled attribute.
-     * @param source the connection which will provider attribute.
-     * 
-     * @deprecated the method will be deleted when the connection fetch from
-     * IRepositoryViewObject.getProperty().getItem().getConnection
-     */
-    @Deprecated
-    public static void fillAttributeBetweenConnection(Connection target, Connection source) {
-        if (target == null || source == null) {
-            return;
-        }
-        target.setName(source.getName());
-        target.setLabel(source.getLabel());
-        MetadataHelper.setPurpose(MetadataHelper.getPurpose(source), target);
-        MetadataHelper.setDescription(MetadataHelper.getDescription(source), target);
-        MetadataHelper.setAuthor(target, MetadataHelper.getAuthor(source));
-        // MetadataHelper.setVersion(versionText.getText(),
-        // currentModelElement);
-        MetadataHelper.setDevStatus(target, MetadataHelper.getDevStatus(source));
-        ConnectionUtils.setName(target, source.getName());
-        JavaSqlFactory.setUsername(target, JavaSqlFactory.getUsername(source));
-        JavaSqlFactory.setPassword(target, JavaSqlFactory.getPassword(source));
-        JavaSqlFactory.setURL(target, JavaSqlFactory.getURL(source));
     }
 
     static String getName(ModelElement element) {
