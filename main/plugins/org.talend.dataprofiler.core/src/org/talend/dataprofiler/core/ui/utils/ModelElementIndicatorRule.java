@@ -18,7 +18,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -29,7 +28,6 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
-import org.talend.utils.sql.XSDDataTypeConvertor;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -68,8 +66,6 @@ public final class ModelElementIndicatorRule {
             // Added yyin 20121211 TDQ-6099:
             isTeradataInterval = Java2SqlType.isTeradataIntervalType(((TdColumn) me).getSqlDataType().getName());
             // ~
-        } else if (me instanceof TdXmlElementType) {
-            javaType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) me).getJavaType());
         } else if (isDeliFileColumn) {
             javaType = TalendTypeConvert.convertToJDBCType(((MetadataColumn) me).getTalendType());
         }
@@ -123,7 +119,7 @@ public final class ModelElementIndicatorRule {
         case BlankCountIndicatorEnum:
             // MOD klliu 2011-07-19 bug 22980 from repository as same as indicator dialog
             // MOD xwang 2011-07-29 bug TDQ-1731 disable blank count checkable for other data type but Text
-            if (me instanceof TdXmlElementType || !Java2SqlType.isTextInSQL(javaType)) {
+            if (!Java2SqlType.isTextInSQL(javaType)) {
                 return false;
             } else if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && isSQLEngine) {
                 // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
@@ -279,10 +275,10 @@ public final class ModelElementIndicatorRule {
     }
 
     /**
-     *
+     * 
      * just several indicator support longvarchar.because longvarchar dosn't support some sql query,.eg.,distinct,group
      * by,function...
-     *
+     * 
      * @param indicatorType
      * @param dataminingType
      * @return

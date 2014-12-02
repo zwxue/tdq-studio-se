@@ -26,14 +26,12 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.properties.TDQAnalysisItem;
@@ -173,13 +171,6 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
                 columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
                 medataViewObject.setRepositoryNode(columnNode);
                 return columnNode;
-            } else if (analyzedElement instanceof TdXmlElementType) {
-                MDMXmlElementRepNode mdmXmlElementNode = new MDMXmlElementRepNode(new MetadataXmlElementTypeRepositoryObject(
-                        medataViewObject, (TdXmlElementType) analyzedElement), this, ENodeType.REPOSITORY_ELEMENT);
-                mdmXmlElementNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.MDM_ELEMENT_TYPE);
-                mdmXmlElementNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
-                medataViewObject.setRepositoryNode(mdmXmlElementNode);
-                return mdmXmlElementNode;
             }
         }
 

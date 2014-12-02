@@ -15,9 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
@@ -88,29 +86,9 @@ public class MatchAnaColumnContentProvider extends ColumnContentProvider {
                     return RepositoryNodeHelper.getMdmChildren(element, true).length > 0;
                 }
                 return repoNode.hasChildren();
-            } else {
-                return superHasChildren(element);
             }
         }
-        
-        return super.hasChildren(element);
-    }
 
-    /**
-     * If element if TdXmlElementType, the super method hasChildren() return wrong result, so add use this method to get
-     * the right result. xqliu 2010-02-04
-     * 
-     * @param element
-     * @return
-     */
-    private boolean superHasChildren(Object element) {
-        boolean hasChildren = super.hasChildren(element);
-        if (element instanceof EObject) {
-            EObject eobject = (EObject) element;
-            if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eobject) != null) {
-                hasChildren = !hasChildren;
-            }
-        }
-        return hasChildren;
+        return super.hasChildren(element);
     }
 }

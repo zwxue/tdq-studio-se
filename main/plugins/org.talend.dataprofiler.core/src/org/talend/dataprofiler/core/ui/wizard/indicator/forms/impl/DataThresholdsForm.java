@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -44,7 +43,6 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
-import org.talend.utils.sql.XSDDataTypeConvertor;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -78,10 +76,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
             if (SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(analyzedElement) != null) {
                 isRangeForDate = false;
                 isDatetime = false;
-            } else if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analyzedElement) != null) {
-                TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analyzedElement);
-                sqlType = XSDDataTypeConvertor.convertToJDBCType(xmlElement.getJavaType());
-                isRangeForDate = Java2SqlType.isDateInSQL(sqlType) && currentIndicatorType == IndicatorEnum.RangeIndicatorEnum;
             } else if (SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement) == null
                     && SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(analyzedElement) != null) {
                 MetadataColumn mColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(analyzedElement);

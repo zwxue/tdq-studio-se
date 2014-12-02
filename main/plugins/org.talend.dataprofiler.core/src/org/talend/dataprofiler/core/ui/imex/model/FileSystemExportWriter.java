@@ -30,16 +30,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Property;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -87,22 +81,6 @@ public class FileSystemExportWriter implements IExportWriter {
         }
         toExportMap.put(propResPath, propDesPath);
 
-        Property property = record.getProperty();
-        EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
-        if (typedConstant != null && typedConstant == EResourceConstant.MDM_CONNECTIONS) {
-            ConnectionItem item = (ConnectionItem) property.getItem();
-            Connection connection = item.getConnection();
-            List<TdXmlSchema> tdXmlDocumentList = ConnectionHelper.getTdXmlDocument(connection);
-            for (TdXmlSchema schema : tdXmlDocumentList) {
-                IPath srcPath = ResourceManager.getMDMConnectionFolder().getLocation().append(schema.getXsdFilePath());
-                if (!srcPath.toFile().exists()) {
-                    log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");//$NON-NLS-1$ //$NON-NLS-2$ 
-                    break;
-                }
-                IPath desPath = ResourceManager.getMDMConnectionFolder().getFullPath().append(new Path(schema.getXsdFilePath()));
-                toExportMap.put(srcPath, desPath);
-            }
-        }
         return toExportMap;
     }
 

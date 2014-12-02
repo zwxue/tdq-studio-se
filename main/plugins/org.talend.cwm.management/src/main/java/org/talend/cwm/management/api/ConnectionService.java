@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
@@ -42,11 +41,7 @@ public class ConnectionService {
     public static TypedReturnCode<Connection> createConnection(DBConnectionParameter parameter) {
         TypedReturnCode<Connection> tReturnCode = new TypedReturnCode<Connection>(false);
         MetadataFillFactory instance = null;
-        if (SupportDBUrlType.MDM.getDBKey().equals(parameter.getSqlTypeName())) {
-            instance = MetadataFillFactory.getMDMInstance();
-        } else {
-            instance = MetadataFillFactory.getDBInstance();
-        }
+        instance = MetadataFillFactory.getDBInstance();
 
         IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(parameter));
         ReturnCode rc = instance.createConnection(metaConnection);

@@ -36,7 +36,6 @@ import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -136,7 +135,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         }
 
         // MOD qiongli 2011-1-10,feature 16796.
-        if (analyzedElements.get(0) instanceof TdXmlElementType || oldDataProvider instanceof DelimitedFileConnection) {
+        if (oldDataProvider instanceof DelimitedFileConnection) {
             // MessageDialog.openInformation(shell,
             // DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"),
             // "Can't change this connection!");

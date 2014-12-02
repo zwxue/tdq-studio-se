@@ -16,7 +16,6 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -43,12 +42,11 @@ public class TableSelectionViewer extends ContainerCheckedTreeViewer {
         Object element = event.getElement();
 
         boolean isPackage = element instanceof orgomg.cwm.objectmodel.core.Package;
-        boolean isXmlElement = element instanceof TdXmlElementType;// TdXMLDocument is a sub-class of Package
 
-        if ((checked && (isPackage || isXmlElement)) || !checked) {
+        if ((checked && isPackage) || !checked) {
             super.fireCheckStateChanged(event);
         }
-        if (checked && !(isPackage || isXmlElement)) {
+        if (checked && !isPackage) {
             if (MessageDialogWithToggle.openConfirm(null,
                     DefaultMessagesImpl.getString("TableSelectionViewer.warning"), tooMuchItemSeleted)) { //$NON-NLS-1$
                 super.fireCheckStateChanged(event);

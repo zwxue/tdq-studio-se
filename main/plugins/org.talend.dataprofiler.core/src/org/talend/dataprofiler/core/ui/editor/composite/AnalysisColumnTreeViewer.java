@@ -77,7 +77,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog2;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -442,7 +441,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         updateBindConnection(masterPage, modelElementIndicators, tree);
         masterPage.refreshTheTree(newsArray);
         masterPage.goLastPage();
-        if(elements!=null&&elements.length>0){
+        if (elements != null && elements.length > 0) {
             selectElement(tree.getItems(), elements[0]);
         }
     }
@@ -474,10 +473,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
                     enableWhereClauseFlag = false;
                     enableExecuteLanguageFlag = false;
-                } else if (ConnectionUtils.isMdmConnection(connection)) {
-                    masterPage.setWhereClauseDisabled();
-
-                    enableWhereClauseFlag = false;
                 } else {// when the selected column is back to DB type, should enable the execute engine combobox again.
                     masterPage.enableExecuteLanguage();
                 }
@@ -485,10 +480,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         // MOD klliu if default ExecutionLanguage is java,it is not changed to SQL.2011-11-21
         String execLang = analysis.getParameters().getExecutionLanguage().getLiteral();
-        if (execLang != null
-                && ExecutionLanguage.JAVA.getLiteral().equals(execLang)
-                && (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection) || ConnectionUtils
-                        .isMdmConnection(connection))) {
+        if (execLang != null && ExecutionLanguage.JAVA.getLiteral().equals(execLang)
+                && (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection))) {
             enableExecuteLanguageFlag = false;
         }
 
@@ -620,14 +613,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 DataManager dm = getAnalysis().getContext().getConnection();
                 if (dm == null) {
                     masterPage.doSave(null);
-                }
-
-                if (dm != null && dm instanceof Connection) {
-                    Connection dp = (Connection) dm;
-                    if (ConnectionUtils.isMdmConnection(dp)) {
-                        MessageUI.openWarning(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dontSupport"));
-                        return;
-                    }
                 }
 
                 IFolder udiProject = ResourceManager.getUDIFolder();
@@ -857,8 +842,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             // MetadataXmlElementTypeRepositoryObject
             if (reposViewObj instanceof MetadataColumnRepositoryObject) {
                 me = ((MetadataColumnRepositoryObject) reposViewObj).getTdColumn();
-            } else if (reposViewObj instanceof MetadataXmlElementTypeRepositoryObject) {
-                me = ((MetadataXmlElementTypeRepositoryObject) reposViewObj).getTdXmlElementType();
             }
             Connection dataprovider = ModelElementHelper.getTdDataProvider(me);
             DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);

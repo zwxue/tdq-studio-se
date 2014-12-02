@@ -485,11 +485,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 meIndicators[i] = ModelElementIndicatorHelper.createDFColumnIndicator(repNode);
             } else if (repViewObj != null && repViewObj instanceof MetadataColumnRepositoryObject) {
                 meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(repNode);
-            } else {
-                // TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(repViewObj);
-                if (repViewObj != null) {
-                    meIndicators[i] = ModelElementIndicatorHelper.createXmlElementIndicator(repNode);
-                }
             }
         }
         addElements(meIndicators);

@@ -40,7 +40,7 @@ public class PieStatisticsExplorer extends DataExplorer {
 
         switch (this.indicatorEnum) {
         case FormatFreqPieIndictorEnum:
-            if (!isXml() && !isSqlEngine) {
+            if (!isSqlEngine) {
                 map.put(MENU_VIEW_ROWS, null);
             }
             break;

@@ -16,7 +16,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -39,7 +38,8 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
      * DOC qzhang RunConnAnalysisAction constructor comment.
      */
     public RunConnAnalysisAction(IRepositoryViewObject respViewObj) {
-        super(DefaultMessagesImpl.getString("RunConnAnalysisAction.createConnAnalysis"), ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS)); //$NON-NLS-1$
+        super(
+                DefaultMessagesImpl.getString("RunConnAnalysisAction.createConnAnalysis"), ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS)); //$NON-NLS-1$
         this.reposViewObj = respViewObj;
     }
 
@@ -79,7 +79,7 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected boolean isAllowed() {
         // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview analysis.
-        return !ConnectionUtils.isMdmConnection(getSelection().getFirstElement());
+        return true;
     }
 
     /*

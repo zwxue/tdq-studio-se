@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.views;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -57,7 +56,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
@@ -680,11 +678,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 version = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataProvider);
             }
         } else {
-            boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
-            subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage()
-                    : PluginConstant.EMPTY_STRING;
+            subtype = isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage() : PluginConstant.EMPTY_STRING;
             if (!DQRepositoryNode.isOnFilterring()) {
-                version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
+                version = PluginConstant.EMPTY_STRING;
             }
         }
 
@@ -759,24 +755,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private void initializeToolBar() {
         getViewSite().getActionBars().getToolBarManager();
-    }
-
-    /**
-     * 
-     * DOC qiongli Comment method "getMDMVersion".
-     * 
-     * @param mdmConn
-     * @return
-     */
-    private String getMDMVersion(MDMConnection mdmConn) {
-        String version = null;
-        Properties props = new Properties();
-        props.put(TaggedValueHelper.USER, mdmConn.getUsername());
-        props.put(TaggedValueHelper.PASSWORD, mdmConn.getValue(mdmConn.getPassword(), false));
-        props.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse()); //$NON-NLS-1$
-        MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), props);
-        version = mdmWsConn.getVersion();
-        return version;
     }
 
 }

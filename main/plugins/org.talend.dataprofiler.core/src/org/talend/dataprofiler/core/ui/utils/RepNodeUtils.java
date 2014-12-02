@@ -31,7 +31,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
@@ -370,7 +369,7 @@ public final class RepNodeUtils {
                     List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
                     reposList.addAll(children);
                 }
-            } else if (obj instanceof MetadataColumn || obj instanceof TdXmlElementType) {
+            } else if (obj instanceof MetadataColumn) {
                 // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
                 RepositoryNode repNode = RepositoryNodeHelper.recursiveFind((ModelElement) obj);
                 if (repNode == null) {

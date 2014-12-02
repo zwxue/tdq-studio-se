@@ -70,8 +70,11 @@ public enum PatternLanguageType {
              PatternToExcelEnum.InformixRegexp),
     // MOD by bzhou, currently, we won't support MDM on using pattern.
     // MOD by zshen, this will effect for the indicatorDefinition so add new method to return differents result.
-    MDM(14, SupportDBUrlType.MDM.getLanguage(), SupportDBUrlType.MDM.getLanguage(), PatternToExcelEnum.MDMRegexp),
-    NETEZZA(15, SupportDBUrlType.NETEZZADEFAULTURL.getLanguage(), SupportDBUrlType.NETEZZADEFAULTURL.getLanguage(), PatternToExcelEnum.NETEZZARegexp),
+    NETEZZA(
+            15,
+            SupportDBUrlType.NETEZZADEFAULTURL.getLanguage(),
+            SupportDBUrlType.NETEZZADEFAULTURL.getLanguage(),
+            PatternToExcelEnum.NETEZZARegexp),
 
     // ADD by msjian 2011-7-20 22517: no such function: CHAR_LENGTH for SQLite
     SQLITE3(
@@ -168,7 +171,7 @@ public enum PatternLanguageType {
 
     /**
      * DOC yyi 2009-09-28 Feature: 9289.
-     *
+     * 
      * @param hasJava set contains Java or not.
      * @return
      */
@@ -188,7 +191,7 @@ public enum PatternLanguageType {
 
     /**
      * DOC zshen 2011-06-29 bug: 22668.
-     *
+     * 
      * @param
      * @return
      */
@@ -198,7 +201,6 @@ public enum PatternLanguageType {
         for (PatternLanguageType oneType : values()) {
             existingTypes.add(oneType.getName());
         }
-        existingTypes.remove(SupportDBUrlType.MDM.getLanguage());
 
         // Get the new database types which is not defined offically.
         List<String> newTypes = SoftwareSystemManager.getInstance().getNewDBTypesFromSoftwareSystem(existingTypes);

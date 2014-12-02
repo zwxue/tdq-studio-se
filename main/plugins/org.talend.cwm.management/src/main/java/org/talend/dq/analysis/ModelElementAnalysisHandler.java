@@ -22,7 +22,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -221,8 +220,6 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         DataminingType type = DataminingType.get(dataminingTypeLiteral);
         if (modelElement instanceof MetadataColumn) {
             MetadataHelper.setDataminingType(type, modelElement);
-        } else if (modelElement instanceof TdXmlElementType) {
-            MetadataHelper.setDataminingType(type, (TdXmlElementType) modelElement);
         } else {
             return;
         }

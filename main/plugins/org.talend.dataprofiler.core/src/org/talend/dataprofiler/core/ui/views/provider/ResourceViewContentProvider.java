@@ -31,7 +31,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.platform.PluginChecker;
-import org.talend.core.model.metadata.IMetadataXmlElementType;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -39,8 +38,6 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
@@ -276,8 +273,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     private IRepositoryNode createNewRepNode(ERepositoryObjectType type) {
         IRepositoryViewObject viewObject = null;
 
-        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(), type,
-                Path.EMPTY);
+        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                ProjectManager.getInstance().getCurrentProject(), type, Path.EMPTY);
         if (folderItem == null) {
             String folderName = ERepositoryObjectType.getFolderName(type);
             viewObject = new Folder(folderName, folderName);
@@ -312,11 +309,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 IRepositoryViewObject viewObject = node.getObject();
                 if (viewObject instanceof MetadataColumnRepositoryObject) {
                     return false;
-                } else if (viewObject instanceof IMetadataXmlElementType) {
-                    MetadataXmlElementTypeRepositoryObject metadataXmlElementType = (MetadataXmlElementTypeRepositoryObject) viewObject;
-                    List<TdXmlElementType> xmlElements = org.talend.cwm.db.connection.ConnectionUtils
-                            .getXMLElementsWithOutSave(metadataXmlElementType.getTdXmlElementType());
-                    return xmlElements.size() > 0;
                 } else if (node instanceof ExchangeFolderRepNode) {
                     // ExchangeFolderRepNode always have children
                     return true;

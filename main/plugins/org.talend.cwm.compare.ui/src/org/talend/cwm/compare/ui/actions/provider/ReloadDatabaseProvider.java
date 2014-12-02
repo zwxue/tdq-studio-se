@@ -20,7 +20,6 @@ import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
@@ -89,9 +88,6 @@ public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
         if ((ENodeType.REPOSITORY_ELEMENT.equals(type) || ENodeType.TDQ_REPOSITORY_ELEMENT.equals(type))
                 && ResourceService.isSubFolder(connectionFolder, folder)) {
             IRepositoryViewObject object = node.getObject();
-            if (ConnectionUtils.isMdmConnection(object)) {
-                return false;
-            }
             Connection conn = getConnection(node);
 
             if (MetadataConnectionUtils.isTDQSupportDBTemplate(conn)) {

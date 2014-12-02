@@ -103,13 +103,10 @@ public final class AnalysisExecutorSelector {
      * @return
      */
     private static AnalysisExecutor getModelElementAnalysisExecutor(Analysis analysis, ExecutionLanguage executionEngine) {
-        boolean mdm = ConnectionUtils.isMdmConnection((DataProvider) analysis.getContext().getConnection());
         // MOD qiongli 2010-11-9 feature 16796
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection((DataProvider) analysis.getContext().getConnection());
         boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
-        if (mdm) {
-            return sql ? new MdmAnalysisSqlExecutor() : new MdmAnalysisExecutor();
-        } else if (isDelimitedFile) {
+        if (isDelimitedFile) {
             return new DelimitedFileAnalysisExecutor();
         } else {
             return sql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
@@ -125,13 +122,9 @@ public final class AnalysisExecutorSelector {
      */
     private static AnalysisExecutor getColumnSetAnalysisExecutor(Analysis analysis, ExecutionLanguage executionEngine) {
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection((DataProvider) analysis.getContext().getConnection());
-        boolean isMdm = ConnectionUtils.isMdmConnection((DataProvider) analysis.getContext().getConnection());
         boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
-
         if (isDelimitedFile) {
             return new ColumnSetAnalysisExecutor(true, false);
-        } else if (isMdm) {
-            return new ColumnSetAnalysisExecutor(false, true);
         } else {
             return sql ? new MultiColumnAnalysisExecutor() : new ColumnSetAnalysisExecutor(false, false);
         }

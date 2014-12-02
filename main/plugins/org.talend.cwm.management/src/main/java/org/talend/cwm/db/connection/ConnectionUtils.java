@@ -56,9 +56,7 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.utils.CloneConnectionUtils;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
@@ -91,7 +89,6 @@ import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
-import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -236,14 +233,7 @@ public final class ConnectionUtils {
         String password = JavaSqlFactory.getPassword(analysisDataProvider);
         props.put(TaggedValueHelper.USER, userName);
         props.put(TaggedValueHelper.PASSWORD, password);
-        if (analysisDataProvider instanceof MDMConnection) {
-            props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) analysisDataProvider));
-            props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) analysisDataProvider));
-            MdmWebserviceConnection mdmWebserviceConnection = new MdmWebserviceConnection(
-                    JavaSqlFactory.getURL(analysisDataProvider), props);
-            returnCode = mdmWebserviceConnection.checkDatabaseConnection();
-            return returnCode;
-        } else if (isGeneralJdbc(analysisDataProvider)) {
+        if (isGeneralJdbc(analysisDataProvider)) {
             ReturnCode rcJdbc = checkGeneralJdbcJarFilePathDriverClassName((DatabaseConnection) analysisDataProvider);
             if (!rcJdbc.isOk()) {
                 return rcJdbc;
@@ -557,16 +547,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC xqliu Comment method "isMdmConnection".
-     * 
-     * @param dataprovider
-     * @return
-     */
-    public static boolean isMdmConnection(DataProvider dataprovider) {
-        return dataprovider instanceof MDMConnection;
-    }
-
-    /**
      * DOC qiongli Comment method "isDelimitedFileConnection".
      * 
      * @param dataprovider
@@ -574,42 +554,6 @@ public final class ConnectionUtils {
      */
     public static boolean isDelimitedFileConnection(DataProvider dataprovider) {
         return dataprovider instanceof DelimitedFileConnection;
-    }
-
-    /**
-     * DOC xqliu Comment method "isMdmConnection".
-     * 
-     * @param object
-     * @return
-     */
-    public static boolean isMdmConnection(Object object) {
-        if (object != null) {
-            if (object instanceof ProviderConnection) {
-                // FIXME it will cause stack overflow.
-                return isMdmConnection(object);
-            } else if (object instanceof DataProvider) {
-                return isMdmConnection((DataProvider) object);
-            } else if (object instanceof IRepositoryViewObject) {
-                Item item = ((IRepositoryViewObject) object).getProperty().getItem();
-                return item instanceof MDMConnectionItem;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * DOC xqliu Comment method "isMdmConnection".
-     * 
-     * @param file
-     * @return
-     */
-    public static boolean isMdmConnection(IRepositoryViewObject reposViewObj) {
-        // MOD qiongli 2011-3-17,bug 19530.avoid NPE.
-        if (reposViewObj == null) {
-            return false;
-        }
-        Item item = reposViewObj.getProperty().getItem();
-        return item instanceof MDMConnectionItem;
     }
 
     /**
@@ -824,10 +768,6 @@ public final class ConnectionUtils {
      * @return the database type string or null
      */
     public static String getDatabaseType(Connection connection) {
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(connection);
-        if (mdmConn != null) {
-            return SupportDBUrlType.MDM.getDBKey();
-        }
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn != null) {
             return dbConn.getDatabaseType();
@@ -846,11 +786,6 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             dbConn.setName(name);
             dbConn.setLabel(name);
-        }
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
-        if (mdmConn != null) {
-            mdmConn.setName(name);
-            mdmConn.setLabel(name);
         }
     }
 
@@ -1246,14 +1181,6 @@ public final class ConnectionUtils {
                     } else {
                         return false;
                     }
-                } else {
-                    return true;
-                }
-            } else if (element instanceof MDMConnection) {
-                MDMConnection mdmConn = (MDMConnection) element;
-                String context = mdmConn.getContext();
-                if (context != null && !"".equals(context.trim())) { //$NON-NLS-1$
-                    return false;
                 } else {
                     return true;
                 }

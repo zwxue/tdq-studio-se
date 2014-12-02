@@ -78,8 +78,6 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.xml.TdXmlElementType;
-import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -535,10 +533,6 @@ public final class RepositoryNodeHelper {
             node = recursiveFindTdColumn((TdColumn) modelElement);
         } else if (modelElement instanceof MDMConnection) {
             node = recursiveFindMDMConnection((MDMConnection) modelElement);
-        } else if (modelElement instanceof TdXmlSchema) {
-            node = recursiveFindTdXmlSchema((TdXmlSchema) modelElement);
-        } else if (modelElement instanceof TdXmlElementType) {
-            node = recursiveFindTdXmlElementType((TdXmlElementType) modelElement);
         } else if (modelElement instanceof DelimitedFileConnection) {
             node = recursiveFindDFConnection((DelimitedFileConnection) modelElement);
         } else if (modelElement instanceof MetadataTable) {// can we use this type? it is duplicate with tdView and
@@ -1311,48 +1305,6 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
-    public static MDMSchemaRepNode recursiveFindTdXmlSchema(TdXmlSchema tdXmlSchema) {
-        if (tdXmlSchema == null) {
-            return null;
-        }
-        String uuidTdXmlSchema = getUUID(tdXmlSchema);
-        if (uuidTdXmlSchema == null) {
-            return null;
-        }
-        EList<DataManager> dataManager = tdXmlSchema.getDataManager();
-        if (dataManager.size() > 0) {
-            RepositoryNode connNode = recursiveFind(dataManager.get(0));
-            if (connNode != null) {
-                List<IRepositoryNode> children = connNode.getChildren();
-                if (children.size() > 0) {
-                    for (IRepositoryNode childNode : children) {
-                        if (childNode != null && childNode instanceof MDMSchemaRepNode) {
-                            MDMSchemaRepNode mdmSchemaRepNode = (MDMSchemaRepNode) childNode;
-                            if (uuidTdXmlSchema.equals(getUUID(mdmSchemaRepNode.getTdXmlSchema()))) {
-                                return mdmSchemaRepNode;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    public static MDMXmlElementRepNode recursiveFindTdXmlElementType(TdXmlElementType tdXmlElementType) {
-        if (tdXmlElementType == null) {
-            return null;
-        }
-        TdXmlSchema ownedDocument = tdXmlElementType.getOwnedDocument();
-        if (ownedDocument != null) {
-            RepositoryNode xmlSchemaNode = recursiveFind(ownedDocument);
-            if (xmlSchemaNode != null) {
-                return recursiveFindXmlElementType(xmlSchemaNode.getChildren(), tdXmlElementType);
-            }
-        }
-        return null;
-    }
-
     public static DFTableRepNode recursiveFindMetadataTable(MetadataTable metadataTable) {
         if (metadataTable == null) {
             return null;
@@ -1639,33 +1591,6 @@ public final class RepositoryNodeHelper {
     // }
     // return null;
     // }
-
-    /**
-     * recursive find the ReopsitoryNode accroding to xmlElementType under nodes.
-     * 
-     * @param nodes
-     * @param xmlElementType
-     * @return
-     */
-    private static MDMXmlElementRepNode recursiveFindXmlElementType(List<IRepositoryNode> nodes, TdXmlElementType xmlElementType) {
-        if (nodes != null && nodes.size() > 0) {
-            for (IRepositoryNode node : nodes) {
-                if (node instanceof MDMXmlElementRepNode) {
-                    TdXmlElementType tdXmlElementTypeOnUi = ((MDMXmlElementRepNode) node).getTdXmlElementType();
-                    if (getUUID(xmlElementType).equals(getUUID(tdXmlElementTypeOnUi))) {
-                        return (MDMXmlElementRepNode) node;
-                    } else {
-                        MDMXmlElementRepNode recursiveFindXmlElementType = recursiveFindXmlElementType(node.getChildren(),
-                                xmlElementType);
-                        if (recursiveFindXmlElementType != null) {
-                            return recursiveFindXmlElementType;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
 
     // /**
     // * get all the ConnectionItems from FolderItem (recursive).
@@ -2241,10 +2166,6 @@ public final class RepositoryNodeHelper {
                 return ((DBViewRepNode) node).getTdView();
             } else if (node instanceof DBColumnRepNode) {
                 return ((DBColumnRepNode) node).getTdColumn();
-            } else if (node instanceof MDMSchemaRepNode) {
-                return ((MDMSchemaRepNode) node).getTdXmlSchema();
-            } else if (node instanceof MDMXmlElementRepNode) {
-                return ((MDMXmlElementRepNode) node).getTdXmlElementType();
             } else if (node instanceof DFColumnRepNode) {
                 return ((DFColumnRepNode) node).getMetadataColumn();
             } else if (node instanceof DFTableRepNode) {

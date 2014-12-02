@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -35,7 +34,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -608,25 +606,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
                 return repoNode.hasChildren();
             }
-            return superHasChildren(element);
+            return super.hasChildren(element);
         }
 
-        /**
-         * If element if TdXmlElementType, the super method hasChildren() return wrong result, so add use this method to
-         * get the right result. xqliu 2010-02-04
-         * 
-         * @param element
-         * @return
-         */
-        private boolean superHasChildren(Object element) {
-            boolean hasChildren = super.hasChildren(element);
-            if (element instanceof EObject) {
-                EObject eobject = (EObject) element;
-                if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eobject) != null) {
-                    hasChildren = !hasChildren;
-                }
-            }
-            return hasChildren;
-        }
     }
 }

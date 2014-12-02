@@ -56,7 +56,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.ui.IMDMProviderService;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -331,11 +330,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) connection));
                 props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) connection));
             }
-            if (ConnectionUtils.isMdmConnection(connection)) {
-                returnCode = new MdmWebserviceConnection(JavaSqlFactory.getURL(connection), props).checkDatabaseConnection();
-            } else {
-                returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection) connection);
-            }
+            returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection) connection);
         }
 
         return returnCode;
