@@ -235,28 +235,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
             }
         }
-        // Added yyin 20120608 TDQ-3589
-        for (int i = 0; i < columnListSize; i++) {
-            String col = columnlist.get(i);
-            List<Indicator> indicators = getIndicators(col);
-            // mapDB mode don't need this part
-            if (indicators.size() > 0 && indicators.get(0).isUsedMapDBMode()) {
-                break;
-            }
-            for (Indicator indicator : indicators) {
-                if (indicator instanceof DuplicateCountIndicator) {
-                    AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
-                    if (analyzedDataSet == null) {
-                        analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
-                        indicToRowMap.put(indicator, analyzedDataSet);
-                        analyzedDataSet.setDataCount(maxNumberRows);
-                        analyzedDataSet.setRecordSize(0);
-                    }
-                    // indicator.finalizeComputation();
-                    addResultToIndicatorToRowMap(indicator, indicToRowMap);
-                }
-            }
-        }// ~
 
         // --- release resultset
         resultSet.close();
@@ -266,32 +244,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
         getConnection().close();
 
         return ok;
-    }
-
-    // get the final result from duplicate indicator and set it into indicatorToRowMap
-    // Added yyin 20120608 TDQ-3589
-    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
-        Map<Object, Object[]> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
-        Set<Object> duplicateValues = ((DuplicateCountIndicator) indicator).getDuplicateValues();
-        Iterator<Object> iterator = duplicateValues.iterator();
-        int maxNumberRows = analysis.getParameters().getMaxNumberRows();
-
-        while (iterator.hasNext()) {
-            Object key = iterator.next();
-
-            Object[] valueArray = dupMap.get(key);
-            if (valueArray != null) {
-                List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
-                // MOD zshen add another loop to insert all of columnValue on the row into indicator.
-                int NumberOfRecord = valueObjectList.size();
-
-                if (NumberOfRecord < maxNumberRows) {
-                    valueObjectList.add(valueArray);
-                } else {
-                    break;
-                }
-            }
-        }
     }
 
     /**

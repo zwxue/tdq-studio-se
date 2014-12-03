@@ -5,7 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +17,6 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.DBSet;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
-import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -65,20 +63,6 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      */
     protected DistinctCountIndicatorImpl() {
         super();
-    }
-
-    /**
-     * Create a new DBSet
-     * 
-     * @return
-     */
-    private Set<Object> initValueForDistinctDBSet(String dbName) {
-        if (isUsedMapDBMode()) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
-                    ResourceManager.getMapDBCatalogName(this, dbName));
-        } else {
-            return new HashSet<Object>();
-        }
     }
 
     /**
@@ -266,14 +250,10 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
     @Override
     public boolean reset() {
         this.distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
-        if (isUsedMapDBMode()) {
-            if (needReconnect((DBSet<Object>) distinctObjects)) {
-                distinctObjects = initValueForDistinctDBSet(StandardDBName.computeProcessSet.name());
-            }
-            if (!distinctObjects.isEmpty()) {
-                distinctObjects.clear();
-            }
-        } else {
+        if (needReconnect((DBSet<Object>) distinctObjects)) {
+            distinctObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+        }
+        if (!distinctObjects.isEmpty()) {
             distinctObjects.clear();
         }
         return super.reset();
@@ -301,17 +281,14 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        // is mapDB mode
-        if (isUsedMapDBMode()) {
-            // is get computeProcess map
-            if (StandardDBName.computeProcess.name().equals(dbName) || StandardDBName.computeProcessSet.name().equals(dbName)) {
-                // current set is invalid
-                if (needReconnect((DBSet<Object>) distinctObjects)) {
-                    // create new DBSet
-                    return initValueForDBSet(StandardDBName.computeProcessSet.name());
-                } else {
-                    return (DBSet<Object>) distinctObjects;
-                }
+        // is get computeProcess map
+        if (StandardDBName.computeProcess.name().equals(dbName) || StandardDBName.computeProcessSet.name().equals(dbName)) {
+            // current set is invalid
+            if (needReconnect((DBSet<Object>) distinctObjects)) {
+                // create new DBSet
+                return initValueForDBSet(StandardDBName.computeProcessSet.name());
+            } else {
+                return (DBSet<Object>) distinctObjects;
             }
         }
         return super.getMapDB(dbName);
