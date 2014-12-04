@@ -16,12 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
-import org.talend.dq.nodes.MDMSchemaRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -56,9 +53,7 @@ public class MatchAnaColumnContentProvider extends ColumnContentProvider {
             if (node.getContentType() == ERepositoryObjectType.METADATA) {
                 List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
                 for (IRepositoryNode childNode : node.getChildren()) {
-                    if (childNode.getContentType() != ERepositoryObjectType.METADATA_MDMCONNECTION) {
-                        children.add(childNode);
-                    }
+                    children.add(childNode);
                 }
                 return children.toArray();
             }
@@ -82,8 +77,6 @@ public class MatchAnaColumnContentProvider extends ColumnContentProvider {
                 RepositoryNode repoNode = (RepositoryNode) element;
                 if (repoNode instanceof DBTableRepNode || repoNode instanceof DBViewRepNode || repoNode instanceof DFTableRepNode) {
                     return Boolean.FALSE;
-                } else if (repoNode instanceof MDMSchemaRepNode || repoNode instanceof MDMXmlElementRepNode) {
-                    return RepositoryNodeHelper.getMdmChildren(element, true).length > 0;
                 }
                 return repoNode.hasChildren();
             }

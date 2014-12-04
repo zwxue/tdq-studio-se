@@ -71,7 +71,6 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         eval.setMonitor(getMonitor());
         // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
-        // MOD qiongli 2011-3-11 featue 17869.consider of mdm connection
         for (Indicator indicator : indicators) {
             if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                 ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;

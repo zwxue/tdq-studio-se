@@ -68,7 +68,6 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -497,7 +496,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private void addItemElements(final ModelElementIndicator[] elements, boolean isExpandAll) {
         for (ModelElementIndicator element : elements) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
-            treeItem.setImage(getColumnElementImage(element));
+            treeItem.setImage(getColumnElementImage());
 
             final ModelElementIndicator meIndicator = element;
             treeItem.setText(0, ModelElementIndicatorHelper.getModelElementDisplayName(meIndicator));
@@ -583,10 +582,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @param element
      * @return
      */
-    private Image getColumnElementImage(ModelElementIndicator element) {
-        if (element instanceof XmlElementIndicator) {
-            return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
-        }
+    private Image getColumnElementImage() {
         return ImageLib.getImage(ImageLib.TD_COLUMN);
     }
 

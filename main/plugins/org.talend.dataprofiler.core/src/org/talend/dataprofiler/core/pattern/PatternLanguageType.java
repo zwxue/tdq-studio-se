@@ -68,7 +68,6 @@ public enum PatternLanguageType {
              SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
              SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
              PatternToExcelEnum.InformixRegexp),
-    // MOD by bzhou, currently, we won't support MDM on using pattern.
     // MOD by zshen, this will effect for the indicatorDefinition so add new method to return differents result.
     NETEZZA(
             15,

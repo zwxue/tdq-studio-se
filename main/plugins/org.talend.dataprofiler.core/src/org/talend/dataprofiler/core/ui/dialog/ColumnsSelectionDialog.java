@@ -50,8 +50,6 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.DQDBFolderRepositoryNode;
-import org.talend.dq.nodes.MDMSchemaRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -193,8 +191,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         IRepositoryNode node = repNode.getParent();
         if (repNode instanceof DBColumnRepNode || repNode instanceof DFColumnRepNode) {
             node = repNode.getParent().getParent();
-        } else if (repNode instanceof MDMXmlElementRepNode) {
-            node = repNode.getParent();
         }
         return node;
     }
@@ -229,8 +225,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     setOutput(event.getElement());
                     RepositoryNode selectedNode = (RepositoryNode) event.getElement();
                     if (selectedNode instanceof DBTableRepNode || selectedNode instanceof DBViewRepNode
-                            || selectedNode instanceof DFTableRepNode || selectedNode instanceof MDMSchemaRepNode
-                            || selectedNode instanceof MDMXmlElementRepNode) {
+                            || selectedNode instanceof DFTableRepNode) {
                         handleTreeElementsChecked(selectedNode, event.getChecked());
                     } else {
                         checkChildrenElements(selectedNode, event.getChecked());
@@ -305,17 +300,11 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         if (checkedFlag) {
             // MOD klliu 2011-03-03 bug 19195 the MDM node is defferent from DF/DB connection Structure
             // MDM does not have Column folder
-            if (repNode instanceof MDMXmlElementRepNode) {
-                Object[] children = sContentProvider.getElements(repNode);
-                for (Object colNode : children) {
+
+            List<IRepositoryNode> children = repNode.getChildren();
+            for (IRepositoryNode colFolderNode : children) {
+                for (IRepositoryNode colNode : colFolderNode.getChildren()) {
                     modelElementCheckedMap.put(repNode, colNode);
-                }
-            } else {
-                List<IRepositoryNode> children = repNode.getChildren();
-                for (IRepositoryNode colFolderNode : children) {
-                    for (IRepositoryNode colNode : colFolderNode.getChildren()) {
-                        modelElementCheckedMap.put(repNode, colNode);
-                    }
                 }
             }
         } else {
@@ -414,10 +403,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     if (allCheckFlag) {
                         this.getTableViewer().setCheckedElements(selectedObj.getChildren().get(0).getChildren().toArray());
                     }
-                } else if (selectedObj instanceof MDMXmlElementRepNode) {
-                    if (allCheckFlag) {
-                        this.getTableViewer().setCheckedElements(selectedObj.getChildren().toArray());
-                    }
                 }
                 // ~
             }
@@ -449,15 +434,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             }
                         }
                     }
-                } else if (repNode instanceof MDMXmlElementRepNode) {
-                    // MOD by zshen two case need to consider which
-                    // 1 select a node on the treeview then select the parent node of the node check whether the element
-                    // will be joined twice.
-                    // 2 select a node on the tableview and which contain more than one node in the treeview check
-                    // whether
-                    // can be select after click on the ok button.
-                    // boolean isLeaf = RepositoryNodeHelper.getMdmChildren(repNode, true).length > 0;
-                    getTableviewCheckedElements(allCheckedElements, repNode);
                 }
             }
         } finally {
@@ -541,10 +517,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 return new Object[] { parentElement };
             }
 
-            if (parentElement instanceof MDMSchemaRepNode || parentElement instanceof MDMXmlElementRepNode) {
-                return RepositoryNodeHelper.getMdmChildren(parentElement, false);
-            }
-
             return new Object[0];
         }
 
@@ -577,13 +549,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         @Override
         public Object[] getChildren(Object parentElement) {
-            if (parentElement instanceof IRepositoryNode) {
-                if (parentElement instanceof MDMSchemaRepNode || parentElement instanceof MDMXmlElementRepNode) {
-                    return RepositoryNodeHelper.getMdmChildren(parentElement, true);
-                }
-            }
             return super.getChildren(parentElement);
-
         }
 
         @Override
@@ -601,8 +567,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 RepositoryNode repoNode = (RepositoryNode) element;
                 if (repoNode instanceof DBTableRepNode || repoNode instanceof DBViewRepNode || repoNode instanceof DFTableRepNode) {
                     return Boolean.FALSE;
-                } else if (repoNode instanceof MDMSchemaRepNode || repoNode instanceof MDMXmlElementRepNode) {
-                    return RepositoryNodeHelper.getMdmChildren(element, true).length > 0;
                 }
                 return repoNode.hasChildren();
             }

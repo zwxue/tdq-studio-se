@@ -51,7 +51,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
-import org.talend.core.model.metadata.builder.database.XMLSchemaBuilder;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
@@ -71,15 +70,11 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
-import org.talend.cwm.xml.TdXmlContent;
-import org.talend.cwm.xml.TdXmlElementType;
-import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.ui.utils.DBConnectionContextUtils;
@@ -984,24 +979,18 @@ public final class ConnectionUtils {
     @Deprecated
     public static List<String> getPackageFilter(DBConnectionParameter connectionParam) {
         List<String> packageFilter = null;
-        if (connectionParam.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
-            String dataFilter = connectionParam.getParameters().getProperty(TaggedValueHelper.DATA_FILTER);
-            if (dataFilter != null) {
-                packageFilter = Arrays.asList(dataFilter.split(","));//$NON-NLS-1$
+
+        if (!connectionParam.isRetrieveAllMetadata()) {
+            packageFilter = new ArrayList<String>();
+            String dbName = connectionParam.getDbName();
+            // String otherParameter = null; // MOD scorreia 2010-10-20 bug 16562 avoid NPE
+            // MOD by msjian 2011-5-16 20875: "reload table list" for postgres have some issue
+            if (isOracle(connectionParam)) {
+                dbName = getDbName(connectionParam);
             }
-        } else {
-            if (!connectionParam.isRetrieveAllMetadata()) {
-                packageFilter = new ArrayList<String>();
-                String dbName = connectionParam.getDbName();
-                // String otherParameter = null; // MOD scorreia 2010-10-20 bug 16562 avoid NPE
-                // MOD by msjian 2011-5-16 20875: "reload table list" for postgres have some issue
-                if (isOracle(connectionParam)) {
-                    dbName = getDbName(connectionParam);
-                }
-                // MOD qiongli 2011-9-14 TDQ-3317,avoid empty string
-                if (dbName != null && !dbName.equals(PluginConstant.EMPTY_STRING)) {
-                    packageFilter.add(dbName);
-                }
+            // MOD qiongli 2011-9-14 TDQ-3317,avoid empty string
+            if (dbName != null && !dbName.equals(PluginConstant.EMPTY_STRING)) {
+                packageFilter.add(dbName);
             }
         }
         return packageFilter;
@@ -1034,73 +1023,6 @@ public final class ConnectionUtils {
             dbName = connectionParam.getParameters().getProperty(TaggedValueHelper.USER).toUpperCase();
         }
         return dbName;
-    }
-
-    public static List<ModelElement> getXMLElements(TdXmlSchema document) {
-        List<ModelElement> elements = document.getOwnedElement();
-        // Load from dababase
-        if (elements == null || elements.size() == 0) {
-            if (!DQRepositoryNode.isOnFilterring()) {
-                XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(document);
-                elements = xmlScheBuilder.getRootElements(document);
-                document.getOwnedElement().addAll(elements);
-                Connection conn = (Connection) document.getDataManager().get(0);
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
-            } else {
-                elements = elements == null ? new ArrayList<ModelElement>() : elements;
-            }
-        }
-        return elements;
-    }
-
-    /**
-     * DOC gdbu Comment method "getXMLElementsWithOutSave".
-     * 
-     * @param document
-     * @return
-     */
-    public static List<ModelElement> getXMLElementsWithOutSave(TdXmlSchema document) {
-        List<ModelElement> elements = document.getOwnedElement();
-        // Load from dababase
-        if (elements == null || elements.size() == 0) {
-            if (!DQRepositoryNode.isOnFilterring()) {
-                XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(document);
-                elements = xmlScheBuilder.getRootElements(document);
-            } else {
-                elements = elements == null ? new ArrayList<ModelElement>() : elements;
-            }
-        }
-        return elements;
-    }
-
-    /**
-     * DOC gdbu Comment method "getXMLElementsWithOutSave".
-     * 
-     * @param element
-     * @return
-     */
-    public static List<TdXmlElementType> getXMLElementsWithOutSave(TdXmlElementType element) {
-        TdXmlContent xmlContent = element.getXmlContent();
-        List<TdXmlElementType> elements = xmlContent == null ? new ArrayList<TdXmlElementType>() : xmlContent.getXmlElements();
-        // Load from dababase
-        if ((xmlContent == null || elements == null || elements.size() == 0) && !DQRepositoryNode.isOnFilterring()) {
-            XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
-            elements = xmlScheBuilder.getChildren(element);
-        }
-        return elements;
-    }
-
-    public static List<TdXmlElementType> getXMLElements(TdXmlElementType element) {
-        TdXmlContent xmlContent = element.getXmlContent();
-        List<TdXmlElementType> elements = xmlContent == null ? new ArrayList<TdXmlElementType>() : xmlContent.getXmlElements();
-        // Load from dababase
-        if ((xmlContent == null || elements == null || elements.size() == 0) && !DQRepositoryNode.isOnFilterring()) {
-            XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
-            elements = xmlScheBuilder.getChildren(element);
-            Connection conn = (Connection) element.getOwnedDocument().getDataManager().get(0);
-            ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
-        }
-        return elements;
     }
 
     /**

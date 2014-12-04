@@ -138,9 +138,6 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 image = ImageLib.getImageDescriptor(ImageLib.CONNECTION);
             } else if (ResourceManager.isExchangeFolder(folder)) {
                 image = ImageLib.getImageDescriptor(ImageLib.EXCHANGE);
-            } else if (ResourceManager.isMdmConnectionFolder(folder)) {
-                // MOD xqliu 2010-08-03 bug 14203
-                image = ImageLib.getImageDescriptor(ImageLib.MDM_CONNECTION);
             } else if (ResourceManager.isFileDelimitedFolder(folder)) {
                 image = ImageLib.getImageDescriptor(ImageLib.FILE_DELIMITED);
             }

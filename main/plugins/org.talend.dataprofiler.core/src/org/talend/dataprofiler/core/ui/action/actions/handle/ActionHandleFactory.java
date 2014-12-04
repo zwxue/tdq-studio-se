@@ -55,7 +55,6 @@ public final class ActionHandleFactory {
             case REPORTS:
                 handle = new ReportDuplicateHandle();
                 break;
-            case MDM_CONNECTIONS:
             case PATTERNS:
             case RULES_PARSER:
             case RULES_SQL:

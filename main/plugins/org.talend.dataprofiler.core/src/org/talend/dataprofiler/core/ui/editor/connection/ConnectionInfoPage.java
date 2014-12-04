@@ -43,20 +43,15 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.ExceptionHandler;
-import org.talend.core.GlobalServiceRegister;
-import org.talend.core.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.ui.IMDMProviderService;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -68,7 +63,6 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
@@ -284,15 +278,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             if (node != null) {
                 if (node instanceof DBConnectionRepNode) {
                     wizard = new DatabaseWizard(PlatformUI.getWorkbench(), false, node, null);
-                } else if (node instanceof MDMConnectionRepNode) {
-                    if (PluginChecker.isMDMPluginLoaded()
-                            && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
-                        IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(
-                                IMDMProviderService.class);
-                        if (service != null) {
-                            wizard = service.newWizard(PlatformUI.getWorkbench(), false, node, null);
-                        }
-                    }
                 }
             }
 
@@ -326,10 +311,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             props.put(TaggedValueHelper.USER, userName);
             props.put(TaggedValueHelper.PASSWORD, password);
 
-            if (connection instanceof MDMConnection) {
-                props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) connection));
-                props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) connection));
-            }
             returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection) connection);
         }
 

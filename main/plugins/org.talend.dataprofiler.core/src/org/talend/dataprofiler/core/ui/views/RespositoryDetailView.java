@@ -47,7 +47,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.FileConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
@@ -92,7 +91,6 @@ import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternLanguageRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -322,11 +320,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                     isNeedcreateDefault = false;
 
                     // ADD by msjian 2011-5-12 21186: don't check whether the selected object is "MDMConnectionRepNode"
-                } else if (fe instanceof MDMConnectionRepNode) {
-                    MDMConnectionRepNode mdmNode = (MDMConnectionRepNode) fe;
-                    MDMConnection mdmConnection = mdmNode.getMdmConnection();
-                    createDataProviderDetail(mdmConnection);
-                    isNeedcreateDefault = false;
                 } else if (fe instanceof DFConnectionRepNode) {
                     DFConnectionRepNode dfNode = (DFConnectionRepNode) fe;
                     DelimitedFileConnection dfConnection = dfNode.getDfConnection();

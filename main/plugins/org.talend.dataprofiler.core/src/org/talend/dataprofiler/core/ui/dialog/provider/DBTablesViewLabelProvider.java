@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.graphics.Image;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -66,9 +65,7 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
             return ImageLib.getImage(ImageLib.PROJECT_ACTIVE);
         } else if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
-            if (ResourceManager.isMdmConnectionFolder(folder)) {
-                return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-            } else if (ResourceManager.isTDQConnectionFolder(folder)) {
+            if (ResourceManager.isTDQConnectionFolder(folder)) {
                 return ImageLib.getImage(ImageLib.CONNECTION);
             }
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
@@ -79,9 +76,6 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
         } else if (element instanceof IRepositoryViewObject) {
             IRepositoryViewObject conn = (IRepositoryViewObject) element;
             Item connItem = conn.getProperty().getItem();
-            if (connItem instanceof MDMConnectionItem) {
-                return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-            }
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         }
         return super.getImage(element);

@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -207,8 +206,6 @@ public class TreeMessageInfoDialog extends MessageDialog {
                         imgName = ImageLib.REPORT_OBJECT;
                     } else if (modelElement instanceof DatabaseConnection) {
                         imgName = ImageLib.CONNECTION;
-                    } else if (modelElement instanceof MDMConnection) {
-                        imgName = ImageLib.MDM_CONNECTION;
                     } else if (modelElement instanceof DelimitedFileConnection) {
                         imgName = ImageLib.FILE_DELIMITED;
                     } else if (modelElement instanceof Pattern) {

@@ -366,7 +366,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         for (ModelElementIndicator element2 : elements) {
             final ModelElementIndicator meIndicator = element2;
 
-            // MOD qiongli 2011-3-11,feature 17896,make columnSet support MDM.
             final ModelElement modelElement = RepositoryNodeHelper
                     .getSubModelElement(meIndicator.getModelElementRepositoryNode());
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);

@@ -76,7 +76,6 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
         objectTypes.add(ERepositoryObjectType.TDQ_PATTERN_ELEMENT);
         objectTypes.add(ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
         objectTypes.add(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
-        objectTypes.add(ERepositoryObjectType.METADATA_MDMCONNECTION);
         objectTypes.add(ERepositoryObjectType.METADATA_CONNECTIONS);
 
         for (IRepositoryNode node : repositoryNodeList) {

@@ -145,8 +145,7 @@ public class DQRepositoryNode extends RepositoryNode {
                 dqRepNode = (DQRepositoryNode) dqNode;
                 if (isUntilSchema()) {
                     if (dqRepNode instanceof DBTableRepNode || dqRepNode instanceof DBViewRepNode
-                            || dqRepNode instanceof DFTableRepNode || dqRepNode instanceof MDMSchemaRepNode
-                            || dqRepNode instanceof MDMXmlElementRepNode) {
+                            || dqRepNode instanceof DFTableRepNode) {
                         break;
                     }
                 }
@@ -182,11 +181,9 @@ public class DQRepositoryNode extends RepositoryNode {
         if (isUntilSchema()) {
             label = getObject().getLabel();
         } else {
-            if (!(this instanceof MDMSchemaRepNode || this instanceof MDMXmlElementRepNode)) {
-                if (null != this.getObject() && this.getObject().isDeleted()) {
-                    label = this.getProperties(EProperties.LABEL) == null ? PluginConstant.EMPTY_STRING : this.getProperties(
-                            EProperties.LABEL).toString();
-                }
+            if (null != this.getObject() && this.getObject().isDeleted()) {
+                label = this.getProperties(EProperties.LABEL) == null ? PluginConstant.EMPTY_STRING : this.getProperties(
+                        EProperties.LABEL).toString();
             }
         }
         if (label.toLowerCase().contains(getFilterStr())) {
@@ -206,8 +203,7 @@ public class DQRepositoryNode extends RepositoryNode {
                     return returnVal ? true : false;
                 }
                 if (childNode instanceof DBTableRepNode || childNode instanceof DBViewRepNode
-                        || childNode instanceof DFTableRepNode || childNode instanceof MDMSchemaRepNode
-                        || childNode instanceof MDMXmlElementRepNode) {
+                        || childNode instanceof DFTableRepNode) {
                     continue;
                 }
             }

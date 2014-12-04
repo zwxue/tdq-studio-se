@@ -78,7 +78,6 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
      */
     @Override
     protected boolean isAllowed() {
-        // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview analysis.
         return true;
     }
 

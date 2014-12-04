@@ -520,11 +520,6 @@ public final class WorkbenchUtils {
         if (dfNode != null) {
             CorePlugin.getDefault().refreshDQView(dfNode);
         }
-        // mdm connection node
-        IRepositoryNode mdmNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS);
-        if (mdmNode != null) {
-            CorePlugin.getDefault().refreshDQView(mdmNode);
-        }
     }
 
     /**

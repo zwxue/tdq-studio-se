@@ -129,10 +129,14 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
      */
     public Collection<Indicator> getIndicators(ModelElement modelElement) {
         ModelElement me = modelElement;
+        // TDQ-9553, if import an old analysis with MDM Connection,the modelement will be null.
+        Collection<Indicator> indics = new ArrayList<Indicator>();
+        if (me == null) {
+            return indics;
+        }
         if (me.eIsProxy()) {
             me = (ModelElement) EObjectHelper.resolveObject(me);
         }
-        Collection<Indicator> indics = new ArrayList<Indicator>();
         EList<Indicator> allIndics = analysis.getResults().getIndicators();
         for (Indicator indicator : allIndics) {
             if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(me)) {

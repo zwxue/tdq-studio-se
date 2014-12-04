@@ -60,7 +60,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -678,8 +677,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                         if (ind instanceof RegexpMatchingIndicator) {
                             // MOD yyi 2011-06-15 22419:column set pattern for MDM
                             IRepositoryViewObject obj = modelElementInd.getModelElementRepositoryNode().getObject();
-                            ModelElement analyzedElt = obj instanceof MetadataColumnRepositoryObject ? ((MetadataColumnRepositoryObject) obj)
-                                    .getTdColumn() : ((MetadataXmlElementTypeRepositoryObject) obj).getModelElement();
+                            ModelElement analyzedElt = ((MetadataColumnRepositoryObject) obj).getTdColumn();
                             ind.setAnalyzedElement(analyzedElt);
                             allMatchIndicator.getCompositeRegexMatchingIndicators().add((RegexpMatchingIndicator) ind);
                         }

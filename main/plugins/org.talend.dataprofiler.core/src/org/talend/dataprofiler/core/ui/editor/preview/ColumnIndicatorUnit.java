@@ -16,7 +16,6 @@ import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -47,10 +46,6 @@ public class ColumnIndicatorUnit extends IndicatorUnit {
 
     public boolean isColumn() {
         return this.modelElementIndicator instanceof ColumnIndicator;
-    }
-
-    public boolean isXmlElement() {
-        return this.modelElementIndicator instanceof XmlElementIndicator;
     }
 
     public boolean isMetadataColumn() {

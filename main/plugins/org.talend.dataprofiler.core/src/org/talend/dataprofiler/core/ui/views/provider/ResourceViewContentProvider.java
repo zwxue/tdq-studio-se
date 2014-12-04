@@ -36,7 +36,6 @@ import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -172,10 +171,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (EResourceConstant.METADATA.getName().equals(label)) {
                 List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                 resContants.add(EResourceConstant.DB_CONNECTIONS);
-                // TDQ-8965 Deprecate MDM connection profiling
-                if (TalendPropertiesUtil.isEnabledOldMDMProfiling()) {
-                    resContants.add(EResourceConstant.MDM_CONNECTIONS);
-                }
                 resContants.add(EResourceConstant.FILEDELIMITED);
                 instance.createRepositoryNodeSystemFolders(node, resContants);
             }

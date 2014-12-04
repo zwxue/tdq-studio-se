@@ -31,7 +31,6 @@ import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -135,12 +134,6 @@ public class AnalysisColumnTreeViewerTest {
                 List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren().get(0).getChildren();
                 reposList.addAll(children);
 
-            } else if (obj instanceof MDMXmlElementRepNode) {
-                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(obj, true).length > 0;
-                if (!isLeaf) {
-                    List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
-                    reposList.addAll(children);
-                }
             } else if (obj instanceof TdColumn) {
                 // MOD yyi 2012-02-29 TDQ-3605 For column set column list.
                 reposList.add(RepositoryNodeHelper.recursiveFind((TdColumn) obj));

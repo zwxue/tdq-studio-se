@@ -37,7 +37,7 @@ public class TDQEEConnectionFolderFilter extends ViewerFilter {
             // } else {
             // return false;
             // }
-            return ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder);
+            return ResourceManager.isConnectionFolder(folder);
         }
         return true;
     }

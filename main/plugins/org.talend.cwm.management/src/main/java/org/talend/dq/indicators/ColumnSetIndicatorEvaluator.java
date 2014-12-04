@@ -34,7 +34,6 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
-import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -73,8 +72,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     protected boolean isDelimitedFile = false;
 
     protected TdXmlSchema tdXmlDocument;
-
-    protected MdmWebserviceConnection mdmWebserviceConn;
 
     private boolean isBadlyFormFlatFile = false;
 
@@ -524,14 +521,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     public void setTdXmlDocument(TdXmlSchema tdXmlDocument) {
         this.tdXmlDocument = tdXmlDocument;
-    }
-
-    public MdmWebserviceConnection getMdmWebserviceConn() {
-        return this.mdmWebserviceConn;
-    }
-
-    public void setMdmWebserviceConn(MdmWebserviceConnection mdmWebserviceConn) {
-        this.mdmWebserviceConn = mdmWebserviceConn;
     }
 
     @Override

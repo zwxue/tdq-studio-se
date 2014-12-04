@@ -36,7 +36,6 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Information;
@@ -129,8 +128,6 @@ public abstract class AElementPersistance {
         IPath path = new Path(PluginConstant.EMPTY_STRING);
         if (element instanceof DatabaseConnection) { // database connection
             path = itemPath.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
-        } else if (element instanceof MDMConnection) { // mdm connection
-            path = itemPath.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
         } else if (element instanceof Analysis) { // analysis
             path = itemPath.makeRelativeTo(ResourceManager.getAnalysisFolder().getFullPath());
         } else if (element instanceof Report) { // report
@@ -421,9 +418,6 @@ public abstract class AElementPersistance {
             if (element instanceof DatabaseConnection) {
                 item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
                 ((ConnectionItem) item).setConnection((DatabaseConnection) element);
-            } else if (element instanceof MDMConnection) {
-                item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createMDMConnectionItem();
-                ((ConnectionItem) item).setConnection((MDMConnection) element);
             }
             ((ConnectionItem) item).setConnection((Connection) element);
         } else if (ModelElementIdentifier.isMatchRule(element)) {

@@ -49,7 +49,6 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.connection.impl.ConnectionImpl;
@@ -118,11 +117,6 @@ import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
-import org.talend.dq.nodes.MDMConnectionFolderRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
-import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
-import org.talend.dq.nodes.MDMSchemaRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
 import org.talend.dq.nodes.PatternRegexSubFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
@@ -172,8 +166,6 @@ import orgomg.cwmx.analysis.informationreporting.Report;
 public final class RepositoryNodeHelper {
 
     public static final String FILE_DELIMITED_CONNECTION = "FileDelimited Connection"; //$NON-NLS-1$
-
-    public static final String MDM_CONNECTION = "MDM Connection"; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(RepositoryNodeHelper.class);
 
@@ -313,8 +305,6 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.METADATA;
         } else if (EResourceConstant.DB_CONNECTIONS.getPath().equals(path)) {
             return ERepositoryObjectType.METADATA_CONNECTIONS;
-        } else if (EResourceConstant.MDM_CONNECTIONS.getPath().equals(path)) {
-            return ERepositoryObjectType.METADATA_MDMCONNECTION;
         } else if (EResourceConstant.FILEDELIMITED.getPath().equals(path)) {
             return ERepositoryObjectType.METADATA_FILE_DELIMITED;
         } else if (EResourceConstant.SYSTEM_INDICATORS_FRAUDDETECTION.getPath().equals(path)) {
@@ -449,27 +439,6 @@ public final class RepositoryNodeHelper {
         return false;
     }
 
-    public static List<MDMConnectionRepNode> getMdmConnectionNodeList(Object[] objs) {
-        List<MDMConnectionRepNode> nodeList = new ArrayList<MDMConnectionRepNode>();
-        for (Object obj : objs) {
-            if (obj != null && obj instanceof MDMConnectionRepNode) {
-                nodeList.add((MDMConnectionRepNode) obj);
-            }
-        }
-        return nodeList;
-    }
-
-    public static boolean hasMdmConnectionNode(Object[] objs) {
-        if (objs != null && objs.length > 0) {
-            for (Object obj : objs) {
-                if (obj != null && obj instanceof MDMConnectionRepNode) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public static List<TdColumn> getTdColumnList(Object[] objs) {
         List<TdColumn> list = new ArrayList<TdColumn>();
         for (Object obj : objs) {
@@ -531,8 +500,6 @@ public final class RepositoryNodeHelper {
             node = recursiveFindTdView((TdView) modelElement);
         } else if (modelElement instanceof TdColumn) {
             node = recursiveFindTdColumn((TdColumn) modelElement);
-        } else if (modelElement instanceof MDMConnection) {
-            node = recursiveFindMDMConnection((MDMConnection) modelElement);
         } else if (modelElement instanceof DelimitedFileConnection) {
             node = recursiveFindDFConnection((DelimitedFileConnection) modelElement);
         } else if (modelElement instanceof MetadataTable) {// can we use this type? it is duplicate with tdView and
@@ -801,27 +768,6 @@ public final class RepositoryNodeHelper {
         return result;
     }
 
-    public static List<MDMConnectionRepNode> getMDMConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
-            boolean withDeleted) {
-        List<MDMConnectionRepNode> result = new ArrayList<MDMConnectionRepNode>();
-        if (parrentNode != null
-                && (parrentNode instanceof MDMConnectionFolderRepNode || parrentNode instanceof MDMConnectionSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
-            if (children.size() > 0) {
-                for (IRepositoryNode inode : children) {
-                    if (inode instanceof MDMConnectionRepNode) {
-                        result.add((MDMConnectionRepNode) inode);
-                    } else if (inode instanceof MDMConnectionFolderRepNode || inode instanceof MDMConnectionSubFolderRepNode) {
-                        if (recursiveFind) {
-                            result.addAll(getMDMConnectionRepNodes(inode, recursiveFind, withDeleted));
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
     public static List<DFConnectionRepNode> getDFConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
             boolean withDeleted) {
         List<DFConnectionRepNode> result = new ArrayList<DFConnectionRepNode>();
@@ -964,26 +910,6 @@ public final class RepositoryNodeHelper {
         if (dbConnectionRepNodes.size() > 0) {
             for (DBConnectionRepNode childNode : dbConnectionRepNodes) {
                 if (uuid.equals(getUUID(childNode.getDatabaseConnection()))) {
-                    return childNode;
-                }
-            }
-        }
-        return null;
-    }
-
-    public static MDMConnectionRepNode recursiveFindMDMConnection(MDMConnection mdmConn) {
-        if (mdmConn == null) {
-            return null;
-        }
-        String uuid = getUUID(mdmConn);
-        if (uuid == null) {
-            return null;
-        }
-        List<MDMConnectionRepNode> mdmConnectionRepNodes = getMDMConnectionRepNodes(
-                getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS), true, true);
-        if (mdmConnectionRepNodes.size() > 0) {
-            for (MDMConnectionRepNode childNode : mdmConnectionRepNodes) {
-                if (uuid.equals(getUUID(childNode.getMdmConnection()))) {
                     return childNode;
                 }
             }
@@ -1672,8 +1598,7 @@ public final class RepositoryNodeHelper {
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode
-                        || subNode instanceof MDMConnectionFolderRepNode) {
+                if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
                     connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
                 }
             }
@@ -1892,8 +1817,7 @@ public final class RepositoryNodeHelper {
         if (metadataObject != null) {
             return metadataObject.getModelElement();
         }
-        if (repositoryNode instanceof DBConnectionRepNode || repositoryNode instanceof DFConnectionRepNode
-                || repositoryNode instanceof MDMConnectionRepNode) {
+        if (repositoryNode instanceof DBConnectionRepNode || repositoryNode instanceof DFConnectionRepNode) {
             return ((ConnectionItem) repositoryNode.getObject().getProperty().getItem()).getConnection();
         }
         return null;
@@ -2052,8 +1976,8 @@ public final class RepositoryNodeHelper {
     public static boolean canOpenEditor(RepositoryNode node) {
         return node instanceof AnalysisRepNode || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                 || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode || node instanceof RuleRepNode
-                || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode || node instanceof ReportRepNode
-                || node instanceof ReportFileRepNode || node instanceof ReportAnalysisRepNode;
+                || node instanceof DBConnectionRepNode || node instanceof ReportRepNode || node instanceof ReportFileRepNode
+                || node instanceof ReportAnalysisRepNode;
     }
 
     public static List<IRepositoryNode> getNmaedColumnSetNodes(IRepositoryNode node) {
@@ -2375,30 +2299,6 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     * DOC xqliu Comment method "getMdmChildren".
-     * 
-     * @param parentElement
-     * @param hasChildren
-     * @return
-     */
-    public static Object[] getMdmChildren(Object parentElement, boolean hasChildren) {
-        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
-        List<IRepositoryNode> result = new ArrayList<IRepositoryNode>();
-        if (parentElement instanceof MDMSchemaRepNode) {
-            children = ((MDMSchemaRepNode) parentElement).getChildren();
-        } else if (parentElement instanceof MDMXmlElementRepNode) {
-            children = ((MDMXmlElementRepNode) parentElement).getChildren();
-        }
-        for (IRepositoryNode node : children) {
-            boolean hasChildren2 = node.hasChildren();
-            if ((hasChildren && hasChildren2) || (!hasChildren && !hasChildren2)) {
-                result.add(node);
-            }
-        }
-        return result.toArray();
-    }
-
-    /**
      * 
      * Add qiongli:find all REPOSITORY_ELEMENT by folderNode.
      * 
@@ -2592,8 +2492,6 @@ public final class RepositoryNodeHelper {
     public static IRepositoryNode getParentNodeForColumnNode(IRepositoryNode node) {
         if (node instanceof DBColumnRepNode || node instanceof DFColumnRepNode) {
             return node.getParent().getParent();
-        } else if (node instanceof MDMXmlElementRepNode) {
-            return node.getParent();
         }
         return null;
 
@@ -2916,8 +2814,7 @@ public final class RepositoryNodeHelper {
             }
         } else {
 
-            if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())
-                    && !(iNode instanceof MDMConnectionFolderRepNode) && null != iNode.getParent()) {
+            if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
                 return iNode;
             }
             if (null != iNode.getObject()) {

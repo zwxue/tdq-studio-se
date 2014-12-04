@@ -191,12 +191,6 @@
                     type="org.talend.dq.nodes.DBConnectionSubFolderRepNode">
               </adapt>
               <adapt
-                    type="org.talend.dq.nodes.MDMConnectionFolderRepNode">
-              </adapt>
-              <adapt
-                    type="org.talend.dq.nodes.MDMConnectionSubFolderRepNode">
-              </adapt>
-              <adapt
                     type="java.util.Collection">
                  <count
                        value="0">
@@ -275,9 +269,6 @@
                </instanceof>
                <instanceof
                      value="org.talend.dq.nodes.DFColumnRepNode">
-               </instanceof>
-               <instanceof
-                     value="org.talend.dq.nodes.MDMXmlElementRepNode">
                </instanceof>
             </or>
          </enablement>
@@ -665,9 +656,6 @@
                      value="org.talend.dq.nodes.DBConnectionRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dq.nodes.MDMConnectionRepNode">
-               </instanceof>
-               <instanceof
                      value="org.talend.dq.nodes.DFConnectionRepNode">
                </instanceof>
                <instanceof
@@ -758,9 +746,6 @@
                 </instanceof>
                 <instanceof
                       value="org.talend.dq.nodes.DFColumnRepNode">
-                </instanceof>
-                <instanceof
-                      value="org.talend.dq.nodes.MDMXmlElementRepNode">
                 </instanceof>
              </or>
           </enablement>
@@ -1118,13 +1103,6 @@
            contentFile="$nl$/cheatsheets/SourceFile_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.libraries.rules.source"
            name="%SourceFile">
-     </cheatsheet>
-     <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.database"
-           composite="false"
-           contentFile="$nl$/cheatsheets/MdmConnection_cheat.xml"
-           id="org.talend.dataprofiler.core.cheatsheet.database.mdmConnection"
-           name="%MDMConnection">
      </cheatsheet>
      <category
            id="org.talend.dataprofiler.core.category.pattern"
@@ -1694,6 +1672,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateReportBeginEndDateTask"
            name="Update the ReportEditor analysis execute Begin and End type from Date to string Task"
            version="5.6.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.RemoveMDMFromIndicatorsTask"
+           id="org.talend.dataprofiler.core.migration.impl.RemoveMDMFromIndicatorsTask"
+           name="org.talend.dataprofiler.core.migration.impl.RemoveMDMFromIndicatorsTask"
+           version="6.0.0">
      </workspacetask>
   </extension>
   <extension

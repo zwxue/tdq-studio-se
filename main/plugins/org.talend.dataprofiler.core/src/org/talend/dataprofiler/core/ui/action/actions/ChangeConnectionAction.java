@@ -61,7 +61,6 @@ import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
@@ -91,8 +90,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
     public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, Connection tdProvider) {
         Object connectionObj = masterPage.getConnCombo().getData(
                 masterPage.getConnCombo().getSelectionIndex() + PluginConstant.EMPTY_STRING);
-        if (connectionObj instanceof DBConnectionRepNode || connectionObj instanceof MDMConnectionRepNode
-                || connectionObj instanceof DFConnectionRepNode) {
+        if (connectionObj instanceof DBConnectionRepNode || connectionObj instanceof DFConnectionRepNode) {
             this.newDataProvider = ((ConnectionItem) (((RepositoryNode) connectionObj).getObject().getProperty().getItem()))
                     .getConnection();
         } else {

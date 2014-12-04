@@ -90,7 +90,6 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -400,11 +399,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 DBConnectionRepNode dbConnRepNode = (DBConnectionRepNode) data;
                 if (dbConnRepNode.getObject() != null && dbConnRepNode.getObject().getProperty() != null) {
                     version = dbConnRepNode.getObject().getProperty().getVersion();
-                }
-            } else if (data instanceof MDMConnectionRepNode) {
-                MDMConnectionRepNode mdmConnRepNode = (MDMConnectionRepNode) data;
-                if (mdmConnRepNode.getObject() != null && mdmConnRepNode.getObject().getProperty() != null) {
-                    version = mdmConnRepNode.getObject().getProperty().getVersion();
                 }
             } else if (data instanceof DFConnectionRepNode) {
                 DFConnectionRepNode dfConnRepNode = (DFConnectionRepNode) data;

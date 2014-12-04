@@ -19,12 +19,9 @@ import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDBConnectionAction;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDFConnectionAction;
-import org.talend.dataprofiler.core.ui.action.actions.CreateMDMConnectionAction;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
-import org.talend.dq.nodes.MDMConnectionFolderRepNode;
-import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -44,6 +41,7 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
     /**
      * Adds a submenu to the given menu with the name "New Component".
      */
+    @Override
     public void fillContextMenu(IMenuManager menu) {
         // MOD mzhao user readonly role on svn repository mode.
         if (!isShowMenu()) {
@@ -56,21 +54,17 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
             return;
         }
 
-		//MOD gdbu 2011-4-1 bug 20051
+        // MOD gdbu 2011-4-1 bug 20051
         RepositoryNode node = (RepositoryNode) getFistContextNode();
 
         if (node != null) {
-		//~20051
+            // ~20051
             IAction action = null;
             if (node instanceof DBConnectionFolderRepNode) {
                 action = new CreateDBConnectionAction(node);
             } else if (node instanceof DFConnectionFolderRepNode || node instanceof DFConnectionSubFolderRepNode) {
                 action = new CreateDFConnectionAction(node);
-            } else if (node instanceof MDMConnectionFolderRepNode || node instanceof MDMConnectionSubFolderRepNode) {
-                // MOD klliu 20744: there is a lack of "Create MDM Connection" menu 2011-04-19
-                action = new CreateMDMConnectionAction(node);
             }
-
             if (action != null) {
                 menu.add(action);
             }
