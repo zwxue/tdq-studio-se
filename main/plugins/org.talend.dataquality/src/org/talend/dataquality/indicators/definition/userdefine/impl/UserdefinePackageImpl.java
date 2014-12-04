@@ -9,69 +9,38 @@ package org.talend.dataquality.indicators.definition.userdefine.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.talend.core.model.properties.PropertiesPackage;
-
 import org.talend.cwm.relational.RelationalPackage;
-
 import org.talend.dataquality.analysis.AnalysisPackage;
-
 import org.talend.dataquality.analysis.category.CategoryPackage;
-
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;
-
 import org.talend.dataquality.analysis.impl.AnalysisPackageImpl;
-
 import org.talend.dataquality.domain.DomainPackage;
-
 import org.talend.dataquality.domain.impl.DomainPackageImpl;
-
 import org.talend.dataquality.domain.pattern.PatternPackage;
-
 import org.talend.dataquality.domain.pattern.impl.PatternPackageImpl;
-
 import org.talend.dataquality.domain.sql.SQLPackage;
-
 import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
-
 import org.talend.dataquality.expressions.ExpressionsPackage;
-
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
-
 import org.talend.dataquality.indicators.IndicatorsPackage;
-
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
-
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
-
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
-
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
-
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
 import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
-
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
-
 import org.talend.dataquality.indicators.schema.SchemaPackage;
-
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
-
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
-
 import org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl;
-
 import org.talend.dataquality.properties.impl.PropertiesPackageImpl;
-
 import org.talend.dataquality.reports.ReportsPackage;
-
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
-
 import org.talend.dataquality.rules.RulesPackage;
-
 import org.talend.dataquality.rules.impl.RulesPackageImpl;
 
 /**

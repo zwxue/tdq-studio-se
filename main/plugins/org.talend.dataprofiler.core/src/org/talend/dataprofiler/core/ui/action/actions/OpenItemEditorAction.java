@@ -14,8 +14,6 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.Properties;
 
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -82,6 +80,7 @@ import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.RepositoryWorkUnit;
@@ -338,7 +337,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     throw createBusinessException;
                 }
                 if (ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
-                    editorID = SQLEditor.EDITOR_ID;
+                    editorID = SqlExplorerUtils.SQLEDITOR_ID;
                 } else {
                     editorID = TDQFileEditorInput.DEFAULT_EDITOR_ID;
                 }

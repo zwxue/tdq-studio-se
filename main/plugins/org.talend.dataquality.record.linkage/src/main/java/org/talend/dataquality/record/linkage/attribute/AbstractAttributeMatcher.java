@@ -36,11 +36,11 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
     }
 
     /*
-         * (non-Javadoc)
-         *
-         * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String,
-         * java.lang.String)
-         */
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String,
+     * java.lang.String)
+     */
     @Override
     public double getMatchingWeight(String str1, String str2) {
         switch (nullOption) {
@@ -104,7 +104,7 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getAttributeName()
      */
     @Override
@@ -138,6 +138,16 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
         } else {
             this.nullOption = IAttributeMatcher.NullOption.nullMatchNull;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#isDummyMatcher()
+     */
+    @Override
+    public boolean isDummyMatcher() {
+        return false;
     }
 
 }

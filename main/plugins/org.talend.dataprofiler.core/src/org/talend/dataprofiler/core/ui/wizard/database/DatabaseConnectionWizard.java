@@ -16,8 +16,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -56,8 +54,6 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     private DBConnectionParameter connectionParam;
 
     private DatabaseWizardPage databaseWizardPage;
-
-    private ManagedDriver driver;
 
     private boolean canFinishFlag = true;
 
@@ -116,9 +112,6 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         IFolder folder = connectionParam.getFolderProvider().getFolderResource();
         TypedReturnCode<Object> save = ElementWriterFactory.getInstance().createDataProviderWriter().create(cwmElement, folder);
         if (save.isOk()) {
-            if (driver != null) {
-                storeInfoToPerference(cwmElement);
-            }
             CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(cwmElement);
         }
         return save;
@@ -138,65 +131,16 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     }
 
     public ModelElement initCWMResourceBuilder() {
-
-        // DataProviderBuilder dpBuilder = new DataProviderBuilder();
-        //
-        // String driverPath = connectionParam.getDriverPath();
-        // if (driverPath != null) {
-        // LinkedList<String> jars = new LinkedList<String>();
-        //            for (String driverpath : driverPath.split(";")) { //$NON-NLS-1$
-        // jars.add(driverpath);
-        // }
-        //
-        // // MOD xqliu 2009-12-03 bug 10247
-        // String jdbcUrl = connectionParam.getJdbcUrl();
-        // if (jdbcUrl != null && jdbcUrl.length() > 12) {
-        // String name = jdbcUrl.substring(0, 12);
-        // driver = dpBuilder.buildDriverForSQLExploer(name, connectionParam.getDriverClassName(), connectionParam
-        // .getJdbcUrl(), jars);
-        // }
-        // // ~
-        // }
-        //
-        // ReturnCode rc = dpBuilder.initializeDataProvider(connectionParam);
-        //
-        // MetadataFillFactory instance;
-        // IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(connectionParam));
-        // ReturnCode rc1 = instance.checkConnection(metaConnection);
-        // if (rc.isOk()) {
-        //
-        // // MOD xqliu 2010-10-13 bug 15756
-        // DataProvider dataProvider = dpBuilder.getDataProvider();
-        // try {DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
-        //
-        // if (dbConn != null && dbConn.getDbVersionString() == null) {
-        // dbConn.setDbVersionString(ConnectionUtils.createDatabaseVersionString(dbConn));
-        // return dbConn;
-        // }
-        // } finally {
-        // // if (sqlConn != null) {
-        // // ConnectionUtils.closeConnection(sqlConn);
-        // // }
-        //
-        // }
-        // return dataProvider;
-
-        // // 15756
-        // } else {
-        // // Need to add a dialog for report the reson of error
-        // MessageDialog
-        // .openInformation(
-        // getShell(),
-        //                            DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
-        // + rc.getMessage());
-        // }
-
         // MOD by zshen use new API to fill connetion and it's construct
         MetadataFillFactory instance = null;
         if (connectionParam.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
             instance = MetadataFillFactory.getMDMInstance();
         } else {
-            instance = MetadataFillFactory.getDBInstance();
+            if (this.modelElement != null && this.modelElement instanceof Connection) {
+                instance = MetadataFillFactory.getDBInstance((Connection) this.modelElement);
+            } else {
+                instance = MetadataFillFactory.getDBInstance();
+            }
         }
 
         IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(connectionParam));
@@ -225,7 +169,6 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                 if (sqlConn != null) {
                     ConnectionUtils.closeConnection(sqlConn);
                 }
-
             }
         }
         return null;
@@ -276,26 +219,6 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         // }
         // }
         // ~
-    }
-
-    private void storeInfoToPerference(ModelElement dataProvider) {
-        if (connectionParam == null || driver == null || dataProvider == null) {
-            return;
-        }
-        StringBuilder driverPara = new StringBuilder();
-        if (CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") != null //$NON-NLS-1$
-                && !CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
-            driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{" //$NON-NLS-1$ //$NON-NLS-2$
-                    + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
-                    + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
-                    + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
-        } else {
-            driverPara.append("{" //$NON-NLS-1$
-                    + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
-                    + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
-                    + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString()); //$NON-NLS-1$
     }
 
     private boolean isMdmFlag() {

@@ -19,10 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -47,11 +44,8 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
-import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesPackage;
@@ -60,7 +54,6 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
-import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -82,6 +75,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     private DbmsLanguage dbmsLanguage;
 
+    private String stringDataFilter;
+
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
@@ -89,12 +84,12 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         assert results != null;
         try {
             // --- get data filter
-            String stringDataFilter = ContextHelper.getDataFilterWithoutContext(analysis);
+            stringDataFilter = ContextHelper.getDataFilterWithoutContext(analysis);
             // --- get all the leaf indicators used for the sql computation
             Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
-                if (!createSqlQuery(stringDataFilter, indicator)) {
+                if (!createSqlQuery(stringDataFilter, indicator, false)) {
                     log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName()); //$NON-NLS-1$
                     return null;
                 }
@@ -109,73 +104,81 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return PluginConstant.EMPTY_STRING;
     }
 
-    private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
-            AnalysisExecutionException {
-        // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
-        // so just return true and get the row count from RowCount indicator
-        if (indicator instanceof WhereRuleAideIndicator && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty()) {
-            return true;
+    private boolean isAnalyzedElementValid(Indicator indicator) {
+        if (indicator.getAnalyzedElement() == null) {
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+            return false;
         }
-        // ~ TDQ-9294
-        ModelElement analyzedElement = indicator.getAnalyzedElement();
-        if (analyzedElement == null) {
-            traceError("Analyzed element is null for indicator " + indicator.getName());//$NON-NLS-1$
-            return Boolean.FALSE;
-        }
+
+        // check the AnalyzedElement as set
         NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (set == null) {
-            traceError("Analyzed element is not a table for indicator " + indicator.getName());//$NON-NLS-1$
-            return Boolean.FALSE;
+            traceError(Messages.getString("TableAnalysisSqlExecutor.ANALYZEDELEMENTISNOTATABLE", indicator.getName()));//$NON-NLS-1$
+            return false;
         }
         // --- get the schema owner
-        String setName = quote(set.getName());
         if (!belongToSameSchemata(set)) {
             StringBuffer buf = new StringBuffer();
             for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
                 buf.append(schema.getName() + " "); //$NON-NLS-1$
             }
-            log.error(Messages
-                    .getString("ColumnAnalysisSqlExecutor.COLUMNNOTBELONGTOEXISTSCHEMA", setName, buf.toString().trim()));//$NON-NLS-1$
+            log.error(Messages.getString(
+                    "TableAnalysisSqlExecutor.TABLENOTBELONGTOEXISSCHEMA", quote(set.getName()), buf.toString().trim()));//$NON-NLS-1$
             return false;
         }
 
-        // get correct language for current database
-        String language = dbms().getDbmsName();
-        Expression sqlGenericExpression = null;
+        return true;
+    }
 
-        // --- create select statement
-        // get indicator's sql tableS (generate the real SQL statement from its definition)
-
-        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+    private boolean isIndicatorDefinitionValid(IndicatorDefinition indicatorDefinition, String indicatorName) {
         if (indicatorDefinition == null) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
-            return Boolean.FALSE;
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicatorName));//$NON-NLS-1$
+            return false;
+        } else {
+            return true;
         }
-        sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
+    }
 
-        final EClass indicatorEclass = indicator.eClass();
+    private boolean isExpressionValid(Expression sqlGenericExpression, Indicator indicator) {
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
+            final EClass indicatorEclass = indicator.eClass();
             traceError(Messages.getString(
                     "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR",//$NON-NLS-1$
                     (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
-                    ResourceHelper.getUUID(indicatorDefinition)));
+                    ResourceHelper.getUUID(indicator.getIndicatorDefinition())));
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean createSqlQuery(String dataFilterAsString, Indicator indicator, boolean withWhereOfRule)
+            throws ParseException, AnalysisExecutionException {
+        if (!isAnalyzedElementValid(indicator)) {
+            return Boolean.FALSE;
+        }
+
+        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+        if (!isIndicatorDefinitionValid(indicatorDefinition, indicator.getName())) {
+            return Boolean.FALSE;
+        }
+
+        Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
+        if (!isExpressionValid(sqlGenericExpression, indicator)) {
             return Boolean.FALSE;
         }
 
         // --- get indicator parameters and convert them into sql expression
-        List<String> whereExpressionAnalysis = new ArrayList<String>();
-        if (StringUtils.isNotBlank(dataFilterAsString)) {
-            whereExpressionAnalysis.add(dataFilterAsString);
-        }
         List<String> whereExpressionDQRule = new ArrayList<String>();
         final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
-            whereExpressionDQRule.add(wr.getWhereExpression());
-
+            if (withWhereOfRule) {
+                whereExpressionDQRule.add(wr.getWhereExpression());
+            }
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
-            if (!wr.getJoins().isEmpty()) {
+            if (!isJoinConditionEmpty(indicator)) {
                 for (JoinElement joinelt : wr.getJoins()) {
                     JoinElement joinCopy = EcoreUtil.copy(joinelt);
                     joinConditions.add(joinCopy);
@@ -183,6 +186,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             }
         }
 
+        NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
         String schemaName = getQuotedSchemaName(set);
 
         // --- normalize table name
@@ -194,32 +198,38 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
 
-        setName = dbms().toQualifiedName(catalogName, schemaName, setName);
-
-        // ### evaluate SQL Statement depending on indicators ###
-        String completedSqlString = null;
-
         // --- default case
         // allow join
         String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
                 schemaName) : PluginConstant.EMPTY_STRING;
 
-        completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
+        String setName = dbms().toQualifiedName(catalogName, schemaName, quote(set.getName()));
+
+        String completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
-        // ADD xqliu 2012-04-23 TDQ-5057
-        if (indicator instanceof WhereRuleAideIndicator) {
-            whereExpressionDQRule = new ArrayList<String>();
+        List<String> whereExpressionAnalysis = new ArrayList<String>();
+        if (StringUtils.isNotBlank(dataFilterAsString)) {
+            whereExpressionAnalysis.add(dataFilterAsString);
         }
-        // ~ TDQ-5057
         completedSqlString = addWhereToSqlStringStatement(whereExpressionAnalysis, whereExpressionDQRule, completedSqlString,
                 true);
 
         // completedSqlString is the final query
         String finalQuery = completedSqlString;
 
-        TdExpression instantiateSqlExpression = BooleanExpressionHelper.createTdExpression(language, finalQuery);
+        TdExpression instantiateSqlExpression = BooleanExpressionHelper.createTdExpression(dbms().getDbmsName(), finalQuery);
         indicator.setInstantiatedExpression(instantiateSqlExpression);
         return true;
+    }
+
+    /**
+     * is there are any join confition
+     * 
+     * @param indicator
+     * @return false: when no join conditions set
+     */
+    private boolean isJoinConditionEmpty(Indicator indicator) {
+        return ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty();
     }
 
     protected TypedReturnCode<Boolean> belongToSameSchemata(final TdTable tdTable) {
@@ -314,75 +324,29 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         Connection connection = trc.getObject();
         try {
-            // store map of element to each indicator used for computation (leaf indicator)
-            Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
+            Long rowCount = 0L;
 
-            // execute the sql statement for each indicator
-            Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
-            for (final Indicator indicator : indicators) {
-                // skip composite indicators that do not require a sql execution
-                if (indicator instanceof CompositeIndicator) {
-                    // options of composite indicators are handled elsewhere
-                    continue;
+            List<Indicator> indicatorList = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
+
+            // execute the row count
+            Indicator rowIndicator = indicatorList.get(0);
+            isSuccess = executeIndicator(rowIndicator, connection);
+            publishDynamicEvent(rowIndicator);
+            // remember the row count
+            rowCount = rowIndicator.getCount();
+
+            // execute the sql statement for each group of aide and rule
+            for (int i = 1; i < indicatorList.size(); i++) {
+                final Indicator rule = indicatorList.get(i);
+
+                isSuccess = executeRule((WhereRuleIndicator) rule, connection);
+                // if there's no joins, should use the row count as the count.
+                if (isJoinConditionEmpty(rule)) {
+                    rule.setCount(rowCount);
                 }
-                // set the connection's catalog
-                String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
-                if (catalogName != null) { // check whether null argument can be given
-                    changeCatalog(catalogName, connection);
-                }
 
-                Expression query = dbms().getInstantiatedExpression(indicator);
-                if (query == null) {
-                    // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
-                    // row count, so will not generate query for it
-                    if (!(indicator instanceof WhereRuleAideIndicator && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty())) {
-                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                                + "query is null");//$NON-NLS-1$
-                        isSuccess = Boolean.FALSE;
-                        continue;
-                    }
-                    // TDQ-9294
-                }
-                if (query != null) {
-                    try {
-                        Boolean isExecSuccess = executeQuery(indicator, connection, query.getBody());
-                        if (!isExecSuccess) {
-                            traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                                    + "SQL query: " + query.getBody());//$NON-NLS-1$
-                            isSuccess = Boolean.FALSE;
-                            continue;
-                        }
-                    } catch (Exception e) {
-                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                                + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
-                        isSuccess = Boolean.FALSE;
-                        continue;
-                    }
-                }
-                indicator.setComputed(true);
-
-                // Added TDQ-8787 publish the related event when one indicator is finished: to refresh the chart with
-                // new result
-                // of the current indicator
-                final ITDQRepositoryService tdqRepositoryService = AnalysisExecutorHelper.getTDQService();
-                if (tdqRepositoryService != null) {
-                    Display.getDefault().asyncExec(new Runnable() {
-
-                        public void run() {
-                            tdqRepositoryService.publishDynamicEvent(indicator, IndicatorCommonUtil.getIndicatorValue(indicator));
-                        }
-                    });
-                }// ~
-
-                // add mapping of analyzed elements to their indicators
-                MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
-
+                publishDynamicEvent(rule);
             }
-
-            // ADD xqliu 2012-04-23 TDQ-5057
-            // set the aide count for the DQRule indicator
-            setDQRuleAideCount(elementToIndicator);
-            // ~ TDQ-5057
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
             if (!rc.isOk()) {
@@ -395,69 +359,104 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     }
 
     /**
-     * DOC xqliu Comment method "setDQRuleAideCount".
+     * DOC yyin Comment method "executeRule".
      * 
-     * @param elementToIndicator
+     * @param rule
+     * @param connection
+     * @return
      */
-    protected void setDQRuleAideCount(Map<ModelElement, List<Indicator>> elementToIndicator) {
-        Set<ModelElement> analyzedElements = elementToIndicator.keySet();
-        for (ModelElement modelElement : analyzedElements) {
-            List<Indicator> list = elementToIndicator.get(modelElement);
-            for (Indicator ind : list) {
-                if (ind instanceof WhereRuleIndicator && !(ind instanceof WhereRuleAideIndicator)) {
-                    Indicator tempInd = getAideIndicator(list, ind);
-                    if (tempInd != null) {
-                        WhereRuleAideIndicator aideInd = (WhereRuleAideIndicator) tempInd;
-                        if (!((WhereRule) aideInd.getIndicatorDefinition()).getJoins().isEmpty()) {
-                            ind.setCount(aideInd.getUserCount());
-                        } else {
-                            Indicator rowInd = getRowCountIndicator(list, ind);
-                            if (rowInd != null) {
-                                ind.setCount(rowInd.getCount());
-                            }
-                        }
-                    }
+    private boolean executeRule(WhereRuleIndicator rule, Connection connection) {
+        // set the connection's catalog
+        String catalogName = getCatalogOrSchemaName(rule.getAnalyzedElement());
+        if (catalogName != null) { // check whether null argument can be given
+            changeCatalog(catalogName, connection);
+        }
+
+        Expression query = dbms().getInstantiatedExpression(rule);
+        if (query == null) {
+            traceError("Query not executed for indicator: \"" + rule.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                    + "query is null");//$NON-NLS-1$
+            return Boolean.FALSE;
+        } else {
+            try {
+                // the current query donot contains where condition, if there're some join condition, execute this query
+                // and use this result as the count
+                if (!isJoinConditionEmpty(rule)) {
+                    List<Object[]> myResultSet = executeQuery(catalogName, connection, query.getBody());
+                    rule.setCount(myResultSet);
                 }
+
+                // add the where condition to the query, and execute it
+                createSqlQuery(stringDataFilter, rule, true);
+                query = dbms().getInstantiatedExpression(rule);
+                List<Object[]> myResultSet = executeQuery(catalogName, connection, query.getBody());
+                // give result to indicator so that it handles the results
+                Boolean isExecSuccess = rule.storeSqlResults(myResultSet);
+                if (!isExecSuccess) {
+                    traceError("Query not executed for indicator: \"" + rule.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + "SQL query: " + query.getBody());//$NON-NLS-1$
+                    return Boolean.FALSE;
+                }
+            } catch (Exception e) {
+                traceError("Query not executed for indicator: \"" + rule.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
+                return Boolean.FALSE;
             }
         }
+        rule.setComputed(true);
+        return Boolean.TRUE;
     }
 
     /**
-     * DOC xqliu Comment method "getAideIndicator".
+     * Added TDQ-8787 publish the related event when one indicator is finished: to refresh the chart with new result of
+     * the current indicator
      * 
-     * @param list
-     * @param ind
-     * @return
+     * @param rule
      */
-    private Indicator getAideIndicator(List<Indicator> list, Indicator indicator) {
-        Indicator aideInd = null;
-        String indName = indicator.getName();
-        for (Indicator ind : list) {
-            if (ind instanceof WhereRuleAideIndicator && indName.equals(ind.getName())) {
-                aideInd = ind;
-                break;
-            }
+    private void publishDynamicEvent(final Indicator rule) {
+        final ITDQRepositoryService tdqRepositoryService = AnalysisExecutorHelper.getTDQService();
+        if (tdqRepositoryService != null) {
+            Display.getDefault().syncExec(new Runnable() {
+
+                public void run() {
+                    tdqRepositoryService.publishDynamicEvent(rule, IndicatorCommonUtil.getIndicatorValue(rule));
+                }
+            });
         }
-        return aideInd;
     }
 
-    /**
-     * DOC xqliu Comment method "getRowCountIndicator".
-     * 
-     * @param list
-     * @param indicator
-     * @return
-     */
-    private Indicator getRowCountIndicator(List<Indicator> list, Indicator indicator) {
-        Indicator rowInd = null;
-        ModelElement analyzedElement = indicator.getAnalyzedElement();
-        for (Indicator ind : list) {
-            if (ind instanceof RowCountIndicator && analyzedElement.equals(ind.getAnalyzedElement())) {
-                rowInd = ind;
-                break;
+    private boolean executeIndicator(Indicator indicator, Connection connection) {
+        // set the connection's catalog
+        String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+        if (catalogName != null) { // check whether null argument can be given
+            changeCatalog(catalogName, connection);
+        }
+
+        Expression query = dbms().getInstantiatedExpression(indicator);
+        if (query == null) {
+            traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                    + "query is null");//$NON-NLS-1$
+            return Boolean.FALSE;
+        } else {
+            try {
+                // Boolean isExecSuccess = executeQuery(indicator, connection, query.getBody());
+                List<Object[]> myResultSet = executeQuery(catalogName, connection, query.getBody());
+
+                // give result to indicator so that it handles the results
+                Boolean isExecSuccess = indicator.storeSqlResults(myResultSet);
+                if (!isExecSuccess) {
+                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + "SQL query: " + query.getBody());//$NON-NLS-1$
+                    return Boolean.FALSE;
+                }
+            } catch (Exception e) {
+                traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
+                return Boolean.FALSE;
             }
         }
-        return rowInd;
+        indicator.setComputed(true);
+        return Boolean.TRUE;
     }
 
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
@@ -491,18 +490,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
             return Boolean.FALSE;
         }
-    }
-
-    private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
-        String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
-        if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName())//$NON-NLS-1$
-                    + "\t" + Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$ //$NON-NLS-2$
-        }
-        List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
-
-        // give result to indicator so that it handles the results
-        return indicator.storeSqlResults(myResultSet);
     }
 
     protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
@@ -550,45 +537,17 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
      * @return
      */
     public String getValidStatement(String dataFilterAsString, Indicator indicator, boolean valid) {
-        ModelElement analyzedElement = indicator.getAnalyzedElement();
-        if (analyzedElement == null) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+        if (!isAnalyzedElementValid(indicator)) {
             return PluginConstant.EMPTY_STRING;
         }
-        NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
-        if (set == null) {
-            traceError(Messages.getString("TableAnalysisSqlExecutor.ANALYZEDELEMENTISNOTATABLE", indicator.getName()));//$NON-NLS-1$
-            return PluginConstant.EMPTY_STRING;
-        }
-        // --- get the schema owner
-        String setName = quote(set.getName());
-        if (!belongToSameSchemata(set)) {
-            StringBuffer buf = new StringBuffer();
-            for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
-                buf.append(schema.getName() + " "); //$NON-NLS-1$
-            }
-            log.error(Messages.getString("TableAnalysisSqlExecutor.TABLENOTBELONGTOEXISSCHEMA", setName, buf.toString().trim()));//$NON-NLS-1$
-            return PluginConstant.EMPTY_STRING;
-        }
-
-        // get correct language for current database
-        Expression sqlGenericExpression = null;
-
-        // --- create select statement
-        // get indicator's sql tableS (generate the real SQL statement from its definition)
 
         IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-        if (indicatorDefinition == null) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+        if (!isIndicatorDefinitionValid(indicatorDefinition, indicator.getName())) {
             return PluginConstant.EMPTY_STRING;
         }
-        sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
-        final EClass indicatorEclass = indicator.eClass();
-        if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
-            traceError(Messages
-                    .getString(
-                            "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()), ResourceHelper.getUUID(indicatorDefinition)));//$NON-NLS-1$
+        Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
+        if (!isExpressionValid(sqlGenericExpression, indicator)) {
             return PluginConstant.EMPTY_STRING;
         }
 
@@ -606,7 +565,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
-            if (!wr.getJoins().isEmpty()) {
+            if (!isJoinConditionEmpty(indicator)) {
                 for (JoinElement joinelt : wr.getJoins()) {
                     JoinElement joinCopy = EcoreUtil.copy(joinelt);
                     joinConditions.add(joinCopy);
@@ -615,6 +574,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             }
         }
 
+        NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
         String schemaName = getQuotedSchemaName(set);
 
         // --- normalize table name
@@ -625,7 +585,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
-        setName = dbms().toQualifiedName(catalogName, schemaName, setName);
+        String setName = dbms().toQualifiedName(catalogName, schemaName, quote(set.getName()));
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;

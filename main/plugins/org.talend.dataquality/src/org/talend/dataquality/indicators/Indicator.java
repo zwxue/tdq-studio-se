@@ -5,42 +5,45 @@
  */
 package org.talend.dataquality.indicators;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.mapdb.MapDBDrillDown;
 import org.talend.dataquality.rules.JoinElement;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Indicator</b></em>'. <!-- end-user-doc -->
- *
+ * 
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getCount <em>Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getNullCount <em>Null Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getParameters <em>Parameters</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getAnalyzedElement <em>Analyzed Element</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getDataminingType <em>Datamining Type</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getIndicatorDefinition <em>Indicator Definition</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getJoinConditions <em>Join Conditions</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#getMaxNumberRows <em>Max Number Rows</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#isValidRow <em>Valid Row</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#isInValidRow <em>In Valid Row</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.Indicator#isStoreData <em>Store Data</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getCount <em>Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getNullCount <em>Null Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getParameters <em>Parameters</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getAnalyzedElement <em>Analyzed Element</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getDataminingType <em>Datamining Type</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getIndicatorDefinition <em>Indicator Definition</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getJoinConditions <em>Join Conditions</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#getMaxNumberRows <em>Max Number Rows</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#isValidRow <em>Valid Row</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#isInValidRow <em>In Valid Row</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.Indicator#isStoreData <em>Store Data</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator()
  * @model
  * @generated
  */
-public interface Indicator extends ModelElement {
+public interface Indicator extends ModelElement, DataValidation, MapDBDrillDown {
 
     /**
      * Returns the value of the '<em><b>Count</b></em>' attribute. The default value is <code>"0"</code>. <!--
@@ -61,8 +64,8 @@ public interface Indicator extends ModelElement {
 
     /**
      * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getCount <em>Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Count</em>' attribute.
      * @see #getCount()
      * @generated
@@ -70,14 +73,14 @@ public interface Indicator extends ModelElement {
     void setCount(Long value);
 
     /**
-     * Returns the value of the '<em><b>Null Count</b></em>' attribute.
-     * The default value is <code>"0"</code>.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Null Count</b></em>' attribute. The default value is <code>"0"</code>. <!--
+     * begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Null Count</em>' attribute isn't clear, there really should be more of a
-     * description here...
+     * If the meaning of the '<em>Null Count</em>' attribute isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Null Count</em>' attribute.
      * @see #setNullCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_NullCount()
@@ -87,9 +90,9 @@ public interface Indicator extends ModelElement {
     Long getNullCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getNullCount <em>Null Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getNullCount <em>Null Count</em>}'
+     * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Null Count</em>' attribute.
      * @see #getNullCount()
      * @generated
@@ -97,13 +100,13 @@ public interface Indicator extends ModelElement {
     void setNullCount(Long value);
 
     /**
-     * Returns the value of the '<em><b>Parameters</b></em>' containment reference.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Parameters</b></em>' containment reference. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Parameters</em>' containment reference isn't clear, there really should be more of
-     * a description here...
+     * If the meaning of the '<em>Parameters</em>' containment reference isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Parameters</em>' containment reference.
      * @see #setParameters(IndicatorParameters)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_Parameters()
@@ -113,8 +116,9 @@ public interface Indicator extends ModelElement {
     IndicatorParameters getParameters();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getParameters <em>Parameters</em>}' containment reference.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getParameters <em>Parameters</em>}'
+     * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Parameters</em>' containment reference.
      * @see #getParameters()
      * @generated
@@ -122,13 +126,13 @@ public interface Indicator extends ModelElement {
     void setParameters(IndicatorParameters value);
 
     /**
-     * Returns the value of the '<em><b>Analyzed Element</b></em>' reference.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Analyzed Element</b></em>' reference. <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Analyzed Element</em>' reference isn't clear, there really should be more of a
      * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Analyzed Element</em>' reference.
      * @see #setAnalyzedElement(ModelElement)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_AnalyzedElement()
@@ -138,8 +142,9 @@ public interface Indicator extends ModelElement {
     ModelElement getAnalyzedElement();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getAnalyzedElement <em>Analyzed Element</em>}' reference.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getAnalyzedElement
+     * <em>Analyzed Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Analyzed Element</em>' reference.
      * @see #getAnalyzedElement()
      * @generated
@@ -147,14 +152,14 @@ public interface Indicator extends ModelElement {
     void setAnalyzedElement(ModelElement value);
 
     /**
-     * Returns the value of the '<em><b>Datamining Type</b></em>' attribute.
-     * The literals are from the enumeration {@link org.talend.dataquality.indicators.DataminingType}.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Datamining Type</b></em>' attribute. The literals are from the enumeration
+     * {@link org.talend.dataquality.indicators.DataminingType}. <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Datamining Type</em>' attribute isn't clear, there really should be more of a
      * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Datamining Type</em>' attribute.
      * @see org.talend.dataquality.indicators.DataminingType
      * @see #setDataminingType(DataminingType)
@@ -165,8 +170,9 @@ public interface Indicator extends ModelElement {
     DataminingType getDataminingType();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getDataminingType <em>Datamining Type</em>}' attribute.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getDataminingType
+     * <em>Datamining Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Datamining Type</em>' attribute.
      * @see org.talend.dataquality.indicators.DataminingType
      * @see #getDataminingType()
@@ -175,13 +181,13 @@ public interface Indicator extends ModelElement {
     void setDataminingType(DataminingType value);
 
     /**
-     * Returns the value of the '<em><b>Indicator Definition</b></em>' reference.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Indicator Definition</b></em>' reference. <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Indicator Definition</em>' reference isn't clear, there really should be more of a
      * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Indicator Definition</em>' reference.
      * @see #setIndicatorDefinition(IndicatorDefinition)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_IndicatorDefinition()
@@ -191,8 +197,9 @@ public interface Indicator extends ModelElement {
     IndicatorDefinition getIndicatorDefinition();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getIndicatorDefinition <em>Indicator Definition</em>}' reference.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getIndicatorDefinition
+     * <em>Indicator Definition</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Indicator Definition</em>' reference.
      * @see #getIndicatorDefinition()
      * @generated
@@ -200,14 +207,14 @@ public interface Indicator extends ModelElement {
     void setIndicatorDefinition(IndicatorDefinition value);
 
     /**
-     * Returns the value of the '<em><b>Instantiated Expressions</b></em>' containment reference list.
-     * The list contents are of type {@link orgomg.cwm.objectmodel.core.Expression}.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Instantiated Expressions</b></em>' containment reference list. The list contents
+     * are of type {@link orgomg.cwm.objectmodel.core.Expression}. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Instantiated Expressions</em>' containment reference list isn't clear, there
-     * really should be more of a description here...
+     * If the meaning of the '<em>Instantiated Expressions</em>' containment reference list isn't clear, there really
+     * should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Instantiated Expressions</em>' containment reference list.
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_InstantiatedExpressions()
      * @model containment="true"
@@ -216,12 +223,9 @@ public interface Indicator extends ModelElement {
     EList<Expression> getInstantiatedExpressions();
 
     /**
-     * Returns the value of the '<em><b>Computed</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * a flag that tells whether this indicator is computed or not.
-     * <!-- end-model-doc -->
+     * Returns the value of the '<em><b>Computed</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc --> <!--
+     * begin-model-doc --> a flag that tells whether this indicator is computed or not. <!-- end-model-doc -->
+     * 
      * @return the value of the '<em>Computed</em>' attribute.
      * @see #setComputed(boolean)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_Computed()
@@ -231,9 +235,9 @@ public interface Indicator extends ModelElement {
     boolean isComputed();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}'
+     * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Computed</em>' attribute.
      * @see #isComputed()
      * @generated
@@ -241,14 +245,14 @@ public interface Indicator extends ModelElement {
     void setComputed(boolean value);
 
     /**
-     * Returns the value of the '<em><b>Join Conditions</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.rules.JoinElement}.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Join Conditions</b></em>' containment reference list. The list contents are of
+     * type {@link org.talend.dataquality.rules.JoinElement}. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Join Conditions</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Join Conditions</em>' containment reference list isn't clear, there really should be
+     * more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Join Conditions</em>' containment reference list.
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_JoinConditions()
      * @model containment="true"
@@ -257,12 +261,10 @@ public interface Indicator extends ModelElement {
     EList<JoinElement> getJoinConditions();
 
     /**
-     * Returns the value of the '<em><b>Max Number Rows</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * The maximum number of rows kept in each indicator when analyzing data with the Java engine. 
-     * <!-- end-model-doc -->
+     * Returns the value of the '<em><b>Max Number Rows</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * --> <!-- begin-model-doc --> The maximum number of rows kept in each indicator when analyzing data with the Java
+     * engine. <!-- end-model-doc -->
+     * 
      * @return the value of the '<em>Max Number Rows</em>' attribute.
      * @see #setMaxNumberRows(int)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_MaxNumberRows()
@@ -272,9 +274,9 @@ public interface Indicator extends ModelElement {
     int getMaxNumberRows();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getMaxNumberRows <em>Max Number Rows</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getMaxNumberRows
+     * <em>Max Number Rows</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Max Number Rows</em>' attribute.
      * @see #getMaxNumberRows()
      * @generated
@@ -282,13 +284,10 @@ public interface Indicator extends ModelElement {
     void setMaxNumberRows(int value);
 
     /**
-     * Returns the value of the '<em><b>Valid Row</b></em>' attribute.
-     * The default value is <code>"false"</code>.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * True if the previously handled data is match with the pattern.False if the indicator not need the parameter.
-     * <!-- end-model-doc -->
+     * Returns the value of the '<em><b>Valid Row</b></em>' attribute. The default value is <code>"false"</code>. <!--
+     * begin-user-doc --> <!-- end-user-doc --> <!-- begin-model-doc --> True if the previously handled data is match
+     * with the pattern.False if the indicator not need the parameter. <!-- end-model-doc -->
+     * 
      * @return the value of the '<em>Valid Row</em>' attribute.
      * @see #setValidRow(boolean)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_ValidRow()
@@ -298,9 +297,9 @@ public interface Indicator extends ModelElement {
     boolean isValidRow();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isValidRow <em>Valid Row</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isValidRow <em>Valid Row</em>}'
+     * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Valid Row</em>' attribute.
      * @see #isValidRow()
      * @generated
@@ -308,13 +307,10 @@ public interface Indicator extends ModelElement {
     void setValidRow(boolean value);
 
     /**
-     * Returns the value of the '<em><b>In Valid Row</b></em>' attribute.
-     * The default value is <code>"false"</code>.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * True if the previously handled data is not match with the pattern.False if the indicator not need the parameter.
-     * <!-- end-model-doc -->
+     * Returns the value of the '<em><b>In Valid Row</b></em>' attribute. The default value is <code>"false"</code>.
+     * <!-- begin-user-doc --> <!-- end-user-doc --> <!-- begin-model-doc --> True if the previously handled data is not
+     * match with the pattern.False if the indicator not need the parameter. <!-- end-model-doc -->
+     * 
      * @return the value of the '<em>In Valid Row</em>' attribute.
      * @see #setInValidRow(boolean)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_InValidRow()
@@ -324,9 +320,9 @@ public interface Indicator extends ModelElement {
     boolean isInValidRow();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isInValidRow <em>In Valid Row</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isInValidRow <em>In Valid Row</em>}'
+     * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>In Valid Row</em>' attribute.
      * @see #isInValidRow()
      * @generated
@@ -334,14 +330,14 @@ public interface Indicator extends ModelElement {
     void setInValidRow(boolean value);
 
     /**
-     * Returns the value of the '<em><b>Store Data</b></em>' attribute.
-     * The default value is <code>"false"</code>.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Store Data</b></em>' attribute. The default value is <code>"false"</code>. <!--
+     * begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Store Data</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Store Data</em>' attribute isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Store Data</em>' attribute.
      * @see #setStoreData(boolean)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_StoreData()
@@ -351,9 +347,9 @@ public interface Indicator extends ModelElement {
     boolean isStoreData();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isStoreData <em>Store Data</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isStoreData <em>Store Data</em>}'
+     * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Store Data</em>' attribute.
      * @see #isStoreData()
      * @generated
@@ -362,6 +358,7 @@ public interface Indicator extends ModelElement {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model
      * @generated
      */
@@ -369,6 +366,7 @@ public interface Indicator extends ModelElement {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model
      * @generated
      */
@@ -376,6 +374,7 @@ public interface Indicator extends ModelElement {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model kind="operation"
      * @generated
      */
@@ -383,6 +382,7 @@ public interface Indicator extends ModelElement {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model kind="operation"
      * @generated
      */
@@ -443,6 +443,7 @@ public interface Indicator extends ModelElement {
      * implemented in order to store the value in the datamart.
      * 
      * <!-- end-user-doc -->
+     * 
      * @model kind="operation"
      * @generated
      */
@@ -455,25 +456,24 @@ public interface Indicator extends ModelElement {
      * implemented in order to store the value in the datamart.
      * 
      * <!-- end-user-doc -->
+     * 
      * @model kind="operation"
      * @generated
      */
     Double getRealValue();
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model kind="operation"
      * @generated
      */
     IndicatorValueType getValueType();
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * Return the instance value of the indicator or null when not applicable.
-     * <!-- end-model-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc --> <!-- begin-model-doc --> Return the instance value of the indicator
+     * or null when not applicable. <!-- end-model-doc -->
+     * 
      * @model kind="operation"
      * @generated
      */
@@ -507,4 +507,48 @@ public interface Indicator extends ModelElement {
      */
     boolean handle(EList<Object> datas);
 
+    /**
+     * Getter for saveTempDataToFile.
+     * 
+     * @return where we will save temp data on a file
+     */
+    public boolean isUsedMapDBMode();
+
+    /**
+     * 
+     * Set current indicator is belong to MapDB mode
+     * 
+     * @param usedMapDBMode
+     */
+    public void setUsedMapDBMode(boolean usedMapDBMode);
+
+    /**
+     * Getter for drillDownLimitSize.
+     * 
+     * @return the drillDownLimitSize
+     */
+    public Long getDrillDownLimitSize();
+
+    /**
+     * Sets the drillDownLimitSize.
+     * 
+     * @param drillDownLimitSize the drillDownLimitSize to set
+     */
+    public void setDrillDownLimitSize(Long dirllDownSize);
+
+    /**
+     * 
+     * Check whether drill down action is allow
+     * 
+     * @return true is allowed else false
+     */
+    public boolean checkAllowDrillDown();
+
+    /**
+     * 
+     * Get the path which used to create mapDB file
+     * 
+     * @return
+     */
+    public File getMapDBFile();
 } // Indicator

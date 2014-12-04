@@ -7,6 +7,7 @@ package org.talend.dataquality.indicators.sql.impl;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
@@ -21,6 +22,8 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
  * @generated
  */
 public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements WhereRuleIndicator {
+
+    private static Logger log = Logger.getLogger(WhereRuleIndicatorImpl.class);
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -56,6 +59,21 @@ public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements Wher
         Long c = IndicatorHelper.getLongFromObject(String.valueOf(objects.get(0)[0]));
         // ~18975
         this.setUserCount(c);
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.sql.WhereRuleIndicator#setCount(java.util.List)
+     */
+    @Override
+    public boolean setCount(List<Object[]> objects) {
+        if (!checkResults(objects, 1)) {
+            return false;
+        }
+        Long c = IndicatorHelper.getLongFromObject(String.valueOf(objects.get(0)[0]));
+        this.setCount(c);
         return true;
     }
 

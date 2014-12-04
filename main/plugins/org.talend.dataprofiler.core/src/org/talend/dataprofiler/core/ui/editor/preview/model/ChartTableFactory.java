@@ -44,7 +44,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
@@ -53,11 +52,10 @@ import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDuplicatesAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsMapSelectionDialog;
-import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
+import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -70,7 +68,6 @@ import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
-import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
@@ -87,23 +84,18 @@ import org.talend.dq.analysis.explore.PatternExplorer;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public final class ChartTableFactory {
-
-    /**
-     * 
-     */
-    private static final String DRILL_DOWN_EDITOR = "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"; //$NON-NLS-1$
 
     private ChartTableFactory() {
     }
@@ -168,9 +160,6 @@ public final class ChartTableFactory {
         final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
         final boolean isJAVALanguage = ExecutionLanguage.JAVA == currentEngine;
         final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
-        final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
-        final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
-        final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
 
         final Table table = tbViewer.getTable();
 
@@ -194,7 +183,6 @@ public final class ChartTableFactory {
                         table.setMenu(menu);
 
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
-                        Long rowCount = getRowCount(analysis, dataEntity.getIndicator().getAnalyzedElement());
 
                         if (!isJAVALanguage) {
                             boolean showExtraMenu = false;
@@ -202,13 +190,10 @@ public final class ChartTableFactory {
                                 MenuItem item = new MenuItem(menu, SWT.PUSH);
                                 item.setText(itemEntity.getLabel());
                                 item.setImage(itemEntity.getIcon());
-
                                 item.addSelectionListener(new SelectionAdapter() {
 
                                     @Override
-                                    public void widgetSelected(SelectionEvent e) {
-                                        String query = itemEntity.getQuery();
-                                        String editorName = indicator.getName();
+                                    public void widgetSelected(SelectionEvent e1) {
                                         // TDQ-8637 pop a message when it is pattern and no implemnt Regex function in
                                         // DBMSLanguage.
                                         if (isPatternMatchingIndicator(indicator)
@@ -217,37 +202,27 @@ public final class ChartTableFactory {
                                                     DefaultMessagesImpl.getString("ChartTableFactory.NoSupportPatternTeradata"));//$NON-NLS-1$
                                             return;
                                         }
-                                        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+
+                                        String query = itemEntity.getQuery();
+                                        String editorName = indicator.getName();
+                                        SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                     }
                                 });
 
                                 // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join
                                 // condition columns
-                                if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
+                                if (IndicatorHelper.isWhereRuleIndicator(indicator)) {
                                     // MOD yyin 20121126 TDQ-6477,show the menu only when Join condition exists
                                     WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
                                     EList<JoinElement> joinConditions = ind.getJoinConditions();
                                     if (joinConditions.size() > 0) {
-                                        // if (rowCount.doubleValue() < ind.getUserCount().doubleValue()) {
                                         showExtraMenu = true;
                                     }
                                 }
                                 // TDQ-4470~
 
                                 if (isPatternFrequencyIndicator(indicator)) {
-                                    MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                    itemCreatePatt.setText(DefaultMessagesImpl
-                                            .getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
-                                    itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
-                                    itemCreatePatt.addSelectionListener(new SelectionAdapter() {
-
-                                        @Override
-                                        public void widgetSelected(SelectionEvent e) {
-                                            DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                                            PatternTransformer pattTransformer = new PatternTransformer(language);
-                                            createPattern(analysis, itemEntity, pattTransformer);
-                                        }
-                                    });
+                                    createMenuOfGenerateRegularPattern(analysis, menu, dataEntity);
                                 }
                             }
                             // show extra menu to create simple analysis, help user to find the duplicated rows
@@ -258,7 +233,7 @@ public final class ChartTableFactory {
                                 itemCreateWhereRule.addSelectionListener(new SelectionAdapter() {
 
                                     @Override
-                                    public void widgetSelected(SelectionEvent e) {
+                                    public void widgetSelected(SelectionEvent e1) {
                                         final StructuredSelection selectionOne = (StructuredSelection) tbViewer.getSelection();
                                         // MOD xqliu 2012-05-11 TDQ-5314
                                         Object firstElement = selectionOne.getFirstElement();
@@ -381,56 +356,16 @@ public final class ChartTableFactory {
                                 });
                             }
                         } else {
-                            AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
+
                             if (analysis.getParameters().isStoreData()) { // if allow drill down
-
-                                boolean hasData = analyDataSet != null
-                                        && (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
-                                                || analyDataSet.getFrequencyData() != null
-                                                && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
-                                                && analyDataSet.getPatternData().size() > 0);
-
-                                if (hasData) {
-                                    for (final MenuItemEntity itemEntity : itemEntities) {
-                                        MenuItem item = new MenuItem(menu, SWT.PUSH);
-                                        item.setText(itemEntity.getLabel());
-                                        item.setImage(itemEntity.getIcon());
-                                        item.addSelectionListener(new SelectionAdapter() {
-
-                                            @Override
-                                            public void widgetSelected(SelectionEvent e) {
-                                                CorePlugin.getDefault().openEditor(
-                                                        new DrillDownEditorInput(analysis, dataEntity, itemEntity),
-                                                        ChartTableFactory.DRILL_DOWN_EDITOR);
-                                            }
-
-                                        });
-                                    }
+                                if (indicator.isUsedMapDBMode()) {
+                                    DrillDownUtils.createDrillDownMenuForMapDB(dataEntity, menu, itemEntities, analysis);
+                                } else {
+                                    DrillDownUtils.createDrillDownMenuForJava(dataEntity, menu, itemEntities, analysis);
                                 }
-
                                 if (isPatternFrequencyIndicator(indicator)) {
                                     for (final MenuItemEntity itemEntity : itemEntities) {
-
-                                        if (itemEntity.getQuery() == null) {
-                                            if (dataEntity.getKey() == null) {
-                                                itemEntity.setQuery(dataEntity.getLabel());
-                                            } else {
-                                                itemEntity.setQuery(dataEntity.getKey().toString());
-                                            }
-                                        }
-                                        MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                        itemCreatePatt.setText(DefaultMessagesImpl
-                                                .getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
-                                        itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
-                                        itemCreatePatt.addSelectionListener(new SelectionAdapter() {
-
-                                            @Override
-                                            public void widgetSelected(SelectionEvent e) {
-                                                DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                                                PatternTransformer pattTransformer = new PatternTransformer(language);
-                                                createPattern(analysis, itemEntity, pattTransformer);
-                                            }
-                                        });
+                                        createMenuOfGenerateRegularPattern(analysis, menu, dataEntity);
                                     }
                                 }
 
@@ -444,7 +379,7 @@ public final class ChartTableFactory {
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
                                     @Override
-                                    public void widgetSelected(SelectionEvent e) {
+                                    public void widgetSelected(SelectionEvent e1) {
                                         DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
                                         IFolder folder = ResourceManager.getPatternRegexFolder();
                                         String model = dataEntity.getLabel();
@@ -467,37 +402,33 @@ public final class ChartTableFactory {
                 }
             }
 
-            /**
-             * DOC xqliu Comment method "getRowCount".
-             * 
-             * @param analysis
-             * @param analyzedElement
-             * @return
-             */
-            private Long getRowCount(Analysis analysis, ModelElement analyzedElement) {
-                Long rowCount = 0L;
-                EList<Indicator> indicators = analysis.getResults().getIndicators();
-                for (Indicator ind : indicators) {
-                    if (ind instanceof RowCountIndicator && ind.getAnalyzedElement().equals(analyzedElement)) {
-                        rowCount = ind.getCount();
-                    }
-                }
-                return rowCount;
-            }
-
-            private SelectionAdapter getAdapter(final IDatabaseJobService service) {
-                return new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        service.executeJob();
-                    }
-                };
-            }
         });
 
         // add tool tip
         TableUtils.addTooltipOnTableItem(table);
+    }
+
+    /**
+     * DOC yyin Comment method "createMenuOfGenerateRegularPattern".
+     * 
+     * @param analysis
+     * @param menu
+     * @param itemEntity
+     */
+    public static void createMenuOfGenerateRegularPattern(final Analysis analysis, Menu menu, final ChartDataEntity dataEntity) {
+        final String query = dataEntity.getKey() == null ? dataEntity.getLabel() : dataEntity.getKey().toString();
+        MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
+        itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
+        itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
+        itemCreatePatt.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e1) {
+                DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
+                PatternTransformer pattTransformer = new PatternTransformer(language);
+                createPattern(analysis, query, pattTransformer);
+            }
+        });
     }
 
     /**
@@ -507,13 +438,8 @@ public final class ChartTableFactory {
      * @param itemEntity
      * @param pattTransformer
      */
-    public static void createPattern(Analysis analysis, MenuItemEntity itemEntity, final PatternTransformer pattTransformer) {
+    public static void createPattern(Analysis analysis, String query, final PatternTransformer pattTransformer) {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
-        String query = itemEntity.getQuery();
-
-        if (analysis.getParameters().getExecutionLanguage().compareTo(ExecutionLanguage.SQL) == 0) {
-            query = query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1);
-        }
         String regex = pattTransformer.getRegexp(query);
         IFolder folder = ResourceManager.getPatternRegexFolder();
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
@@ -664,7 +590,7 @@ public final class ChartTableFactory {
             return false;
         }
         // only support 3 kinds of db: mysql, oracle, postgressql
-        String[] supportDB = { "MySQL", "Oracle with SID", "PostgreSQL" };
+        String[] supportDB = { "MySQL", "Oracle with SID", "PostgreSQL" }; //$NON-NLS-2$ //$NON-NLS-3$
         TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (table == null) {
             return false;

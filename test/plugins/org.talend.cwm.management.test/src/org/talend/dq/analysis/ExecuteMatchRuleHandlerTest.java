@@ -38,6 +38,7 @@ import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dq.analysis.match.ExecuteMatchRuleHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -100,8 +101,9 @@ public class ExecuteMatchRuleHandlerTest {
 
         BlockKeyIndicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
         ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator);
         TypedReturnCode<MatchGroupResultConsumer> executeResult = execHandler.execute(columnMap, recordMatchingIndicator,
-                matchRows, blockKeyIndicator);
+                matchRows, blockKeyIndicator, matchResultConsumer);
 
         Assert.assertTrue(executeResult.isOk());
         Assert.assertTrue(executeResult.getMessage() == null);
@@ -115,6 +117,33 @@ public class ExecuteMatchRuleHandlerTest {
             Assert.assertTrue(Boolean.parseBoolean(object.toString()));
         }
 
+    }
+
+    private MatchGroupResultConsumer createMatchGroupResultConsumer(Map<MetadataColumn, String> columnMap,
+            final RecordMatchingIndicator recordMatchingIndicator) {
+        MetadataColumn[] completeColumnSchema = AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap);
+        String[] colSchemaString = new String[completeColumnSchema.length];
+        int idx = 0;
+        for (MetadataColumn metadataCol : completeColumnSchema) {
+            colSchemaString[idx++] = metadataCol.getName();
+        }
+        recordMatchingIndicator.setMatchRowSchema(colSchemaString);
+        recordMatchingIndicator.reset();
+
+        MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer(true) {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping. MatchGroupResultConsumer#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(Object row) {
+                recordMatchingIndicator.handle(row);
+                addOneRowOfResult(row);
+            }
+        };
+        return matchResultConsumer;
     }
 
     /**
@@ -182,8 +211,9 @@ public class ExecuteMatchRuleHandlerTest {
         matchRows.add(new String[] { "id4", "name2", "number2", "date1" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         BlockKeyIndicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
         ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator);
         TypedReturnCode<MatchGroupResultConsumer> executeResult = execHandler.execute(columnMap, recordMatchingIndicator,
-                matchRows, blockKeyIndicator);
+                matchRows, blockKeyIndicator, matchResultConsumer);
         Assert.assertTrue(executeResult.isOk());
         Assert.assertTrue(executeResult.getMessage() == null);
         Assert.assertTrue(executeResult.getObject() != null);
@@ -280,8 +310,11 @@ public class ExecuteMatchRuleHandlerTest {
         matchRows.add(new String[] { "id4", "name2", "number2", "date1" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         BlockKeyIndicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
         ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+
+        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator);
+
         TypedReturnCode<MatchGroupResultConsumer> executeResult = execHandler.execute(columnMap, recordMatchingIndicator,
-                matchRows, blockKeyIndicator);
+                matchRows, blockKeyIndicator, matchResultConsumer);
         Assert.assertTrue(executeResult.isOk());
         Assert.assertTrue(executeResult.getMessage() == null);
         Assert.assertTrue(executeResult.getObject() != null);
@@ -381,8 +414,10 @@ public class ExecuteMatchRuleHandlerTest {
         matchRows.add(new String[] { "id4", "name2", "number2", "date1" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         BlockKeyIndicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
         ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+
+        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator);
         TypedReturnCode<MatchGroupResultConsumer> executeResult = execHandler.execute(columnMap, recordMatchingIndicator,
-                matchRows, blockKeyIndicator);
+                matchRows, blockKeyIndicator, matchResultConsumer);
         Assert.assertTrue(executeResult.isOk());
         Assert.assertTrue(executeResult.getMessage() == null);
         Assert.assertTrue(executeResult.getObject() != null);

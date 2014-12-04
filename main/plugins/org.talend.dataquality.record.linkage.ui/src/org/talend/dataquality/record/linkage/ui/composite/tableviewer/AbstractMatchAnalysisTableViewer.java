@@ -115,7 +115,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
                 if (columnLabel.length() == 1) {
                     columnLabel = columnLabel + PluginConstant.SPACE_STRING + PluginConstant.SPACE_STRING;
                 }
-                tLayout.addColumnData(new ColumnPixelData(columnLabel.length() * getHeaderDisplayWeight()));
+                tLayout.addColumnData(new ColumnPixelData(columnLabel.length() * getHeaderDisplayWeight(index)));
                 new TableColumn(innerTable, SWT.LEFT).setText(columnLabel);
             }
         }
@@ -139,7 +139,8 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     private String getInternationalizedLabel(String str) {
-        return DefaultMessagesImpl.getString(str);
+        // if the str is %, just return it, need not to do internationalization
+        return MatchAnalysisConstant.PERCENTAGE.equals(str) ? str : DefaultMessagesImpl.getString(str);
     }
 
     /**
@@ -213,6 +214,16 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
      * @return
      */
     abstract protected int getHeaderDisplayWeight();
+
+    /**
+     * get the header display weight according to the index.
+     * 
+     * @param index
+     * @return
+     */
+    protected int getHeaderDisplayWeight(int index) {
+        return getHeaderDisplayWeight();
+    }
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".

@@ -5,7 +5,10 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.eclipse.emf.ecore.EClass;
@@ -21,15 +24,14 @@ import org.talend.dataquality.indicators.WeekLowFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class WeekLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements WeekLowFrequencyIndicator {
 
-    private final String weekSign = "w"; //$NON-NLS-1$ 
-
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected WeekLowFrequencyIndicatorImpl() {
@@ -38,6 +40,7 @@ public class WeekLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -72,8 +75,7 @@ public class WeekLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
         }
 
         if (data instanceof Date) {
-            Date date = (Date) data;
-            String format = DateFormatUtils.format((Date) data, datePattern + getWeekOfYear(date));
+            String format = getFormatName(data);
             return super.handle(format);
         }
         return super.handle(data);
@@ -87,12 +89,27 @@ public class WeekLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
      * @return
      */
     private int getWeekOfYear(Date date) {
-        String weekStr = DateFormatUtils.format(date, weekSign);
-        int weekOfYear = Integer.parseInt(weekStr);
-        if (weekOfYear > 0) {
-            weekOfYear--;
-        }
+        // 'setFirstDayOfWeek(int)' and 'setMinimalDaysInFirstWeek(Locale)' will set by these 2 default parametes.
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
+        cal.setTime(date);
+        int weekOfYear = cal.get(Calendar.WEEK_OF_YEAR);
         return weekOfYear;
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getSpecialName(java.lang.Object)
+     */
+    @Override
+    protected String getFormatName(Object data) {
+        Date date = (Date) data;
+        int weekOfYear = getWeekOfYear(date);
+        if (weekOfYear < 10) {
+            return DateFormatUtils.format(date, datePattern + "0" + weekOfYear);
+        }
+        return DateFormatUtils.format(date, datePattern + weekOfYear);
     }
 
     /*

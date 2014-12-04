@@ -38,6 +38,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -46,7 +47,7 @@ import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-@PrepareForTest({ ColumnHelper.class, LanguageManager.class })
+@PrepareForTest({ ColumnHelper.class, LanguageManager.class, JavaSqlFactory.class })
 public class DelimitedFileIndicatorEvaluatorTest {
 
     @Rule
@@ -54,29 +55,31 @@ public class DelimitedFileIndicatorEvaluatorTest {
 
     @Test
     public void testExecuteSqlQuery_delimetd() throws Exception {
-        String empty = "";
+        String empty = ""; //$NON-NLS-1$
         Analysis analysis = mock(Analysis.class);
         DelimitedFileIndicatorEvaluator delFileIndiEvaluator = new DelimitedFileIndicatorEvaluator(analysis);
         DelimitedFileIndicatorEvaluator spyEvaluator = Mockito.spy(delFileIndiEvaluator);
-        stub(method(DelimitedFileIndicatorEvaluator.class, "handleByARow"));
-        stub(method(DelimitedFileIndicatorEvaluator.class, "addResultToIndicatorToRowMap", Indicator.class, EMap.class));
+        stub(method(DelimitedFileIndicatorEvaluator.class, "handleByARow")); //$NON-NLS-1$
+        stub(method(DelimitedFileIndicatorEvaluator.class, "addResultToIndicatorToRowMap", Indicator.class, EMap.class)); //$NON-NLS-1$
         AnalysisContext context = mock(AnalysisContext.class);
         when(analysis.getContext()).thenReturn(context);
         DelimitedFileConnection deliFileConn = mock(DelimitedFileConnection.class);
         when(context.getConnection()).thenReturn(deliFileConn);
         when(deliFileConn.isContextMode()).thenReturn(false);
-        String path = "test.txt";
-        when(deliFileConn.getFilePath()).thenReturn(path);
+        String path = "test.txt"; //$NON-NLS-1$
+
+        PowerMockito.mockStatic(JavaSqlFactory.class);
+        when(JavaSqlFactory.getURL(deliFileConn)).thenReturn(path);
         IPath iPath = mock(IPath.class);
         File file = new File(path);
         BufferedWriter output = new BufferedWriter(new FileWriter(file));
-        String str = "id;Cocust(Tests);owner_id\n" + "1;yellow;3301\n" + "2;blue;3302\n" + " 4;red;3307\n" + "5;white;4563\n"
-                + "6;pink2;457883\n" + "7;blank;231233\n";
+        String str = "id;Cocust(Tests);owner_id\n" + "1;yellow;3301\n" + "2;blue;3302\n" + " 4;red;3307\n" + "5;white;4563\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+                + "6;pink2;457883\n" + "7;blank;231233\n"; //$NON-NLS-1$ //$NON-NLS-2$
         output.write(str);
         output.close();
         when(iPath.toFile()).thenReturn(file);
-        when(deliFileConn.getFieldSeparatorValue()).thenReturn(";");
-        when(deliFileConn.getEncoding()).thenReturn("US-ASCII");
+        when(deliFileConn.getFieldSeparatorValue()).thenReturn(";"); //$NON-NLS-1$
+        when(deliFileConn.getEncoding()).thenReturn("US-ASCII"); //$NON-NLS-1$
         AnalysisResult results = mock(AnalysisResult.class);
         when(analysis.getResults()).thenReturn(results);
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = mock(EMap.class);
@@ -104,7 +107,7 @@ public class DelimitedFileIndicatorEvaluatorTest {
         when(deliFileConn.getFooterValue()).thenReturn(empty);
         when(deliFileConn.getLimitValue()).thenReturn(empty);
         when(deliFileConn.getEscapeType()).thenReturn(Escape.DELIMITED);
-        when(deliFileConn.getRowSeparatorValue()).thenReturn("\\n");
+        when(deliFileConn.getRowSeparatorValue()).thenReturn("\\n"); //$NON-NLS-1$
         when(deliFileConn.isRemoveEmptyRow()).thenReturn(false);
         when(deliFileConn.isSplitRecord()).thenReturn(false);
 
@@ -114,5 +117,4 @@ public class DelimitedFileIndicatorEvaluatorTest {
         Mockito.doReturn(true).when(spyEvaluator).continueRun();
         spyEvaluator.executeSqlQuery(empty);
     }
-
 }

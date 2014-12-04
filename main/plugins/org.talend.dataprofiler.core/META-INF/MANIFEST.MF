@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Data Profiler Core Plug-in
 Bundle-SymbolicName: org.talend.dataprofiler.core; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.core.CorePlugin
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
- net.sourceforge.sqlexplorer;resolution:=optional,
+ org.eclipse.nebula.widgets.grid,
  org.eclipse.ui.ide,
  org.apache.commons.logging,
  org.apache.commons.collections,
@@ -19,12 +19,10 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.eclipse.ui.browser,
  org.eclipse.help.ui,
  org.eclipse.ui.intro,
- org.eclipse.nebula.widgets.grid,
  org.talend.cwm.management,
  org.talend.dataprofiler.help,
  org.talend.libraries.jfreechart,
  org.talend.dataquality.edit,
- org.talend.libraries.javacsv,
  org.talend.libraries.jung,
  org.talend.dataprofiler.ecos,
  org.talend.cwm.compare,
@@ -37,14 +35,19 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.talend.metadata.managment.ui,
  org.talend.commons.ui,
  org.talend.repository.metadata,
- org.eclipse.nebula.widgets.grid,
  org.apache.log4j,
  org.talend.dataprofiler.common.ui,
  org.talend.dataquality.record.linkage.ui,
  org.talend.dataprofiler.migration,
  org.eclipse.help,
  org.talend.libraries.jexcel,
- org.talend.core.ui
+ org.talend.core.ui,
+ org.eclipse.nebula.widgets.pagination,
+ org.talend.libraries.mapdb,
+ org.talend.updates.runtime,
+ org.talend.dataprofiler.service,
+ org.talend.librariesmanager.ui,
+ org.talend.libraries.csv
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
@@ -107,7 +110,7 @@ Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.ui.wizard.matchrule,
  org.talend.dataprofiler.core.ui.wizard.parserrule,
  org.talend.dataprofiler.core.ui.wizard.urlsetup
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.apache.log4j, org.talend.testutils
 Bundle-Localization: plugin
 Bundle-ClassPath: .
+Import-Package: org.talend.dataprofiler.service

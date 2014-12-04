@@ -15,13 +15,14 @@ import org.talend.dataquality.indicators.MinLengthWithBlankIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MinLengthWithBlankIndicatorImpl extends MinLengthIndicatorImpl implements MinLengthWithBlankIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MinLengthWithBlankIndicatorImpl() {
@@ -30,6 +31,7 @@ public class MinLengthWithBlankIndicatorImpl extends MinLengthIndicatorImpl impl
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -46,7 +48,12 @@ public class MinLengthWithBlankIndicatorImpl extends MinLengthIndicatorImpl impl
     public boolean handle(Object data) {
         boolean ok = super.handle(data);
         if (data != null && ((String) data).trim().length() == 0) {
-            length = 0L;
+            if (length == LENGTH_EDEFAULT || length > 0) {
+                changeLength(0);
+            }
+            if (this.checkMustStoreCurrentRow()) {
+                mustStoreRow = true;
+            }
         }
         return ok;
     }

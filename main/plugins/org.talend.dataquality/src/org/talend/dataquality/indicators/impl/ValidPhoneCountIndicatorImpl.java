@@ -1,11 +1,11 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -22,23 +22,24 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Valid Phone Count Indicator</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Valid Phone Count Indicator</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.ValidPhoneCountIndicatorImpl#getValidPhoneNumCount <em>Valid Phone Num Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.ValidPhoneCountIndicatorImpl#getValidPhoneNumCount <em>Valid Phone
+ * Num Count</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements ValidPhoneCountIndicator {
+
     /**
-     * The default value of the '{@link #getValidPhoneNumCount() <em>Valid Phone Num Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getValidPhoneNumCount() <em>Valid Phone Num Count</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getValidPhoneNumCount()
      * @generated
      * @ordered
@@ -46,9 +47,9 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
     protected static final Long VALID_PHONE_NUM_COUNT_EDEFAULT = new Long(0L);
 
     /**
-     * The cached value of the '{@link #getValidPhoneNumCount() <em>Valid Phone Num Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getValidPhoneNumCount() <em>Valid Phone Num Count</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getValidPhoneNumCount()
      * @generated
      * @ordered
@@ -56,8 +57,8 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
     protected Long validPhoneNumCount = VALID_PHONE_NUM_COUNT_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected ValidPhoneCountIndicatorImpl() {
@@ -65,8 +66,8 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -75,31 +76,37 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public Long getValidPhoneNumCount() {
         return validPhoneNumCount;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public void setValidPhoneNumCount(Long newValidPhoneNumCount) {
         Long oldValidPhoneNumCount = validPhoneNumCount;
         validPhoneNumCount = newValidPhoneNumCount;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT, oldValidPhoneNumCount, validPhoneNumCount));
+        if (eNotificationRequired()) {
+            eNotify(new ENotificationImpl(this, Notification.SET,
+                    IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT, oldValidPhoneNumCount,
+                    validPhoneNumCount));
+        }
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public Set<Object> getValidPhoneValues() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
@@ -107,71 +114,74 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT:
-                return getValidPhoneNumCount();
+        case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT:
+            return getValidPhoneNumCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT:
-                setValidPhoneNumCount((Long)newValue);
-                return;
+        case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT:
+            setValidPhoneNumCount((Long) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT:
-                setValidPhoneNumCount(VALID_PHONE_NUM_COUNT_EDEFAULT);
-                return;
+        case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT:
+            setValidPhoneNumCount(VALID_PHONE_NUM_COUNT_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT:
-                return VALID_PHONE_NUM_COUNT_EDEFAULT == null ? validPhoneNumCount != null : !VALID_PHONE_NUM_COUNT_EDEFAULT.equals(validPhoneNumCount);
+        case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT:
+            return VALID_PHONE_NUM_COUNT_EDEFAULT == null ? validPhoneNumCount != null : !VALID_PHONE_NUM_COUNT_EDEFAULT
+                    .equals(validPhoneNumCount);
         }
         return super.eIsSet(featureID);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy()) {
+            return super.toString();
+        }
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (validPhoneNumCount: ");
@@ -187,7 +197,6 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
      */
     @Override
     public boolean handle(Object data) {
-        this.mustStoreRow = false;
         super.handle(data);
         if (data == null) {
             return false;
@@ -201,7 +210,9 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
             if (phoneUtil.isValidNumberForRegion(phoneNumber, country)) {
                 // if (phoneUtil.isValidNumber(phoneNumber)) {
                 validPhoneNumCount++;
-                this.mustStoreRow = true;
+                if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
+                    this.mustStoreRow = true;
+                }
             }
 
         } catch (NumberParseException e) {
@@ -219,6 +230,7 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
     @Override
     public boolean reset() {
         this.validPhoneNumCount = VALID_PHONE_NUM_COUNT_EDEFAULT;
+        drillDownValueCount = 0l;
         return super.reset();
     }
 
@@ -237,4 +249,23 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
         return this.getValidPhoneNumCount();
     }
 
-} //ValidPhoneCountIndicatorImpl
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        if (checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
+        }
+    }
+
+} // ValidPhoneCountIndicatorImpl

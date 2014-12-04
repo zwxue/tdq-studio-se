@@ -10,12 +10,12 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.talend.dataquality.domain.*;
 import org.talend.dataquality.domain.DateValue;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.EnumerationRule;
 import org.talend.dataquality.domain.IntegerValue;
+import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
 import org.talend.dataquality.domain.LengthRestriction;
 import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.domain.NumericValue;

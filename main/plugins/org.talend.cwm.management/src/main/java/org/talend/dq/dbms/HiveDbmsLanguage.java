@@ -15,6 +15,8 @@ package org.talend.dq.dbms;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.lang.StringUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -150,7 +152,8 @@ public class HiveDbmsLanguage extends DbmsLanguage {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.dbms.DbmsLanguage#castColumn4ColumnAnalysisSqlExecutor(org.talend.dataquality.indicators.Indicator,
+     * @see
+     * org.talend.dq.dbms.DbmsLanguage#castColumn4ColumnAnalysisSqlExecutor(org.talend.dataquality.indicators.Indicator,
      * org.talend.cwm.relational.TdColumn, java.lang.String)
      */
     @Override
@@ -186,4 +189,22 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         return super.getInvalidClauseBenFord(castColumnNameToChar(columnName));
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.dbms.DbmsLanguage#getQueryColumnSetWithPrefixFromContext(org.talend.core.model.metadata.builder
+     * .connection.DatabaseConnection, java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Override
+    protected String getQueryColumnSetWithPrefixFromContext(DatabaseConnection dbConn, String catalogName, String schemaName,
+            String tableName) {
+        String catalogNameFromContext = getCatalogNameFromContext(dbConn);
+        String schemaNameFromContext = getSchemaNameFromContext(dbConn);
+        if (StringUtils.isBlank(catalogNameFromContext) && StringUtils.isBlank(schemaNameFromContext)) {
+            catalogNameFromContext = catalogName;
+            schemaNameFromContext = schemaName;
+        }
+        return toQualifiedName(catalogNameFromContext, schemaNameFromContext, tableName);
+    }
 }

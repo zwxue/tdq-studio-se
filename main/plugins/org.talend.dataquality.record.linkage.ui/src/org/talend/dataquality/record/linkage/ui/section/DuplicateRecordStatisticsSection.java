@@ -13,15 +13,20 @@
 package org.talend.dataquality.record.linkage.ui.section;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.chart.DuplicateRecordPieChart;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.DuplicateRecordTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.DuplicateStatisticsRow;
@@ -38,6 +43,8 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
     private DuplicateRecordTableViewer duplicateRecordTableViewer = null;
 
     private DuplicateRecordPieChart duplicateRecordPieChart = null;
+
+    private Label mergedRecordsValue = null;
 
     /**
      * DOC zhao DuplicateRecordStatisticsSection constructor comment.
@@ -134,8 +141,43 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
     protected Composite createSubContent(Composite sectionClient) {
         duplicateRecordTableViewer = new DuplicateRecordTableViewer(sectionClient, SWT.NONE);
         setDupRecordTableInput();
+        // Add the merged records information: only for T-swoosh
+        final Object[] IndicatorList = MatchRuleAnlaysisUtils.getNeedIndicatorFromAna(analysis);
+        final RecordMatchingIndicator recordMatchingIndicator = (RecordMatchingIndicator) IndicatorList[0];
+        if (recordMatchingIndicator.getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm()
+                .equals(RecordMatcherType.T_SwooshAlgorithm.name())) {
+            Composite mergedRecordComp = new Composite(sectionClient, SWT.NONE);
+            mergedRecordComp.setLayout(new GridLayout(2, true));
+            Label mergedRcdLabel = new Label(mergedRecordComp, SWT.NONE);
+            mergedRcdLabel.setText(DefaultMessagesImpl.getString("DuplicateRecordStatisticsSection.MergedRecord")); //$NON-NLS-1$
+            mergedRecordsValue = new Label(mergedRecordComp, SWT.NONE);
+            Long mergedRecordsCount = computeMergedRecords();
+            mergedRecordsValue.setText(mergedRecordsCount.toString());
+        }
         return sectionClient;
 
+    }
+
+    /**
+     * DOC zhao Comment method "computeMergedRecords".
+     * 
+     * @return
+     */
+    private Long computeMergedRecords() {
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        Map<Object, Long> g2f = recordMatchingIndicator.getGroupSize2groupFrequency();
+        Iterator<Object> groupSizeIterator = g2f.keySet().iterator();
+
+        Long mergedRecordsCount = 0l;
+        while (groupSizeIterator.hasNext()) {
+            Object groupSize = groupSizeIterator.next();
+            if (Long.valueOf(groupSize.toString()) > 1) {
+                Long groupFreq = g2f.get(groupSize);
+                // Merged records
+                mergedRecordsCount += groupFreq;
+            }
+        }
+        return mergedRecordsCount;
     }
 
     /*

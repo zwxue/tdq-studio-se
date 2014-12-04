@@ -14,10 +14,7 @@ package org.talend.dq.helper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +50,8 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
+import com.talend.csv.CSVReader;
+import com.talend.csv.CSVWriter;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -64,14 +61,6 @@ public final class ReportUtils {
     private static Logger log = Logger.getLogger(ReportUtils.class);
 
     public static final String REPORT_LIST = ".report.list";//$NON-NLS-1$
-
-    public static final char CURRENT_SEPARATOR = '\t';
-
-    public static final boolean USE_TEXT_QUAL = true;
-
-    public static final char TEXT_QUAL = '"';
-
-    public static final int ESCAPE_MODE_BACKSLASH = CsvReader.ESCAPE_MODE_BACKSLASH;
 
     private static Map<String, List<String>> mainSubRepMap;
 
@@ -164,11 +153,7 @@ public final class ReportUtils {
             @Override
             protected void run() throws LoginException, PersistenceException {
                 try {
-                    CsvWriter out = new CsvWriter(new FileOutputStream(reportListFile), CURRENT_SEPARATOR,
-                            Charset.defaultCharset());
-                    out.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-                    out.setTextQualifier(TEXT_QUAL);
-                    out.setForceQualifier(USE_TEXT_QUAL);
+                    CSVWriter out = FileUtils.createCSVWriter(reportListFile, FileUtils.TEXT_QUAL, FileUtils.BACKSLASH);
 
                     ReportListEnum[] values = ReportListEnum.values();
                     String[] temp = new String[values.length];
@@ -184,7 +169,7 @@ public final class ReportUtils {
                             temp[2] = repList.get(i - 1).createTime;
                         }
 
-                        out.writeRecord(temp);
+                        out.writeNext(temp);
                     }
 
                     out.flush();
@@ -195,6 +180,7 @@ public final class ReportUtils {
                     log.error(e);
                 }
             }
+
         };
         repositoryWorkUnit.setAvoidUnloadResources(true);
         ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
@@ -647,12 +633,9 @@ public final class ReportUtils {
 
         if (reportListFile != null && reportListFile.exists()) {
             try {
-                CsvReader reader = new CsvReader(new FileReader(reportListFile), CURRENT_SEPARATOR);
-                reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-                reader.setTextQualifier(TEXT_QUAL);
-                reader.setUseTextQualifier(USE_TEXT_QUAL);
+                CSVReader reader = FileUtils.createCSVReader(reportListFile, FileUtils.TEXT_QUAL, FileUtils.ESCAPE_CHAR);
                 reader.readHeaders();
-                while (reader.readRecord()) {
+                while (reader.readNext()) {
                     repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()),
                             reader.get(ReportListEnum.Path.getLiteral()), reader.get(ReportListEnum.CreateTime.getLiteral())));
                 }
@@ -834,7 +817,7 @@ public final class ReportUtils {
 
                 // Getting the folder :
                 IFolder deleteFolder = ResourceUtils.getFolder(fsProject, completePath, true);
-                //delete folder and files from workbench
+                // delete folder and files from workbench
                 for (IResource subResource : deleteFolder.members()) {
                     if (subResource.getType() == IResource.FILE) {
                         subResource.delete(true, null);

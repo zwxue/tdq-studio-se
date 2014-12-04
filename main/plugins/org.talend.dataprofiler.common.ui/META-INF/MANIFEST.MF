@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dataprofiler Common Ui
 Bundle-SymbolicName: org.talend.dataprofiler.common.ui;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.jface,
@@ -14,15 +13,18 @@ Require-Bundle: org.eclipse.jface,
  org.talend.cwm.management,
  org.talend.commons.runtime,
  org.talend.commons.ui,
- org.talend.dataquality.record.linkage
+ org.talend.dataquality.record.linkage,
+ org.eclipse.nebula.widgets.pagination,
+ org.talend.libraries.mapdb
 Export-Package: org.talend.dataprofiler.common.ui.dialog,
  org.talend.dataprofiler.common.ui.editor.preview,
  org.talend.dataprofiler.common.ui.editor.preview.chart,
  org.talend.dataprofiler.common.ui.editor.preview.chart.renderer,
- org.talend.dataprofiler.common.ui.editor.preview.chart.utils
+ org.talend.dataprofiler.common.ui.editor.preview.chart.utils,
+ org.talend.dataprofiler.common.ui.pagination.pageloder
 Import-Package: org.eclipse.ui.actions,
  org.talend.core,
  org.talend.core.repository.model,
  org.talend.repository
 Bundle-ClassPath: .,
- jar/org.talend.dataprofiler.common.ui.jar
+ dist/org.talend.dataprofiler.common.ui.jar

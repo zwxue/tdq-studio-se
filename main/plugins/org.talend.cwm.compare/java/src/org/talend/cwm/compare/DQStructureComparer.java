@@ -315,7 +315,7 @@ public final class DQStructureComparer {
         } else {
             EDatabaseTypeName currentEDatabaseType = EDatabaseTypeName.getTypeFromDbType(metadataConnection.getDbType());
             if (currentEDatabaseType != null) {
-                MetadataFillFactory dbInstance = MetadataFillFactory.getDBInstance(currentEDatabaseType);
+                MetadataFillFactory dbInstance = MetadataFillFactory.getDBInstance(metadataConnection);
                 TypedReturnCode<?> trc = (TypedReturnCode<?>) dbInstance.createConnection(metadataConnection);
                 Object sqlConnObject = trc.getObject();
                 DatabaseMetaData dbJDBCMetadata = null;
@@ -330,9 +330,9 @@ public final class DQStructureComparer {
                     copyedConnection = EObjectHelper.deepCopy(prevDataProvider);
                     copyedConnection.getDataPackage().clear();
                     // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
-                    MetadataFillFactory.getDBInstance(currentEDatabaseType).fillCatalogs(copyedConnection, dbJDBCMetadata,
+                    dbInstance.fillCatalogs(copyedConnection, dbJDBCMetadata, metadataConnection,
                             MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, true));
-                    MetadataFillFactory.getDBInstance(currentEDatabaseType).fillSchemas(copyedConnection, dbJDBCMetadata,
+                    dbInstance.fillSchemas(copyedConnection, dbJDBCMetadata, metadataConnection,
                             MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, false));
 
                     ConnectionUtils.closeConnection(sqlConn);

@@ -26,7 +26,7 @@ public class SortState {
     private String selectedColumnName = null;
 
     // because the grp_size is String type, so need special operation before sorting
-    private int grpSizeIndex = -1;
+    private final int grpSizeIndex;
 
     // if the current column is the first time to click, should reset the sort direction
     // if the clicked column=current selected column, only need to get next direction
@@ -34,13 +34,13 @@ public class SortState {
 
     private boolean isSortEnable = Boolean.FALSE;
 
-    public void reset() {
-        sortDirection = SortDirectionEnum.NONE;
-        selectedColumnIndex = -1;
-        isColumnChanged = Boolean.FALSE;
-        grpSizeIndex = -1;
-        isSortEnable = Boolean.FALSE;
-        selectedColumnName = null;
+    /**
+     * DOC yyin SortState constructor comment.
+     * 
+     * @param grpSizeIndex
+     */
+    public SortState(int grpSizeIndex2) {
+        grpSizeIndex = grpSizeIndex2;
     }
 
     public String getSelectedColumnName() {
@@ -81,10 +81,6 @@ public class SortState {
         this.selectedColumnIndex = clickedColumnIndex;
         // every column header click will set the column index
         isSortEnable = Boolean.FALSE;
-    }
-
-    public void setGrpSizeIndex(int grpSizeIndex) {
-        this.grpSizeIndex = grpSizeIndex;
     }
 
     public int getGrpSizeIndex() {

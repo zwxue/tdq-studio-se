@@ -18,8 +18,6 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.service.GlobalServiceRegister;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -47,8 +45,8 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-@PrepareForTest({ ReportUtils.class, ResourceFileMap.class, GlobalServiceRegister.class, IExtensionRegistry.class,
-        IConfigurationElement.class, ProjectManager.class, CoreRuntimePlugin.class })
+@PrepareForTest({ ReportUtils.class, ResourceFileMap.class, IExtensionRegistry.class, IConfigurationElement.class,
+        ProjectManager.class, CoreRuntimePlugin.class })
 public class ReportSubFolderRepNodeTest {
 
     @Rule

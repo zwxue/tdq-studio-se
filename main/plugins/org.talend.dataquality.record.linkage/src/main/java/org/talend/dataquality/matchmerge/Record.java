@@ -165,14 +165,19 @@ public class Record {
 
     /**
      * @param confidence The new confidence for this record. Confidence is always a double between 0 and 1. 1 indicates
-     * a high confidence (a certain match) and 0 indicates a very unreliable match.
+     * a high confidence (a certain match) and 0 indicates a very unreliable match. This method may not <b>always</b>
+     * change the confidence value, you can only lower the confidence, never improve it. Method only change confidence
+     * if <code>confidence</code> is lower than current.
+     * 
      * @throws java.lang.IllegalArgumentException If confidence > {@link #MAX_CONFIDENCE}.
      */
     public void setConfidence(double confidence) {
         if (confidence > MAX_CONFIDENCE) {
             throw new IllegalArgumentException("Confidence value '" + confidence + "' is incorrect (>" + MAX_CONFIDENCE + ".");
         }
-        this.confidence = confidence;
+        // TMDM-7833: A record can never gain confidence (especially in case of multiple merges, it's not because this
+        // record perfectly match another that it becomes a sure match).
+        this.confidence = Math.min(confidence, this.confidence);
     }
 
     /**

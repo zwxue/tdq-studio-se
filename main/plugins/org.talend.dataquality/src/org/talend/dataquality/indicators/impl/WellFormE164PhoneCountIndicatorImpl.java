@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -194,8 +195,6 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
 
     @Override
     public boolean handle(Object data) {
-
-        this.mustStoreRow = false;
         super.handle(data);
         if (data == null) {
             return false;
@@ -209,7 +208,9 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
             String format = phoneUtil.format(phoneNumeber, PhoneNumberFormat.E164);
             if (data.toString().equals(format)) {
                 wellFormE164PhoneCount++;
-                this.mustStoreRow = true;
+                if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
+                    this.mustStoreRow = true;
+                }
             }
         } catch (NumberParseException e) {
             return false;
@@ -220,12 +221,32 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
     @Override
     public boolean reset() {
         this.wellFormE164PhoneCount = WELL_FORM_E164_PHONE_COUNT_EDEFAULT;
+        drillDownValueCount = 0l;
         return super.reset();
     }
 
     @Override
     public Long getIntegerValue() {
         return this.getWellFormE164PhoneCount();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        if (checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
+        }
     }
 
 } // WellFormE164PhoneCountIndicatorImpl

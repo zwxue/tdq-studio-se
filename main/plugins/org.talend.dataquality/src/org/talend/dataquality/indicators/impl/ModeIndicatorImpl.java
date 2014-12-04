@@ -156,6 +156,18 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#handle(java.lang.Object)
+     */
+    @Override
+    public boolean handle(Object data) {
+        boolean handle = super.handle(data);
+        mustStoreRow = false;
+        return handle;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#storeSqlResults(java.util.List)
      * 
      * ADDED scorreia 2008-05-02 storeSqlResults(List<Object[]> objects)
@@ -235,9 +247,9 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
 
         List<Object[]> mostFrequentList = new ArrayList<Object[]>();
         // get the most frequency value
-        List<Object> mostFrequent = new MapValueSorter().getMostFrequent(this.valueToFreq, 1);
+        List<Object> mostFrequent = new MapValueSorter().getMostFrequent(getMapForFreq(), 1);
         if (mostFrequent != null && !mostFrequent.isEmpty()) {
-            Object[] mostFrequentObj = new Object[] { mostFrequent.get(0), valueToFreq.get(mostFrequent.get(0)) };
+            Object[] mostFrequentObj = new Object[] { mostFrequent.get(0), getMapForFreq().get(mostFrequent.get(0)) };
             mostFrequentList.add(mostFrequentObj);
         }
 

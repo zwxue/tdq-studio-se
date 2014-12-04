@@ -27,6 +27,12 @@ import org.talend.dataprofiler.core.ui.dialog.MatchRuleElementTreeSelectionDialo
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.rules.BlockKeyDefinition;
+import org.talend.dataquality.rules.MatchKeyDefinition;
+import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -60,6 +66,38 @@ public class ImportMatchRuleAction extends Action {
             inputColumnNames.add(me.getName());
         }
         dialog.setInputColumnNames(inputColumnNames);
+
+        AnalysisResult anaResults = analysis.getResults();
+        if (anaResults != null) {
+            for (Indicator ind : anaResults.getIndicators()) {
+                if (ind != null && ind instanceof RecordMatchingIndicator) {
+                    RecordMatchingIndicator rmInd = (RecordMatchingIndicator) ind;
+                    MatchRuleDefinition builtInMatchRuleDefinition = rmInd.getBuiltInMatchRuleDefinition();
+                    if (builtInMatchRuleDefinition != null) {
+                        if (builtInMatchRuleDefinition.getBlockKeys() != null
+                                && builtInMatchRuleDefinition.getBlockKeys().size() > 0) {
+                            List<String> blockKeyName = new ArrayList<String>();
+                            for (BlockKeyDefinition blockKey : builtInMatchRuleDefinition.getBlockKeys()) {
+                                blockKeyName.add(blockKey.getName());
+                            }
+                            dialog.setCurrentAnaBlockKeys(blockKeyName);
+                        }
+                        List<String> matchKeysName = new ArrayList<String>();
+                        for (MatchRule matchRule : builtInMatchRuleDefinition.getMatchRules()) {
+                            EList<MatchKeyDefinition> matchKeys = matchRule.getMatchKeys();
+                            for (MatchKeyDefinition mkd : matchKeys) {
+                                // only need to add different names of the match keys, for the import to compare if any
+                                // same
+                                if (!matchKeysName.contains(mkd.getName())) {
+                                    matchKeysName.add(mkd.getName());
+                                }
+                            }
+                        }
+                        dialog.setAnalysisCurrentMatchKeys(matchKeysName);
+                    }
+                }
+            }
+        }
         dialog.create();
 
         // dialog.setExpandedElements(getAllMatchRules());

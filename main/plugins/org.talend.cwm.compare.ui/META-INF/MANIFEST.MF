@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CWM Compare Plug-in
 Bundle-SymbolicName: org.talend.cwm.compare.ui;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: org.talend.cwm.compare.ui.Activator
 Require-Bundle: org.talend.cwm.management,
  org.eclipse.ui.navigator,
@@ -18,6 +18,5 @@ Require-Bundle: org.talend.cwm.management,
  org.talend.core.repository,
  org.apache.log4j
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: .Talend SA.
 Bundle-Localization: plugin

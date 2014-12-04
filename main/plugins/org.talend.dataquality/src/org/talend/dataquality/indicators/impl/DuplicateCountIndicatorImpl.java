@@ -7,7 +7,7 @@ package org.talend.dataquality.indicators.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,9 +18,15 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.DBSet;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
+import org.talend.resource.ResourceManager;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Duplicate Count Indicator</b></em>'. <!--
@@ -57,15 +63,41 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     protected Long duplicateValueCount = DUPLICATE_VALUE_COUNT_EDEFAULT;
 
-    private Set<Object> duplicateObjects = new HashSet<Object>();
+    private Set<Object> duplicateObjects = null;
 
-    // Added yyin 20120607 TDQ-3589
-    // private Map<Object, Object[]> uniqueMap = new HashMap<Object, Object[]>();
-
-    // store all duplicate rows by one key, in its list.
-    private Map<Object, List<Object[]>> duplicateMap = new HashMap<Object, List<Object[]>>();
+    // store all distinct rows by one key, in its list.
+    private Map<Object, Object[]> distinctMap = null;
 
     // ~
+
+    /**
+     * Create a new DBMap
+     * 
+     * @return
+     */
+    private Map<Object, Object[]> initValueForMap(String dbName) {
+        if (isUsedMapDBMode()) {
+            return new DBMap<Object, Object[]>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
+        } else {
+            return new HashMap<Object, Object[]>();
+        }
+    }
+
+    /**
+     * Create a new DBSet
+     * 
+     * @return
+     */
+    private Set<Object> initValueForSet(String dbName) {
+        if (isUsedMapDBMode()) {
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
+        } else {
+            return new HashSet<Object>();
+        }
+    }
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -228,38 +260,61 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     public boolean finalizeComputation() {
         // Mod yyin 20120608 TDQ-3589
         // at the end: remove the list.size()=1 , only remain the list.size()>1
-        Iterator<Object> iterator = duplicateMap.keySet().iterator();
+        Iterator<Object> iterator = duplicateObjects.iterator();
         long dupSize = 0;
         while (iterator.hasNext()) {
             Object key = iterator.next();
-            List<Object[]> valuelist = duplicateMap.get(key);
-            if (valuelist.size() > 1) {
-                dupSize++;
-                this.duplicateObjects.add(key);
+            Object[] valueArray = distinctMap.get(key);
+
+            dupSize++;
+            if (needStoreDrillDownData()) {
+                addDrillDownData(key, valueArray);
             }
         }
         this.setDuplicateValueCount(Long.valueOf(dupSize));
         return super.finalizeComputation();
     }
 
-    @Override
-    public boolean handle(Object data) {
-        this.mustStoreRow = false;
-        super.handle(data);
-        // MOD yyi 2009-09-22 8769
-        // if (!this.uniqueObjects.add(data)) {
-        // // store duplicate objects
-        // if (duplicateObjects.add(data)) {
-        // this.mustStoreRow = true;
-        // }
-        // }
-        return true;
+    /**
+     * Add drill down data
+     * 
+     * @param valueArray
+     */
+    private void addDrillDownData(Object key, Object[] valueArray) {
+        List<Object> rowData = Arrays.asList(valueArray);
+        handleDrillDownData(key, rowData);
+
+    }
+
+    /**
+     * Judge whether we should store current data. It should be mapDB mode and keyIndex is not more than limit
+     * 
+     * @param keyIndex
+     * @return
+     */
+    private boolean needStoreDrillDownData() {
+        return isUsedMapDBMode() && this.checkMustStoreCurrentRow() && this.checkAllowDrillDown();
     }
 
     @Override
     public boolean reset() {
-        this.duplicateValueCount = DUPLICATE_VALUE_COUNT_EDEFAULT;
-        this.duplicateMap.clear();
+        if (this.isUsedMapDBMode()) {
+            if (needReconnect((AbstractDB<?>) distinctMap)) {
+                distinctMap = initValueForMap(StandardDBName.computeProcess.name());
+            }
+            distinctMap.clear();
+            if (needReconnect((AbstractDB<?>) duplicateObjects)) {
+                duplicateObjects = initValueForSet(StandardDBName.computeProcessSet.name());
+            }
+            duplicateObjects.clear();
+            drillDownValueCount = 0l;
+            // java normal mode
+        } else {
+            distinctMap = initValueForMap(StandardDBName.computeProcess.name());
+            duplicateObjects = initValueForSet(StandardDBName.computeProcessSet.name());
+            distinctMap.clear();
+            duplicateObjects.clear();
+        }
         return super.reset();
     }
 
@@ -271,21 +326,33 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     @Override
     public void handle(Object colValue, ResultSet resultSet, int columnSize) throws SQLException {
-        this.mustStoreRow = false;
         super.handle(colValue);
         // first get the whole row from resultset
         Object[] valueObject = new Object[columnSize];
 
         for (int i = 0; i < columnSize; i++) {
-            valueObject[i] = resultSet.getObject(i + 1);
-        }
+            Object object = null;
+            try {
+                object = resultSet.getObject(i + 1);
+            } catch (SQLException e) {
+                if ("0000-00-00 00:00:00".equals(resultSet.getString(i + 1))) { //$NON-NLS-1$
+                    object = null;
+                }
 
-        if (duplicateMap.containsKey(colValue)) {
-            duplicateMap.get(colValue).add(valueObject);
+            }
+
+            // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
+            valueObject[i] = object == null ? PluginConstant.NULL_STRING : object;
+        }
+        if (distinctMap.containsKey(colValue)) {
+            if (!duplicateObjects.contains(colValue)) {
+                duplicateObjects.add(colValue);
+            }
+            if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
+                this.mustStoreRow = true;
+            }
         } else {
-            List<Object[]> temp = new ArrayList<Object[]>();
-            temp.add(valueObject);
-            duplicateMap.put(colValue, temp);
+            distinctMap.put(colValue, valueObject);
         }
 
     }
@@ -296,9 +363,9 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @see org.talend.dataquality.indicators.DuplicateCountIndicator#getDuplicateMap()
      */
     @Override
-    public Map<Object, List<Object[]>> getDuplicateMap() {
+    public Map<Object, Object[]> getDuplicateMap() {
 
-        return this.duplicateMap;
+        return this.distinctMap;
     }
 
     /*
@@ -309,12 +376,83 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     @Override
     public void handle(Object object, String[] rowValues) {
         super.handle(object);
-        if (duplicateMap.containsKey(object)) {
-            duplicateMap.get(object).add(rowValues);
+        if (distinctMap.containsKey(object)) {
+            if (!duplicateObjects.contains(object)) {
+                duplicateObjects.add(object);
+            }
+            if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
+                this.mustStoreRow = true;
+            }
         } else {
-            List<Object[]> temp = new ArrayList<Object[]>();
-            temp.add(rowValues);
-            duplicateMap.put(object, temp);
+            distinctMap.put(object, rowValues);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getMapDB(java.lang.String)
+     */
+    @Override
+    public AbstractDB getMapDB(String dbName) {
+        if (isUsedMapDBMode()) {
+            // is get computeProcess map
+            if (StandardDBName.computeProcess.name().equals(dbName)) {
+                // current set is valid
+                if (distinctMap != null && !((DBMap<Object, Object[]>) distinctMap).isClosed()) {
+                    return (DBMap<Object, Object[]>) distinctMap;
+                } else {
+                    // create new DBSet
+                    return ((DBMap<Object, Object[]>) initValueForMap(StandardDBName.computeProcess.name()));
+                }
+            } else if (StandardDBName.computeProcessSet.name().equals(dbName)) {
+                // current set is valid
+                if (duplicateObjects != null && !((DBSet<Object>) duplicateObjects).isClosed()) {
+                    return (DBSet<Object>) duplicateObjects;
+                } else {
+                    // create new DBSet
+                    return ((DBSet<Object>) initValueForSet(StandardDBName.computeProcessSet.name()));
+                }
+            }
+
+        }
+        return super.getMapDB(dbName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#isValid(java.lang.Object)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean isValid(Object inputData) {
+        if (Long.class.isInstance(inputData)) {
+            Long dataFrequency = Long.valueOf(inputData.toString());
+            if (dataFrequency > 1) {
+                return true;
+            }
+        }
+
+        return super.isValid(inputData);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        if (checkMustStoreCurrentRow()) {
+            super.handleDrillDownData(masterObject, inputRowList);
+        }
+        // store drill dwon data for view values
+        if (this.checkMustStoreCurrentRow(drillDownValueCount)) {
+            if (!drillDownValuesSet.contains(masterObject)) {
+                drillDownValueCount++;
+                drillDownValuesSet.add(masterObject);
+            }
         }
     }
 

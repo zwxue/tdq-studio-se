@@ -442,7 +442,12 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         if (this.columnMap == null) {
             return false;
         }
-        return columnMap.containsKey(keyName);
+        for (MetadataColumn column : columnMap.keySet()) {
+            if (StringUtils.equalsIgnoreCase(getColumnName(column), keyName)) {
+                return true;
+            }
+        }
+        return false;// columnMap.containsKey(keyName);
     }
 
     public void addColumn(MetadataColumn column, int index) {
@@ -453,18 +458,30 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     }
 
     /**
-     * When import:1) use key's name & key's column to compare, 2) set it empty when no match
+     * When import:1) use key's name & key's column to compare, 2) set it empty when no match. If the key's column =
+     * some column name, keep it; when key's name and key's column both no match, set it empty
      * 
      * @param keyDefinition
      */
     protected void setColumnValueIfMatch(KeyDefinition keyDefinition) {
-        // if the key name= some column name, set the column to this key
-        if (hasSameColumnWithKeyName(keyDefinition.getName())) {
-            keyDefinition.setColumn(keyDefinition.getName());
-        } else if (!hasSameColumnWithKeyName(keyDefinition.getColumn())) {
-            // if the key's column = some column name, keep it
-            // when key's name and key's column both no match, set it empty
-            keyDefinition.setColumn(StringUtils.EMPTY);
+        String columnName = StringUtils.EMPTY;
+        if (this.columnMap != null) {
+            for (MetadataColumn column : columnMap.keySet()) {
+                if (StringUtils.equalsIgnoreCase(getColumnName(column), keyDefinition.getName())) {
+                    columnName = column.getLabel();
+                    break;
+                }
+            }
+        }
+        keyDefinition.setColumn(columnName);
+    }
+
+    // For the columns from file connection, the name is null
+    private String getColumnName(MetadataColumn column) {
+        if (StringUtils.isBlank(column.getName())) {
+            return column.getLabel();
+        } else {
+            return column.getName();
         }
     }
 

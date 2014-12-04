@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.language.Soundex;
 import org.apache.log4j.Logger;
@@ -20,6 +21,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.utils.collections.MapValueSorter;
 
 /**
@@ -57,6 +59,10 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      */
     protected HashMap<Object, Long> valueToDistinctFreq = VALUE_TO_DISTINCT_FREQ_EDEFAULT;
 
+    protected Map<Object, List<Object>> soundexFreqMap = null;
+
+    private Soundex soundex = new Soundex();
+
     private static Logger log = Logger.getLogger(SoundexFreqIndicatorImpl.class);
 
     /**
@@ -83,6 +89,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      * 
      * @generated
      */
+    @Override
     public HashMap<Object, Long> getValueToDistinctFreq() {
         return valueToDistinctFreq;
     }
@@ -92,12 +99,14 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      * 
      * @generated
      */
+    @Override
     public void setValueToDistinctFreq(HashMap<Object, Long> newValueToDistinctFreq) {
         HashMap<Object, Long> oldValueToDistinctFreq = valueToDistinctFreq;
         valueToDistinctFreq = newValueToDistinctFreq;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET,
                     IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ, oldValueToDistinctFreq, valueToDistinctFreq));
+        }
     }
 
     /**
@@ -105,6 +114,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      * 
      * @generated NOT getDistinctCount(Object dataValue)
      */
+    @Override
     public Long getDistinctCount(Object dataValue) {
         // MOD xqliu 2009-07-01 bug 7068
         Long freq = this.valueToDistinctFreq == null || this.valueToDistinctFreq.size() == 0 ? null : this.valueToDistinctFreq
@@ -181,8 +191,9 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      */
     @Override
     public String toString() {
-        if (eIsProxy())
+        if (eIsProxy()) {
             return super.toString();
+        }
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (valueToDistinctFreq: ");
@@ -267,6 +278,47 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     @Override
     public boolean handle(Object data) {
+
+        if (isUsedMapDBMode()) {
+            if (data == null) {
+                List<Object> valueList = soundexFreqMap.get(data);
+                if (valueList == null) {
+                    valueList = new ArrayList<Object>();
+                    valueList.add(data);// input value
+                    valueList.add(null);// soundex value
+                    valueList.add(0);// distinct count
+                    valueList.add(1);// duplicate count
+                } else {
+                    // if already contain null value then duplicate count +1
+                    Long duplicateCount = Long.valueOf(valueList.get(3).toString()) + 1;
+                    valueList.set(3, duplicateCount);
+                }
+                soundexFreqMap.put(data, valueList);
+            } else {
+                String soundexValue = soundex.soundex(data.toString());
+                List<Object> valueList = soundexFreqMap.get(soundexValue);
+                if (valueList == null) {
+                    valueList = new ArrayList<Object>();
+                    valueList.add(data);// input value
+                    valueList.add(soundexValue);// soundex value
+                    valueList.add(1);// distinct count
+                    valueList.add(0);// duplicate count
+                } else if (!getMapForFreq().containsKey(data)) {
+                    // if already contain then soundex value but input valie is different then distinct count +1
+                    Long distinctCount = Long.valueOf(valueList.get(2).toString()) + 1;
+                    valueList.set(2, distinctCount);
+                    // distinctKey should be max one
+                    if (valueList.get(0).toString().compareTo(data.toString()) < 0) {
+                        valueList.set(0, data);
+                    }
+                } else {
+                    // if already contain the soundex value but input valie is same then duplicate count +1
+                    Long duplicateCount = Long.valueOf(valueList.get(3).toString()) + 1;
+                    valueList.set(3, duplicateCount);
+                }
+                soundexFreqMap.put(soundexValue, valueList);
+            }
+        }
         boolean returnValue = super.handle(data);
         this.mustStoreRow = false;
         return returnValue;
@@ -281,7 +333,6 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         Soundex sd = new Soundex();
         HashMap<Object, Long> disctinctVfMap = new HashMap<Object, Long>();
         List<String[]> valueToFreqLs = new ArrayList<String[]>();
-
         while (iterator.hasNext()) {
             String array[] = new String[3];
             Object obj = iterator.next();
@@ -306,16 +357,16 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         HashMap<Object, Long> vfMap = new HashMap<Object, Long>();
         // remove duplicate key of valueToFreqLs, and get total count every key for valueToFreq.
         for (int i = 0; i < valueToFreqLs.size(); i++) {
-            foreArray = (String[]) valueToFreqLs.get(i);
+            foreArray = valueToFreqLs.get(i);
             // MOD qiongli 7-21
             if (foreArray[0] == null) {
                 disctinctVfMap.put(WorkspaceUtils.NULL_FIELD, Long.valueOf(foreArray[2]));
-                vfMap.put(WorkspaceUtils.NULL_FIELD, valueToFreq.get(foreArray[0]));
+                vfMap.put(WorkspaceUtils.NULL_FIELD, getMapForFreq().get(foreArray[0]));
                 continue;
             }
-            vfMap.put(foreArray[0], valueToFreq.get(foreArray[0]));
+            vfMap.put(foreArray[0], getMapForFreq().get(foreArray[0]));
             for (int j = i + 1; j < valueToFreqLs.size(); j++) {
-                afterArray = (String[]) valueToFreqLs.get(j);
+                afterArray = valueToFreqLs.get(j);
                 if (afterArray[0] == null) {
                     continue;
                 }
@@ -323,11 +374,13 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
                     foreArray[2] = Long.valueOf(foreArray[2]).intValue() + 1 + "";
                     valueToFreqLs.remove(afterArray);
                     j--;
-                    Long newLong = Long.valueOf(vfMap.get(foreArray[0]).longValue() + valueToFreq.get(afterArray[0]).longValue());
+                    Long newLong = Long.valueOf(vfMap.get(foreArray[0]).longValue()
+                            + getMapForFreq().get(afterArray[0]).longValue());
                     vfMap.remove(foreArray[0]);
                     // same as function max in sql engine
-                    if (foreArray[0].compareTo(afterArray[0]) < 0)
+                    if (foreArray[0].compareTo(afterArray[0]) < 0) {
                         foreArray[0] = afterArray[0];
+                    }
                     vfMap.put(foreArray[0], newLong);
                 }
             }
@@ -335,6 +388,59 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         }
         setValueToFreq(vfMap);
         setValueToDistinctFreq(disctinctVfMap);
+    }
+
+    /**
+     * 
+     * compute soundex result
+     * 
+     * @param asc
+     */
+    protected void computeSoundexFreqByMapDB(boolean asc) {
+        final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
+        Iterator<List<Object>> iterator = soundexFreqMap.values().iterator();
+        HashMap<Object, Long> ValueToFreq = new HashMap<Object, Long>();
+        HashMap<Object, Long> ValueToDistinctFreq = new HashMap<Object, Long>();
+        Object[] distinctKey = new Object[topN + 1];// input value
+        Long[] distinctValue = new Long[topN + 1];
+        Long[] countValue = new Long[topN + 1];// the count of itmes which contain by this soundex group
+        while (iterator.hasNext()) {
+            List<Object> nextValueList = iterator.next();
+            Long currentDistinctValue = Long.valueOf(nextValueList.get(2).toString());// current input value
+            Object currentDistinctKey = nextValueList.get(0);
+            // current the count of itmes which contain by this soundex group
+            Long currentCountValue = Long.valueOf(nextValueList.get(3).toString()) + currentDistinctValue;
+            // find out TopN elements
+            for (int i = 0; i < topN; i++) {
+                if (distinctValue[i] == null) {
+                    distinctValue[i] = currentDistinctValue;
+                    distinctKey[i] = currentDistinctKey;
+                    countValue[i] = currentCountValue;
+                    ValueToFreq.put(distinctKey[i], countValue[i]);
+                    ValueToDistinctFreq.put(distinctKey[i], distinctValue[i]);
+                    break;
+                } else if (asc && currentDistinctValue > distinctValue[i] || !asc && currentDistinctValue < distinctValue[i]) {
+                    distinctValue[topN] = distinctValue[i];
+                    countValue[topN] = countValue[i];
+                    distinctKey[topN] = distinctKey[i];
+
+                    distinctValue[i] = currentDistinctValue;
+                    countValue[i] = currentCountValue;
+                    ValueToFreq.remove(distinctKey[i]);
+                    ValueToDistinctFreq.remove(distinctKey[i]);
+                    distinctKey[i] = currentDistinctKey;
+                    ValueToFreq.put(distinctKey[i], countValue[i]);
+                    ValueToDistinctFreq.put(distinctKey[i], distinctValue[i]);
+                    currentDistinctKey = distinctKey[topN];
+                    currentDistinctValue = distinctValue[topN];
+                    currentCountValue = countValue[topN];
+                }
+            }
+
+        }
+        setValueToFreq(ValueToFreq);
+        setValueToDistinctFreq(ValueToDistinctFreq);
+
     }
 
     /*
@@ -345,15 +451,19 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     @Override
     public boolean finalizeComputation() {
         final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
-        soundexForJavaEngine();
-        MapValueSorter mvs = new MapValueSorter();
-        List<Object> ls = mvs.sortMap(this.valueToDistinctFreq, false);
-        List<Object> mostDistinctFrequent = getOrderElements(ls, topN, false);
-        HashMap<Object, Long> map = new HashMap<Object, Long>();
-        for (Object object : mostDistinctFrequent) {
-            map.put(object, valueToFreq.get(object));
+        if (isUsedMapDBMode()) {
+            computeSoundexFreqByMapDB(true);
+        } else {
+            soundexForJavaEngine();
+            MapValueSorter mvs = new MapValueSorter();
+            List<Object> ls = mvs.sortMap(this.valueToDistinctFreq, false);
+            List<Object> mostDistinctFrequent = getOrderElements(ls, topN, false);
+            HashMap<Object, Long> map = new HashMap<Object, Long>();
+            for (Object object : mostDistinctFrequent) {
+                map.put(object, valueToFreq.get(object));
+            }
+            this.setValueToFreq(map);
         }
-        this.setValueToFreq(map);
         return true;
     }
 
@@ -389,6 +499,22 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
             }
         }
         return frequentLs;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#reset()
+     */
+    @Override
+    public boolean reset() {
+        if (isUsedMapDBMode()) {
+            if (soundexFreqMap != null) {
+                soundexFreqMap.clear();
+            }
+            soundexFreqMap = initValueForDBMap(StandardDBName.computeProcess.name());
+        }
+        return super.reset();
     }
 
 } // SoundexFreqIndicatorImpl

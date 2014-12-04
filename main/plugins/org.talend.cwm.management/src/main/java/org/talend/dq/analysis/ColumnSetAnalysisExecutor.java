@@ -138,7 +138,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             traceError(rc.getMessage());
         }
 
-        return true;
+        return rc.isOk();
     }
 
     /*
@@ -314,7 +314,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         MDMConnection dataProvider = (MDMConnection) analysis.getContext().getConnection();
         Properties props = new Properties();
         props.setProperty(TaggedValueHelper.USER, dataProvider.getUsername());
-        props.setProperty(TaggedValueHelper.PASSWORD, dataProvider.getPassword());
+        props.setProperty(TaggedValueHelper.PASSWORD, dataProvider.getValue(dataProvider.getPassword(), false));
         props.setProperty(TaggedValueHelper.UNIVERSE, dataProvider.getUniverse() == null ? PluginConstant.EMPTY_STRING
                 : dataProvider.getUniverse());
         props.setProperty(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter(dataProvider));

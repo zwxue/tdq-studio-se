@@ -144,7 +144,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
             return new AnaMatchKeyAndSurvTableViewer(this, getTableStyle(), isAddColumn(), matchRule);
         } else {
             // Definition editor
-            return new MatchKeyAndSurvivorshipTableViewer(this, getTableStyle(), isAddColumn());
+            return new MatchKeyAndSurvivorshipTableViewer(this, getTableStyle(), isAddColumn(), matchRule);
         }
     }
 

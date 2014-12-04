@@ -35,6 +35,7 @@ import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorit
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams.SurvivorshipFunction;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
+import org.talend.utils.collections.BidiMultiMap;
 
 /**
  * Record grouping class with t-swoosh algorithm.
@@ -48,11 +49,25 @@ public class TSwooshGrouping<TYPE> {
 
     AbstractRecordGrouping<TYPE> recordGrouping;
 
+    BidiMultiMap<String, String> oldGID2New = new BidiMultiMap<String, String>();
+
+    // Added TDQ-9320: to use the algorithm handle the record one by one
+    private DQMFB algorithm;
+
     /**
      * DOC zhao TSwooshGrouping constructor comment.
      */
     public TSwooshGrouping(AbstractRecordGrouping<TYPE> recordGrouping) {
         this.recordGrouping = recordGrouping;
+    }
+
+    /**
+     * Getter for oldGID2New.
+     * 
+     * @return the oldGID2New
+     */
+    public Map<String, String> getOldGID2New() {
+        return this.oldGID2New;
     }
 
     /**
@@ -105,6 +120,22 @@ public class TSwooshGrouping<TYPE> {
     }
 
     public void swooshMatch(IRecordMatcher combinedRecordMatcher, SurvivorShipAlgorithmParams survParams) {
+        MatchMergeAlgorithm malgorithm = createTswooshAlgorithm(combinedRecordMatcher, survParams, null);
+
+        Iterator<Record> iterator = new DQRecordIterator(totalCount, rcdsGenerators);
+        List<Record> mergedRecords = malgorithm.execute(iterator, new GroupingCallBack());
+        outputResult(mergedRecords);
+    }
+
+    /**
+     * DOC yyin Comment method "createTswooshAlgorithm".
+     * 
+     * @param combinedRecordMatcher
+     * @param survParams
+     * @return
+     */
+    private MatchMergeAlgorithm createTswooshAlgorithm(IRecordMatcher combinedRecordMatcher,
+            SurvivorShipAlgorithmParams survParams, MatchMergeAlgorithm.Callback callback) {
         SurvivorShipAlgorithmEnum[] surviorShipAlgos = new SurvivorShipAlgorithmEnum[survParams.getSurviorShipAlgos().length];
         String[] funcParams = new String[surviorShipAlgos.length];
         int idx = 0;
@@ -113,12 +144,33 @@ public class TSwooshGrouping<TYPE> {
             funcParams[idx] = func.getParameter();
             idx++;
         }
-        MatchMergeAlgorithm algorithm = new DQMFB(combinedRecordMatcher, new DQMFBRecordMerger("MFB", funcParams, //$NON-NLS-1$
-                surviorShipAlgos, survParams));
+        return new DQMFB(combinedRecordMatcher, new DQMFBRecordMerger("MFB", funcParams, //$NON-NLS-1$
+                surviorShipAlgos, survParams), callback);
+    }
 
-        Iterator<Record> iterator = new DQRecordIterator(totalCount, rcdsGenerators);
-        List<Record> mergedRecords = algorithm.execute(iterator, new GroupingCallBack());
-        for (Record rcd : mergedRecords) {
+    // init the algorithm before do matching.
+    public void initialMFBForOneRecord(IRecordMatcher combinedRecordMatcher, SurvivorShipAlgorithmParams survParams) {
+        algorithm = (DQMFB) createTswooshAlgorithm(combinedRecordMatcher, survParams, new GroupingCallBack());
+    }
+
+    // do match on one single record
+    public void oneRecordMatch(RichRecord printRcd) {
+        algorithm.matchOneRecord(printRcd);
+    }
+
+    // get and output all result after all records finished
+    public void afterAllRecordFinished() {
+        List<Record> result = algorithm.getResult();
+        outputResult(result);
+    }
+
+    /**
+     * Output the result Result after all finished.
+     * 
+     * @param result
+     */
+    private void outputResult(List<Record> result) {
+        for (Record rcd : result) {
             RichRecord printRcd = (RichRecord) rcd;
             output(printRcd);
         }
@@ -173,10 +225,16 @@ public class TSwooshGrouping<TYPE> {
 
             } else if (grpId1 != null && grpId2 != null) {
                 // Both records are merged records.
-                // Append the new group id to the existing id delimited by ","
-                String combinedGRPID = richRecord1.getGroupId() + "," + richRecord2.getGroupId(); //$NON-NLS-1$
-                richRecord1.setGroupId(combinedGRPID);
-                richRecord2.setGroupId(combinedGRPID);
+                richRecord2.setGroupId(grpId1);
+                // Put into the map: <gid2,gid1>
+                oldGID2New.put(grpId2, grpId1);
+                // Update map where value equals to gid2
+                List<String> keysOfGID2 = oldGID2New.getKeys(grpId2);
+                if (keysOfGID2 != null) {
+                    for (String key : keysOfGID2) {
+                        oldGID2New.put(key, grpId1);
+                    }
+                }
 
             } else if (grpId1 == null) {
                 // richRecord1 is original record
@@ -211,19 +269,16 @@ public class TSwooshGrouping<TYPE> {
         public void onNewMerge(Record record) {
             // record must be RichRecord from DQ grouping implementation.
             RichRecord richRecord = (RichRecord) record;
+            richRecord.setMaster(true);
+            richRecord.setScore(1.0);
             if (record.getGroupId() != null) {
-                richRecord.setMaster(true);
                 richRecord.setMerged(true);
-                richRecord.setScore(1.0);
                 richRecord.setGrpSize(richRecord.getRelatedIds().size());
                 if (richRecord.getGroupQuality() == 0) {
                     // group quality will be the confidence (score) .
                     richRecord.setGroupQuality(record.getConfidence());
                 }
-            } else {
-                richRecord.setMaster(true);
             }
-
         }
 
         /*

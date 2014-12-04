@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.sql;
 
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
@@ -32,6 +30,7 @@ import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.editor.TDQFileEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -88,7 +87,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
             // MOD TDQ-7143 yyin 20130603
             TDQFileEditorInput result = new TDQFileEditorInput(WorkspaceUtils.fileToIFile(fileWizard.getSqlFile()));
             result.setFileItem(fileWizard.getSourceFileItem());
-            CorePlugin.getDefault().openEditor(result, SQLEditor.EDITOR_ID);
+            CorePlugin.getDefault().openEditor(result, SqlExplorerUtils.SQLEDITOR_ID);
 
             CorePlugin.getDefault().refreshWorkSpace();
             CorePlugin.getDefault().refreshDQView(node);

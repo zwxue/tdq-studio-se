@@ -2,13 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CWM Management Plug-in
 Bundle-SymbolicName: org.talend.cwm.management;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 6.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.navigator,
  org.talend.dataquality;visibility:=reexport,
  org.talend.sqltools,
  org.talend.utils,
- net.sourceforge.sqlexplorer,
  org.apache.commons.collections,
  org.apache.commons.beanutils,
  org.apache.commons.lang,
@@ -20,20 +19,21 @@ Require-Bundle: org.eclipse.ui,
  org.talend.core.runtime,
  org.talend.libraries.mdm,
  org.talend.metadata.managment,
- org.talend.libraries.javacsv,
  org.talend.common.ui.runtime,
  org.talend.metadata.managment.ui,
  org.apache.log4j,
  org.talend.librariesmanager,
  org.talend.dataquality.record.linkage,
  org.talend.libraries.jboss,
- org.talend.repository.items.importexport
+ org.talend.repository.items.importexport,
+ org.talend.libraries.mapdb,
+ org.talend.dataprofiler.service,
+ org.talend.libraries.csv
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
  lib/advancedPersistentLookupLib-1.0.jar,
- jar/org.talend.cwm.management.jar
+ dist/org.talend.cwm.management.jar
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist,org.talend.testutils,org.talend.libraries.jboss
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.talend.dq.CWMPlugin
 Export-Package: org.talend.commons.emf,
@@ -47,9 +47,9 @@ Export-Package: org.talend.commons.emf,
  org.talend.dq.analysis.category,
  org.talend.dq.analysis.connpool,
  org.talend.dq.analysis.explore,
+ org.talend.dq.analysis.match,
  org.talend.dq.analysis.memory,
  org.talend.dq.analysis.parameters,
- org.talend.dq.connection,
  org.talend.dq.dbms,
  org.talend.dq.dqrule,
  org.talend.dq.factory,
@@ -72,4 +72,6 @@ Export-Package: org.talend.commons.emf,
  org.talend.dq.sql.converters,
  org.talend.dq.writer,
  org.talend.dq.writer.impl
+Import-Package: org.talend.dataprofiler.service
+Service-Component: OSGI-INF/mapdb.xml
 

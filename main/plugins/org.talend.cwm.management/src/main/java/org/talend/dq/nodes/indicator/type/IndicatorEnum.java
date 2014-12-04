@@ -268,11 +268,6 @@ public enum IndicatorEnum {
                            IndicatorSqlPackage.Literals.WHERE_RULE_INDICATOR,
                            "where rule", //$NON-NLS-1$
                            null),
-    WhereRuleAideIndicatorEnum(
-                               IndicatorSqlPackage.WHERE_RULE_AIDE_INDICATOR,
-                               IndicatorSqlPackage.Literals.WHERE_RULE_AIDE_INDICATOR,
-                               "where rule aide", //$NON-NLS-1$
-                               null),
     UserDefinedIndicatorEnum(
                              IndicatorSqlPackage.USER_DEF_INDICATOR,
                              IndicatorSqlPackage.Literals.USER_DEF_INDICATOR,
@@ -545,8 +540,6 @@ public enum IndicatorEnum {
             returnEnum = SqlPatternMatchingIndicatorEnum;
         } else if (indicatorType == WhereRuleIndicatorEnum.getIndicatorType()) {
             returnEnum = WhereRuleIndicatorEnum;
-        } else if (indicatorType == WhereRuleAideIndicatorEnum.getIndicatorType()) {
-            returnEnum = WhereRuleAideIndicatorEnum;
         } else if (indicatorType == DefValueCountIndicatorEnum.getIndicatorType()) {
             returnEnum = DefValueCountIndicatorEnum;
         } else if (indicatorType == UserDefinedIndicatorEnum.getIndicatorType()) {
@@ -583,8 +576,7 @@ public enum IndicatorEnum {
 
     public static boolean isPlainIndicatorEnum(IndicatorEnum indicatorEnumn) {
         return indicatorEnumn != RegexpMatchingIndicatorEnum && indicatorEnumn != SqlPatternMatchingIndicatorEnum
-                && indicatorEnumn != WhereRuleIndicatorEnum && indicatorEnumn != WhereRuleAideIndicatorEnum
-                && indicatorEnumn != UserDefinedIndicatorEnum;
+                && indicatorEnumn != WhereRuleIndicatorEnum && indicatorEnumn != UserDefinedIndicatorEnum;
     }
 
     public boolean isAChildOf(IndicatorEnum parent) {

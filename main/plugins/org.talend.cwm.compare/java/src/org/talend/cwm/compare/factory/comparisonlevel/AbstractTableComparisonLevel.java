@@ -111,10 +111,6 @@ public abstract class AbstractTableComparisonLevel extends AbstractComparisonLev
         return null;
     }
 
-    protected void saveReloadResult() {
-        // no need to save here
-    }
-
     /*
      * (non-Javadoc)
      * 

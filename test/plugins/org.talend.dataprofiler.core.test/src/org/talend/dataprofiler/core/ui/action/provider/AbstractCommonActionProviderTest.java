@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.actions.ActionContext;
 import org.jfree.util.Log;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -93,7 +92,6 @@ public class AbstractCommonActionProviderTest {
         absCommonActionProvider.setContext(context);
         UnitTestBuildHelper.initProjectStructure("testForDeleteActionTDQ"); //$NON-NLS-1$
     }
-
 
     @BeforeClass
     public static void beforeAllTests() {
@@ -178,7 +176,7 @@ public class AbstractCommonActionProviderTest {
         DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         createConnection.setName(name);
         createConnection.setUsername("UserName"); //$NON-NLS-1$
-        createConnection.setPassword("Password"); //$NON-NLS-1$
+        createConnection.setRawPassword("Password"); //$NON-NLS-1$
         createConnection.setURL("URL"); //$NON-NLS-1$
         createConnection.setDatabaseType(EDatabaseTypeName.MYSQL.getXmlName());
         createConnection.setContextMode(true);

@@ -7,19 +7,29 @@
 package org.talend.dataquality.rules.impl;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.talend.dataquality.rules.*;
+import org.talend.dataquality.rules.AlgorithmDefinition;
+import org.talend.dataquality.rules.AppliedBlockKey;
+import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 import org.talend.dataquality.rules.InferredDQRule;
 import org.talend.dataquality.rules.JoinElement;
+import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.MatchKeyDefinition;
+import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.SpecifiedDQRule;
+import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 import org.talend.dataquality.rules.WhereRule;
 
 /**

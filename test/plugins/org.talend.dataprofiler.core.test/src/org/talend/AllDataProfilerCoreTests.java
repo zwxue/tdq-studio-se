@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.ui.utils.UDIUtilsTest;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtilsTest;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProviderTest;
 import org.talend.dq.analysis.AnalysisCreationTest;
+import org.talend.dq.indicators.TextIndicatorForNetezzaTest;
 import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
 
 /**
@@ -70,7 +71,7 @@ import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
         ResourceViewLabelProviderTest.class, MultiColAnalysisCreationTest.class, CorePluginTest.class,
         AnalysisCreationTest.class, SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class,
         ModelElementIndicatorRuleTest.class, RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class,
-        FileTreeLabelProviderTest.class })
+        FileTreeLabelProviderTest.class, TextIndicatorForNetezzaTest.class })
 public class AllDataProfilerCoreTests {
 
 }

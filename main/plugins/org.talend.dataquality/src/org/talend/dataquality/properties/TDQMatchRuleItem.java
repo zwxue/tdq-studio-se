@@ -7,7 +7,6 @@
 package org.talend.dataquality.properties;
 
 import org.talend.core.model.properties.TDQItem;
-
 import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**

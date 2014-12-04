@@ -15,9 +15,6 @@ package org.talend.dq;
 import java.util.List;
 
 import junit.framework.TestCase;
-import net.sourceforge.sqlexplorer.dbproduct.Alias;
-import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +22,7 @@ import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
+import org.talend.dq.helper.SqlExplorerUtils;
 
 /**
  * created by qiongli on 2013-11-26 Detailled comment
@@ -43,7 +41,7 @@ public class CWMPluginTest extends TestCase {
         dbConn.setURL(""); //$NON-NLS-1$
         dbConn.setName(dbName);
         dbConn.setUsername("root"); //$NON-NLS-1$
-        dbConn.setPassword("root"); //$NON-NLS-1$
+        dbConn.setRawPassword("root"); //$NON-NLS-1$
         dbConn.setContextMode(false);
     }
 
@@ -86,14 +84,12 @@ public class CWMPluginTest extends TestCase {
      * DOC qiongli Comment method "runAddConnetionAliasToSQLPlugin".
      */
     private void runAddConnetionAliasToSQLPlugin(boolean isSupportedDB) {
-        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dbConn);
-        AliasManager aliasManager = sqlPlugin.getAliasManager();
-        Alias alias = aliasManager.getAlias(dbConn.getName());
+        boolean aliasExist = SqlExplorerUtils.getDefault().aliasExist(dbConn.getName());
         if (isSupportedDB) {
-            assertNotNull(alias);
+            assertTrue(aliasExist);
         } else {
-            assertNull(alias);
+            assertFalse(aliasExist);
         }
     }
 }

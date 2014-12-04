@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SQLExplorer Plugin
 Bundle-SymbolicName: net.sourceforge.sqlexplorer; singleton:=true
-Bundle-Version: 3.5.0.qualifier
+Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin
 Bundle-Vendor: Eclipse SQL Explorer Project (eclipsesql.sourceforge.net)
 Require-Bundle: org.eclipse.ui;bundle-version="3.2.0",
@@ -10,6 +10,9 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.2.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="3.2.0",
  org.eclipse.jface.text;bundle-version="3.2.0",
  org.eclipse.ui.editors;bundle-version="3.2.0",
+ org.eclipse.equinox.ds,
+ org.eclipse.equinox.util,
+ org.eclipse.osgi.services,
  org.apache.log4j;bundle-version="1.2.13",
  org.apache.commons.lang,
  org.apache.commons.io,
@@ -17,8 +20,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.2.0",
  org.talend.model,
  org.talend.utils,
  org.talend.core.runtime,
- org.talend.metadata.managment
-Bundle-ActivationPolicy: lazy
+ org.talend.metadata.managment,
+ org.talend.dataprofiler.service
 Bundle-ClassPath: sqlexplorer.jar,
  lib/rowset.jar,
  lib/dom4j.jar,
@@ -37,6 +40,7 @@ Export-Package: META-INF,
  net.sourceforge.sqlexplorer.connections.actions,
  net.sourceforge.sqlexplorer.dataset,
  net.sourceforge.sqlexplorer.dataset.actions,
+ net.sourceforge.sqlexplorer.dataset.mapdb,
  net.sourceforge.sqlexplorer.dbdetail,
  net.sourceforge.sqlexplorer.dbdetail.tab,
  net.sourceforge.sqlexplorer.dbproduct,
@@ -95,6 +99,8 @@ Export-Package: META-INF,
  org.dom4j.xpath,
  org.dom4j.xpp,
  org.eclipse.jface.preference
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
 Bundle-Localization: plugin
+Import-Package: org.talend.dataprofiler.service
+Service-Component: OSGI-INF/sqlexplorer.xml
+Bundle-ActivationPolicy: lazy

@@ -32,9 +32,11 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -131,6 +133,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         boolean ok = false;
         try { // catch any exception
             if (this.continueRun()) {
+                // before run analysis need to clear old DB
+                if (AnalysisHelper.isJavaExecutionEngine(analysis)) {
+                    MapDBManager.getInstance().deleteDB(analysis);
+                }
                 ok = runAnalysis(analysis, sql);
             }
         } catch (Exception e) {
@@ -141,6 +147,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             // after run analysis, close connection at once when don't need it
             TdqAnalysisConnectionPool.closeConnectionPool(analysis);
             // TDQ-5952~
+            if (AnalysisHelper.isJavaExecutionEngine(analysis)) {
+                MapDBManager.getInstance().closeDB(analysis);
+            }
         }
 
         // --- set metadata information of analysis
@@ -567,4 +576,5 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         UDIHelper.updateJUDIsForAnalysis(analysis);
         // TDQ-8202~
     }
+
 }

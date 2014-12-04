@@ -58,7 +58,9 @@ import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -239,7 +241,11 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
                 // if DqRepository view is not openning will don'st should show the element immediately
                 if (dqview != null) {
-                    dqview.showSelectedElements(column);
+                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(column);
+                    if (recursiveFind == null) {
+                        recursiveFind = RepositoryNodeHelper.createRepositoryNode(column);
+                    }
+                    dqview.showSelectedElements(recursiveFind);
                 }
             } catch (Exception e) {
                 log.error(e, e);

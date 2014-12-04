@@ -5,8 +5,11 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -15,6 +18,10 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LengthIndicator;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
+import org.talend.resource.ResourceManager;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Length Indicator</b></em>'. <!-- end-user-doc
@@ -31,9 +38,9 @@ import org.talend.dataquality.indicators.LengthIndicator;
 public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicator {
 
     /**
-     * The default value of the '{@link #getLength() <em>Length</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getLength() <em>Length</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getLength()
      * @generated
      * @ordered
@@ -41,17 +48,20 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     protected static final Long LENGTH_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getLength() <em>Length</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getLength() <em>Length</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getLength()
      * @generated
      * @ordered
      */
     protected Long length = LENGTH_EDEFAULT;
 
+    protected Set<String> dbNameSet = new HashSet<String>();
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected LengthIndicatorImpl() {
@@ -60,6 +70,7 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -69,73 +80,82 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public Long getLength() {
         return length;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public void setLength(Long newLength) {
         Long oldLength = length;
         length = newLength;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.LENGTH_INDICATOR__LENGTH, oldLength, length));
+        }
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
-                return getLength();
+        case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
+            return getLength();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
-                setLength((Long)newValue);
-                return;
+        case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
+            setLength((Long) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
-                setLength(LENGTH_EDEFAULT);
-                return;
+        case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
+            setLength(LENGTH_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
-                return LENGTH_EDEFAULT == null ? length != null : !LENGTH_EDEFAULT.equals(length);
+        case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
+            return LENGTH_EDEFAULT == null ? length != null : !LENGTH_EDEFAULT.equals(length);
         }
         return super.eIsSet(featureID);
     }
@@ -195,6 +215,61 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     public boolean reset() {
         this.length = LENGTH_EDEFAULT;
         return super.reset();
+    }
+
+    /**
+     * Change length attribute
+     * 
+     * @param strLength
+     */
+    protected void changeLength(final int strLength) {
+        this.resetDrillDownRowCount();
+        length = Long.valueOf(strLength);
+    }
+
+    /**
+     * DOC talend Comment method "clearDrillDownMaps".
+     */
+    @Override
+    protected void clearDrillDownMap() {
+        if (isUsedMapDBMode() && checkAllowDrillDown()) {
+            AbstractDB<?> mapDB = getMapDB(StandardDBName.drillDown.name());
+            if (mapDB != null) {
+                mapDB.clearDB(ResourceManager.getMapDBCatalogName(this));
+            }
+            resetDrillDownRowCount();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        String dbName = getDBName(masterObject);
+        drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
+        super.handleDrillDownData(masterObject, inputRowList);
+    }
+
+    /**
+     * DOC talend Comment method "getDBName".
+     * 
+     * @param masterObject
+     * @return
+     */
+    private String getDBName(Object inputData) {
+        int inputDataLength = 0;
+        if (null == inputData) {
+            inputDataLength = 0;
+        } else if (StringUtils.EMPTY.equals(inputData)) {
+            inputDataLength = 0;
+        } else {
+            inputDataLength = inputData.toString().length();
+        }
+        return this.getName() + inputDataLength;
     }
 
     /*

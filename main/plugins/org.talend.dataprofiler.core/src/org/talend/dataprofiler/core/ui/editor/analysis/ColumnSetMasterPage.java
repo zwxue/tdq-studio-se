@@ -28,9 +28,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -166,7 +169,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         columnSetAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = columnSetAnalysisHandler.getStringDataFilter();
         analyzedColumns = columnSetAnalysisHandler.getAnalyzedColumns();
-        if (columnSetAnalysisHandler.getSimpleStatIndicator() == null || columnSetAnalysisHandler.getSimpleStatIndicator().eIsProxy()) {
+        if (columnSetAnalysisHandler.getSimpleStatIndicator() == null
+                || columnSetAnalysisHandler.getSimpleStatIndicator().eIsProxy()) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             simpleStatIndicator = columnsetFactory.createSimpleStatIndicator();
             simpleStatIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
@@ -199,7 +203,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
 
             if (tdColumn == null && mdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper.recursiveFind(mdColumn));
+                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
+                        .recursiveFind(mdColumn));
             } else if (tdColumn != null) {
                 RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(tdColumn);
                 if (recursiveFind == null) {
@@ -207,7 +212,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 }
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(recursiveFind);
             } else if (xmlElement != null) {
-                currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper.recursiveFind(xmlElement));
+                currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper
+                        .recursiveFind(xmlElement));
             }
 
             DataminingType dataminingType = MetadataHelper.getDataminingType(element);
@@ -263,8 +269,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
 
-        Composite exeEngineComp = createExecuteEngineSection(form, topComp, analyzedColumns, columnSetAnalysisHandler.getAnalysis()
-                .getParameters());
+        Composite exeEngineComp = createExecuteEngineSection(form, topComp, analyzedColumns, columnSetAnalysisHandler
+                .getAnalysis().getParameters());
+        addListenerToExecuteEngine(execCombo);
 
         createStoreDataCheck(exeEngineComp);
 
@@ -293,6 +300,18 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             // ~
             createPreviewSection(form, previewComp);
         }
+    }
+
+    private void addListenerToExecuteEngine(final CCombo execCombo1) {
+        execCombo1.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                execLang = execCombo1.getText();
+                setStoreDataValueAndStatus();
+                setDirty(true);
+            }
+
+        });
     }
 
     /**
@@ -370,8 +389,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
             // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java
-            // engine,show all match indicator in the
-            // Indicators section.
+            // engine,show all match indicator in the Indicators section.
             EventManager.getInstance().publish(getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
             // TDQ-8860~
         }
@@ -391,7 +409,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
         refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
         refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
+        final Label message = toolkit.createLabel(sectionClient,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
@@ -500,8 +519,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     private void createSimpleStatistics(final Composite composite) {
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
         units.add(new ColumnSetIndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, simpleStatIndicator.getRowCountIndicator()));
-        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator.getDistinctCountIndicator()));
-        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, simpleStatIndicator.getDuplicateCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator
+                .getDistinctCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, simpleStatIndicator
+                .getDuplicateCountIndicator()));
         units.add(new ColumnSetIndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, simpleStatIndicator.getUniqueCountIndicator()));
 
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(EIndicatorChartType.SIMPLE_STATISTICS, units);
@@ -562,7 +583,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * DOC qiongli Comment method "createStoreDataCheck".
+     * create StoreData Checkbox.
      * 
      * @param sectionClient
      */
@@ -571,9 +592,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         GridLayout gridLayout = new GridLayout(2, false);
         gridLayout.marginWidth = 0;
         storeDataSection.setLayout(gridLayout);
-        toolkit.createLabel(storeDataSection, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$
+        toolkit.createLabel(storeDataSection, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$ //$NON-NLS-2$
         storeDataCheck = new Button(storeDataSection, SWT.CHECK | SWT.RIGHT_TO_LEFT);
-        storeDataCheck.setSelection(simpleStatIndicator.isStoreData());
+        setStoreDataValueAndStatus();
 
         storeDataCheck.addSelectionListener(new SelectionAdapter() {
 
@@ -589,13 +610,19 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * DOC yyin Comment method "setStoreData".
-     * 
-     * @param selection
+     * set StoreData Value And Status.
      */
-    @Override
-    protected void setStoreData(boolean selection) {
-        columnSetAnalysisHandler.getAnalysis().getParameters().setStoreData(selection);
+    private void setStoreDataValueAndStatus() {
+        // TDQ-9467 msjian: for columnset when is jave engine, we set this always true, and can not edit
+        if (execLang.equals(ExecutionLanguage.JAVA.getLiteral())) {
+            storeDataCheck.setSelection(true);
+            storeDataCheck.setEnabled(false);
+        } else {
+            storeDataCheck.setSelection(simpleStatIndicator.isStoreData());
+            storeDataCheck.setEnabled(true);
+        }
+        simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
+        allMatchIndicator.setStoreData(storeDataCheck.getSelection());
     }
 
     /**
@@ -622,10 +649,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // set execute engine
         Analysis analysis = columnSetAnalysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
-        analysis.getParameters().setMaxNumberRows(Integer.valueOf(maxNumText.getText()));
-
-        // MOD sizhaoliu TDQ-7144 save result data for drill down
-        simpleStatIndicator.setMustStoreRow(drillDownCheck.getSelection());
 
         // set data filter
         columnSetAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
@@ -713,7 +736,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     public boolean isDirty() {
-        return super.isDirty() || (treeViewer != null && treeViewer.isDirty()) || (dataFilterComp != null && dataFilterComp.isDirty())
+        return super.isDirty() || (treeViewer != null && treeViewer.isDirty())
+                || (dataFilterComp != null && dataFilterComp.isDirty())
                 || (indicatorsViewer != null && indicatorsViewer.isDirty());
     }
 

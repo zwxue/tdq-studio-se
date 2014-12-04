@@ -5,6 +5,8 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.io.File;
+import java.io.IOError;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +24,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
@@ -29,7 +33,13 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.DBMap;
+import org.talend.dataquality.indicators.mapdb.DBSet;
+import org.talend.dataquality.indicators.mapdb.MapDBManager;
+import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dataquality.rules.JoinElement;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -64,6 +74,36 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     private static Logger log = Logger.getLogger(IndicatorImpl.class);
+
+    /**
+     * Decide whether save temp data to file
+     */
+    protected boolean usedMapDBMode = true;
+
+    /**
+     * The limit size of the items which will be store by drillDown
+     */
+    protected Long drillDownLimitSize = 0l;
+
+    /**
+     * The count which how many rows have been store.
+     */
+    protected Long drillDownRowCount = 0l;
+
+    /**
+     * store view values count
+     */
+    protected Long drillDownValueCount = 0l;
+
+    /**
+     * store drill down rows.
+     */
+    protected DBMap<Object, List<Object>> drillDownMap = null;
+
+    /**
+     * store drill down value.
+     */
+    protected DBSet<Object> drillDownValuesSet = null;
 
     /**
      * The default value of the '{@link #getCount() <em>Count</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -106,6 +146,11 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected Long nullCount = NULL_COUNT_EDEFAULT;
 
     // MOD mzhao feature 12919
+    /**
+     * This field should only be used by java engin. When this field is true mean that currnt data should be store for
+     * drill down action {@link #handleDrillDownData(Object, List)} method will do that. Else it should be false. And
+     * default it is false. It should be decided in {@link #handle(Object)} method.
+     */
     protected boolean mustStoreRow = false;
 
     /**
@@ -696,6 +741,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = false;
         if (data == null) {
             nullCount++;
         }
@@ -712,7 +758,69 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public boolean reset() {
         count = COUNT_EDEFAULT;
         nullCount = NULL_COUNT_EDEFAULT;
+        // for MapDB init
+        clearDrillDownMap();
+        clearDrillDownSet();
         return true;
+    }
+
+    /**
+     * DOC talend Comment method "clearDrillDownMap".
+     */
+    protected void clearDrillDownMap() {
+        if (this.isUsedMapDBMode() && checkAllowDrillDown()) {
+            if (needReconnect(drillDownMap)) {
+                drillDownMap = initValueForDBMap(StandardDBName.drillDown.name());
+            }
+            if (!drillDownMap.isEmpty()) {
+                drillDownMap.clear();
+            }
+            resetDrillDownRowCount();
+        }
+    }
+
+    /**
+     * DOC talend Comment method "clearDrillDownMap".
+     */
+    protected void clearDrillDownSet() {
+        if (this.isUsedMapDBMode() && checkAllowDrillDown()) {
+            if (needReconnect(drillDownValuesSet)) {
+                drillDownValuesSet = initValueForDBSet(StandardDBName.drillDownValues.name());
+            }
+            if (!drillDownValuesSet.isEmpty()) {
+                drillDownValuesSet.clear();
+            }
+            drillDownValueCount = 0l;
+        }
+    }
+
+    /**
+     * Whether the map is not created or has been closed
+     * 
+     * @return true if map should be reconnection else false
+     */
+    protected boolean needReconnect(AbstractDB<?> map) {
+        return map == null || map.isClosed();
+    }
+
+    /**
+     * Create a new DBMap
+     * 
+     * @return
+     */
+    protected DBMap<Object, List<Object>> initValueForDBMap(String dbName) {
+        return new DBMap<Object, List<Object>>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                ResourceManager.getMapDBCatalogName(this, dbName));
+    }
+
+    /**
+     * Create a new DBSet
+     * 
+     * @return
+     */
+    protected DBSet<Object> initValueForDBSet(String dbName) {
+        return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                ResourceManager.getMapDBCatalogName(this, dbName));
     }
 
     /**
@@ -1206,4 +1314,169 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         return result.toString();
     }
 
+    /**
+     * Getter for saveTempDataToFile.
+     * 
+     * @return the saveTempDataToFile
+     */
+    @Override
+    public boolean isUsedMapDBMode() {
+        return this.usedMapDBMode;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.Indicator#getMapDB(java.lang.String)
+     * 
+     * Get Map for MapDB by spical dbName
+     * 
+     * @return null when current is not support MapDB
+     */
+    @Override
+    public AbstractDB getMapDB(String dbName) throws IOError {
+        if (isUsedMapDBMode() && checkAllowDrillDown()) {
+            if (StandardDBName.drillDown.name().equals(dbName)) {
+                if (drillDownMap != null && !drillDownMap.isClosed()) {
+                    return drillDownMap;
+                }
+            } else if (StandardDBName.drillDownValues.name().equals(dbName)) {
+                if (drillDownValuesSet != null && !drillDownValuesSet.isClosed()) {
+                    return drillDownValuesSet;
+                }
+                return initValueForDBSet(StandardDBName.drillDownValues.name());
+            }
+            return initValueForDBMap(dbName);
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.DataValidation#isValid(java.lang.Object)
+     */
+    @Override
+    public boolean isValid(Object inputData) {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.mapdb.MapDBDrillDown#handleDrillDownData(java.lang.Object, java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        drillDownRowCount++;
+        drillDownMap.put(count, inputRowList);
+    }
+
+    /**
+     * Sets the usedMapDBMode.
+     * 
+     * @param usedMapDBMode the usedMapDBMode to set
+     */
+    @Override
+    public void setUsedMapDBMode(boolean usedMapDBMode) {
+        this.usedMapDBMode = usedMapDBMode;
+    }
+
+    /**
+     * Getter for dirllDownLimitSize.
+     * 
+     * @return the dirllDownLimitSize
+     */
+    @Override
+    public Long getDrillDownLimitSize() {
+        Analysis analysis = AnalysisHelper.getAnalysis(this);
+        if (analysis != null) {
+            this.drillDownLimitSize = Long.valueOf(analysis.getParameters().getMaxNumberRows());
+        }
+        return this.drillDownLimitSize;
+    }
+
+    /**
+     * Check whether drill down action is allow
+     * 
+     * @return true is allowed else false
+     */
+    @Override
+    public boolean checkAllowDrillDown() {
+        Analysis analysis = AnalysisHelper.getAnalysis(this);
+        boolean isStoreData = false;
+        if (analysis != null) {
+            isStoreData = analysis.getParameters().isStoreData();
+        }
+        boolean isJavaEngine = AnalysisHelper.isJavaExecutionEngine(analysis);
+        return isStoreData && isJavaEngine;
+    }
+
+    /**
+     * Sets the dirllDownLimitSize.
+     * 
+     * @param dirllDownLimitSize the dirllDownLimitSize to set
+     */
+    @Override
+    public void setDrillDownLimitSize(Long drillDownLimitSize) {
+        this.drillDownLimitSize = drillDownLimitSize;
+    }
+
+    /**
+     * Getter for dirllDownRowCount.
+     * 
+     * @return the dirllDownRowCount
+     */
+    public Long getDrillDownRowCount() {
+        return this.drillDownRowCount;
+    }
+
+    /**
+     * Sets the dirllDownRowCount.
+     * 
+     * @param dirllDownRowCount the dirllDownRowCount to set
+     */
+    public void setDrillDownRowCount(Long drillDownRowCount) {
+        this.drillDownRowCount = drillDownRowCount;
+    }
+
+    /**
+     * 
+     * Reset drillDownRowCount
+     */
+    public void resetDrillDownRowCount() {
+        this.drillDownRowCount = 0l;
+    }
+
+    /**
+     * check the DrillDown if From the current DrillDownRowCount.
+     */
+    protected boolean checkMustStoreCurrentRow() {
+        return checkMustStoreCurrentRow(getDrillDownRowCount());
+
+    }
+
+    /**
+     * check the DrillDown if From the beginning of 0.
+     */
+    protected boolean checkMustStoreCurrentRow(Long rowCount) {
+        Long currentDrillDownLimit = getDrillDownLimitSize();
+        if (currentDrillDownLimit == null || currentDrillDownLimit == 0l) {
+            return true;
+        }
+        if (rowCount < currentDrillDownLimit) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.Indicator#getMapDBFile()
+     */
+    @Override
+    public File getMapDBFile() {
+        return MapDBManager.createPath(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this));
+    }
 } // IndicatorImpl

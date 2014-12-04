@@ -13,6 +13,7 @@
 package org.talend.dq.indicators;
 
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,16 +39,14 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.PluginConstant;
@@ -55,23 +54,23 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
-import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
-import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * DOC qiongli class global comment. Detailled comment
@@ -181,8 +180,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 }
                 handleObjects(objectLs, resultSet);
             }
-        } catch (Exception exc) {
-            log.error(exc, exc);
         } finally {
             if (resultSet != null) {
                 resultSet.close();
@@ -206,19 +203,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      */
     private ReturnCode evaluateByDelimitedFile(String sqlStatement, ReturnCode returnCode) {
         DelimitedFileConnection fileConnection = (DelimitedFileConnection) analysis.getContext().getConnection();
-        String path = AnalysisExecutorHelper.getFilePath(fileConnection);
+        String path = JavaSqlFactory.getURL(fileConnection);
 
-        String rowSeparator = fileConnection.getRowSeparatorValue();
-        if (fileConnection.isContextMode()) {
-            rowSeparator = ConnectionUtils.getOriginalConntextValue(fileConnection, rowSeparator);
-        }
+        String rowSeparator = JavaSqlFactory.getRowSeparatorValue(fileConnection);
         IPath iPath = new Path(path);
         File file = iPath.toFile();
         if (!file.exists()) {
             returnCode.setReturnCode(Messages.getString("ColumnSetIndicatorEvaluator.FileNotFound", file.getName()), false); //$NON-NLS-1$ 
             return returnCode;
         }
-        CsvReader csvReader = null;
+        CSVReader csvReader = null;
         try {
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
@@ -226,13 +220,13 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
             if (Escape.CSV.equals(fileConnection.getEscapeType())) {
                 // use CsvReader to parse.
-                csvReader = AnalysisExecutorHelper.createCsvReader(file, fileConnection);
+                csvReader = FileUtils.createCsvReader(file, fileConnection);
                 this.useCsvReader(csvReader, file, fileConnection, analysisElementList);
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
                 FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(fileConnection);
 
-                long currentRow = AnalysisExecutorHelper.getHeadValue(fileConnection);
+                long currentRow = JavaSqlFactory.getHeadValue(fileConnection);
                 int columsCount = 0;
                 while (fileInputDelimited.nextRecord()) {
                     if (!continueRun()) {
@@ -256,31 +250,36 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             returnCode.setReturnCode(e.getMessage(), false);
         } finally {
             if (csvReader != null) {
-                csvReader.close();
+                try {
+                    csvReader.close();
+                } catch (IOException e) {
+                    log.error(e, e);
+                }
             }
         }
 
         return returnCode;
     }
 
-    private void useCsvReader(CsvReader csvReader, File file, DelimitedFileConnection dfCon,
+    private void useCsvReader(CSVReader csvReader, File file, DelimitedFileConnection dfCon,
             List<ModelElement> analysisElementList) throws Exception {
 
-        AnalysisExecutorHelper.initializeCsvReader(dfCon, csvReader);
+        FileUtils.initializeCsvReader(dfCon, csvReader);
 
         long currentRecord = 0;
-        int limitValue = AnalysisExecutorHelper.getLimitValue(dfCon);
+        int limitValue = JavaSqlFactory.getLimitValue(dfCon);
+        int headValue = JavaSqlFactory.getHeadValue(dfCon);
+        for (int i = 0; i < headValue && csvReader.readNext(); i++) {
+            // do nothing, just ignore the header part
+        }
 
-        while (csvReader.readRecord()) {
-            currentRecord = csvReader.getCurrentRecord();
-            if (!continueRun() || limitValue != 0 && currentRecord > limitValue - 1) {
+        while (csvReader.readNext()) {
+            currentRecord++;
+            if (!continueRun() || limitValue != -1 && currentRecord > limitValue) {
                 break;
             }
-            if (dfCon.isFirstLineCaption() && currentRecord == 0) {
-                continue;
-            }
             String[] rowValues = csvReader.getValues();
-            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord + 1, analysisElementList,
+            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord, analysisElementList,
                     dfCon.getFieldSeparatorValue());
 
         }
@@ -415,75 +414,14 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             return;
         }
         EList<Indicator> indicators = analysis.getResults().getIndicators();
-        EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
-        int recordIncrement = 0;
+        // EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
+        // int recordIncrement = 0;
         for (Indicator indicator : indicators) {
             if (!this.continueRun()) {
                 break;
             }
             if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                 indicator.handle(objectLs);
-                // feature 19192 ,save data for drill down RowCountIndicator.
-                if (indicator instanceof SimpleStatIndicator) {
-                    for (Indicator leafIndicator : ((SimpleStatIndicator) indicator).getLeafIndicators()) {
-                        if (!(leafIndicator instanceof RowCountIndicator) || !indicator.isStoreData()) {
-                            continue;
-                        }
-
-                        List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
-                        recordIncrement = valueObjectList.size();
-                        if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                            // MOD gdbu 2011-5-6 bug : 20927
-                            int columnCount = resultSet.getMetaData().getColumnCount();
-                            if (0 >= columnCount) {
-                                continue;
-                            }
-                            // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
-                            // columnset
-                            List<TdColumn> columnList = ColumnSetHelper
-                                    .getColumns(SwitchHelpers.COLUMN_SET_SWITCH
-                                            .doSwitch(((ColumnSetMultiValueIndicator) indicator).getAnalyzedColumns().get(0)
-                                                    .eContainer()));
-                            // List<TdColumn> columnList = TableHelper
-                            // .getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(((ColumnSetMultiValueIndicator)
-                            // indicator)
-                            // .getAnalyzedColumns().get(0).eContainer()));
-                            for (int j = 0; j < columnCount; j++) {
-                                String newcol = null;
-                                Object newobject = null;
-
-                                for (TdColumn tdColumn : columnList) {
-                                    try {
-                                        newcol = tdColumn.getName();
-                                        newobject = resultSet.getObject(newcol);
-                                    } catch (Exception e) {
-                                        continue;
-                                    }
-                                    columnList.remove(tdColumn);
-                                    break;
-                                }
-
-                                if (null == newcol || null == newobject) {
-                                    continue;
-                                }
-                                // ~20927
-                                if (newobject != null && !(newobject instanceof String)
-                                        && newobject.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$ 
-                                    newobject = resultSet.getTimestamp(newcol);
-                                }
-                                // if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                                if (recordIncrement < valueObjectList.size()) {
-                                    valueObjectList.get(recordIncrement)[j] = newobject;
-                                } else {
-                                    Object[] valueObject = new Object[resultSet.getMetaData().getColumnCount()];
-                                    valueObject[j] = newobject;
-                                    valueObjectList.add(valueObject);
-                                }
-                                // }
-                            }
-                        }
-                    }
-                }
             }
         }
     }
@@ -666,51 +604,60 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         for (Indicator indicator : analysis.getResults().getIndicators()) {
             if (indicator instanceof SimpleStatIndicator) {
                 SimpleStatIndicator simpleIndicator = (SimpleStatIndicator) indicator;
-                List<Object[]> listRows = simpleIndicator.getListRows();
-                if (!analysis.getParameters().isStoreData() || listRows == null || listRows.isEmpty()) {
+                if (!analysis.getParameters().isStoreData()) {
                     break;
                 }
-                for (Indicator leafIndicator : simpleIndicator.getLeafIndicators()) {
-                    if (leafIndicator instanceof RowCountIndicator) {
-                        continue;
+                if (simpleIndicator.isUsedMapDBMode() && AnalysisHelper.isJavaExecutionEngine(analysis)) {
+                    // nothing need to do
+                } else {
+                    List<Object[]> listRows = simpleIndicator.getListRows();
+                    if (listRows == null || listRows.isEmpty()) {
+                        break;
                     }
-                    List<Object[]> dataList = new ArrayList<Object[]>();
-                    AnalyzedDataSet analyzedDataSet = indicToRowMap.get(leafIndicator);
-                    if (analyzedDataSet == null) {
-                        analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
-                        indicToRowMap.put(leafIndicator, analyzedDataSet);
-                        analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
-                        analyzedDataSet.setRecordSize(0);
-                    }
+                    for (Indicator leafIndicator : simpleIndicator.getLeafIndicators()) {
+                        if (leafIndicator instanceof RowCountIndicator) {
+                            continue;
+                        }
+                        List<Object[]> dataList = new ArrayList<Object[]>();
+                        AnalyzedDataSet analyzedDataSet = indicToRowMap.get(leafIndicator);
+                        if (analyzedDataSet == null) {
+                            analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
+                            indicToRowMap.put(leafIndicator, analyzedDataSet);
+                            analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
+                            analyzedDataSet.setRecordSize(0);
+                        }
 
-                    for (int i = 0; i < listRows.size(); i++) {
-                        Object[] object = listRows.get(i);
-                        // the last element store the count value.
-                        Object count = object[object.length > 0 ? object.length - 1 : 0];
-                        if (leafIndicator instanceof DistinctCountIndicator) {
-                            dataList.add(object);
-                        } else if (leafIndicator instanceof UniqueCountIndicator) {
-                            if (count != null && NumberUtils.isNumber(count + PluginConstant.EMPTY_STRING)) {
-                                if (Long.valueOf(count + PluginConstant.EMPTY_STRING).longValue() == 1) {
-                                    dataList.add(object);
+                        for (int i = 0; i < listRows.size(); i++) {
+                            // if (dataList.size() >= analyzedDataSet.getDataCount()) {
+                            // break;
+                            // }
+                            Object[] object = listRows.get(i);
+                            // the last element store the count value.
+                            Object count = object[object.length > 0 ? object.length - 1 : 0];
+                            if (leafIndicator instanceof DistinctCountIndicator) {
+                                dataList.add(object);
+                            } else if (leafIndicator instanceof UniqueCountIndicator) {
+                                if (count != null && NumberUtils.isNumber(count + PluginConstant.EMPTY_STRING)) {
+                                    if (Long.valueOf(count + PluginConstant.EMPTY_STRING).longValue() == 1) {
+                                        dataList.add(object);
+                                    }
                                 }
-                            }
-                        } else if (leafIndicator instanceof DuplicateCountIndicator) {
-                            if (count != null && NumberUtils.isNumber(count + PluginConstant.EMPTY_STRING)) {
-                                if (Long.valueOf(count + PluginConstant.EMPTY_STRING).longValue() > 1) {
-                                    dataList.add(object);
+                            } else if (leafIndicator instanceof DuplicateCountIndicator) {
+                                if (count != null && NumberUtils.isNumber(count + PluginConstant.EMPTY_STRING)) {
+                                    if (Long.valueOf(count + PluginConstant.EMPTY_STRING).longValue() > 1) {
+                                        dataList.add(object);
+                                    }
                                 }
                             }
                         }
+                        analyzedDataSet.setData(dataList);
                     }
-                    analyzedDataSet.setData(dataList);
-                }
-                // MOD sizhaoliu TDQ-7144 clear the listRows after usage for drill down
-                if (!simpleIndicator.isStoreData()) {
-                    simpleIndicator.setListRows(new ArrayList<Object[]>());
+                    // MOD sizhaoliu TDQ-7144 clear the listRows after usage for drill down
+                    if (!simpleIndicator.isStoreData()) {
+                        simpleIndicator.setListRows(new ArrayList<Object[]>());
+                    }
                 }
             }
-
             if (indicator instanceof AllMatchIndicator) {
                 AllMatchIndicator allMatchIndicator = (AllMatchIndicator) indicator;
                 if (!allMatchIndicator.isStoreData()) {

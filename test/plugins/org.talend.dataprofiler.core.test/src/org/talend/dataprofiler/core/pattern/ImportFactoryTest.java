@@ -30,7 +30,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.talend.commons.utils.StringUtils;
 import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -56,7 +55,7 @@ public class ImportFactoryTest {
 
     private static final String UDI_NAME = "UDI1"; //$NON-NLS-1$
 
-    private static final String IND_DEF_PARA_STRING = "email__PARA_SEP_1__a@b.cn; x@y.zn__PARA_SEP_2__int__PARA_SEP_1__100__PARA_SEP_2__name1__PARA_SEP_1__value1__PARA_SEP_2__key__PARA_SEP_1__ `1234567890-=~!@#$%^&*()_+[]\\{}|;':\"\",./<>?qwertyuiopasdfghjklzxcvbnmMNBVCXZLKJHGFDSAPOIUYTREWQ __PARA_SEP_2__"; //$NON-NLS-1$
+    private static final String IND_DEF_PARA_STRING = "email__PARA_SEP_1__a@b.cn; x@y.zn__PARA_SEP_2__int__PARA_SEP_1__100__PARA_SEP_2__name1__PARA_SEP_1__value1__PARA_SEP_2__key__PARA_SEP_1__ `1234567890-=~!@#$%^&*()_+[]{}|;':,./<>?qwertyuiopasdfghjklzxcvbnmMNBVCXZLKJHGFDSAPOIUYTREWQ __PARA_SEP_2__"; //$NON-NLS-1$
 
     /**
      * DOC xqliu Comment method "setUpBeforeClass".
@@ -154,9 +153,9 @@ public class ImportFactoryTest {
         ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule(parserRuleFile);
         List<TdExpression> expressions = parserRule.getExpression();
         for (TdExpression expression : expressions) {
-            assertTrue(name.equals(expression.getName()));
-            assertTrue(lang.equals(expression.getLanguage()));
-            assertTrue(body.equals(expression.getBody()));
+            assertEquals(name, expression.getName());
+            assertEquals(lang, expression.getLanguage());
+            assertEquals(body, expression.getBody());
         }
     }
 
@@ -214,9 +213,9 @@ public class ImportFactoryTest {
         ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule(parserRuleFile);
         List<TdExpression> expressions = parserRule.getExpression();
         for (TdExpression expression : expressions) {
-            assertTrue(name.equals(expression.getName()));
-            assertTrue(lang.equals(expression.getLanguage()));
-            assertTrue(body.equals(expression.getBody()));
+            assertEquals(name, expression.getName());
+            assertEquals(lang, expression.getLanguage());
+            assertEquals(body, expression.getBody());
         }
     }
 
@@ -274,9 +273,9 @@ public class ImportFactoryTest {
         ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule(parserRuleFile);
         List<TdExpression> expressions = parserRule.getExpression();
         for (TdExpression expression : expressions) {
-            assertTrue(name.equals(expression.getName()));
-            assertTrue(lang.equals(expression.getLanguage()));
-            assertTrue(body.equals(expression.getBody()));
+            assertEquals(name, expression.getName());
+            assertEquals(lang, expression.getLanguage());
+            assertEquals(body, expression.getBody());
         }
     }
 
@@ -380,12 +379,13 @@ public class ImportFactoryTest {
         if (indicatorDefinition != null) {
             EList<IndicatorDefinitionParameter> indDefParas = indicatorDefinition.getIndicatorDefinitionParameter();
             assertFalse(indDefParas.isEmpty());
-            String paraString = StringUtils.replace(IND_DEF_PARA_STRING, "\"\"", "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            //String paraString = StringUtils.replace(IND_DEF_PARA_STRING, "\"\"", "\""); //$NON-NLS-1$ //$NON-NLS-2$
             for (IndicatorDefinitionParameter indDefPara : indDefParas) {
                 String temp = indDefPara.getKey() + UDIHelper.PARA_SEPARATE_1 + indDefPara.getValue() + UDIHelper.PARA_SEPARATE_2;
-                assertTrue(paraString.indexOf(temp) > -1);
+                assertTrue(IND_DEF_PARA_STRING.indexOf(temp) > -1);
             }
         }
+        importFile.delete();
     }
 
     /**
@@ -407,6 +407,7 @@ public class ImportFactoryTest {
         List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
         assertTrue(rc.size() == 1);
         assertFalse(rc.get(0).isOk());
+        importFile.delete();
     }
 
     /**
@@ -428,6 +429,7 @@ public class ImportFactoryTest {
         List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
         assertTrue(rc.size() == 1);
         assertFalse(rc.get(0).isOk());
+        importFile.delete();
     }
 
     /**
@@ -456,6 +458,7 @@ public class ImportFactoryTest {
         List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
         assertTrue(rc.size() == 1);
         assertFalse(rc.get(0).isOk());
+        importFile.delete();
     }
 
     /**

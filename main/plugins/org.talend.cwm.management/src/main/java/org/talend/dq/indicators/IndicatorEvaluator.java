@@ -142,6 +142,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
                 // --- give row to handle to indicators
                 for (Indicator indicator : indicators) {
+                    indicator.setDrillDownLimitSize(Long.valueOf(maxNumberRows));
                     // MOD xqliu 2009-02-09 bug 6237
                     if (!continueRun()) {
                         break label;
@@ -161,57 +162,73 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         analyzedDataSet.setDataCount(maxNumberRows);
                         analyzedDataSet.setRecordSize(0);
                     }
+                    // should store data for dirll down
+                    if (analysis.getParameters().isStoreData()) {
+                        // current indicator is need to store the data
+                        if (indicator.mustStoreRow()) {
 
-                    if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
-                        List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
-                        // MOD zshen add another loop to insert all of columnValue on the row into indicator.
-                        recordIncrement = valueObjectList.size();
-                        // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
-                        // columnset
-                        ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH
-                                .doSwitch(indicator.getAnalyzedElement().eContainer());
-                        List<TdColumn> columnList = ColumnSetHelper.getColumns(doSwitch);
+                            List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
+                            // MOD zshen add another loop to insert all of columnValue on the row into indicator.
+                            recordIncrement = valueObjectList.size();
+                            // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
+                            // columnset
+                            ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement()
+                                    .eContainer());
+                            List<TdColumn> columnList = ColumnSetHelper.getColumns(doSwitch);
+                            List<Object> inputRowList = new ArrayList<Object>();
+                            for (int j = 0; j < columnCount; j++) {
+                                String newcol = columnList.get(j).getName();
+                                Object newobject = null;
+                                try {
+                                    newobject = resultSet.getObject(newcol);
+                                } catch (SQLException e) {
+                                    if ("0000-00-00 00:00:00".equals(resultSet.getString(newcol))) { //$NON-NLS-1$
+                                        newobject = null;
+                                    }
 
-                        for (int j = 0; j < columnCount; j++) {
-                            String newcol = columnList.get(j).getName();
-                            Object newobject = null;
-                            try {
-                                newobject = resultSet.getObject(newcol);
-                            } catch (SQLException e) {
-                                if ("0000-00-00 00:00:00".equals(resultSet.getString(newcol))) { //$NON-NLS-1$
-                                    newobject = null;
                                 }
-
-                            }
-                            if (recordIncrement < maxNumberRows) {// decide whether current record is more than max
-                                                                  // Number else don't need to record more than data.
-                                if (recordIncrement < valueObjectList.size()) {// decide whether need to increase
-                                                                               // current array.
-                                    valueObjectList.get(recordIncrement)[j] = newobject;
-
+                                if (indicator.isUsedMapDBMode()) {
+                                    inputRowList.add(newobject == null ? PluginConstant.NULL_STRING : newobject);
+                                    continue;
                                 } else {
-                                    Object[] valueObject = new Object[columnCount];
-                                    valueObject[j] = newobject;
-                                    valueObjectList.add(valueObject);
+                                    if (recordIncrement < maxNumberRows) {// decide whether current record is more than
+                                                                          // max
+                                                                          // Number else don't need to record more than
+                                                                          // data.
+                                        if (recordIncrement < valueObjectList.size()) {// decide whether need to
+                                                                                       // increase
+                                                                                       // current array.
+                                            valueObjectList.get(recordIncrement)[j] = newobject;
+
+                                        } else {
+                                            Object[] valueObject = new Object[columnCount];
+                                            valueObject[j] = newobject;
+                                            valueObjectList.add(valueObject);
+                                        }
+                                    } else {
+                                        break;
+                                    }
                                 }
-                            } else {
-                                break;
                             }
-                        }
-                        // ~
-                    } else if (indicator instanceof UniqueCountIndicator
-                            && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
-                        List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
-                        // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
-                        // columnset
-                        ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH
-                                .doSwitch(indicator.getAnalyzedElement().eContainer());
-                        List<TdColumn> columnElementList = ColumnSetHelper.getColumns(doSwitch);
-                        int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
-                        for (Object[] dataObject : removeValueObjectList) {
-                            if (dataObject[offsetting].equals(object)) {
-                                removeValueObjectList.remove(dataObject);
-                                break;
+                            if (indicator.isUsedMapDBMode()) {
+                                indicator.handleDrillDownData(object, inputRowList);
+                            }
+                            // ~
+                        } else if (indicator instanceof UniqueCountIndicator
+                                && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
+                            List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator)
+                                    .getData();
+                            // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
+                            // columnset
+                            ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement()
+                                    .eContainer());
+                            List<TdColumn> columnElementList = ColumnSetHelper.getColumns(doSwitch);
+                            int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
+                            for (Object[] dataObject : removeValueObjectList) {
+                                if (dataObject[offsetting].equals(object)) {
+                                    removeValueObjectList.remove(dataObject);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -222,6 +239,10 @@ public class IndicatorEvaluator extends Evaluator<String> {
         for (int i = 0; i < columnListSize; i++) {
             String col = columnlist.get(i);
             List<Indicator> indicators = getIndicators(col);
+            // mapDB mode don't need this part
+            if (indicators.size() > 0 && indicators.get(0).isUsedMapDBMode()) {
+                break;
+            }
             for (Indicator indicator : indicators) {
                 if (indicator instanceof DuplicateCountIndicator) {
                     AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
@@ -232,7 +253,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         analyzedDataSet.setRecordSize(0);
                     }
                     // indicator.finalizeComputation();
-                    addResultToIndicatorToRowMap(indicator, indicToRowMap, maxNumberRows, columnCount);
+                    addResultToIndicatorToRowMap(indicator, indicToRowMap);
                 }
             }
         }// ~
@@ -249,27 +270,25 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
     // get the final result from duplicate indicator and set it into indicatorToRowMap
     // Added yyin 20120608 TDQ-3589
-    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap,
-            int maxNumberRows, int columnCount) {
-        Map<Object, List<Object[]>> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
-
-        Iterator<Object> iterator = dupMap.keySet().iterator();
+    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+        Map<Object, Object[]> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
+        Set<Object> duplicateValues = ((DuplicateCountIndicator) indicator).getDuplicateValues();
+        Iterator<Object> iterator = duplicateValues.iterator();
+        int maxNumberRows = analysis.getParameters().getMaxNumberRows();
 
         while (iterator.hasNext()) {
             Object key = iterator.next();
 
-            List<Object[]> valuelist = dupMap.get(key);
-            if (valuelist.size() > 1) {
+            Object[] valueArray = dupMap.get(key);
+            if (valueArray != null) {
                 List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
                 // MOD zshen add another loop to insert all of columnValue on the row into indicator.
-                int recordIncrement = valueObjectList.size();
+                int NumberOfRecord = valueObjectList.size();
 
-                for (Object[] row : valuelist) {
-                    if (recordIncrement < maxNumberRows) {
-                        valueObjectList.add(row);
-                    } else {
-                        break;
-                    }
+                if (NumberOfRecord < maxNumberRows) {
+                    valueObjectList.add(valueArray);
+                } else {
+                    break;
                 }
             }
         }

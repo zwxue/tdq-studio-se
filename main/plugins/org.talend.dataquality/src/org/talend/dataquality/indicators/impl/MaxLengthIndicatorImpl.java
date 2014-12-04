@@ -15,13 +15,14 @@ import org.talend.dataquality.indicators.MaxLengthIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLengthIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MaxLengthIndicatorImpl() {
@@ -30,6 +31,7 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -44,12 +46,22 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
      */
     @Override
     public boolean handle(Object data) {
-        this.mustStoreRow = true;
         boolean ok = super.handle(data);
         if (data != null) {
             String str = (String) data;
-            if (str.length() > 0 && (length == null || length.intValue() < str.length())) {
-                length = Long.valueOf(str.length());
+            final int strLength = str.length();
+            if (strLength > 0) {
+                if ((length == LENGTH_EDEFAULT || length.intValue() == strLength)) {
+                    length = Long.valueOf(strLength);
+                    if (this.checkMustStoreCurrentRow()) {
+                        mustStoreRow = true;
+                    }
+                } else if (length.intValue() < strLength) {
+                    changeLength(strLength);
+                    if (this.checkMustStoreCurrentRow()) {
+                        mustStoreRow = true;
+                    }
+                }
             }
         }
         return ok;
@@ -66,6 +78,16 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
         parameters.getTextParameter().setUseNulls(false);
         parameters.getTextParameter().setUseBlank(false);
         return parameters;
+    }
+
+    protected void zeroIsMax() {
+        // first data is zero
+        if (length == LENGTH_EDEFAULT) {
+            length = 0L;
+        }
+        if (length == 0 && this.checkMustStoreCurrentRow()) {
+            mustStoreRow = true;
+        }
     }
 
 } // MaxLengthIndicatorImpl

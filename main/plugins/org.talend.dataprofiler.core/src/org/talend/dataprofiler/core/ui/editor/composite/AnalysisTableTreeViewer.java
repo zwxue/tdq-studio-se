@@ -100,6 +100,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -370,10 +371,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      * @param tableIndicator
      */
     private void showAddDQRuleDialog(final TreeItem treeItem, final TableIndicator tableIndicator) {
-        // Button addDQRuleBtn = new Button(tree, SWT.NONE);
-        //            addDQRuleBtn.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.addDQRule")); //$NON-NLS-1$
-        // addDQRuleBtn.pack();
-        // addDQRuleBtn.addSelectionListener(new SelectionAdapter() {
         // MOD xqliu 2009-04-30 bug 6808
         IndicatorCheckedTreeSelectionDialog dialog = new IndicatorCheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
                 new WorkbenchContentProvider());
@@ -509,7 +506,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         ArrayList<IFile> ret = new ArrayList<IFile>();
         Indicator[] indicators = tableIndicator.getIndicators();
         for (Indicator indicator : indicators) {
-            if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
+            if (IndicatorHelper.isWhereRuleIndicator(indicator)) {
                 Object obj = indicator.getIndicatorDefinition();
                 if (obj != null && obj instanceof WhereRule) {
                     WhereRule wr = (WhereRule) obj;
@@ -522,11 +519,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     private void createIndicatorItems(TreeItem treeItem, TableIndicatorUnit[] indicatorUnits) {
         for (TableIndicatorUnit indicatorUnit : indicatorUnits) {
-            // ADD xqliu 2012-04-23 TDQ-5057
-            if (IndicatorEnum.WhereRuleAideIndicatorEnum.equals(indicatorUnit.getType())) {
-                continue;
-            }
-            // ~ TDQ-5057
             createOneUnit(treeItem, indicatorUnit);
         }
     }
@@ -999,7 +991,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     private void deleteIndicatorItems(TableIndicator tableIndicator, TableIndicatorUnit inidicatorUnit) {
-        deleteIndicatorAideItems(tableIndicator, inidicatorUnit);
         tableIndicator.removeIndicatorUnit(inidicatorUnit);
         this.indicatorTreeItemMap.remove(inidicatorUnit);
     }
@@ -1009,36 +1000,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      */
     private void deleteIndicatorItems(TableIndicator tableIndicator) {
         for (TableIndicatorUnit indiUnit : tableIndicator.getIndicatorUnits()) {
-            deleteIndicatorAideItems(tableIndicator, indiUnit);
             tableIndicator.removeIndicatorUnit(indiUnit);
             this.indicatorTreeItemMap.remove(indiUnit);
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "deleteIndicatorAideItems".
-     * 
-     * @param tableIndicator
-     * @param inidicatorUnit
-     */
-    private void deleteIndicatorAideItems(TableIndicator tableIndicator, TableIndicatorUnit inidicatorUnit) {
-        if (IndicatorEnum.WhereRuleIndicatorEnum.equals(inidicatorUnit.getType())) {
-            TableIndicatorUnit indicatorAideUnit = null;
-
-            String name = inidicatorUnit.getIndicatorName();
-            TableIndicatorUnit[] indicatorUnits = tableIndicator.getIndicatorUnits();
-
-            for (TableIndicatorUnit tiu : indicatorUnits) {
-                if (IndicatorEnum.WhereRuleAideIndicatorEnum.equals(tiu.getType()) && name.equals(tiu.getIndicatorName())) {
-                    indicatorAideUnit = tiu;
-                    break;
-                }
-            }
-
-            if (indicatorAideUnit != null) {
-                tableIndicator.removeIndicatorUnit(indicatorAideUnit);
-                // this.indicatorTreeItemMap.remove(indicatorAideUnit);
-            }
         }
     }
 
@@ -1266,7 +1229,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                         return;
                     }
 
-                    CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(), set.getName());
+                    SqlExplorerUtils.getDefault().runInDQViewer(dataprovider, expression.getBody(), set.getName());
                 }
             }
         }

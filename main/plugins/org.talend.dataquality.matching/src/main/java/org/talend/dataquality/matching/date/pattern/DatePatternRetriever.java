@@ -101,6 +101,36 @@ public class DatePatternRetriever {
     }
 
     /**
+     * DOC msjian Comment method "getModels".
+     * 
+     * @param expression
+     * @return
+     */
+    public List<String> getModels(String expression) {
+        List<String> models = new ArrayList<String>();
+        for (ModelMatcher findMatcher : findMatchers(expression)) {
+            models.add(findMatcher.getModel());
+        }
+        return models;
+    }
+
+    /**
+     * Find the matcher whiche is match with expression notice: sometimes, when expression may have more than one
+     * matchers for example: 2000-04-05 matches both "yyyy MM dd" and "yyyy dd MM"
+     * 
+     * @param expression
+     */
+    public List<ModelMatcher> findMatchers(String expression) {
+        List<ModelMatcher> matchers = new ArrayList<ModelMatcher>();
+        for (ModelMatcher patternMatcher : this.modelMatchers) {
+            if (patternMatcher.matches(expression)) {
+                matchers.add(patternMatcher);
+            }
+        }
+        return matchers;
+    }
+
+    /**
      * method to show results on screen console.
      */
     void showResults() {
@@ -130,6 +160,22 @@ public class DatePatternRetriever {
         for (ModelMatcher matcher : this.getModelMatchers()) {
             if (matcher.getModel().equals(model)) {
                 return matcher.getRegex();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * method "get Matcher by model".
+     * 
+     * @param model the model of matcher.
+     * @return if can find corresponding to matcher return it else return null;
+     */
+    public ModelMatcher getMatcher(String model) {
+        for (ModelMatcher matcher : this.getModelMatchers()) {
+            if (matcher.getModel().equals(model)) {
+                return matcher;
             }
         }
         return null;

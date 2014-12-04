@@ -29,6 +29,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.matching.date.pattern.DatePatternRetriever;
 import org.talend.dataquality.matching.date.pattern.ModelMatcher;
 
@@ -112,6 +113,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
      */
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = false;
         if (data != null) {
             // MOD qiongli 2011-11-11 TDQ-3864,format the date for file connection.
             if (data instanceof Date && isDelimtedFile) {
@@ -123,25 +125,36 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
                     data = sdf.format((Date) data);
                 }
             }
-            dateRetriever.handle(String.valueOf(data));
+            List<ModelMatcher> findMatchers = dateRetriever.findMatchers(String.valueOf(data));
+            for (ModelMatcher matcher : findMatchers) {
+                if (matcher != null) {
+                    data = matcher.getModel();
+                    matcher.increment();
+                    mustStoreRow = mustStoreRow || this.checkMustStoreCurrentRow(Long.valueOf(matcher.getScore() - 1));
+
+                }
+            }
+        } else {
+            nullCount++;
         }
-        boolean returnValue = super.handle(data);
-        // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
-        this.mustStoreRow = true;
-        return returnValue;
+        count++;
+
+        return true;
     }
 
     @Override
     public Double getFrequency(Object dataValue) {
         if (this.count.compareTo(0L) == 0) {
             return Double.NaN;
-        } else
-
-        if (dataValue instanceof ModelMatcher) {
-            ModelMatcher dataMatcher = (ModelMatcher) dataValue;
-            return ((double) dataMatcher.getScore()) / this.getCount().longValue();
         }
-        return super.getFrequency(dataValue);
+        ModelMatcher matcher = null;
+        if (dataValue instanceof ModelMatcher) {
+            matcher = (ModelMatcher) dataValue;
+            return ((double) matcher.getScore()) / this.getCount().longValue();
+        } else {
+            return super.getFrequency(dataValue);
+        }
+
     }
 
     @Override
@@ -151,7 +164,9 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         for (ModelMatcher matcher : modelMatchers) {
             map.put(matcher.getModel(), (long) matcher.getScore());
         }
-        setValueToFreq(map);
+        // this clear is necessary, because in the map contains the parent'result.
+        getMapForFreq().clear();
+        getMapForFreq().putAll(map);
         return super.finalizeComputation();
     }
 
@@ -226,6 +241,24 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
             }
         }
         return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#handleDrillDownData(java.lang.Object,
+     * java.util.List)
+     */
+    @Override
+    public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
+        List<ModelMatcher> matchers = dateRetriever.findMatchers(String.valueOf(masterObject));
+        for (ModelMatcher matcher : matchers) {
+            drillDownMap = (DBMap<Object, List<Object>>) getMapDB(matcher.getModel());
+            // check the size of limite
+            if (this.checkMustStoreCurrentRow(Long.valueOf(matcher.getScore() - 1))) {
+                drillDownMap.put(matcher.getScore(), inputRowList);
+            }
+        }
     }
 
 } // DatePatternFreqIndicatorImpl

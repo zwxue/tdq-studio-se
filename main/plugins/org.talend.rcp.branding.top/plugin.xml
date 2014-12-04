@@ -16,7 +16,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.talend.rcp.branding.top.application"
-            name="Talend Open Profiler">
+            name="Talend Open Studio for Data Quality">
          <property
                name="windowImages"
                value="platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_16x16.gif,platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_32x32.gif,platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_48x48.gif">
@@ -26,7 +26,7 @@
             value="icons/about.jpg"/>
          <property
                name="appName"
-               value="Talend Open Profiler">
+               value="Talend Open Studio for Data Quality">
          </property>
          <property
                name="aboutText"
@@ -76,6 +76,17 @@
             </implementation>
          </presentation>
       </config>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:help?after=additions">
+         <menu
+               id="talend"
+               label="talend">
+         </menu>
+      </menuContribution>
    </extension>
 
 </plugin>

@@ -254,6 +254,16 @@ public enum FormEnum {
             break;
         case SoundexIndicatorEnum:
         case SoundexLowIndicatorEnum:
+        case DateFrequencyIndicatorEnum:
+        case DateLowFrequencyIndicatorEnum:
+        case YearFrequencyIndicatorEnum:
+        case YearLowFrequencyIndicatorEnum:
+        case QuarterFrequencyIndicatorEnum:
+        case QuarterLowFrequencyIndicatorEnum:
+        case MonthFrequencyIndicatorEnum:
+        case MonthLowFrequencyIndicatorEnum:
+        case WeekFrequencyIndicatorEnum:
+        case WeekLowFrequencyIndicatorEnum:
             forms = new FormEnum[] { NumbericNominalForm };
 
             break;

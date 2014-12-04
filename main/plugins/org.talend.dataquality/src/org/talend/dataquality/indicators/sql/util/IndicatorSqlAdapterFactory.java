@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.sql.util;
@@ -20,26 +19,23 @@ import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * <!-- begin-user-doc -->
- * The <b>Adapter Factory</b> for the model.
- * It provides an adapter <code>createXXX</code> method for each class of the model.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> The <b>Adapter Factory</b> for the model. It provides an adapter <code>createXXX</code>
+ * method for each class of the model. <!-- end-user-doc -->
  * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage
  * @generated
  */
 public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
+
     /**
      * The cached model package.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected static IndicatorSqlPackage modelPackage;
 
     /**
      * Creates an instance of the adapter factory.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public IndicatorSqlAdapterFactory() {
@@ -50,9 +46,9 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
 
     /**
      * Returns whether this factory is applicable for the type of the object.
-     * <!-- begin-user-doc -->
-     * This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This
+     * implementation returns <code>true</code> if the object is either the model's package or is an instance object of
+     * the model. <!-- end-user-doc -->
      * @return whether this factory is applicable for the type of the object.
      * @generated
      */
@@ -69,12 +65,10 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
 
     /**
      * The switch that delegates to the <code>createXXX</code> methods.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    protected IndicatorSqlSwitch<Adapter> modelSwitch =
-        new IndicatorSqlSwitch<Adapter>() {
+    protected IndicatorSqlSwitch<Adapter> modelSwitch = new IndicatorSqlSwitch<Adapter>() {
             @Override
             public Adapter caseUserDefIndicator(UserDefIndicator object) {
                 return createUserDefIndicatorAdapter();
@@ -86,10 +80,6 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
             @Override
             public Adapter caseJavaUserDefIndicator(JavaUserDefIndicator object) {
                 return createJavaUserDefIndicatorAdapter();
-            }
-            @Override
-            public Adapter caseWhereRuleAideIndicator(WhereRuleAideIndicator object) {
-                return createWhereRuleAideIndicatorAdapter();
             }
             @Override
             public Adapter caseElement(Element object) {
@@ -111,8 +101,7 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
 
     /**
      * Creates an adapter for the <code>target</code>.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @param target the object to adapt.
      * @return the adapter for the <code>target</code>.
      * @generated
@@ -122,13 +111,11 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
         return modelSwitch.doSwitch((EObject)target);
     }
 
-
     /**
      * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.sql.UserDefIndicator <em>User Def Indicator</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.talend.dataquality.indicators.sql.UserDefIndicator
      * @generated
@@ -139,10 +126,9 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
 
     /**
      * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.sql.WhereRuleIndicator <em>Where Rule Indicator</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.talend.dataquality.indicators.sql.WhereRuleIndicator
      * @generated
@@ -153,10 +139,9 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
 
     /**
      * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.sql.JavaUserDefIndicator <em>Java User Def Indicator</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we
+     * can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.talend.dataquality.indicators.sql.JavaUserDefIndicator
      * @generated
@@ -166,25 +151,10 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.sql.WhereRuleAideIndicator <em>Where Rule Aide Indicator</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
-     * @return the new adapter.
-     * @see org.talend.dataquality.indicators.sql.WhereRuleAideIndicator
-     * @generated
-     */
-    public Adapter createWhereRuleAideIndicatorAdapter() {
-        return null;
-    }
-
-    /**
-     * Creates a new adapter for an object of class '{@link orgomg.cwm.objectmodel.core.Element <em>Element</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link orgomg.cwm.objectmodel.core.Element <em>Element</em>}'. <!--
+     * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
+     * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+     * 
      * @return the new adapter.
      * @see orgomg.cwm.objectmodel.core.Element
      * @generated
@@ -194,11 +164,11 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link orgomg.cwm.objectmodel.core.ModelElement <em>Model Element</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link orgomg.cwm.objectmodel.core.ModelElement
+     * <em>Model Element</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+     * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+     * -->
+     * 
      * @return the new adapter.
      * @see orgomg.cwm.objectmodel.core.ModelElement
      * @generated
@@ -208,11 +178,11 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.Indicator
+     * <em>Indicator</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+     * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+     * -->
+     * 
      * @return the new adapter.
      * @see org.talend.dataquality.indicators.Indicator
      * @generated
@@ -223,8 +193,7 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
 
     /**
      * Creates a new adapter for the default case.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null.
+     * <!-- begin-user-doc --> This default implementation returns null.
      * <!-- end-user-doc -->
      * @return the new adapter.
      * @generated
@@ -233,4 +202,4 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
         return null;
     }
 
-} //IndicatorSqlAdapterFactory
+} // IndicatorSqlAdapterFactory

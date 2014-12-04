@@ -82,7 +82,7 @@ public class AliasAndManaDriverHelper {
         addJars(dbConn, manaDriver);
         // register jdbc driver for Object ManagedDriver when its jars are not empty.
         if (!manaDriver.getJars().isEmpty()) {
-            manaDriver.registerSQLDriver(dbType, dbVersion);
+            manaDriver.registerSQLDriver(dbConn);
         }
         return manaDriver;
     }

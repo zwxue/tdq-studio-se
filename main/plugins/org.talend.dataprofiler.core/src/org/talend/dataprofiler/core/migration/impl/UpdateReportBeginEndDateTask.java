@@ -12,25 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ContextHelper;
-import org.talend.dq.helper.ReportUtils;
-import org.talend.dq.helper.ReportUtils.ReportListParameters;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * TDQ-7418 msjian: update the dateFrom and dateEnd type from Date to String.

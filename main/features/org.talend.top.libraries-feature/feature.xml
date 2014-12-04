@@ -2,7 +2,7 @@
 <feature
       id="org.talend.top.libraries_feature"
       label="Libraries_feature Feature"
-      version="1.0.0.qualifier"
+      version="6.0.0.qualifier"
       provider-name=".Talend SA.">
 
    <description>
@@ -568,18 +568,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.talend.libraries.jasperreport"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.javacsv"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.talend.libraries.csv"
          download-size="0"
          install-size="0"
@@ -590,13 +578,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.jdbc.h2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.talend.libraries.jdbc.hsql"
@@ -694,6 +675,20 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.apache.commons.el"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.jasper"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.apache.lucene.analysis"
@@ -1301,6 +1296,19 @@
 
    <plugin
          id="org.talend.libraries.zookeeper"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.libraries.mapdb"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.nebula.widgets.pagination"
          download-size="0"
          install-size="0"
          version="0.0.0"

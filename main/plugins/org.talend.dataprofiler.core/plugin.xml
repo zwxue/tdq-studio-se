@@ -1551,12 +1551,6 @@
            version="5.1.0">
      </workspacetask>
      <workspacetask
-           class="org.talend.dataprofiler.core.migration.impl.UpdateDQRuleAnalysisTask"
-           id="org.talend.dataprofiler.core.migration.impl.UpdateDQRuleAnalysisTask"
-           name="Update DQRule Analysis Task"
-           version="5.1.0">
-     </workspacetask>
-     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateItemStatePathForPatternsUDIsTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateItemStatePathForPatternsUDIsTask"
            name="Update ItemState Path For Patterns UDIs Task"
@@ -1771,9 +1765,6 @@
               <instanceof
                     value="org.eclipse.ui.part.FileEditorInput">
               </instanceof>
-              <instanceof
-                    value="net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput">
-              </instanceof>
            </or></editorInputEnablement>
         <selectionEnablement>
            <instanceof
@@ -1788,13 +1779,6 @@
            class="org.talend.dataprofiler.core.process.FilePreviewProcess"
            language="java">
      </preview>
-  </extension>
-  <extension
-        point="net.sourceforge.sqlexplorer.saveAs">
-     <Service
-           class="org.talend.dataprofiler.core.service.SqlExploerSaveAsService"
-           saveAsServiceId="net.sourceforge.sqlexplorer.service.ISaveAsService">
-     </Service>
   </extension>
   <extension
         point="org.eclipse.ui.startup">
@@ -1833,6 +1817,14 @@
                 visible="false">
           </view>
        </perspectiveExtension>
+    </extension>
+    <extension
+          point="org.talend.updates.runtime.extraUpdatesFactory">
+       <factory
+             class="org.talend.dataprofiler.core.DQRequiredMissingJarsExtraUpdatesFactory"
+             id="org.talend.dataprofiler.core.DownloadSqlexplorerPluginJar"
+             name="Download Sqlexplorer Plugin Jar">
+       </factory>
     </extension>
 
 </plugin>

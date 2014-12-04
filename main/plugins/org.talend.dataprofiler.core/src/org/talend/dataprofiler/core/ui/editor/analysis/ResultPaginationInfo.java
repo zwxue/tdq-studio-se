@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -45,7 +45,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -69,20 +68,18 @@ import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.IEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.PatternFreqIndicator;
-import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
-import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.dq.pattern.PatternTransformer;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -90,6 +87,8 @@ import org.talend.repository.model.IRepositoryNode;
  * DOC mzhao UIPagination.MasterPaginationInfo class global comment. Detailled comment
  */
 public class ResultPaginationInfo extends IndicatorPaginationInfo {
+
+    private static Logger log = Logger.getLogger(ResultPaginationInfo.class);
 
     private ColumnMasterDetailsPage masterPage;
 
@@ -321,17 +320,22 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
             public void chartMouseClicked(ChartMouseEvent event) {
                 boolean flag = event.getTrigger().getButton() != MouseEvent.BUTTON3;
-
                 chartComp.setDomainZoomable(flag);
                 chartComp.setRangeZoomable(flag);
-
-                final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
                 // MOD xqliu 2010-09-26 bug 15745
                 // if (flag || ExecutionLanguage.JAVA == currentEngine) {
                 if (flag) {
                     return;
                 }
                 // ~ 15745
+
+                final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
+
+                // ADD msjian TDQ-7275 2013-5-21: when allow drill down is not checked, no menu display
+                if (ExecutionLanguage.JAVA == currentEngine && !analysis.getParameters().isStoreData()) {
+                    return;
+                }
+                // TDQ-7275~
 
                 ChartEntity chartEntity = event.getEntity();
                 if (chartEntity != null && chartEntity instanceof CategoryItemEntity) {
@@ -341,37 +345,34 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     // MOD xqliu 2010-09-26 bug 15745
                     final ChartDataEntity currentDataEntity = getCurrentChartDateEntity(cateEntity, dataEntity);
                     // ~ 15745
-
                     if (currentDataEntity != null) {
-                        // MOD gdbu 2011-7-12 bug : 22524
-                        if (ExecutionLanguage.JAVA == currentEngine && 0 == analysis.getResults().getIndicToRowMap().size()) {
-                            return;
+                        final Indicator currentIndicator = currentDataEntity.getIndicator();
+
+                        if (!currentIndicator.isUsedMapDBMode()) {
+                            // MOD gdbu 2011-7-12 bug : 22524
+                            if (ExecutionLanguage.JAVA == currentEngine && 0 == analysis.getResults().getIndicToRowMap().size()) {
+                                return;
+                            }
+                            // ~22524
+
+                            // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
+                            if (currentIndicator instanceof DatePatternFreqIndicator
+                                    && null == analysis.getResults().getIndicToRowMap().get(currentIndicator).getFrequencyData()) {
+                                return;
+                            }
                         }
-                        // ~22524
-                        // ADD msjian TDQ-7275 2013-5-21: when allow drill down is not checked, no menu display
-                        if (ExecutionLanguage.JAVA == currentEngine && !analysis.getParameters().isStoreData()) {
-                            return;
-                        }
-                        // TDQ-7275~
 
                         // create menu
                         Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
                         chartComp.setMenu(menu);
 
-                        final Indicator currentIndicator = currentDataEntity.getIndicator();
                         int createPatternFlag = 0;
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
-
-                        // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
-                        if (currentIndicator instanceof DatePatternFreqIndicator
-                                && null == analysis.getResults().getIndicToRowMap().get(currentIndicator).getFrequencyData()) {
-                            return;
-                        }
-
                         for (final MenuItemEntity itemEntity : itemEntities) {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
                             item.setImage(itemEntity.getIcon());
+                            item.setEnabled(DrillDownUtils.isMenuItemEnable(currentDataEntity, itemEntity, analysis));
                             item.addSelectionListener(new SelectionAdapter() {
 
                                 @Override
@@ -381,8 +382,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                         try {
                                             DrillDownEditorInput input = new DrillDownEditorInput(analysis, currentDataEntity,
                                                     itemEntity);
-
-                                            if (input.computeColumnValueLength(input.filterAdaptDataList())) {
+                                            if (SqlExplorerUtils.getDefault().getSqlexplorerService() != null) {
                                                 CorePlugin
                                                         .getDefault()
                                                         .getWorkbench()
@@ -390,14 +390,9 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                                         .getActivePage()
                                                         .openEditor(input,
                                                                 "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
-                                            } else {
-                                                MessageDialog.openWarning(null,
-                                                        Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),//$NON-NLS-1$
-                                                        Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));//$NON-NLS-1$
                                             }
-
                                         } catch (PartInitException e1) {
-                                            e1.printStackTrace();
+                                            log.error(e1, e1);
                                         }
                                     } else {
                                         Display.getDefault().asyncExec(new Runnable() {
@@ -407,7 +402,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                                         .getContext().getConnection());
                                                 String query = itemEntity.getQuery();
                                                 String editorName = currentIndicator.getName();
-                                                CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                                SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                             }
 
                                         });
@@ -416,25 +411,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                 }
                             });
 
-                            if ((currentIndicator instanceof PatternFreqIndicator || currentIndicator instanceof PatternLowFreqIndicator)
-                                    && createPatternFlag == 0) {
-                                MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                itemCreatePatt.setText(DefaultMessagesImpl
-                                        .getString("ColumnAnalysisResultPage.GenerateRegularPattern")); //$NON-NLS-1$
-                                final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
-                                        .createDbmsLanguage(analysis));
-                                itemCreatePatt.addSelectionListener(new SelectionAdapter() {
-
-                                    @Override
-                                    public void widgetSelected(SelectionEvent e) {
-                                        Display.getDefault().asyncExec(new Runnable() {
-
-                                            public void run() {
-                                                ChartTableFactory.createPattern(analysis, itemEntity, pattTransformer);
-                                            }
-                                        });
-                                    }
-                                });
+                            if (ChartTableFactory.isPatternFrequencyIndicator(currentIndicator) && createPatternFlag == 0) {
+                                ChartTableFactory.createMenuOfGenerateRegularPattern(analysis, menu, currentDataEntity);
                             }
 
                             createPatternFlag++;

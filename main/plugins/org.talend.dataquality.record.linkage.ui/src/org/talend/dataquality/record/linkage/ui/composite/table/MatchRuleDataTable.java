@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.jfree.util.Log;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.utils.MatchRuleColorRegistry;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
@@ -73,7 +74,8 @@ public class MatchRuleDataTable extends Composite {
 
     private Label index;
 
-    private int disGroupSize = 0;
+    // TDQ-9297: Set the default value of "hide groups less than" to 2 instead of 1
+    private int disGroupSize = PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT;
 
     private final ControlAdapter matchRuleTableResizeListener = new MatchRuleTableResizeListener();
 

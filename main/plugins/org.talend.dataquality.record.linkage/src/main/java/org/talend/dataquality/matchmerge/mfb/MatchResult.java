@@ -30,6 +30,8 @@ public class MatchResult {
 
     public static class Score {
 
+        public final String[] ids = new String[2];
+        
         public final String[] values = new String[2];
 
         public AttributeMatcherType algorithm;
@@ -53,13 +55,16 @@ public class MatchResult {
         return normalizedConfidence;
     }
 
-    public void setScore(int index, AttributeMatcherType algorithm, double score, String value1, String value2) {
+    public void setScore(int index, AttributeMatcherType algorithm, double score, String recordId1, String value1,
+            String recordId2, String value2) {
         while (index >= scores.size()) {
             scores.add(new Score());
         }
         Score currentScore = scores.get(index);
         currentScore.algorithm = algorithm;
         currentScore.score = score;
+        currentScore.ids[0] = recordId1;
+        currentScore.ids[1] = recordId2;
         currentScore.values[0] = value1;
         currentScore.values[1] = value2;
     }
