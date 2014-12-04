@@ -232,7 +232,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      * 
      */
     private void clearDrillDownData() {
-        if (!checkAllowDrillDown()) {
+        if (!isUsedMapDBMode() || !checkAllowDrillDown()) {
             return;
         }
         Iterator<Object> iterator = duplicateObjects.iterator();
@@ -270,15 +270,19 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     @Override
     public boolean reset() {
         this.uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
-        uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
-        if (uniqueObjects != null) {
-            ((DBSet<Object>) uniqueObjects).clear();
+        if (isUsedMapDBMode()) {
+            uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+            if (uniqueObjects != null) {
+                ((DBSet<Object>) uniqueObjects).clear();
+            }
+            duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
+            if (duplicateObjects != null) {
+                ((DBSet<Object>) duplicateObjects).clear();
+            }
+        } else {
+            this.uniqueObjects.clear();
+            this.duplicateObjects.clear();
         }
-        duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
-        if (duplicateObjects != null) {
-            ((DBSet<Object>) duplicateObjects).clear();
-        }
-
         return super.reset();
     }
 
@@ -307,18 +311,20 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        // is get computeProcess map
-        if (StandardDBName.computeProcess.name().equals(dbName)) {
-            // current set is invalid
-            if (needReconnect((DBSet<Object>) uniqueObjects)) {
-                // create new DBSet
-                return initValueForDBSet(StandardDBName.computeProcessSet.name());
-            } else {
-                return (DBSet<Object>) uniqueObjects;
+        if (isUsedMapDBMode()) {
+            // is get computeProcess map
+            if (StandardDBName.computeProcess.name().equals(dbName)) {
+                // current set is invalid
+                if (needReconnect((DBSet<Object>) uniqueObjects)) {
+                    // create new DBSet
+                    return initValueForDBSet(StandardDBName.computeProcessSet.name());
+                } else {
+                    return (DBSet<Object>) uniqueObjects;
+                }
+                // the key is view values case so do this translate
+            } else if (StandardDBName.drillDownValues.name().equals(dbName)) {
+                return super.getMapDB(StandardDBName.drillDown.name());
             }
-            // the key is view values case so do this translate
-        } else if (StandardDBName.drillDownValues.name().equals(dbName)) {
-            return super.getMapDB(StandardDBName.drillDown.name());
         }
         return super.getMapDB(dbName);
     }

@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -75,8 +76,12 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @return
      */
     private Set<Object> initValueForSet(String dbName) {
-        return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
-                ResourceManager.getMapDBCatalogName(this, dbName));
+        if (isUsedMapDBMode()) {
+            return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
+                    ResourceManager.getMapDBCatalogName(this, dbName));
+        } else {
+            return new HashSet<Object>();
+        }
     }
 
     /**
@@ -263,20 +268,28 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @return
      */
     private boolean needStoreDrillDownData() {
-        return this.checkMustStoreCurrentRow() && this.checkAllowDrillDown();
+        return isUsedMapDBMode() && this.checkMustStoreCurrentRow() && this.checkAllowDrillDown();
     }
 
     @Override
     public boolean reset() {
-        if (needReconnect((AbstractDB<?>) distinctMap)) {
+        if (this.isUsedMapDBMode()) {
+            if (needReconnect((AbstractDB<?>) distinctMap)) {
+                distinctMap = initValueForDBMap(StandardDBName.computeProcess.name());
+            }
+            distinctMap.clear();
+            if (needReconnect((AbstractDB<?>) duplicateObjects)) {
+                duplicateObjects = initValueForSet(StandardDBName.computeProcessSet.name());
+            }
+            duplicateObjects.clear();
+            drillDownValueCount = 0l;
+            // java normal mode
+        } else {
             distinctMap = initValueForDBMap(StandardDBName.computeProcess.name());
-        }
-        distinctMap.clear();
-        if (needReconnect((AbstractDB<?>) duplicateObjects)) {
             duplicateObjects = initValueForSet(StandardDBName.computeProcessSet.name());
+            distinctMap.clear();
+            duplicateObjects.clear();
         }
-        duplicateObjects.clear();
-        drillDownValueCount = 0l;
         return super.reset();
     }
 
@@ -358,25 +371,26 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     @Override
     public AbstractDB getMapDB(String dbName) {
-        // is get computeProcess map
-        if (StandardDBName.computeProcess.name().equals(dbName)) {
-            // current set is valid
-            if (distinctMap != null && !((DBMap<Object, List<Object>>) distinctMap).isClosed()) {
-                return (DBMap<Object, List<Object>>) distinctMap;
-            } else {
-                // create new DBSet
-                return initValueForDBMap(StandardDBName.computeProcess.name());
-            }
-        } else if (StandardDBName.computeProcessSet.name().equals(dbName)) {
-            // current set is valid
-            if (duplicateObjects != null && !((DBSet<Object>) duplicateObjects).isClosed()) {
-                return (DBSet<Object>) duplicateObjects;
-            } else {
-                // create new DBSet
-                return ((DBSet<Object>) initValueForSet(StandardDBName.computeProcessSet.name()));
+        if (isUsedMapDBMode()) {
+            // is get computeProcess map
+            if (StandardDBName.computeProcess.name().equals(dbName)) {
+                // current set is valid
+                if (distinctMap != null && !((DBMap<Object, List<Object>>) distinctMap).isClosed()) {
+                    return (DBMap<Object, List<Object>>) distinctMap;
+                } else {
+                    // create new DBSet
+                    return initValueForDBMap(StandardDBName.computeProcess.name());
+                }
+            } else if (StandardDBName.computeProcessSet.name().equals(dbName)) {
+                // current set is valid
+                if (duplicateObjects != null && !((DBSet<Object>) duplicateObjects).isClosed()) {
+                    return (DBSet<Object>) duplicateObjects;
+                } else {
+                    // create new DBSet
+                    return ((DBSet<Object>) initValueForSet(StandardDBName.computeProcessSet.name()));
+                }
             }
         }
-
         return super.getMapDB(dbName);
     }
 
