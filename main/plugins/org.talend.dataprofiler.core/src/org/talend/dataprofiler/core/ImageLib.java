@@ -41,10 +41,6 @@ import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
-import org.talend.dq.nodes.MDMConnectionFolderRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
-import org.talend.dq.nodes.MDMSchemaRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
@@ -620,8 +616,6 @@ public final class ImageLib {
                 imageName = ImageLib.METADATA;
             } else if (node instanceof DBConnectionFolderRepNode) {
                 imageName = ImageLib.CONNECTION;
-            } else if (node instanceof MDMConnectionFolderRepNode) {
-                imageName = ImageLib.MDM_CONNECTION;
             } else if (label.equals(EResourceConstant.FILEDELIMITED.getName())) {
                 imageName = ImageLib.FILE_DELIMITED;
             } else if (label.equals(EResourceConstant.LIBRARIES.getName())) {
@@ -636,12 +630,6 @@ public final class ImageLib {
         } else if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
             if (node instanceof DBConnectionRepNode) {
                 imageName = ImageLib.TD_DATAPROVIDER;
-            } else if (node instanceof MDMConnectionRepNode) {
-                imageName = ImageLib.MDM_CONNECTION;
-            } else if (node instanceof MDMSchemaRepNode) {
-                imageName = ImageLib.XML_DOC;
-            } else if (node instanceof MDMXmlElementRepNode) {
-                imageName = ImageLib.XML_ELEMENT_DOC;
             } else if (node instanceof DFConnectionRepNode) {
                 imageName = ImageLib.FILE_DELIMITED;
             } else if (node instanceof AnalysisRepNode) {
@@ -683,10 +671,6 @@ public final class ImageLib {
             } else if (node instanceof DFColumnRepNode) {
 
                 imageName = ImageLib.TD_COLUMN;
-            } else if (node instanceof MDMSchemaRepNode) {
-                imageName = ImageLib.XML_DOC;
-            } else if (node instanceof MDMXmlElementRepNode) {
-                imageName = ImageLib.XML_ELEMENT_DOC;
             } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
                 imageName = ImageLib.FOLDERNODE_IMAGE;
             }

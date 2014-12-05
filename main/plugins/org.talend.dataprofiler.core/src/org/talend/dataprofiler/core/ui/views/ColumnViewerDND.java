@@ -46,7 +46,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
@@ -73,7 +72,6 @@ import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -141,10 +139,6 @@ public class ColumnViewerDND {
                 // MOD klliu 15750 2011-01-17 for Drag&Drop On columnset
                 if (object instanceof DBColumnRepNode || object instanceof DBTableRepNode || object instanceof DFColumnRepNode) {
                     receiver = new ColumnReceiver();
-                }
-
-                if (object instanceof MDMXmlElementRepNode) {
-                    receiver = new XmlElementReceiver();
                 }
 
                 if (receiver == null) {
@@ -275,7 +269,7 @@ public class ColumnViewerDND {
             TreeItem item = (TreeItem) event.item;
             Object indData = item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
             // MOD yyi 2011-06-15 22419:column set pattern for MDM
-            if (indData instanceof ColumnIndicator || indData instanceof XmlElementIndicator) {
+            if (indData instanceof ColumnIndicator) {
                 // ColumnIndicator data = (ColumnIndicator) indData;
                 ModelElementIndicator data = (ModelElementIndicator) indData;
                 // MOD klliu 2010-06-12 bug 13696
@@ -478,16 +472,6 @@ public class ColumnViewerDND {
             event.detail = DND.DROP_NONE;
             RepositoryNode firstElement = (RepositoryNode) ((StructuredSelection) LocalSelectionTransfer.getTransfer()
                     .getSelection()).getFirstElement();
-            if (firstElement instanceof MDMXmlElementRepNode) {
-                MDMXmlElementRepNode xmlElement = (MDMXmlElementRepNode) firstElement;
-
-                Tree tree = (Tree) ((DropTarget) event.widget).getControl();
-                AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
-                if (viewer != null && viewer.canDrop(xmlElement)) {
-                    event.detail = DND.DROP_MOVE;
-                }
-
-            }
         }
 
         @SuppressWarnings("unchecked")

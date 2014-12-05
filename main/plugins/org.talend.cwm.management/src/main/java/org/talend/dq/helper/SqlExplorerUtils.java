@@ -17,7 +17,6 @@ import java.net.URL;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.Command;
@@ -66,7 +65,7 @@ public class SqlExplorerUtils {
 
     public static final String PLUGIN_NAME = "net.sourceforge.sqlexplorer"; //$NON-NLS-1$
 
-    private static final String SQL_EXPLORER_VERSION = "_5.6.0"; //$NON-NLS-1$
+    private static final String SQL_EXPLORER_VERSION = "_5.6.1"; //$NON-NLS-1$
 
     public static final String JAR_FILE_NAME = PLUGIN_NAME + SQL_EXPLORER_VERSION + ".jar"; //$NON-NLS-1$ 
 
@@ -247,14 +246,6 @@ public class SqlExplorerUtils {
             return getSqlexplorerService().getMyURLClassLoaderAssignableClasses(url);
         }
         return new Class[] {};
-    }
-
-    public Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
-            IllegalAccessException {
-        if (getSqlexplorerService() != null) {
-            return getSqlexplorerService().getClassDriverFromSQLExplorer(driverClassName, props);
-        }
-        return null;
     }
 
     public void addConnetionAliasToSQLPlugin(ModelElement... dataproviders) {

@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -64,12 +63,11 @@ public final class DbmsLanguageFactory {
 
         // MOD sizhaoliu TDQ-6316 deprecate software system
         // TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
-        boolean isMdm = ConnectionUtils.isMdmConnection(dataprovider);
         // MOD qiongli 2011-1-11 feature 16796.handle the delimited file
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataprovider);
         if (isDelimitedFile) {
             dbmsLanguage = createDbmsLanguage(DbmsLanguage.DELIMITEDFILE, PluginConstant.EMPTY_STRING);
-        } else if (dataprovider != null || isMdm) {
+        } else if (dataprovider != null) {
             String productSubtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataprovider);
             // Added 20130222 TDQ-6760 yyin, if the tag value is null, update it
             // All analysis & reports will go here, so check it here is better than other place.
@@ -80,13 +78,11 @@ public final class DbmsLanguageFactory {
             // ~
             String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataprovider);
 
-            final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : productSubtype;
             if (log.isDebugEnabled()) {
-                log.debug("Software system subtype (Database type): " + dbmsSubtype); //$NON-NLS-1$
+                log.debug("Software system subtype (Database type): " + productSubtype); //$NON-NLS-1$
             }
-            if (StringUtils.isNotBlank(dbmsSubtype)) {
-                String version = isMdm ? DatabaseConstant.MDM_VERSION : productVersion;
-                dbmsLanguage = createDbmsLanguage(dbmsSubtype, version);
+            if (StringUtils.isNotBlank(productSubtype)) {
+                dbmsLanguage = createDbmsLanguage(productSubtype, productVersion);
             }
         }
         String identifierQuoteString = ConnectionHelper.getIdentifierQuoteString(dataprovider);
@@ -135,8 +131,6 @@ public final class DbmsLanguageFactory {
             dbmsLanguage = new TeradataDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isIngres(dbmsSubtype)) {
             dbmsLanguage = new IngresDbmsLanguage(dbmsSubtype, dbVersion);
-        } else if (isMdm(dbmsSubtype)) {
-            dbmsLanguage = new MdmDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isDelimitedFile(dbmsSubtype)) {
             dbmsLanguage = new DelimitedFileLanguage(dbmsSubtype, dbVersion);
         } else if (isInfomix(dbmsSubtype)) {
@@ -197,14 +191,15 @@ public final class DbmsLanguageFactory {
             databaseProductName = databaseProductName == null ? PluginConstant.EMPTY_STRING : databaseProductName;
             String databaseProductVersion = null;
             try {
-                databaseProductVersion = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductVersion();
+                databaseProductVersion = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection)
+                        .getDatabaseProductVersion();
                 databaseProductVersion = databaseProductVersion == null ? "0" : databaseProductVersion; //$NON-NLS-1$
             } catch (Exception e) {
                 log.warn(Messages.getString("DbmsLanguageFactory.RetrieveVerSionException", databaseProductName), e);//$NON-NLS-1$
             }
             DbmsLanguage dbmsLanguage = createDbmsLanguage(databaseProductName, databaseProductVersion);
-            dbmsLanguage
-                    .setDbQuoteString(org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection).getIdentifierQuoteString());
+            dbmsLanguage.setDbQuoteString(org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection)
+                    .getIdentifierQuoteString());
             return dbmsLanguage;
         } catch (SQLException e) {
             log.warn(Messages.getString("DbmsLanguageFactory.RetrieveInfoException", e), e);//$NON-NLS-1$
@@ -250,10 +245,6 @@ public final class DbmsLanguageFactory {
 
     private static boolean isIngres(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.INGRES, dbms);
-    }
-
-    private static boolean isMdm(String dbms) {
-        return compareDbmsLanguage(DbmsLanguage.MDM, dbms);
     }
 
     private static boolean isDelimitedFile(String dbms) {

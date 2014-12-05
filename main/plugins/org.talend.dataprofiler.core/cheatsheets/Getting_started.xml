@@ -117,16 +117,6 @@
          <param name="path" value="UDI_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Create an MDM connection" skip="false">
-         <intro>
-            This tutorial guides you through the creation of a MDM connection.
-         </intro>
-         <onCompletion>
-            <b>Conclusion</b>
-         </onCompletion>
-         <param name="path" value="MdmConnection_cheat.xml">
-         </param>
-      </task>
       <task kind="cheatsheet" name="Create a column set analysis" skip="false">
          <intro>
             This tutorial guides you through the creation of an analysis of the content of a set of columns. The analysis computes the row count, distinct count, unique count and duplicate count

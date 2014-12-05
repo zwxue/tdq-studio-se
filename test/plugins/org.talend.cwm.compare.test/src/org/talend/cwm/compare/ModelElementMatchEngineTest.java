@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.cwm.compare;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.eclipse.emf.compare.FactoryException;
 import org.junit.After;
@@ -21,7 +20,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.relational.TdColumn;
@@ -171,9 +169,5 @@ public class ModelElementMatchEngineTest {
         DatabaseConnection con2 = mock(DatabaseConnection.class);
         Assert.assertTrue(matchEngine.isSimilar(con1, con2));
 
-        //other type
-        MDMConnection mcon1 = mock(MDMConnection.class);
-        MDMConnection mcon2 = mock(MDMConnection.class);
-        Assert.assertTrue(matchEngine.isSimilar(mcon1, mcon2));
     }
 }

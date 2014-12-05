@@ -109,12 +109,11 @@ public final class ChartTableFactory {
      */
     public static void addJobGenerationMenu(final Menu menu, final Analysis analysis, final Indicator currentIndicator) {
         final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
-        final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
         final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
         final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
         final boolean isVertica = ConnectionHelper.isVertica(tdDataProvider);
 
-        if (PluginChecker.isTDCPLoaded() && !(isMDMAnalysis || isDelimitedFileAnalysis || isHiveConnection)) {
+        if (PluginChecker.isTDCPLoaded() && !(isDelimitedFileAnalysis || isHiveConnection)) {
             final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault().getService(
                     IJobService.class);
             if (service != null) {

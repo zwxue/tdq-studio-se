@@ -25,13 +25,15 @@ public class PhoneNumbStatisticsExplorer extends DataExplorer {
     public PhoneNumbStatisticsExplorer() {
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
      */
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
-        if (!isXml() && !isSqlEngine) {
+        if (!isSqlEngine) {
             switch (this.indicatorEnum) {
             case ValidPhoneCountIndicatorEnum:
             case PossiblePhoneCountIndicatorEnum:

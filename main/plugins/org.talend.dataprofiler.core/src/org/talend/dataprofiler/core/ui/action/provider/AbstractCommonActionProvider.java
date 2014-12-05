@@ -41,8 +41,6 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
-import org.talend.dq.nodes.MDMSchemaRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
@@ -52,7 +50,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- *
+ * 
  * DOC mzhao Abstract common action provider.
  */
 public class AbstractCommonActionProvider extends CommonActionProvider {
@@ -72,7 +70,7 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
 
     /**
      * DOC bZhou Comment method "getSubMenuManager".
-     *
+     * 
      * @param subMenuId
      * @return
      */
@@ -89,11 +87,11 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
-     *
+     * 
      * MOD bzhou 2011-4-1 bug 20051
-     *
+     * 
      * DOC bzhou Comment method "getContextObject".
-     *
+     * 
      * @return
      */
     protected Object getContextObject() {
@@ -101,11 +99,11 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
-     *
+     * 
      * MOD bzhou 2011-4-1 bug 20051
-     *
+     * 
      * DOC bzhou Comment method "getFistContextNode".
-     *
+     * 
      * @return
      */
     protected IRepositoryNode getFistContextNode() {
@@ -119,9 +117,9 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
-     *
+     * 
      * judge if all selections are the same type nodes.
-     *
+     * 
      * @return
      */
     protected boolean isSelectionSameType() {
@@ -154,11 +152,11 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
-     *
+     * 
      * Get Connection which cotain by selectedNode(DBConnectionRepNode\DBCatalogRepNode\DBSchemaRepNode) If want to
      * support to DelimiteFileConnection node need to make DFColumnFolderRepNode implements IConnectionElementSubFolder
      * interface The case for MDMConnection is same to DelimiteFileConnection.
-     *
+     * 
      * @param selectedNode
      * @return
      */
@@ -189,8 +187,7 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     protected boolean isVirturalNode(RepositoryNode node) {
         return node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode || node instanceof DBTableFolderRepNode
                 || node instanceof DBViewFolderRepNode || node instanceof DBTableRepNode || node instanceof DBViewRepNode
-                || node instanceof DBColumnFolderRepNode || node instanceof DBColumnRepNode || node instanceof MDMSchemaRepNode
-                || node instanceof MDMXmlElementRepNode || node instanceof DFTableRepNode
+                || node instanceof DBColumnFolderRepNode || node instanceof DBColumnRepNode || node instanceof DFTableRepNode
                 || node instanceof DFColumnFolderRepNode || node instanceof DFColumnRepNode
                 || node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode
                 || node instanceof ExchangeFolderRepNode || isReportSubFolderVirtualNode(node)

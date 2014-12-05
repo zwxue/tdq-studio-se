@@ -25,14 +25,12 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -63,6 +61,7 @@ public class AnalysisColumnTreeViewerTest {
 
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -72,6 +71,7 @@ public class AnalysisColumnTreeViewerTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -87,8 +87,7 @@ public class AnalysisColumnTreeViewerTest {
     @Test
     public void testFilterInputData_1() {
         MetadataColumn col = mock(MetadataColumn.class);
-        TdXmlElementType td = mock(TdXmlElementType.class);
-        Object[] params = { col, td };
+        Object[] params = { col };
 
         Object[] beforeModify = this.filterInputData_before(params);
         assertNull(beforeModify);
@@ -109,12 +108,6 @@ public class AnalysisColumnTreeViewerTest {
                 List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren().get(0).getChildren();
                 reposList.addAll(children);
 
-            } else if (obj instanceof MDMXmlElementRepNode) {
-                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(obj, true).length > 0;
-                if (!isLeaf) {
-                    List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
-                    reposList.addAll(children);
-                }
             } else if (obj instanceof TdColumn) {
                 // MOD yyi 2012-02-29 TDQ-3605 For column set column list.
                 reposList.add(RepositoryNodeHelper.recursiveFind((TdColumn) obj));
@@ -122,10 +115,6 @@ public class AnalysisColumnTreeViewerTest {
                 // MOD yyin 2012-03-31 TDQ-4994 reopen column set analysis about fileDelimited file all items gone.
                 // because here did not check this kind of obj so it is not be added in the list
                 reposList.add(RepositoryNodeHelper.recursiveFind((MetadataColumn) obj));
-            } else if (obj instanceof TdXmlElementType) {
-                // MOD yyin 2012-03-31 TDQ-4994 reopen column set analysis about fileDelimited file all items gone.
-                // because here did not check this kind of obj so it is not be added in the list
-                reposList.add(RepositoryNodeHelper.recursiveFind((TdXmlElementType) obj));
             }
         }
         if (reposList.size() == 0) {
@@ -145,12 +134,6 @@ public class AnalysisColumnTreeViewerTest {
                 List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren().get(0).getChildren();
                 reposList.addAll(children);
 
-            } else if (obj instanceof MDMXmlElementRepNode) {
-                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(obj, true).length > 0;
-                if (!isLeaf) {
-                    List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
-                    reposList.addAll(children);
-                }
             } else if (obj instanceof TdColumn) {
                 // MOD yyi 2012-02-29 TDQ-3605 For column set column list.
                 reposList.add(RepositoryNodeHelper.recursiveFind((TdColumn) obj));

@@ -97,10 +97,6 @@ public class FolderWizard extends Wizard {
                             // when create folder under dbconnections
                             ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA_CONNECTIONS,
                                     path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath()), folderName);
-                        } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
-                            // when create folder under MDMconnections
-                            ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA_MDMCONNECTION,
-                                    path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath()), folderName);
                         } else {
                             // when create folder under other nodes
                             newFolder.create(false, true, null);

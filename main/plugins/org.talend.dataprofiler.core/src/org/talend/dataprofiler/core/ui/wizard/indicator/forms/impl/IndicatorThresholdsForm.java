@@ -33,7 +33,6 @@ import org.eclipse.ui.IEditorPart;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -59,7 +58,6 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
-import org.talend.utils.sql.XSDDataTypeConvertor;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -103,15 +101,6 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             if (SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(analyzedElement) != null) {
                 isRangeForDate = false;
                 isDatetime = false;
-            } else if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analyzedElement) != null) {
-                TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analyzedElement);
-                int sqltype = XSDDataTypeConvertor.convertToJDBCType(xmlElement.getJavaType());
-                isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
-                        && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
-
-                if (isRangeForDate) {
-                    isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
-                }
             } else if (SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement) == null
                     && SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(analyzedElement) != null) {
                 // MOD qiongli 2010-12-8,feature 16796.
@@ -363,10 +352,12 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             } else {
                 // MOD yyi 2010-04-15 bug 12483 : check the value is out of range
                 try {
-                    if (!CheckValueUtils.isEmpty(max))
+                    if (!CheckValueUtils.isEmpty(max)) {
                         Long.valueOf(max);
-                    if (!CheckValueUtils.isEmpty(min))
+                    }
+                    if (!CheckValueUtils.isEmpty(min)) {
                         Long.valueOf(min);
+                    }
                 } catch (NumberFormatException e) {
                     rc.setOk(false);
                     statusLabelText += UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE_LONG + System.getProperty("line.separator"); //$NON-NLS-1$

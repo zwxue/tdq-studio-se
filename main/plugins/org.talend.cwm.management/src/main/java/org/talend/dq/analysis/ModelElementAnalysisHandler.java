@@ -22,7 +22,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -130,10 +129,14 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
      */
     public Collection<Indicator> getIndicators(ModelElement modelElement) {
         ModelElement me = modelElement;
+        // TDQ-9553, if import an old analysis with MDM Connection,the modelement will be null.
+        Collection<Indicator> indics = new ArrayList<Indicator>();
+        if (me == null) {
+            return indics;
+        }
         if (me.eIsProxy()) {
             me = (ModelElement) EObjectHelper.resolveObject(me);
         }
-        Collection<Indicator> indics = new ArrayList<Indicator>();
         EList<Indicator> allIndics = analysis.getResults().getIndicators();
         for (Indicator indicator : allIndics) {
             if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(me)) {
@@ -221,8 +224,6 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         DataminingType type = DataminingType.get(dataminingTypeLiteral);
         if (modelElement instanceof MetadataColumn) {
             MetadataHelper.setDataminingType(type, modelElement);
-        } else if (modelElement instanceof TdXmlElementType) {
-            MetadataHelper.setDataminingType(type, (TdXmlElementType) modelElement);
         } else {
             return;
         }

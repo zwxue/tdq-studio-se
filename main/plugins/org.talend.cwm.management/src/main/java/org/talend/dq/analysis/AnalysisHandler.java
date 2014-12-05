@@ -18,8 +18,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.Property;
@@ -295,21 +293,6 @@ public class AnalysisHandler {
     }
 
     /**
-     * DOC xqliu Comment method "isMdmConnection".
-     * 
-     * @return
-     */
-    public boolean isMdmConnection() {
-        if (this.analysis != null) {
-            Connection dataProvider = (Connection) this.analysis.getContext().getConnection();
-            if (dataProvider != null) {
-                return dataProvider instanceof MDMConnection;
-            }
-        }
-        return false;
-    }
-
-    /**
      * get NumberOfConnections Per Analysis with the real value.
      * 
      * @return
@@ -317,8 +300,8 @@ public class AnalysisHandler {
     public int getNumberOfConnectionsPerAnalysis() throws NumberFormatException {
         int num = TdqAnalysisConnectionPool.CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
         if (this.analysis != null) {
-            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
-                    this.analysis.getTaggedValue());
+            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(
+                    TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS, this.analysis.getTaggedValue());
             if (taggedValue != null) {
                 num = Integer.valueOf(ContextHelper.getAnalysisContextValue(analysis, taggedValue.getValue()));
             }
@@ -334,8 +317,8 @@ public class AnalysisHandler {
     public String getNumberOfConnectionsPerAnalysisWithContext() {
         int num = TdqAnalysisConnectionPool.CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
         if (this.analysis != null) {
-            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
-                    this.analysis.getTaggedValue());
+            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(
+                    TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS, this.analysis.getTaggedValue());
             if (taggedValue != null) {
                 return taggedValue.getValue();
             }

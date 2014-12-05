@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -46,7 +45,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -384,8 +382,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                         try {
                                             DrillDownEditorInput input = new DrillDownEditorInput(analysis, currentDataEntity,
                                                     itemEntity);
-
-                                            if (input.computeColumnValueLength(input.filterAdaptDataList())) {
+                                            if (SqlExplorerUtils.getDefault().getSqlexplorerService() != null) {
                                                 CorePlugin
                                                         .getDefault()
                                                         .getWorkbench()
@@ -393,12 +390,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                                         .getActivePage()
                                                         .openEditor(input,
                                                                 "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
-                                            } else {
-                                                MessageDialog.openWarning(null,
-                                                        Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),//$NON-NLS-1$
-                                                        Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));//$NON-NLS-1$
                                             }
-
                                         } catch (PartInitException e1) {
                                             log.error(e1, e1);
                                         }

@@ -46,8 +46,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.xml.TdXmlElementType;
-import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -217,8 +215,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     throw createBusinessException;
                 }
             }
-            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
-                    || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
+            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)) {
                 result = new ConnectionItemEditorInput(item);
                 editorID = ConnectionEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
@@ -261,10 +258,6 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     } else if (modelElement instanceof MetadataColumn) {
                         MetadataColumn mColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(modelElement);
                         connection = ConnectionHelper.getTdDataProvider(mColumn);
-                    } else if (modelElement instanceof TdXmlElementType) {
-                        TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
-                        TdXmlSchema ownedDocument = tdXmlElement.getOwnedDocument();
-                        connection = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(ownedDocument.getDataManager().get(0));
                     }
                     connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
                 }

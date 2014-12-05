@@ -16,6 +16,7 @@ import java.sql.Driver;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IFontProvider;
@@ -30,6 +31,7 @@ import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
@@ -47,7 +49,11 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
@@ -66,10 +72,6 @@ import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
-import org.talend.dq.nodes.MDMConnectionFolderRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
-import org.talend.dq.nodes.MDMSchemaRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
@@ -84,6 +86,8 @@ import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.utils.exceptions.MissingDriverException;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
@@ -133,8 +137,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     image = ImageLib.getImage(ImageLib.METADATA);
                 } else if (node instanceof DBConnectionFolderRepNode) {
                     image = ImageLib.getImage(ImageLib.CONNECTION);
-                } else if (node instanceof MDMConnectionFolderRepNode) {
-                    image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
                 } else if (label.equals(EResourceConstant.FILEDELIMITED.getName())) {
                     image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
                 } else if (label.equals(EResourceConstant.LIBRARIES.getName())) {
@@ -158,18 +160,14 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     } else {
                         image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                     }
-                } else if (node instanceof MDMConnectionRepNode) {
-                    originalImageName = ImageLib.MDM_CONNECTION;
-                } else if (node instanceof MDMSchemaRepNode) {
-                    originalImageName = ImageLib.XML_DOC;
-                } else if (node instanceof MDMXmlElementRepNode) {
-                    originalImageName = ImageLib.XML_ELEMENT_DOC;
                 } else if (node instanceof DFConnectionRepNode) {
                     originalImageName = ImageLib.FILE_DELIMITED;
                 } else if (node instanceof AnalysisRepNode) {
                     originalImageName = ImageLib.ANALYSIS_OBJECT;
+                    image = addWarnIconIfNeeded(node, originalImageName);
                 } else if (node instanceof ReportRepNode) {
                     originalImageName = ImageLib.REPORT_OBJECT;
+                    image = addWarnIconIfNeeded(node, originalImageName);
                 } else if (node instanceof SysIndicatorDefinitionRepNode) {
                     originalImageName = ImageLib.IND_DEFINITION;
                 } else if (node instanceof PatternRepNode) {
@@ -191,7 +189,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                         image = imageNode;
                     }
                 }
-                if (originalImageName != null && !(node instanceof DBConnectionRepNode)) {
+                if (originalImageName != null
+                        && !(node instanceof DBConnectionRepNode || node instanceof AnalysisRepNode || node instanceof ReportRepNode)) {
                     image = ImageLib.getImage(originalImageName);
                 }
                 // MOD klliu 2010-04-11 20468: Unfolder "exchange",get many NPE
@@ -240,10 +239,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     }
                 } else if (node instanceof DFColumnRepNode) {
                     image = ImageLib.getImage(ImageLib.TD_COLUMN);
-                } else if (node instanceof MDMSchemaRepNode) {
-                    image = ImageLib.getImage(ImageLib.XML_DOC);
-                } else if (node instanceof MDMXmlElementRepNode) {
-                    image = ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
                 } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
                     image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 } else if (node instanceof JrxmlTempleteRepNode) {
@@ -254,6 +249,46 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         // ~
 
         return image;
+    }
+
+    /**
+     * if it is needed,add a over warning icon..eg., it is empty analysis or report; imported a MDM analysis or report.
+     * 
+     * @param image
+     * @param node
+     * @param originalImageName
+     * @return
+     */
+    private Image addWarnIconIfNeeded(IRepositoryNode node, String originalImageName) {
+        ModelElement modEle = RepositoryNodeHelper.getResourceModelElement(node);
+        ERepositoryObjectType objectType = node.getObjectType();
+
+        if (modEle != null) {
+            if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT == objectType) {
+                Analysis analysis = (Analysis) modEle;
+                EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+                DataManager connection = analysis.getContext().getConnection();
+                if (analysedElements.isEmpty() || connection instanceof MDMConnection) {
+                    return ImageLib.createInvalidIcon(originalImageName).createImage();
+                }
+            } else if (ERepositoryObjectType.TDQ_REPORT_ELEMENT == objectType) {
+                TdReport report = (TdReport) modEle;
+                EList<AnalysisMap> analysisMap = report.getAnalysisMap();
+                if (analysisMap.isEmpty()) {
+                    return ImageLib.createInvalidIcon(originalImageName).createImage();
+                }
+                for (AnalysisMap anaMap : report.getAnalysisMap()) {
+                    Analysis analysis = anaMap.getAnalysis();
+                    if (analysis != null) {
+                        DataManager connection = analysis.getContext().getConnection();
+                        if (connection instanceof MDMConnection) {
+                            return ImageLib.createInvalidIcon(originalImageName).createImage();
+                        }
+                    }
+                }
+            }
+        }
+        return ImageLib.getImage(originalImageName);
     }
 
     @Override
@@ -306,8 +341,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         }
         if (type == ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT) {
             return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
-        } else if (type == ERepositoryObjectType.METADATA_MDMCONNECTION) {
-            return ImageLib.getImage(ImageLib.MDM_CONNECTION);
         } else if (type == ERepositoryObjectType.METADATA_CONNECTIONS) {
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         } else if (type == ERepositoryObjectType.METADATA_FILE_DELIMITED) {

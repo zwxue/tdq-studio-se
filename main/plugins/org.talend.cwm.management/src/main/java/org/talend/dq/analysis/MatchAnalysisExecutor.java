@@ -30,12 +30,10 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
-import org.talend.cwm.db.connection.MDMSQLExecutor;
 import org.talend.cwm.db.connection.SQLExecutor;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.indicators.Indicator;
@@ -275,8 +273,6 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         ISQLExecutor sqlExecutor = null;
         if (modelElement instanceof TdColumn) {
             sqlExecutor = new DatabaseSQLExecutor();
-        } else if (modelElement instanceof TdXmlElementType) {
-            sqlExecutor = new MDMSQLExecutor();
         } else if (modelElement instanceof MetadataColumn) {
             sqlExecutor = new DelimitedFileSQLExecutor();
         }

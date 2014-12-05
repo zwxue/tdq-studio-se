@@ -541,16 +541,6 @@ public final class ResourceManager {
     }
 
     /**
-     * DOC xqliu Comment method "isMdmConnectionFolder".
-     * 
-     * @param resource
-     * @return
-     */
-    public static boolean isMdmConnectionFolder(IResource resource) {
-        return isOneFolder(resource, EResourceConstant.MDM_CONNECTIONS);
-    }
-
-    /**
      * DOC bZhou Comment method "isExchangeFolder".
      * 
      * @param resource

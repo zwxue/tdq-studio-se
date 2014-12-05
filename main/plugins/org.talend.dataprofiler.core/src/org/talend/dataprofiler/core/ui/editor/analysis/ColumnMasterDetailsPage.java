@@ -54,11 +54,9 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -141,11 +139,10 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         ModelElementIndicator currentIndicator = null;
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-            TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(element);
 
             // MOD qiongli 2011-1-10,16796:delimitefile
             MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
-            if (tdColumn == null && xmlElement == null && mdColumn == null) {
+            if (tdColumn == null && mdColumn == null) {
                 continue;
             }
             // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
@@ -157,8 +154,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             if (tdColumn == null && mdColumn != null) {
                 currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(repNode);
             } else if (tdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(repNode);
-            } else if (xmlElement != null) {
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(repNode);
             }
 
@@ -547,8 +542,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
                 ModelElement modelEle = null;
                 if (reposObject instanceof MetadataColumnRepositoryObject) {
                     modelEle = ((MetadataColumnRepositoryObject) reposObject).getTdColumn();
-                } else if (reposObject instanceof MetadataXmlElementTypeRepositoryObject) {
-                    modelEle = ((MetadataXmlElementTypeRepositoryObject) reposObject).getTdXmlElementType();
                 }
                 analysisHandler.addIndicator(modelEle, modelElementIndicator.getIndicators());
                 DataminingType type = MetadataHelper.getDataminingType(modelEle);

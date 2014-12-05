@@ -22,7 +22,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -30,7 +29,6 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
-import org.talend.utils.sql.XSDDataTypeConvertor;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -270,8 +268,6 @@ public class ChartDataEntity {
                 if (temp instanceof TdColumn) {
                     // MOD qiongli 2011-11-15,TDQ-3690.it should be set value to 'tempType' not 'sqltype' at here.
                     tempType = ((TdColumn) temp).getSqlDataType().getJavaDataType();
-                } else if (temp instanceof TdXmlElementType) {
-                    tempType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) temp).getJavaType());
                 }
                 sqltype = temp instanceof TdTable ? Types.INTEGER : tempType;
             }

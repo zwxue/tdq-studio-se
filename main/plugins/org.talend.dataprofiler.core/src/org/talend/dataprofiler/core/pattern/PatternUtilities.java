@@ -220,11 +220,10 @@ public final class PatternUtilities {
 
             // MOD qiongli 2011-1-10 feature 16796
             boolean isDelimitedFileConnection = ConnectionUtils.isDelimitedFileConnection((DataProvider) dm);
-            boolean isMdmConnection = ConnectionUtils.isMdmConnection((DataProvider) dm);
             if (trc != null) {
-                    // SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
-                    // MOD sizhaoliu TDQ-6316
-                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+                // SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
+                // MOD sizhaoliu TDQ-6316
+                dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
             }
 
             // MOD xqliu 2010-08-12 bug 14601

@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.DelimitedFileConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -245,8 +244,6 @@ public enum EResourceConstant {
             constatnt = PATTERNS;
         } else if (element instanceof DatabaseConnection) {
             constatnt = DB_CONNECTIONS;
-        } else if (element instanceof MDMConnection) {
-            constatnt = MDM_CONNECTIONS;
         }
 
         return constatnt;

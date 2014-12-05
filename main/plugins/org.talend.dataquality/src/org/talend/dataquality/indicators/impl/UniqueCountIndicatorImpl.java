@@ -5,7 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +18,6 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.DBSet;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
-import org.talend.resource.ResourceManager;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Unique Count Indicator</b></em>'. <!--
@@ -67,20 +65,6 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      */
     protected UniqueCountIndicatorImpl() {
         super();
-    }
-
-    /**
-     * Create a new DBSet
-     * 
-     * @return
-     */
-    private Set<Object> initValueForSet(String dbName) {
-        if (isUsedMapDBMode()) {
-            return new DBSet<Object>(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this),
-                    ResourceManager.getMapDBCatalogName(this, dbName));
-        } else {
-            return new HashSet<Object>();
-        }
     }
 
     /**
@@ -287,11 +271,11 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     public boolean reset() {
         this.uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
         if (isUsedMapDBMode()) {
-            uniqueObjects = initValueForSet(StandardDBName.computeProcessSet.name());
+            uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
             if (uniqueObjects != null) {
                 ((DBSet<Object>) uniqueObjects).clear();
             }
-            duplicateObjects = initValueForSet(StandardDBName.temp.name());
+            duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
             if (duplicateObjects != null) {
                 ((DBSet<Object>) duplicateObjects).clear();
             }
@@ -299,7 +283,6 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
             this.uniqueObjects.clear();
             this.duplicateObjects.clear();
         }
-
         return super.reset();
     }
 

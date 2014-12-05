@@ -59,7 +59,6 @@ import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
-import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -648,7 +647,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode node : nodes) {
             // MOD klliu 2001-03-08 bug 19243: In table selection wizard should filter mdm and file connection
-            if (!(node instanceof DFConnectionFolderRepNode || node instanceof MDMConnectionFolderRepNode)) {
+            if (!(node instanceof DFConnectionFolderRepNode)) {
                 if (node instanceof DBTableFolderRepNode) {
                     if (TableSelectionType.TABLE.equals(getTableType()) || TableSelectionType.ALL.equals(getTableType())) {
                         list.add(node);
