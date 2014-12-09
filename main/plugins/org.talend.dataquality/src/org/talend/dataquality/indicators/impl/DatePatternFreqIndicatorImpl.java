@@ -178,9 +178,6 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     @Override
     public List<ModelMatcher> getModelMatcherList() {
-        if (dateRetriever == null) {
-            this.prepare();
-        }
         return dateRetriever.getModelMatchers();
     }
 
