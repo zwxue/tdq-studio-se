@@ -6,7 +6,6 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -133,7 +132,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * @generated NOT
      * @ordered
      */
-    protected static final HashMap<Object, Long> VALUE_TO_FREQ_EDEFAULT = new HashMap<Object, Long>();
+    protected final HashMap<Object, Long> VALUE_TO_FREQ_EDEFAULT = new HashMap<Object, Long>();
 
     /**
      * The cached value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute. <!-- begin-user-doc -->
@@ -483,7 +482,6 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     @Override
     public boolean handle(Object data) {
         super.handle(data);
-
         Long freq = getMapForFreq().get(data);
         if (freq == null) { // new data
             freq = 0L;
@@ -523,6 +521,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         for (Object object : mostFrequent) {
             map.put(object, getMapForFreq().get(object));
         }
+        this.valueToFreq.clear();
         this.setValueToFreq(map);
         // this.distinctComputed = true;
         return super.finalizeComputation();
@@ -583,32 +582,29 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * @return String
      */
-    protected List<String> getDBNames(Object name) {
-        List<String> dbNames = new ArrayList<String>();
+    protected String getDBName(Object name) {
         if (null == name) {
-            dbNames.add(SpecialValueDisplay.NULL_FIELD);
-        } else if (StringUtils.EMPTY.equals(name)) {
-            dbNames.add(SpecialValueDisplay.EMPTY_FIELD);
+            return SpecialValueDisplay.NULL_FIELD;
+        }
+        if (StringUtils.EMPTY.equals(name)) {
+            return SpecialValueDisplay.EMPTY_FIELD;
         } else {
             if (datePattern != null) {
-                dbNames.add(getFormatName(name));
+                return getFormatName(name);
             } else {
-                dbNames.addAll(specialNames(name));
+                return getFrequencyLabel(name);
             }
         }
-        return dbNames;
     }
 
     /**
-     * DOC talend Comment method "specialName".
+     * Get the label of frequency item
      * 
      * @param name
      * @return
      */
-    protected List<String> specialNames(Object name) {
-        List<String> specialNames = new ArrayList<String>();
-        specialNames.add(name.toString());
-        return specialNames;
+    protected String getFrequencyLabel(Object name) {
+        return name.toString();
     }
 
     /**
@@ -850,11 +846,9 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     @SuppressWarnings("unchecked")
     @Override
     public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
-        List<String> dbNames = getDBNames(masterObject);
-        for (String dbName : dbNames) {
-            drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
-            super.handleDrillDownData(masterObject, inputRowList);
-        }
+        String dbName = getDBName(masterObject);
+        drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
+        super.handleDrillDownData(masterObject, inputRowList);
 
     }
 

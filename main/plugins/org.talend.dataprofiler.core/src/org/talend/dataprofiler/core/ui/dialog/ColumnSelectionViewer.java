@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -50,10 +49,8 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
             TreeItem treeItem = (TreeItem) item;
             treeItem.setGrayed(false);
             // MOD by zshen for TDQ-5138 this case only use in 5.0.3
-            if (!(element instanceof MDMXmlElementRepNode)) {
-                updateChildrenItems(treeItem);
-                updateParentItems(treeItem.getParentItem());
-            }
+            updateChildrenItems(treeItem);
+            updateParentItems(treeItem.getParentItem());
         }
     }
 
@@ -65,8 +62,8 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
             Item[] children = getChildren(item);
             boolean containsChecked = false;
             boolean containsUnchecked = false;
-            for (int i = 0; i < children.length; i++) {
-                TreeItem curr = (TreeItem) children[i];
+            for (Item element : children) {
+                TreeItem curr = (TreeItem) element;
                 containsChecked |= curr.getChecked();
                 containsUnchecked |= (!curr.getChecked() || curr.getGrayed());
             }
@@ -82,8 +79,8 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
     private void updateChildrenItems(TreeItem parent) {
         Item[] children = getChildren(parent);
         boolean state = parent.getChecked();
-        for (int i = 0; i < children.length; i++) {
-            TreeItem curr = (TreeItem) children[i];
+        for (Item element : children) {
+            TreeItem curr = (TreeItem) element;
             if (curr.getData() != null && ((curr.getChecked() != state) || curr.getGrayed())) {
                 curr.setChecked(state);
                 curr.setGrayed(false);

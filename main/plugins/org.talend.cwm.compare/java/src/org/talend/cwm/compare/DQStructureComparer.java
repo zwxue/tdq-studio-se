@@ -300,7 +300,6 @@ public final class DQStructureComparer {
     public static TypedReturnCode<Connection> getRefreshedDataProvider(Connection prevDataProvider) {
         // ADD xqliu 2010-03-29 bug 11951
         TypedReturnCode<Connection> returnProvider = new TypedReturnCode<Connection>();
-        boolean mdm = ConnectionUtils.isMdmConnection(prevDataProvider);
         // ~11951
 
         // MOD by zshen 2012-07-05 for bug 5074 remove convert about DatabaseParameter instead
@@ -308,40 +307,34 @@ public final class DQStructureComparer {
         IMetadataConnection metadataConnection = ConvertionHelper.convert((DatabaseConnection) prevDataProvider, false,
                 prevDataProvider.getContextName());
         Connection copyedConnection = null;
-        if (mdm) {
-            copyedConnection = MetadataFillFactory.getMDMInstance().fillUIConnParams(metadataConnection, null);
-            MetadataFillFactory.getMDMInstance().fillSchemas(copyedConnection, null, null);
-            // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
-        } else {
-            EDatabaseTypeName currentEDatabaseType = EDatabaseTypeName.getTypeFromDbType(metadataConnection.getDbType());
-            if (currentEDatabaseType != null) {
-                MetadataFillFactory dbInstance = MetadataFillFactory.getDBInstance(metadataConnection);
-                TypedReturnCode<?> trc = (TypedReturnCode<?>) dbInstance.createConnection(metadataConnection);
-                Object sqlConnObject = trc.getObject();
-                DatabaseMetaData dbJDBCMetadata = null;
-                if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
-                    java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
+        EDatabaseTypeName currentEDatabaseType = EDatabaseTypeName.getTypeFromDbType(metadataConnection.getDbType());
+        if (currentEDatabaseType != null) {
+            MetadataFillFactory dbInstance = MetadataFillFactory.getDBInstance(metadataConnection);
+            TypedReturnCode<?> trc = (TypedReturnCode<?>) dbInstance.createConnection(metadataConnection);
+            Object sqlConnObject = trc.getObject();
+            DatabaseMetaData dbJDBCMetadata = null;
+            if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
+                java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
 
-                    // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue
-                    // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
-                    dbJDBCMetadata = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn,
-                            (DatabaseConnection) prevDataProvider);
+                // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue
+                // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
+                dbJDBCMetadata = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn,
+                        (DatabaseConnection) prevDataProvider);
 
-                    copyedConnection = EObjectHelper.deepCopy(prevDataProvider);
-                    copyedConnection.getDataPackage().clear();
-                    // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
-                    dbInstance.fillCatalogs(copyedConnection, dbJDBCMetadata, metadataConnection,
-                            MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, true));
-                    dbInstance.fillSchemas(copyedConnection, dbJDBCMetadata, metadataConnection,
-                            MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, false));
+                copyedConnection = EObjectHelper.deepCopy(prevDataProvider);
+                copyedConnection.getDataPackage().clear();
+                // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
+                dbInstance.fillCatalogs(copyedConnection, dbJDBCMetadata, metadataConnection,
+                        MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, true));
+                dbInstance.fillSchemas(copyedConnection, dbJDBCMetadata, metadataConnection,
+                        MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, false));
 
-                    ConnectionUtils.closeConnection(sqlConn);
+                ConnectionUtils.closeConnection(sqlConn);
 
-                } else {
-                    returnProvider.setMessage(trc.getMessage());
-                }
-
+            } else {
+                returnProvider.setMessage(trc.getMessage());
             }
+
         }
         if (copyedConnection == null) {
             returnProvider.setOk(false);

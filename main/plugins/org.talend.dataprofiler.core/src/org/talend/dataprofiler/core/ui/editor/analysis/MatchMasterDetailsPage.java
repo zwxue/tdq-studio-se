@@ -55,16 +55,13 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
-import org.talend.cwm.db.connection.MDMSQLExecutor;
 import org.talend.cwm.db.connection.SQLExecutor;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -146,8 +143,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private SashForm sForm;
 
     private IRepositoryNode[] selectedNodes;
-
-    private boolean isMdm = false;
 
     private boolean isDelimitedFile = false;
 
@@ -350,9 +345,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         if (selectedColumns != null && selectedColumns.length > 0) {
             // use ModelElement instead of node to get the data source type directly.
-            if (selectedColumns[0] instanceof TdXmlElementType) {
-                isMdm = true;
-            } else if (selectedColumns[0] instanceof MetadataColumn && !(selectedColumns[0] instanceof TdColumn)) {
+            if (selectedColumns[0] instanceof MetadataColumn && !(selectedColumns[0] instanceof TdColumn)) {
                 isDelimitedFile = true;
             }
 
@@ -1222,9 +1215,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             return new ArrayList<Object[]>();
         }
         ISQLExecutor sqlExecutor = null;
-        if (this.isMdm) {
-            sqlExecutor = new MDMSQLExecutor();
-        } else if (this.isDelimitedFile) {
+        if (this.isDelimitedFile) {
             sqlExecutor = new DelimitedFileSQLExecutor();
         } else {// is database
             sqlExecutor = new DatabaseSQLExecutor();
@@ -1264,20 +1255,15 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             return new ModelElement[0];
         }
         if (selectedNodes != null && selectedNodes.length != 0) {
-            isMdm = RepNodeUtils.isMDM(selectedNodes[0]);
             isDelimitedFile = RepNodeUtils.isDelimitedFile(selectedNodes[0]);
-            if (!(selectedNodes[0] instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
+            if (!(selectedNodes[0] instanceof DBColumnRepNode || isDelimitedFile)) {
                 selectedNodes = null;
                 return null;
             }
         }
         List<ModelElement> modelElementList = new ArrayList<ModelElement>();
         for (IRepositoryNode repObj : selectedNodes) {
-            if (isMdm) {
-                modelElementList.add(((MetadataXmlElementTypeRepositoryObject) repObj.getObject()).getModelElement());
-            } else {// delimited file or database
-                modelElementList.add(((MetadataColumnRepositoryObject) repObj.getObject()).getTdColumn());
-            }
+            modelElementList.add(((MetadataColumnRepositoryObject) repObj.getObject()).getTdColumn());
         }
         return modelElementList.toArray(new ModelElement[modelElementList.size()]);
     }
@@ -1308,13 +1294,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             refreshDataFromConnection();
         } else if (MatchAnalysisConstant.DATA_SAMPLE_TABLE_COLUMN_SELECTION.equals(evt.getPropertyName())) {
             handleColumnSelectionChange();
-        } else if (MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE.equals(evt.getPropertyName())) {
+        } else if (MatchAnalysisConstant.HIDE_GROUPS.equals(evt.getPropertyName())) {
             String minGrpSizeText = evt.getNewValue().toString();
             sampleTable.setMinGroupSize(Integer.valueOf(minGrpSizeText));
             if (selectAlgorithmSection.isVSRMode()) {
-                matchingKeySection.refreshChart();
+                matchingKeySection.refreshChart(false);
             } else {
-                matchAndSurvivorKeySection.refreshChart();
+                matchAndSurvivorKeySection.refreshChart(false);
             }
         }
     }

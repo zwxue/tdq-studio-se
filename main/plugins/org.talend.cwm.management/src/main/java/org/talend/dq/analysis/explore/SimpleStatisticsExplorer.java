@@ -46,7 +46,7 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         AnalysisType analysisType = this.analysis.getParameters().getAnalysisType();
         // MOD qiongli 2012-8-29 hive don't support 'where in...'
         boolean isHive = dbmsLanguage instanceof HiveDbmsLanguage;
-        if (!isXml() || !isSqlEngine) {
+        if (!isSqlEngine) {
 
             switch (this.indicatorEnum) {
             case RowCountIndicatorEnum:

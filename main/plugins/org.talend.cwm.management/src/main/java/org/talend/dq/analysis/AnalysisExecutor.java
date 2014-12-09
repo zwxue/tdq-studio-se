@@ -32,6 +32,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.ValueIndicator;
@@ -133,7 +134,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         try { // catch any exception
             if (this.continueRun()) {
                 // before run analysis need to clear old DB
-                if (needCheckMapDB(analysis)) {
+                if (AnalysisHelper.isJavaExecutionEngine(analysis)) {
                     MapDBManager.getInstance().deleteDB(analysis);
                 }
                 ok = runAnalysis(analysis, sql);
@@ -146,7 +147,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             // after run analysis, close connection at once when don't need it
             TdqAnalysisConnectionPool.closeConnectionPool(analysis);
             // TDQ-5952~
-            if (needCheckMapDB(analysis)) {
+            if (AnalysisHelper.isJavaExecutionEngine(analysis)) {
                 MapDBManager.getInstance().closeDB(analysis);
             }
         }
@@ -576,11 +577,4 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // TDQ-8202~
     }
 
-    private boolean needCheckMapDB(Analysis analysis) {
-        EList<Indicator> indicators = analysis.getResults().getIndicators();
-        if (indicators.size() > 0) {
-            return indicators.get(0).checkAllowDrillDown() && indicators.get(0).isUsedMapDBMode();
-        }
-        return false;
-    }
 }

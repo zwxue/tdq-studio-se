@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.dialog.provider;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -21,10 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.graphics.Image;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.xml.TdXmlElementType;
-import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
@@ -69,9 +65,7 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
             return ImageLib.getImage(ImageLib.PROJECT_ACTIVE);
         } else if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
-            if (ResourceManager.isMdmConnectionFolder(folder)) {
-                return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-            } else if (ResourceManager.isTDQConnectionFolder(folder)) {
+            if (ResourceManager.isTDQConnectionFolder(folder)) {
                 return ImageLib.getImage(ImageLib.CONNECTION);
             }
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
@@ -79,16 +73,9 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else if (element instanceof IFile) {
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-        } else if (element instanceof TdXmlSchema) {
-            return ImageLib.getImage(ImageLib.XML_DOC);
-        } else if (element instanceof TdXmlElementType) {
-            return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
         } else if (element instanceof IRepositoryViewObject) {
             IRepositoryViewObject conn = (IRepositoryViewObject) element;
             Item connItem = conn.getProperty().getItem();
-            if (connItem instanceof MDMConnectionItem) {
-                return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-            }
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         }
         return super.getImage(element);
@@ -108,17 +95,6 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
                 decorateText = item.getConnection().getName();
             }
             return decorateText;
-        }
-
-        else if (element instanceof TdXmlSchema) {
-            return ((TdXmlSchema) element).getName();
-        } else if (element instanceof TdXmlElementType) {
-            String elemLabe = ((TdXmlElementType) element).getName();
-            String elementType = ((TdXmlElementType) element).getJavaType();
-            if (elementType != null && !StringUtils.isEmpty(elementType)) {
-                elemLabe += " (" + elementType + ")";//$NON-NLS-1$ //$NON-NLS-2$
-            }
-            return elemLabe;
         }
 
         return super.getText(element);

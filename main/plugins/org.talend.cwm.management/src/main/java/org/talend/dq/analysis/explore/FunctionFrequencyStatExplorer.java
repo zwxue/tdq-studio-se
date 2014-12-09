@@ -41,8 +41,6 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
 
     private static final String REGEX_INFORMIX = ".*\\s*SELECT (REPLACE.*)\\s*(AS|as)+\\s*\\w+\\s* FROM"; //$NON-NLS-1$
 
-    private static final String REGEX_INFOMIX_DATE = ".*\\s*SELECT.*\\s*(YEAR.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
-
     /*
      * (non-Javadoc)
      * 
@@ -58,6 +56,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
                 + andDataFilterClause();
     }
 
+    @Override
     protected String getInstantiatedClause() {
         // get function which convert data into a pattern
         String colName = columnName;
@@ -80,7 +79,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         }
 
         String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : ((function == null ? colName : function)
-                + dbmsLanguage.equal() + value); //$NON-NLS-1$ //$NON-NLS-2$
+                + dbmsLanguage.equal() + value);
         // ADD xqliu 2011-06-03 bug 20600's note 86482
         if (dbmsLanguage instanceof InfomixDbmsLanguage) {
             clause = clause.replaceAll(InfomixDbmsLanguage.AS_REPLACE_COLUMN, PluginConstant.EMPTY_STRING);
@@ -97,14 +96,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         // MOD mzhao 2010-04-12 bug 11554
         String dbmsName = this.dbmsLanguage.getDbmsName();
         if (DbmsLanguageFactory.isInfomix(dbmsName)) {
-            // Handle date type.
-            TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-            int javaType = column.getSqlDataType().getJavaDataType();
-            if (Java2SqlType.isDateInSQL(javaType)) {
-                p = Pattern.compile(REGEX_INFOMIX_DATE, Pattern.CASE_INSENSITIVE);
-            } else {
-                p = Pattern.compile(REGEX_INFORMIX, Pattern.CASE_INSENSITIVE);
-            }
+            p = Pattern.compile(REGEX_INFORMIX, Pattern.CASE_INSENSITIVE);
         }
         // ~
         Matcher matcher = p.matcher(body);

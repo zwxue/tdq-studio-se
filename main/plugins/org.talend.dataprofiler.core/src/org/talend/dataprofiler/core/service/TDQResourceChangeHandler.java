@@ -35,7 +35,6 @@ import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.TDQItem;
@@ -102,16 +101,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             // try {
             if (eObject instanceof DatabaseConnection) {
                 // ProxyRepositoryViewObject.registerURI((DatabaseConnection) eObject, toBeUnloadedResource.getURI());
-                // if (xmiResourceManager != null) {
-                // try {
-                // xmiResourceManager.saveResource(toBeUnloadedResource);
-                // } catch (PersistenceException e) {
-                // log.error(e, e);
-                // }
-                //
-                // }
-            } else if (eObject instanceof MDMConnection) {
-                // ProxyRepositoryViewObject.registerURI((MDMConnection) eObject, toBeUnloadedResource.getURI());
                 // if (xmiResourceManager != null) {
                 // try {
                 // xmiResourceManager.saveResource(toBeUnloadedResource);
@@ -419,7 +408,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             if (objectType != null
                     && (objectType == ERepositoryObjectType.METADATA_CONNECTIONS
                             || objectType == ERepositoryObjectType.METADATA_FILE_DELIMITED
-                            || objectType == ERepositoryObjectType.METADATA_MDMCONNECTION
                             || objectType == ERepositoryObjectType.METADATA_CON_TABLE || objectType == ERepositoryObjectType.METADATA_CON_VIEW)) {
                 childrenList.add(parent);
             }

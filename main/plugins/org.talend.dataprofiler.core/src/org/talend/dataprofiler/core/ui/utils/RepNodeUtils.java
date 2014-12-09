@@ -29,9 +29,7 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
@@ -54,7 +52,6 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
@@ -339,10 +336,6 @@ public final class RepNodeUtils {
         return separator;
     }
 
-    public static boolean isMDM(Object object) {
-        return (object instanceof MetadataXmlElementTypeRepositoryObject || object instanceof MDMXmlElementRepNode);
-    }
-
     public static boolean isDelimitedFile(Object object) {
         return (object instanceof DFTableRepNode || object instanceof DFColumnRepNode);
     }
@@ -351,12 +344,6 @@ public final class RepNodeUtils {
         List<IRepositoryNode> reposList = new ArrayList<IRepositoryNode>();
         for (Object obj : objs) {
             // MOD klliu 2011-02-16 feature 15387
-            if (obj instanceof MDMXmlElementRepNode) {
-                boolean isleaf = isLeaf((MDMXmlElementRepNode) obj);
-                if (isleaf) {
-                    reposList.add((RepositoryNode) obj);
-                }
-            }
             if (obj instanceof DBColumnRepNode || obj instanceof DFColumnRepNode) {
                 reposList.add((RepositoryNode) obj);
             }
@@ -364,13 +351,7 @@ public final class RepNodeUtils {
                 List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren().get(0).getChildren();
                 reposList.addAll(children);
 
-            } else if (obj instanceof MDMXmlElementRepNode) {
-                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(obj, true).length > 0;
-                if (!isLeaf) {
-                    List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
-                    reposList.addAll(children);
-                }
-            } else if (obj instanceof MetadataColumn || obj instanceof TdXmlElementType) {
+            } else if (obj instanceof MetadataColumn) {
                 // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
                 RepositoryNode repNode = RepositoryNodeHelper.recursiveFind((ModelElement) obj);
                 if (repNode == null) {
@@ -380,14 +361,6 @@ public final class RepNodeUtils {
             }
         }
         return reposList;
-    }
-
-    private static boolean isLeaf(MDMXmlElementRepNode obj) {
-        List<IRepositoryNode> children = obj.getChildren();
-        if (children.size() > 0) {
-            return false;
-        }
-        return true;
     }
 
     /**

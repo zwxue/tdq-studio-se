@@ -146,8 +146,7 @@ public abstract class ModelElementTreeMenuProvider {
             });
         }
 
-        if (isSelectedIndicator(tree.getSelection()) && !isMdmSelected(tree.getSelection())
-                && !isMetadataColumnIndicatorSelected(tree.getSelection())) {
+        if (isSelectedIndicator(tree.getSelection()) && !isMetadataColumnIndicatorSelected(tree.getSelection())) {
             // MOD 2009-01-04 mzhao
             MenuItem showQueryMenuItem = new MenuItem(menu, SWT.CASCADE);
             showQueryMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.viewQuery")); //$NON-NLS-1$
@@ -496,25 +495,6 @@ public abstract class ModelElementTreeMenuProvider {
             }
         }
         return null;
-    }
-
-    /**
-     * DOC xqliu Comment method "isMdmSelected".
-     * 
-     * @param items
-     * @return
-     */
-    private boolean isMdmSelected(TreeItem[] items) {
-        for (TreeItem item : items) {
-            Object data = item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY);
-            if (data != null) {
-                if (data instanceof ColumnIndicatorUnit) {
-                    ColumnIndicatorUnit iu = (ColumnIndicatorUnit) data;
-                    return iu.isXmlElement();
-                }
-            }
-        }
-        return false;
     }
 
     /**

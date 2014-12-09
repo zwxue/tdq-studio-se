@@ -19,7 +19,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.PopComparisonUIAction;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
@@ -83,9 +82,6 @@ public class PopComparisonUIProvider extends AbstractCommonActionProvider {
         IFolder connectionFolder = ResourceManager.getConnectionFolder();
         if ((ENodeType.REPOSITORY_ELEMENT.equals(type) || ENodeType.TDQ_REPOSITORY_ELEMENT.equals(type))
                 && ResourceService.isSubFolder(connectionFolder, folder)) {
-            if (ConnectionUtils.isMdmConnection(node.getObject())) {
-                return false;
-            }
             Connection conn = getConnection(node);
 
             if (MetadataConnectionUtils.isTDQSupportDBTemplate(conn)) {

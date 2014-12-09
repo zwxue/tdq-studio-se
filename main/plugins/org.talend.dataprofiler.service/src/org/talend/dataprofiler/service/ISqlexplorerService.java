@@ -15,7 +15,6 @@ package org.talend.dataprofiler.service;
 import java.net.URL;
 import java.sql.Driver;
 import java.util.List;
-import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -49,9 +48,6 @@ public interface ISqlexplorerService {
     public boolean needAddDriverConnection(DatabaseConnection dbConn);
 
     public Class[] getMyURLClassLoaderAssignableClasses(URL url);
-
-    public Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
-            IllegalAccessException;
 
     public void updateConnetionAliasByName(Connection connection, String aliasName);
 

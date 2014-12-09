@@ -516,6 +516,10 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     @Override
     public void refreshChart() {
+        refreshChart(true);
+    }
+
+    public void refreshChart(boolean needCompute) {
         if (!hasMatchKey(true)) {
             MessageDialogWithToggle
                     .openError(
@@ -530,19 +534,40 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             return;
         }
         listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA, true, false);
-        TypedReturnCode<RecordMatchingIndicator> computeMatchResult = computeMatchResult();
+        RecordMatchingIndicator recordMatchingIndicator;
+        List<Object[]> results;
+        // MOD TDQ-9741: "chart" button will compute, "hide group" will not compute
+        if (needCompute) {
+            TypedReturnCode<RecordMatchingIndicator> computeMatchResult = computeMatchResult();
 
-        if (!computeMatchResult.isOk()) {
-            if (computeMatchResult.getMessage() != null && !computeMatchResult.getMessage().equals(StringUtils.EMPTY)) {
-                MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                        DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), computeMatchResult.getMessage()); //$NON-NLS-1$
+            if (!computeMatchResult.isOk()) {
+                if (computeMatchResult.getMessage() != null && !computeMatchResult.getMessage().equals(StringUtils.EMPTY)) {
+                    MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), computeMatchResult.getMessage()); //$NON-NLS-1$
+                }
+                return;
             }
-            return;
+            recordMatchingIndicator = computeMatchResult.getObject();
+            matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
+
+            // sort the result before refresh
+            results = MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), this.getTableResult());
+        } else {// for "hide group" , get the result from the last "chart" directly.
+            matchRuleChartComp.refresh(getChartResult());
+            results = getTableResult();
         }
-        RecordMatchingIndicator recordMatchingIndicator = computeMatchResult.getObject();
-        matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
+
+        // refresh related table
+        MatchRuleAnlaysisUtils.refreshDataTable(analysis, results);
+
         // Clear the match row data.
         matchRows.clear();
+    }
+
+    public void hideGroups() {
+        RecordMatchingIndicator recordMatchingIndicator = (RecordMatchingIndicator) analysis.getResults().getIndicators().get(1);
+        matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
+
     }
 
     /*

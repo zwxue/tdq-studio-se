@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.views;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -48,7 +47,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.FileConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
@@ -57,7 +55,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
@@ -94,7 +91,6 @@ import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternLanguageRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -324,11 +320,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                     isNeedcreateDefault = false;
 
                     // ADD by msjian 2011-5-12 21186: don't check whether the selected object is "MDMConnectionRepNode"
-                } else if (fe instanceof MDMConnectionRepNode) {
-                    MDMConnectionRepNode mdmNode = (MDMConnectionRepNode) fe;
-                    MDMConnection mdmConnection = mdmNode.getMdmConnection();
-                    createDataProviderDetail(mdmConnection);
-                    isNeedcreateDefault = false;
                 } else if (fe instanceof DFConnectionRepNode) {
                     DFConnectionRepNode dfNode = (DFConnectionRepNode) fe;
                     DelimitedFileConnection dfConnection = dfNode.getDfConnection();
@@ -680,11 +671,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 version = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataProvider);
             }
         } else {
-            boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
-            subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage()
-                    : PluginConstant.EMPTY_STRING;
+            subtype = isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage() : PluginConstant.EMPTY_STRING;
             if (!DQRepositoryNode.isOnFilterring()) {
-                version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
+                version = PluginConstant.EMPTY_STRING;
             }
         }
 
@@ -759,24 +748,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private void initializeToolBar() {
         getViewSite().getActionBars().getToolBarManager();
-    }
-
-    /**
-     * 
-     * DOC qiongli Comment method "getMDMVersion".
-     * 
-     * @param mdmConn
-     * @return
-     */
-    private String getMDMVersion(MDMConnection mdmConn) {
-        String version = null;
-        Properties props = new Properties();
-        props.put(TaggedValueHelper.USER, mdmConn.getUsername());
-        props.put(TaggedValueHelper.PASSWORD, mdmConn.getValue(mdmConn.getPassword(), false));
-        props.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse()); //$NON-NLS-1$
-        MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), props);
-        version = mdmWsConn.getVersion();
-        return version;
     }
 
 }

@@ -88,8 +88,11 @@ public class QuarterFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
     protected String getFormatName(Object data) {
         // add the quater pattern for each data.
         String monthStr = DateFormatUtils.format((Date) data, monthSign);
-        int month = Integer.parseInt(monthStr) / 4 + 1;
-        return DateFormatUtils.format((Date) data, datePattern + month);
+        int month = Integer.parseInt(monthStr);
+        int quotient = month / 3;
+        int remainder = month % 3;
+        int quarter = remainder == 0 ? quotient : quotient + 1;
+        return DateFormatUtils.format((Date) data, datePattern + quarter);
     }
 
     /**

@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ConnectionsContentProvider;
@@ -71,12 +70,6 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 if (object instanceof DBConnectionRepNode) {
                     DBConnectionRepNode connNode = (DBConnectionRepNode) object;
                     IRepositoryViewObject reposViewObj = connNode.getObject();
-                    // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview
-                    // analysis.
-                    if (ConnectionUtils.isMdmConnection(reposViewObj)) {
-                        setPageComplete(false);
-                        return;
-                    }
 
                     Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
                     if (connection != null && connPanameter != null) {

@@ -51,7 +51,7 @@ public class SwitchContextAction extends Action {
      */
     @Override
     public void run() {
-        // MOD msjian 2012-2-13 TDQ-4559: make it support file/mdm connection
+        // MOD msjian 2012-2-13 TDQ-4559: make it support file connection
         if (selectedObject instanceof ConnectionRepNode) {
             ConnectionRepNode conRepNode = (ConnectionRepNode) selectedObject;
             Item item = conRepNode.getObject().getProperty().getItem();

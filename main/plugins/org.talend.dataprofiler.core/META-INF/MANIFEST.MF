@@ -108,8 +108,7 @@ Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.ui.wizard.database,
  org.talend.dataprofiler.core.ui.wizard.indicator,
  org.talend.dataprofiler.core.ui.wizard.matchrule,
- org.talend.dataprofiler.core.ui.wizard.parserrule,
- org.talend.dataprofiler.core.ui.wizard.urlsetup
+ org.talend.dataprofiler.core.ui.wizard.parserrule
 Eclipse-RegisterBuddy: org.apache.log4j, org.talend.testutils
 Bundle-Localization: plugin
 Bundle-ClassPath: .

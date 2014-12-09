@@ -485,11 +485,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 meIndicators[i] = ModelElementIndicatorHelper.createDFColumnIndicator(repNode);
             } else if (repViewObj != null && repViewObj instanceof MetadataColumnRepositoryObject) {
                 meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(repNode);
-            } else {
-                // TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(repViewObj);
-                if (repViewObj != null) {
-                    meIndicators[i] = ModelElementIndicatorHelper.createXmlElementIndicator(repNode);
-                }
             }
         }
         addElements(meIndicators);
@@ -514,14 +509,12 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             // this.modelElementIndicators = new ModelElementIndicator[0];
             return new ModelElementIndicator[0];
         }
-        boolean isMdm = false;
         // MOD qiongli 2011-1-7 feature 16796.
         boolean isDelimitedFile = false;
         if (objs != null && objs.length != 0) {
             // MOD klliu 2011-02-16 feature 15387
-            isMdm = RepNodeUtils.isMDM(objs[0]);
             isDelimitedFile = RepNodeUtils.isDelimitedFile(objs[0]);
-            if (!(reposList.get(0) instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
+            if (!(reposList.get(0) instanceof DBColumnRepNode || isDelimitedFile)) {
                 return null;
             }
         }
@@ -535,9 +528,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
 
         for (IRepositoryNode repObj : reposList) {
-            ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper.createXmlElementIndicator(repObj)
-                    : isDelimitedFile ? ModelElementIndicatorHelper.createDFColumnIndicator(repObj) : ModelElementIndicatorHelper
-                            .createColumnIndicator(repObj);
+            ModelElementIndicator temp = isDelimitedFile ? ModelElementIndicatorHelper.createDFColumnIndicator(repObj)
+                    : ModelElementIndicatorHelper.createColumnIndicator(repObj);
             modelElementIndicatorList.add(temp);
         }
 

@@ -5,9 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
@@ -80,13 +77,11 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#specialName(java.lang.Object)
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getFrequencyLabel(java.lang.Object)
      */
     @Override
-    protected List<String> specialNames(Object name) {
-        List<String> specialNames = new ArrayList<String>();
-        specialNames.add(convertCharacters(name.toString()));
-        return specialNames;
+    protected String getFrequencyLabel(Object name) {
+        return convertCharacters(name.toString());
     }
 
 } // PatternLowFreqIndicatorImpl

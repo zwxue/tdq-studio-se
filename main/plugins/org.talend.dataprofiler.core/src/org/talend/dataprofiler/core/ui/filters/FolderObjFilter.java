@@ -50,23 +50,22 @@ public class FolderObjFilter extends AbstractViewerFilter {
             if (IResource.FOLDER == res.getType()) {
                 IFolder folder = (IFolder) element;
                 // MOD mzhao 2010-08-12 14891: use same repository API with TOS to persistent metadata
-                if (((IFolder) folder).getProjectRelativePath().toString().startsWith(EResourceConstant.METADATA.getPath())) {
-                    String folderName = ((IFolder) folder).getName();
+                if (folder.getProjectRelativePath().toString().startsWith(EResourceConstant.METADATA.getPath())) {
+                    String folderName = folder.getName();
                     if (folderName.equals("bin")) {//$NON-NLS-1$ 
                         return false;
                     }
                     if (folderName.equals(EResourceConstant.METADATA.getPath())) {
                         return true;
-                    } else if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())
-                            || ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
+                    } else if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
                         return true;
                     }
                     return false;
                 }
                 // MOD zshen 2011-1-16 18724: Java UDI enhancements to hide lib folder.
-                else if (((IFolder) folder).getProjectRelativePath().toString()
+                else if (folder.getProjectRelativePath().toString()
                         .startsWith(EResourceConstant.USER_DEFINED_INDICATORS.getPath())
-                        && (((IFolder) folder).getName().equals("lib"))) { //$NON-NLS-1$
+                        && (folder.getName().equals("lib"))) { //$NON-NLS-1$
                     return false;
                 }
                 // ~18724
@@ -82,7 +81,7 @@ public class FolderObjFilter extends AbstractViewerFilter {
             }
         } else if (element instanceof UserDefIndicatorSubFolderRepNode) {
             if (EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName().equalsIgnoreCase(
-                    ((UserDefIndicatorSubFolderRepNode) element).getObject().getLabel())) {//$NON-NLS-1$
+                    ((UserDefIndicatorSubFolderRepNode) element).getObject().getLabel())) {
                 return false;
             }
         }

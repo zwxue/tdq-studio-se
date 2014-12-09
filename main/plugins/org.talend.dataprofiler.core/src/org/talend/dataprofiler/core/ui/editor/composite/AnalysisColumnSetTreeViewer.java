@@ -52,7 +52,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -69,7 +68,6 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.TalendTypeConvert;
@@ -368,7 +366,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         for (ModelElementIndicator element2 : elements) {
             final ModelElementIndicator meIndicator = element2;
 
-            // MOD qiongli 2011-3-11,feature 17896,make columnSet support MDM.
             final ModelElement modelElement = RepositoryNodeHelper
                     .getSubModelElement(meIndicator.getModelElementRepositoryNode());
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
@@ -682,8 +679,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             // MOD scorreia 2010-10-20 bug 16403 avoid NPE here
             TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
             typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";//$NON-NLS-1$
-        } else if (meIndicator instanceof XmlElementIndicator) {
-            typeName = ((MDMXmlElementRepNode) meIndicator.getModelElementRepositoryNode()).getTdXmlElementType().getJavaType();
         } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
             MetadataColumn mColumn = ((DelimitedFileIndicatorImpl) meIndicator).getMetadataColumn();
             typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());

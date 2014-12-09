@@ -22,16 +22,13 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataquality.analysis.Analysis;
@@ -259,7 +256,6 @@ public class DrillDownEditorInput implements IEditorInput {
         for (Object[] tableRow : newColumnElementList) {
             int columnIndex = 0;
             for (Object tableValue : tableRow) {
-                // added yyin 20120523 TDQ-4691: in MDM, when these two size not equal, this for will throw exception
                 if (tableValue == null) {
                     if (newColumnElementList.get(0).length != columnElementList.size()) {
                         continue;
@@ -459,18 +455,6 @@ public class DrillDownEditorInput implements IEditorInput {
                     MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
                     List<MetadataColumn> columnElementList = mTable.getColumns();
                     offset = columnElementList.indexOf(analysisElement);
-                } else if (analysisElement instanceof TdXmlElementType) {
-                    TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
-                            .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
-                    List<TdXmlElementType> xmlElementListTmp = org.talend.cwm.db.connection.ConnectionUtils
-                            .getXMLElements(parentElement);
-                    List<TdXmlElementType> xmlElementList = new ArrayList<TdXmlElementType>();
-                    for (TdXmlElementType tdXmlEle : xmlElementListTmp) {
-                        if (!DqRepositoryViewService.hasChildren(tdXmlEle)) {
-                            xmlElementList.add(tdXmlEle);
-                        }
-                    }
-                    offset = xmlElementList.indexOf(analysisElement);
                 }
                 // Added yyin 20120608 TDQ-3589
                 if (currIndicator instanceof DuplicateCountIndicator) {
@@ -507,39 +491,20 @@ public class DrillDownEditorInput implements IEditorInput {
         if (simpInd.getAnalyzedColumns().size() == 0) {
             return columnElementList;
         }
-        TdXmlElementType tdXmeElement = null;
         if (DrillDownUtils.judgeMenuType(this.getMenuType(), DrillDownUtils.MENU_VALUE_TYPE)) {
             for (ModelElement mod : simpInd.getAnalyzedColumns()) {
-                tdXmeElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
-                if (tdXmeElement != null) {
-                    columnElementList.add(tdXmeElement.getName());
-                } else {
-                    columnElementList.add(ModelElementHelper.getName(mod));
-                }
-
+                columnElementList.add(ModelElementHelper.getName(mod));
             }
         } else {
             boolean isDelimitedFile = false;
-            boolean isMDM = false;
             for (ModelElement mColumn : simpInd.getAnalyzedColumns()) {
-                tdXmeElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mColumn);
                 TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(mColumn);
-                if (tdXmeElement != null) {
-                    isMDM = true;
-                } else if (tdColumn == null) {
+                if (tdColumn == null) {
                     isDelimitedFile = true;
                 }
                 break;
             }
-            if (isMDM) {
-                TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
-                        .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(tdXmeElement)));
-                List<TdXmlElementType> columnList = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
-                for (TdXmlElementType tdXmlElement : columnList) {
-                    columnElementList.add(tdXmlElement.getName());
-                }
-
-            } else if (isDelimitedFile) {
+            if (isDelimitedFile) {
                 List<MetadataColumn> columnList = ColumnHelper.getColumnOwnerAsMetadataTable(simpInd.getAnalyzedColumns().get(0))
                         .getColumns();
                 for (MetadataColumn mdColumn : columnList) {

@@ -30,7 +30,6 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
-import net.sourceforge.sqlexplorer.service.MapDBUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,7 +46,6 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.talend.dataprofiler.service.IMapDBService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -92,6 +90,8 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash bin
     private static HashMap<Alias, IFile> propertyFile = new HashMap<Alias, IFile>();
 
+    private BundleContext bundleContext;
+
     /**
      * The constructor. Moved previous logic to the start method.
      */
@@ -106,7 +106,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
-
+        this.bundleContext = context;
         try {
             getLog().addLogListener(new ILogListener() {
 
@@ -491,11 +491,12 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
         return propertyFile;
     }
 
-    public void bind(IMapDBService service) {
-        MapDBUtils.getDefault().setMapDBService(service);
-    }
-
-    public void unbind(IMapDBService service) {
-        MapDBUtils.getDefault().setMapDBService(null);
+    /**
+     * Getter for bundleContext.
+     * 
+     * @return the bundleContext
+     */
+    public BundleContext getBundleContext() {
+        return this.bundleContext;
     }
 }

@@ -27,7 +27,6 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -80,16 +79,6 @@ public final class MetadataHelper {
      */
     public static void setDataminingType(DataminingType type, TdColumn column) {
         column.setContentType(type.getLiteral());
-    }
-
-    /**
-     * DOC xqliu Comment method "setDataminingType".
-     * 
-     * @param type
-     * @param xmlElement
-     */
-    public static void setDataminingType(DataminingType type, TdXmlElementType xmlElement) {
-        xmlElement.setContentType(type.getLiteral());
     }
 
     /**
@@ -360,8 +349,6 @@ public final class MetadataHelper {
         if (modelElement != null) {
             if (modelElement instanceof TdColumn) {
                 return getDataminingType((TdColumn) modelElement);
-            } else if (modelElement instanceof TdXmlElementType) {
-                return DataminingType.get(((TdXmlElementType) modelElement).getContentType());
             } else if (modelElement instanceof MetadataColumn) {
                 String contentType = TaggedValueHelper.getValueString(TaggedValueHelper.DATA_CONTENT_TYPE_TAGGED_VAL,
                         modelElement);

@@ -775,7 +775,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             if (!drillDownMap.isEmpty()) {
                 drillDownMap.clear();
             }
-            drillDownRowCount = 0l;
+            resetDrillDownRowCount();
         }
     }
 
@@ -1369,7 +1369,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     @Override
     public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
         drillDownRowCount++;
-        drillDownMap.put(count, inputRowList);
+        drillDownMap.put(drillDownRowCount, inputRowList);
     }
 
     /**

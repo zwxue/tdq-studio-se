@@ -60,11 +60,9 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -103,7 +101,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -196,9 +193,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             // MOD yyi 2011-02-16 17871:delimitefile
             MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-            TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(element);
 
-            if (tdColumn == null && mdColumn == null && xmlElement == null) {
+            if (tdColumn == null && mdColumn == null) {
                 continue;
             }
 
@@ -211,9 +207,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                     recursiveFind = RepositoryNodeHelper.createRepositoryNode(tdColumn);
                 }
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(recursiveFind);
-            } else if (xmlElement != null) {
-                currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper
-                        .recursiveFind(xmlElement));
             }
 
             DataminingType dataminingType = MetadataHelper.getDataminingType(element);
@@ -669,11 +662,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             List<ModelElement> columnList = new ArrayList<ModelElement>();
             for (IRepositoryNode rd : repositoryNodes) {
                 reposObject = rd.getObject();
-                if (rd instanceof MDMXmlElementRepNode) {
-                    columnList.add(((MetadataXmlElementTypeRepositoryObject) reposObject).getTdXmlElementType());
-                } else {
-                    columnList.add(((MetadataColumnRepositoryObject) reposObject).getTdColumn());
-                }
+                columnList.add(((MetadataColumnRepositoryObject) reposObject).getTdColumn());
             }
 
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
@@ -688,8 +677,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                         if (ind instanceof RegexpMatchingIndicator) {
                             // MOD yyi 2011-06-15 22419:column set pattern for MDM
                             IRepositoryViewObject obj = modelElementInd.getModelElementRepositoryNode().getObject();
-                            ModelElement analyzedElt = obj instanceof MetadataColumnRepositoryObject ? ((MetadataColumnRepositoryObject) obj)
-                                    .getTdColumn() : ((MetadataXmlElementTypeRepositoryObject) obj).getModelElement();
+                            ModelElement analyzedElt = ((MetadataColumnRepositoryObject) obj).getTdColumn();
                             ind.setAnalyzedElement(analyzedElt);
                             allMatchIndicator.getCompositeRegexMatchingIndicators().add((RegexpMatchingIndicator) ind);
                         }

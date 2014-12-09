@@ -25,7 +25,6 @@ import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.SelectedComparisonAction;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
@@ -56,14 +55,9 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
     @Override
     public void fillContextMenu(IMenuManager menu) {
         Iterator<?> iter = ((TreeSelection) this.getContext().getSelection()).iterator();
-        // remove the "Database Compare" menu when the object is a mdm connection
         while (iter.hasNext()) {
             Object obj = iter.next();
-            if (obj instanceof RepositoryNode) {
-                if (ConnectionUtils.isMdmConnection(((RepositoryNode) obj).getObject())) {
-                    return;
-                }
-            } else {
+            if (!(obj instanceof RepositoryNode)) {
                 return;
             }
         }

@@ -31,7 +31,6 @@ public enum PatternToExcelEnum {
     SybaseRegexp(11, "Sybase_Regexp"), //$NON-NLS-1$
     IngresRegexp(12, "Ingres_Regexp"), //$NON-NLS-1$
     InformixRegexp(13, "Informix_Regexp"), //$NON-NLS-1$
-    MDMRegexp(24, "MDM_Informix_Regexp"), //$NON-NLS-1$
     NETEZZARegexp(25, "NETEZZA_Regexp"), //$NON-NLS-1$
     SQLite3Regexp(14, "SQLite3_Regexp"), //$NON-NLS-1$
     Teradata(15, "Teradata_Regexp"), //$NON-NLS-1$

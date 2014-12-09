@@ -157,6 +157,37 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         return returnCode;
     }
 
+    /**
+     * get the final result from duplicate indicator and set it into indicatorToRowMap Added yyin 20120608 TDQ-3589.
+     * 
+     * @param indicator
+     * @param indicToRowMap
+     */
+    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+        Map<Object, List<Object>> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
+        Set<Object> duplicateValues = ((DuplicateCountIndicator) indicator).getDuplicateValues();
+        Iterator<Object> iterator = duplicateValues.iterator();
+        int maxNumberRows = analysis.getParameters().getMaxNumberRows();
+
+        while (iterator.hasNext()) {
+            Object key = iterator.next();
+
+            List<Object> valueList = dupMap.get(key);
+            if (valueList == null) {
+                continue;
+            }
+            List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
+            // MOD zshen add another loop to insert all of columnValue on the row into indicator.
+            int NumberOfRecord = valueObjectList.size();
+
+            if (NumberOfRecord < maxNumberRows) {
+                valueObjectList.add(valueList.toArray());
+            } else {
+                break;
+            }
+        }
+    }
+
     private void useCsvReader(File file, DelimitedFileConnection dfCon, List<ModelElement> analysisElementList,
             List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
         int limitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
@@ -189,38 +220,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 } catch (IOException e) {
                     log.error(e, e);
                 }
-            }
-        }
-    }
-
-    /**
-     * DOC yyin Comment method "addResultToIndicatorToRowMap".
-     * 
-     * @param indicator
-     * @param indicToRowMap
-     */
-    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
-        Map<Object, Object[]> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
-        Set<Object> duplicateValues = ((DuplicateCountIndicator) indicator).getDuplicateValues();
-
-        Iterator<Object> iterator = duplicateValues.iterator();
-        int maxNumberRows = analysis.getParameters().getMaxNumberRows();
-
-        while (iterator.hasNext()) {
-            Object key = iterator.next();
-
-            Object[] valueArray = dupMap.get(key);
-            if (valueArray == null) {
-                continue;
-            }
-            List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
-            // MOD zshen add another loop to insert all of columnValue on the row into indicator.
-            int NumberOfRecord = valueObjectList.size();
-
-            if (NumberOfRecord < maxNumberRows) {
-                valueObjectList.add(valueArray);
-            } else {
-                break;
             }
         }
     }

@@ -45,7 +45,6 @@ import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -57,11 +56,9 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
-import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
@@ -352,39 +349,9 @@ public class FileSystemImportWriter implements IImportWriter {
                 return toImportMap;
             }
             toImportMap.put(record.getPropertyPath(), propDesPath);
-
-            EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
-            if (typedConstant != null && typedConstant == EResourceConstant.MDM_CONNECTIONS) {
-                ConnectionItem item = (ConnectionItem) property.getItem();
-                Connection connection = item.getConnection();
-                List<TdXmlSchema> tdXmlDocumentList = ConnectionHelper.getTdXmlDocument(connection);
-                for (TdXmlSchema schema : tdXmlDocumentList) {
-                    IPath srcPath = getXsdFolderPath(record, schema);
-                    if (!srcPath.toFile().exists()) {
-                        log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");//$NON-NLS-1$ //$NON-NLS-2$ 
-                        break;
-                    }
-                    IPath desPath = ResourceManager.getMDMConnectionFolder().getLocation()
-                            .append(new Path(schema.getXsdFilePath()));
-                    toImportMap.put(srcPath, desPath);
-                }
-            }
         }
 
         return toImportMap;
-    }
-
-    private IPath getXsdFolderPath(ItemRecord record, TdXmlSchema schema) {
-        IPath mdmPath = record.getFilePath().removeLastSegments(1);
-        IPath srcPath = mdmPath.append(schema.getXsdFilePath());
-        while (!srcPath.toFile().exists()) {
-            if (mdmPath.isRoot()) {
-                break;
-            }
-            mdmPath = mdmPath.removeLastSegments(1);
-            srcPath = mdmPath.append(schema.getXsdFilePath());
-        }
-        return srcPath;
     }
 
     /*

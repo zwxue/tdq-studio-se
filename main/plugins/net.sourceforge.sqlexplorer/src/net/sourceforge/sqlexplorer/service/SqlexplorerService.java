@@ -23,9 +23,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
+import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dataset.actions.ExportCSVAction;
@@ -61,7 +61,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -74,6 +73,7 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.classloader.DynamicClassLoader;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -85,7 +85,6 @@ import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataprofiler.service.ISqlexplorerService;
@@ -174,6 +173,12 @@ public class SqlexplorerService implements ISqlexplorerService {
         }
 
         input.setUser(user);
+        // TDQ-9533 append a "limit X" in sql query for vertica database.
+        if (EDatabaseTypeName.VERTICA.getProduct().equals(databaseConnection.getProductId())) {
+            String maxPref = SQLExplorerPlugin.getDefault().getPreferenceStore().getString(IConstants.MAX_SQL_ROWS);
+            int maxNum = maxPref == null ? 100 : Integer.parseInt(maxPref);
+            query = query + " limit " + maxNum;
+        }
         IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
         try {
             SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
@@ -718,72 +723,6 @@ public class SqlexplorerService implements ISqlexplorerService {
             classes = new Class[] {};
         }
         return classes;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.service.ISqlexplorerService#getClassDriverFromSQLExplorer(java.lang.String,
-     * java.util.Properties)
-     */
-    @Override
-    public Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
-            IllegalAccessException {
-        Driver driver = null;
-        if (Platform.isRunning()) {
-            SQLExplorerPlugin sqlExplorerPlugin = SQLExplorerPlugin.getDefault();
-            if (sqlExplorerPlugin != null) {
-                DriverManager driverModel = sqlExplorerPlugin.getDriverModel();
-                String dbType = props.getProperty(TaggedValueHelper.DBTYPE);
-                String dbVersion = props.getProperty(TaggedValueHelper.DB_PRODUCT_VERSION);
-                String managedDriverId = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(dbType, driverClassName,
-                        dbVersion);
-                ManagedDriver managedDriver = driverModel.getDriver(managedDriverId);
-                if (managedDriver != null) {
-                    if (!managedDriver.isDriverClassLoaded()) {
-                        loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
-                    }
-                    driver = managedDriver.getJdbcDriver();
-                }
-            }
-        }
-        return driver;
-    }
-
-    /**
-     * 
-     * Load the driver by lib management system , which will configure the SQL Explorer driver classpath from xml.
-     * 
-     * @param dbType
-     * @param dbVersion
-     * @param driverClassName
-     * @deprecated
-     */
-    @Deprecated
-    private void loadDriverByLibManageSystem(String dbType, String dbVersion, String driverClassName) {
-        if (dbType == null || driverClassName == null) {
-            return;
-        }
-        DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
-        AliasAndManaDriverHelper aliasManaHelper = AliasAndManaDriverHelper.getInstance();
-        String manaDriverId = aliasManaHelper.joinManagedDriverId(dbType, driverClassName, dbVersion);
-        ManagedDriver manDr = driverManager.getDriver(manaDriverId);
-        if (manDr != null && !manDr.isDriverClassLoaded()) {
-            // find driver jars from 'temp\dbWizard', prefrence page or installation path 'lib\java',
-            // "librariesIndex.xml".
-            try {
-                List<String> jarNames = EDatabaseVersion4Drivers.getDrivers(dbType, dbVersion);
-                LinkedList<String> driverJarRealPaths = aliasManaHelper.getDriverJarRealPaths(jarNames);
-                if (!driverJarRealPaths.isEmpty()) {
-                    manDr.getJars().clear();
-                    manDr.getJars().addAll(driverJarRealPaths);
-                }
-
-                manDr.registerSQLDriver(dbType, dbVersion);
-            } catch (Exception e) {
-                log.error(e);
-            }
-        }
     }
 
     /*

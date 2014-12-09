@@ -15,22 +15,15 @@ package org.talend.dq.analysis;
 import java.sql.Connection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -78,35 +71,17 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         eval.setMonitor(getMonitor());
         // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
-        // MOD qiongli 2011-3-11 featue 17869.consider of mdm connection
         for (Indicator indicator : indicators) {
             if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                 ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
                 colSetMultValIndicator.prepare();
                 eval.storeIndicator(indicator.getName(), colSetMultValIndicator);
-                if (isMdm) {
-                    EList<ModelElement> modelElementLs = colSetMultValIndicator.getAnalyzedColumns();
-                    for (ModelElement mod : modelElementLs) {
-                        TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
-                        if (tdXmlElement != null) {
-                            eval.setTdXmlDocument(tdXmlElement.getOwnedDocument());
-                            break;
-                        }
-                    }
-                }
             }
         }
 
         TypedReturnCode<java.sql.Connection> connection = null;
         // MOD yyi 2011-02-22 17871:delimitefile
-        if (isMdm) {
-            TypedReturnCode<MdmWebserviceConnection> mdmReturnObj = getMdmConnection(analysis);
-            if (!mdmReturnObj.isOk()) {
-                log.error(mdmReturnObj.getMessage());
-                return false;
-            }
-            eval.setMdmWebserviceConn(mdmReturnObj.getObject());
-        } else if (!isDelimitedFile) {
+        if (!isDelimitedFile) {
             connection = getConnectionBeforeRun(analysis);
             if (!connection.isOk()) {
                 this.traceError(connection.getMessage());
@@ -138,7 +113,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             traceError(rc.getMessage());
         }
 
-        return true;
+        return rc.isOk();
     }
 
     /*
@@ -152,15 +127,6 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         // MOD yyi 2011-02-22 17871:delimitefile
         if (isDelimitedFile) {
             return PluginConstant.EMPTY_STRING;
-        } else if (isMdm) {
-            EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
-            if (analysedElements.isEmpty()) {
-                setError(Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
-                        analysis.getName()));
-                return null;
-            }
-            return createSqlForMDM(analysedElements);
-
         }
         // ~
         this.cachedAnalysis = analysis;
@@ -249,30 +215,6 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         return sqlStatement;
     }
 
-    private String createSqlForMDM(EList<ModelElement> analysedElements) {
-        StringBuilder sql = new StringBuilder("//");//$NON-NLS-1$
-        for (ModelElement modelElement : analysedElements) {
-            TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
-            if (tdXmlElement == null) {
-                setError("given element can't be used.");
-                return null;
-            }
-            ModelElement parentElement = XmlElementHelper.getParentElement(tdXmlElement);
-            if (parentElement == null) {
-                setError(Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName()));//$NON-NLS-1$
-                return null;
-            }
-            TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
-            if (parentXmlElement == null) {
-                setError(Messages.getString("ColumnAnalysisExecutor.NoContainerFound", parentElement.getName())); //$NON-NLS-1$
-                return null;
-            }
-            sql.append(parentXmlElement.getName());
-            break;
-        }
-        return sql.toString();
-    }
-
     @Override
     protected boolean check(Analysis analysis) {
 
@@ -307,22 +249,6 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             return false;
         }
         return true;
-    }
-
-    protected TypedReturnCode<MdmWebserviceConnection> getMdmConnection(Analysis analysis) {
-        TypedReturnCode<MdmWebserviceConnection> rc = new TypedReturnCode<MdmWebserviceConnection>(true);
-        MDMConnection dataProvider = (MDMConnection) analysis.getContext().getConnection();
-        Properties props = new Properties();
-        props.setProperty(TaggedValueHelper.USER, dataProvider.getUsername());
-        props.setProperty(TaggedValueHelper.PASSWORD, dataProvider.getValue(dataProvider.getPassword(), false));
-        props.setProperty(TaggedValueHelper.UNIVERSE, dataProvider.getUniverse() == null ? PluginConstant.EMPTY_STRING
-                : dataProvider.getUniverse());
-        props.setProperty(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter(dataProvider));
-        MdmWebserviceConnection tempMdmConnection = new MdmWebserviceConnection(dataProvider.getPathname(), props);
-        rc.setObject(tempMdmConnection);
-        rc.setOk(tempMdmConnection.checkDatabaseConnection().isOk());
-        rc.setMessage(dataProvider.getPathname());
-        return rc;
     }
 
     /*

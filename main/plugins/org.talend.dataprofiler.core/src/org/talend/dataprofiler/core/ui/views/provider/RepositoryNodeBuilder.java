@@ -47,7 +47,6 @@ import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.IndicatorFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
-import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.PatternFolderRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.RulesFolderRepNode;
@@ -190,11 +189,6 @@ public final class RepositoryNodeBuilder {
             folder.setRepositoryNode(dbFolder);
             parentNode.getChildren().add(dbFolder);
             return dbFolder;
-        case MDM_CONNECTIONS:
-            MDMConnectionFolderRepNode mdmFolder = new MDMConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
-            folder.setRepositoryNode(mdmFolder);
-            parentNode.getChildren().add(mdmFolder);
-            return mdmFolder;
         case FILEDELIMITED:
             DFConnectionFolderRepNode dfmFolder = new DFConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(dfmFolder);

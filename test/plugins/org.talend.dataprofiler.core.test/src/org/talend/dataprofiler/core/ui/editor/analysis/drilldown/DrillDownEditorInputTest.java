@@ -35,7 +35,6 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
 import org.talend.dataquality.analysis.Analysis;
@@ -102,7 +101,7 @@ public class DrillDownEditorInputTest {
         when(dataEntity.getIndicator()).thenReturn(currIndicator);
 
         ddInput = new DrillDownEditorInput(analysis, dataEntity, menuItemEntity);
-        TdXmlElementType analysisElement = mock(TdXmlElementType.class);
+        TdColumn analysisElement = mock(TdColumn.class);
         when(currIndicator.getAnalyzedElement()).thenReturn(analysisElement);
         DrillDownEditorInput spydd = spy(ddInput);
         // size 1=2

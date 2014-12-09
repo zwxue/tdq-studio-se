@@ -21,9 +21,6 @@ import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnAction;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
-import org.talend.dq.nodes.DBColumnRepNode;
-import org.talend.dq.nodes.DFColumnRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -79,7 +76,7 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
             submenu.add(analyzeColumnAction);
         }
 
-        if (isSelectedColumnLevel(currentSelection) || isSelectedMdmColumn(currentSelection)) {
+        if (isSelectedColumnLevel(currentSelection)) {
             analyzeColumnSetAction.setColumnSelection(currentSelection);
             menu.add(analyzeColumnSetAction);
         }
@@ -106,35 +103,4 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
         return true;
     }
 
-    /**
-     * DOC bZhou Comment method "isSelectedTdColumn".
-     * 
-     * @param currentSelection
-     * @return
-     */
-    private boolean isSelectedTdColumn(TreeSelection currentSelection) {
-        for (Object obj : currentSelection.toList()) {
-            if (!(obj instanceof DBColumnRepNode) && !(obj instanceof DFColumnRepNode)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * DOC yyi 2011-06-17 22418: Missing "Analyze Column Set" menu on the MDM entities
-     * 
-     * @param currentSelection
-     * @return
-     */
-    private boolean isSelectedMdmColumn(TreeSelection currentSelection) {
-        for (Object obj : currentSelection.toList()) {
-            if (!(obj instanceof MDMXmlElementRepNode)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 }

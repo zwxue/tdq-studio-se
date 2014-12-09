@@ -63,7 +63,6 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -91,7 +90,6 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -401,11 +399,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 DBConnectionRepNode dbConnRepNode = (DBConnectionRepNode) data;
                 if (dbConnRepNode.getObject() != null && dbConnRepNode.getObject().getProperty() != null) {
                     version = dbConnRepNode.getObject().getProperty().getVersion();
-                }
-            } else if (data instanceof MDMConnectionRepNode) {
-                MDMConnectionRepNode mdmConnRepNode = (MDMConnectionRepNode) data;
-                if (mdmConnRepNode.getObject() != null && mdmConnRepNode.getObject().getProperty() != null) {
-                    version = mdmConnRepNode.getObject().getProperty().getVersion();
                 }
             } else if (data instanceof DFConnectionRepNode) {
                 DFConnectionRepNode dfConnRepNode = (DFConnectionRepNode) data;
@@ -819,11 +812,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         if (analyzedColumns != null && !analyzedColumns.isEmpty()) {
             ModelElement mod = analyzedColumns.get(0);
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(mod);
-            TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
-            dataFilterComp.getDataFilterText().setEnabled((xmlElement != null || tdColumn != null) ? true : false);
-            if (xmlElement != null) {
-                dataFilterComp.getDataFilterText().setEnabled(false);
-            } else if (tdColumn == null) {
+            dataFilterComp.getDataFilterText().setEnabled((tdColumn != null) ? true : false);
+            if (tdColumn == null) {
                 dataFilterComp.getDataFilterText().setEnabled(false);
                 changeExecuteLanguageToJava(true);
             }

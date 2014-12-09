@@ -25,10 +25,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
-import org.talend.core.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.ui.IMDMProviderService;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
@@ -39,9 +37,8 @@ import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWiz
 import org.talend.repository.ui.wizards.metadata.connection.files.delimited.DelimitedFileWizard;
 import org.talend.resource.EResourceConstant;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class ConnectionTypePage extends WizardPage {
 
@@ -53,7 +50,7 @@ public class ConnectionTypePage extends WizardPage {
 
     /**
      * DOC yyin ConnectionTypePage constructor comment.
-     *
+     * 
      * @param pageName
      */
     protected ConnectionTypePage(String pageName) {
@@ -114,17 +111,6 @@ public class ConnectionTypePage extends WizardPage {
         case 1:// file
             node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.FILEDELIMITED);
             nextWizard = new DelimitedFileWizard(PlatformUI.getWorkbench(), true, node, null);
-            break;
-        case 2:// MDM
-            node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS);
-            if (PluginChecker.isMDMPluginLoaded()
-                    && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
-                IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(
-                        IMDMProviderService.class);
-                if (service != null) {
-                    nextWizard = service.newWizard(PlatformUI.getWorkbench(), true, node, null);
-                }
-            }
             break;
         default:
             break;

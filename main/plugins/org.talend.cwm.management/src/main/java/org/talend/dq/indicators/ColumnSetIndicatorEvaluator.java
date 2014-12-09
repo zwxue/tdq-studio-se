@@ -14,17 +14,12 @@ package org.talend.dq.indicators;
 
 import java.io.File;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -37,17 +32,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
-import org.talend.cwm.db.connection.MdmStatement;
-import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -82,18 +71,13 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     // MOD yyi 2011-02-22 17871:delimitefile
     protected boolean isDelimitedFile = false;
 
-    protected boolean isMdm = false;
-
     protected TdXmlSchema tdXmlDocument;
-
-    protected MdmWebserviceConnection mdmWebserviceConn;
 
     private boolean isBadlyFormFlatFile = false;
 
     public ColumnSetIndicatorEvaluator(Analysis analysis) {
         this.analysis = analysis;
         this.isDelimitedFile = analysis.getContext().getConnection() instanceof DelimitedFileConnection;
-        this.isMdm = analysis.getContext().getConnection() instanceof MDMConnection;
     }
 
     @Override
@@ -104,8 +88,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         indicToRowMap.clear();
         if (isDelimitedFile) {
             ok = evaluateByDelimitedFile(sqlStatement, ok);
-        } else if (isMdm) {
-            ok = evaluateByMDM(sqlStatement, ok);
         } else {
             ok = evaluateBySql(sqlStatement, ok);
         }
@@ -180,8 +162,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 }
                 handleObjects(objectLs, resultSet);
             }
-        } catch (Exception exc) {
-            log.error(exc, exc);
         } finally {
             if (resultSet != null) {
                 resultSet.close();
@@ -332,80 +312,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
-     * DOC qiongli Comment method "evaluateByMDM".
-     * 
-     * @param sqlStatement
-     * @param returnCode
-     * @return
-     */
-    private ReturnCode evaluateByMDM(String sqlStatement, ReturnCode returnCode) {
-        if (mdmWebserviceConn == null || tdXmlDocument == null) {
-            returnCode.setOk(false);
-            return returnCode;
-        }
-        MdmStatement statement = mdmWebserviceConn.createStatement();
-        String[] resultSet = null;
-        // sqlStatement = "//" + tdXmlDocument.getName();
-        this.getAnalyzedElements();
-        if (continueRun()) {
-            try {
-                returnCode.setOk(true);
-                returnCode.setOk(returnCode.isOk() && statement.execute(tdXmlDocument, sqlStatement));
-                // resultSet = statement.getResultSet();
-                List<String> strResultList = Arrays.asList(statement.getResultSet());
-                resultSet = strResultList.toArray(new String[strResultList.size()]);
-            } catch (RemoteException e) {
-                returnCode.setMessage(e.getMessage());
-            } catch (ServiceException e) {
-                returnCode.setMessage(e.getMessage());
-            }
-        }
-        if (resultSet == null) {
-            String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$ 
-            log.warn(mess);
-            returnCode.setReturnCode(mess, false);
-            return returnCode;
-        }
-        List<Map<String, String>> resultSetList = new ArrayList<Map<String, String>>();
-        List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
-        TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
-                .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElementList.get(0))));
-        List<TdXmlElementType> columnList = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
-        if (analysis.getParameters().isStoreData()) {
-            resultSetList = statement.tidyResultSet(columnList.toArray(new ModelElement[columnList.size()]), resultSet);
-        } else {
-            resultSetList = statement.tidyResultSet(analysisElementList.toArray(new ModelElement[analysisElementList.size()]),
-                    resultSet);
-        }
-        List<String> columnNames = getAnalyzedElementsName();
-        for (int i = 0; i < resultSetList.size(); i++) {
-            if (!this.continueRun()) {
-                break;
-            }
-            Map<String, String> rowMap = resultSetList.get(i);
-            EList<Object> objectLs = new BasicEList<Object>();
-            Iterator<String> it = columnNames.iterator();
-            while (it.hasNext()) {
-                if (!this.continueRun()) {
-                    break;
-                }
-                Object obj = rowMap.get(it.next());
-                if (obj != null && (PluginConstant.EMPTY_STRING.equals(obj.toString().trim()))) {
-                    obj = obj.toString().trim();
-                }
-                objectLs.add(obj);
-            }
-            if (objectLs.size() == 0) {
-                continue;
-            }
-            handleObjects(rowMap, objectLs, columnList);
-
-        }
-        return returnCode;
-    }
-
-    /**
      * DOC qiongli Comment method "handleObjects".
      * 
      * @param objectLs
@@ -492,62 +398,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         }
     }
 
-    /**
-     * 
-     * handle Objects and store data for MDM.
-     * 
-     * @param rowMap
-     * @param objectLs
-     * @param columnList
-     */
-    private void handleObjects(Map<String, String> rowMap, EList<Object> objectLs, List<TdXmlElementType> columnList) {
-        EList<Indicator> indicators = analysis.getResults().getIndicators();
-        EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
-        int recordIncrement = 0;
-        for (Indicator indicator : indicators) {
-            if (!this.continueRun()) {
-                break;
-            }
-            if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
-                indicator.handle(objectLs);
-                if (indicator instanceof SimpleStatIndicator) {
-                    if (!indicator.isStoreData()) {
-                        continue;
-                    }
-                    SimpleStatIndicator simpIndi = (SimpleStatIndicator) indicator;
-                    for (Indicator leafIndicator : simpIndi.getLeafIndicators()) {
-                        if (!this.continueRun()) {
-                            break;
-                        }
-                        if (!(leafIndicator instanceof RowCountIndicator)) {
-                            continue;
-                        }
-                        List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
-                        recordIncrement = valueObjectList.size();
-
-                        int offset = 0;
-                        for (TdXmlElementType columnElement : columnList) {
-                            if (!this.continueRun()) {
-                                break;
-                            }
-                            Object newobject = rowMap.get(columnElement.getName());
-                            if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                                if (recordIncrement < valueObjectList.size()) {
-                                    valueObjectList.get(recordIncrement)[offset] = newobject;
-                                } else {
-                                    Object[] valueObject = new Object[columnList.size()];
-                                    valueObject[offset] = newobject;
-                                    valueObjectList.add(valueObject);
-                                }
-                            }
-                            offset++;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     /*
      * ADD yyi 2011-02-22 17871:delimitefile
      * 
@@ -557,10 +407,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     protected ReturnCode checkConnection() {
         if (isDelimitedFile) {
             return new ReturnCode();
-        } else if (isMdm) {
-            if (mdmWebserviceConn.checkDatabaseConnection().isOk()) {
-                return new ReturnCode(true);
-            }
         }
         return super.checkConnection();
     }
@@ -572,7 +418,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      */
     @Override
     protected ReturnCode closeConnection() {
-        if (isDelimitedFile || isMdm) {
+        if (isDelimitedFile) {
             return new ReturnCode();
         }
         return super.closeConnection();
@@ -675,14 +521,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     public void setTdXmlDocument(TdXmlSchema tdXmlDocument) {
         this.tdXmlDocument = tdXmlDocument;
-    }
-
-    public MdmWebserviceConnection getMdmWebserviceConn() {
-        return this.mdmWebserviceConn;
-    }
-
-    public void setMdmWebserviceConn(MdmWebserviceConnection mdmWebserviceConn) {
-        this.mdmWebserviceConn = mdmWebserviceConn;
     }
 
     @Override

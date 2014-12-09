@@ -309,7 +309,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             childObjectType.add(ERepositoryObjectType.TDQ_RULES_PARSER);
             childObjectType.add(ERepositoryObjectType.TDQ_RULES_SQL);
         } else if (targetObjectType.equals(ERepositoryObjectType.METADATA)) {
-            childObjectType.add(ERepositoryObjectType.METADATA_MDMCONNECTION);
             childObjectType.add(ERepositoryObjectType.METADATA_CONNECTIONS);
             childObjectType.add(ERepositoryObjectType.METADATA_FILE_DELIMITED);
         }
@@ -663,8 +662,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             fullPath = ResourceManager.getReportsFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.METADATA_FILE_DELIMITED) {
             fullPath = ResourceManager.getFileDelimitedFolder().getFullPath();
-        } else if (objectType == ERepositoryObjectType.METADATA_MDMCONNECTION) {
-            fullPath = ResourceManager.getMDMConnectionFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.TDQ_RULES_PARSER) {
             fullPath = ResourceManager.getRulesParserFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.TDQ_RULES_MATCHER) {

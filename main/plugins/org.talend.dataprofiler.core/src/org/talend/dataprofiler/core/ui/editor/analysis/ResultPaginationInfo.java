@@ -13,14 +13,12 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.event.MouseEvent;
-import java.io.IOError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -47,7 +45,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -77,16 +74,12 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.PatternFreqIndicator;
-import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
-import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.dq.pattern.PatternTransformer;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -379,12 +372,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
                             item.setImage(itemEntity.getIcon());
-                            try {
-                                int mapSize = DrillDownUtils.getMapDB(currentDataEntity, analysis, itemEntity).size();
-                                item.setEnabled(mapSize > 0);
-                            } catch (IOError e) {
-                                item.setEnabled(false);
-                            }
+                            item.setEnabled(DrillDownUtils.isMenuItemEnable(currentDataEntity, itemEntity, analysis));
                             item.addSelectionListener(new SelectionAdapter() {
 
                                 @Override
@@ -394,8 +382,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                         try {
                                             DrillDownEditorInput input = new DrillDownEditorInput(analysis, currentDataEntity,
                                                     itemEntity);
-
-                                            if (input.computeColumnValueLength(input.filterAdaptDataList())) {
+                                            if (SqlExplorerUtils.getDefault().getSqlexplorerService() != null) {
                                                 CorePlugin
                                                         .getDefault()
                                                         .getWorkbench()
@@ -403,12 +390,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                                         .getActivePage()
                                                         .openEditor(input,
                                                                 "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
-                                            } else {
-                                                MessageDialog.openWarning(null,
-                                                        Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),//$NON-NLS-1$
-                                                        Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));//$NON-NLS-1$
                                             }
-
                                         } catch (PartInitException e1) {
                                             log.error(e1, e1);
                                         }
@@ -429,25 +411,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                 }
                             });
 
-                            if ((currentIndicator instanceof PatternFreqIndicator || currentIndicator instanceof PatternLowFreqIndicator)
-                                    && createPatternFlag == 0) {
-                                MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                itemCreatePatt.setText(DefaultMessagesImpl
-                                        .getString("ColumnAnalysisResultPage.GenerateRegularPattern")); //$NON-NLS-1$
-                                final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
-                                        .createDbmsLanguage(analysis));
-                                itemCreatePatt.addSelectionListener(new SelectionAdapter() {
-
-                                    @Override
-                                    public void widgetSelected(SelectionEvent e) {
-                                        Display.getDefault().asyncExec(new Runnable() {
-
-                                            public void run() {
-                                                ChartTableFactory.createPattern(analysis, itemEntity, pattTransformer);
-                                            }
-                                        });
-                                    }
-                                });
+                            if (ChartTableFactory.isPatternFrequencyIndicator(currentIndicator) && createPatternFlag == 0) {
+                                ChartTableFactory.createMenuOfGenerateRegularPattern(analysis, menu, currentDataEntity);
                             }
 
                             createPatternFlag++;
