@@ -75,6 +75,24 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
      */
     @Override
     public boolean prepare() {
+        initDateRetriever();
+        // MOD qiongli 2011-11-15 TDQ-3864,judge if it is file connection.
+        MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
+        if (mdColumn != null) {
+            Connection Connection = ConnectionHelper.getTdDataProvider(mdColumn);
+            if (Connection != null && SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(Connection) != null) {
+                isDelimtedFile = true;
+            }
+
+        }
+
+        return super.prepare();
+    }
+
+    /**
+     * Extract it from 'prepare()'.initialize DatePatternRetriever.
+     */
+    private void initDateRetriever() {
         dateRetriever = new DatePatternRetriever();
         URL url = null;
         if (Platform.isRunning()) {
@@ -92,18 +110,6 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
             InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PATTERNS_FILENAME);
             dateRetriever.initModel2Regex(inStream);
         }
-
-        // MOD qiongli 2011-11-15 TDQ-3864,judge if it is file connection.
-        MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
-        if (mdColumn != null) {
-            Connection Connection = ConnectionHelper.getTdDataProvider(mdColumn);
-            if (Connection != null && SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(Connection) != null) {
-                isDelimtedFile = true;
-            }
-
-        }
-
-        return super.prepare();
     }
 
     /*
@@ -172,6 +178,9 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     @Override
     public List<ModelMatcher> getModelMatcherList() {
+        if (dateRetriever == null) {
+            this.prepare();
+        }
         return dateRetriever.getModelMatchers();
     }
 
@@ -219,6 +228,10 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
      */
     @Override
     public String getRegex(String model) {
+        // TDQ-9779. Avoid NPE.
+        if (dateRetriever == null) {
+            initDateRetriever();
+        }
         return this.dateRetriever.getRegex(model);
     }
 
