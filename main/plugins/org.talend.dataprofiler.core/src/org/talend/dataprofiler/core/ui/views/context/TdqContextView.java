@@ -22,6 +22,7 @@ import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.ui.context.view.AbstractContextView;
+import org.talend.core.ui.context.view.Contexts;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
@@ -29,7 +30,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.designer.core.ui.views.contexts.Contexts;
 
 /**
  * created by xqliu on Jul 25, 2013 Detailled comment
