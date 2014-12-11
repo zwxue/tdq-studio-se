@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
+import org.talend.dataquality.indicators.mapdb.MapDBUtils;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -64,7 +65,7 @@ public class DrillDownUtils {
         Indicator indicator = dataEntity.getIndicator();
         String selectValue = dataEntity.getLabel();
         String dbMapName = getDBMapName(analysisType, indicator, selectValue, itemEntitie);
-        return indicator.getMapDB(dbMapName);
+        return MapDBUtils.getMapDB(dbMapName, indicator);
     }
 
     /**
@@ -163,7 +164,7 @@ public class DrillDownUtils {
             }
         }
         if (simpleStatIndicator != null) {
-            return simpleStatIndicator.getMapDB(StandardDBName.dataSection.name());
+            return MapDBUtils.getMapDB(StandardDBName.dataSection.name(), simpleStatIndicator);
         }
         return null;
     }

@@ -289,28 +289,10 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#isValid(java.lang.Object)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean isValid(Object inputData) {
-        if (Long.class.isInstance(inputData)) {
-            Long dataFrequency = Long.valueOf(inputData.toString());
-            if (dataFrequency == 1) {
-                return true;
-            }
-        }
-
-        return super.isValid(inputData);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getMapDB(java.lang.String)
      */
     @Override
-    public AbstractDB getMapDB(String dbName) {
+    public AbstractDB<Object> getMapDB(String dbName) {
         if (isUsedMapDBMode()) {
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName)) {

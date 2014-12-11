@@ -43,6 +43,7 @@ import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.mapdb.MapDBUtils;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
@@ -275,7 +276,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position], mColumn.getPattern());
             List<Indicator> indicators = getIndicators(mColumn.getLabel());
             for (Indicator indicator : indicators) {
-                indicator.setDrillDownLimitSize(Long.valueOf(maxNumberRows));
                 if (!continueRun()) {
                     break element;
                 }
@@ -326,7 +326,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                         }
 
                         if (indicator.isUsedMapDBMode()) {
-                            indicator.handleDrillDownData(object, inputRowList);
+                            MapDBUtils.handleDrillDownData(object, inputRowList, indicator);
                         }
                     } else if (indicator instanceof UniqueCountIndicator
                             && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {

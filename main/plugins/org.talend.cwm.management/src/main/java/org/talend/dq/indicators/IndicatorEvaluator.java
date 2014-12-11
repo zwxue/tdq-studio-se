@@ -47,11 +47,13 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.mapdb.MapDBUtils;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.utils.collections.MultiMapHelper;
+import org.talend.utils.sql.ResultSetUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -124,15 +126,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 col = columnlistMap.get(col);
 
                 // --- get content of column
-                Object object = null;
-                try {
-                    object = resultSet.getObject(col);
-                } catch (SQLException e) {
-                    if ("0000-00-00 00:00:00".equals(resultSet.getString(col))) { //$NON-NLS-1$
-                        object = null;
-                    }
-
-                }
+                Object object = ResultSetUtils.getObject(resultSet, col);
 
                 // MOD zshen, when the type of object is TIMESTAMP then need getTimestamp(col) to get correct value,or
                 // the value only is the name of type and can't be match with TIMESTAMP.
@@ -142,7 +136,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
                 // --- give row to handle to indicators
                 for (Indicator indicator : indicators) {
-                    indicator.setDrillDownLimitSize(Long.valueOf(maxNumberRows));
                     // MOD xqliu 2009-02-09 bug 6237
                     if (!continueRun()) {
                         break label;
@@ -178,15 +171,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             List<Object> inputRowList = new ArrayList<Object>();
                             for (int j = 0; j < columnCount; j++) {
                                 String newcol = columnList.get(j).getName();
-                                Object newobject = null;
-                                try {
-                                    newobject = resultSet.getObject(newcol);
-                                } catch (SQLException e) {
-                                    if ("0000-00-00 00:00:00".equals(resultSet.getString(newcol))) { //$NON-NLS-1$
-                                        newobject = null;
-                                    }
-
-                                }
+                                Object newobject = ResultSetUtils.getObject(resultSet, newcol);
                                 if (indicator.isUsedMapDBMode()) {
                                     inputRowList.add(newobject == null ? PluginConstant.NULL_STRING : newobject);
                                     continue;
@@ -211,7 +196,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                 }
                             }
                             if (indicator.isUsedMapDBMode()) {
-                                indicator.handleDrillDownData(object, inputRowList);
+                                MapDBUtils.handleDrillDownData(object, inputRowList, indicator);
                             }
                             // ~
                         } else if (indicator instanceof UniqueCountIndicator

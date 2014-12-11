@@ -83,14 +83,4 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
         return this.getCount();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#isValid(java.lang.Object)
-     */
-    @Override
-    public boolean isValid(Object inputData) {
-        return true;
-    }
-
 } // RowCountIndicatorImpl

@@ -47,6 +47,7 @@ import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
+import org.talend.dataquality.indicators.validation.IDataValidationFactory;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -211,7 +212,8 @@ public class DrillDownEditorInput implements IEditorInput {
             Long size = getCurrentIndicatorResultSize();
             if (ColumnSetDBMap.class.isInstance(mapDB)) {
                 return SqlExplorerUtils.getDefault().createMapDBColumnSetDataSet(columnHeader, (ColumnSetDBMap) mapDB, size,
-                        currIndicator, pageSize);
+                        IDataValidationFactory.INSTANCE.createValidation(currIndicator), pageSize);
+
             }
         }
 

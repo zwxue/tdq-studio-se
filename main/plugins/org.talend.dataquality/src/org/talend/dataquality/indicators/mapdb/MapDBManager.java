@@ -126,7 +126,7 @@ public class MapDBManager {
         if (analysisUUID == null) {
             return null;
         }
-        return MapDBManager.createPath(ResourceManager.getMapDBFilePath(), analysisUUID);
+        return MapDBUtils.createPath(ResourceManager.getMapDBFilePath(), analysisUUID);
     }
 
     /**
@@ -137,7 +137,7 @@ public class MapDBManager {
      * @param analysis
      */
     public void closeDB(String parentPathStr, String fileName) {
-        File filePath = createPath(parentPathStr, fileName);
+        File filePath = MapDBUtils.createPath(parentPathStr, fileName);
         closeDB(filePath);
     }
 
@@ -246,22 +246,4 @@ public class MapDBManager {
         }
     }
 
-    /**
-     * Make sure the path of DB file is valid
-     * 
-     * @param ParentPathStr the Path of parent folder
-     * @param FileName The name of db File
-     * @return If parentPathStr or fileName is null will return null else return the file of special path
-     */
-    public static File createPath(String parentPathStr, String fileName) {
-        if (parentPathStr == null || fileName == null) {
-            return null;
-        }
-        File parentFolder = new File(parentPathStr);
-        if (!parentFolder.exists()) {
-            parentFolder.mkdirs();
-        }
-        File file = new File(parentFolder.getPath() + File.separator + fileName);
-        return file;
-    }
 }

@@ -45,7 +45,7 @@ public class DuplicateCountIndicatorImplTest {
     @Before
     public void setUp() throws Exception {
         dupIndicator = IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator();
-        dupIndicator.setUsedMapDBMode(false);
+        ((DuplicateCountIndicatorImpl) dupIndicator).setUsedMapDBMode(false);
         // init the resultset: columnsize:2, rowscount: 6
         result = mock(ResultSet.class);
         when(result.getObject(1)).thenReturn("1").thenReturn("2").thenReturn("3").thenReturn("4").thenReturn("5").thenReturn("6");

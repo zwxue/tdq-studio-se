@@ -36,7 +36,7 @@ public class SoundexFreqIndicatorImplTest {
         // mapDB case
         SoundexFreqIndicator soundexFreqIndicator = IndicatorsFactory.eINSTANCE.createSoundexFreqIndicator();
 
-        soundexFreqIndicator.setUsedMapDBMode(true);
+        ((SoundexFreqIndicatorImpl) soundexFreqIndicator).setUsedMapDBMode(true);
         ResourceUtils.createAnalysis(soundexFreqIndicator);
         soundexFreqIndicator.reset();
 
@@ -74,7 +74,7 @@ public class SoundexFreqIndicatorImplTest {
         Object empty = null;
         // java case
         SoundexFreqIndicator soundexFreqIndicator = IndicatorsFactory.eINSTANCE.createSoundexFreqIndicator();
-        soundexFreqIndicator.setUsedMapDBMode(false);
+        ((SoundexFreqIndicatorImpl) soundexFreqIndicator).setUsedMapDBMode(false);
         soundexFreqIndicator.reset();
         soundexFreqIndicator.handle(empty);
         soundexFreqIndicator.handle("mac"); //$NON-NLS-1$

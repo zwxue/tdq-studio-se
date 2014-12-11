@@ -24,6 +24,7 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBMapParameter;
+import org.talend.dataquality.indicators.validation.IDataValidationFactory;
 
 /**
  * created by talend on Jul 15, 2014 Detailled comment
@@ -358,7 +359,8 @@ public class DBMapTest {
         dbMap1.put("name2", 2l); //$NON-NLS-1$
         Assert.assertEquals("{name1=1, name2=2}", dbMap1.toString()); //$NON-NLS-1$
         UniqueCountIndicator uniqueCountIndicator = IndicatorsFactory.eINSTANCE.createUniqueCountIndicator();
-        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, String>(), uniqueCountIndicator);
+        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, String>(),
+                IDataValidationFactory.INSTANCE.createValidation(uniqueCountIndicator));
         Assert.assertEquals(1, subList.size());
     }
 }

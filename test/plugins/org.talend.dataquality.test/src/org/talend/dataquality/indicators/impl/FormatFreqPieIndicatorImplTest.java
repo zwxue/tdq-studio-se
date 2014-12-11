@@ -50,7 +50,7 @@ public class FormatFreqPieIndicatorImplTest {
     @Test
     public void testHandle_1() {
         FormatFreqPieIndicator formatFreqPieIndicator = IndicatorsFactory.eINSTANCE.createFormatFreqPieIndicator();
-        formatFreqPieIndicator.setUsedMapDBMode(false);
+        ((FormatFreqPieIndicatorImpl) formatFreqPieIndicator).setUsedMapDBMode(false);
         for (Object obj : data) {
             Assert.assertTrue(formatFreqPieIndicator.handle(obj));
         }
@@ -72,7 +72,7 @@ public class FormatFreqPieIndicatorImplTest {
     @Test
     public void testHandle_2() {
         FormatFreqPieIndicator formatFreqPieIndicator = IndicatorsFactory.eINSTANCE.createFormatFreqPieIndicator();
-        formatFreqPieIndicator.setUsedMapDBMode(true);
+        ((FormatFreqPieIndicatorImpl) formatFreqPieIndicator).setUsedMapDBMode(true);
         ResourceUtils.createAnalysis(formatFreqPieIndicator);
         formatFreqPieIndicator.reset();
 
