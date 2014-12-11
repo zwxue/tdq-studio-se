@@ -5,7 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.io.File;
 import java.io.IOError;
 import java.sql.Types;
 import java.util.Collection;
@@ -36,7 +35,6 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
-import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.resource.ResourceManager;
@@ -1324,17 +1322,17 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         return this.usedMapDBMode;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * 
-     * @see org.talend.dataquality.indicators.Indicator#getMapDB(java.lang.String)
+     * Get MapDB by dbName
      * 
-     * Get Map for MapDB by spical dbName
+     * @param dbName The name of DB(note that it is not the name of db file, one db file can contains many dbs and every
+     * db have a name)
      * 
-     * @return null when current is not support MapDB
+     * @return null when MapDB can not be used by current indicator
+     * @exception when the DB colsed by abnormal way in last exit, then call this method will throws IOError
      */
-    @Override
-    public AbstractDB getMapDB(String dbName) throws IOError {
+    public AbstractDB<Object> getMapDB(String dbName) throws IOError {
         if (isUsedMapDBMode() && checkAllowDrillDown()) {
             if (StandardDBName.drillDown.name().equals(dbName)) {
                 if (drillDownMap != null && !drillDownMap.isClosed()) {
@@ -1351,43 +1349,32 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Store drill down data into file
      * 
-     * @see org.talend.dataquality.indicators.DataValidation#isValid(java.lang.Object)
+     * @param masterObject
+     * @param inputRowList
      */
-    @Override
-    public boolean isValid(Object inputData) {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.mapdb.MapDBDrillDown#handleDrillDownData(java.lang.Object, java.util.List)
-     */
-    @Override
     public void handleDrillDownData(Object masterObject, List<Object> inputRowList) {
         drillDownRowCount++;
         drillDownMap.put(count, inputRowList);
     }
 
     /**
-     * Sets the usedMapDBMode.
      * 
-     * @param usedMapDBMode the usedMapDBMode to set
+     * Set current indicator is belong to MapDB mode
+     * 
+     * @param usedMapDBMode
      */
-    @Override
     public void setUsedMapDBMode(boolean usedMapDBMode) {
         this.usedMapDBMode = usedMapDBMode;
     }
 
     /**
-     * Getter for dirllDownLimitSize.
+     * Getter for drillDownLimitSize.
      * 
-     * @return the dirllDownLimitSize
+     * @return the drillDownLimitSize
      */
-    @Override
     public Long getDrillDownLimitSize() {
         Analysis analysis = AnalysisHelper.getAnalysis(this);
         if (analysis != null) {
@@ -1397,11 +1384,11 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
+     * 
      * Check whether drill down action is allow
      * 
      * @return true is allowed else false
      */
-    @Override
     public boolean checkAllowDrillDown() {
         Analysis analysis = AnalysisHelper.getAnalysis(this);
         boolean isStoreData = false;
@@ -1413,11 +1400,10 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
-     * Sets the dirllDownLimitSize.
+     * Sets the drillDownLimitSize.
      * 
-     * @param dirllDownLimitSize the dirllDownLimitSize to set
+     * @param drillDownLimitSize the drillDownLimitSize to set
      */
-    @Override
     public void setDrillDownLimitSize(Long drillDownLimitSize) {
         this.drillDownLimitSize = drillDownLimitSize;
     }
@@ -1470,13 +1456,4 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.Indicator#getMapDBFile()
-     */
-    @Override
-    public File getMapDBFile() {
-        return MapDBManager.createPath(ResourceManager.getMapDBFilePath(), ResourceManager.getMapDBFileName(this));
-    }
 } // IndicatorImpl

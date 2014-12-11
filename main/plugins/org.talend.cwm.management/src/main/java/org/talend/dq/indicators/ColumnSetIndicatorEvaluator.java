@@ -66,6 +66,7 @@ import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
+import org.talend.utils.sql.ResultSetUtils;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -172,7 +173,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 EList<Object> objectLs = new BasicEList<Object>();
                 Iterator<String> it = columnNames.iterator();
                 while (it.hasNext()) {
-                    Object obj = resultSet.getObject(it.next());
+                    Object obj = ResultSetUtils.getObject(resultSet, it.next());
                     objectLs.add(obj);
                 }
                 if (objectLs.size() == 0) {

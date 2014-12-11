@@ -25,6 +25,7 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
+import org.talend.dataquality.indicators.validation.IDataValidationFactory;
 
 /**
  * created by talend on Nov 4, 2014 Detailled comment
@@ -115,7 +116,8 @@ public class ColumnSetDBMapTest {
         dbMap1.put(keyList, 2l);
         Assert.assertEquals(2, dbMap1.size());
         UniqueCountIndicator uniqueCountIndicator = IndicatorsFactory.eINSTANCE.createUniqueCountIndicator();
-        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, List<Object>>(), uniqueCountIndicator);
+        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, List<Object>>(),
+                IDataValidationFactory.INSTANCE.createValidation(uniqueCountIndicator));
         Assert.assertEquals(1, subList.size());
     }
 
@@ -138,7 +140,8 @@ public class ColumnSetDBMapTest {
         dbMap1.put(keyList, 2l);
         Assert.assertEquals(2, dbMap1.size());
         DuplicateCountIndicator duplicateCountIndicator = IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator();
-        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, List<Object>>(), duplicateCountIndicator);
+        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, List<Object>>(),
+                IDataValidationFactory.INSTANCE.createValidation(duplicateCountIndicator));
         Assert.assertEquals(1, subList.size());
     }
 
@@ -161,7 +164,8 @@ public class ColumnSetDBMapTest {
         dbMap1.put(keyList, 2l);
         Assert.assertEquals(2, dbMap1.size());
         DistinctCountIndicator distinctCountIndicator = IndicatorsFactory.eINSTANCE.createDistinctCountIndicator();
-        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, List<Object>>(), distinctCountIndicator);
+        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, List<Object>>(),
+                IDataValidationFactory.INSTANCE.createValidation(distinctCountIndicator));
         Assert.assertEquals(2, subList.size());
     }
 
@@ -184,7 +188,8 @@ public class ColumnSetDBMapTest {
         dbMap1.put(keyList, 2l);
         Assert.assertEquals(2, dbMap1.size());
         RowCountIndicator rowCountIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
-        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, List<Object>>(), rowCountIndicator);
+        List<Object[]> subList = dbMap1.subList(0, 2, new HashMap<Long, List<Object>>(),
+                IDataValidationFactory.INSTANCE.createValidation(rowCountIndicator));
         Assert.assertEquals(2, subList.size());
     }
 

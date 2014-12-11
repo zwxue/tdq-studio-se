@@ -88,6 +88,7 @@ import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.MapDBManager;
+import org.talend.dataquality.indicators.mapdb.MapDBUtils;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.explore.DataExplorer;
@@ -396,9 +397,9 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             sectionTableComp.setLayout(new GridLayout());
             // MOD zshen for feature 14000
-            AbstractDB<Object[]> mapDB = null;
+            AbstractDB<Object> mapDB = null;
             try {
-                mapDB = ssIndicator.getMapDB(StandardDBName.dataSection.name());
+                mapDB = MapDBUtils.getMapDB(StandardDBName.dataSection.name(), ssIndicator);
             } catch (IOError error) {
                 log.warn(error.getMessage(), error);
             }
@@ -453,7 +454,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             // add pagation control
             final PageableController controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
             if (mapDB != null) {
-                final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object[]>(mapDB);
+                final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object>(mapDB);
 
                 controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
                         columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null));

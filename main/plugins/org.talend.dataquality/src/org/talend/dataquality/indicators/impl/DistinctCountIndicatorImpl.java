@@ -287,16 +287,6 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#isValid(java.lang.Object)
-     */
-    @Override
-    public boolean isValid(Object inputData) {
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getMapDB(java.lang.String)
      */
     @Override

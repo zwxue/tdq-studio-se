@@ -42,7 +42,7 @@ public abstract class AbstractDB<K> {
     protected Logger log = Logger.getLogger(this.getClass());
 
     protected void initDefaultDB(String parentFullPathStr, String fileName) {
-        dbFile = MapDBManager.createPath(parentFullPathStr, fileName);
+        dbFile = MapDBUtils.createPath(parentFullPathStr, fileName);
         db = MapDBManager.getInstance().getDB(dbFile);
         if (db != null) {
             return;

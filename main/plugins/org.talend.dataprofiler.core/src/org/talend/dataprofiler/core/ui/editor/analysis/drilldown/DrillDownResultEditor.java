@@ -74,6 +74,8 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.MapDBManager;
+import org.talend.dataquality.indicators.mapdb.MapDBUtils;
+import org.talend.dataquality.indicators.validation.IDataValidationFactory;
 import org.talend.dq.helper.SqlExplorerUtils;
 
 /**
@@ -208,10 +210,11 @@ public class DrillDownResultEditor extends EditorPart {
         IPageLoader<PageResult<Object[]>> pageLoader = null;
         AbstractDB<Object> mapDB = ddEditorInput.getMapDB();
         Indicator generateMapDBIndicator = ddEditorInput.getGenerateMapDBIndicator();
-        MapDBManager.getInstance().addDBRef(generateMapDBIndicator.getMapDBFile());
+        MapDBManager.getInstance().addDBRef(MapDBUtils.getMapDBFile(generateMapDBIndicator));
         Long itemsSize = ddEditorInput.getItemSize(mapDB);
         if (AnalysisType.COLUMN_SET == analysisType) {
-            pageLoader = new MapDBPageLoader<Object>(mapDB, ddEditorInput.getCurrIndicator(), itemsSize);
+            pageLoader = new MapDBPageLoader<Object>(mapDB, IDataValidationFactory.INSTANCE.createValidation(ddEditorInput
+                    .getCurrIndicator()), itemsSize);
         } else {
             // ~
             ColumnFilter filter = ddEditorInput.getColumnFilter();
@@ -693,7 +696,7 @@ public class DrillDownResultEditor extends EditorPart {
         super.dispose();
         DrillDownEditorInput ddEditorInput = (DrillDownEditorInput) this.getEditorInput();
         Indicator generateMapDBIndicator = ddEditorInput.getGenerateMapDBIndicator();
-        MapDBManager.getInstance().removeDBRef(generateMapDBIndicator.getMapDBFile());
+        MapDBManager.getInstance().removeDBRef(MapDBUtils.getMapDBFile(generateMapDBIndicator));
     }
 
 }

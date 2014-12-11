@@ -27,6 +27,7 @@ import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sql.ResultSetUtils;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Duplicate Count Indicator</b></em>'. <!--
@@ -331,15 +332,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
         Object[] valueObject = new Object[columnSize];
 
         for (int i = 0; i < columnSize; i++) {
-            Object object = null;
-            try {
-                object = resultSet.getObject(i + 1);
-            } catch (SQLException e) {
-                if ("0000-00-00 00:00:00".equals(resultSet.getString(i + 1))) { //$NON-NLS-1$
-                    object = null;
-                }
-
-            }
+            Object object = ResultSetUtils.getObject(resultSet, i + 1);
 
             // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
             valueObject[i] = object == null ? PluginConstant.NULL_STRING : object;
@@ -394,7 +387,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getMapDB(java.lang.String)
      */
     @Override
-    public AbstractDB getMapDB(String dbName) {
+    public AbstractDB<Object> getMapDB(String dbName) {
         if (isUsedMapDBMode()) {
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName)) {
@@ -417,24 +410,6 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
 
         }
         return super.getMapDB(dbName);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#isValid(java.lang.Object)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean isValid(Object inputData) {
-        if (Long.class.isInstance(inputData)) {
-            Long dataFrequency = Long.valueOf(inputData.toString());
-            if (dataFrequency > 1) {
-                return true;
-            }
-        }
-
-        return super.isValid(inputData);
     }
 
     /*

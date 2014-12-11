@@ -43,9 +43,9 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.indicator.ColumnFilter;
+import org.talend.cwm.indicator.DataValidation;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.service.ISqlexplorerService;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
@@ -301,10 +301,10 @@ public class SqlExplorerUtils {
         }
     }
 
-    public Object createMapDBColumnSetDataSet(String[] columnHeader, ColumnSetDBMap mapDB, Long size, Indicator currIndicator,
-            int pageSize) {
+    public Object createMapDBColumnSetDataSet(String[] columnHeader, ColumnSetDBMap mapDB, Long size,
+            DataValidation dataValidation, int pageSize) {
         if (getSqlexplorerService() != null) {
-            return getSqlexplorerService().createMapDBColumnSetDataSet(columnHeader, mapDB, size, currIndicator, pageSize);
+            return getSqlexplorerService().createMapDBColumnSetDataSet(columnHeader, mapDB, size, dataValidation, pageSize);
         }
         return null;
     }
