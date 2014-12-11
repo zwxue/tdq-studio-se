@@ -437,6 +437,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     @Override
     public EList<String> getColumnHeaders() {
         EList<String> headers = new BasicEList<String>();
+        for (ModelElement column : this.getNominalColumns()) {
+            headers.add(column.getName());
+        }
         for (ModelElement column : analyzedColumns) {
             if (isSameMiningType(column, DataminingType.INTERVAL)) {
                 // add numerical or date columns with formatted heander name if numeric or date functions defined in
@@ -453,9 +456,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                     // Never go here
                     log.error("invalid data mining type for " + column);
                 }
-            } else {
-                // Add the name without formatting directly into header list.
-                headers.add(column.getName());
             }
         }
         headers.add(this.getCountAll());
@@ -506,14 +506,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @param headers
      * @param column
-     * @param numericFunctionsList
+     * @param functionsList
      */
-    private void addColumnToHeaderList(EList<String> headers, ModelElement column, EList<String> numericFunctionsList) {
-        if (!numericFunctionsList.isEmpty()) {
-            for (String f : this.getNumericFunctions()) {
+    private void addColumnToHeaderList(EList<String> headers, ModelElement column, EList<String> functionsList) {
+        if (functionsList != null && !functionsList.isEmpty()) {
+            for (String f : functionsList) {
                 headers.add(MessageFormat.format(f, column.getName()));
-                // break , one function is enough for formating the header name.
-                break;
             }
         } else {
             // No functions defined for this indicator definition.
