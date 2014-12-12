@@ -248,17 +248,17 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
         // Mod yyin 20120608 TDQ-3589
         // at the end: remove the list.size()=1 , only remain the list.size()>1
         Iterator<Object> iterator = duplicateObjects.iterator();
-        long dupSize = 0;
         while (iterator.hasNext()) {
             Object key = iterator.next();
-            List<Object> valueArray = distinctMap.get(key);
 
-            dupSize++;
             if (needStoreDrillDownData()) {
+                List<Object> valueArray = distinctMap.get(key);
                 handleDrillDownData(key, valueArray);
+            } else {
+                break;
             }
         }
-        this.setDuplicateValueCount(Long.valueOf(dupSize));
+        this.setDuplicateValueCount(Long.valueOf(duplicateObjects.size()));
         return super.finalizeComputation();
     }
 
@@ -303,15 +303,6 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     @Override
     public void handle(Object colValue, ResultSet resultSet, int columnSize) throws SQLException {
         super.handle(colValue);
-        // first get the whole row from resultset
-        List<Object> valueObject = new ArrayList<Object>();
-
-        for (int i = 0; i < columnSize; i++) {
-            Object object = ResultSetUtils.getObject(resultSet, i + 1);
-
-            // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
-            valueObject.add(object == null ? PluginConstant.NULL_STRING : object);
-        }
         if (distinctMap.containsKey(colValue)) {
             if (!duplicateObjects.contains(colValue)) {
                 duplicateObjects.add(colValue);
@@ -320,6 +311,15 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
                 this.mustStoreRow = true;
             }
         } else {
+            // first get the whole row from resultset
+            List<Object> valueObject = new ArrayList<Object>();
+
+            for (int i = 0; i < columnSize; i++) {
+                Object object = ResultSetUtils.getObject(resultSet, i + 1);
+
+                // TDQ-9455 msjian: if the value is null, we show it "<null>" in the drill down editor
+                valueObject.add(object == null ? PluginConstant.NULL_STRING : object);
+            }
             distinctMap.put(colValue, valueObject);
         }
 

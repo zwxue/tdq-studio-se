@@ -54,7 +54,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      */
     protected Long uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
 
-    private Set<Object> uniqueObjects = null;
+    private Set<Object> distintObjects = null;
 
     private Set<Object> duplicateObjects = null;
 
@@ -220,9 +220,8 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
 
     @Override
     public boolean finalizeComputation() {
-        uniqueObjects.removeAll(duplicateObjects);
         clearDrillDownData();
-        this.setUniqueValueCount(Long.valueOf(uniqueObjects.size()));
+        this.setUniqueValueCount(Long.valueOf(distintObjects.size() - duplicateObjects.size()));
         return super.finalizeComputation();
     }
 
@@ -257,11 +256,11 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     public boolean handle(Object data) {
         super.handle(data);
         if (data != null) {
-            if (!this.uniqueObjects.add(data)) {
+            if (this.distintObjects.add(data)) {
+                this.mustStoreRow = true;
+            } else {
                 // store duplicate objects
                 duplicateObjects.add(data);
-            } else {
-                this.mustStoreRow = true;
             }
         }
         return true;
@@ -271,16 +270,16 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     public boolean reset() {
         this.uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
         if (isUsedMapDBMode()) {
-            uniqueObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
-            if (uniqueObjects != null) {
-                ((DBSet<Object>) uniqueObjects).clear();
+            distintObjects = initValueForDBSet(StandardDBName.computeProcessSet.name());
+            if (distintObjects != null) {
+                ((DBSet<Object>) distintObjects).clear();
             }
             duplicateObjects = initValueForDBSet(StandardDBName.temp.name());
             if (duplicateObjects != null) {
                 ((DBSet<Object>) duplicateObjects).clear();
             }
         } else {
-            this.uniqueObjects.clear();
+            this.distintObjects.clear();
             this.duplicateObjects.clear();
         }
         return super.reset();
@@ -297,11 +296,11 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
             // is get computeProcess map
             if (StandardDBName.computeProcess.name().equals(dbName)) {
                 // current set is invalid
-                if (needReconnect((DBSet<Object>) uniqueObjects)) {
+                if (needReconnect((DBSet<Object>) distintObjects)) {
                     // create new DBSet
                     return initValueForDBSet(StandardDBName.computeProcessSet.name());
                 } else {
-                    return (DBSet<Object>) uniqueObjects;
+                    return (DBSet<Object>) distintObjects;
                 }
                 // the key is view values case so do this translate
             } else if (StandardDBName.drillDownValues.name().equals(dbName)) {
