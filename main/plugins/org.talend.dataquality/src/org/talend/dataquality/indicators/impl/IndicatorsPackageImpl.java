@@ -2668,12 +2668,12 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         quarterFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         yearFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         binFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
-        dateLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
-        weekLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
-        monthLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
-        quarterLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
-        yearLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
-        binLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        dateLowFrequencyIndicatorEClass.getESuperTypes().add(this.getLowFrequencyIndicator());
+        weekLowFrequencyIndicatorEClass.getESuperTypes().add(this.getLowFrequencyIndicator());
+        monthLowFrequencyIndicatorEClass.getESuperTypes().add(this.getLowFrequencyIndicator());
+        quarterLowFrequencyIndicatorEClass.getESuperTypes().add(this.getLowFrequencyIndicator());
+        yearLowFrequencyIndicatorEClass.getESuperTypes().add(this.getLowFrequencyIndicator());
+        binLowFrequencyIndicatorEClass.getESuperTypes().add(this.getLowFrequencyIndicator());
         validPhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
         possiblePhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
         validRegCodeCountIndicatorEClass.getESuperTypes().add(this.getIndicator());

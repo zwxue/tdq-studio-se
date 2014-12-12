@@ -24,7 +24,7 @@ import org.talend.dataquality.indicators.MonthLowFrequencyIndicator;
  *
  * @generated
  */
-public class MonthLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements MonthLowFrequencyIndicator {
+public class MonthLowFrequencyIndicatorImpl extends LowFrequencyIndicatorImpl implements MonthLowFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

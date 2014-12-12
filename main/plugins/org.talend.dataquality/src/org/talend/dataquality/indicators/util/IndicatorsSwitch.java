@@ -712,6 +712,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.DATE_LOW_FREQUENCY_INDICATOR: {
                 DateLowFrequencyIndicator dateLowFrequencyIndicator = (DateLowFrequencyIndicator)theEObject;
                 T result = caseDateLowFrequencyIndicator(dateLowFrequencyIndicator);
+                if (result == null) result = caseLowFrequencyIndicator(dateLowFrequencyIndicator);
                 if (result == null) result = caseFrequencyIndicator(dateLowFrequencyIndicator);
                 if (result == null) result = caseIndicator(dateLowFrequencyIndicator);
                 if (result == null) result = caseModelElement(dateLowFrequencyIndicator);
@@ -722,6 +723,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.WEEK_LOW_FREQUENCY_INDICATOR: {
                 WeekLowFrequencyIndicator weekLowFrequencyIndicator = (WeekLowFrequencyIndicator)theEObject;
                 T result = caseWeekLowFrequencyIndicator(weekLowFrequencyIndicator);
+                if (result == null) result = caseLowFrequencyIndicator(weekLowFrequencyIndicator);
                 if (result == null) result = caseFrequencyIndicator(weekLowFrequencyIndicator);
                 if (result == null) result = caseIndicator(weekLowFrequencyIndicator);
                 if (result == null) result = caseModelElement(weekLowFrequencyIndicator);
@@ -732,6 +734,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.MONTH_LOW_FREQUENCY_INDICATOR: {
                 MonthLowFrequencyIndicator monthLowFrequencyIndicator = (MonthLowFrequencyIndicator)theEObject;
                 T result = caseMonthLowFrequencyIndicator(monthLowFrequencyIndicator);
+                if (result == null) result = caseLowFrequencyIndicator(monthLowFrequencyIndicator);
                 if (result == null) result = caseFrequencyIndicator(monthLowFrequencyIndicator);
                 if (result == null) result = caseIndicator(monthLowFrequencyIndicator);
                 if (result == null) result = caseModelElement(monthLowFrequencyIndicator);
@@ -742,6 +745,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.QUARTER_LOW_FREQUENCY_INDICATOR: {
                 QuarterLowFrequencyIndicator quarterLowFrequencyIndicator = (QuarterLowFrequencyIndicator)theEObject;
                 T result = caseQuarterLowFrequencyIndicator(quarterLowFrequencyIndicator);
+                if (result == null) result = caseLowFrequencyIndicator(quarterLowFrequencyIndicator);
                 if (result == null) result = caseFrequencyIndicator(quarterLowFrequencyIndicator);
                 if (result == null) result = caseIndicator(quarterLowFrequencyIndicator);
                 if (result == null) result = caseModelElement(quarterLowFrequencyIndicator);
@@ -752,6 +756,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.YEAR_LOW_FREQUENCY_INDICATOR: {
                 YearLowFrequencyIndicator yearLowFrequencyIndicator = (YearLowFrequencyIndicator)theEObject;
                 T result = caseYearLowFrequencyIndicator(yearLowFrequencyIndicator);
+                if (result == null) result = caseLowFrequencyIndicator(yearLowFrequencyIndicator);
                 if (result == null) result = caseFrequencyIndicator(yearLowFrequencyIndicator);
                 if (result == null) result = caseIndicator(yearLowFrequencyIndicator);
                 if (result == null) result = caseModelElement(yearLowFrequencyIndicator);
@@ -762,6 +767,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.BIN_LOW_FREQUENCY_INDICATOR: {
                 BinLowFrequencyIndicator binLowFrequencyIndicator = (BinLowFrequencyIndicator)theEObject;
                 T result = caseBinLowFrequencyIndicator(binLowFrequencyIndicator);
+                if (result == null) result = caseLowFrequencyIndicator(binLowFrequencyIndicator);
                 if (result == null) result = caseFrequencyIndicator(binLowFrequencyIndicator);
                 if (result == null) result = caseIndicator(binLowFrequencyIndicator);
                 if (result == null) result = caseModelElement(binLowFrequencyIndicator);

@@ -21,16 +21,15 @@ import org.talend.dataquality.indicators.QuarterLowFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
-public class QuarterLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements QuarterLowFrequencyIndicator {
+public class QuarterLowFrequencyIndicatorImpl extends LowFrequencyIndicatorImpl implements QuarterLowFrequencyIndicator {
 
     private final String monthSign = "MM"; //$NON-NLS-1$ 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected QuarterLowFrequencyIndicatorImpl() {
@@ -39,7 +38,6 @@ public class QuarterLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
