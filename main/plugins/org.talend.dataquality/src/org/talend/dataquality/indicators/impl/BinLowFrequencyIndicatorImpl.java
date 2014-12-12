@@ -20,14 +20,13 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
-public class BinLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements BinLowFrequencyIndicator {
+public class BinLowFrequencyIndicatorImpl extends LowFrequencyIndicatorImpl implements BinLowFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected BinLowFrequencyIndicatorImpl() {
@@ -36,7 +35,6 @@ public class BinLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

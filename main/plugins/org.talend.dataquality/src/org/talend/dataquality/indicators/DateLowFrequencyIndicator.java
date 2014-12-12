@@ -17,5 +17,5 @@ package org.talend.dataquality.indicators;
  * @model
  * @generated
  */
-public interface DateLowFrequencyIndicator extends FrequencyIndicator {
+public interface DateLowFrequencyIndicator extends LowFrequencyIndicator {
 } // DateLowFrequencyIndicator

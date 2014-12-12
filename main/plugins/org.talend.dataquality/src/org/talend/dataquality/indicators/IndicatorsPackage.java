@@ -17892,7 +17892,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+    int DATE_LOW_FREQUENCY_INDICATOR__NAME = LOW_FREQUENCY_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -17901,7 +17901,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+    int DATE_LOW_FREQUENCY_INDICATOR__VISIBILITY = LOW_FREQUENCY_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -17910,7 +17910,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+    int DATE_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -17919,7 +17919,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+    int DATE_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -17928,7 +17928,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+    int DATE_LOW_FREQUENCY_INDICATOR__CONSTRAINT = LOW_FREQUENCY_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -17937,7 +17937,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+    int DATE_LOW_FREQUENCY_INDICATOR__NAMESPACE = LOW_FREQUENCY_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -17946,7 +17946,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+    int DATE_LOW_FREQUENCY_INDICATOR__IMPORTER = LOW_FREQUENCY_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -17955,7 +17955,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+    int DATE_LOW_FREQUENCY_INDICATOR__STEREOTYPE = LOW_FREQUENCY_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -17964,7 +17964,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+    int DATE_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = LOW_FREQUENCY_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -17973,7 +17973,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+    int DATE_LOW_FREQUENCY_INDICATOR__DOCUMENT = LOW_FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -17982,7 +17982,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+    int DATE_LOW_FREQUENCY_INDICATOR__DESCRIPTION = LOW_FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -17991,7 +17991,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+    int DATE_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -18000,7 +18000,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+    int DATE_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = LOW_FREQUENCY_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -18009,7 +18009,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+    int DATE_LOW_FREQUENCY_INDICATOR__SET = LOW_FREQUENCY_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -18018,7 +18018,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+    int DATE_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -18027,7 +18027,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+    int DATE_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -18036,7 +18036,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+    int DATE_LOW_FREQUENCY_INDICATOR__MEASUREMENT = LOW_FREQUENCY_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -18045,7 +18045,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+    int DATE_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -18054,7 +18054,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+    int DATE_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -18063,7 +18063,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+    int DATE_LOW_FREQUENCY_INDICATOR__COUNT = LOW_FREQUENCY_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -18072,7 +18072,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+    int DATE_LOW_FREQUENCY_INDICATOR__NULL_COUNT = LOW_FREQUENCY_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -18081,7 +18081,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+    int DATE_LOW_FREQUENCY_INDICATOR__PARAMETERS = LOW_FREQUENCY_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -18090,7 +18090,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+    int DATE_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -18099,7 +18099,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+    int DATE_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -18108,7 +18108,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+    int DATE_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -18117,7 +18117,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int DATE_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -18126,7 +18126,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+    int DATE_LOW_FREQUENCY_INDICATOR__COMPUTED = LOW_FREQUENCY_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -18135,7 +18135,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+    int DATE_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -18144,7 +18144,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+    int DATE_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -18153,7 +18153,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+    int DATE_LOW_FREQUENCY_INDICATOR__VALID_ROW = LOW_FREQUENCY_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -18162,7 +18162,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+    int DATE_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = LOW_FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Store Data</b></em>' attribute.
@@ -18171,7 +18171,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+    int DATE_LOW_FREQUENCY_INDICATOR__STORE_DATA = LOW_FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -18180,7 +18180,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+    int DATE_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES;
 
     /**
      * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
@@ -18189,7 +18189,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+    int DATE_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
@@ -18198,7 +18198,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+    int DATE_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
@@ -18207,7 +18207,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+    int DATE_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
@@ -18216,7 +18216,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+    int DATE_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
      * The number of structural features of the '<em>Date Low Frequency Indicator</em>' class.
@@ -18225,7 +18225,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+    int DATE_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = LOW_FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl <em>Week Low Frequency Indicator</em>}' class.
@@ -18244,7 +18244,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+    int WEEK_LOW_FREQUENCY_INDICATOR__NAME = LOW_FREQUENCY_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -18253,7 +18253,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+    int WEEK_LOW_FREQUENCY_INDICATOR__VISIBILITY = LOW_FREQUENCY_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -18262,7 +18262,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+    int WEEK_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -18271,7 +18271,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+    int WEEK_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -18280,7 +18280,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__CONSTRAINT = LOW_FREQUENCY_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -18289,7 +18289,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+    int WEEK_LOW_FREQUENCY_INDICATOR__NAMESPACE = LOW_FREQUENCY_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -18298,7 +18298,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+    int WEEK_LOW_FREQUENCY_INDICATOR__IMPORTER = LOW_FREQUENCY_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -18307,7 +18307,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+    int WEEK_LOW_FREQUENCY_INDICATOR__STEREOTYPE = LOW_FREQUENCY_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -18316,7 +18316,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+    int WEEK_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = LOW_FREQUENCY_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -18325,7 +18325,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__DOCUMENT = LOW_FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -18334,7 +18334,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+    int WEEK_LOW_FREQUENCY_INDICATOR__DESCRIPTION = LOW_FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -18343,7 +18343,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+    int WEEK_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -18352,7 +18352,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+    int WEEK_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = LOW_FREQUENCY_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -18361,7 +18361,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+    int WEEK_LOW_FREQUENCY_INDICATOR__SET = LOW_FREQUENCY_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -18370,7 +18370,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -18379,7 +18379,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -18388,7 +18388,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__MEASUREMENT = LOW_FREQUENCY_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -18397,7 +18397,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+    int WEEK_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -18406,7 +18406,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+    int WEEK_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -18415,7 +18415,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__COUNT = LOW_FREQUENCY_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -18424,7 +18424,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__NULL_COUNT = LOW_FREQUENCY_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -18433,7 +18433,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+    int WEEK_LOW_FREQUENCY_INDICATOR__PARAMETERS = LOW_FREQUENCY_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -18442,7 +18442,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -18451,7 +18451,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+    int WEEK_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -18460,7 +18460,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+    int WEEK_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -18469,7 +18469,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int WEEK_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -18478,7 +18478,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+    int WEEK_LOW_FREQUENCY_INDICATOR__COMPUTED = LOW_FREQUENCY_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -18487,7 +18487,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+    int WEEK_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -18496,7 +18496,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+    int WEEK_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -18505,7 +18505,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+    int WEEK_LOW_FREQUENCY_INDICATOR__VALID_ROW = LOW_FREQUENCY_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -18514,7 +18514,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+    int WEEK_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = LOW_FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Store Data</b></em>' attribute.
@@ -18523,7 +18523,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+    int WEEK_LOW_FREQUENCY_INDICATOR__STORE_DATA = LOW_FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -18532,7 +18532,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+    int WEEK_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES;
 
     /**
      * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
@@ -18541,7 +18541,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
@@ -18550,7 +18550,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
@@ -18559,7 +18559,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+    int WEEK_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
@@ -18568,7 +18568,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+    int WEEK_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
      * The number of structural features of the '<em>Week Low Frequency Indicator</em>' class.
@@ -18577,7 +18577,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int WEEK_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+    int WEEK_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = LOW_FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl <em>Month Low Frequency Indicator</em>}' class.
@@ -18596,7 +18596,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+    int MONTH_LOW_FREQUENCY_INDICATOR__NAME = LOW_FREQUENCY_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -18605,7 +18605,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+    int MONTH_LOW_FREQUENCY_INDICATOR__VISIBILITY = LOW_FREQUENCY_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -18614,7 +18614,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+    int MONTH_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -18623,7 +18623,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+    int MONTH_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -18632,7 +18632,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__CONSTRAINT = LOW_FREQUENCY_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -18641,7 +18641,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+    int MONTH_LOW_FREQUENCY_INDICATOR__NAMESPACE = LOW_FREQUENCY_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -18650,7 +18650,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+    int MONTH_LOW_FREQUENCY_INDICATOR__IMPORTER = LOW_FREQUENCY_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -18659,7 +18659,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+    int MONTH_LOW_FREQUENCY_INDICATOR__STEREOTYPE = LOW_FREQUENCY_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -18668,7 +18668,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+    int MONTH_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = LOW_FREQUENCY_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -18677,7 +18677,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__DOCUMENT = LOW_FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -18686,7 +18686,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+    int MONTH_LOW_FREQUENCY_INDICATOR__DESCRIPTION = LOW_FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -18695,7 +18695,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+    int MONTH_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -18704,7 +18704,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+    int MONTH_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = LOW_FREQUENCY_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -18713,7 +18713,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+    int MONTH_LOW_FREQUENCY_INDICATOR__SET = LOW_FREQUENCY_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -18722,7 +18722,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -18731,7 +18731,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -18740,7 +18740,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__MEASUREMENT = LOW_FREQUENCY_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -18749,7 +18749,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+    int MONTH_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -18758,7 +18758,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+    int MONTH_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -18767,7 +18767,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__COUNT = LOW_FREQUENCY_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -18776,7 +18776,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__NULL_COUNT = LOW_FREQUENCY_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -18785,7 +18785,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+    int MONTH_LOW_FREQUENCY_INDICATOR__PARAMETERS = LOW_FREQUENCY_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -18794,7 +18794,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -18803,7 +18803,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+    int MONTH_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -18812,7 +18812,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+    int MONTH_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -18821,7 +18821,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int MONTH_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -18830,7 +18830,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+    int MONTH_LOW_FREQUENCY_INDICATOR__COMPUTED = LOW_FREQUENCY_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -18839,7 +18839,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+    int MONTH_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -18848,7 +18848,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+    int MONTH_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -18857,7 +18857,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+    int MONTH_LOW_FREQUENCY_INDICATOR__VALID_ROW = LOW_FREQUENCY_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -18866,7 +18866,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+    int MONTH_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = LOW_FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Store Data</b></em>' attribute.
@@ -18875,7 +18875,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+    int MONTH_LOW_FREQUENCY_INDICATOR__STORE_DATA = LOW_FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -18884,7 +18884,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+    int MONTH_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES;
 
     /**
      * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
@@ -18893,7 +18893,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
@@ -18902,7 +18902,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
@@ -18911,7 +18911,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+    int MONTH_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
@@ -18920,7 +18920,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+    int MONTH_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
      * The number of structural features of the '<em>Month Low Frequency Indicator</em>' class.
@@ -18929,7 +18929,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MONTH_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+    int MONTH_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = LOW_FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl <em>Quarter Low Frequency Indicator</em>}' class.
@@ -18948,7 +18948,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__NAME = LOW_FREQUENCY_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -18957,7 +18957,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__VISIBILITY = LOW_FREQUENCY_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -18966,7 +18966,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -18975,7 +18975,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -18984,7 +18984,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__CONSTRAINT = LOW_FREQUENCY_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -18993,7 +18993,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__NAMESPACE = LOW_FREQUENCY_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -19002,7 +19002,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__IMPORTER = LOW_FREQUENCY_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -19011,7 +19011,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__STEREOTYPE = LOW_FREQUENCY_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -19020,7 +19020,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = LOW_FREQUENCY_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -19029,7 +19029,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DOCUMENT = LOW_FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -19038,7 +19038,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DESCRIPTION = LOW_FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -19047,7 +19047,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -19056,7 +19056,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = LOW_FREQUENCY_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -19065,7 +19065,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__SET = LOW_FREQUENCY_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -19074,7 +19074,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -19083,7 +19083,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -19092,7 +19092,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__MEASUREMENT = LOW_FREQUENCY_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -19101,7 +19101,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -19110,7 +19110,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -19119,7 +19119,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__COUNT = LOW_FREQUENCY_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -19128,7 +19128,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__NULL_COUNT = LOW_FREQUENCY_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -19137,7 +19137,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__PARAMETERS = LOW_FREQUENCY_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -19146,7 +19146,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -19155,7 +19155,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -19164,7 +19164,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -19173,7 +19173,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -19182,7 +19182,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__COMPUTED = LOW_FREQUENCY_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -19191,7 +19191,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -19200,7 +19200,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -19209,7 +19209,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__VALID_ROW = LOW_FREQUENCY_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -19218,7 +19218,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = LOW_FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Store Data</b></em>' attribute.
@@ -19227,7 +19227,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__STORE_DATA = LOW_FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -19236,7 +19236,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES;
 
     /**
      * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
@@ -19245,7 +19245,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
@@ -19254,7 +19254,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
@@ -19263,7 +19263,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
@@ -19272,7 +19272,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+    int QUARTER_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
      * The number of structural features of the '<em>Quarter Low Frequency Indicator</em>' class.
@@ -19281,7 +19281,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUARTER_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+    int QUARTER_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = LOW_FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl <em>Year Low Frequency Indicator</em>}' class.
@@ -19300,7 +19300,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+    int YEAR_LOW_FREQUENCY_INDICATOR__NAME = LOW_FREQUENCY_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -19309,7 +19309,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+    int YEAR_LOW_FREQUENCY_INDICATOR__VISIBILITY = LOW_FREQUENCY_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -19318,7 +19318,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+    int YEAR_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -19327,7 +19327,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+    int YEAR_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -19336,7 +19336,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__CONSTRAINT = LOW_FREQUENCY_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -19345,7 +19345,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+    int YEAR_LOW_FREQUENCY_INDICATOR__NAMESPACE = LOW_FREQUENCY_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -19354,7 +19354,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+    int YEAR_LOW_FREQUENCY_INDICATOR__IMPORTER = LOW_FREQUENCY_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -19363,7 +19363,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+    int YEAR_LOW_FREQUENCY_INDICATOR__STEREOTYPE = LOW_FREQUENCY_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -19372,7 +19372,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+    int YEAR_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = LOW_FREQUENCY_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -19381,7 +19381,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__DOCUMENT = LOW_FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -19390,7 +19390,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+    int YEAR_LOW_FREQUENCY_INDICATOR__DESCRIPTION = LOW_FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -19399,7 +19399,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+    int YEAR_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -19408,7 +19408,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+    int YEAR_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = LOW_FREQUENCY_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -19417,7 +19417,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+    int YEAR_LOW_FREQUENCY_INDICATOR__SET = LOW_FREQUENCY_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -19426,7 +19426,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -19435,7 +19435,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -19444,7 +19444,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__MEASUREMENT = LOW_FREQUENCY_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -19453,7 +19453,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+    int YEAR_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -19462,7 +19462,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+    int YEAR_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -19471,7 +19471,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__COUNT = LOW_FREQUENCY_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -19480,7 +19480,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__NULL_COUNT = LOW_FREQUENCY_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -19489,7 +19489,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+    int YEAR_LOW_FREQUENCY_INDICATOR__PARAMETERS = LOW_FREQUENCY_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -19498,7 +19498,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -19507,7 +19507,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+    int YEAR_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -19516,7 +19516,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+    int YEAR_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -19525,7 +19525,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int YEAR_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -19534,7 +19534,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+    int YEAR_LOW_FREQUENCY_INDICATOR__COMPUTED = LOW_FREQUENCY_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -19543,7 +19543,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+    int YEAR_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -19552,7 +19552,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+    int YEAR_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -19561,7 +19561,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+    int YEAR_LOW_FREQUENCY_INDICATOR__VALID_ROW = LOW_FREQUENCY_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -19570,7 +19570,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+    int YEAR_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = LOW_FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Store Data</b></em>' attribute.
@@ -19579,7 +19579,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+    int YEAR_LOW_FREQUENCY_INDICATOR__STORE_DATA = LOW_FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -19588,7 +19588,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+    int YEAR_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES;
 
     /**
      * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
@@ -19597,7 +19597,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
@@ -19606,7 +19606,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
@@ -19615,7 +19615,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+    int YEAR_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
@@ -19624,7 +19624,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+    int YEAR_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
      * The number of structural features of the '<em>Year Low Frequency Indicator</em>' class.
@@ -19633,7 +19633,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int YEAR_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+    int YEAR_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = LOW_FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl <em>Bin Low Frequency Indicator</em>}' class.
@@ -19652,7 +19652,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+    int BIN_LOW_FREQUENCY_INDICATOR__NAME = LOW_FREQUENCY_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -19661,7 +19661,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+    int BIN_LOW_FREQUENCY_INDICATOR__VISIBILITY = LOW_FREQUENCY_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -19670,7 +19670,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+    int BIN_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -19679,7 +19679,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+    int BIN_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -19688,7 +19688,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+    int BIN_LOW_FREQUENCY_INDICATOR__CONSTRAINT = LOW_FREQUENCY_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -19697,7 +19697,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+    int BIN_LOW_FREQUENCY_INDICATOR__NAMESPACE = LOW_FREQUENCY_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -19706,7 +19706,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+    int BIN_LOW_FREQUENCY_INDICATOR__IMPORTER = LOW_FREQUENCY_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -19715,7 +19715,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+    int BIN_LOW_FREQUENCY_INDICATOR__STEREOTYPE = LOW_FREQUENCY_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -19724,7 +19724,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+    int BIN_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = LOW_FREQUENCY_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -19733,7 +19733,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+    int BIN_LOW_FREQUENCY_INDICATOR__DOCUMENT = LOW_FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -19742,7 +19742,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+    int BIN_LOW_FREQUENCY_INDICATOR__DESCRIPTION = LOW_FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -19751,7 +19751,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+    int BIN_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -19760,7 +19760,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+    int BIN_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = LOW_FREQUENCY_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -19769,7 +19769,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+    int BIN_LOW_FREQUENCY_INDICATOR__SET = LOW_FREQUENCY_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -19778,7 +19778,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+    int BIN_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -19787,7 +19787,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+    int BIN_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -19796,7 +19796,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+    int BIN_LOW_FREQUENCY_INDICATOR__MEASUREMENT = LOW_FREQUENCY_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -19805,7 +19805,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+    int BIN_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -19814,7 +19814,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+    int BIN_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -19823,7 +19823,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+    int BIN_LOW_FREQUENCY_INDICATOR__COUNT = LOW_FREQUENCY_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -19832,7 +19832,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+    int BIN_LOW_FREQUENCY_INDICATOR__NULL_COUNT = LOW_FREQUENCY_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -19841,7 +19841,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+    int BIN_LOW_FREQUENCY_INDICATOR__PARAMETERS = LOW_FREQUENCY_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -19850,7 +19850,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+    int BIN_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -19859,7 +19859,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+    int BIN_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -19868,7 +19868,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+    int BIN_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -19877,7 +19877,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int BIN_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -19886,7 +19886,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+    int BIN_LOW_FREQUENCY_INDICATOR__COMPUTED = LOW_FREQUENCY_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -19895,7 +19895,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+    int BIN_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -19904,7 +19904,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+    int BIN_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -19913,7 +19913,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+    int BIN_LOW_FREQUENCY_INDICATOR__VALID_ROW = LOW_FREQUENCY_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -19922,7 +19922,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+    int BIN_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = LOW_FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Store Data</b></em>' attribute.
@@ -19931,7 +19931,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+    int BIN_LOW_FREQUENCY_INDICATOR__STORE_DATA = LOW_FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -19940,7 +19940,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+    int BIN_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES;
 
     /**
      * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
@@ -19949,7 +19949,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+    int BIN_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
@@ -19958,7 +19958,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+    int BIN_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
@@ -19967,7 +19967,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+    int BIN_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
@@ -19976,7 +19976,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+    int BIN_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
      * The number of structural features of the '<em>Bin Low Frequency Indicator</em>' class.
@@ -19985,7 +19985,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BIN_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+    int BIN_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = LOW_FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.ValidPhoneCountIndicatorImpl <em>Valid Phone Count Indicator</em>}' class.
