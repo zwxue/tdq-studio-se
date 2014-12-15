@@ -22,7 +22,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.talend.utils_feature"
+         id="org.talend.utils-feature"
          version="0.0.0"/>
 
    <includes
