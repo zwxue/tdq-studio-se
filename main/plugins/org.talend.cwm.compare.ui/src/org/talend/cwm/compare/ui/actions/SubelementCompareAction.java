@@ -16,24 +16,18 @@ package org.talend.cwm.compare.ui.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.compare.ui.viewer.content.part.diff.ModelContentMergeDiffTab;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
-import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
-import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -53,7 +47,7 @@ public class SubelementCompareAction extends Action {
 
     private String text = null;
 
-    private ModelContentMergeDiffTab diffTabLeft = null;
+    // private ModelContentMergeDiffTab diffTabLeft = null;
 
     private int actionType;
 
@@ -61,13 +55,14 @@ public class SubelementCompareAction extends Action {
 
     private PopComparisonUIAction popCompUIAction = null;
 
-    public SubelementCompareAction(String showText, ModelContentMergeDiffTab diffTabLeft, Object selectedOjbect, int actionType) {
-        text = showText;
-        this.diffTabLeft = diffTabLeft;
-        this.selectedOjbect = selectedOjbect;
-        this.actionType = actionType;
-        popCompUIAction = new PopComparisonUIAction(text);
-    }
+    // public SubelementCompareAction(String showText, ModelContentMergeDiffTab diffTabLeft, Object selectedOjbect, int
+    // actionType) {
+    // text = showText;
+    // this.diffTabLeft = diffTabLeft;
+    // this.selectedOjbect = selectedOjbect;
+    // this.actionType = actionType;
+    // popCompUIAction = new PopComparisonUIAction(text);
+    // }
 
     @Override
     public String getText() {
@@ -76,69 +71,69 @@ public class SubelementCompareAction extends Action {
 
     @Override
     public void run() {
-        IStructuredSelection selection = (IStructuredSelection) diffTabLeft.getSelection();
-        EObject selectedElement = null;
-        if (selection.toList().size() == 1) {
-            selectedElement = (EObject) selection.getFirstElement();
-            IFolderNode folderNode = null;
-            if (selectedElement instanceof ColumnSet) {
-                IRepositoryViewObject reposViewObj = ((RepositoryNode) selectedOjbect).getParent().getObject();
-                Package parentPackage = null;
-                if (reposViewObj instanceof ISubRepositoryObject) {
-                    parentPackage = (Package) ((ISubRepositoryObject) reposViewObj).getModelElement();
-                }
-
-                // MOD mzhao 2009-08-05 Bug 8581
-                // PackageHelper.addColumnSet((ColumnSet) selectedElement,
-                // parentPackage);
-                // ((ColumnSet) selectedElement).setNamespace(parentPackage);
-                ModelElement matchedElement = findMatchedModelElement(parentPackage, selectedElement);
-                // FIXME folderNode is never used.
-                folderNode = FolderNodeHelper.getFolderNodes(matchedElement)[0];
-                IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(matchedElement);
-
-                openComparisonEditor(repositoryNode.getChildren().get(0));
-            } else if (selectedElement instanceof Catalog) {
-                // Judge and see if there are schemas under the catalog.(Case of
-                // SQL Servers)
-                Catalog catalog = (Catalog) selectedElement;
-                List<Schema> schemas = CatalogHelper.getSchemas(catalog);
-                if (schemas != null && schemas.size() > 0) {
-                    IRepositoryViewObject reposViewObj = (IRepositoryViewObject) selectedOjbect;
-                    ConnectionItem item = (ConnectionItem) reposViewObj.getProperty().getItem();
-                    Connection conn = item.getConnection();
-                    if (catalog.getDataManager().isEmpty()) {
-                        catalog.getDataManager().add(conn);
-                    }
-                    popCompUIAction.setSelectedObject(getTableOrViewFolder(getFirstSchema(catalog)));
-                    popCompUIAction.run();
-                } else {
-                    IRepositoryNode repositoryfolderNode = getTableOrViewFolder(selectedElement);
-                    openComparisonEditor(repositoryfolderNode);
-                }
-            } else if (selectedElement instanceof Schema) {
-                IRepositoryNode repositoryfolderNode = getTableOrViewFolder(selectedElement);
-                openComparisonEditor(repositoryfolderNode);
-            } else {
-                return;
-            }
-
-            // Remove namespace link
-            if (selectedElement instanceof ColumnSet) {
-                IRepositoryViewObject reposViewObj = ((RepositoryNode) selectedOjbect).getParent().getObject();
-                Package parentPackage = null;
-                if (reposViewObj instanceof ISubRepositoryObject) {
-                    parentPackage = (Package) ((ISubRepositoryObject) reposViewObj).getModelElement();
-                }
-                // FIXME the originPackage might be Null, and we should never used a new object to replace the old one.
-                Package originPackage = parentPackage;
-                if (originPackage.eIsProxy()) {
-                    originPackage = (Package) EObjectHelper.resolveObject(originPackage);
-                }
-                PackageHelper.removeColumnSet((ColumnSet) selectedElement, originPackage);
-                EMFSharedResources.getInstance().saveResource(originPackage.eResource());
-            }
-        }
+        // IStructuredSelection selection = (IStructuredSelection) diffTabLeft.getSelection();
+        // EObject selectedElement = null;
+        // if (selection.toList().size() == 1) {
+        // selectedElement = (EObject) selection.getFirstElement();
+        // IFolderNode folderNode = null;
+        // if (selectedElement instanceof ColumnSet) {
+        // IRepositoryViewObject reposViewObj = ((RepositoryNode) selectedOjbect).getParent().getObject();
+        // Package parentPackage = null;
+        // if (reposViewObj instanceof ISubRepositoryObject) {
+        // parentPackage = (Package) ((ISubRepositoryObject) reposViewObj).getModelElement();
+        // }
+        //
+        // // MOD mzhao 2009-08-05 Bug 8581
+        // // PackageHelper.addColumnSet((ColumnSet) selectedElement,
+        // // parentPackage);
+        // // ((ColumnSet) selectedElement).setNamespace(parentPackage);
+        // ModelElement matchedElement = findMatchedModelElement(parentPackage, selectedElement);
+        // // FIXME folderNode is never used.
+        // folderNode = FolderNodeHelper.getFolderNodes(matchedElement)[0];
+        // IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(matchedElement);
+        //
+        // openComparisonEditor(repositoryNode.getChildren().get(0));
+        // } else if (selectedElement instanceof Catalog) {
+        // // Judge and see if there are schemas under the catalog.(Case of
+        // // SQL Servers)
+        // Catalog catalog = (Catalog) selectedElement;
+        // List<Schema> schemas = CatalogHelper.getSchemas(catalog);
+        // if (schemas != null && schemas.size() > 0) {
+        // IRepositoryViewObject reposViewObj = (IRepositoryViewObject) selectedOjbect;
+        // ConnectionItem item = (ConnectionItem) reposViewObj.getProperty().getItem();
+        // Connection conn = item.getConnection();
+        // if (catalog.getDataManager().isEmpty()) {
+        // catalog.getDataManager().add(conn);
+        // }
+        // popCompUIAction.setSelectedObject(getTableOrViewFolder(getFirstSchema(catalog)));
+        // popCompUIAction.run();
+        // } else {
+        // IRepositoryNode repositoryfolderNode = getTableOrViewFolder(selectedElement);
+        // openComparisonEditor(repositoryfolderNode);
+        // }
+        // } else if (selectedElement instanceof Schema) {
+        // IRepositoryNode repositoryfolderNode = getTableOrViewFolder(selectedElement);
+        // openComparisonEditor(repositoryfolderNode);
+        // } else {
+        // return;
+        // }
+        //
+        // // Remove namespace link
+        // if (selectedElement instanceof ColumnSet) {
+        // IRepositoryViewObject reposViewObj = ((RepositoryNode) selectedOjbect).getParent().getObject();
+        // Package parentPackage = null;
+        // if (reposViewObj instanceof ISubRepositoryObject) {
+        // parentPackage = (Package) ((ISubRepositoryObject) reposViewObj).getModelElement();
+        // }
+        // // FIXME the originPackage might be Null, and we should never used a new object to replace the old one.
+        // Package originPackage = parentPackage;
+        // if (originPackage.eIsProxy()) {
+        // originPackage = (Package) EObjectHelper.resolveObject(originPackage);
+        // }
+        // PackageHelper.removeColumnSet((ColumnSet) selectedElement, originPackage);
+        // EMFSharedResources.getInstance().saveResource(originPackage.eResource());
+        // }
+        // }
     }
 
     /**

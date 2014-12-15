@@ -17,8 +17,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
@@ -36,9 +34,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -46,8 +42,6 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -177,64 +171,64 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         return upperCaseResource(reloadResource);
     }
 
-    @Override
-    protected void handleAddElement(ModelElementChangeRightTarget addElement) {
-        EObject rightElement = addElement.getRightElement();
-        Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
-        if (catalog != null) {
-            // ADD xqliu 2012-05-03 TDQ-4853
-            catalog.getDataManager().clear();
-            // ~ TDQ-4853
-            ConnectionHelper.addCatalog(catalog, oldDataProvider);
-            this.tempReloadProvider.getDataPackage().remove(catalog);
-        } else {
-            Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
-            if (schema != null) {
-                // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and schema,should add schema into
-                // catalog.
-                EObject eContainer = schema.eContainer();
-                if (eContainer != null && eContainer instanceof Catalog) {
-                    Catalog schemaParent = (Catalog) eContainer;
-                    List<Schema> schemas = new ArrayList<Schema>();
-                    schemas.add(schema);
-                    Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
-                    if (oldCatalog != null) {
-                        CatalogHelper.addSchemas(schemas, oldCatalog);
-                        schemaParent.getOwnedElement().remove(schema);
-                    }
-                } else {
-                    // ADD xqliu 2012-05-03 TDQ-4853
-                    schema.getDataManager().clear();
-                    // ~ TDQ-4853
-                    ConnectionHelper.addSchema(schema, oldDataProvider);
-                    this.tempReloadProvider.getDataPackage().remove(catalog);
-                }
-            }
-        }
-        return;
-    }
+    // @Override
+    // protected void handleAddElement(ModelElementChangeRightTarget addElement) {
+    // EObject rightElement = addElement.getRightElement();
+    // Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
+    // if (catalog != null) {
+    // // ADD xqliu 2012-05-03 TDQ-4853
+    // catalog.getDataManager().clear();
+    // // ~ TDQ-4853
+    // ConnectionHelper.addCatalog(catalog, oldDataProvider);
+    // this.tempReloadProvider.getDataPackage().remove(catalog);
+    // } else {
+    // Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
+    // if (schema != null) {
+    // // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and schema,should add schema into
+    // // catalog.
+    // EObject eContainer = schema.eContainer();
+    // if (eContainer != null && eContainer instanceof Catalog) {
+    // Catalog schemaParent = (Catalog) eContainer;
+    // List<Schema> schemas = new ArrayList<Schema>();
+    // schemas.add(schema);
+    // Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
+    // if (oldCatalog != null) {
+    // CatalogHelper.addSchemas(schemas, oldCatalog);
+    // schemaParent.getOwnedElement().remove(schema);
+    // }
+    // } else {
+    // // ADD xqliu 2012-05-03 TDQ-4853
+    // schema.getDataManager().clear();
+    // // ~ TDQ-4853
+    // ConnectionHelper.addSchema(schema, oldDataProvider);
+    // this.tempReloadProvider.getDataPackage().remove(catalog);
+    // }
+    // }
+    // }
+    // return;
+    // }
 
-    @Override
-    protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
-        Package removePackage = packageSwitch.doSwitch(removeElement.getLeftElement());
-        if (removePackage == null) {
-            return;
-        }
-        popRemoveElementConfirm();
-        // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and Schema,should remove schema from catalog.
-        Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removePackage);
-        if (schema != null && schema.eContainer() != null && schema.eContainer() instanceof Catalog) {
-            Catalog schemaParent = (Catalog) schema.eContainer();
-            Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
-            if (oldCatalog != null && oldCatalog.getName().equalsIgnoreCase(schemaParent.getName())) {
-                oldCatalog.getOwnedElement().remove(schema);
-                if (oldCatalog.eResource() != null) {
-                    oldCatalog.eResource().getContents().remove(schema);
-                }
-            }
-            return;
-        }
-        oldDataProvider.getDataPackage().remove(removePackage);
-        oldDataProvider.eResource().getContents().remove(removePackage);
-    }
+    // @Override
+    // protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
+    // Package removePackage = packageSwitch.doSwitch(removeElement.getLeftElement());
+    // if (removePackage == null) {
+    // return;
+    // }
+    // popRemoveElementConfirm();
+    // // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and Schema,should remove schema from catalog.
+    // Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removePackage);
+    // if (schema != null && schema.eContainer() != null && schema.eContainer() instanceof Catalog) {
+    // Catalog schemaParent = (Catalog) schema.eContainer();
+    // Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
+    // if (oldCatalog != null && oldCatalog.getName().equalsIgnoreCase(schemaParent.getName())) {
+    // oldCatalog.getOwnedElement().remove(schema);
+    // if (oldCatalog.eResource() != null) {
+    // oldCatalog.eResource().getContents().remove(schema);
+    // }
+    // }
+    // return;
+    // }
+    // oldDataProvider.getDataPackage().remove(removePackage);
+    // oldDataProvider.eResource().getContents().remove(removePackage);
+    // }
 }

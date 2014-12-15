@@ -12,36 +12,16 @@
 // ============================================================================
 package org.talend.cwm.compare.ui.actions;
 
-import java.io.IOException;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.MatchOptions;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
-import org.eclipse.emf.compare.match.service.MatchService;
-import org.eclipse.emf.compare.util.ModelUtils;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreePath;
@@ -49,21 +29,12 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.talend.commons.emf.EMFUtil;
-import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
-import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -98,7 +69,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        synchronize();
+        // synchronize();
     }
 
     @SuppressWarnings("unused")
@@ -113,113 +84,113 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         }
     }
 
-    private void synchronize() {
-        // Load Model from Prv File
-        // Creates the resourceSet where we'll load the models
-        final ResourceSet resourceSet = new ResourceSetImpl();
-        try {
-            final EObject alreadySavedModel = ModelUtils.load(selectedFileObject.toString(), resourceSet);
-
-            Connection connection = null;
-            if (alreadySavedModel instanceof Connection) {
-                connection = (Connection) alreadySavedModel;
-            }
-            Connection newConn = null;
-            if (connection != null) {
-                String dbUrl = JavaSqlFactory.getURL(connection);
-                String driverClassName = JavaSqlFactory.getDriverClass(connection);
-                EList<EObject> pcObjects = connection.eContents();
-                ListIterator<EObject> liEObject = pcObjects.listIterator();
-
-                Properties parameters = new Properties();
-
-                while (liEObject.hasNext()) {
-                    EObject eo = liEObject.next();
-                    if (eo instanceof TaggedValue) {
-                        String tag = ((TaggedValue) eo).getTag();
-                        System.out.print(tag);
-                        String value = ((TaggedValue) eo).getValue();
-                        System.out.println(" " + value); //$NON-NLS-1$
-                        parameters.put(tag, value);
-                    }
-
-                }
-
-                System.out.println(dbUrl);
-                System.out.println(driverClassName);
-                DBConnectionParameter dbcp = new DBConnectionParameter();
-
-                dbcp.setName(connection.getName());
-                dbcp.setAuthor(MetadataHelper.getAuthor(connection));
-                dbcp.setDescription(MetadataHelper.getDescription(connection));
-                dbcp.setPurpose(MetadataHelper.getPurpose(connection));
-                dbcp.setStatus(MetadataHelper.getDevStatus(connection));
-
-                dbcp.setDriverClassName(driverClassName);
-                dbcp.setJdbcUrl(dbUrl);
-                dbcp.setParameters(parameters);
-                IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance(connection).fillUIParams(
-                        ParameterUtil.toMap(dbcp));
-                newConn = MetadataFillFactory.getDBInstance(connection).fillUIConnParams(metadataConnection, null);
-            }
-            if (newConn == null) {
-                log.error(Messages.getString(
-                        "RefreshActionDelegate.errorUnableCreateNewCon", connection == null ? "" : connection.getName()));//$NON-NLS-1$ //$NON-NLS-2$
-                return;
-            }
-            // System.out.println(alreadySavedModel.toString());
-            IFolder folder = ResourceManager.getConnectionFolder();
-            FolderProvider fp = new FolderProvider();
-            fp.setFolderResource(folder);
-            IFile file2 = loadDataProviderAndStructureInMemory(newConn, fp);
-
-            final EObject model2 = ModelUtils.load(file2.toString(), resourceSet);
-
-            // MODSCA 2008-03-31 add option for ignoring some elements
-            Map<String, Object> options = new HashMap<String, Object>();
-            options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-            options.put(MatchOptions.OPTION_SEARCH_WINDOW, 500);
-
-            // Creates the match then the diff model for those two models
-            final MatchModel match = MatchService.doMatch(alreadySavedModel, model2, options);
-            final DiffModel diff = DiffService.doDiff(match, false);
-
-            EList<UnmatchElement> unMatchedElements = match.getUnmatchedElements();
-            for (Object object : unMatchedElements) {
-                UnmatchElement unMatched = (UnmatchElement) object;
-                ModelElement modelElt = (ModelElement) unMatched.getElement();
-                System.out.println("Unmatched elt= " + modelElt.getName()); //$NON-NLS-1$
-            }
-            @SuppressWarnings("unused")
-            EList<DiffElement> ownedElements = diff.getOwnedElements();
-
-            // Prints the results
-            try {
-                System.out.println(ModelUtils.serialize(match));
-                System.out.println(ModelUtils.serialize(diff));
-            } catch (IOException e) {
-                log.error(e, e);
-            }
-
-            // Serializes the result as "result.emfdiff" in the directory this
-            // class has been called from.
-            String outputFile = "out/result.emfdiff"; //$NON-NLS-1$
-            System.out.println("saving emfdiff as \"" + outputFile + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-            final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
-            snapshot.setDate(Calendar.getInstance().getTime());
-            snapshot.setMatch(match);
-            snapshot.setDiff(diff);
-            // MOD scorreia 2010-01-29: we may need to set the file.encoding property here.
-            ModelUtils.save(snapshot, outputFile);
-
-        } catch (IOException e) {
-            System.out.print(e.getMessage());
-            // log.error(e, e);
-        } catch (InterruptedException e) {
-            System.out.print(e.getMessage());
-            log.error(e, e);
-        }
-    }
+    // private void synchronize() {
+    // // Load Model from Prv File
+    // // Creates the resourceSet where we'll load the models
+    // final ResourceSet resourceSet = new ResourceSetImpl();
+    // try {
+    // final EObject alreadySavedModel = ModelUtils.load(selectedFileObject.toString(), resourceSet);
+    //
+    // Connection connection = null;
+    // if (alreadySavedModel instanceof Connection) {
+    // connection = (Connection) alreadySavedModel;
+    // }
+    // Connection newConn = null;
+    // if (connection != null) {
+    // String dbUrl = JavaSqlFactory.getURL(connection);
+    // String driverClassName = JavaSqlFactory.getDriverClass(connection);
+    // EList<EObject> pcObjects = connection.eContents();
+    // ListIterator<EObject> liEObject = pcObjects.listIterator();
+    //
+    // Properties parameters = new Properties();
+    //
+    // while (liEObject.hasNext()) {
+    // EObject eo = liEObject.next();
+    // if (eo instanceof TaggedValue) {
+    // String tag = ((TaggedValue) eo).getTag();
+    // System.out.print(tag);
+    // String value = ((TaggedValue) eo).getValue();
+    //                        System.out.println(" " + value); //$NON-NLS-1$
+    // parameters.put(tag, value);
+    // }
+    //
+    // }
+    //
+    // System.out.println(dbUrl);
+    // System.out.println(driverClassName);
+    // DBConnectionParameter dbcp = new DBConnectionParameter();
+    //
+    // dbcp.setName(connection.getName());
+    // dbcp.setAuthor(MetadataHelper.getAuthor(connection));
+    // dbcp.setDescription(MetadataHelper.getDescription(connection));
+    // dbcp.setPurpose(MetadataHelper.getPurpose(connection));
+    // dbcp.setStatus(MetadataHelper.getDevStatus(connection));
+    //
+    // dbcp.setDriverClassName(driverClassName);
+    // dbcp.setJdbcUrl(dbUrl);
+    // dbcp.setParameters(parameters);
+    // IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance(connection).fillUIParams(
+    // ParameterUtil.toMap(dbcp));
+    // newConn = MetadataFillFactory.getDBInstance(connection).fillUIConnParams(metadataConnection, null);
+    // }
+    // if (newConn == null) {
+    // log.error(Messages.getString(
+    //                        "RefreshActionDelegate.errorUnableCreateNewCon", connection == null ? "" : connection.getName()));//$NON-NLS-1$ //$NON-NLS-2$
+    // return;
+    // }
+    // // System.out.println(alreadySavedModel.toString());
+    // IFolder folder = ResourceManager.getConnectionFolder();
+    // FolderProvider fp = new FolderProvider();
+    // fp.setFolderResource(folder);
+    // IFile file2 = loadDataProviderAndStructureInMemory(newConn, fp);
+    //
+    // final EObject model2 = ModelUtils.load(file2.toString(), resourceSet);
+    //
+    // // MODSCA 2008-03-31 add option for ignoring some elements
+    // Map<String, Object> options = new HashMap<String, Object>();
+    // options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+    // options.put(MatchOptions.OPTION_SEARCH_WINDOW, 500);
+    //
+    // // Creates the match then the diff model for those two models
+    // final MatchModel match = MatchService.doMatch(alreadySavedModel, model2, options);
+    // final DiffModel diff = DiffService.doDiff(match, false);
+    //
+    // EList<UnmatchElement> unMatchedElements = match.getUnmatchedElements();
+    // for (Object object : unMatchedElements) {
+    // UnmatchElement unMatched = (UnmatchElement) object;
+    // ModelElement modelElt = (ModelElement) unMatched.getElement();
+    //                System.out.println("Unmatched elt= " + modelElt.getName()); //$NON-NLS-1$
+    // }
+    // @SuppressWarnings("unused")
+    // EList<DiffElement> ownedElements = diff.getOwnedElements();
+    //
+    // // Prints the results
+    // try {
+    // System.out.println(ModelUtils.serialize(match));
+    // System.out.println(ModelUtils.serialize(diff));
+    // } catch (IOException e) {
+    // log.error(e, e);
+    // }
+    //
+    // // Serializes the result as "result.emfdiff" in the directory this
+    // // class has been called from.
+    //            String outputFile = "out/result.emfdiff"; //$NON-NLS-1$
+    //            System.out.println("saving emfdiff as \"" + outputFile + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+    // final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+    // snapshot.setDate(Calendar.getInstance().getTime());
+    // snapshot.setMatch(match);
+    // snapshot.setDiff(diff);
+    // // MOD scorreia 2010-01-29: we may need to set the file.encoding property here.
+    // ModelUtils.save(snapshot, outputFile);
+    //
+    // } catch (IOException e) {
+    // System.out.print(e.getMessage());
+    // // log.error(e, e);
+    // } catch (InterruptedException e) {
+    // System.out.print(e.getMessage());
+    // log.error(e, e);
+    // }
+    // }
 
     private IFile loadDataProviderAndStructureInMemory(Connection dataProvider, FolderProvider folderProvider) {
         IPath folderPath = ((folderProvider != null) && folderProvider.getFolder() != null) ? folderProvider.getFolderResource()

@@ -22,13 +22,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.MatchOptions;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
@@ -98,7 +91,7 @@ public class RenameComparedElementAction extends Action {
 
         this.newAddedColumnSet = addElementList;
         options = new HashMap<String, Object>();
-        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        // options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
     }
 
     @Override
@@ -170,45 +163,15 @@ public class RenameComparedElementAction extends Action {
         // ~
     }
 
-    /**
-     * DOC zhao Comment method "checkSubStructure".
-     * 
-     * @deprecated
-     * @param checkedColumnSet
-     * @return
-     */
-    @Deprecated
-    @SuppressWarnings("unused")
-    private List<DiffElement> checkSubStructure(ColumnSet checkedColumnSet) {
-        MatchModel match = null;
-
-        try {
-            match = MatchService.doResourceMatch(getLeftResource(), getRightResource(checkedColumnSet), options);
-
-        } catch (InterruptedException e) {
-            log.error(e, e);
-        } catch (ReloadCompareException e) {
-            log.error(e, e);
-        }
-        List<DiffElement> subDeffElements = new ArrayList<DiffElement>();
-        final DiffModel diff = DiffService.doDiff(match);
-        if (diff.getOwnedElements() != null && diff.getOwnedElements().size() > 0) {
-            for (DiffElement diffEle : diff.getOwnedElements()) {
-                getDiffElements(diffEle, subDeffElements);
-            }
-        }
-        return subDeffElements;
-    }
-
-    private void getDiffElements(DiffElement diffEle, List<DiffElement> diffElementList) {
-        if (diffEle instanceof DiffGroup) {
-            for (DiffElement subDiffEle : ((DiffGroup) diffEle).getSubDiffElements()) {
-                getDiffElements(subDiffEle, diffElementList);
-            }
-        } else {
-            diffElementList.add(diffEle);
-        }
-    }
+    // private void getDiffElements(DiffElement diffEle, List<DiffElement> diffElementList) {
+    // if (diffEle instanceof DiffGroup) {
+    // for (DiffElement subDiffEle : ((DiffGroup) diffEle).getSubDiffElements()) {
+    // getDiffElements(subDiffEle, diffElementList);
+    // }
+    // } else {
+    // diffElementList.add(diffEle);
+    // }
+    // }
 
     private Resource getLeftResource() throws ReloadCompareException {
         ColumnSet selectedColumnSet = (ColumnSet) theSelectedElement;
@@ -361,6 +324,7 @@ public class RenameComparedElementAction extends Action {
             tableViewer = CheckboxTableViewer.newCheckList(composite, SWT.SINGLE);
             tableViewer.setContentProvider(new IStructuredContentProvider() {
 
+                @Override
                 public Object[] getElements(Object inputElement) {
                     if (inputElement instanceof List<?>) {
                         return ((List<?>) inputElement).toArray();
@@ -368,10 +332,12 @@ public class RenameComparedElementAction extends Action {
                     return new Object[] { inputElement };
                 }
 
+                @Override
                 public void dispose() {
                     // needn't to do anyting ???
                 }
 
+                @Override
                 public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
                     // needn't to do anyting ???
                 }
@@ -379,27 +345,33 @@ public class RenameComparedElementAction extends Action {
 
             tableViewer.setLabelProvider(new ILabelProvider() {
 
+                @Override
                 public Image getImage(Object element) {
                     return null;
                 }
 
+                @Override
                 public String getText(Object element) {
                     ModelElement me = (ModelElement) element;
                     return me.getName();
                 }
 
+                @Override
                 public void addListener(ILabelProviderListener listener) {
                     // needn't to do anyting ???
                 }
 
+                @Override
                 public void dispose() {
                     // needn't to do anyting ???
                 }
 
+                @Override
                 public boolean isLabelProperty(Object element, String property) {
                     return false;
                 }
 
+                @Override
                 public void removeListener(ILabelProviderListener listener) {
                     // needn't to do anyting ???
                 }
@@ -407,6 +379,7 @@ public class RenameComparedElementAction extends Action {
             tableViewer.setInput(newAddedColumnSet);
             tableViewer.addCheckStateListener(new ICheckStateListener() {
 
+                @Override
                 public void checkStateChanged(CheckStateChangedEvent event) {
                     tableViewer.setAllChecked(false);
                     tableViewer.setChecked(event.getElement(), event.getChecked());

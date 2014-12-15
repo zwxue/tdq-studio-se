@@ -21,7 +21,6 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -74,9 +73,10 @@ public class SelectedLocalComparison implements IComparisonLevel {
         this.firstSelectedObj = firstSelectedObj;
         this.secondSelectedObj = secondSelectedObj;
         options = new HashMap<String, Object>();
-        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        // options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
     }
 
+    @Override
     public void popComparisonUI(IUIHandler uiHandler) throws ReloadCompareException {
 
         // Judge selected elements types.
@@ -103,8 +103,9 @@ public class SelectedLocalComparison implements IComparisonLevel {
         // displayed at left panel of compare editor,have not handled case when
         // compared models both from local
         // structure)
-        DQStructureComparer.openDiffCompareEditor(getResource(LEFT_RESOURCE), getResource(RIGHT_RESOURCE), options, uiHandler,
-                DQStructureComparer.getLocalDiffResourceFile(), firstSelectedDataProvider.getName(), firstSelectedObj, true);
+        // DQStructureComparer.openDiffCompareEditor(getResource(LEFT_RESOURCE), getResource(RIGHT_RESOURCE), options,
+        // uiHandler,
+        // DQStructureComparer.getLocalDiffResourceFile(), firstSelectedDataProvider.getName(), firstSelectedObj, true);
 
     }
 
@@ -274,6 +275,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
         }
     }
 
+    @Override
     public Connection reloadCurrentLevelElement() throws ReloadCompareException {
         // FIXME implement this method
         return null;

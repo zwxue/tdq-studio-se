@@ -58,11 +58,7 @@
       <import plugin="org.eclipse.ui.intro"/>
       <import plugin="org.eclipse.help.webapp"/>
       <import plugin="org.eclipse.equinox.http.jetty"/>
-      <import plugin="org.eclipse.emf.compare" version="0.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.compare.diff" version="0.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.compare.match" version="0.8.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.compare.ui"/>
       <import plugin="org.apache.commons.discovery" version="0.2.0" match="compatible"/>
       <import plugin="org.eclipse.core.net" version="1.0.0" match="compatible"/>
       <import plugin="org.talend.libraries.jackson"/>

@@ -14,19 +14,9 @@
 package org.talend.cwm.compare.ui.actions.provider;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
-import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
-import org.eclipse.emf.compare.util.AdapterUtils;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.compare.i18n.Messages;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC mzhao 2009-03-10 class global comment. Detailled comment
@@ -42,7 +32,7 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
      * Default constructor.
      */
     public CompareModelStructureLabelProvider() {
-        adapterProvider = new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory());
+        // adapterProvider = new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory());
     }
 
     /**
@@ -56,16 +46,16 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
     @Override
     public Image getImage(Object object) {
         Image image = null;
-        if (object instanceof AbstractDiffExtension) {
-            image = (Image) ((AbstractDiffExtension) object).getImage();
-        }
-        if (object instanceof IFile) {
-            image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
-        } else {
-            if (image == null) {
-                image = adapterProvider.getImage(object);
-            }
-        }
+        // if (object instanceof AbstractDiffExtension) {
+        // image = (Image) ((AbstractDiffExtension) object).getImage();
+        // }
+        // if (object instanceof IFile) {
+        // image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+        // } else {
+        // if (image == null) {
+        // image = adapterProvider.getImage(object);
+        // }
+        // }
         return image;
     }
 
@@ -80,46 +70,46 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
     @Override
     public String getText(Object object) {
         String text = null;
-        if (object instanceof AbstractDiffExtension) {
-            text = ((AbstractDiffExtension) object).getText();
-        } else {
-            if (object instanceof IFile) {
-                text = ((IFile) object).getName();
-            } else {
-                if (object instanceof DiffGroup) {
-                    DiffGroup diffGroup = (DiffGroup) object;
-                    int subChanges = diffGroup.getSubchanges();
-                    text = Messages.getString("CompareModelStructureLabelProvider.ChangeInModel", subChanges); //$NON-NLS-1$
-                    if (diffGroup.getRightParent() != null && diffGroup.getRightParent() instanceof ModelElement) {
-                        text += ":\"" + ((ModelElement) diffGroup.getRightParent()).getName() + "\"";//$NON-NLS-1$ //$NON-NLS-2$
-                    }
-                } else if (object instanceof ModelElementChangeRightTarget) {
-                    ModelElementChangeRightTarget addModelElement = (ModelElementChangeRightTarget) object;
-
-                    String modelName = ""; //$NON-NLS-1$
-                    EObject leftElement = addModelElement.getRightElement();
-                    if (leftElement != null && leftElement instanceof ModelElement) {
-                        modelName = ((ModelElement) leftElement).getName();
-                    }
-                    text = Messages.getString("CompareModelStructureLabelProvider.ModelAdded", modelName); //$NON-NLS-1$
-
-                } else if (object instanceof ModelElementChangeLeftTarget) {
-                    ModelElementChangeLeftTarget removeModelElement = (ModelElementChangeLeftTarget) object;
-                    String modelName = ""; //$NON-NLS-1$
-                    EObject leftElement = removeModelElement.getLeftElement();
-                    if (leftElement != null && leftElement instanceof ModelElement) {
-                        modelName = ((ModelElement) leftElement).getName();
-                    }
-                    EObject rightElement = removeModelElement.getLeftElement();
-                    if (rightElement != null && rightElement instanceof ModelElement) {
-                        modelName = ((ModelElement) rightElement).getName();
-                    }
-                    text = Messages.getString("CompareModelStructureLabelProvider.ModelRemoved", modelName); //$NON-NLS-1$
-                } else {
-                    text = adapterProvider.getText(object);
-                }
-            }
-        }
+        // if (object instanceof AbstractDiffExtension) {
+        // text = ((AbstractDiffExtension) object).getText();
+        // } else {
+        // if (object instanceof IFile) {
+        // text = ((IFile) object).getName();
+        // } else {
+        // if (object instanceof DiffGroup) {
+        // DiffGroup diffGroup = (DiffGroup) object;
+        // int subChanges = diffGroup.getSubchanges();
+        //                    text = Messages.getString("CompareModelStructureLabelProvider.ChangeInModel", subChanges); //$NON-NLS-1$
+        // if (diffGroup.getRightParent() != null && diffGroup.getRightParent() instanceof ModelElement) {
+        //                        text += ":\"" + ((ModelElement) diffGroup.getRightParent()).getName() + "\"";//$NON-NLS-1$ //$NON-NLS-2$
+        // }
+        // } else if (object instanceof ModelElementChangeRightTarget) {
+        // ModelElementChangeRightTarget addModelElement = (ModelElementChangeRightTarget) object;
+        //
+        //                    String modelName = ""; //$NON-NLS-1$
+        // EObject leftElement = addModelElement.getRightElement();
+        // if (leftElement != null && leftElement instanceof ModelElement) {
+        // modelName = ((ModelElement) leftElement).getName();
+        // }
+        //                    text = Messages.getString("CompareModelStructureLabelProvider.ModelAdded", modelName); //$NON-NLS-1$
+        //
+        // } else if (object instanceof ModelElementChangeLeftTarget) {
+        // ModelElementChangeLeftTarget removeModelElement = (ModelElementChangeLeftTarget) object;
+        //                    String modelName = ""; //$NON-NLS-1$
+        // EObject leftElement = removeModelElement.getLeftElement();
+        // if (leftElement != null && leftElement instanceof ModelElement) {
+        // modelName = ((ModelElement) leftElement).getName();
+        // }
+        // EObject rightElement = removeModelElement.getLeftElement();
+        // if (rightElement != null && rightElement instanceof ModelElement) {
+        // modelName = ((ModelElement) rightElement).getName();
+        // }
+        //                    text = Messages.getString("CompareModelStructureLabelProvider.ModelRemoved", modelName); //$NON-NLS-1$
+        // } else {
+        // text = adapterProvider.getText(object);
+        // }
+        // }
+        // }
         return text;
     }
 }

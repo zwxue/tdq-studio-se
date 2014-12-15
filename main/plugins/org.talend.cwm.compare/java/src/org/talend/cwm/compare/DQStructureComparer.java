@@ -17,9 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.DatabaseMetaData;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -28,20 +26,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
-import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -53,7 +40,6 @@ import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.compare.exception.ReloadCompareException;
-import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
@@ -556,64 +542,65 @@ public final class DQStructureComparer {
      * @return
      * @throws ReloadCompareException
      */
-    public static DiffModel openDiffCompareEditor(Resource leftResource, Resource rightResource, Map<String, Object> opt,
-            IUIHandler guiHandler, IFile efmDiffResultFile, String dbName, Object selectedObject, boolean compareEachOther)
-            throws ReloadCompareException {
-
-        // ~ MOD mzhao bug 11449. 2010-03-16
-        if (leftResource.getContents() == null || leftResource.getContents().size() == 0) {
-            // Could not merge this.
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog1"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog2"));//$NON-NLS-1$ $NON-NLS-2$
-            DQStructureComparer.removeResourceFromWorkspace(leftResource);
-            DQStructureComparer.removeResourceFromWorkspace(rightResource);
-            DQStructureComparer.deleteFile(efmDiffResultFile);
-            return null;
-        }
-        MatchModel match = null;
-        try {
-            boolean isTos = isTos(leftResource);
-            match = MatchService
-                    .doResourceMatch(cleanUpResource(leftResource, isTos), cleanUpResource(rightResource, isTos), opt);
-        } catch (InterruptedException e) {
-            throw new ReloadCompareException(e);
-        }
-        final DiffModel diff = DiffService.doDiff(match);
-        EList<DiffElement> ownedElements = diff.getOwnedElements();
-        for (DiffElement de : ownedElements) {
-            EList<DiffElement> subDiffElements = de.getSubDiffElements();
-            for (DiffElement difElement : subDiffElements) {
-                if (difElement instanceof ModelElementChangeRightTarget) {
-                    ((ModelElementChangeRightTarget) difElement).setLeftParent(leftResource.getContents().get(0));
-
-                }
-            }
-        }
-        // ~
-
-        // Open UI for different comparison
-        final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
-        snapshot.setDate(Calendar.getInstance().getTime());
-        snapshot.setMatch(match);
-        snapshot.setDiff(diff);
-        IFile createDiffResourceFile = efmDiffResultFile;
-        try {
-            // klliu
-            createDiffResourceFile.clearHistory(new NullProgressMonitor());
-            final String fullPath = createDiffResourceFile.getLocation().toOSString();
-
-            ModelUtils.save(snapshot, fullPath);
-        } catch (IOException e) {
-            throw new ReloadCompareException(e);
-        } catch (CoreException e) {
-            log.error(e);
-        }
-        if (guiHandler != null) {
-            guiHandler.popComparisonUI(createDiffResourceFile.getLocation(), dbName, selectedObject, compareEachOther);
-        }
-        return diff;
-    }
+    // public static DiffModel openDiffCompareEditor(Resource leftResource, Resource rightResource, Map<String, Object>
+    // opt,
+    // IUIHandler guiHandler, IFile efmDiffResultFile, String dbName, Object selectedObject, boolean compareEachOther)
+    // throws ReloadCompareException {
+    //
+    // // ~ MOD mzhao bug 11449. 2010-03-16
+    // if (leftResource.getContents() == null || leftResource.getContents().size() == 0) {
+    // // Could not merge this.
+    // MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+    //                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog1"), //$NON-NLS-1$
+    //                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog2"));//$NON-NLS-1$ $NON-NLS-2$
+    // DQStructureComparer.removeResourceFromWorkspace(leftResource);
+    // DQStructureComparer.removeResourceFromWorkspace(rightResource);
+    // DQStructureComparer.deleteFile(efmDiffResultFile);
+    // return null;
+    // }
+    // MatchModel match = null;
+    // try {
+    // boolean isTos = isTos(leftResource);
+    // match = MatchService
+    // .doResourceMatch(cleanUpResource(leftResource, isTos), cleanUpResource(rightResource, isTos), opt);
+    // } catch (InterruptedException e) {
+    // throw new ReloadCompareException(e);
+    // }
+    // final DiffModel diff = DiffService.doDiff(match);
+    // EList<DiffElement> ownedElements = diff.getOwnedElements();
+    // for (DiffElement de : ownedElements) {
+    // EList<DiffElement> subDiffElements = de.getSubDiffElements();
+    // for (DiffElement difElement : subDiffElements) {
+    // if (difElement instanceof ModelElementChangeRightTarget) {
+    // ((ModelElementChangeRightTarget) difElement).setLeftParent(leftResource.getContents().get(0));
+    //
+    // }
+    // }
+    // }
+    // // ~
+    //
+    // // Open UI for different comparison
+    // final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+    // snapshot.setDate(Calendar.getInstance().getTime());
+    // snapshot.setMatch(match);
+    // snapshot.setDiff(diff);
+    // IFile createDiffResourceFile = efmDiffResultFile;
+    // try {
+    // // klliu
+    // createDiffResourceFile.clearHistory(new NullProgressMonitor());
+    // final String fullPath = createDiffResourceFile.getLocation().toOSString();
+    //
+    // ModelUtils.save(snapshot, fullPath);
+    // } catch (IOException e) {
+    // throw new ReloadCompareException(e);
+    // } catch (CoreException e) {
+    // log.error(e);
+    // }
+    // if (guiHandler != null) {
+    // guiHandler.popComparisonUI(createDiffResourceFile.getLocation(), dbName, selectedObject, compareEachOther);
+    // }
+    // return diff;
+    // }
 
     private static boolean isTos(Resource resource) {
         EList<EObject> contents = resource.getContents();
