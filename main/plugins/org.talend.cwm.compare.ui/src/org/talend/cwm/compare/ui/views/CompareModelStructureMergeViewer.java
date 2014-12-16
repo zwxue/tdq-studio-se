@@ -13,19 +13,13 @@
 package org.talend.cwm.compare.ui.views;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareViewerPane;
-import org.eclipse.emf.compare.ui.export.ExportMenu;
-import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * DOC xqliu class global comment. bug 9407 2009-10-13
  */
-public class CompareModelStructureMergeViewer extends ModelStructureMergeViewer {
+// public class CompareModelStructureMergeViewer extends ModelStructureMergeViewer {
+public class CompareModelStructureMergeViewer {
 
     /**
      * DOC xqliu CompareModelStructureMergeViewer constructor comment.
@@ -34,20 +28,20 @@ public class CompareModelStructureMergeViewer extends ModelStructureMergeViewer 
      * @param compareConfiguration
      */
     public CompareModelStructureMergeViewer(Composite parent, CompareConfiguration compareConfiguration) {
-        super(parent, compareConfiguration);
-        final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
-        IContributionItem[] items = tbm.getItems();
-        for (IContributionItem item : items) {
-            if (item instanceof ActionContributionItem) {
-                IAction action = ((ActionContributionItem) item).getAction();
-                if (action instanceof ExportMenu) {
-                    tbm.remove(item);
-                    item.dispose();
-                }
-            }
-        }
+        // super(parent, compareConfiguration);
+        // final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
+        // IContributionItem[] items = tbm.getItems();
+        // for (IContributionItem item : items) {
+        // if (item instanceof ActionContributionItem) {
+        // IAction action = ((ActionContributionItem) item).getAction();
+        // if (action instanceof ExportMenu) {
+        // tbm.remove(item);
+        // item.dispose();
+        // }
+        // }
+        // }
 
-        tbm.update(true);
+        // tbm.update(true);
         // exportMenu.setEnabled(false);
     }
 

@@ -53,6 +53,11 @@ public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
+        // TDQ-9394 hide all "Reload" menu.
+        if (isShowMenu()) {
+            return;
+        }
+
         // MOD bug 16532 scorreia 2010-10-19 hide menu when not in TOP standalone
         // if (!PluginChecker.isOnlyTopLoaded()) {
         // return;

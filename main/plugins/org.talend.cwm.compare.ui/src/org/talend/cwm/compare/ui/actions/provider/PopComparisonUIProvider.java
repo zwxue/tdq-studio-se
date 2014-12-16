@@ -52,7 +52,10 @@ public class PopComparisonUIProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
-
+        // TDQ-9394 hide all "Reload" menu.
+        if (isShowMenu()) {
+            return;
+        }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;

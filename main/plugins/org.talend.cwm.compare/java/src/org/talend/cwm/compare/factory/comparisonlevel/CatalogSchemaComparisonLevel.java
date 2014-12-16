@@ -14,20 +14,10 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -41,7 +31,6 @@ import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -52,7 +41,6 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
@@ -142,38 +130,38 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     protected boolean compareWithReloadObject() throws ReloadCompareException {
 
         // MOD scorreia 2009-01-16 option initialized in CTOR
-        MatchModel match = null;
-        try {
-            // remove the jrxml from the ResourceSet before doMatch
-            Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
-
-            match = MatchService.doContentMatch(getPackageFromObject(selectedObj), getSavedReloadObject(), options);
-
-            // add the jrxml into the ResourceSet after doMatch
-            addJrxmlsIntoResourceSet(rsJrxmlMap);
-        } catch (InterruptedException e) {
-            log.error(e, e);
-            return false;
-        }
-        final DiffModel diff = DiffService.doDiff(match, false);
-        EList<DiffElement> ownedElements = diff.getOwnedElements();
-        for (DiffElement de : ownedElements) {
-            handleSubDiffElement(de);
-        }
+        // MatchModel match = null;
+        // try {
+        // // remove the jrxml from the ResourceSet before doMatch
+        // Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
+        //
+        // match = MatchService.doContentMatch(getPackageFromObject(selectedObj), getSavedReloadObject(), options);
+        //
+        // // add the jrxml into the ResourceSet after doMatch
+        // addJrxmlsIntoResourceSet(rsJrxmlMap);
+        // } catch (InterruptedException e) {
+        // log.error(e, e);
+        // return false;
+        // }
+        // final DiffModel diff = DiffService.doDiff(match, false);
+        // EList<DiffElement> ownedElements = diff.getOwnedElements();
+        // for (DiffElement de : ownedElements) {
+        // handleSubDiffElement(de);
+        // }
         return true;
     }
 
-    private void handleSubDiffElement(DiffElement de) {
-        if (de.getSubDiffElements().size() > 0) {
-            EList<DiffElement> subDiffElements = de.getSubDiffElements();
-            for (DiffElement difElement : subDiffElements) {
-                handleSubDiffElement(difElement);
-            }
-
-        } else {
-            handleDiffPackageElement(de);
-        }
-    }
+    // private void handleSubDiffElement(DiffElement de) {
+    // if (de.getSubDiffElements().size() > 0) {
+    // EList<DiffElement> subDiffElements = de.getSubDiffElements();
+    // for (DiffElement difElement : subDiffElements) {
+    // handleSubDiffElement(difElement);
+    // }
+    //
+    // } else {
+    // handleDiffPackageElement(de);
+    // }
+    // }
 
     @Override
     protected EObject getSavedReloadObject() throws ReloadCompareException {
@@ -321,50 +309,49 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     }
 
     @SuppressWarnings("deprecation")
-    @Override
-    protected void handleAddElement(ModelElementChangeRightTarget addElement) {
-        EObject rightElement = addElement.getRightElement();
-        ColumnSet columnSetSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
-        if (columnSetSwitch != null) {
-
-            if (isValidTableHandle(columnSetSwitch) || isValidViewHandle(columnSetSwitch)) {
-                PackageHelper.addColumnSet(columnSetSwitch, getPackageFromObject(selectedObj));
-            }
-        }
-
-        // ADD msjian TDQ-8546:handle taggedValue
-        if (rightElement instanceof TaggedValue) {
-            TdTable elementOwner = SwitchHelpers.TABLE_SWITCH.doSwitch(addElement.getLeftParent());
-            if (elementOwner != null) {
-                TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) rightElement).getTag(),
-                        ((TaggedValue) rightElement).getValue());
-            }
-        }
-        // TDQ-8546~
-    }
-
-    @Override
-    protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
-        EObject leftElement = removeElement.getLeftElement();
-        ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(leftElement);
-        if (removeColumnSet != null) {
-            popRemoveElementConfirm();
-
-            if (isValidTableHandle(removeColumnSet) || isValidViewHandle(removeColumnSet)) {
-                PackageHelper.removeColumnSet(removeColumnSet, getPackageFromObject(selectedObj));
-            }
-        }
-
-        // ADD msjian TDQ-8546:handle taggedValue
-        if (leftElement instanceof TaggedValue) {
-            TdTable elementOwner = SwitchHelpers.TABLE_SWITCH.doSwitch(leftElement.eContainer());
-            if (elementOwner != null) {
-                TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) leftElement).getTag(), null);
-            }
-        }
-        // TDQ-8546~
-    }
-
+    // @Override
+    // protected void handleAddElement(ModelElementChangeRightTarget addElement) {
+    // EObject rightElement = addElement.getRightElement();
+    // ColumnSet columnSetSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
+    // if (columnSetSwitch != null) {
+    //
+    // if (isValidTableHandle(columnSetSwitch) || isValidViewHandle(columnSetSwitch)) {
+    // PackageHelper.addColumnSet(columnSetSwitch, getPackageFromObject(selectedObj));
+    // }
+    // }
+    //
+    // // ADD msjian TDQ-8546:handle taggedValue
+    // if (rightElement instanceof TaggedValue) {
+    // TdTable elementOwner = SwitchHelpers.TABLE_SWITCH.doSwitch(addElement.getLeftParent());
+    // if (elementOwner != null) {
+    // TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) rightElement).getTag(),
+    // ((TaggedValue) rightElement).getValue());
+    // }
+    // }
+    // // TDQ-8546~
+    // }
+    //
+    // @Override
+    // protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
+    // EObject leftElement = removeElement.getLeftElement();
+    // ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(leftElement);
+    // if (removeColumnSet != null) {
+    // popRemoveElementConfirm();
+    //
+    // if (isValidTableHandle(removeColumnSet) || isValidViewHandle(removeColumnSet)) {
+    // PackageHelper.removeColumnSet(removeColumnSet, getPackageFromObject(selectedObj));
+    // }
+    // }
+    //
+    // // ADD msjian TDQ-8546:handle taggedValue
+    // if (leftElement instanceof TaggedValue) {
+    // TdTable elementOwner = SwitchHelpers.TABLE_SWITCH.doSwitch(leftElement.eContainer());
+    // if (elementOwner != null) {
+    // TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) leftElement).getTag(), null);
+    // }
+    // }
+    // // TDQ-8546~
+    // }
     /**
      * DOC bZhou Comment method "isValidViewHandle".
      * 

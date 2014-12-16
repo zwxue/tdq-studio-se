@@ -55,6 +55,13 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // TDQ-9394 hide all "Reload" menu.
+        if (!isShowMenu()) {
+            return;
+        }
+        if (isShowMenu()) {
+            return;
+        }
         Iterator<?> iter = ((TreeSelection) this.getContext().getSelection()).iterator();
         // remove the "Database Compare" menu when the object is a mdm connection
         while (iter.hasNext()) {

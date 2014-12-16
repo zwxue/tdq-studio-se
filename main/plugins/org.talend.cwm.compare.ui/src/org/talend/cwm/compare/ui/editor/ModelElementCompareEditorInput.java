@@ -19,27 +19,34 @@ import org.eclipse.compare.Splitter;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.ui.ModelCompareInput;
-import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.talend.cwm.compare.DQStructureComparer;
-import org.talend.cwm.compare.ui.actions.provider.CompareModelStructureLabelProvider;
 import org.talend.cwm.compare.ui.views.CompareModelContentMergeViewer;
-import org.talend.cwm.compare.ui.views.CompareModelStructureMergeViewer;
 
 /**
  * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class ModelElementCompareEditorInput extends CompareEditorInput {
+
+    /**
+     * DOC talend2 ModelElementCompareEditorInput constructor comment.
+     * 
+     * @param configuration
+     */
+    public ModelElementCompareEditorInput(CompareConfiguration configuration) {
+        super(configuration);
+        inputListener = new ICompareInputChangeListener() {
+
+            @Override
+            public void compareInputChanged(ICompareInput source) {
+                // structureMergeViewer.setInput(source);
+                // contentMergeViewer.setInput(source);
+            }
+        };
+    }
 
     private Object selectedObject = null;
 
@@ -51,10 +58,10 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
     /**
      * Structure merge viewer of this {@link CompareViewerPane}. It represents the top {@link TreeViewer} of the view.
      */
-    protected ModelStructureMergeViewer structureMergeViewer;
+    // protected ModelStructureMergeViewer structureMergeViewer;
 
     /** {@link DiffModel} result of the underlying comparison. */
-    private final DiffModel diff;
+    // private final DiffModel diff;
 
     /**
      * This listener will be in charge of updating the {@link CompareModelContentMergeViewer} and
@@ -63,30 +70,32 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
     private final ICompareInputChangeListener inputListener;
 
     /** {@link ModelInputSnapshot} result of the underlying comparison. */
-    private final ComparisonResourceSnapshot inputSnapshot;
+    // private final ComparisonResourceSnapshot inputSnapshot;
 
     /** {@link MatchModel} result of the underlying comparison. */
-    private final MatchModel match;
+    // private final MatchModel match;
 
     /**
      * This constructor takes a {@link ModelInputSnapshot} as input.
      * 
      * @param snapshot The {@link ModelInputSnapshot} loaded from an emfdiff.
      */
-    public ModelElementCompareEditorInput(ComparisonResourceSnapshot snapshot, CompareConfiguration comConf, Object selObj) {
-        super(comConf);
-        diff = snapshot.getDiff();
-        match = snapshot.getMatch();
-        inputSnapshot = snapshot;
-        selectedObject = selObj;
-        inputListener = new ICompareInputChangeListener() {
-
-            public void compareInputChanged(ICompareInput source) {
-                structureMergeViewer.setInput(source);
-                contentMergeViewer.setInput(source);
-            }
-        };
-    }
+    // public ModelElementCompareEditorInput(ComparisonResourceSnapshot snapshot, CompareConfiguration comConf, Object
+    // selObj) {
+    // super(comConf);
+    // diff = snapshot.getDiff();
+    // match = snapshot.getMatch();
+    // inputSnapshot = snapshot;
+    // selectedObject = selObj;
+    // inputListener = new ICompareInputChangeListener() {
+    //
+    // @Override
+    // public void compareInputChanged(ICompareInput source) {
+    // structureMergeViewer.setInput(source);
+    // contentMergeViewer.setInput(source);
+    // }
+    // };
+    // }
 
     public void hookLeftPanelContextMenu(boolean compareEachOther) {
         contentMergeViewer.hookContextMenu(compareEachOther);
@@ -110,9 +119,9 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
         final CompareViewerPane pane = new CompareViewerPane(fComposite, SWT.NONE);
 
         contentMergeViewer = new CompareModelContentMergeViewer(pane, getCompareConfiguration(), selectedObject);
-        pane.setContent(contentMergeViewer.getControl());
-
-        contentMergeViewer.setInput(inputSnapshot);
+        // pane.setContent(contentMergeViewer.getControl());
+        //
+        // contentMergeViewer.setInput(inputSnapshot);
         // MOD klliu bug 15529 replace "Td Table" to "Table"
         // ModelContentMergeDiffTab diffTabLeft = contentMergeViewer.diffTabLeft;
         // repaintingTreePart(diffTabLeft);
@@ -156,11 +165,11 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
         final CompareViewerPane pane = new CompareViewerPane(splitter, SWT.NONE);
 
-        structureMergeViewer = new CompareModelStructureMergeViewer(pane, getCompareConfiguration());
-        structureMergeViewer.setLabelProvider(new CompareModelStructureLabelProvider());
-        pane.setContent(structureMergeViewer.getTree());
-
-        structureMergeViewer.setInput(inputSnapshot);
+        // structureMergeViewer = new CompareModelStructureMergeViewer(pane, getCompareConfiguration());
+        // structureMergeViewer.setLabelProvider(new CompareModelStructureLabelProvider());
+        // pane.setContent(structureMergeViewer.getTree());
+        //
+        // structureMergeViewer.setInput(inputSnapshot);
 
         return splitter;
     }
@@ -172,9 +181,10 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
      */
     @Override
     protected Object prepareInput(IProgressMonitor monitor) {
-        final ModelCompareInput input = new ModelCompareInput(match, diff);
-        input.addCompareInputChangeListener(inputListener);
-        return input;
+        // final ModelCompareInput input = new ModelCompareInput(match, diff);
+        // input.addCompareInputChangeListener(inputListener);
+        // return input;
+        return null;
     }
 
     /*
@@ -196,31 +206,31 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
             return false;
         }
         Object compareResult = editorInput.getCompareResult();
-        if (compareResult != null && compareResult instanceof ModelCompareInput) {
-            returnCode &= removeLeftResource((ModelCompareInput) compareResult);
-            returnCode &= removeRightResource((ModelCompareInput) compareResult);
-            returnCode &= removeCurrResource((ModelCompareInput) compareResult);
-        }
+        // if (compareResult != null && compareResult instanceof ModelCompareInput) {
+        // returnCode &= removeLeftResource((ModelCompareInput) compareResult);
+        // returnCode &= removeRightResource((ModelCompareInput) compareResult);
+        // returnCode &= removeCurrResource((ModelCompareInput) compareResult);
+        // }
         return returnCode;
     }
 
-    private boolean removeLeftResource(ModelCompareInput compareResult) {
-        Resource leftResource = compareResult.getLeftResource();
-        return DQStructureComparer.removeResourceFromWorkspace(leftResource);
-    }
+    // private boolean removeLeftResource(ModelCompareInput compareResult) {
+    // Resource leftResource = compareResult.getLeftResource();
+    // return DQStructureComparer.removeResourceFromWorkspace(leftResource);
+    // }
 
-    private boolean removeRightResource(ModelCompareInput compareResult) {
-        Resource rightResource = compareResult.getRightResource();
-        return DQStructureComparer.removeResourceFromWorkspace(rightResource);
-    }
+    // private boolean removeRightResource(ModelCompareInput compareResult) {
+    // Resource rightResource = compareResult.getRightResource();
+    // return DQStructureComparer.removeResourceFromWorkspace(rightResource);
+    // }
 
-    private boolean removeCurrResource(ModelCompareInput compareResult) {
-        Object tempDiff = compareResult.getDiff();
-        Resource currResource = null;
-        if (tempDiff instanceof DiffModel) {
-            currResource = ((DiffModel) tempDiff).eResource();
-        }
-        return DQStructureComparer.removeResourceFromWorkspace(currResource);
-    }
+    // private boolean removeCurrResource(ModelCompareInput compareResult) {
+    // Object tempDiff = compareResult.getDiff();
+    // Resource currResource = null;
+    // if (tempDiff instanceof DiffModel) {
+    // currResource = ((DiffModel) tempDiff).eResource();
+    // }
+    // return DQStructureComparer.removeResourceFromWorkspace(currResource);
+    // }
 
 }

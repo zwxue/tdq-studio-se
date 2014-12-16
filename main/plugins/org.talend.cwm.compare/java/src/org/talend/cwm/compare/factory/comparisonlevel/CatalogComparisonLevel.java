@@ -15,8 +15,6 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -115,24 +113,24 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
         return findMatchPackage;
     }
 
-    @Override
-    protected void handleAddElement(ModelElementChangeRightTarget addElement) {
-        EObject rightElement = addElement.getRightElement();
-        Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
-        if (schema != null) {
-            ConnectionHelper.addSchema(schema, oldDataProvider);
-        }
-    }
-
-    @Override
-    protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
-        Schema removedSchema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removeElement.getLeftElement());
-        if (removedSchema == null) {
-            return;
-        }
-        popRemoveElementConfirm();
-        ((Package) selectedObj).getOwnedElement().remove(removedSchema);
-        // CatalogHelper.(removedSchema, (Package) selectedObj);
-    }
+    // @Override
+    // protected void handleAddElement(ModelElementChangeRightTarget addElement) {
+    // EObject rightElement = addElement.getRightElement();
+    // Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
+    // if (schema != null) {
+    // ConnectionHelper.addSchema(schema, oldDataProvider);
+    // }
+    // }
+    //
+    // @Override
+    // protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
+    // Schema removedSchema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removeElement.getLeftElement());
+    // if (removedSchema == null) {
+    // return;
+    // }
+    // popRemoveElementConfirm();
+    // ((Package) selectedObj).getOwnedElement().remove(removedSchema);
+    // // CatalogHelper.(removedSchema, (Package) selectedObj);
+    // }
 
 }

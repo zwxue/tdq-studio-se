@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.talend.cwm.compare;singleton:=true
 Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: org.talend.cwm.compare.Activator
 Bundle-Vendor: .Talend SA.
-Require-Bundle: org.eclipse.emf.compare;bundle-version="0.8.0",
- org.talend.cwm.management,
+Require-Bundle: org.talend.cwm.management,
  org.apache.commons.lang,
  org.talend.utils,
  org.eclipse.ui,
