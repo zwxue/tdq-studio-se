@@ -27,9 +27,9 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.metadata.managment.ui.wizard.RepositoryWizard;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.wizards.RepositoryWizard;
 
 /**
  * DOC bZhou class global comment. Detailled comment

@@ -63,9 +63,9 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionSubFolderRepNode;
+import org.talend.metadata.managment.ui.dialog.MappingFileSelectDialog;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.wizards.metadata.connection.database.MappingFileSelectDialog;
 import org.talend.repository.ui.wizards.metadata.connection.database.SelectDatabaseJarDialog;
 import org.talend.resource.EResourceConstant;
 
