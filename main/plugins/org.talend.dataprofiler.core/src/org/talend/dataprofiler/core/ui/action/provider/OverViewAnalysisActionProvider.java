@@ -18,8 +18,8 @@ import java.util.List;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.model.IRepositoryNode;
 
 /**

@@ -19,7 +19,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.Item;
@@ -36,10 +35,12 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.metadata.managment.model.MetadataFillFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

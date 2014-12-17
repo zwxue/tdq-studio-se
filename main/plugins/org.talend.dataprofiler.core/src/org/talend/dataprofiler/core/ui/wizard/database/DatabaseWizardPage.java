@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Text;
 import org.jfree.util.Log;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.IXMLDBConnection;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
@@ -55,6 +54,7 @@ import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControlFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.metadata.managment.utils.DatabaseConstant;
 import org.talend.utils.sugars.ReturnCode;
 
 /**

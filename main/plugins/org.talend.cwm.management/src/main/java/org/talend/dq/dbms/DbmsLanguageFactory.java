@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -29,7 +28,9 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.metadata.managment.utils.DatabaseConstant;
 import org.talend.utils.ProductVersion;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 

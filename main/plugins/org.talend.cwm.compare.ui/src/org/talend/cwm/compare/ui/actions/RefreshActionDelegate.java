@@ -50,7 +50,6 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.compare.i18n.Messages;
@@ -61,7 +60,9 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.metadata.managment.model.MetadataFillFactory;
 import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
