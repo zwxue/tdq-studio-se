@@ -18,7 +18,7 @@
    </license>
 
    <includes
-         id="org.talend.top.libraries_feature"
+         id="org.talend.top.libraries-feature"
          version="0.0.0"/>
 
    <includes
