@@ -14,9 +14,9 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;

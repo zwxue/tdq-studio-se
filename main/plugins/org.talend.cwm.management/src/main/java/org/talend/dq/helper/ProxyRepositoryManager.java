@@ -15,6 +15,7 @@ package org.talend.dq.helper;
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.runtime.model.repository.ERepositoryStatus;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.model.general.Project;
@@ -22,7 +23,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.repository.RepositoryWorkUnit;
-import org.talend.repository.model.ERepositoryStatus;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>

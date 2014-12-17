@@ -51,10 +51,10 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -442,7 +442,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         updateBindConnection(masterPage, modelElementIndicators, tree);
         masterPage.refreshTheTree(newsArray);
         masterPage.goLastPage();
-        if(elements!=null&&elements.length>0){
+        if (elements != null && elements.length > 0) {
             selectElement(tree.getItems(), elements[0]);
         }
     }

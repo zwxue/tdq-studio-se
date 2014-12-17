@@ -23,13 +23,13 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.MetadataXmlElementType;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -48,7 +48,6 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
-import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -165,13 +164,13 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
             Connection connection = ConnectionHelper.getConnection((TdTable) firstElement);
             IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
             parameter = new AnalysisParameter();
-            parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
+            parameter.setConnectionRepNode(repositoryNode);
             return getStandardAnalysisWizardDialog(type, parameter);
         } else if (firstElement instanceof TdView) { // Added yyin 20120522 TDQ-4945, support tdView
             Connection connection = ConnectionHelper.getConnection((TdView) firstElement);
             IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
             parameter = new AnalysisParameter();
-            parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
+            parameter.setConnectionRepNode(repositoryNode);
             return getStandardAnalysisWizardDialog(type, parameter);
             // ~4945
         }
@@ -286,8 +285,8 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 if (predefinedColumnIndicator != null) {
                     ColumnMasterDetailsPage masterPage = getMasterPage();
                     if (masterPage != null) {
-                    	masterPage.refreshTheTree(predefinedColumnIndicator);
-                    	masterPage.doSave(null);
+                        masterPage.refreshTheTree(predefinedColumnIndicator);
+                        masterPage.doSave(null);
                     }
                 }
             }

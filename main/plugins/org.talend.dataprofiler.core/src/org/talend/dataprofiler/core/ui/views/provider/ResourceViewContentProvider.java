@@ -32,13 +32,13 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.IMetadataXmlElementType;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -276,8 +276,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     private IRepositoryNode createNewRepNode(ERepositoryObjectType type) {
         IRepositoryViewObject viewObject = null;
 
-        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(), type,
-                Path.EMPTY);
+        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                ProjectManager.getInstance().getCurrentProject(), type, Path.EMPTY);
         if (folderItem == null) {
             String folderName = ERepositoryObjectType.getFolderName(type);
             viewObject = new Folder(folderName, folderName);

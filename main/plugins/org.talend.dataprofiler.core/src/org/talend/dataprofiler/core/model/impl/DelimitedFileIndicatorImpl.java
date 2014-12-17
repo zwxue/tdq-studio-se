@@ -12,8 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.impl;
 
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.TalendTypeConvert;
@@ -32,10 +32,12 @@ public class DelimitedFileIndicatorImpl extends ModelElementIndicatorImpl implem
         return ((MetadataColumnRepositoryObject) this.getModelElementRepositoryNode().getObject()).getTdColumn();
     }
 
+    @Override
     public int getJavaType() {
         return TalendTypeConvert.convertToJDBCType(getMetadataColumn().getTalendType());
     }
 
+    @Override
     public String getElementName() {
         String name = super.getElementName();
         if (name == null) {

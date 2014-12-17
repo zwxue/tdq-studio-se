@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.impl;
 
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.repository.model.IRepositoryNode;
@@ -32,6 +32,7 @@ public class ColumnIndicatorImpl extends ModelElementIndicatorImpl implements Co
         return (TdColumn) ((MetadataColumnRepositoryObject) this.getModelElementRepositoryNode().getObject()).getTdColumn();
     }
 
+    @Override
     public int getJavaType() {
         // return this.getTdColumn().getJavaType();
         return this.getTdColumn().getSqlDataType().getJavaDataType();
