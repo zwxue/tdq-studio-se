@@ -30,7 +30,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -50,6 +49,7 @@ import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
 import org.talend.dq.CWMPlugin;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
+import org.talend.model.bridge.ReponsitoryContextBridge;
 
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;

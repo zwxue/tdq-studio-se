@@ -39,7 +39,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.runtime.model.emf.EmfHelper;
 import org.talend.commons.ui.swt.proposal.ProposalUtils;
@@ -60,8 +59,10 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;

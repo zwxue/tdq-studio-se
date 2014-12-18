@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.views.navigator.ResourceComparator;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.utils.WorkspaceUtils;
+import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.utils.io.FilesUtils;
 
 /**

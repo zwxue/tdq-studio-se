@@ -21,8 +21,8 @@ import org.junit.Test;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.dq.helper.SqlExplorerUtils;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 
 /**
  * created by qiongli on 2013-11-26 Detailled comment

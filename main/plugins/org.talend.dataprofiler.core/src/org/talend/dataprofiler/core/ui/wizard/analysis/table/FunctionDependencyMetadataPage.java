@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.model.bridge.ReponsitoryContextBridge;
 
 /**
  * DOC jet class global comment. Detailled comment
