@@ -24,7 +24,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor;
 import org.talend.commons.utils.system.EclipseCommandLine;
 import org.talend.dataprofiler.rcp.i18n.Messages;
-import org.talend.repository.registeruser.RegisterManagement;
+import org.talend.registration.register.RegisterManagement;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>
