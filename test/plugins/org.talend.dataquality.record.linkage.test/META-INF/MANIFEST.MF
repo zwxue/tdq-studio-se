@@ -5,5 +5,5 @@ Bundle-SymbolicName: org.talend.dataquality.record.linkage.test
 Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.dataquality.record.linkage
-Require-Bundle: org.junit4,
- org.apache.commons.io
+Require-Bundle: org.apache.commons.io,
+ org.junit

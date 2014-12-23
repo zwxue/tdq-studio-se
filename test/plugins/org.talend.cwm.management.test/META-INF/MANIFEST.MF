@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.talend.cwm.management.test
 Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.cwm.management
-Require-Bundle: org.junit4,
- org.talend.testutils,
- org.talend.model
+Require-Bundle: org.talend.testutils,
+ org.talend.model,
+ org.junit
 Bundle-ClassPath: .

@@ -6,6 +6,7 @@ Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.cwm.compare
 Require-Bundle: org.talend.testutils,
- org.talend.common.ui.runtime
+ org.talend.common.ui.runtime,
+ org.junit
 Bundle-ClassPath: .
 Export-Package: org.talend.cwm.compare
