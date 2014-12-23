@@ -34,6 +34,8 @@ import org.talend.dataprofiler.rcp.i18n.Messages;
  */
 public class LinksToolbarItem extends ContributionItem {
 
+    public static final String COOLITEM_LINKS_ID = Activator.PLUGIN_ID + ".CoolItemLinks"; //$NON-NLS-1$
+    
     private ToolItem toolitem;
 
     private static final String LEARN_URL = "<a href=\"http://www.talendforge.org/tutorials/menu.php\">Learn</a>"; //$NON-NLS-1$
