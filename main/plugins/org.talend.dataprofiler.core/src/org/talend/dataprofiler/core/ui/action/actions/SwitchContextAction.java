@@ -26,8 +26,8 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.nodes.ConnectionRepNode;
-import org.talend.repository.ui.utils.SwitchContextGroupNameImpl;
-import org.talend.repository.ui.wizards.metadata.ContextSetsSelectionDialog;
+import org.talend.metadata.managment.ui.utils.SwitchContextGroupNameImpl;
+import org.talend.metadata.managment.ui.wizard.metadata.ContextSetsSelectionDialog;
 
 /**
  * DOC msjian class global comment. Detailled comment

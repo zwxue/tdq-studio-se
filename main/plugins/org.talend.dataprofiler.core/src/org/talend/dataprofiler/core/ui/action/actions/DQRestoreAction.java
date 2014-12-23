@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.repository.ui.actions.RestoreAction;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -29,7 +30,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.actions.RestoreAction;
 
 /**
  * @author qiongli Restore recycle bin element
@@ -86,7 +86,8 @@ public class DQRestoreAction extends RestoreAction {
         RepositoryNode tempNode = node;
         List<IRepositoryNode> recycleBinNodeFirstLevelChildren = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
                 .getChildren();
-        Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper.findAllChildrenNodes(recycleBinNodeFirstLevelChildren);
+        Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper
+                .findAllChildrenNodes(recycleBinNodeFirstLevelChildren);
         Iterator<IRepositoryNode> iterator = allRecycleBinNodes.iterator();
         while (iterator.hasNext()) {
             IRepositoryNode next = iterator.next();

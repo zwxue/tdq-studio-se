@@ -24,7 +24,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
@@ -44,10 +43,12 @@ import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.impl.SumIndicatorImpl;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
+import org.talend.model.emf.CwmResource;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.time.TimeTracer;
+
 import orgomg.cwm.foundation.datatypes.DatatypesFactory;
 import orgomg.cwm.foundation.datatypes.QueryExpression;
 

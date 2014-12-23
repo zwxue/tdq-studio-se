@@ -21,7 +21,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
@@ -34,7 +33,9 @@ import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

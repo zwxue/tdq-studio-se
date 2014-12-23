@@ -53,7 +53,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;

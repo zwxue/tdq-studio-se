@@ -36,7 +36,7 @@ import org.talend.dataprofiler.core.license.LicenseWizard;
 import org.talend.dataprofiler.core.license.LicenseWizardDialog;
 import org.talend.dataprofiler.rcp.i18n.Messages;
 //import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4CoolBar;
-import org.talend.repository.ui.wizards.register.TalendForgeDialog;
+import org.talend.registration.wizards.register.TalendForgeDialog;
 import org.talend.utils.sugars.ReturnCode;
 
 /**

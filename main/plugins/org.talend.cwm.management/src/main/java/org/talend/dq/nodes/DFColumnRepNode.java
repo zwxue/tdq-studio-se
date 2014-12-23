@@ -12,9 +12,9 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.TalendTypeConvert;
 

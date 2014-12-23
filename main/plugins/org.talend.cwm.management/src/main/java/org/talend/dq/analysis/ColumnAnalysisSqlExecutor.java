@@ -42,7 +42,6 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -80,17 +79,18 @@ import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
+import org.talend.metadata.managment.utils.DatabaseConstant;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.RelationalPackage;
-
 import Zql.ParseException;
 
 /**

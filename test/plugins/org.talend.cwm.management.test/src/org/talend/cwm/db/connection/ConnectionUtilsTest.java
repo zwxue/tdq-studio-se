@@ -12,14 +12,11 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,7 +37,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -52,6 +48,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.impl.TdColumnImpl;
 import org.talend.dq.writer.impl.DataProviderWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.resource.relational.Catalog;

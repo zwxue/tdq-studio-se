@@ -39,7 +39,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.ResourceModelUtils;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
@@ -810,7 +809,7 @@ public final class ReportUtils {
             IFolder tempFolder = WorkspaceUtils.fileToIFolder(folder);
             if (tempFolder != null && tempFolder.exists()) {
 
-                IProject fsProject = ResourceModelUtils.getProject(ProjectManager.getInstance().getCurrentProject());
+                IProject fsProject = ResourceUtils.getProject(ProjectManager.getInstance().getCurrentProject());
 
                 String completePath = new Path(ERepositoryObjectType.getFolderName(ERepositoryObjectType.TDQ_REPORT_ELEMENT))
                         .append(tempFolder.getFullPath().makeRelativeTo(reportsFolder.getFullPath())).toString();

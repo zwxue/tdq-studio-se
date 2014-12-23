@@ -81,7 +81,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -89,6 +88,8 @@ import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
+
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;

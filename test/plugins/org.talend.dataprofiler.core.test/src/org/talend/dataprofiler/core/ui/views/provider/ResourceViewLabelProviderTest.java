@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.jfree.util.Log;
 import org.junit.Test;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.context.Context;
@@ -62,10 +61,12 @@ import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
+import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**

@@ -20,14 +20,14 @@ import java.io.InputStreamReader;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.talend.core.repository.model.preview.IPreview;
+import org.talend.core.repository.model.preview.IProcessDescription;
 import org.talend.core.utils.CsvArray;
 import org.talend.core.utils.TalendQuoteUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.helper.FileUtils;
 import org.talend.dq.helper.ParameterUtil;
-import org.talend.repository.preview.IPreview;
-import org.talend.repository.preview.IProcessDescription;
 
 import com.talend.csv.CSVReader;
 

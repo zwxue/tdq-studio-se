@@ -24,7 +24,7 @@ import org.talend.repository.model.IRepositoryNode;
  * ReportSubFolder, all the works should be done in the supder class
  */
 @Deprecated
-public class TdqFolderWizard extends org.talend.repository.ui.wizards.folder.FolderWizard {
+public class TdqFolderWizard extends org.talend.core.repository.ui.wizard.folder.FolderWizard {
 
     private IRepositoryNode _node;
 

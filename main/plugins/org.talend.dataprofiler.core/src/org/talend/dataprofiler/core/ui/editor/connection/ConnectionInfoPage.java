@@ -46,7 +46,6 @@ import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -64,9 +63,11 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
 import org.talend.utils.sugars.ReturnCode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.compare.i18n.Messages;
@@ -34,8 +33,10 @@ import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 

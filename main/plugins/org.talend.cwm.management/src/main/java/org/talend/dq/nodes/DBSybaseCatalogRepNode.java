@@ -20,19 +20,20 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.database.EDatabaseTypeName;
-import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.metadata.managment.model.MetadataFillFactory;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.resource.relational.Schema;
 
 /**

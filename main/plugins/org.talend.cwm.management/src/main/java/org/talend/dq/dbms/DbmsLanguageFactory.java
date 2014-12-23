@@ -28,7 +28,9 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.metadata.managment.utils.DatabaseConstant;
 import org.talend.utils.ProductVersion;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 

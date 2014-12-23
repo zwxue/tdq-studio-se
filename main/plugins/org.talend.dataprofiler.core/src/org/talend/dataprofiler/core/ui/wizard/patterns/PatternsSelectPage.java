@@ -37,12 +37,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Widget;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

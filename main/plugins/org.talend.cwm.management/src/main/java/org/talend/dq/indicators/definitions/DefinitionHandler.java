@@ -29,7 +29,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.EmfFileResourceUtil;
 import org.talend.commons.emf.FactoriesUtil;
@@ -55,7 +54,9 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.model.emf.CwmResource;
 import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

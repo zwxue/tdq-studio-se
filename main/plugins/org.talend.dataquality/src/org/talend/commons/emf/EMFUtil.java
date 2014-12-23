@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.talend.i18n.Messages;
+import org.talend.model.emf.CwmResourceFactory;
 
 /**
  * @author scorreia This class creates the EMF resources and save them. All resources are stored in a ResourceSet (which

@@ -24,7 +24,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
@@ -39,6 +38,8 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.model.bridge.ReponsitoryContextBridge;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

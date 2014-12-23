@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -40,6 +39,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.metadata.managment.model.MetadataFillFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 

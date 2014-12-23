@@ -12,8 +12,8 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.repository.model.RepositoryNode;
 
 /**

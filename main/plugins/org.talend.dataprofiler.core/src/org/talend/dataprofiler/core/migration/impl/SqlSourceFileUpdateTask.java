@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.properties.ByteArray;
@@ -38,6 +37,7 @@ import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.helper.FileUtils;
+import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.model.IProxyRepositoryFactory;
 
 /**

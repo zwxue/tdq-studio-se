@@ -26,7 +26,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.talend.core.utils.PluginUtil;
+import org.talend.core.ui.utils.PluginUtil;
 import org.talend.dataquality.standardization.main.HandLuceneImplTest;
 
 /**

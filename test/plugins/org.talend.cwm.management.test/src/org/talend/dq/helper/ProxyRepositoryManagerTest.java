@@ -12,10 +12,9 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -24,13 +23,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.commons.runtime.model.repository.ERepositoryStatus;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.repository.model.ERepositoryStatus;
-
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @PrepareForTest({ ProxyRepositoryFactory.class })
 public class ProxyRepositoryManagerTest {
@@ -39,8 +37,10 @@ public class ProxyRepositoryManagerTest {
     public PowerMockRule powerMockRule = new PowerMockRule();
 
     private ProxyRepositoryFactory proxFactory;
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -52,6 +52,7 @@ public class ProxyRepositoryManagerTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -59,7 +60,8 @@ public class ProxyRepositoryManagerTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ProxyRepositoryManager#isLocked(org.talend.core.model.properties.Item)}.
+     * Test method for
+     * {@link org.talend.dq.helper.ProxyRepositoryManager#isLocked(org.talend.core.model.properties.Item)}.
      */
     @Test
     public void testIsLocked() {
