@@ -49,9 +49,9 @@ import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.designer.core.model.utils.emf.talendfile.TalendFileFactory;
-import org.talend.repository.ui.utils.ConnectionContextHelper;
-import org.talend.repository.ui.utils.DBConnectionContextUtils;
-import org.talend.repository.ui.utils.SwitchContextGroupNameImpl;
+import org.talend.metadata.managment.ui.utils.ConnectionContextHelper;
+import org.talend.metadata.managment.ui.utils.DBConnectionContextUtils;
+import org.talend.metadata.managment.ui.utils.SwitchContextGroupNameImpl;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 

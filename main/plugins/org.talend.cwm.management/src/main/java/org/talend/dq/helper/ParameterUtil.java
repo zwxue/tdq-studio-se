@@ -23,10 +23,10 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.utils.TalendQuoteUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.metadata.managment.model.MetadataFillFactory;
 
 /**
  * DOC zshen class global comment. Detailled comment.

@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.talend.core.repository.ui.actions.EmptyRecycleBinAction;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -24,7 +25,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.actions.EmptyRecycleBinAction;
 
 /**
  * DOC qiongli class global comment. Detailled comment

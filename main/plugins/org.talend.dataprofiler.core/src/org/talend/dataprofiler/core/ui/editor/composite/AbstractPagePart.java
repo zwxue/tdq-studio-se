@@ -26,12 +26,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -92,8 +92,8 @@ public abstract class AbstractPagePart {
     }
 
     /**
-     * ADD mzhao 2009-05-05 bug:6587. MOD 20130524 TDQ-7327 yyin: even when the indicators is empty, if the tdProvider is not null, should
-     * also set the connection state
+     * ADD mzhao 2009-05-05 bug:6587. MOD 20130524 TDQ-7327 yyin: even when the indicators is empty, if the tdProvider
+     * is not null, should also set the connection state
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ModelElementIndicator[] indicators, Tree tree) {
         // MOD mzhao 2010-07-24, avoid a NPE, feature 13221
@@ -209,7 +209,8 @@ public abstract class AbstractPagePart {
             }
 
             // MOD qiongli 2011-5-16 bug 21453
-            if (prop != null && prop.getItem() != null && prop.getItem().getState() != null && prop.getItem().getState().isDeleted()) {
+            if (prop != null && prop.getItem() != null && prop.getItem().getState() != null
+                    && prop.getItem().getState().isDeleted()) {
                 masterPage.getLabelConnDeleted().setVisible(true);
                 masterPage.getLabelConnDeleted().setText(
                         DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", prop.getDisplayName()));//$NON-NLS-1$
@@ -265,7 +266,8 @@ public abstract class AbstractPagePart {
                     }
 
                     /**
-                     * check the connection is available or not(the connection is exist and not proxy, don't check the connection).
+                     * check the connection is available or not(the connection is exist and not proxy, don't check the
+                     * connection).
                      * 
                      * @return a ReturnCode, the message is the connection label
                      */
@@ -311,7 +313,8 @@ public abstract class AbstractPagePart {
     }
 
     // MOD mzhao 2009-06-09 feature 5887
-    private Connection callChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, final int oldSelect, Connection tdProvider) {
+    private Connection callChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, final int oldSelect,
+            Connection tdProvider) {
         Connection returnProvider = tdProvider;
         ChangeConnectionAction changeConnAction = new ChangeConnectionAction(masterPage, tdProvider);
         changeConnAction.run();
@@ -342,7 +345,8 @@ public abstract class AbstractPagePart {
             // time connection changes.
             Object connObject = masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
             if (connObject instanceof RepositoryNode) {
-                returnProvider = ((ConnectionItem) ((RepositoryNode) connObject).getObject().getProperty().getItem()).getConnection();
+                returnProvider = ((ConnectionItem) ((RepositoryNode) connObject).getObject().getProperty().getItem())
+                        .getConnection();
             } else if (connObject instanceof Connection) {
                 returnProvider = (Connection) connObject;
             }

@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.talend.model.emf.CwmResourceFactory;
 
 /**
  * DOC sizhaoliu class global comment. Detailled comment

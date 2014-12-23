@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 import org.apache.lucene.queryParser.ParseException;
 import org.junit.Test;
-import org.talend.core.utils.PluginUtil;
+import org.talend.core.ui.utils.PluginUtil;
 
 public class HandLuceneImplTest extends TestCase {
 

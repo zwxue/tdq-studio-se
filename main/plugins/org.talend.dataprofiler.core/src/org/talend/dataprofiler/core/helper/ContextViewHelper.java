@@ -18,9 +18,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.ui.context.view.AbstractContextView;
+import org.talend.core.ui.context.view.Contexts;
 import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
 import org.talend.dataprofiler.core.ui.views.context.TdqContextView;
-import org.talend.designer.core.ui.views.contexts.Contexts;
 
 /**
  * created by msjian on 2014-6-19 Detailled comment

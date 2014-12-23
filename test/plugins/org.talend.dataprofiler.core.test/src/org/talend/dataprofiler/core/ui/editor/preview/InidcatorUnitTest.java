@@ -19,10 +19,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;

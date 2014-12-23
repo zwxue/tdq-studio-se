@@ -45,10 +45,10 @@ import org.eclipse.ui.texteditor.IElementStateListener;
 import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.ui.context.view.AbstractContextView;
+import org.talend.core.ui.context.view.Contexts;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.views.context.TdqContextView;
-import org.talend.designer.core.ui.views.contexts.Contexts;
 import org.talend.repository.model.RepositoryNode;
 
 /**
