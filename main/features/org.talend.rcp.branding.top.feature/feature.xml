@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.talend.rcp.branding.top-feature"
+      id="org.talend.rcp.branding.top.feature"
       label="Top_feature Feature"
       version="6.0.0.qualifier"
       provider-name=".Talend SA.">
@@ -22,11 +22,11 @@
    </url>
 
    <includes
-         id="org.talend.top-feature"
+         id="org.talend.top.feature"
          version="0.0.0"/>
 
    <includes
-         id="org.talend.update.p2-feature"
+         id="org.talend.update.p2.feature"
          version="0.0.0"/>
 
    <plugin

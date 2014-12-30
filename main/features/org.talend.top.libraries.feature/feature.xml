@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.talend.top.libraries-feature"
+      id="org.talend.top.libraries.feature"
       label="Libraries_feature Feature"
       version="6.0.0.qualifier"
       provider-name=".Talend SA.">
@@ -18,15 +18,15 @@
    </license>
 
    <includes
-         id="org.talend.libraries.jdbc_feature"
+         id="org.talend.libraries.jdbc.feature"
          version="0.0.0"/>
 
    <includes
-         id="org.talend.utils-feature"
+         id="org.talend.utils.feature"
          version="0.0.0"/>
 
    <includes
-         id="org.talend.commons_feature"
+         id="org.talend.commons.feature"
          version="0.0.0"/>
 
    <requires>
