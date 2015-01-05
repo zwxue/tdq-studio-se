@@ -7,7 +7,6 @@ Bundle-Vendor: .Talend SA.
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.jface,
  org.eclipse.ui.workbench,
- org.talend.libraries.jfreechart,
  org.talend.core.ui,
  org.talend.dataquality,
  org.talend.cwm.management,
@@ -15,12 +14,10 @@ Require-Bundle: org.eclipse.jface,
  org.talend.commons.ui,
  org.talend.dataquality.record.linkage,
  org.eclipse.nebula.widgets.pagination,
- org.talend.libraries.mapdb
+ org.talend.libraries.mapdb,
+ org.talend.dataprofiler.service
 Export-Package: org.talend.dataprofiler.common.ui.dialog,
  org.talend.dataprofiler.common.ui.editor.preview,
- org.talend.dataprofiler.common.ui.editor.preview.chart,
- org.talend.dataprofiler.common.ui.editor.preview.chart.renderer,
- org.talend.dataprofiler.common.ui.editor.preview.chart.utils,
  org.talend.dataprofiler.common.ui.pagination.pageloder
 Import-Package: org.eclipse.ui.actions,
  org.talend.core,
@@ -28,3 +25,4 @@ Import-Package: org.eclipse.ui.actions,
  org.talend.repository
 Bundle-ClassPath: .,
  dist/org.talend.dataprofiler.common.ui.jar
+Bundle-Activator: org.talend.dataprofiler.common.ui.CommonUIPlogin

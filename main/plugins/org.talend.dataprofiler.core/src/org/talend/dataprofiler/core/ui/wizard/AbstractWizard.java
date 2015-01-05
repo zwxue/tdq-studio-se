@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2014 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
-import org.jfree.util.Log;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -49,6 +49,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC zqin class global comment. Detailled comment
  */
 public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapter {
+
+    private static Logger log = Logger.getLogger(AbstractWizard.class);
 
     protected ModelElement modelElement = null;
 
@@ -121,7 +123,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                         conns.add(connItem.getConnection());
                     }
                 } catch (PersistenceException e) {
-                    Log.error(e, e);
+                    log.error(e, e);
                 }
                 modelElements.addAll(conns);
                 break;

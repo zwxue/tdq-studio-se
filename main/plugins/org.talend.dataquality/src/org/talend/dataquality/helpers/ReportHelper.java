@@ -146,7 +146,7 @@ public final class ReportHelper {
         }
 
         public static List<String> getLabels() {
-            List<String> list = new ArrayList<>();
+            List<String> list = new ArrayList<String>();
             for (ReportType t : ReportType.values()) {
                 if (!list.contains(t.getLabel())) {
                     list.add(t.getLabel());
@@ -356,7 +356,7 @@ public final class ReportHelper {
      * @return a list of analyses or an empty list. Do not use this list to add analysis to the report.
      */
     public static List<Analysis> getAnalyses(Report report) {
-        List<Analysis> analyses = new ArrayList<>();
+        List<Analysis> analyses = new ArrayList<Analysis>();
         // MOD yyin 20120530 TDQ-5050
         if (report instanceof TdReport) {
             for (AnalysisMap anaMap : ((TdReport) report).getAnalysisMap()) {

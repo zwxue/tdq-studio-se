@@ -30,15 +30,11 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
@@ -53,11 +49,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jfree.chart.ChartMouseEvent;
-import org.jfree.chart.ChartMouseListener;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -66,13 +57,12 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
-import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataprofiler.core.ui.editor.analysis.TablesSelectionDialog.TableSelectionType;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
 import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
@@ -82,6 +72,7 @@ import org.talend.dataprofiler.core.ui.events.IEventReceiver;
 import org.talend.dataprofiler.core.ui.events.TableDynamicChartEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
+import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
@@ -193,7 +184,7 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
         createContextGroupSection(form, topComp);
 
         // MOD klliu Hide the setting pate graphics 2011-03-11
-        if (!EditorPreferencePage.isHideGraphics()) {
+        if (canShowChart()) {
             createPreviewComposite();
 
             createPreviewSection(form, previewComp);
@@ -361,7 +352,7 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
                                 for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
                                     List<TableIndicatorUnit> units = indicatorComposite.get(chartType);
                                     if (!units.isEmpty()) {
-                                        final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartStateTable(
+                                        final IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartStateOfTableAna(
                                                 chartType, units, tableIndicator);
                                         // get all indicator lists separated by chart, and only
                                         // WhereRuleStatisticsStateTable can get not-null charts
@@ -369,14 +360,13 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
                                                 .getPagedIndicators();
                                         // Added TDQ-9241: for each list(for each chart), check if the current
                                         // list has been registered dynamic event
-                                        List<DefaultCategoryDataset> datasets = new ArrayList<DefaultCategoryDataset>();
+                                        List<Object> datasets = new ArrayList<Object>();
                                         for (List<Indicator> oneChart : pagedIndicators) {
                                             IEventReceiver event = EventManager.getInstance().findRegisteredEvent(
                                                     oneChart.get(0), EventEnum.DQ_DYMANIC_CHART, 0);
                                             if (event != null) {
                                                 // get the dataset from the event
-                                                DefaultCategoryDataset dataset = ((TableDynamicChartEventReceiver) event)
-                                                        .getDataset();
+                                                Object dataset = ((TableDynamicChartEventReceiver) event).getDataset();
                                                 // if there has the dataset for the current rule, use it to replace,
                                                 // (only happen when first switch from master to result page, during
                                                 // one running)
@@ -387,7 +377,7 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
                                             }// ~
                                         }
                                         // create chart
-                                        List<JFreeChart> charts = null;
+                                        List<Object> charts = null;
                                         if (datasets.size() > 0) {
                                             charts = chartTypeState.getChartList(datasets);
                                         } else {
@@ -396,20 +386,19 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
                                         int index = 0;
 
                                         if (charts != null) {
-                                            for (JFreeChart chart : charts) {
-                                                final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
+                                            for (Object chart : charts) {
+                                                Object chartComp = TOPChartUtils.getInstance().createChartComposite(comp,
+                                                        SWT.NONE, chart, true);
+
                                                 // Added TDQ-8787 20140707 yyin: create and store the dynamic model
                                                 DynamicIndicatorModel dyModel = AnalysisUtils.createDynamicModel(chartType,
                                                         pagedIndicators.get(index++), chart);
                                                 dynamicList.add(dyModel);
                                                 // ~
 
-                                                GridData gd = new GridData();
-                                                gd.widthHint = 550;
-                                                gd.heightHint = 250;
-                                                chartComp.setLayoutData(gd);
-
-                                                addListenerToChartComp(chartComp, chartTypeState);
+                                                TOPChartUtils.getInstance().addListenerToChartComp(chartComp,
+                                                        chartTypeState.getReferenceLink(),
+                                                        DefaultMessagesImpl.getString("TableMasterDetailsPage.what")); //$NON-NLS-1$
                                             }
                                         }
                                     }
@@ -445,36 +434,6 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
         if (!previewChartList.isEmpty()) {
             this.previewChartCompsites = previewChartList.toArray(new Composite[previewChartList.size()]);
         }
-    }
-
-    private void addListenerToChartComp(final ChartComposite chartComp, final IChartTypeStates chartTypeState) {
-        chartComp.addChartMouseListener(new ChartMouseListener() {
-
-            public void chartMouseClicked(ChartMouseEvent event) {
-                final String referenceLink = chartTypeState.getReferenceLink();
-                if (event.getTrigger().getButton() == 1 && referenceLink != null) {
-                    Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
-                    chartComp.setMenu(menu);
-
-                    MenuItem item = new MenuItem(menu, SWT.PUSH);
-                    item.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.what")); //$NON-NLS-1$
-                    item.addSelectionListener(new SelectionAdapter() {
-
-                        @Override
-                        public void widgetSelected(SelectionEvent e) {
-                            ChartUtils.openReferenceLink(referenceLink);
-                        }
-                    });
-
-                    menu.setVisible(true);
-                }
-            }
-
-            public void chartMouseMoved(ChartMouseEvent event) {
-                // no implements
-            }
-
-        });
     }
 
     @Override
