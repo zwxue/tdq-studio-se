@@ -196,7 +196,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
         createContextGroupSection(form, topComp);
 
-        if (canShowChart()) {
+        if (!EditorPreferencePage.isHideGraphics()) {
             createPreviewComposite();
 
             createPreviewSection(form, previewComp);

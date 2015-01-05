@@ -12,18 +12,27 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.PieStatisticsStateUtil;
+import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.FrequencyLabelProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.PieStatisticsExplorer;
 import org.talend.dq.indicators.ext.FrequencyExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
@@ -37,10 +46,6 @@ public class PieStatisticsState extends AbstractChartTypeStates {
 
     private String title = PluginConstant.EMPTY_STRING;
 
-    /**
-     * @deprecated
-     */
-    @Deprecated
     public PieStatisticsState(List<IndicatorUnit> units) {
         super(units);
     }
@@ -55,8 +60,8 @@ public class PieStatisticsState extends AbstractChartTypeStates {
      * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChart()
      */
-    public Object getChart() {
-        return TOPChartUtils.getInstance().createPieChart(getTitle(), getPieDataset(), true, true, false);
+    public JFreeChart getChart() {
+        return TopChartFactory.createPieChart(getTitle(), getPieDataset(), true, true, false);
     }
 
     /*
@@ -64,7 +69,7 @@ public class PieStatisticsState extends AbstractChartTypeStates {
      * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getExampleChart()
      */
-    public Object getExampleChart() {
+    public JFreeChart getExampleChart() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -75,7 +80,7 @@ public class PieStatisticsState extends AbstractChartTypeStates {
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getDataExplorer()
      */
     public DataExplorer getDataExplorer() {
-        return PieStatisticsStateUtil.getDataExplorer();
+        return new PieStatisticsExplorer();
     }
 
     /*
@@ -88,9 +93,43 @@ public class PieStatisticsState extends AbstractChartTypeStates {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getTableStructure()
+     */
     @Override
-    public Object getPieDataset() {
-        Map<String, Double> valueMap = new HashMap<String, Double>();
+    protected TableStructureEntity getTableStructure() {
+        TableStructureEntity entity = new TableStructureEntity();
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity.setFieldWidths(new Integer[] { 200, 150, 150 });
+        return entity;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getLabelProvider()
+     */
+    @Override
+    protected ITableLabelProvider getLabelProvider() {
+        return new FrequencyLabelProvider();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getContentProvider()
+     */
+    @Override
+    protected IStructuredContentProvider getContentProvider() {
+        return new CommonContenteProvider();
+    }
+
+    @Override
+    public PieDataset getPieDataset() {
+        DefaultPieDataset dataset = new DefaultPieDataset();
         for (IndicatorUnit unit : units) {
             if (unit.isExcuted()) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
@@ -98,13 +137,19 @@ public class PieStatisticsState extends AbstractChartTypeStates {
                 int numOfShown = frequencyExt.length;
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
-                    String keyLabel = PieStatisticsStateUtil.getkeyLabel(freqExt);
+                    String keyLabel = String.valueOf(freqExt.getKey());
+                    if ("null".equals(keyLabel)) { //$NON-NLS-1$
+                        keyLabel = SpecialValueDisplay.NULL_FIELD;
+                    }
+                    if (PluginConstant.EMPTY_STRING.equals(keyLabel)) {
+                        keyLabel = SpecialValueDisplay.EMPTY_FIELD;
+                    }
                     Double percent = freqExt.getFrequency();
-                    valueMap.put(keyLabel, percent);
+                    dataset.setValue(keyLabel, percent);
                 }
             }
         }
-        return TOPChartUtils.getInstance().createPieDataset(valueMap);
+        return dataset;
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -114,15 +159,34 @@ public class PieStatisticsState extends AbstractChartTypeStates {
             if (unit.isExcuted()) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
 
-                int numOfShown = PieStatisticsStateUtil.getNumberOfShown(unit, frequencyExt);
+                int numOfShown = frequencyExt.length;
+                IndicatorParameters parameters = unit.getIndicator().getParameters();
+                if (parameters != null) {
+                    if (parameters.getTopN() < numOfShown) {
+                        numOfShown = parameters.getTopN();
+                    }
+                }
 
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
-                    String keyLabel = PieStatisticsStateUtil.getkeyLabel(freqExt);
+                    String keyLabel = String.valueOf(freqExt.getKey());
+                    if ("null".equals(keyLabel)) { //$NON-NLS-1$
+                        keyLabel = SpecialValueDisplay.NULL_FIELD;
+                    }
+                    if (PluginConstant.EMPTY_STRING.equals(keyLabel)) {
+                        keyLabel = SpecialValueDisplay.EMPTY_FIELD;
+                    }
 
                     customerdataset.addValue(freqExt.getValue(), PluginConstant.EMPTY_STRING, keyLabel);
+                    ChartDataEntity entity = new ChartDataEntity();
+                    entity.setIndicator(unit.getIndicator());
+                    entity.setKey(freqExt.getKey());
+                    entity.setLabelNull(freqExt.getKey() == null);
+                    entity.setLabel(keyLabel);
+                    entity.setValue(String.valueOf(freqExt.getValue()));
 
-                    ChartDataEntity entity = PieStatisticsStateUtil.createDataEntity(unit, freqExt, keyLabel);
+                    Double percent = freqExt.getFrequency();
+                    entity.setPercent(percent);
 
                     customerdataset.addDataEntity(entity);
                 }

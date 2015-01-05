@@ -35,6 +35,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.data.category.CategoryDataset;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
@@ -80,6 +81,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
      */
     public DynamicAnalysisMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+        // TODO Auto-generated constructor stub
     }
 
     protected void createPreviewComposite() {
@@ -233,7 +235,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
         // register dynamic event,for the indicator (for each column)
         for (DynamicIndicatorModel oneCategoryIndicatorModel : indiAndDatasets) {
-            Object categoryDataset = oneCategoryIndicatorModel.getDataset();
+            CategoryDataset categoryDataset = oneCategoryIndicatorModel.getDataset();
             if (EIndicatorChartType.SUMMARY_STATISTICS.equals(oneCategoryIndicatorModel.getChartType())) {
                 // when all summary indicators are selected
                 DynamicBAWChartEventReceiver bawReceiver = AnalysisUtils.createDynamicBAWChartEventReceiver(

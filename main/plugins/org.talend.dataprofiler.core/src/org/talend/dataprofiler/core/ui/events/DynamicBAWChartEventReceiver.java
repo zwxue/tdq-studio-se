@@ -18,11 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jfree.chart.JFreeChart;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultBAWDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -34,7 +36,7 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
 
     private CustomerDefaultBAWDataset bawDataset;
 
-    private Object BAWparentComposite = null;
+    private TalendChartComposite BAWparentComposite = null;
 
     private List<IndicatorUnit> indicators = new ArrayList<IndicatorUnit>();
 
@@ -108,10 +110,11 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
                 // The BAW chart doesnot support dynamic, so only can create a new one after all finished.
                 SummaryStatisticsState state = new SummaryStatisticsState(indicators);
                 state.setSqltype(Types.DOUBLE);
-                Object chart = state.getChart();
-                TOPChartUtils.getInstance().decorateChart(chart, false);
+                JFreeChart chart = state.getChart();
+                ChartDecorator.decorate(chart, null);
                 if (BAWparentComposite != null) {
-                    TOPChartUtils.getInstance().refrechChart(BAWparentComposite, chart);
+                    BAWparentComposite.setChart(chart);
+                    BAWparentComposite.forceRedraw();
                 }
 
                 EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
@@ -153,7 +156,9 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
     @Override
     public void clearValue() {
         if (bawDataset != null && bawDataset.getRowCount() == 7) {
-            bawDataset.clear();
+            for (int i = 0; i < 7; i++) {
+                bawDataset.remove(String.valueOf(i), "");//$NON-NLS-1$ 
+            }
         }
     }
 
@@ -185,7 +190,7 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
      * 
      * @param bAWparentComposite the bAWparentComposite to set
      */
-    public void setBAWparentComposite(Object bAWparentComposite) {
+    public void setBAWparentComposite(TalendChartComposite bAWparentComposite) {
         this.BAWparentComposite = bAWparentComposite;
     }
 }

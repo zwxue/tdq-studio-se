@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -62,6 +61,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.jfree.util.Log;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
@@ -96,8 +96,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
-
-    private static Logger log = Logger.getLogger(IndicatorDefinitionMaterPage.class);
 
     protected static final Image DELETE_BUTTON_IMAGE = ImageLib.getImage(ImageLib.DELETE_ACTION);
 
@@ -1890,7 +1888,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                             getDateExpression().getBody()));
                 }
             } catch (CloneNotSupportedException e) {
-                log.error(e.getMessage());
+                Log.error(e.getMessage());
             }
             return ade;
         }

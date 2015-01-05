@@ -14,9 +14,11 @@ package org.talend.dataprofiler.core.ui.events;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.ModeIndicator;
@@ -33,7 +35,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     protected static final String NAN_STRING = String.valueOf(Double.NaN);
 
-    protected Object dataset;
+    protected DefaultCategoryDataset dataset;
 
     protected Indicator indicator;
 
@@ -47,6 +49,10 @@ public class DynamicChartEventReceiver extends EventReceiver {
     protected TableViewer tableViewer = null;
 
     protected Composite chartComposite;
+
+    public void setDataset(CategoryDataset categoryDataset) {
+        this.dataset = (DefaultCategoryDataset) categoryDataset;
+    }
 
     public int getIndexInDataset() {
         return this.entityIndex;
@@ -68,7 +74,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
      * 
      * @return the dataset
      */
-    public Object getDataset() {
+    public DefaultCategoryDataset getDataset() {
         return this.dataset;
     }
 
@@ -77,7 +83,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
      * 
      * @param dataset the dataset to set
      */
-    public void setDataset(Object dataset) {
+    public void setDataset(DefaultCategoryDataset dataset) {
         this.dataset = dataset;
     }
 
@@ -116,20 +122,20 @@ public class DynamicChartEventReceiver extends EventReceiver {
         }
         if (dataset != null) {
             if (indValue instanceof Number) {
-                TOPChartUtils.getInstance().setValue(dataset, (Number) indValue, indicatorName, indicatorName);
+                ((CustomerDefaultCategoryDataset) dataset).setValue((Number) indValue, indicatorName, indicatorName);
             } else if (indValue instanceof String) {
                 if (!(indicator instanceof ModeIndicator)) {
-                    TOPChartUtils.getInstance().setValue(dataset, Double.parseDouble((String) indValue), indicatorName,
+                    ((CustomerDefaultCategoryDataset) dataset).setValue(Double.parseDouble((String) indValue), indicatorName,
                             indicatorName);
                 }
             } else if (indValue instanceof PatternMatchingExt) {
                 PatternMatchingExt patternExt = (PatternMatchingExt) indValue;
-                TOPChartUtils.getInstance().setValue(dataset, patternExt.getNotMatchingValueCount(),
+                ((CustomerDefaultCategoryDataset) dataset).setValue(patternExt.getNotMatchingValueCount(),
                         DefaultMessagesImpl.getString("PatternStatisticsState.NotMatching"), this.indicatorName);//$NON-NLS-1$
-                TOPChartUtils.getInstance().setValue(dataset, patternExt.getMatchingValueCount(),
+                ((CustomerDefaultCategoryDataset) dataset).setValue(patternExt.getMatchingValueCount(),
                         DefaultMessagesImpl.getString("PatternStatisticsState.Matching"), this.indicatorName);//$NON-NLS-1$
             } else {
-                TOPChartUtils.getInstance().setValue(dataset,
+                ((CustomerDefaultCategoryDataset) dataset).setValue(
                         (Number) StringFormatUtil.format(indValue, StringFormatUtil.NUMBER), indicatorName, indicatorName);
             }
         }
@@ -145,7 +151,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     public void clearValue() {
         if (dataset != null) {
-            TOPChartUtils.getInstance().setValue(dataset, 0.0, indicatorName, indicatorName);
+            dataset.setValue(0.0, indicatorName, indicatorName);
         }
         if (tableViewer != null) {
             refreshTable(NAN_STRING);
@@ -153,7 +159,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
     }
 
     public void refreshTable(String value) {
-        TableWithData input = (TableWithData) tableViewer.getInput();
+        ChartWithData input = (ChartWithData) tableViewer.getInput();
         if (input != null) {
             ChartDataEntity[] dataEntities = input.getEnity();
             if (dataEntities != null && dataEntities.length > entityIndex) {

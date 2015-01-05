@@ -13,25 +13,48 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Table;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerXYSeriesCollection;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonStateUtil;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.WhereRuleStatisticsStateUtil;
+import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.PatternLabelProvider;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
+import org.talend.dq.analysis.explore.DQRuleExplorer;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -57,16 +80,31 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     public WhereRuleStatisticsStateTable(List<TableIndicatorUnit> units, TableIndicator tableIndicator) {
         super(units);
         this.tableIndicator = tableIndicator;
-        this.rowCount = WhereRuleStatisticsStateUtil.initRowCount(tableIndicator);
+        this.rowCount = initRowCount(tableIndicator);
     }
 
     @Override
-    public Object getChart() {
-        List<Object> chartList = getChartList();
+    public JFreeChart getChart() {
+        List<JFreeChart> chartList = getChartList();
         if (chartList != null && chartList.size() > 0) {
             return chartList.get(0);
         }
         return null;
+    }
+
+    private Long initRowCount(TableIndicator tableIndicator1) {
+        Long result = 0L;
+        if (tableIndicator1 != null) {
+            TableIndicatorUnit[] tius = tableIndicator1.getIndicatorUnits();
+            for (TableIndicatorUnit tiu : tius) {
+                if (tiu.getIndicator() instanceof RowCountIndicator) {
+                    RowCountIndicator rci = (RowCountIndicator) tiu.getIndicator();
+                    result = rci.getCount();
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -93,45 +131,84 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
         return customerDataset;
     }
 
+    /**
+     * DOC xqliu Comment method "getUnitToolTip". ADD xqliu 2010-03-10 feature 10834
+     * 
+     * @param unit
+     * @return
+     */
+    private String getUnitToolTip(TableIndicatorUnit unit) {
+        if (unit != null) {
+            if (unit.getIndicator() != null && unit.getIndicator().getIndicatorDefinition() != null) {
+                IndicatorDefinition indicatorDefinition = unit.getIndicator().getIndicatorDefinition();
+                TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DESCRIPTION,
+                        indicatorDefinition.getTaggedValue());
+                if (taggedValue != null) {
+                    return taggedValue.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     public ICustomerDataset getCustomerXYDataset() {
-        Map<Integer, Double> valueMap = new HashMap<Integer, Double>();
-
+        final CustomerXYSeriesCollection dataset = new CustomerXYSeriesCollection();
+        final XYSeries series = new XYSeries("Rules"); //$NON-NLS-1$
         int x = 0;
         for (TableIndicatorUnit unit : units) {
             x++;
             double y = 100 * (1 - (Double.parseDouble(unit.getValue().toString()) / getRowCount()));
-            valueMap.put(x, y);
+            series.add(x, y);
+            dataset.addSeries(series);
         }
-        final CustomerXYSeriesCollection dataset = new CustomerXYSeriesCollection(valueMap);
-
         return dataset;
     }
 
     public DataExplorer getDataExplorer() {
-        return WhereRuleStatisticsStateUtil.getDataExplorer();
+        return new DQRuleExplorer();
     }
 
-    public Object getExampleChart() {
+    public JFreeChart getExampleChart() {
         return null;
+    }
+
+    @Override
+    protected TableStructureEntity getTableStructure() {
+        TableStructureEntity entity = new TableStructureEntity();
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.Label"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.Match"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.NoMatch"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.Match_"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.NoMatch_") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        entity.setFieldWidths(new Integer[] { 200, 75, 75, 75, 75 });
+        return entity;
+    }
+
+    protected TableStructureEntity getTableStructureRowCount() {
+        TableStructureEntity entity = new TableStructureEntity();
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("SimpleStatisticsStateTable.Label"), DefaultMessagesImpl.getString("SimpleStatisticsStateTable.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity.setFieldWidths(new Integer[] { 200, 150, 150 });
+        return entity;
+    }
+
+    @Override
+    protected ITableLabelProvider getLabelProvider() {
+        return new WhereRuleTableLabelProvider(this.getRowCount());
+    }
+
+    @Override
+    protected IStructuredContentProvider getContentProvider() {
+        return new CommonContenteProvider();
     }
 
     public String getReferenceLink() {
         return null;
     }
 
-    private List<Object> tempDatasets;
-
-    // better call this after getChartList()
-    public List<Object> getTempDatasetList() {
-        return tempDatasets;
-    }
-
     @Override
-    public List<Object> getChartList() {
+    public List<JFreeChart> getChartList() {
         // MOD xqliu 2010-03-17 feature 10834
-        tempDatasets = getOptimizeShowDataset();
-        return getChartList(tempDatasets);
+        List<DefaultCategoryDataset> optimizeShowDataset = getOptimizeShowDataset();
+        return getChartList(optimizeShowDataset);
     }
 
     /**
@@ -139,8 +216,8 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      * 
      * @return
      */
-    private List<Object> getOptimizeShowDataset() {
-        List<Object> result = new ArrayList<Object>();
+    private List<DefaultCategoryDataset> getOptimizeShowDataset() {
+        List<DefaultCategoryDataset> result = new ArrayList<DefaultCategoryDataset>();
         // get the page size
         int size = getSizeOfDQRulePerChart();
 
@@ -194,8 +271,31 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     }
 
     public List<List<Indicator>> getPagedIndicators() {
+        int size = getSizeOfDQRulePerChart();
 
-        return WhereRuleStatisticsStateUtil.getPagedIndicators(units);
+        List<List<Indicator>> indicatorList = new ArrayList<List<Indicator>>();
+        // first , add row count indicator
+        List<Indicator> rowInd = new ArrayList<Indicator>();
+        rowInd.add(getRownCountUnit(units).getIndicator());
+        indicatorList.add(rowInd);
+
+        // then, add all where rules(one chart <--> one list)
+        List<TableIndicatorUnit> whereRuleUnits = removeRowCountUnit(units);
+        int totalNum = whereRuleUnits.size();
+        int pageNum = totalNum % size == 0 ? totalNum / size : totalNum / size + 1;
+        for (int i = 0; i < pageNum; i++) {
+            List<Indicator> rules = new ArrayList<Indicator>();
+            for (int j = 0; j < size; ++j) {
+                int index = i * size + j;
+                if (index < totalNum) {
+                    rules.add(whereRuleUnits.get(index).getIndicator());
+                } else {
+                    break;
+                }
+            }
+            indicatorList.add(rules);
+        }
+        return indicatorList;
     }
 
     /**
@@ -205,7 +305,13 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      * @return
      */
     public List<TableIndicatorUnit> removeRowCountUnit(List<TableIndicatorUnit> units1) {
-        return WhereRuleStatisticsStateUtil.removeRowCountUnit(units1);
+        List<TableIndicatorUnit> result = new ArrayList<TableIndicatorUnit>();
+        for (TableIndicatorUnit tiu : units1) {
+            if (!IndicatorEnum.RowCountIndicatorEnum.equals(tiu.getType())) {
+                result.add(tiu);
+            }
+        }
+        return result;
     }
 
     /**
@@ -215,7 +321,12 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      * @return
      */
     public TableIndicatorUnit getRownCountUnit(List<TableIndicatorUnit> units1) {
-        return WhereRuleStatisticsStateUtil.getRownCountUnit(units1);
+        for (TableIndicatorUnit tiu : units1) {
+            if (IndicatorEnum.RowCountIndicatorEnum.equals(tiu.getType())) {
+                return tiu;
+            }
+        }
+        return null;
     }
 
     /**
@@ -227,16 +338,36 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     private void addDataEntity2CustomerDataset(CustomerDefaultCategoryDataset customerDataset, TableIndicatorUnit unit) {
         if (IndicatorEnum.WhereRuleIndicatorEnum.equals(unit.getType())) {
             String columnKey = unit.getIndicatorName();
-            double value = WhereRuleStatisticsStateUtil.getMatchValue(unit.getValue());
-            double valueNotM = WhereRuleStatisticsStateUtil.getNotMatchValue(unit.getValue(), value, unit.geIndicatorCount());
+            double value = getMatchValue(unit.getValue());
+            double valueNotM = getNotMatchValue(unit.getValue(), value, unit.geIndicatorCount());
             customerDataset.addValue(valueNotM, ROW_KEY_NOT_PASS, columnKey);
             customerDataset.addValue(value, ROW_KEY_PASS, columnKey);
 
-            WhereRuleChartDataEntity entity = WhereRuleStatisticsStateUtil
-                    .createRuleDataEntity(unit, columnKey, value, valueNotM);
+            WhereRuleChartDataEntity entity = new WhereRuleChartDataEntity();
+            entity.setIndicator(unit.getIndicator());
+            entity.setLabel(columnKey);
+            entity.setNumMatch(String.valueOf(value));
+            entity.setNumNoMatch(String.valueOf(valueNotM));
+            // ADD xqliu 2010-03-10 feature 10834
+            entity.setToolTip(getUnitToolTip(unit));
+            // ~
 
             customerDataset.addDataEntity(entity);
         }
+    }
+
+    /**
+     * get the MatchValue
+     * 
+     * @param value
+     * @return
+     */
+    public static double getMatchValue(Object value) {
+        return value == null ? Double.NaN : Double.parseDouble(value.toString());
+    }
+
+    public static double getNotMatchValue(Object value, double matchValue, long rowCount) {
+        return value == null ? Double.NaN : rowCount - matchValue;
     }
 
     /**
@@ -253,10 +384,124 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
             customerDataset.addValue(valueCount, label, label);
 
-            ChartDataEntity entityCount = CommonStateUtil.createDataEntity(unit, valueCount, label);
+            ChartDataEntity entityCount = new ChartDataEntity();
+            entityCount.setIndicator(unit.getIndicator());
+            entityCount.setLabel(label);
+            entityCount.setValue(String.valueOf(valueCount));
+            entityCount.setPercent(valueCount / unit.getIndicator().getCount());
 
             customerDataset.addDataEntity(entityCount);
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "getDataEntityRowCount".
+     * 
+     * @return
+     */
+    public ChartDataEntity[] getDataEntityRowCount() {
+        return getCustomerDatasetRownCount().getDataEntities();
+    }
+
+    /**
+     * DOC xqliu Comment method "getTableFormRowCount".
+     * 
+     * @param composite
+     * @return
+     */
+    public TableViewer getTableFormRowCount(Composite composite) {
+        TableViewer tbViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
+
+        Table table = tbViewer.getTable();
+
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+        GridData gd = new GridData();
+        gd.heightHint = 220;
+        gd.widthHint = 500;
+        gd.verticalAlignment = SWT.BEGINNING;
+        table.setLayoutData(gd);
+
+        createTableColumnStructure(getTableStructureRowCount(), table);
+
+        tbViewer.setLabelProvider(getLabelProviderRowCount());
+
+        tbViewer.setContentProvider(getContentProvider());
+
+        return tbViewer;
+    }
+
+    /**
+     * DOC xqliu Comment method "getLabelProviderRowCount".
+     * 
+     * @return
+     */
+    private IBaseLabelProvider getLabelProviderRowCount() {
+        return new BaseChartTableLabelProvider();
+    }
+
+    /**
+     * DOC xqliu WhereRuleStatisticsStateTable class global comment. Detailled comment
+     */
+    public static class WhereRuleTableLabelProvider extends PatternLabelProvider {
+
+        private Long rowCount = 0L;
+
+        public Long getRowCount() {
+            return this.rowCount;
+        }
+
+        public void setRowCount(Long rowCount) {
+            this.rowCount = rowCount;
+        }
+
+        public WhereRuleTableLabelProvider(Long rowCount) {
+            setRowCount(rowCount);
+        }
+
+        @Override
+        public Image getColumnImage(Object element, int columnIndex) {
+            Image result = super.getColumnImage(element, columnIndex);
+
+            if (result == null) {
+                boolean largeThanRowCount = false;
+
+                Indicator indicator = ((WhereRuleChartDataEntity) element).getIndicator();
+
+                if (!Double.isNaN(Double.parseDouble(((WhereRuleChartDataEntity) element).getNumMatch()))) {
+                    largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getUserCount();
+                }
+
+                if (3 == columnIndex && largeThanRowCount) {
+                    result = ImageLib.getImage(ImageLib.LEVEL_WARNING);
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        public Color getForeground(Object element, int columnIndex) {
+            Color result = super.getForeground(element, columnIndex);
+
+            if (result == null) {
+                boolean largeThanRowCount = false;
+
+                Indicator indicator = ((WhereRuleChartDataEntity) element).getIndicator();
+
+                if (!Double.isNaN(Double.parseDouble(((WhereRuleChartDataEntity) element).getNumMatch()))) {
+                    // MOD yyin 20121031 TDQ-6194, when: match+no match>row count, highlight
+                    largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getCount();
+                }
+
+                if ((3 == columnIndex || 4 == columnIndex) && largeThanRowCount) {
+                    result = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                }
+            }
+
+            return result;
+        }
+
     }
 
     /*
@@ -266,7 +511,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      * org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChart(org.jfree.data.category
      * .CategoryDataset)
      */
-    public Object getChart(Object dataset) {
+    public JFreeChart getChart(CategoryDataset dataset) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -276,24 +521,23 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChartList(java.util.List)
      */
-    public List<Object> getChartList(List<Object> datasets) {
-        List<Object> ret = new ArrayList<Object>();
-        if (datasets == null || datasets.size() < 1) {
-            return ret;
-        }
-        // first get the chart for the row count
-        Object chart = TOPChartUtils.getInstance().createBarChart(
-                DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), datasets.get(0), false); //$NON-NLS-1$
-        TOPChartUtils.getInstance().decorateChart(chart, false);
-        ret.add(chart);
-
-        // THEN get the charts for each paged rules
-        for (int i = 1; i < datasets.size(); i++) {
-            Object dataset = datasets.get(i);
-            Object stackChart = TOPChartUtils.getInstance().createStackedBarChart(
-                    DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), dataset, true); //$NON-NLS-1$
-
-            ret.add(stackChart);
+    public List<JFreeChart> getChartList(List<DefaultCategoryDataset> datasets) {
+        List<JFreeChart> ret = new ArrayList<JFreeChart>();
+        // MOD xqliu 2012-04-23 TDQ-5057
+        int i = 0;
+        for (CategoryDataset dataset : datasets) {
+            if (i < 1) {
+                JFreeChart barChart = TopChartFactory.createBarChart(
+                        DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), dataset, false); //$NON-NLS-1$
+                ChartDecorator.decorate(barChart, null);
+                ret.add(barChart);
+            } else {
+                JFreeChart stackChart = TopChartFactory.createStackedBarChart(
+                        DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), dataset, true); //$NON-NLS-1$
+                ChartDecorator.decorate(stackChart, null);
+                ret.add(stackChart);
+            }
+            i++;
         }
         return ret;
     }

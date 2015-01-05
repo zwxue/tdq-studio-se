@@ -14,15 +14,22 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonStateUtil;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.TextStatisticsStateUtil;
+import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.TextStatisticsExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
@@ -34,16 +41,16 @@ public class TextStatisticsState extends AbstractChartTypeStates {
         super(units);
     }
 
-    public Object getChart() {
+    public JFreeChart getChart() {
         return getChart(getDataset());
     }
 
     @Override
-    public Object getChart(Object dataset) {
-        Object chart = TOPChartUtils.getInstance().createBarChart(
+    public JFreeChart getChart(CategoryDataset dataset) {
+        JFreeChart barChart = TopChartFactory.createBarChart(
                 DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics"), dataset, false); //$NON-NLS-1$ 
-        TOPChartUtils.getInstance().setDisplayDecimalFormatOfChart(chart);
-        return chart;
+        ChartDecorator.setDisplayDecimalFormat(barChart);
+        return barChart;
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -53,12 +60,16 @@ public class TextStatisticsState extends AbstractChartTypeStates {
 
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
-            double value = CommonStateUtil.getUnitValue(unit.getValue());
+            double value = unit.getValue() != null ? Double.parseDouble(unit.getValue().toString()) : Double.NaN;
             String label = unit.getIndicatorName();
 
             customerdataset.addValue(value, label, label);
 
-            ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label);
+            ChartDataEntity entity = new ChartDataEntity();
+            entity.setIndicator(unit.getIndicator());
+            entity.setLabel(label);
+            entity.setValue(String.valueOf(value));
+            entity.setPercent(value / unit.getIndicator().getCount());
 
             customerdataset.addDataEntity(entity);
         }
@@ -66,12 +77,34 @@ public class TextStatisticsState extends AbstractChartTypeStates {
     }
 
     public DataExplorer getDataExplorer() {
-        return TextStatisticsStateUtil.getDataExplorer();
+        // TODO Auto-generated method stub
+        return new TextStatisticsExplorer();
     }
 
-    public Object getExampleChart() {
+    public JFreeChart getExampleChart() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    protected TableStructureEntity getTableStructure() {
+        TableStructureEntity entity = new TableStructureEntity();
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("TextStatisticsState.Label"), DefaultMessagesImpl.getString("TextStatisticsState.Value") }); //$NON-NLS-1$ //$NON-NLS-2$
+        entity.setFieldWidths(new Integer[] { 200, 300 });
+        return entity;
+    }
+
+    @Override
+    protected ITableLabelProvider getLabelProvider() {
+        // TODO Auto-generated method stub
+        return new BaseChartTableLabelProvider();
+    }
+
+    @Override
+    protected IStructuredContentProvider getContentProvider() {
+        // TODO Auto-generated method stub
+        return new CommonContenteProvider();
     }
 
     public String getReferenceLink() {
@@ -86,7 +119,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
      * org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChart(org.talend.dataprofiler
      * .common.ui.editor.preview.ICustomerDataset)
      */
-    public Object getChart(ICustomerDataset dataset) {
+    public JFreeChart getChart(ICustomerDataset dataset) {
         // TODO Auto-generated method stub
         return null;
     }

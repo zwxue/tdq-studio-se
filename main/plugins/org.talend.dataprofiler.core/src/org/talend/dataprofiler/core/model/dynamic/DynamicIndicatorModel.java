@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.model.dynamic;
 import java.util.List;
 
 import org.eclipse.jface.viewers.TableViewer;
+import org.jfree.data.category.CategoryDataset;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
@@ -32,16 +34,16 @@ public class DynamicIndicatorModel {
     private EIndicatorChartType chartType = null;
 
     // the dataset of the chart
-    private Object dataset = null;
+    private CategoryDataset dataset = null;
 
     // for benford law indicator
-    private Object secondDataset = null;
+    private CategoryDataset secondDataset = null;
 
     // the table of this category of indicators in the result page only
     private TableViewer tableViewer = null;
 
     // the parent composite for the chart of the summary indicators: BAW chart
-    private Object bawParentChartComp = null; // TalendChartComposite
+    private TalendChartComposite bawParentChartComp = null;
 
     /**
      * Getter for indicatorList.
@@ -102,7 +104,7 @@ public class DynamicIndicatorModel {
      * 
      * @return the dataset
      */
-    public Object getDataset() {
+    public CategoryDataset getDataset() {
         return this.dataset;
     }
 
@@ -111,7 +113,7 @@ public class DynamicIndicatorModel {
      * 
      * @param dataset the dataset to set
      */
-    public void setDataset(Object dataset) {
+    public void setDataset(CategoryDataset dataset) {
         this.dataset = dataset;
     }
 
@@ -138,7 +140,7 @@ public class DynamicIndicatorModel {
      * 
      * @return the bawParentChartComp
      */
-    public Object getBawParentChartComp() {
+    public TalendChartComposite getBawParentChartComp() {
         return this.bawParentChartComp;
     }
 
@@ -147,7 +149,7 @@ public class DynamicIndicatorModel {
      * 
      * @param bawParentChartComp the bawParentChartComp to set
      */
-    public void setBawParentChartComp(Object bawParentChartComp) {
+    public void setBawParentChartComp(TalendChartComposite bawParentChartComp) {
         this.bawParentChartComp = bawParentChartComp;
     }
 
@@ -166,7 +168,7 @@ public class DynamicIndicatorModel {
      * 
      * @return the secondDataset
      */
-    public Object getSecondDataset() {
+    public CategoryDataset getSecondDataset() {
         return secondDataset;
     }
 
@@ -175,7 +177,7 @@ public class DynamicIndicatorModel {
      * 
      * @param secondDataset the secondDataset to set
      */
-    public void setSecondDataset(Object secondDataset) {
+    public void setSecondDataset(CategoryDataset secondDataset) {
         this.secondDataset = secondDataset;
     }
 }

@@ -14,14 +14,20 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonStateUtil;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.SimpleStatisticsStateUtil;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
@@ -33,46 +39,71 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
         super(units);
     }
 
-    public Object getChart() {
-        return TOPChartUtils.getInstance().createBarChart(
+    public JFreeChart getChart() {
+        return TopChartFactory.createBarChart(
                 DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), getDataset(), false); //$NON-NLS-1$
     }
 
     @Override
-    public Object getChart(Object dataset) {
-        return TOPChartUtils.getInstance().createBarChart(
+    public JFreeChart getChart(CategoryDataset dataset) {
+        return TopChartFactory.createBarChart(
                 DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), dataset, false); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
-            double value = CommonStateUtil.getUnitValue(unit.getValue());
+            final Object unitValue = unit.getValue();
+            double value = unitValue != null ? Double.parseDouble(unitValue.toString()) : Double.NaN;
             String label = unit.getIndicatorName();
 
             customerdataset.addValue(value, label, label);
 
-            ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label);
+            ChartDataEntity entity = new ChartDataEntity();
+            entity.setIndicator(unit.getIndicator());
+            entity.setLabel(label);
+            entity.setValue(String.valueOf(value));
+            entity.setPercent(value / unit.getIndicator().getCount());
 
             customerdataset.addDataEntity(entity);
         }
         return customerdataset;
     }
 
-    public Object getExampleChart() {
+    public DataExplorer getDataExplorer() {
+        // TODO Auto-generated method stub
+        return new SimpleStatisticsExplorer();
+    }
+
+    public JFreeChart getExampleChart() {
+        // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    protected TableStructureEntity getTableStructure() {
+
+        TableStructureEntity entity = new TableStructureEntity();
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("SimpleStatisticsState.Label"), DefaultMessagesImpl.getString("SimpleStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity.setFieldWidths(new Integer[] { 200, 150, 150 });
+        return entity;
+    }
+
+    @Override
+    protected ITableLabelProvider getLabelProvider() {
+
+        return new BaseChartTableLabelProvider();
+    }
+
+    @Override
+    protected IStructuredContentProvider getContentProvider() {
+
+        return new CommonContenteProvider();
     }
 
     public String getReferenceLink() {
+        // TODO Auto-generated method stub
         return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getDataExplorer()
-     */
-    public DataExplorer getDataExplorer() {
-        return SimpleStatisticsStateUtil.getDataExplorer();
     }
 }

@@ -14,9 +14,12 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.List;
 
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dq.analysis.explore.DataExplorer;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -24,13 +27,13 @@ import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 public class UDISimpleStatisticsState extends SimpleStatisticsState {
 
     @Override
-    public Object getChart() {
+    public JFreeChart getChart() {
         return getChart(getDataset());
     }
 
     @Override
-    public Object getChart(Object dataset) {
-        return TOPChartUtils.getInstance().createBarChart(
+    public JFreeChart getChart(CategoryDataset dataset) {
+        return TopChartFactory.createBarChart(
                 DefaultMessagesImpl.getString("SimpleStatisticsState.UserIndicators"), dataset, false); //$NON-NLS-1$
     }
 
@@ -43,4 +46,8 @@ public class UDISimpleStatisticsState extends SimpleStatisticsState {
         super(units);
     }
 
+    @Override
+    public DataExplorer getDataExplorer() {
+        return super.getDataExplorer();
+    }
 }

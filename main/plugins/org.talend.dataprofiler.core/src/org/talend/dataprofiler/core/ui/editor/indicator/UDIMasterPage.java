@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -58,6 +57,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.util.Log;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.relational.TdExpression;
@@ -86,8 +86,6 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * the Master Page for the user define indicator(UDI)
  */
 public class UDIMasterPage extends IndicatorDefinitionMaterPage {
-
-    private static Logger log = Logger.getLogger(UDIMasterPage.class);
 
     private static final String REMOVE_BUTTON_TEXT = DefaultMessagesImpl.getString("PatternMasterDetailsPage.del"); //$NON-NLS-1$
 
@@ -1260,9 +1258,9 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
                         return true;
                     }
                 } catch (MalformedURLException e1) {
-                    log.error(e1.getStackTrace());
+                    Log.error(e1.getStackTrace());
                 } catch (ClassNotFoundException e1) {
-                    log.error(e1.getStackTrace());
+                    Log.error(e1.getStackTrace());
                 }
             }
             return false;

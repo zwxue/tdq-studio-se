@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.chart.jung;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.talend.dataprofiler.core.ui.chart.FullScreenChartDialog;
 
 /**
  * DOC BZhou class global comment. Detailled comment

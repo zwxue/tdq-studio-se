@@ -13,31 +13,31 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
+import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
+import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.PaginationInfo;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.analysis.explore.DataExplorer;
-import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
@@ -45,8 +45,6 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
 public abstract class IndicatorPaginationInfo extends PaginationInfo {
-
-    private static Logger log = Logger.getLogger(IndicatorPaginationInfo.class);
 
     private static final int PAGE_SIZE = 5;
 
@@ -61,9 +59,42 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
         this.modelElementIndicators = modelElementIndicators;
     }
 
-    protected void addListenerToChartComp(final Object chartComp, final IChartTypeStates chartTypeState) {
-        TOPChartUtils.getInstance().addListenerToChartComp(chartComp, chartTypeState.getReferenceLink(),
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.what")); //$NON-NLS-1$
+    protected void addListenerToChartComp(final ChartComposite chartComp, final IChartTypeStates chartTypeState) {
+        chartComp.addChartMouseListener(new ChartMouseListener() {
+
+            public void chartMouseClicked(ChartMouseEvent event) {
+                final String referenceLink = chartTypeState.getReferenceLink();
+                if (event.getTrigger().getButton() == 1 && referenceLink != null) {
+                    Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
+                    chartComp.setMenu(menu);
+
+                    MenuItem item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.what")); //$NON-NLS-1$
+                    item.addSelectionListener(new SelectionAdapter() {
+
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            ChartUtils.openReferenceLink(referenceLink);
+                        }
+                    });
+
+                    menu.setVisible(true);
+                }
+            }
+
+            public void chartMouseMoved(ChartMouseEvent event) {
+                // no need to implement
+            }
+
+        });
+        chartComp.addDisposeListener(new DisposeListener() {
+
+            public void widgetDisposed(DisposeEvent e) {
+                chartComp.dispose();
+
+            }
+
+        });
     }
 
     @SuppressWarnings("deprecation")
@@ -135,36 +166,4 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
         }
         dynamicList.clear();
     }
-
-    /**
-     * DOC yyin Comment method "createMenuForAllDataEntity".
-     * 
-     * @param shell
-     * @param dataExplorer
-     * @param analysis
-     * @param chartDataEntities
-     * @return
-     */
-    protected Map<String, Object> createMenuForAllDataEntity(Shell shell, DataExplorer dataExplorer, Analysis analysis,
-            ChartDataEntity[] chartDataEntities) {
-        Map<String, Object> menuMap = new HashMap<String, Object>();
-        final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
-
-        // ADD msjian TDQ-7275 2013-5-21: when allow drill down is not checked, no menu display
-        if (ExecutionLanguage.JAVA == currentEngine && !analysis.getParameters().isStoreData()) {
-            return menuMap;
-        }
-        // TDQ-7275~
-        for (ChartDataEntity oneDataEntity : chartDataEntities) {
-            Indicator indicator = oneDataEntity.getIndicator();
-            Menu menu = TOPChartUtils.getInstance().createMenu(shell, dataExplorer, analysis, currentEngine, oneDataEntity,
-                    indicator, false);
-            ChartTableFactory.addJobGenerationMenu(menu, analysis, indicator);
-
-            menuMap.put(oneDataEntity.getLabel(), menu);
-        }
-
-        return menuMap;
-    }
-
 }

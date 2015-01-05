@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.PatternStatisticsState;
+import org.talend.dq.analysis.explore.DataExplorer;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -31,4 +32,8 @@ public class UDIMatchStatisticsState extends PatternStatisticsState {
         super(units);
     }
 
+    @Override
+    public DataExplorer getDataExplorer() {
+        return super.getDataExplorer();
+    }
 }

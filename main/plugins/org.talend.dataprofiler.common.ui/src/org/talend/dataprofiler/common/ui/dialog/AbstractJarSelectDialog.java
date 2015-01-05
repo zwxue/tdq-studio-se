@@ -62,6 +62,7 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.jfree.util.Log;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.ui.utils.loader.MyURLClassLoader;
 import org.talend.commons.utils.WorkspaceUtils;
@@ -538,7 +539,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
                     try {
                         listURL.add(new URL(CustomAttributeMatcherHelper.FILEPROTOCOL, StringUtils.EMPTY, file.toURI().getPath()));
                     } catch (MalformedURLException e) {
-                        ExceptionHandler.process(e);
+                        Log.error(e, e);
                     }
                 }
             }

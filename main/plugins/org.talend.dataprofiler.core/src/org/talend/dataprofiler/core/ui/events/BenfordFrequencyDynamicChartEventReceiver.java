@@ -12,10 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.events;
 
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BenfordLawFrequencyState;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.util.BenfordLawFrequencyStateUtil;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataquality.indicators.impl.BenfordLawFrequencyIndicatorImpl;
 import org.talend.dq.indicators.ext.FrequencyExt;
 
@@ -25,7 +26,7 @@ import org.talend.dq.indicators.ext.FrequencyExt;
  */
 public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicChartEventReceiver {
 
-    private Object secondDataset = null;
+    private CategoryDataset secondDataset = null;
 
     @Override
     public boolean handle(Object value) {
@@ -33,16 +34,16 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
     }
 
     @Override
-    protected void addValueToDataset(Object customerdataset, FrequencyExt freqExt, String keyLabel) {
+    protected void addValueToDataset(DefaultCategoryDataset customerdataset, FrequencyExt freqExt, String keyLabel) {
         // the value of the bar
-        TOPChartUtils.getInstance().addValueToCategoryDataset(customerdataset, freqExt.getFrequency(), "1", keyLabel); //$NON-NLS-1$
+        customerdataset.addValue(freqExt.getFrequency(), "1", keyLabel); //$NON-NLS-1$
         // the value of the line
         if (secondDataset != null) {// when the graph is hiden, the secondDataset is null
             if (!BenfordLawFrequencyIndicatorImpl.INVALID.equals(keyLabel) && !"0".equals(keyLabel)) { //$NON-NLS-1$
-                TOPChartUtils.getInstance().addValueToCategoryDataset(secondDataset,
+                ((DefaultCategoryDataset) secondDataset).addValue(
                         BenfordLawFrequencyState.formalValues[Integer.valueOf(keyLabel) - 1], "Expected(%)", keyLabel);//$NON-NLS-1$
             } else {
-                TOPChartUtils.getInstance().addValueToCategoryDataset(secondDataset, BenfordLawFrequencyState.formalValues[9],
+                ((DefaultCategoryDataset) secondDataset).addValue(BenfordLawFrequencyState.formalValues[9],
                         "Expected(%)", keyLabel);//$NON-NLS-1$
             }
         }
@@ -53,7 +54,7 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
         FrequencyExt[] tempFreq = frequencyExt;
         ComparatorsFactory.sort(tempFreq, ComparatorsFactory.BENFORDLAW_FREQUENCY_COMPARATOR_ID);
 
-        return BenfordLawFrequencyStateUtil.recomputerForBenfordLaw(tempFreq);
+        return AnalysisUtils.recomputerForBenfordLaw(tempFreq);
     }
 
     /**
@@ -61,7 +62,7 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
      * 
      * @return the secondDataset
      */
-    public Object getSecondDataset() {
+    public CategoryDataset getSecondDataset() {
         return secondDataset;
     }
 
@@ -70,14 +71,14 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
      * 
      * @param secondDataset the secondDataset to set
      */
-    public void setSecondDataset(Object secondDataset) {
+    public void setSecondDataset(CategoryDataset secondDataset) {
         this.secondDataset = secondDataset;
     }
 
     @Override
     public void clearValue() {
         if (secondDataset != null) {// when the graph is hiden, the secondDataset is null
-            TOPChartUtils.getInstance().clearDataset(secondDataset);
+            ((DefaultCategoryDataset) secondDataset).clear();
         }
         super.clearValue();
     }

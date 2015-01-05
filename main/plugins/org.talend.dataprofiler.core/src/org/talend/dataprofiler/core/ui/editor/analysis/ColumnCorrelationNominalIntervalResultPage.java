@@ -47,8 +47,11 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.chart.JFreeChart;
+import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -57,12 +60,10 @@ import org.talend.dataprofiler.core.ui.chart.jung.JungGraphGenerator;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.TableTypeStatesFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.table.ITableTypeStates;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -140,7 +141,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            if (canShowChart()) {
+            if (!EditorPreferencePage.isHideGraphics()) {
                 this.createGraphicsSectionPart(sectionClient);
             }
         }
@@ -312,22 +313,24 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                 .getUniqueCountIndicator()));
 
         EIndicatorChartType simpleStatType = EIndicatorChartType.SIMPLE_STATISTICS;
-        // create table viewer firstly
-        ITableTypeStates tableTypeState = TableTypeStatesFactory.getInstance().getTableState(simpleStatType, units);
-        TableWithData chartData = new TableWithData(simpleStatType, tableTypeState.getDataEntity());
+        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(simpleStatType, units);
+        ChartWithData chartData = new ChartWithData(simpleStatType, chartTypeState.getChart(), chartTypeState.getDataEntity());
 
-        TableViewer tableviewer = tableTypeState.getTableForm(composite);
+        TableViewer tableviewer = chartTypeState.getTableForm(composite);
         tableviewer.setInput(chartData);
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
         // create chart
-        if (canShowChart()) {
-            // then create chart
-            IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(simpleStatType, units);
-            Object chart = chartTypeState.getChart();
-            TOPChartUtils.getInstance().decorateChart(chart, false);
+        if (!EditorPreferencePage.isHideGraphics()) {
+            JFreeChart chart = chartTypeState.getChart();
+            ChartDecorator.decorate(chart, null);
             if (chart != null) {
-                TOPChartUtils.getInstance().createChartComposite(composite, SWT.NONE, chart, true);
+                ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+
+                GridData gd = new GridData();
+                gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+                gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+                cc.setLayoutData(gd);
             }
         }
     }

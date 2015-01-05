@@ -12,12 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.events;
 
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.FrequencyTypeStateUtil;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
+import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.ModeIndicator;
@@ -44,7 +45,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             }
         }
         if (tableViewer != null) {
-            TableWithData input = (TableWithData) tableViewer.getInput();
+            ChartWithData input = (ChartWithData) tableViewer.getInput();
             if (input != null) {
                 if (this.indicator instanceof ModeIndicator) {
                     ChartDataEntity entity = new ChartDataEntity();
@@ -69,7 +70,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
         return true;
     }
 
-    private void setFrequecyToDataset(Object customerdataset, FrequencyExt[] frequencyExt, Indicator indicator) {
+    private void setFrequecyToDataset(DefaultCategoryDataset customerdataset, FrequencyExt[] frequencyExt, Indicator indicator) {
 
         int numOfShown = frequencyExt.length;
         IndicatorParameters parameters = indicator.getParameters();
@@ -80,7 +81,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
         }
         FrequencyExt[] tempFreq = handleFrequency(frequencyExt);
 
-        boolean withRowCountIndicator = FrequencyTypeStateUtil.isWithRowCountIndicator(indicator);
+        boolean withRowCountIndicator = AnalysisUtils.isWithRowCountIndicator(indicator);
         for (int i = 0; i < numOfShown; i++) {
             FrequencyExt freqExt = tempFreq[i];
             String keyLabel = String.valueOf(freqExt.getKey());
@@ -93,8 +94,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
             addValueToDataset(customerdataset, freqExt, keyLabel);
 
-            ChartDataEntity entity = FrequencyTypeStateUtil
-                    .createChartEntity(indicator, freqExt, keyLabel, withRowCountIndicator);
+            ChartDataEntity entity = AnalysisUtils.createChartEntity(indicator, freqExt, keyLabel, withRowCountIndicator);
 
             ((CustomerDefaultCategoryDataset) customerdataset).addDataEntity(entity);
         }
@@ -106,11 +106,11 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             if (dataset instanceof CustomerDefaultCategoryDataset) {
                 ((CustomerDefaultCategoryDataset) dataset).clearAll();
             } else {
-                TOPChartUtils.getInstance().clearDataset(dataset);
+                dataset.clear();
             }
         }
         if (tableViewer != null) {
-            TableWithData input = (TableWithData) tableViewer.getInput();
+            ChartWithData input = (ChartWithData) tableViewer.getInput();
             input.setEntities(null);
             tableViewer.getTable().clearAll();
         }
@@ -135,7 +135,11 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
      * @param freqExt
      * @param keyLabel
      */
-    protected void addValueToDataset(Object customerdataset, FrequencyExt freqExt, String keyLabel) {
-        TOPChartUtils.getInstance().addValueToCategoryDataset(customerdataset, freqExt.getValue(), "1", keyLabel); //$NON-NLS-1$
+    protected void addValueToDataset(DefaultCategoryDataset customerdataset, FrequencyExt freqExt, String keyLabel) {
+        if (indicator instanceof BenfordLawFrequencyIndicator) {
+            customerdataset.addValue(freqExt.getFrequency(), "1", keyLabel); //$NON-NLS-1$
+        } else {
+            customerdataset.addValue(freqExt.getValue(), "1", keyLabel); //$NON-NLS-1$
+        }
     }
 }

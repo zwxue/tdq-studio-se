@@ -14,29 +14,20 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.dataset;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.jfree.data.xy.XYSeriesCollection;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
-import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class CustomerXYSeriesCollection implements ICustomerDataset {
-
-    // XYSeriesCollection
-    private Object xySeries;
+public class CustomerXYSeriesCollection extends XYSeriesCollection implements ICustomerDataset {
 
     private List<ChartDataEntity> dataEnities;
 
-    public CustomerXYSeriesCollection(Map<Integer, Double> valueMap) {
+    public CustomerXYSeriesCollection() {
         dataEnities = new ArrayList<ChartDataEntity>();
-        xySeries = TOPChartUtils.getInstance().createXYDataset(valueMap);
-    }
-
-    public Object getDataset() {
-        return xySeries;
     }
 
     public void addDataEntity(ChartDataEntity dataEntity) {

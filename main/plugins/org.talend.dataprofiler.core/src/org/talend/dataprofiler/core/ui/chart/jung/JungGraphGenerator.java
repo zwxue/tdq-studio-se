@@ -129,9 +129,8 @@ public class JungGraphGenerator {
         JPanel controllers = createToolControllers(vv);
 
         // MOD yyi 2009-09-09 feature 8834
-        if (this.isPreview) {
+        if (this.isPreview)
             controllers.setVisible(false);
-        }
 
         JPanel panel = new GraphZoomScrollPane(vv);
 
@@ -438,7 +437,7 @@ public class JungGraphGenerator {
 
             int sheight;
 
-            String str = PluginConstant.EMPTY_STRING;
+            String str = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
 
             public void paint(Graphics g) {
                 Dimension d = vv.getSize();

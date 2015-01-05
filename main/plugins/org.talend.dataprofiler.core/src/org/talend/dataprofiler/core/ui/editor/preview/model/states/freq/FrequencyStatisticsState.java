@@ -16,9 +16,9 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.FrequencyTypeStateUtil;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
 import org.talend.dq.indicators.ext.FrequencyExt;
 
 /**
@@ -28,10 +28,12 @@ public class FrequencyStatisticsState extends FrequencyTypeStates {
 
     public FrequencyStatisticsState(List<IndicatorUnit> units) {
         super(units);
+        // TODO Auto-generated constructor stub
     }
 
     @Override
     protected void sortIndicator(FrequencyExt[] frequencyExt) {
+        // TODO Auto-generated method stub
         ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
     }
 
@@ -39,8 +41,9 @@ public class FrequencyStatisticsState extends FrequencyTypeStates {
     protected String getTitle() {
         return DefaultMessagesImpl.getString("FrequencyTypeStates.FreqyebctStatistics"); //$NON-NLS-1$
     }
-
+    
     public DataExplorer getDataExplorer() {
-        return FrequencyTypeStateUtil.getDataExplorer();
+        // TODO Auto-generated method stub
+        return new FrequencyStatisticsExplorer();
     }
 }

@@ -12,12 +12,16 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.chart;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.DuplicateStatisticsRow;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
@@ -29,7 +33,7 @@ public class DuplicateRecordPieChart {
 
     private Composite parent = null;
 
-    private Object chartComposite = null;
+    private ChartComposite chartComposite = null;
 
     /**
      * DOC zhao DuplicateRecordPieChart constructor comment.
@@ -41,30 +45,35 @@ public class DuplicateRecordPieChart {
         this.parent = parent;
     }
 
-    public void createPieChart(List<DuplicateStatisticsRow> dupStats) {
-        Object pieChart = TOPChartUtil.getInstance().createDuplicateRecordPieChart(
-                DefaultMessagesImpl.getString("DuplicateRecordPieChart.PieChart.Title"), getPieDataset(dupStats)); //$NON-NLS-1$
-        chartComposite = TOPChartUtil.getInstance().createChartComposite(parent, SWT.NONE, pieChart, true);
-
+    /**
+     * Getter for chartComposite.
+     * 
+     * @return the chartComposite
+     */
+    public ChartComposite getChartComposite() {
+        return this.chartComposite;
     }
 
-    private Object getPieDataset(List<DuplicateStatisticsRow> dupStats) {
-        Map<String, Long> dupMap = new HashMap<String, Long>();
+    public void createPieChart(List<DuplicateStatisticsRow> dupStats) {
+        JFreeChart pieChart = TopChartFactory.createDuplicateRecordPieChart(
+                DefaultMessagesImpl.getString("DuplicateRecordPieChart.PieChart.Title"), //$NON-NLS-1$
+                getPieDataset(dupStats), true, true, false);
+        chartComposite = new ChartComposite(parent, SWT.NONE, pieChart, true);
+        GridData gd = new GridData();
+        gd.widthHint = CHART_STANDARD_WIDHT;
+        gd.heightHint = CHART_STANDARD_HEIGHT;
+        chartComposite.setLayoutData(gd);
+    }
 
+    private PieDataset getPieDataset(List<DuplicateStatisticsRow> dupStats) {
+        DefaultPieDataset dataset = new DefaultPieDataset();
         for (DuplicateStatisticsRow dupStatRow : dupStats) {
             if (!dupStatRow.getIsRowCount()) {
                 String label = dupStatRow.getLabel();
-                dupMap.put(label, dupStatRow.getCount());
+                dataset.setValue(label, dupStatRow.getCount());
             }
         }
-        return TOPChartUtil.getInstance().createDatasetForDuplicateRecord(dupMap);
-    }
-
-    public void refreshChart(List<DuplicateStatisticsRow> dupStatistics) {
-        ((Composite) chartComposite).dispose();
-        createPieChart(dupStatistics);
-        ((Composite) chartComposite).getParent().layout();
-
+        return dataset;
     }
 
     public static final int CHART_STANDARD_WIDHT = 600;
