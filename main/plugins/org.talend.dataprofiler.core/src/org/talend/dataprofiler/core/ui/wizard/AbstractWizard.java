@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
-import org.jfree.util.Log;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -121,7 +121,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                         conns.add(connItem.getConnection());
                     }
                 } catch (PersistenceException e) {
-                    Log.error(e, e);
+                    ExceptionHandler.process(e);
                 }
                 modelElements.addAll(conns);
                 break;

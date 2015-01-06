@@ -14,15 +14,8 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.widgets.Composite;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dq.analysis.explore.DataExplorer;
-import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -30,18 +23,18 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 public interface IChartTypeStates {
 
     /**
+     * DOC Zqin Comment method "getDataExplorer".
+     * 
+     * @return the specified data explorer for kinds of chart.
+     */
+    public DataExplorer getDataExplorer();
+
+    /**
      * DOC Zqin Comment method "getDataset".
      * 
      * @return the dataset of the specified chart.
      */
-    public CategoryDataset getDataset();
-
-    /**
-     * DOC Zqin Comment method "getDataEntity".
-     * 
-     * @return the data entity of the specified chart, this is to create table viewer.
-     */
-    public ChartDataEntity[] getDataEntity();
+    public Object getDataset();
 
     /**
      * DOC Zqin Comment method "getCustomerDataset".
@@ -55,29 +48,15 @@ public interface IChartTypeStates {
      * 
      * @return the specified chart.
      */
-    public JFreeChart getChart();
+    public Object getChart();
 
     /**
      * DOC Zqin Comment method "getExampleChart".
      * 
      * @return the specified chart with example data.
-     */
-    public JFreeChart getExampleChart();
-
-    /**
-     * DOC Zqin Comment method "getDataExplorer".
      * 
-     * @return the specified data explorer for kinds of chart.
+     * public Object getExampleChart();
      */
-    public DataExplorer getDataExplorer();
-
-    /**
-     * DOC Zqin Comment method "getTableForm".
-     * 
-     * @param parent
-     * @return the table form of the specified chart data.
-     */
-    public TableViewer getTableForm(Composite parent);
 
     /**
      * DOC Administrator Comment method "getReferenceLink".
@@ -91,7 +70,7 @@ public interface IChartTypeStates {
      * 
      * @return
      */
-    public XYDataset getXYDataset();
+    public Object getXYDataset();
 
     /**
      * DOC xqliu Comment method "getCustomerXYDataset".
@@ -105,7 +84,7 @@ public interface IChartTypeStates {
      * 
      * @return
      */
-    public List<JFreeChart> getChartList();
+    public List<Object> getChartList();
 
     /**
      * use an existed dataset to create a chart
@@ -113,7 +92,7 @@ public interface IChartTypeStates {
      * @param dataset
      * @return
      */
-    public JFreeChart getChart(CategoryDataset dataset);
+    public Object getChart(Object dataset);
 
-    public List<JFreeChart> getChartList(List<DefaultCategoryDataset> datasets);
+    public List<Object> getChartList(List<Object> datasets);
 }

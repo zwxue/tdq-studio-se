@@ -58,10 +58,8 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jfree.chart.JFreeChart;
-import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageConstant;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
@@ -71,15 +69,16 @@ import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.TableTypeStatesFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
-import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.table.ITableTypeStates;
+import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataprofiler.core.ui.wizard.patterns.DataFilterType;
 import org.talend.dataprofiler.core.ui.wizard.patterns.SelectPatternsWizard;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
@@ -98,7 +97,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 /**
  * @author yyi 2009-12-16
  */
-public class ColumnSetResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
+public class ColumnSetResultPage extends AbstractAnalysisResultPageWithChart implements PropertyChangeListener {
 
     protected static Logger log = Logger.getLogger(ColumnSetResultPage.class);
 
@@ -215,27 +214,24 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         units.add(new ColumnSetIndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator));
 
         EIndicatorChartType matchingType = EIndicatorChartType.PATTERN_MATCHING;
-        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(matchingType, units);
-        ChartWithData chartData = new ChartWithData(matchingType, chartTypeState.getChart(), chartTypeState.getDataEntity());
+        ITableTypeStates tableTypeState = TableTypeStatesFactory.getInstance().getTableState(matchingType, units);
+        TableWithData chartData = new TableWithData(matchingType, tableTypeState.getDataEntity());
 
-        TableViewer tableviewer = chartTypeState.getTableForm(sectionClient);
+        TableViewer tableviewer = tableTypeState.getTableForm(sectionClient);
         tableviewer.setInput(chartData);
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
+
         // MOD qiongli feature 19192.
         if (masterPage.getAnalysis().getParameters().isStoreData()) {
-            ChartTableFactory.addMenuAndTip(tableviewer, chartTypeState.getDataExplorer(), masterPage.getAnalysis());
+            ChartTableFactory.addMenuAndTip(tableviewer, tableTypeState.getDataExplorer(), masterPage.getAnalysis());
         }
 
-        if (!EditorPreferencePage.isHideGraphics()) {
-            JFreeChart chart = chartTypeState.getChart();
-            ChartDecorator.decorate(chart, null);
+        if (canShowChart()) {
+            IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(matchingType, units);
+            Object chart = chartTypeState.getChart();
+            TOPChartUtils.getInstance().decorateChart(chart, false);
             if (chart != null) {
-                ChartComposite cc = new ChartComposite(sectionClient, SWT.NONE, chart, true);
-
-                GridData gd = new GridData();
-                gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-                gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-                cc.setLayoutData(gd);
+                TOPChartUtils.getInstance().createChartComposite(sectionClient, SWT.NONE, chart, true);
             }
         }
         section.setClient(sectionClient);
@@ -272,39 +268,30 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                 .getUniqueCountIndicator()));
 
         EIndicatorChartType simpleStatType = EIndicatorChartType.SIMPLE_STATISTICS;
-        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(simpleStatType, units);
-        ChartWithData chartData = new ChartWithData(simpleStatType, chartTypeState.getChart(), chartTypeState.getDataEntity());
+        // create table firstly
+        ITableTypeStates tableTypeState = TableTypeStatesFactory.getInstance().getTableState(simpleStatType, units);
+        TableWithData chartData = new TableWithData(simpleStatType, tableTypeState.getDataEntity());
 
-        TableViewer tableviewer = chartTypeState.getTableForm(composite);
+        TableViewer tableviewer = tableTypeState.getTableForm(composite);
         tableviewer.setInput(chartData);
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
         // MOD qiongli feature 19192.
-        DataExplorer dataExplorer = chartTypeState.getDataExplorer();
+        DataExplorer dataExplorer = tableTypeState.getDataExplorer();
         Analysis analysis = this.getAnalysisHandler().getAnalysis();
         ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
         // create chart
-        if (!EditorPreferencePage.isHideGraphics()) {
-
-            JFreeChart chart = chartTypeState.getChart();
-            ChartDecorator.decorate(chart, null);
+        if (canShowChart()) {
+            IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(simpleStatType, units);
+            Object chart = chartTypeState.getChart();
+            TOPChartUtils.getInstance().decorateChart(chart, false);
             if (chart != null) {
-                ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+                Object chartComposite2 = TOPChartUtils.getInstance().createChartComposite(composite, SWT.NONE, chart, true);
 
-                GridData gd = new GridData();
-                gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-                gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-                cc.setLayoutData(gd);
-                // MOD qiongli 2011-3-28 feature 19192.allow drill down for chart.
-                ExecutionLanguage execuLanguage = analysis.getParameters().getExecutionLanguage();
-
-                // MOD gdbu 2011-7-12 bug : 22524
-                boolean isAllow = ExecutionLanguage.SQL.equals(execuLanguage) || ExecutionLanguage.JAVA.equals(execuLanguage);
-                // ~22524
-
-                if (isAllow) {
-                    addMouseListenerForChart(cc, dataExplorer, analysis);
-                }
+                Map<String, Object> menuMap = createMenuForAllDataEntity(((Composite) chartComposite2).getShell(), dataExplorer,
+                        analysis, ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
+                // call chart service to create related mouse listener
+                TOPChartUtils.getInstance().addMouseListenerForChart(chartComposite2, menuMap, true);
             }
         }
     }
