@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.jfree.util.Log;
 import org.junit.Test;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
@@ -66,7 +65,6 @@ import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
@@ -138,7 +136,6 @@ public class ResourceViewLabelProviderTest {
             try {
                 aa.create(true, true, null);
             } catch (CoreException e) {
-                Log.error(e, e);
                 Assert.fail(e.getMessage());
             }
         }
@@ -281,7 +278,6 @@ public class ResourceViewLabelProviderTest {
         try {
             ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
         } catch (PersistenceException e) {
-            Log.error(e, e);
             Assert.fail(e.getMessage());
         }
 
@@ -308,7 +304,6 @@ public class ResourceViewLabelProviderTest {
         try {
             ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
         } catch (PersistenceException e) {
-            Log.error(e, e);
             Assert.fail(e.getMessage());
         }
     }
@@ -327,7 +322,6 @@ public class ResourceViewLabelProviderTest {
             try {
                 currFolder.create(true, true, null);
             } catch (CoreException e) {
-                Log.error(e, e);
                 Assert.fail(e.getMessage());
             }
         }
@@ -351,7 +345,6 @@ public class ResourceViewLabelProviderTest {
                         "/temp/" + parentPath.toOSString() + "/" + filName);//$NON-NLS-1$//$NON-NLS-2$
                 file.create(resourceAsStream, true, null);
             } catch (CoreException e) {
-                Log.error(e, e);
                 Assert.fail(e.getMessage());
             }
         }

@@ -96,7 +96,9 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             ChartDataEntity entity = FrequencyTypeStateUtil
                     .createChartEntity(indicator, freqExt, keyLabel, withRowCountIndicator);
 
-            ((CustomerDefaultCategoryDataset) customerdataset).addDataEntity(entity);
+            if (customerdataset instanceof CustomerDefaultCategoryDataset) {
+                ((CustomerDefaultCategoryDataset) customerdataset).addDataEntity(entity);
+            }
         }
     }
 

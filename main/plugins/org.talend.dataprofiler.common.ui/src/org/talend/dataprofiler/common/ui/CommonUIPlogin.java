@@ -33,7 +33,7 @@ public class CommonUIPlogin extends AbstractUIPlugin {
 
     private static final Log _logger = LogFactory.getLog(CommonUIPlogin.class);
 
-    private static final String PLUGIN_ID = "org.talend.dataprofiler.top.chart"; //$NON-NLS-1$
+    private static final String PLUGIN_ID = "org.talend.dataprofiler.common.ui"; //$NON-NLS-1$
 
     private static CommonUIPlogin plugin;
 

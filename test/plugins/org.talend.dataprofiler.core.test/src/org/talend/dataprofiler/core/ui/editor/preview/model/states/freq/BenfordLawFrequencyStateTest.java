@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dq.indicators.ext.FrequencyExt;
 
 /**
@@ -92,7 +93,7 @@ public class BenfordLawFrequencyStateTest {
         fre.setValue(3l);
         fre.setFrequency(0.33);
         benState.setValueToDataset(customerdataset, fre, "2");
-        Number n = customerdataset.getValue(0, 0);
+        Number n = TOPChartUtils.getInstance().getValue(customerdataset, 0, 0);
         Assert.assertEquals(0.33, n);
     }
 

@@ -68,7 +68,6 @@ Export-Package: org.talend.commons.emf,
  org.talend.dq.nodes.indicator.impl,
  org.talend.dq.nodes.indicator.type,
  org.talend.dq.pattern,
- org.talend.dq.sql.converters,
  org.talend.dq.writer,
  org.talend.dq.writer.impl
 Import-Package: org.talend.dataprofiler.service

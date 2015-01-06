@@ -35,8 +35,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dataquality.domain.sql.SqlPredicate;
-import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
@@ -47,7 +45,6 @@ import org.talend.dq.analysis.MultiColumnAnalysisExecutor;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.sql.converters.CwmZExpression;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.metadata.managment.model.MetadataFillFactory;
 import org.talend.metadata.managment.ui.model.ProjectNodeHelper;
@@ -181,19 +178,6 @@ public class MultiColAnalysisCreationTest {
         }
         Assert.assertTrue(dataProviderOK);
         Assert.assertTrue(analysisOK);
-    }
-
-    /**
-     * DOC scorreia Comment method "getExpression".
-     * 
-     * @param column
-     * 
-     * @return
-     */
-    private BooleanExpressionNode getExpression(TdColumn column) {
-        CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
-        expre.setOperands(column, "\"sunny\""); //$NON-NLS-1$
-        return expre.generateExpressions();
     }
 
     /**
