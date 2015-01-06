@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.jfree.util.Log;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -108,7 +107,6 @@ public class UpdateMsSqlToJdbcTaskTest {
         try {
             factory.create(createDatabaseConnectionItem, createPath, false);
         } catch (PersistenceException e) {
-            Log.error(e, e);
             Assert.fail(e.getMessage());
         }
         return createConnection;

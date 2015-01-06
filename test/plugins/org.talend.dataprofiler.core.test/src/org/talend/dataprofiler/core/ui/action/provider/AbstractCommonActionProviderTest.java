@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.actions.ActionContext;
-import org.jfree.util.Log;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -197,7 +196,6 @@ public class AbstractCommonActionProviderTest {
             factory.create(createDatabaseConnectionItem, createPath, false);
             repViewObject = factory.getLastVersion(createDatabaseConnectionProperty.getId());
         } catch (PersistenceException e) {
-            Log.error(e, e);
             Assert.fail(e.getMessage());
         }
 
@@ -262,7 +260,6 @@ public class AbstractCommonActionProviderTest {
             factory.create(createAnalysisItem, createPath, false);
             repViewObject = factory.getLastVersion(createAnaProperty.getId());
         } catch (PersistenceException e) {
-            Log.error(e, e);
             Assert.fail(e.getMessage());
         }
         RepositoryNode anaRepNode = new AnalysisRepNode(repViewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);

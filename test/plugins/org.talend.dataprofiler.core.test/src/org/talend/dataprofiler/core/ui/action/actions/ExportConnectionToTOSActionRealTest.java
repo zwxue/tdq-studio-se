@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.jfree.util.Log;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.talend.commons.exception.PersistenceException;
@@ -115,7 +114,6 @@ public class ExportConnectionToTOSActionRealTest {
                 factory.create(createDatabaseConnectionItem, createPath, false);
             }
         } catch (PersistenceException e) {
-            Log.error(e, e);
             Assert.fail(e.getMessage());
         }
         return createDatabaseConnectionItem;
