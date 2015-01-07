@@ -58,6 +58,7 @@
     <module>main/plugins/org.talend.cwm.compare</module>
     <module>main/plugins/org.talend.cwm.compare.ui</module>
     <module>main/plugins/org.talend.cwm.management</module>
+    <module>main/plugins/org.talend.dataprofiler.top.chart</module>
     <module>main/plugins/org.talend.dataprofiler.common.ui</module>
     <module>main/plugins/org.talend.dataprofiler.core</module>
     <module>main/plugins/org.talend.dataprofiler.ecos</module>
