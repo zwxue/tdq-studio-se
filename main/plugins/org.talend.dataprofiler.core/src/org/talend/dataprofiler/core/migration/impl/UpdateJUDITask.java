@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -39,8 +40,6 @@ import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.io.FilesUtils;
 import orgomg.cwm.objectmodel.core.TaggedValue;
-
-import common.Logger;
 
 /**
  * 
@@ -143,7 +142,7 @@ public class UpdateJUDITask extends AbstractWorksapceUpdateTask {
                         propResource.getContents().add(newProperty.getItem().getState());
                         EMFUtil.saveResource(propResource);
                         returnCode ^= false;
-                       
+
                     }
                 }
                 if (jarPath != null) {

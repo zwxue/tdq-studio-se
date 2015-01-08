@@ -288,10 +288,9 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPageWithChart imp
             if (chart != null) {
                 Object chartComposite2 = TOPChartUtils.getInstance().createChartComposite(composite, SWT.NONE, chart, true);
 
-                Map<String, Object> menuMap = createMenuForAllDataEntity(((Composite) chartComposite2).getShell(), dataExplorer,
-                        analysis, ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
-                // call chart service to create related mouse listener
-                TOPChartUtils.getInstance().addMouseListenerForChart(chartComposite2, menuMap, true);
+                addMenuToChartComp(chartComposite2, dataExplorer, analysis,
+                        ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
+
             }
         }
     }
