@@ -18,13 +18,13 @@ import java.util.Map;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.talend.dataprofiler.service.ITOPChartService;
-import org.talend.dataquality.record.linkage.ui.LinkageUIPlugin;
+import org.talend.dq.helper.AbstractOSGIServiceUtils;
 
 /**
  * created by yyin on 2014-12-11 Detailled comment
  * 
  */
-public class TOPChartUtil {
+public class TOPChartUtil extends AbstractOSGIServiceUtils {
 
     private static TOPChartUtil instance;
 
@@ -38,30 +38,8 @@ public class TOPChartUtil {
     }
 
     public boolean isTOPChartInstalled() {
-        initTOPChartService(false);
+        initService(true);
         return this.chartService != null;
-    }
-
-    /**
-     * DOC yyin Comment method "initTOPChartService".
-     * 
-     * @param b
-     */
-    private void initTOPChartService(boolean b) {
-        if (this.chartService == null) {
-            BundleContext context = LinkageUIPlugin.getDefault().getBundleContext();
-            if (context == null) {
-                return;
-            }
-
-            ServiceReference serviceReference = context.getServiceReference(ITOPChartService.class.getName());
-            if (serviceReference != null) {
-                Object obj = context.getService(serviceReference);
-                if (obj != null) {
-                    this.chartService = (ITOPChartService) obj;
-                }
-            }
-        }
     }
 
     public Object createChartComposite(Object composite, int style, Object chart, boolean useBuffer) {
@@ -125,6 +103,47 @@ public class TOPChartUtil {
             return chartService.createDatasetForDuplicateRecord(dupStats);
         }
         return null;
+    }
+
+    @Override
+    public String getPluginName() {
+        return ITOPChartService.PLUGIN_NAME;
+    }
+
+    @Override
+    public String getJarFileName() {
+        return ITOPChartService.JAR_FILE_NAME;
+    }
+
+    @Override
+    public String getServiceName() {
+        return ITOPChartService.class.getName();
+    }
+
+    @Override
+    public boolean isServiceInstalled() {
+        initService(true);
+        return this.chartService != null;
+    }
+
+    @Override
+    protected String getMissingMessageName() {
+        return "TOPChartUtil.missingTopChart"; //$NON-NLS-1$
+    }
+
+    @Override
+    protected String getRestartMessageName() {
+        return "TOPChartUtil.restartToLoadTopChart"; //$NON-NLS-1$
+    }
+
+    @Override
+    protected void setService(BundleContext context, ServiceReference serviceReference) {
+        if (serviceReference != null) {
+            Object obj = context.getService(serviceReference);
+            if (obj != null) {
+                this.chartService = (ITOPChartService) obj;
+            }
+        }
     }
 
 }

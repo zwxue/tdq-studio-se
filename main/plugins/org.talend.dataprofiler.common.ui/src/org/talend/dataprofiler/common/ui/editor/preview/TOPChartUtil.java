@@ -16,14 +16,20 @@ import java.util.List;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.talend.dataprofiler.common.ui.CommonUIPlogin;
 import org.talend.dataprofiler.service.ITOPChartService;
+import org.talend.dq.helper.AbstractOSGIServiceUtils;
 
 /**
  * created by yyin on 2014-12-15 Detailled comment
  * 
  */
-public class TOPChartUtil {
+public class TOPChartUtil extends AbstractOSGIServiceUtils {
+
+    public static final String PLUGIN_NAME = "org.talend.dataprofiler.top.chart"; //$NON-NLS-1$
+
+    private static final String CHART_VERSION = "_6.0.0"; //$NON-NLS-1$
+
+    public static final String JAR_FILE_NAME = PLUGIN_NAME + CHART_VERSION + ".jar"; //$NON-NLS-1$ 
 
     private static TOPChartUtil instance;
 
@@ -36,104 +42,118 @@ public class TOPChartUtil {
         return instance;
     }
 
-    public boolean isTOPChartInstalled() {
-        initTOPChartService(false);
+    @Override
+    public boolean isServiceInstalled() {
+        initService(true);
         return this.chartService != null;
     }
 
-    /**
-     * DOC yyin Comment method "initTOPChartService".
-     * 
-     * @param b
-     */
-    private void initTOPChartService(boolean b) {
-        if (this.chartService == null) {
-            BundleContext context = CommonUIPlogin.getDefault().getBundleContext();
-            if (context == null) {
-                return;
-            }
+    @Override
+    public String getPluginName() {
+        return ITOPChartService.PLUGIN_NAME;
+    }
 
-            ServiceReference serviceReference = context.getServiceReference(ITOPChartService.class.getName());
-            if (serviceReference != null) {
-                Object obj = context.getService(serviceReference);
-                if (obj != null) {
-                    this.chartService = (ITOPChartService) obj;
-                }
+    @Override
+    public String getJarFileName() {
+        return ITOPChartService.JAR_FILE_NAME;
+    }
+
+    @Override
+    public String getServiceName() {
+        return ITOPChartService.class.getName();
+    }
+
+    @Override
+    protected String getMissingMessageName() {
+        return "TOPChartUtil.missingTopChart"; //$NON-NLS-1$
+    }
+
+    @Override
+    protected String getRestartMessageName() {
+        return "TOPChartUtil.restartToLoadTopChart"; //$NON-NLS-1$
+    }
+
+    @Override
+    protected void setService(BundleContext context, ServiceReference serviceReference) {
+        if (serviceReference != null) {
+            Object obj = context.getService(serviceReference);
+            if (obj != null) {
+                this.chartService = (ITOPChartService) obj;
             }
         }
     }
 
     public Object createDefaultCategoryDataset() {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.createDefaultCategoryDataset();
         }
         return null;
     }
 
     public void addValueToCategoryDataset(Object dataset, double value, String labelX, String labelY) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             chartService.addValueToCategoryDataset(dataset, value, labelX, labelY);
         }
     }
 
     public int getRowCount(Object dataset) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getRowCount(dataset);
         }
         return Integer.MIN_VALUE;
     }
 
     public int getColumnCount(Object dataset) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getColumnCount(dataset);
         }
         return Integer.MIN_VALUE;
     }
 
     public Number getValue(Object dataset, int row, int column) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getValue(dataset, row, column);
         }
         return Integer.MIN_VALUE;
     }
 
     public Comparable getRowKey(Object dataset, int row) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getRowKey(dataset, row);
         }
         return Integer.MIN_VALUE;
     }
 
     public int getRowIndex(Object dataset, Comparable key) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getRowIndex(dataset, key);
         }
         return Integer.MIN_VALUE;
     }
 
     public List getRowKeys(Object dataset) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getRowKeys(dataset);
         }
         return null;
     }
 
     public Comparable getColumnKey(Object dataset, int column) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getColumnKey(dataset, column);
         }
         return Integer.MIN_VALUE;
     }
 
     public int getColumnIndex(Object dataset, Comparable key) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getColumnIndex(dataset, key);
         }
         return Integer.MIN_VALUE;
     }
 
     public List getColumnKeys(Object dataset) {
-        if (isTOPChartInstalled()) {
+        if (isServiceInstalled()) {
             return chartService.getColumnKeys(dataset);
         }
         return null;

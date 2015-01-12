@@ -214,7 +214,7 @@ public class DQRespositoryView extends CommonNavigator {
             initWorkspace();
 
             // TDQ-9711 init all ManagedDrivers and alias.
-            if (SqlExplorerUtils.getDefault().isSqlexplorerInstalled()) {
+            if (SqlExplorerUtils.getDefault().isServiceInstalled()) {
                 SqlExplorerUtils.getDefault().initAllConnectionsToSQLExplorer();
             }
 

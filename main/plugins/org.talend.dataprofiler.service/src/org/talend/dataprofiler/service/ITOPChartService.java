@@ -22,6 +22,12 @@ import java.util.Map;
  */
 public interface ITOPChartService {
 
+    public static final String PLUGIN_NAME = "org.talend.dataprofiler.top.chart"; //$NON-NLS-1$
+
+    static final String SERVICE_VERSION = "_6.0.0"; //$NON-NLS-1$
+
+    public static final String JAR_FILE_NAME = PLUGIN_NAME + SERVICE_VERSION + ".jar"; //$NON-NLS-1$ 
+
     Object getDatasetFromChart(Object chart, int datasetIndex);
 
     Object createTalendChartComposite(Object composite, int style, Object chart, boolean useBuffer);

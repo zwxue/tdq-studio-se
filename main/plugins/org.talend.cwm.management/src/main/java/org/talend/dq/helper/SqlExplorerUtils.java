@@ -12,21 +12,15 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import java.io.File;
 import java.net.URL;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.talend.commons.exception.PersistenceException;
@@ -46,10 +40,8 @@ import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.dataquality.indicators.mapdb.ColumnSetDBMap;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.DBSet;
-import org.talend.dq.CWMPlugin;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.model.bridge.ReponsitoryContextBridge;
-
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -58,7 +50,7 @@ import orgomg.cwm.objectmodel.core.Package;
  * created by xqliu on 2014-9-9 Detailled comment
  * 
  */
-public class SqlExplorerUtils {
+public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
 
     private static Logger log = Logger.getLogger(SqlExplorerUtils.class);
 
@@ -70,8 +62,6 @@ public class SqlExplorerUtils {
 
     public static final String JAR_FILE_NAME = PLUGIN_NAME + SQL_EXPLORER_VERSION + ".jar"; //$NON-NLS-1$ 
 
-    public static final String COMMAND_ID = "org.talend.updates.show.wizard.command"; //$NON-NLS-1$
-
     public static final String TALENDDATASET_CLASS_NAME = "net.sourceforge.sqlexplorer.dataset.mapdb.TalendDataSet"; //$NON-NLS-1$
 
     private static SqlExplorerUtils sqlExplorerUtils;
@@ -82,18 +72,25 @@ public class SqlExplorerUtils {
 
     private boolean initAllDrivers = false;
 
-    private boolean hasShowDownloadWizard = false;
-
-    public boolean isSqlexplorerInstalled() {
-        initSqlExplorerService(false);
+    @Override
+    public boolean isServiceInstalled() {
+        initService(false);
         return this.sqlexplorerService != null;
     }
 
     public ISqlexplorerService getSqlexplorerService() {
         if (this.sqlexplorerService == null) {
-            initSqlExplorerService(true);
+            initService(true);
         }
         return this.sqlexplorerService;
+    }
+
+    @Override
+    protected void setService(BundleContext context, ServiceReference serviceReference) {
+        Object obj = context.getService(serviceReference);
+        if (obj != null) {
+            this.sqlexplorerService = (ISqlexplorerService) obj;
+        }
     }
 
     /**
@@ -103,42 +100,9 @@ public class SqlExplorerUtils {
      * @param isNeedDownload. if the service is not found, "isNeedDownload" will pop the downlaoding dialog.
      * 
      */
-    private void initSqlExplorerService(boolean isNeedDownload) {
-
-        if (this.sqlexplorerService == null) {
-            BundleContext context = CWMPlugin.getDefault().getBundleContext();
-            if (context == null) {
-                return;
-            }
-
-            ServiceReference serviceReference = context.getServiceReference(ISqlexplorerService.class.getName());
-            if (serviceReference != null) {
-                Object obj = context.getService(serviceReference);
-                if (obj != null) {
-                    this.sqlexplorerService = (ISqlexplorerService) obj;
-                }
-            } else if (isNeedDownload) {
-                // check the jar file has been donwloaded or not
-                String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-                File movedfile = new File(pathToStore, JAR_FILE_NAME);
-                if (movedfile.exists()) {
-                    log.warn(Messages.getString("SqlExplorerUtils.restartToLoadSqlexplorer")); //$NON-NLS-1$
-                } else if (!hasShowDownloadWizard) {
-                    // show download jar dialog
-                    IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-                    ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
-                    try {
-                        Command command = commandService.getCommand(COMMAND_ID);
-                        command.executeWithChecks(new ExecutionEvent());
-                        hasShowDownloadWizard = true;
-                    } catch (Exception e) {
-                        log.error(e);
-                    }
-                } else {
-                    log.error(Messages.getString("SqlExplorerUtils.missingSqlexplorer")); //$NON-NLS-1$
-                }
-            }
-        }
+    @Override
+    protected void initService(boolean isNeedDownload) {
+        super.initService(isNeedDownload);
 
         if (!this.initRootProject && sqlexplorerService != null) {
             this.sqlexplorerService.initSqlExplorerRootProject(ReponsitoryContextBridge.getRootProject());
@@ -334,5 +298,30 @@ public class SqlExplorerUtils {
             return getSqlexplorerService().createDataSet(columnHeader, columnValue);
         }
         return null;
+    }
+
+    @Override
+    public String getPluginName() {
+        return PLUGIN_NAME;
+    }
+
+    @Override
+    public String getJarFileName() {
+        return JAR_FILE_NAME;
+    }
+
+    @Override
+    public String getServiceName() {
+        return ISqlexplorerService.class.getName();
+    }
+
+    @Override
+    protected String getMissingMessageName() {
+        return "SqlExplorerUtils.missingSqlexplorer"; //$NON-NLS-1$
+    }
+
+    @Override
+    protected String getRestartMessageName() {
+        return "SqlExplorerUtils.restartToLoadSqlexplorer"; //$NON-NLS-1$
     }
 }
