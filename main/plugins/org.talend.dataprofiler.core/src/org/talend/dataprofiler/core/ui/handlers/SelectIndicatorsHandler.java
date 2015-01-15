@@ -18,7 +18,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
-import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog2;
+import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog3;
 
 /**
  * DOC yyi class global comment. Detailled comment
@@ -46,8 +46,8 @@ public class SelectIndicatorsHandler extends AbstractHandler {
             Object dialog = activeShell.getData();
             if (dialog instanceof IndicatorSelectDialog) {
                 ((IndicatorSelectDialog) dialog).selectAllIndicators(select);
-            } else if (dialog instanceof IndicatorSelectDialog2) {
-                ((IndicatorSelectDialog2) dialog).selectAllIndicators(select);
+            } else if (dialog instanceof IndicatorSelectDialog3) {
+                ((IndicatorSelectDialog3) dialog).selectAllIndicators(select);
             }
         }
         return null;
