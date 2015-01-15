@@ -27,6 +27,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
+import org.talend.dataquality.record.linkage.ui.composite.chart.TOPChartUtil;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.GroupStatisticsTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.GroupStatisticsRow;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
@@ -63,6 +64,10 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
      */
     @Override
     protected void createSubChart(Composite sectionClient) {
+        if (!TOPChartUtil.getInstance().isTOPChartInstalled()) {
+            return;
+        }
+
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         Composite chartComposite = toolkit.createComposite(sectionClient);
         GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);

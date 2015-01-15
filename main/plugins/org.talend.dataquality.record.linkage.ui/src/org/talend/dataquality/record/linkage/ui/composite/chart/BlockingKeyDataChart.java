@@ -48,6 +48,9 @@ public class BlockingKeyDataChart extends Composite {
      */
     public BlockingKeyDataChart(Composite parent, Map<String, List<String[]>> viewData) {
         super(parent, SWT.NONE);
+        if (!TOPChartUtil.getInstance().isTOPChartInstalled()) {
+            return;
+        }
         this.prviewData = viewData;
         this.setLayout(new FillLayout());
         // make the size of the chart full fill the area
