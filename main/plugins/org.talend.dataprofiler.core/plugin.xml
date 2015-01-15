@@ -1805,9 +1805,14 @@
     <extension
           point="org.talend.updates.runtime.extraUpdatesFactory">
        <factory
-             class="org.talend.dataprofiler.core.DQRequiredMissingJarsExtraUpdatesFactory"
+             class="org.talend.dataprofiler.core.download.DQSqlExplorerJarsExtraUpdatesFactory"
              id="org.talend.dataprofiler.core.DownloadSqlexplorerPluginJar"
              name="Download Sqlexplorer Plugin Jar">
+       </factory>
+       <factory
+             class="org.talend.dataprofiler.core.download.DQChartJarsExtraUpdatesFactory"
+             id="org.talend.dataprofiler.core.DownloadTOPChartPluginJar"
+             name="Download TOPChart Plugin Jar">
        </factory>
     </extension>
     <extension

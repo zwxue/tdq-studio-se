@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.grid;
 
-import org.eclipse.nebula.widgets.grid.GridCellRenderer;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -23,21 +22,12 @@ import org.eclipse.swt.graphics.Point;
 /**
  * The renderer for a cell in Grid.
  */
-public class TdCellRenderer extends GridCellRenderer {
-
-    int leftMargin = 4;
-
-    int rightMargin = 4;
-
-    int topMargin = 0;
-
-    int bottomMargin = 0;
-
-    private int insideMargin = 3;
+public class TdCellRenderer extends AbstractTdCellRenderer {
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void paint(GC gc, Object value) {
         GridItem item = (GridItem) value;
         gc.setAntialias(SWT.ON);
@@ -104,6 +94,7 @@ public class TdCellRenderer extends GridCellRenderer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Point computeSize(GC gc, int wHint, int hHint, Object value) {
         GridItem item = (GridItem) value;
 
@@ -132,6 +123,7 @@ public class TdCellRenderer extends GridCellRenderer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean notify(int event, Point point, Object value) {
         return false;
     }
