@@ -38,7 +38,7 @@ public class TOPChartUtil extends AbstractOSGIServiceUtils {
     }
 
     public boolean isTOPChartInstalled() {
-        initService(true);
+        initService(false);
         return this.chartService != null;
     }
 
@@ -136,6 +136,7 @@ public class TOPChartUtil extends AbstractOSGIServiceUtils {
         return "TOPChartUtil.restartToLoadTopChart"; //$NON-NLS-1$
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void setService(BundleContext context, ServiceReference serviceReference) {
         if (serviceReference != null) {

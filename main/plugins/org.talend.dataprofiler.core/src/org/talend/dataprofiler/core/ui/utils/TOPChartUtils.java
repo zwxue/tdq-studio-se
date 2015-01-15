@@ -105,14 +105,14 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     }
 
     public Object createBarChart(String title, Object dataset, boolean showLegend) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createBarChart(title, ((CustomerDefaultCategoryDataset) dataset).getDataset(), showLegend);
         }
         return null;
     }
 
     public Object createBarChart(String title, Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createBarChart(title, ((CustomerDefaultCategoryDataset) dataset).getDataset());
         }
         return null;
@@ -120,7 +120,7 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
 
     public Object createBenfordChart(String axisXLabel, String categoryAxisLabel, Object dataset, List<String> dotChartLabels,
             double[] formalValues, String title) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createBenfordChart(axisXLabel, categoryAxisLabel,
                     ((CustomerDefaultCategoryDataset) dataset).getDataset(), dotChartLabels, formalValues, title);
         }
@@ -128,14 +128,14 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     }
 
     public Object createTalendChartComposite(Object parentComponent, int style, Object chart, boolean useBuffer) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createTalendChartComposite(parentComponent, style, chart, useBuffer);
         }
         return null;
     }
 
     public Object createChartComposite(Object composite, int style, Object chart, boolean useBuffer) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createChartComposite(composite, style, chart, useBuffer);
         }
         return null;
@@ -143,79 +143,79 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
 
     public Object createChartCompositeWithSpecialSize(Object composite, int style, Object chart, boolean useBuffer, int height,
             int width) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createChartCompositeWithSpecialSize(composite, style, chart, useBuffer, height, width);
         }
         return null;
     }
 
     public Object createChartCompositeWithFull(Object composite, Object chart) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createChartCompositeWithFull(composite, chart);
         }
         return null;
     }
 
     public Object getDatasetFromChart(Object chart, int datasetIndex) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getDatasetFromChart(chart, datasetIndex);
         }
         return null;
     }
 
     public void decorateChart(Object chart, boolean withPlot) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.decorateChart(chart, withPlot);
         }
     }
 
     public void decorateColumnDependency(Object chart) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.decorateColumnDependency(chart);
         }
     }
 
     public void setOrientation(Object chart, boolean isHorizontal) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.setOrientation(chart, isHorizontal);
         }
     }
 
     public void setDisplayDecimalFormatOfChart(Object chart) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.setDisplayDecimalFormatOfChart(chart);
         }
     }
 
     public void addMouseListenerForChart(Object chartComposite, final Map<String, Object> menuMap, boolean useRowFirst) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.addMouseListenerForChart(chartComposite, menuMap, useRowFirst);
         }
     }
 
     public Object createPieChart(String title, Object dataset, boolean showLegend, boolean toolTips, boolean urls) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createPieChart(title, dataset, showLegend, toolTips, urls);
         }
         return null;
     }
 
     public Object createBoxAndWhiskerChart(String title, Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createBoxAndWhiskerChart(title, ((CustomerDefaultBAWDataset) dataset).getDataset());
         }
         return null;
     }
 
     public Object createStackedBarChart(String title, Object dataset, boolean showLegend) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createStackedBarChart(title, ((CustomerDefaultCategoryDataset) dataset).getDataset(), showLegend);
         }
         return null;
     }
 
     public Object createStackedBarChart(String title, Object dataset, boolean isHorizatal, boolean showLegend) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createStackedBarChart(title, ((CustomerDefaultCategoryDataset) dataset).getDataset(),
                     isHorizatal, showLegend);
         }
@@ -223,7 +223,7 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     }
 
     public void addListenerToChartComp(Object chartComposite, final String referenceLink, final String menuText) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.addListenerToChartComp(chartComposite, referenceLink, menuText);
         }
     }
@@ -304,20 +304,20 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     }
 
     public Object createDefaultCategoryDataset() {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createDefaultCategoryDataset();
         }
         return null;
     }
 
     public void addValueToCategoryDataset(Object dataset, double value, String labelX, String labelY) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.addValueToCategoryDataset(dataset, value, labelX, labelY);
         }
     }
 
     public Object createPieDataset(Map<String, Double> valueMap) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createPieDataset(valueMap);
         }
         return null;
@@ -325,180 +325,180 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
 
     public Object createDefaultBoxAndWhiskerCategoryDataset(Double mean, Double median, Double q1, Double q3,
             Double minRegularValue, Double maxRegularValue) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createDefaultBoxAndWhiskerCategoryDataset(mean, median, q1, q3, minRegularValue, maxRegularValue);
         }
         return null;
     }
 
     public Object createXYDataset(Map<Integer, Double> valueMap) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createXYDataset(valueMap);
         }
         return null;
     }
 
     public int getColumnCount(Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getColumnCount(dataset);
         }
         return Integer.MIN_VALUE;
     }
 
     public int getRowCount(Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getRowCount(dataset);
         }
         return Integer.MIN_VALUE;
     }
 
     public Number getValue(Object dataset, int row, int column) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getValue(dataset, row, column);
         }
         return null;
     }
 
     public Comparable getColumnKey(Object dataset, int column) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getColumnKey(dataset, column);
         }
         return null;
     }
 
     public void setValue(Object dataset, Number value, Comparable rowKey, Comparable columnKey) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.setValue(dataset, value, rowKey, columnKey);
         }
     }
 
     public void clearDataset(Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.clearDataset(dataset);
         }
     }
 
     public void refrechChart(Object chartComp, Object chart) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.refrechChart(chartComp, chart);
         }
     }
 
     public void clearDefaultBoxAndWhiskerCategoryDataset(Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.clearDefaultBoxAndWhiskerCategoryDataset(dataset);
         }
     }
 
     public Object createTaskSeriesCollection() {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createTaskSeriesCollection();
         }
         return null;
     }
 
     public Object createTaskSeries(String keyOfDataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createTaskSeries(keyOfDataset);
         }
         return null;
     }
 
     public void addTaskToTaskSeries(Object taskSeries, String key, Date[] date) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.addTaskToTaskSeries(taskSeries, key, date);
         }
     }
 
     public void addSeriesToCollection(Object taskSeriesCollection, Object taskSeries) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.addSeriesToCollection(taskSeriesCollection, taskSeries);
         }
     }
 
     public Object createGanttChart(String chartAxies, Object ganttDataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createGanttChart(chartAxies, ganttDataset);
         }
         return null;
     }
 
     public void addSeriesToDefaultXYZDataset(Object dataset, String keyOfDataset, double[][] data) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.addSeriesToDefaultXYZDataset(dataset, keyOfDataset, data);
         }
     }
 
     public Object createBubbleChart(String chartName, Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createBubbleChart(chartName, dataset);
         }
         return null;
     }
 
     public Object createDefaultXYZDataset() {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createDefaultXYZDataset();
         }
         return null;
     }
 
     public void createAnnotOnGantt(Object chart, List<Object[]> rowList, int multiDateColumn, int nominal) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.createAnnotOnGantt(chart, rowList, multiDateColumn, nominal);
         }
     }
 
     public void showChartInFillScreen(Object chart, boolean isCountAvgNull, boolean isMinMaxDate) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.showChartInFillScreen(chart, isCountAvgNull, isMinMaxDate);
         }
     }
 
     public void addSpecifiedListenersForCorrelationChart(Object chartcomp, Object chart, final boolean isAvg,
             final boolean isDate, final Map<Integer, Object> keyWithAdapter) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.addSpecifiedListenersForCorrelationChart(chartcomp, chart, isAvg, isDate, keyWithAdapter);
         }
     }
 
     public int getSeriesCount(Object chart) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getSeriesCount(chart);
         }
         return Integer.MIN_VALUE;
     }
 
     public int getSeriesRowCount(Object chart) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getSeriesRowCount(chart);
         }
         return Integer.MIN_VALUE;
     }
 
     public Object createSelectionAdapterForButton(final Object chart, final boolean isCountAvg, final boolean isMinMax) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createSelectionAdapterForButton(chart, isCountAvg, isMinMax);
         }
         return null;
     }
 
     public String getSeriesKeyOfBubbleChart(Object chart, int index) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getSeriesKeyOfBubbleChart(chart, index);
         }
         return StringUtils.EMPTY;
     }
 
     public String getSeriestKeyOfGanttChart(Object chart, int index) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getSeriestKeyOfGanttChart(chart, index);
         }
         return StringUtils.EMPTY;
     }
 
     public Object createChartCompositeForCorrelationAna(Object parent, Object chart, int height) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createChartCompositeForCorrelationAna(parent, chart, height);
         }
         return null;

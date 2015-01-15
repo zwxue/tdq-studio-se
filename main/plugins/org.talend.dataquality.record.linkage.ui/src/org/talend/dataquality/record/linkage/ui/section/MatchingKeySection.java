@@ -52,6 +52,7 @@ import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
+import org.talend.dataquality.record.linkage.ui.composite.chart.TOPChartUtil;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.KeyDefinitionTableViewerSorter;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
@@ -505,6 +506,9 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      */
     @Override
     protected void createSubChart(Composite sectionClient) {
+        if (!TOPChartUtil.getInstance().isTOPChartInstalled()) {
+            return;
+        }
         Composite chartComposite = toolkit.createComposite(sectionClient);
         GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
         chartComposite.setLayout(tableLayout);

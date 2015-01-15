@@ -83,91 +83,97 @@ public class TOPChartUtil extends AbstractOSGIServiceUtils {
         }
     }
 
+    // No need to download,only for check
+    public boolean isTOPChartInstalled() {
+        initService(false);
+        return this.chartService != null;
+    }
+
     public Object createDefaultCategoryDataset() {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.createDefaultCategoryDataset();
         }
         return null;
     }
 
     public void addValueToCategoryDataset(Object dataset, double value, String labelX, String labelY) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             chartService.addValueToCategoryDataset(dataset, value, labelX, labelY);
         }
     }
 
     public int getRowCount(Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getRowCount(dataset);
         }
         return Integer.MIN_VALUE;
     }
 
     public int getColumnCount(Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getColumnCount(dataset);
         }
         return Integer.MIN_VALUE;
     }
 
     public Number getValue(Object dataset, int row, int column) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getValue(dataset, row, column);
         }
         return Integer.MIN_VALUE;
     }
 
     public Comparable getRowKey(Object dataset, int row) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getRowKey(dataset, row);
         }
         return Integer.MIN_VALUE;
     }
 
     public int getRowIndex(Object dataset, Comparable key) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getRowIndex(dataset, key);
         }
         return Integer.MIN_VALUE;
     }
 
     public List getRowKeys(Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getRowKeys(dataset);
         }
         return null;
     }
 
     public Comparable getColumnKey(Object dataset, int column) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getColumnKey(dataset, column);
         }
         return Integer.MIN_VALUE;
     }
 
     public int getColumnIndex(Object dataset, Comparable key) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getColumnIndex(dataset, key);
         }
         return Integer.MIN_VALUE;
     }
 
     public List getColumnKeys(Object dataset) {
-        if (isServiceInstalled()) {
+        if (isTOPChartInstalled()) {
             return chartService.getColumnKeys(dataset);
         }
         return null;
     }
 
     public Number getValue(Object dataset, Comparable rowKey, Comparable columnKey) {
-        if (chartService != null) {
+        if (isTOPChartInstalled()) {
             return chartService.getValue(dataset, rowKey, columnKey);
         }
         return Integer.MIN_VALUE;
     }
 
     public void clearDataset(Object dataset) {
-        if (chartService != null) {
+        if (isTOPChartInstalled()) {
             chartService.clearDataset(dataset);
         }
     }
