@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.model.nodes.foldernode;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.ui.runtime.exception.MessageBoxExceptionHandler;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -25,9 +26,9 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
-import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -49,8 +50,8 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         super(DefaultMessagesImpl.getString("ColumnFolderNode.columns")); //$NON-NLS-1$
     }
 
-    private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences()
-            .getBoolean(PluginConstant.FILTER_TABLE_VIEW_COLUMN);
+    private static final boolean FILTER_FLAG = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID,
+            PluginConstant.FILTER_TABLE_VIEW_COLUMN, false, null);
 
     /*
      * (non-Javadoc)

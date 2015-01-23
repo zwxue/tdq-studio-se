@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -46,6 +47,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.osgi.service.prefs.BackingStoreException;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.i18n.BabiliInfo;
 import org.talend.commons.i18n.BabiliUpdateUtil;
@@ -227,7 +229,11 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
         boolean ok = super.performOk();
         LocalToLanguageEnum language = LocalToLanguageEnum.findLocal(execCombo.getText());
         getPreferenceStore().setValue(PluginConstant.LANGUAGE_SELECTOR, language.getShortOfLocale());
-        CorePlugin.getDefault().savePluginPreferences();
+        try {
+            InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).flush();
+        } catch (BackingStoreException e) {
+            log.error(e);
+        }
         saveLanguageType();
         return ok;
     }
@@ -247,8 +253,10 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
             File iniFile = new File(url.getFile(), "config.ini"); //$NON-NLS-1$
             fin = new FileInputStream(iniFile);
             p.load(fin);
-            String languageType = CorePlugin.getDefault().getPluginPreferences().getString(PluginConstant.LANGUAGE_SELECTOR);
-            if (languageType.equals(p.getProperty(EclipseStarter.PROP_NL))) {
+            String languageType = Platform.getPreferencesService().get(CorePlugin.PLUGIN_ID, PluginConstant.LANGUAGE_SELECTOR,
+                    null);
+
+            if (languageType == null || languageType.equals(p.getProperty(EclipseStarter.PROP_NL))) {
                 return;
             }
 
@@ -355,7 +363,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
                 }
             }
 
-            return PluginConstant.EMPTY_STRING; //$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
 
         static LocalToLanguageEnum findLocal(String locale) {

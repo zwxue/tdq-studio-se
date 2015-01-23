@@ -15,7 +15,7 @@ public class CWMPreferenceInitializer extends AbstractPreferenceInitializer {
 
     @Override
     public void initializeDefaultPreferences() {
-        IEclipsePreferences prefs = new DefaultScope().getNode(CWMPlugin.getDefault().getBundle().getSymbolicName());
+        IEclipsePreferences prefs = DefaultScope.INSTANCE.getNode(CWMPlugin.getDefault().getBundle().getSymbolicName());
         prefs.putBoolean(PluginConstant.CONNECTION_TIMEOUT, false);
         prefs.putBoolean(PluginConstant.FILTER_TABLE_VIEW_COLUMN, true);
         PlatformUI.getPreferenceStore().setDefault(AnalysisThreadMemoryChangeNotifier.ANALYSIS_AUTOMATIC_MEMORY_CONTROL, false);

@@ -74,7 +74,7 @@ public class WebBrowserPreferencePage extends PreferencePage implements IWorkben
      */
     public void init(IWorkbench workbench) {
         isBlockWeb = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, BLOCK_WEB_BROWSER,
-                DQPreferenceManager.BLOCK_HELP_DEFAULT, new IScopeContext[] { new InstanceScope() });
+                DQPreferenceManager.BLOCK_HELP_DEFAULT, new IScopeContext[] { InstanceScope.INSTANCE });
     }
 
     /*
@@ -95,7 +95,7 @@ public class WebBrowserPreferencePage extends PreferencePage implements IWorkben
      */
     @Override
     public boolean performOk() {
-        IEclipsePreferences node = new InstanceScope().getNode(CorePlugin.PLUGIN_ID);
+        IEclipsePreferences node = InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID);
         if (node != null) {
             node.putBoolean(BLOCK_WEB_BROWSER, isBlockWeb);
         }

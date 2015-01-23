@@ -42,6 +42,6 @@ public final class DQPreferenceManager {
      */
     public static boolean isBlockWeb() {
         return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, WebBrowserPreferencePage.BLOCK_WEB_BROWSER,
-                BLOCK_HELP_DEFAULT, new IScopeContext[] { new InstanceScope() });
+                BLOCK_HELP_DEFAULT, new IScopeContext[] { InstanceScope.INSTANCE });
     }
 }

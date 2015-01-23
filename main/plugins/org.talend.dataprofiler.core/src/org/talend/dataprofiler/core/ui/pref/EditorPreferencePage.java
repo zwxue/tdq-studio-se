@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.pref;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -30,6 +32,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.osgi.service.prefs.BackingStoreException;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.PluginConstant;
@@ -93,8 +96,10 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
     private BooleanFieldEditor hideGraphsField;
 
+    protected static Logger log = Logger.getLogger(EditorPreferencePage.class);
+
     public static int getCurrentFolding() {
-        int sectionFoldState = ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_MASTER_PAGE_FOLDING);
+        int sectionFoldState = Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID, EDITOR_MASTER_PAGE_FOLDING, 0, null);
         if (currentFolding == 0 && sectionFoldState != 0) {
             currentFolding = sectionFoldState;
         }
@@ -132,13 +137,16 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     // MOD klliu bug TDQ-966-->TDQ-3970 2011-11-16
     public static boolean isUnfoldingAnalyzedEelements() {
-        return ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS) == 0 ? true
-                : false;
+        int prefValue = Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID, EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS, 0,
+                null);
+        return prefValue == 0 ? true : false;
     }
 
     public static boolean isUnfoldingIndicators() {
-        return ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_RESULT_PAGE_INDICATORS) == 0 ? true : false;
+        int prefValue = Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID, EDITOR_RESULT_PAGE_INDICATORS, 0, null);
+        return prefValue == 0 ? true : false;
     }
+
     @Override
     protected Control createContents(Composite parent) {
 
@@ -214,8 +222,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         label2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFoldingText")); //$NON-NLS-1$
         button4 = new Button(group2, SWT.CHECK);
         button4.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding1")); //$NON-NLS-1$
-        setCurrentAnalyzedElements(ResourcesPlugin.getPlugin().getPluginPreferences()
-                .getInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS) == 0 ? true : false);
+        setCurrentAnalyzedElements(Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID,
+                EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS, 0, null) == 0 ? true : false);
         button4.setSelection(isCurrentAnalyzedElements());
         button4.addSelectionListener(new SelectionListener() {
 
@@ -228,8 +236,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         });
         button5 = new Button(group2, SWT.CHECK);
         button5.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding2")); //$NON-NLS-1$
-        setCurrentIndicators(ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_RESULT_PAGE_INDICATORS) == 0 ? true
-                : false);
+        setCurrentIndicators(Platform.getPreferencesService()
+                .getInt(CorePlugin.PLUGIN_ID, EDITOR_RESULT_PAGE_INDICATORS, 0, null) == 0 ? true : false);
         button5.setSelection(isCurrentIndicators());
         button5.addSelectionListener(new SelectionListener() {
 
@@ -263,8 +271,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
         graphicGroup.setLayoutData(data);
 
-        hideGraphsField = new BooleanFieldEditor(HIDE_GRAPHICS_FOR_RESULT_PAGE, DefaultMessagesImpl
-                .getString("EditorPreferencePage.hideGraphics"), graphicGroup);
+        hideGraphsField = new BooleanFieldEditor(HIDE_GRAPHICS_FOR_RESULT_PAGE,
+                DefaultMessagesImpl.getString("EditorPreferencePage.hideGraphics"), graphicGroup); //$NON-NLS-1$
         getPreferenceStore().setDefault(HIDE_GRAPHICS_FOR_RESULT_PAGE, false);
         hideGraphsField.setPreferenceStore(getPreferenceStore());
         hideGraphsField.load();
@@ -284,7 +292,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         dfofLable.setText(DefaultMessagesImpl.getString("EditorPreferencePage.AnalyzePerPage")); //$NON-NLS-1$
 
         pageSizeText = new Text(pageSizeComp, SWT.BORDER);
-        String pageSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(ANALYZED_ITEMS_PER_PAGE);
+        String pageSize = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID, ANALYZED_ITEMS_PER_PAGE, null, null);
         if (pageSize == null || pageSize.equals(PluginConstant.EMPTY_STRING)) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
@@ -297,7 +305,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         drorLable.setText(DefaultMessagesImpl.getString("EditorPreferencePage.DQRulePerPage")); //$NON-NLS-1$
 
         dqruleSizeText = new Text(pageSizeComp, SWT.BORDER);
-        String dqruleSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(DQ_RULES_PER_PAGE);
+        String dqruleSize = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID, DQ_RULES_PER_PAGE, null, null);
         if (dqruleSize == null || dqruleSize.equals(PluginConstant.EMPTY_STRING)) {
             dqruleSize = DEFAULT_PAGE_SIZE;
         }
@@ -313,21 +321,26 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         button2.setSelection(false);
         button3.setSelection(false);
         setCurrentFolding(FOLDING_1);
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
 
         button4.setSelection(true);
         setCurrentAnalyzedElements(button4.getSelection());
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
                 isCurrentAnalyzedElements() ? 0 : 1);
 
         button5.setSelection(true);
         setCurrentIndicators(button5.getSelection());
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
 
         // Analyzed Items Per Page
         pageSizeText.setText(DEFAULT_PAGE_SIZE);
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
-        ResourcesPlugin.getPlugin().savePluginPreferences();
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).put(ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
+        // ResourcesPlugin.getPlugin().savePluginPreferences();
+        try {
+            InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).flush();
+        } catch (BackingStoreException e) {
+            log.error(e);
+        }
 
         hideGraphsField.loadDefault();
         super.performDefaults();
@@ -346,27 +359,31 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     @Override
     public boolean performOk() {
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
                 isCurrentAnalyzedElements() ? 0 : 1);
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
         // ADD yyi 2010-07-07 for 13964
         hideGraphsField.store();
         // ~ 13964
 
         // MOD xqliu 2010-03-10 feature 10834
         if (checkPageSize(this.pageSizeText.getText()) && checkPageSize(this.dqruleSizeText.getText())) {
-            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
-            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(DQ_RULES_PER_PAGE, dqruleSizeText.getText());
-            ResourcesPlugin.getPlugin().savePluginPreferences();
+            InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).put(ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
+            InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).put(DQ_RULES_PER_PAGE, dqruleSizeText.getText());
+            try {
+                InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).flush();
+            } catch (BackingStoreException e) {
+                log.error(e);
+            }
             return super.performOk();
         } else {
             String msg = DefaultMessagesImpl.getString("PerformancePreferencePage.pageSizeMsg");//$NON-NLS-1$
             if (!checkPageSize(this.dqruleSizeText.getText())) {
                 msg = DefaultMessagesImpl.getString("PerformancePreferencePage.dqruleSizeMsg");//$NON-NLS-1$
             }
-            MessageDialogWithToggle.openInformation(getShell(), DefaultMessagesImpl
-                    .getString("PerformancePreferencePage.information"), //$NON-NLS-1$
+            MessageDialogWithToggle.openInformation(getShell(),
+                    DefaultMessagesImpl.getString("PerformancePreferencePage.information"), //$NON-NLS-1$
                     msg);
             return false;
         }
@@ -398,7 +415,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
      * @return
      */
     public static String getDQRuleSize() {
-        String result = ResourcesPlugin.getPlugin().getPluginPreferences().getString(DQ_RULES_PER_PAGE);
+        String result = Platform.getPreferencesService().get(CorePlugin.PLUGIN_ID, DQ_RULES_PER_PAGE, null);
         if (result == null || PluginConstant.EMPTY_STRING.equals(result.trim())) {
             result = DEFAULT_PAGE_SIZE;
         }

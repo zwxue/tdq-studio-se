@@ -1169,6 +1169,14 @@
            id="org.talend.dataprofiler.core.dqDelete"
            name="%command.name.dqDelete">
      </command>
+     <command
+           id="org.talend.dataprofiler.core.ExportItem"
+           name="Export Item">
+     </command>
+     <command
+           id="org.talend.dataprofiler.core.importItem"
+           name="Import item">
+     </command>
   </extension>
   <extension
         point="org.eclipse.ui.bindings">
@@ -1680,32 +1688,7 @@
            version="6.0.0">
      </workspacetask>
   </extension>
-  <extension
-        point="org.eclipse.ui.actionSets">
-     <actionSet
-           id="org.talend.dataprofiler.core.actionSet"
-           label="TOP Action Set"
-           visible="false">
-        <action
-              class="org.talend.dataprofiler.core.ui.imex.action.ImportItemAction"
-              icon="icons/import.gif"
-              id="org.talend.dataprofiler.core.ui.imex.action.ImportItemAction"
-              label="Import Item"
-              style="push"
-              toolbarPath="Default"
-              tooltip="import items">
-        </action>
-        <action
-              class="org.talend.dataprofiler.core.ui.imex.action.ExportItemAction"
-              icon="icons/export.gif"
-              id="org.talend.dataprofiler.core.ui.imex.action.ExportItemAction"
-              label="Export Item"
-              style="push"
-              toolbarPath="Default"
-              tooltip="export items">
-        </action>
-     </actionSet>
-  </extension>
+  
   <extension
         point="org.eclipse.ui.handlers">
      <handler
@@ -1821,6 +1804,59 @@
              appearsAfter="org.talend.camel.perspective | org.talend.rcp.perspective"
              id="org.talend.dataprofiler.DataProfilingPerspective">
        </perspective>
+    </extension>
+    <extension
+          point="org.eclipse.ui.menus">
+       <menuContribution
+             allPopups="false"
+             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+          <toolbar
+                id="org.talend.dataprofiler.core.toolbar.importExportItem">
+             <command
+                   commandId="org.talend.dataprofiler.core.ExportItem"
+                   icon="icons/export.gif"
+                   id="org.talend.dataprofiler.core.toolbar.ExportItem.id"
+                   label="Export item"
+                   style="push"
+                   tooltip="export items">
+                <visibleWhen>
+                   <with
+                         variable="activeWorkbenchWindow.activePerspective">
+                      <equals
+                            value="org.talend.dataprofiler.DataProfilingPerspective">
+                      </equals>
+                   </with>
+                </visibleWhen>
+             </command>
+             <command
+                   commandId="org.talend.dataprofiler.core.importItem"
+                   icon="icons/import.gif"
+                   id="org.talend.dataprofiler.core.toolbar.importItem.id"
+                   label="Import item"
+                   style="push"
+                   tooltip="import items">
+                <visibleWhen>
+                   <with
+                         variable="activeWorkbenchWindow.activePerspective">
+                      <equals
+                            value="org.talend.dataprofiler.DataProfilingPerspective">
+                      </equals>
+                   </with>
+                </visibleWhen>
+             </command>
+          </toolbar>
+       </menuContribution>
+    </extension>
+    <extension
+          point="org.eclipse.ui.handlers">
+       <handler
+             class="org.talend.dataprofiler.core.ui.handlers.ExportItemHandler"
+             commandId="org.talend.dataprofiler.core.ExportItem">
+       </handler>
+       <handler
+             class="org.talend.dataprofiler.core.ui.handlers.ImportItemHandler"
+             commandId="org.talend.dataprofiler.core.importItem">
+       </handler>
     </extension>
 
 </plugin>

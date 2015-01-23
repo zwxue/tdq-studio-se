@@ -101,7 +101,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
         container.setLayout(gdLayout);
 
         PatternFilter filter = new PatternFilter();
-        FilteredTree tree = new FilteredTree(container, SWT.BORDER, filter);
+        FilteredTree tree = new FilteredTree(container, SWT.BORDER, filter, true);
 
         typeTreeViewer = tree.getViewer();
         typeTreeViewer.setContentProvider(new AnalysisTypeContentProvider());

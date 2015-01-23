@@ -36,7 +36,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -68,7 +67,6 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -132,46 +130,6 @@ public final class WorkbenchUtils {
                 }
             }
         });
-    }
-
-    public static void autoChange2DataProfilerPerspective() {
-        if (!AUTO_CHANGE2DATA_PROFILER) {
-            return;
-        }
-        try {
-            IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getPerspective();
-            if (!(PluginConstant.PERSPECTIVE_ID.equals(perspective.getId()) || PluginConstant.SQLEXPLORER_PERSPECTIVE_ID
-                    .equals(perspective.getId()))) {
-
-                int autoChange = ResourcesPlugin.getPlugin().getPluginPreferences()
-                        .getInt(PluginConstant.AUTO_CHANGE2DATA_PROFILER);
-
-                switch (autoChange) {
-                case AUTO_CHANGE2DATA_PROFILER_TRUE:
-                    // change perspective automatically
-                    changePerspective(PluginConstant.PERSPECTIVE_ID);
-                    break;
-                case AUTO_CHANGE2DATA_PROFILER_FALSE:
-                    // do nothing
-                    break;
-                default:
-                    // ask user what to do, and rember user's decision
-                    if (MessageUI.openYesNoQuestion(DefaultMessagesImpl
-                            .getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
-                        ResourcesPlugin.getPlugin().getPluginPreferences()
-                                .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_TRUE);
-                        // change perspective
-                        changePerspective(PluginConstant.PERSPECTIVE_ID);
-                    } else {
-                        ResourcesPlugin.getPlugin().getPluginPreferences()
-                                .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_FALSE);
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            log.warn(t, t);
-        }
     }
 
     public static IFolder folder2IFolder(Folder folder) {
