@@ -506,15 +506,15 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      */
     @Override
     protected void createSubChart(Composite sectionClient) {
-        if (!TOPChartUtil.getInstance().isTOPChartInstalled()) {
-            return;
-        }
         Composite chartComposite = toolkit.createComposite(sectionClient);
         GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
         chartComposite.setLayout(tableLayout);
         GridData gridData = new GridData(GridData.FILL_BOTH);
         chartComposite.setLayoutData(gridData);
         matchRuleChartComp = new MatchRuleDataChart(chartComposite, new HashMap<Object, Long>());
+        if (!TOPChartUtil.getInstance().isTOPChartInstalled()) {
+            return;
+        }
         createHideGroupComposite(chartComposite);
     }
 

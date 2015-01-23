@@ -64,9 +64,6 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
      */
     @Override
     protected void createSubChart(Composite sectionClient) {
-        if (!TOPChartUtil.getInstance().isTOPChartInstalled()) {
-            return;
-        }
 
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         Composite chartComposite = toolkit.createComposite(sectionClient);
@@ -77,6 +74,9 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
         matchRuleChartComp = new MatchRuleDataChart(chartComposite, recordMatchingIndicator.getGroupSize2groupFrequency());
 
+        if (!TOPChartUtil.getInstance().isTOPChartInstalled()) {
+            return;
+        }
         createHideGroupComposite(chartComposite);
     }
 
