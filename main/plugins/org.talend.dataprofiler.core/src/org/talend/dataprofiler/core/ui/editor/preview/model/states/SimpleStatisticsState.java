@@ -40,7 +40,7 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
 
     @Override
     public Object getChart(Object dataset) {
-        return TOPChartUtils.getInstance().createBarChart(
+        return TOPChartUtils.getInstance().createBarChartWithDefaultDataset(
                 DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), dataset, false); //$NON-NLS-1$
     }
 

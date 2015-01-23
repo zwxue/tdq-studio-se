@@ -46,54 +46,51 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         AnalysisType analysisType = this.analysis.getParameters().getAnalysisType();
         // MOD qiongli 2012-8-29 hive don't support 'where in...'
         boolean isHive = dbmsLanguage instanceof HiveDbmsLanguage;
-        if (!isSqlEngine) {
-
-            switch (this.indicatorEnum) {
-            case RowCountIndicatorEnum:
-                // for columnset/column and jave engine, we didn't show the view rows menu
-                if (isSqlEngine) {
-                    // when user define indicator
-                    map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getRowsStatement());
-                }
-                break;
-            case NullCountIndicatorEnum:
-            case BlankCountIndicatorEnum:
-            case DefValueCountIndicatorEnum:
-            case UserDefinedIndicatorEnum:
+        switch (this.indicatorEnum) {
+        case RowCountIndicatorEnum:
+            // for columnset/column and jave engine, we didn't show the view rows menu
+            if (isSqlEngine) {
                 // when user define indicator
-                IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS)
-                        + (indicatorDefinition instanceof UDIndicatorDefinition ? getQueryForViewRows(indicatorDefinition)
-                                : getRowsStatement()) : null);
-                break;
-
-            case UniqueIndicatorEnum:
-                if (analysisType != AnalysisType.COLUMN_SET) {
-                    if (!isHive) {
-                        map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
-                    } else if (!isSqlEngine) {
-                        map.put(MENU_VIEW_ROWS, null);
-                    }
-                }
-                map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
-                break;
-            case DistinctCountIndicatorEnum:
-                map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES)
-                        + getDistinctValuesStatement(this.columnName) : null);
-                break;
-
-            case DuplicateCountIndicatorEnum:
-                if (analysisType != AnalysisType.COLUMN_SET) {
-                    if (!isHive) {
-                        map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
-                    } else if (!isSqlEngine) {
-                        map.put(MENU_VIEW_ROWS, null);
-                    }
-                }
-                map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
-                break;
-            default:
+                map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getRowsStatement());
             }
+            break;
+        case NullCountIndicatorEnum:
+        case BlankCountIndicatorEnum:
+        case DefValueCountIndicatorEnum:
+        case UserDefinedIndicatorEnum:
+            // when user define indicator
+            IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
+            map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS)
+                    + (indicatorDefinition instanceof UDIndicatorDefinition ? getQueryForViewRows(indicatorDefinition)
+                            : getRowsStatement()) : null);
+            break;
+
+        case UniqueIndicatorEnum:
+            if (analysisType != AnalysisType.COLUMN_SET) {
+                if (!isHive) {
+                    map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                } else if (!isSqlEngine) {
+                    map.put(MENU_VIEW_ROWS, null);
+                }
+            }
+            map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
+            break;
+        case DistinctCountIndicatorEnum:
+            map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getDistinctValuesStatement(this.columnName)
+                    : null);
+            break;
+
+        case DuplicateCountIndicatorEnum:
+            if (analysisType != AnalysisType.COLUMN_SET) {
+                if (!isHive) {
+                    map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                } else if (!isSqlEngine) {
+                    map.put(MENU_VIEW_ROWS, null);
+                }
+            }
+            map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
+            break;
+        default:
         }
 
         return map;

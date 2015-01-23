@@ -514,4 +514,14 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         return "TOPChartUtils.restartToLoadTopChart"; //$NON-NLS-1$
     }
 
+    /**
+     * use the dataset directly, mainly for dynamical chart.
+     */
+    public Object createBarChartWithDefaultDataset(String title, Object dataset, boolean showLegend) {
+        if (isTOPChartInstalled()) {
+            return chartService.createBarChart(title, dataset, showLegend);
+        }
+        return null;
+    }
+
 }
