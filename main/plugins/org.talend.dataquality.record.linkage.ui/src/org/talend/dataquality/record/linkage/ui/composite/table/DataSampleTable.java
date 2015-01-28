@@ -242,7 +242,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]> {
                 columnsName.add(column.getName());
             }
         }
-        columnsName.addAll(createFixedColumns(columns.length));
+        columnsName.addAll(createFixedColumns(columns == null ? 0 : columns.length));
 
         return columnsName.toArray(new String[columnsName.size()]);
     }
@@ -256,12 +256,12 @@ public class DataSampleTable implements TDQObserver<ModelElement[]> {
         List<String> columnNames = new ArrayList<String>();
         columnNames.add(MatchAnalysisConstant.BLOCK_KEY);
         // remember the index of the GID;
-        additionalColumnPosition = new ColumnPosition(columnSize);
+        additionalColumnPosition = new ColumnPosition(columnSize + 1);
         columnNames.add(MatchAnalysisConstant.GID);
         // record the index of the GRP_SIZE
-        sortState = new SortState(columnNames.size());
+        sortState = new SortState(columnSize + 2);
         columnNames.add(MatchAnalysisConstant.GRP_SIZE);
-        this.masterColumn = columnNames.size();
+        this.masterColumn = columnSize + 3;
 
         columnNames.add(MatchAnalysisConstant.MASTER);
         columnNames.add(MatchAnalysisConstant.SCORE);
