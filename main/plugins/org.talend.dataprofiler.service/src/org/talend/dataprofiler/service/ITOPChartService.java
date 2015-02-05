@@ -28,6 +28,8 @@ public interface ITOPChartService {
 
     public static final String JAR_FILE_NAME = PLUGIN_NAME + SERVICE_VERSION + ".jar"; //$NON-NLS-1$ 
 
+    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + SERVICE_VERSION + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+
     Object getDatasetFromChart(Object chart, int datasetIndex);
 
     Object createTalendChartComposite(Object composite, int style, Object chart, boolean useBuffer);

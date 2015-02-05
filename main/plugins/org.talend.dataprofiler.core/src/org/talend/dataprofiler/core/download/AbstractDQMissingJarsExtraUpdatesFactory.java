@@ -49,7 +49,11 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
 
     protected static Logger log = Logger.getLogger(AbstractDQMissingJarsExtraUpdatesFactory.class);
 
-    protected abstract String getJarFileName();
+    /**
+     * the jar file name must be in pairs and in order, jar file and jar nl file.<br/>
+     * {"sqlexplorer.jar", "sqlexplorer.nl.jar"}
+     */
+    protected abstract List<String> getJarFileNames();
 
     protected abstract String getPluginName();
 
@@ -57,10 +61,10 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
     public void retrieveUninstalledExtraFeatures(IProgressMonitor monitor, Set<ExtraFeature> uninstalledExtraFeatures)
             throws Exception {
         Bundle bundle = Platform.getBundle(getPluginName());
-        if (bundle == null) {// if the sql explorer bundle is not installed then propose to download it.
+        if (bundle == null) {// if the bundle is not installed then propose to download it.
             String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-            File sqlexplorerJarfile = new File(pathToStore, getJarFileName());
-            if (sqlexplorerJarfile.exists()) {
+            File jarfile = new File(pathToStore, getJarFileNames().get(0));
+            if (jarfile.exists()) {
                 return;
             } else {
                 SubMonitor mainSubMonitor = SubMonitor.convert(monitor, 2);
@@ -87,7 +91,7 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                         .filterAllAutomaticInstallableModules(modulesRequiredToBeInstalled);
                 if (modulesForAutomaticInstall.isEmpty()) {// if could not find anything to download log and error and
                                                            // return nothing
-                    log.error("failed to fetch missing third parties jars information for " + getJarFileName()); //$NON-NLS-1$
+                    log.error("failed to fetch missing third parties jars information for " + getJarFileNames().get(0)); //$NON-NLS-1$
                     return;
                 }
 
@@ -121,15 +125,16 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                             }
 
                             private void moveJars() throws MalformedURLException, IOException {
-                                File jarFile = null;
-                                List<File> jarFiles = FilesUtils.getJarFilesFromFolder(new File(CWMPlugin.getDefault()
-                                        .getLibrariesPath()), getJarFileName());
-                                if (jarFiles.size() > 0) {
-                                    jarFile = jarFiles.get(0);
+                                List<File> jarFiles = new ArrayList<File>();
+
+                                String librariesPath = CWMPlugin.getDefault().getLibrariesPath();
+                                for (String jarFileName : getJarFileNames()) {
+                                    jarFiles.addAll(FilesUtils.getJarFilesFromFolder(new File(librariesPath), jarFileName));
                                 }
-                                if (jarFile != null) {
+
+                                for (File jarFile : jarFiles) {
                                     String pluginPath = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-                                    File movedfile = new File(pluginPath, getJarFileName());
+                                    File movedfile = new File(pluginPath, jarFile.getName());
                                     if (!movedfile.exists()) {
                                         File target = new File(StringUtils.trimToEmpty(pluginPath));
                                         if (!target.exists()) {
@@ -161,18 +166,20 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
             notInstalledModulesRunnable.run(mainSubMonitor.newChild(1));
             return true;
         } catch (InvocationTargetException e) {
-            log.error("failed to fetch missing third parties jars information for " + getJarFileName(), e); //$NON-NLS-1$
+            log.error("failed to fetch missing third parties jars information for " + getJarFileNames().get(0), e); //$NON-NLS-1$
             return false;
         } catch (InterruptedException e) {
-            log.error("failed to fetch missing third parties jars information" + getJarFileName(), e); //$NON-NLS-1$
+            log.error("failed to fetch missing third parties jars information" + getJarFileNames().get(0), e); //$NON-NLS-1$
             return false;
         }
     }
 
     protected List<ModuleNeeded> getAllUninstalledModules() {
-        ModuleNeeded modelNeeded = new ModuleNeeded(getContextName(), getJarFileName(), getInforMessage(), true);
         List<ModuleNeeded> allUninstalledModules = new ArrayList<ModuleNeeded>();
-        allUninstalledModules.add(modelNeeded);
+        for (String jarFileName : getJarFileNames()) {
+            ModuleNeeded modelNeeded = new ModuleNeeded(getContextName(), jarFileName, getInforMessage(), true);
+            allUninstalledModules.add(modelNeeded);
+        }
         return allUninstalledModules;
     }
 

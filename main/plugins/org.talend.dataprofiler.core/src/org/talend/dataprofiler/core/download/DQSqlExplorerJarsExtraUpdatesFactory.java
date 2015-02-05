@@ -12,13 +12,19 @@
 // ============================================================================
 package org.talend.dataprofiler.core.download;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.talend.dq.helper.SqlExplorerUtils;
 
 public class DQSqlExplorerJarsExtraUpdatesFactory extends AbstractDQMissingJarsExtraUpdatesFactory {
 
     @Override
-    protected String getJarFileName() {
-        return SqlExplorerUtils.JAR_FILE_NAME;
+    protected List<String> getJarFileNames() {
+        List<String> jarFiles = new ArrayList<String>();
+        jarFiles.add(SqlExplorerUtils.JAR_FILE_NAME);
+        jarFiles.add(SqlExplorerUtils.JAR_NL_FILE_NAME);
+        return jarFiles;
     }
 
     @Override

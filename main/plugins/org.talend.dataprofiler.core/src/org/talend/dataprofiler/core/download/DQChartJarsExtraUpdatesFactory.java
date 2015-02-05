@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.download;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.talend.dataprofiler.service.ITOPChartService;
 
 /**
@@ -21,8 +24,11 @@ import org.talend.dataprofiler.service.ITOPChartService;
 public class DQChartJarsExtraUpdatesFactory extends AbstractDQMissingJarsExtraUpdatesFactory {
 
     @Override
-    protected String getJarFileName() {
-        return ITOPChartService.JAR_FILE_NAME;
+    protected List<String> getJarFileNames() {
+        List<String> jarFiles = new ArrayList<String>();
+        jarFiles.add(ITOPChartService.JAR_FILE_NAME);
+        jarFiles.add(ITOPChartService.JAR_NL_FILE_NAME);
+        return jarFiles;
     }
 
     @Override
@@ -42,7 +48,7 @@ public class DQChartJarsExtraUpdatesFactory extends AbstractDQMissingJarsExtraUp
 
     @Override
     protected String getDownloadName() {
-        return "DownloadChartPluginJarFactory.name";
+        return "DownloadChartPluginJarFactory.name"; //$NON-NLS-1$
     }
 
 }
