@@ -13,6 +13,7 @@
 package org.talend.datascience.common.schema
 
 trait SemanticField extends Field[Any] {
-  val semanticName: String
- 
+  var semanticName: String
+  val sampleValues: Seq[String] = Seq()
+
 }

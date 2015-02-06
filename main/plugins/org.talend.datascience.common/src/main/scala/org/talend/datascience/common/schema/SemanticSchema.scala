@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.datascience.common.schema
 
-trait SemanticSchema[Schema] extends Serializable{
+trait SemanticSchema[+Schema] extends Serializable {
   val fields: Seq[SemanticField]
   def getSchema: Schema
 }

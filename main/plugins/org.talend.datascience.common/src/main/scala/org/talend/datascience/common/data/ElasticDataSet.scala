@@ -12,6 +12,15 @@
 // ============================================================================
 package org.talend.datascience.common.data
 
-trait ElasticDataSet[Context] extends Serializable{
-  
+trait ElasticDataSet[Context] extends Serializable {
+  def emit(): ElasticData[Any]
+  def setDataSource(path:String)
+  def getContext: Context
+}
+
+object ElasticDataSet {
+  def createDataSet(elasticDataSetClassName: String): ElasticDataSet[Any] = {
+    val aclass = Class.forName(elasticDataSetClassName)
+    aclass.newInstance().asInstanceOf[ElasticDataSet[Any]]
+  }
 }

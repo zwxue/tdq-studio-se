@@ -19,5 +19,6 @@ trait Field[StructField] extends Serializable{
   val size: Int
   val description: String
   val pattern: String
+  var index: Int
   def getStructField: StructField
 }
