@@ -13,7 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.equinox.ds,
  org.eclipse.equinox.util
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.chart
 Import-Package: org.apache.commons.logging;version="1.1.1",
