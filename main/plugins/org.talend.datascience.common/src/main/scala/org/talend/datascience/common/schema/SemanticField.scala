@@ -12,8 +12,13 @@
 // ============================================================================
 package org.talend.datascience.common.schema
 
+import org.talend.datascience.common.statistics.NumericalFieldStatistics
+import org.talend.datascience.common.statistics.TextualFieldStatistics
+
 trait SemanticField extends Field[Any] {
   var semanticName: String
   val sampleValues: Seq[String] = Seq()
+  var numericalStatistics = new NumericalFieldStatistics
+  var textualStatistics = new TextualFieldStatistics
 
 }

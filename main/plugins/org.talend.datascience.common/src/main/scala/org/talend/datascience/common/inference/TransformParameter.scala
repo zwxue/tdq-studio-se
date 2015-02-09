@@ -1,5 +1,6 @@
 package org.talend.datascience.common.inference
-import ValueSurvivorOptions._
+
+import org.talend.datascience.common.transform.MissingValueResolutionOption
 /**
  * @author zhao
  * @parameter globalParameter the parameter applies to all data.
@@ -9,9 +10,10 @@ class TransformParameter(val globalParameter: ParameterEntity, val fieldTransfor
   def this() = this(EmptyParameter, Map.empty)
 }
 class ParameterEntity {
-  val globalValueSurvivorOption: ValueSurvivorOptions = SurviveTextualValue
-  val globalVissingValueResolutions: Seq[MissingValueResolution] = Seq()
-  val allowNumericalValueCalculas: Boolean = false
+  var numMissingValueResolution = MissingValueResolutionOption.fillZero
+  var allowNumericalValueCalculas: Boolean = false
+  var patternStr: String = "" 
+  var allowTransform = false
 }
 case object EmptyParameter extends ParameterEntity {
 

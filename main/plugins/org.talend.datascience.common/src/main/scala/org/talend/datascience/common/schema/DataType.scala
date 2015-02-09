@@ -12,10 +12,9 @@
 // ============================================================================
 package org.talend.datascience.common.schema
 
-trait DataType[+T] extends Serializable{
+trait DataType[+T] extends Serializable {
 
   def getType: T
-
   def getTypeName: String
   def getJavaType: Int
 
