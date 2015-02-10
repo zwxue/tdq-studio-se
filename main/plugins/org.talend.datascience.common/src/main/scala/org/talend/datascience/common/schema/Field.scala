@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.datascience.common.schema
 
-import scala.collection.mutable.ListBuffer
-import org.talend.datascience.common.statistics.FieldStatistics
-
 trait Field[StructField] extends Serializable{
   val name: String
   var dataType: DataType[Any]
@@ -25,5 +22,4 @@ trait Field[StructField] extends Serializable{
   var index: Int
   def getStructField: StructField
   def setDataType(dType:DataType[Any])
-  var suggestedType:(DataType[Any], ListBuffer[Map[DataType[Any], (Long,FieldStatistics)]])//(data type name, type infer details)
 }
