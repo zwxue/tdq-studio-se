@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -430,9 +431,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     @Override
     public EList<String> getColumnHeaders() {
         EList<String> headers = new BasicEList<String>();
-        for (ModelElement column : this.getNominalColumns()) {
-            headers.add(column.getName());
-        }
+        // shuold keep the order of the columns, when show the data in result page need to follow the order
         for (ModelElement column : analyzedColumns) {
             if (isSameMiningType(column, DataminingType.INTERVAL)) {
                 // add numerical or date columns with formatted heander name if numeric or date functions defined in
@@ -449,10 +448,29 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                     // Never go here
                     log.error("invalid data mining type for " + column);
                 }
+            } else {
+                if (isNominalColumn(column.getName())) {
+                    headers.add(column.getName());
+                }
             }
         }
         headers.add(this.getCountAll());
         return headers;
+    }
+
+    /**
+     * if the column's mining type is nominal return true, else return false.
+     * 
+     * @param columnName
+     * @return
+     */
+    private boolean isNominalColumn(String columnName) {
+        for (ModelElement me : this.getNominalColumns()) {
+            if (StringUtils.equals(columnName, me.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
