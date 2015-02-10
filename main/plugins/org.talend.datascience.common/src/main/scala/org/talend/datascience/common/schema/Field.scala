@@ -14,7 +14,7 @@ package org.talend.datascience.common.schema
 
 trait Field[StructField] extends Serializable{
   val name: String
-  var dataType: DataType[Any]
+  private[schema] var dataType: DataType[Any]
   val nullable: Boolean = true
   val size: Int
   val description: String
@@ -22,4 +22,5 @@ trait Field[StructField] extends Serializable{
   var index: Int
   def getStructField: StructField
   def setDataType(dType:DataType[Any])
+  def getDataType=dataType
 }

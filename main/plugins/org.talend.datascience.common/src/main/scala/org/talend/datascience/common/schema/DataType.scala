@@ -17,5 +17,5 @@ trait DataType[+T] extends Serializable {
   def getType: T
   def getTypeName: String
   def getJavaType: Int
-
+  def setType(dType:Any)
 }

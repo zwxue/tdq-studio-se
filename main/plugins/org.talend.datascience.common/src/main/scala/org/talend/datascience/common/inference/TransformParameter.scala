@@ -9,11 +9,10 @@ import org.talend.datascience.common.transform.MissingValueResolutionOption
 class TransformParameter(val globalParameter: ParameterEntity, val fieldTransformParameters: Map[Int, ParameterEntity]) extends Serializable {
   def this() = this(EmptyParameter, Map.empty)
 }
-class ParameterEntity {
+class ParameterEntity extends Serializable{
   var numMissingValueResolution = MissingValueResolutionOption.fillZero
   var allowNumericalValueCalculas: Boolean = false
   var patternStr: String = "" 
-  var allowTransform = false
 }
 case object EmptyParameter extends ParameterEntity {
 

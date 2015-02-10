@@ -15,6 +15,8 @@ package org.talend.datascience.common.data
 /**
  * @author zhao
  */
-trait ElasticData[+ComputeModel] extends Serializable{
-  def getModel : ComputeModel
+trait ElasticData[+ComputeModel] extends Serializable {
+  def getModel: ComputeModel
+  def foreach[U](f: Any=> Unit): Unit
+
 }
