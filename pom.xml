@@ -42,6 +42,7 @@
 		<module>i18n/plugins/org.talend.dataprofiler.ecos.nl</module>
 		<module>i18n/plugins/org.talend.dataprofiler.help.nl</module>
 		<module>i18n/plugins/org.talend.dataprofiler.rcp.nl</module>
+		<module>i18n/plugins/org.talend.dataprofiler.top.chart.nl</module>
 		<module>i18n/plugins/org.talend.dataquality.edit.nl</module>
 		<module>i18n/plugins/org.talend.dataquality.matching.nl</module>
 		<module>i18n/plugins/org.talend.dataquality.nl</module>
