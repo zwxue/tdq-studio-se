@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.provider;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -50,8 +51,6 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
-
-import common.Logger;
 
 /**
  * created by talend on Dec 19, 2012 Detailled comment

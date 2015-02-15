@@ -17,6 +17,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -46,8 +47,6 @@ import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
-
-import common.Logger;
 
 /**
  * created by zshen on Apr 23, 2013 Detailled comment

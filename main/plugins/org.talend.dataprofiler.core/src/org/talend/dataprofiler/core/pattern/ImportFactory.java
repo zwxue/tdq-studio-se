@@ -23,13 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jxl.Cell;
-import jxl.CellType;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.read.biff.BiffException;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -320,88 +313,6 @@ public final class ImportFactory {
             }
         }
 
-        if ("xls".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
-            Map<Integer, PatternLanguageType> expressionMap = new HashMap<Integer, PatternLanguageType>();
-            try {
-                WorkbookSettings settings = new WorkbookSettings();
-                settings.setEncoding("UTF-8"); //$NON-NLS-1$
-                Workbook rwb = Workbook.getWorkbook(importFile, settings);
-                Sheet[] sheets = rwb.getSheets();
-                for (Sheet sheet : sheets) {
-                    Cell[] headerRow = sheet.getRow(0);
-
-                    for (Cell cell : headerRow) {
-                        for (PatternLanguageType languageType : PatternLanguageType.values()) {
-                            if (cell.getContents().equals(languageType.getExcelEnum().getLiteral())) {
-                                expressionMap.put(cell.getColumn(), languageType);
-                            }
-                        }
-                    }
-
-                    for (int i = 1; i < sheet.getRows(); i++) {
-                        Cell[] row = sheet.getRow(i);
-                        Cell cell = row[0];
-                        if (CellType.LABEL.equals(cell.getType())) {
-                            String contents = cell.getContents();
-                            if (names.contains(contents)) {
-                                if (skip) {
-                                    importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.patternInported", //$NON-NLS-1$
-                                            contents), false));
-                                    continue;
-                                }
-                                if (rename) {
-                                    contents = contents + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-                                }
-                            }
-
-                            PatternParameters patternParameters = new ImportFactory().new PatternParameters();
-
-                            patternParameters.name = contents;
-                            patternParameters.auther = row[6].getContents();
-                            patternParameters.description = row[2].getContents();
-                            patternParameters.purpose = row[1].getContents();
-                            patternParameters.status = DevelopmentStatus.DRAFT.getLiteral();
-
-                            for (int columnIndex : expressionMap.keySet()) {
-                                String rowContent = row[columnIndex].getContents();
-                                if (!rowContent.equals("")) { //$NON-NLS-1$
-                                    patternParameters.regex.put(expressionMap.get(columnIndex).getLiteral(), rowContent);
-                                }
-                            }
-
-                            try {
-                                TypedReturnCode<Object> create = createAndStorePattern(patternParameters, selectionFolder, type);
-                                if (create.isOk()) {
-                                    names.add(contents);
-
-                                    importEvent
-                                            .add(new ReturnCode(
-                                                    DefaultMessagesImpl
-                                                            .getString(
-                                                                    "ImportFactory.importPattern", ((TDQItem) create.getObject()).getProperty().getDisplayName(), //$NON-NLS-1$
-                                                                    selectionFolder.getProjectRelativePath().toString()), true));
-                                } else {
-                                    throw new TalendInternalPersistenceException(create.getMessage());
-                                }
-
-                            } catch (Exception e) {
-                                importEvent.add(new ReturnCode(DefaultMessagesImpl
-                                        .getString("ImportFactory.SaveFailed", contents), false)); //$NON-NLS-1$
-                            }
-                        }
-                    }
-                }
-
-                rwb.close();
-            } catch (BiffException e) {
-                log.error(e, e);
-                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
-            } catch (IOException e) {
-                log.error(e, e);
-                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
-            }
-        }
-
         importObject.copyJarFiles();
 
         // ADD xqliu 2012-04-27 TDQ-5149
@@ -676,72 +587,6 @@ public final class ImportFactory {
             } catch (Exception e) {
                 log.error(e, e);
                 information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed", name), false)); //$NON-NLS-1$
-            }
-        }
-
-        if ("xls".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
-            Map<Integer, PatternLanguageType> expressionMap = new HashMap<Integer, PatternLanguageType>();
-            String contents = PluginConstant.EMPTY_STRING;
-            try {
-                WorkbookSettings settings = new WorkbookSettings();
-                settings.setEncoding("UTF-8"); //$NON-NLS-1$
-                Workbook rwb = Workbook.getWorkbook(importFile, settings);
-                Sheet[] sheets = rwb.getSheets();
-                for (Sheet sheet : sheets) {
-                    Cell[] headerRow = sheet.getRow(0);
-
-                    for (Cell cell : headerRow) {
-                        for (PatternLanguageType languageType : PatternLanguageType.values()) {
-                            if (cell.getContents().equals(languageType.getExcelEnum().getLiteral())) {
-                                expressionMap.put(cell.getColumn(), languageType);
-                            }
-                        }
-                    }
-
-                    for (int i = 1; i < sheet.getRows(); i++) {
-                        Cell[] row = sheet.getRow(i);
-                        Cell cell = row[0];
-                        if (CellType.LABEL.equals(cell.getType())) {
-                            contents = cell.getContents();
-                            if (names.contains(contents)) {
-                                if (skip) {
-                                    continue;
-                                }
-                                if (rename) {
-                                    contents = contents + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-                                }
-                            }
-
-                            UDIParameters udiParameters = new ImportFactory().new UDIParameters();
-
-                            udiParameters.name = contents;
-                            udiParameters.auther = row[6].getContents();
-                            udiParameters.description = row[2].getContents();
-                            udiParameters.purpose = row[1].getContents();
-                            udiParameters.status = DevelopmentStatus.DRAFT.getLiteral();
-                            udiParameters.category = row[16].getContents();
-
-                            for (int columnIndex : expressionMap.keySet()) {
-                                String rowContent = row[columnIndex].getContents();
-                                if (!rowContent.equals("")) { //$NON-NLS-1$
-                                    udiParameters.regex.put(expressionMap.get(columnIndex).getLiteral(), rowContent);
-                                }
-                            }
-
-                            createAndStoreUDI(udiParameters, selectionFolder);
-
-                            names.add(contents);
-
-                            information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
-                                    , contents), true));
-                        }
-                    }
-                }
-
-                rwb.close();
-            } catch (Exception e) {
-                log.error(e, e);
-                information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed", contents), false)); //$NON-NLS-1$
             }
         }
 
