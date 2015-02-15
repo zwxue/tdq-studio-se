@@ -12,7 +12,18 @@
 // ============================================================================
 package org.talend.datascience.common.schema
 
+/**
+ * A schema trait that contains all fields. Schema is implementor specific class .
+ * @author zhao
+ * @since 1.0
+ */
 trait SemanticSchema[+Schema] extends Serializable {
   val fields: Seq[SemanticField]
-  def getSchema: Schema
+  /**
+   * Get the underlying schema provided by implementor.
+   * @since 1.0
+   * @author mzhao
+   * @return the implementor specific schema.
+   */
+  private[datascience] def getSchema: Schema
 }

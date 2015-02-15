@@ -16,11 +16,29 @@ import org.talend.datascience.common.statistics.NumericalFieldStatistics
 import org.talend.datascience.common.statistics.TextualFieldStatistics
 import org.talend.datascience.common.statistics.FieldStatistics
 
+/**
+ * A field with senmatic information.
+ * @author mzhao
+ */
 trait SemanticField extends Field[Any] {
   var semanticName: String
+  /**
+   * A sample with typical uniform distributed values.
+   */
   val sampleValues: Seq[String] = Seq()
+  /**
+   * Numerical statistics.
+   */
   var numericalStatistics = new NumericalFieldStatistics
+  /**
+   * Textual statistics.
+   */
   var textualStatistics = new TextualFieldStatistics
-  var suggestedType: (DataType[Any], Map[DataType[Any], (Long, FieldStatistics)]) //(data type name, type infer details)
+  /**
+   * Suggested data type with type infer details.<br>
+   * (data type name, type infer details) Map[types inferred from this field, number of record which has this type]
+   * @since 1.0
+   */
+  var suggestedType: (DataType[Any], Map[DataType[Any], Long])
 
 }

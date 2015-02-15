@@ -13,10 +13,46 @@
 package org.talend.datascience.common.data
 
 /**
- * @author zhao
+ * The trait is generic data representation with computation model.<br> The computation model is an abstract concept that could be a computation model such as RDD from spark, Mappper/Reducer from batch processer or Spout/Bolt from storm.
+ * @author mzhao
  */
 trait ElasticData[+ComputeModel] extends Serializable {
-  def getModel: ComputeModel
-  def foreach[U](f: Any=> Unit): Unit
+  /**
+   * Return the computation model. This function is proposed to be used internally from API in order to hide different technique implementation details
+   * @since 1.0
+   */
+  private[datascience] def getModel: ComputeModel
 
+  /**
+   * Process data by passing each to function. <br> Function f must be defined with one parameter without a return value.
+   * @since 1.0
+   * @author mzhao
+   * @param f function processes each data
+   */
+  def foreach[U](f: Any => Unit): Unit
+
+  /**
+   * Get a whole collection of data.
+   * @since 1.0
+   * @author mzhao
+   * @return Array representation of data sets.
+   */
+  def collect(): Array[Any]
+
+  /**
+   * Takes first num data.
+   * @since 1.0
+   * @author mzhao
+   * @param num the number data to be taken from dataset.
+   * @return First num array representation of data sets
+   */
+  def take(num: Int): Array[Any]
+
+  /**
+   * Take the very first data.
+   * @since 1.0
+   * @author mzhao
+   * @return The data indexed 1 from dataset.
+   */
+  def first(): Any
 }

@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.datascience.common.schema
 
+/**
+ * A field trait that represents a field of a record (or row , data etc.).
+ * @author mzhao
+ */
 trait Field[StructField] extends Serializable{
   val name: String
   private[schema] var dataType: DataType[Any]
@@ -19,8 +23,31 @@ trait Field[StructField] extends Serializable{
   val size: Int
   val description: String
   val pattern: String
+  /**
+   * The index of this field in a record.
+   */
   var index: Int
-  def getStructField: StructField
-  def setDataType(dType:DataType[Any])
+  /**
+   * Get the strut field that the implementor provided. This function is intended to be called from API internally.
+   * @since 1.0
+   * @author mzhao
+   * @return struct field of underlying implemented class.
+   */
+  private[datascience] def getStructField: StructField
+  
+  /**
+   * Set the field's data type.
+   * @since 1.0
+   * @author mzhao
+   * @param the data type set for this field.
+   */
+  private[datascience]  def setDataType(dType:DataType[Any])
+  
+  /**
+   * Get the field's data type.
+   * @since 1.0
+   * @author mzhao
+   * @return data type of this field.
+   */
   def getDataType=dataType
 }

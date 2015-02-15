@@ -12,13 +12,45 @@
 // ============================================================================
 package org.talend.datascience.common.data
 
+/**
+ * The trait is a representation of a dataset with context. <br> the context is environment variable with probably several parameters , such as spark's SparkContext with HDFS storage path , or JobConf in map/reduce model.
+ * @author mzhao
+ */
 trait ElasticDataSet[Context] extends Serializable {
+  /**
+   * Emit an unit data from data set. <br> The data emitted is confined to the computation model.
+   * @since 1.0
+   * @author mzhao
+   * @return A unit of elastic data.
+   */
   def emit(): ElasticData[Any]
-  def setDataSource(path:String)
-  def getContext: Context
+  
+  /**
+   * Set the path of the data source
+   * @since 1.0
+   * @author mzhao
+   * @param path The data source path that can be a file path locally or a HDFS path remotely. 
+   */
+  def setDataSourcePath(path: String)
+  
+  
+  /**
+   * Set the data set context.
+   * @since 1.0
+   * @author mzhao
+   * @param ctx The context which has adequate information about the data set.
+   */
+  def setContext(ctx: Context)
 }
 
 object ElasticDataSet {
+  /**
+   * Create a data set instance with data set class name. The class with the specified name must be present in classpath.
+   * @since 1.0
+   * @author mzhao
+   * @param ElasticDataSetClassName Full qualified class name to be instantiated.
+   * @return Elastic data set instance.
+   */
   def createDataSet(elasticDataSetClassName: String): ElasticDataSet[Any] = {
     val aclass = Class.forName(elasticDataSetClassName)
     aclass.newInstance().asInstanceOf[ElasticDataSet[Any]]
