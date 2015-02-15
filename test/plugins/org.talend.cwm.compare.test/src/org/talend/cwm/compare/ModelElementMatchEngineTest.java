@@ -29,7 +29,7 @@ public class ModelElementMatchEngineTest {
      */
     @Before
     public void setUp() throws Exception {
-        matchEngine = new ModelElementMatchEngine();
+        // matchEngine = new ModelElementMatchEngine();
     }
 
     /**

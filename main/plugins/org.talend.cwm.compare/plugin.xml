@@ -4,9 +4,18 @@
    <extension
          point="org.eclipse.emf.ecore.extension_parser">
       <parser
-            class="org.talend.commons.emf.CwmResourceFactory"
+            class="org.talend.model.emf.CwmResourceFactory"
             type="comp">
       </parser>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.matchEngine">
+      <engineFactory
+            class="org.talend.cwm.compare.factory.DQMatchEngineFactory"
+            label="org.talend.cwm.compare.factory.DQMatchEngineFactory"
+            ranking="50">
+      </engineFactory>
+   </extension>
+  
 
 </plugin>

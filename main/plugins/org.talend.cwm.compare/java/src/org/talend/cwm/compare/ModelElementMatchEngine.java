@@ -12,81 +12,132 @@
 // ============================================================================
 package org.talend.cwm.compare;
 
+import java.util.Iterator;
 
-/**
- * yyi 2011-03-30 19137:reload database list on editing connection url.
- */
-// public class ModelElementMatchEngine extends GenericMatchEngine {
-public class ModelElementMatchEngine {
-    /*
-     * ADD yyi 2011-03-30 19137:reload database list on editing connection url
+import org.eclipse.emf.common.util.Monitor;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.match.IComparisonFactory;
+import org.eclipse.emf.compare.match.eobject.CachingDistance;
+import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.WeightProvider;
+import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
+import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
+import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.helper.SwitchHelpers;
+
+import com.google.common.collect.Iterators;
+
+public class ModelElementMatchEngine extends DefaultMatchEngine {
+
+    /**
+     * DOC qiongli ModelElementMatchEngine constructor comment.
      * 
-     * @see org.eclipse.emf.compare.match.engine.GenericMatchEngine#isSimilar(org.eclipse.emf.ecore.EObject,
-     * org.eclipse.emf.ecore.EObject)
+     * @param matcher
+     * @param comparisonFactory
      */
-    // @Override
-    // public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
-    // if (obj1 instanceof DatabaseConnection) {
-    // return true;
-    // }
-    //
-    // if (obj1 instanceof Catalog && obj2 instanceof Catalog) {
-    // Catalog catalog1 = (Catalog) obj1;
-    // Catalog catalog2 = (Catalog) obj2;
-    // return StringUtils.equalsIgnoreCase(catalog1.getName(), catalog2.getName());
-    // } else if (obj1 instanceof Schema && obj2 instanceof Schema) {
-    // Schema schema1 = (Schema) obj1;
-    // Schema schema2 = (Schema) obj2;
-    // return StringUtils.equalsIgnoreCase(schema1.getName(), schema2.getName());
-    // } else if (obj1 instanceof TdTable && obj2 instanceof TdTable) {
-    // TdTable tdTable1 = (TdTable) obj1;
-    // TdTable tdTable2 = (TdTable) obj2;
-    // return StringUtils.equalsIgnoreCase(tdTable1.getName(), tdTable2.getName());
-    // } else if (obj1 instanceof TdView && obj2 instanceof TdView) {
-    // TdView tdView1 = (TdView) obj1;
-    // TdView tdView2 = (TdView) obj2;
-    // return StringUtils.equalsIgnoreCase(tdView1.getName(), tdView2.getName());
-    // } else if (obj1 instanceof TdColumn && obj2 instanceof TdColumn) {
-    // TdColumn tdColumn1 = (TdColumn) obj1;
-    // TdColumn tdColumn2 = (TdColumn) obj2;
-    // return StringUtils.equalsIgnoreCase(tdColumn1.getName(), tdColumn2.getName())
-    // && isSimilar(tdColumn1.getSqlDataType(), tdColumn2.getSqlDataType());
-    // } else if (obj1 instanceof TaggedValue && obj2 instanceof TaggedValue) {
-    // TaggedValue taggedValue1 = (TaggedValue) obj1;
-    // TaggedValue taggedValue2 = (TaggedValue) obj2;
-    // return StringUtils.equalsIgnoreCase(taggedValue1.getTag(), taggedValue2.getTag())
-    // && StringUtils.equalsIgnoreCase(taggedValue1.getValue(), taggedValue2.getValue());
-    // } else if (obj1 instanceof TdExpression && obj2 instanceof TdExpression) {
-    // TdExpression tdExpression1 = (TdExpression) obj1;
-    // TdExpression tdExpression2 = (TdExpression) obj2;
-    // return StringUtils.equalsIgnoreCase(tdExpression1.getLanguage(), tdExpression2.getLanguage())
-    // && StringUtils.equalsIgnoreCase(tdExpression1.getBody(), tdExpression2.getBody());
-    // } else if (obj1 instanceof TdSqlDataType && obj2 instanceof TdSqlDataType) {
-    // TdSqlDataType tdExpression1 = (TdSqlDataType) obj1;
-    // TdSqlDataType tdExpression2 = (TdSqlDataType) obj2;
-    // return StringUtils.equalsIgnoreCase(tdExpression1.getName(), tdExpression2.getName());
-    // } else if (obj1 instanceof MetadataColumn && obj2 instanceof MetadataColumn) {// Added yyin TDQ-8360
-    // MetadataColumn metaColumn1 = (MetadataColumn) obj1;
-    // MetadataColumn metaColumn2 = (MetadataColumn) obj2;
-    // return StringUtils.equalsIgnoreCase(metaColumn1.getLabel(), metaColumn2.getLabel());
-    // } else if (obj1 instanceof MetadataTable && obj2 instanceof MetadataTable) {
-    // MetadataTable mTable1 = (MetadataTable) obj1;
-    // MetadataTable mTable2 = (MetadataTable) obj2;
-    // return StringUtils.equalsIgnoreCase(mTable1.getLabel(), mTable2.getLabel());
-    // }
-    //
-    // // MOD yyin 20130201 TDQ-6780, do not use "isURlChanged" any more.
-    // return true;// Can not return: super.isSimilar(obj1, obj2); reload table list will have problems.
-    // // ~ 16538
-    // }
+    public ModelElementMatchEngine(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
+        super(matcher, comparisonFactory);
+    }
+
+    /**
+     * Creates and configures an {@link IEObjectMatcher} with the strategy given by {@code useIDs}. The {@code cache}
+     * will be used to cache some expensive computation (should better a LoadingCache).
+     * 
+     * @param useIDs which strategy the return IEObjectMatcher must follow.
+     * @return a new IEObjectMatcher.
+     */
+    public static IEObjectMatcher createDQEObjectMatcher(UseIdentifiers useIDs) {
+        return createDQEObjectMatcher(useIDs, WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
+    }
+
+    /**
+     * Creates and configures an {@link IEObjectMatcher} with the strategy given by {@code useIDs}. The {@code cache}
+     * will be used to cache some expensive computation (should better a LoadingCache).
+     * 
+     * @param useIDs which strategy the return IEObjectMatcher must follow.
+     * @param weightProviderRegistry the match engine needs a WeightProvider in case of this match engine do not use
+     * identifiers.
+     * @return a new IEObjectMatcher.
+     */
+    public static IEObjectMatcher createDQEObjectMatcher(UseIdentifiers useIDs,
+            WeightProvider.Descriptor.Registry weightProviderRegistry) {
+        final IEObjectMatcher matcher;
+        final ModelElementEditonDistance editionDistance = new ModelElementEditonDistance(weightProviderRegistry);
+        final CachingDistance cachedDistance = new CachingDistance(editionDistance);
+        switch (useIDs) {
+        case NEVER:
+            matcher = new ProximityEObjectMatcher(cachedDistance);
+            break;
+        case ONLY:
+            matcher = new IdentifierEObjectMatcher();
+            break;
+        case WHEN_AVAILABLE:
+            // fall through to default
+        default:
+            // Use an ID matcher, delegating to proximity when no ID is available
+            final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(cachedDistance);
+            matcher = new IdentifierEObjectMatcher(contentMatcher);
+            break;
+
+        }
+
+        return matcher;
+    }
 
     /*
-     * ADD yyi 2011-03-30 19137:reload database list on editing connection url
+     * (non-Javadoc)
      * 
-     * @see org.eclipse.emf.compare.match.engine.GenericMatchEngine#reset()
+     * @see org.eclipse.emf.compare.match.DefaultMatchEngine#match(org.eclipse.emf.compare.Comparison,
+     * org.eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
+     * org.eclipse.emf.ecore.EObject, org.eclipse.emf.common.util.Monitor)
      */
-    // @Override
-    // public void reset() {
-    // super.reset();
-    // }
+    @Override
+    protected void match(Comparison comparison, IComparisonScope scope, EObject left, EObject right, EObject origin,
+            Monitor monitor) {
+        DatabaseConnection dbConnLeft = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(left);
+        DatabaseConnection dbConnRight = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(right);
+        if (dbConnLeft != null && dbConnRight != null) {
+            matchForDBConn(comparison, scope, left, right, origin, monitor);
+            return;
+        }
+
+        super.match(comparison, scope, left, right, origin, monitor);
+    }
+
+    /**
+     * 
+     * if the scope is DBConnection,should use scope.getCoveredEObjects(EResource res),instead of
+     * scope.getChildren(EObject left).
+     * 
+     * @param comparison
+     * @param scope
+     * @param left
+     * @param right
+     * @param origin
+     * @param monitor
+     */
+    private void matchForDBConn(Comparison comparison, IComparisonScope scope, EObject left, EObject right, EObject origin,
+            Monitor monitor) {
+        if (left == null || right == null) {
+            throw new IllegalArgumentException();
+        }
+
+        final Iterator<? extends EObject> leftEObjects = Iterators.concat(Iterators.singletonIterator(left),
+                scope.getCoveredEObjects(left.eResource()));
+        final Iterator<? extends EObject> rightEObjects = Iterators.concat(Iterators.singletonIterator(right),
+                scope.getCoveredEObjects(right.eResource()));
+        final Iterator<? extends EObject> originEObjects;
+        if (origin != null) {
+            originEObjects = Iterators.concat(Iterators.singletonIterator(origin), scope.getCoveredEObjects(origin.eResource()));
+        } else {
+            originEObjects = Iterators.emptyIterator();
+        }
+
+        getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects, monitor);
+    }
 }

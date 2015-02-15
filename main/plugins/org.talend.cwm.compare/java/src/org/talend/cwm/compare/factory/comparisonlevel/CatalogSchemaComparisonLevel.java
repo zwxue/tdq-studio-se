@@ -14,10 +14,19 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -41,6 +50,7 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
@@ -49,8 +59,6 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC rli class global comment. Detailled comment
  */
 public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
-
-    private static Logger log = Logger.getLogger(CatalogSchemaComparisonLevel.class);
 
     private boolean isCompareTabel;
 
@@ -128,40 +136,40 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected boolean compareWithReloadObject() throws ReloadCompareException {
+        // remove the jrxml from the ResourceSet before doMatch
+        Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
+        EMFCompare comparator = createDefaultEMFCompare();
+        IComparisonScope scope = new DefaultComparisonScope(getPackageFromObject(selectedObj), getSavedReloadObject(), null);
+        Comparison compare = comparator.compare(scope);
 
-        // MOD scorreia 2009-01-16 option initialized in CTOR
-        // MatchModel match = null;
-        // try {
-        // // remove the jrxml from the ResourceSet before doMatch
-        // Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
-        //
-        // match = MatchService.doContentMatch(getPackageFromObject(selectedObj), getSavedReloadObject(), options);
-        //
-        // // add the jrxml into the ResourceSet after doMatch
-        // addJrxmlsIntoResourceSet(rsJrxmlMap);
-        // } catch (InterruptedException e) {
-        // log.error(e, e);
-        // return false;
-        // }
-        // final DiffModel diff = DiffService.doDiff(match, false);
-        // EList<DiffElement> ownedElements = diff.getOwnedElements();
-        // for (DiffElement de : ownedElements) {
-        // handleSubDiffElement(de);
-        // }
+        // add the jrxml into the ResourceSet after doMatch
+        addJrxmlsIntoResourceSet(rsJrxmlMap);
+        EList<Diff> differences = compare.getDifferences();
+        for (Diff diff : differences) {
+            // ignore the move Kind
+            if (diff.getKind() == DifferenceKind.MOVE) {
+                continue;
+            }
+            // ignore others except TdTable and TdView and Related TaggetValue
+            if (diff instanceof ReferenceChange) {
+                EObject value = ((ReferenceChange) diff).getValue();
+                boolean isIgnore = true;
+                if (value instanceof TaggedValue) {
+                    TdTable tableContianer = SwitchHelpers.TABLE_SWITCH.doSwitch(value.eContainer());
+                    if (tableContianer != null) {
+                        isIgnore = false;
+                    }
+                } else if (isValidTableHandle(value) || isValidViewHandle(value)) {
+                    isIgnore = false;
+                }
+                if (!isIgnore) {
+                    copyRightToLeft(diff);
+                }
+            }
+
+        }
         return true;
     }
-
-    // private void handleSubDiffElement(DiffElement de) {
-    // if (de.getSubDiffElements().size() > 0) {
-    // EList<DiffElement> subDiffElements = de.getSubDiffElements();
-    // for (DiffElement difElement : subDiffElements) {
-    // handleSubDiffElement(difElement);
-    // }
-    //
-    // } else {
-    // handleDiffPackageElement(de);
-    // }
-    // }
 
     @Override
     protected EObject getSavedReloadObject() throws ReloadCompareException {
@@ -308,58 +316,14 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     }
 
-    @SuppressWarnings("deprecation")
-    // @Override
-    // protected void handleAddElement(ModelElementChangeRightTarget addElement) {
-    // EObject rightElement = addElement.getRightElement();
-    // ColumnSet columnSetSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
-    // if (columnSetSwitch != null) {
-    //
-    // if (isValidTableHandle(columnSetSwitch) || isValidViewHandle(columnSetSwitch)) {
-    // PackageHelper.addColumnSet(columnSetSwitch, getPackageFromObject(selectedObj));
-    // }
-    // }
-    //
-    // // ADD msjian TDQ-8546:handle taggedValue
-    // if (rightElement instanceof TaggedValue) {
-    // TdTable elementOwner = SwitchHelpers.TABLE_SWITCH.doSwitch(addElement.getLeftParent());
-    // if (elementOwner != null) {
-    // TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) rightElement).getTag(),
-    // ((TaggedValue) rightElement).getValue());
-    // }
-    // }
-    // // TDQ-8546~
-    // }
-    //
-    // @Override
-    // protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
-    // EObject leftElement = removeElement.getLeftElement();
-    // ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(leftElement);
-    // if (removeColumnSet != null) {
-    // popRemoveElementConfirm();
-    //
-    // if (isValidTableHandle(removeColumnSet) || isValidViewHandle(removeColumnSet)) {
-    // PackageHelper.removeColumnSet(removeColumnSet, getPackageFromObject(selectedObj));
-    // }
-    // }
-    //
-    // // ADD msjian TDQ-8546:handle taggedValue
-    // if (leftElement instanceof TaggedValue) {
-    // TdTable elementOwner = SwitchHelpers.TABLE_SWITCH.doSwitch(leftElement.eContainer());
-    // if (elementOwner != null) {
-    // TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) leftElement).getTag(), null);
-    // }
-    // }
-    // // TDQ-8546~
-    // }
     /**
      * DOC bZhou Comment method "isValidViewHandle".
      * 
      * @param columnSetSwitch
      * @return
      */
-    private boolean isValidViewHandle(ColumnSet columnSetSwitch) {
-        TdView view = SwitchHelpers.VIEW_SWITCH.doSwitch(columnSetSwitch);
+    private boolean isValidViewHandle(EObject object) {
+        TdView view = SwitchHelpers.VIEW_SWITCH.doSwitch(object);
         return isCompareView && view != null;
     }
 
@@ -369,8 +333,9 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
      * @param columnSetSwitch
      * @return
      */
-    private boolean isValidTableHandle(ColumnSet columnSetSwitch) {
-        TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(columnSetSwitch);
+    private boolean isValidTableHandle(EObject object) {
+        TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(object);
         return isCompareTabel && table != null;
     }
+
 }

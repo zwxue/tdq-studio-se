@@ -5,14 +5,17 @@ Bundle-SymbolicName: org.talend.cwm.compare;singleton:=true
 Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: org.talend.cwm.compare.Activator
 Bundle-Vendor: .Talend SA.
-Require-Bundle: org.talend.cwm.management,
+Require-Bundle: org.eclipse.emf.compare,
+ org.talend.cwm.management,
  org.apache.commons.lang,
  org.talend.utils,
  org.eclipse.ui,
  org.talend.core.runtime,
  org.talend.core.repository,
  org.talend.metadata.managment,
- org.apache.log4j
+ org.apache.log4j,
+ com.google.guava,
+ org.eclipse.emf.compare.rcp
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.talend.testutils
 Bundle-ClassPath: .

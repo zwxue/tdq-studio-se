@@ -51,7 +51,6 @@ import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -120,8 +119,7 @@ public class ReloadDatabaseAction extends Action {
             // popup a dialog to warn the user better do the compare before the reload, and provide two buttons:
             // if the user click the compare button, the compare will be executed.
             // if the user click the reload button, the reload will continue.
-            String[] dialogButtonLabels = {
-                    Messages.getString("ReloadDatabaseAction.CompareLabel"), Messages.getString("ReloadDatabaseAction.ReloadLabel") };//$NON-NLS-1$ //$NON-NLS-2$ 
+            String[] dialogButtonLabels = { Messages.getString("ReloadDatabaseAction.ReloadLabel") };//$NON-NLS-1$ 
             MessageDialog dialog = new MessageDialog(
                     CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
                     Messages.getString("ReloadDatabaseAction.ReloadLabel"), null, Messages.getString("ReloadDatabaseAction.IsContinue"), 3, dialogButtonLabels, SWT.NONE);//$NON-NLS-1$ //$NON-NLS-2$ 
@@ -132,12 +130,12 @@ public class ReloadDatabaseAction extends Action {
             }
 
             // when click compare
-            if (open == 0) {
-                // go to compare instead of reloading now
-                new PopComparisonUIAction(selectedObject, Messages.getString("ReloadDatabaseAction.CompareLabel")).run();//$NON-NLS-1$ 
-                returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.IsContinue"), false);//$NON-NLS-1$ 
-                return;
-            }// ~
+            // if (open == 0) {
+            // // go to compare instead of reloading now
+            //                new PopComparisonUIAction(selectedObject, Messages.getString("ReloadDatabaseAction.CompareLabel")).run();//$NON-NLS-1$ 
+            //                returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.IsContinue"), false);//$NON-NLS-1$ 
+            // return;
+            // }// ~
         }
 
         Connection conn = getConnection();
@@ -153,10 +151,12 @@ public class ReloadDatabaseAction extends Action {
         }
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
+            @Override
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
                 final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(selectedObject);
                 Display.getDefault().asyncExec(new Runnable() {
 
+                    @Override
                     public void run() {
                         try {
                             Connection oldDataProvider = creatComparisonLevel.reloadCurrentLevelElement();

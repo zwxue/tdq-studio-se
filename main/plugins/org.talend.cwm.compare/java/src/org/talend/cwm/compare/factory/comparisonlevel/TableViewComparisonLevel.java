@@ -15,12 +15,21 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -61,46 +70,29 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
 
     @Override
     protected boolean compareWithReloadObject() throws ReloadCompareException {
-        // add option for ignoring some elements
-        // MatchModel match = null;
-        // try {
-        // // remove the jrxml from the ResourceSet before doMatch
-        // Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
-        //
-        // DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
-        // match = MatchService.doContentMatch(columnFolderRepNode.getColumnSet(), getSavedReloadObject(), options);
-        //
-        // // add the jrxml into the ResourceSet after doMatch
-        // addJrxmlsIntoResourceSet(rsJrxmlMap);
-        // } catch (InterruptedException e) {
-        // log.error(e, e);
-        // return false;
-        // }
-        // DiffModel diff = null;
-        // try {
-        // diff = DiffService.doDiff(match, false);
-        // EList<DiffElement> ownedElements = diff.getOwnedElements();
-        // for (DiffElement de : ownedElements) {
-        // handleSubDiffElement(de);
-        // }
-        // } catch (Exception e) {
-        // log.error(e.getMessage(), e);
-        // return false;
-        // }
+        // remove the jrxml from the ResourceSet before doMatch
+        Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
+        DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
+
+        // Compare the two models
+        EMFCompare comparator = createDefaultEMFCompare();
+        IComparisonScope scope = new DefaultComparisonScope(columnFolderRepNode.getColumnSet(), getSavedReloadObject(), null);
+        Comparison compare = comparator.compare(scope);
+        // add the jrxml into the ResourceSet after doMatch
+        addJrxmlsIntoResourceSet(rsJrxmlMap);
+
+        EList<Diff> differences = compare.getDifferences();
+        for (Diff diff : differences) {
+            // ignore the move Kind
+            if (diff.getKind() == DifferenceKind.MOVE) {
+                continue;
+            }
+            // copy right to left
+            copyRightToLeft(diff);
+        }
+
         return true;
     }
-
-    // private void handleSubDiffElement(DiffElement de) {
-    // if (de.getSubDiffElements().size() > 0) {
-    // EList<DiffElement> subDiffElements = de.getSubDiffElements();
-    // for (DiffElement difElement : subDiffElements) {
-    // handleSubDiffElement(difElement);
-    // }
-    //
-    // } else {
-    // handleDiffPackageElement(de);
-    // }
-    // }
 
     @Override
     protected Connection findDataProvider() {
@@ -228,80 +220,6 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
         EMFSharedResources.getInstance().saveResource(rightResource);
         return upperCaseResource(rightResource);
     }
-
-    // @Override
-    // protected void handleAddElement(ModelElementChangeRightTarget addElement) {
-    // EObject rightElement = addElement.getRightElement();
-    // TdColumn columnSetSwitch = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement);
-    // if (columnSetSwitch != null) {
-    // ColumnSet columnSet = getCurrentColumnSet();
-    // ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
-    // // MOD zshen 2010.06.10 for feature 12842.
-    // // Case of pk
-    // PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
-    // if (primaryKey != null) {
-    // TableHelper.addPrimaryKey((TdTable) columnSet, columnSetSwitch);
-    // }
-    // Set<ForeignKey> foreignKeySet = ColumnHelper.getForeignKey(columnSetSwitch);
-    // for (ForeignKey foreignKey : foreignKeySet) {
-    // if (foreignKey != null) {
-    // TableHelper.addForeignKey((TdTable) columnSet, foreignKey, columnSetSwitch);
-    // }
-    // }
-    //
-    // return;
-    // }
-    // // MOD handle default value for a column 13411
-    // // MOD mzhao 13411, handle default value changes (TdExpression)
-    // TdExpression addedExpression = DataqualitySwitchHelper.TDEXPRESSION_SWITCH.doSwitch(rightElement);
-    // if (addedExpression != null) {
-    // TdColumn parentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(addElement.getLeftParent());
-    // if (parentColumn != null) {
-    // parentColumn.setInitialValue(addedExpression);
-    // }
-    // }
-    //
-    // // ADD msjian TDQ-8546:handle taggedValue
-    // if (rightElement instanceof TaggedValue) {
-    // TdColumn elementOwner = SwitchHelpers.COLUMN_SWITCH.doSwitch(addElement.getLeftParent());
-    // if (elementOwner != null) {
-    // TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) rightElement).getTag(),
-    // ((TaggedValue) rightElement).getValue());
-    // }
-    // }
-    // // TDQ-8546~
-    //
-    // }
-    //
-    // @Override
-    // protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
-    // // MOD mzhao 13411, handle column changes 2010-08-23
-    // EObject leftElement = removeElement.getLeftElement();
-    // TdColumn removeColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(leftElement);
-    // if (removeColumn != null) {
-    // ColumnSet columnSet = getCurrentColumnSet();
-    // popRemoveElementConfirm();
-    // ColumnSetHelper.removeColumn(removeColumn, columnSet);
-    // return;
-    // }
-    // // MOD mzhao 13411, handle default value changes (TdExpression)
-    // TdExpression removedExpression = DataqualitySwitchHelper.TDEXPRESSION_SWITCH.doSwitch(leftElement);
-    // if (removedExpression != null) {
-    // TdColumn expressionOwner = SwitchHelpers.COLUMN_SWITCH.doSwitch(removedExpression.eContainer());
-    // if (expressionOwner != null) {
-    // expressionOwner.setInitialValue(null);
-    // }
-    // }
-    //
-    // // ADD msjian TDQ-8546:handle taggedValue
-    // if (leftElement instanceof TaggedValue) {
-    // TdColumn elementOwner = SwitchHelpers.COLUMN_SWITCH.doSwitch(leftElement.eContainer());
-    // if (elementOwner != null) {
-    // TaggedValueHelper.setTaggedValue(elementOwner, ((TaggedValue) leftElement).getTag(), null);
-    // }
-    // }
-    // // TDQ-8546~
-    // }
 
     /**
      * DOC msjian Comment method "getCurrentColumnSet".

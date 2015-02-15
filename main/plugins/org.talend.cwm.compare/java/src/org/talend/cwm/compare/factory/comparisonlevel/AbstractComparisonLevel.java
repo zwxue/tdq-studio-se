@@ -16,22 +16,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.EMFCompare.Builder;
+import org.eclipse.emf.compare.diff.DefaultDiffEngine;
+import org.eclipse.emf.compare.diff.DiffBuilder;
+import org.eclipse.emf.compare.diff.FeatureFilter;
+import org.eclipse.emf.compare.diff.IDiffEngine;
+import org.eclipse.emf.compare.diff.IDiffProcessor;
+import org.eclipse.emf.compare.match.DefaultComparisonFactory;
+import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
+import org.eclipse.emf.compare.match.IComparisonFactory;
+import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
+import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.compare.DQStructureComparer;
+import org.talend.cwm.compare.ModelElementMatchEngine;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
+import org.talend.cwm.compare.factory.DQMatchEngineFactory;
 import org.talend.cwm.compare.factory.update.AddTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
+import org.talend.cwm.compare.merge.DQReferenceMerger;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -51,21 +78,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
-    private static Logger log = Logger.getLogger(AbstractComparisonLevel.class);
-
     protected static final boolean CASE_INSENSTIVE = true;
-
-    // protected DiffSwitch<ModelElementChangeRightTarget> addModelSwitch;
-    //
-    // protected DiffSwitch<UpdateModelElement> updateModelSwitch;
-    //
-    // protected DiffSwitch<ModelElementChangeLeftTarget> removeModelSwitch;
-    //
-    // protected DiffSwitch<ReferenceChangeRightTarget> removeReferenceValueSwitch;
-    //
-    // protected DiffSwitch<ReferenceChangeLeftTarget> addReferenceValueSwitch;
-    //
-    // protected DiffSwitch<DiffGroup> diffGroupSwitch;
 
     // MOD klliu bug 14689 2010-08-04
     protected CoreSwitch<Package> packageSwitch;
@@ -109,55 +122,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         } else {
             selectedObj = selObj;
         }
-
-        // initSwitchValue();
-        options = new HashMap<String, Object>();
-        // options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-        // options.put(MatchOptions.OPTION_IGNORE_ID, true);
     }
-
-    // private void initSwitchValue() {
-    //
-    // addModelSwitch = new DiffSwitch<ModelElementChangeRightTarget>() {
-    //
-    // @Override
-    // public ModelElementChangeRightTarget caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
-    // return object;
-    // }
-    //
-    // };
-    //
-    // updateModelSwitch = new DiffSwitch<UpdateModelElement>() {
-    //
-    // @Override
-    // public UpdateModelElement caseUpdateModelElement(UpdateModelElement object) {
-    // return object;
-    // }
-    // };
-    // removeModelSwitch = new DiffSwitch<ModelElementChangeLeftTarget>() {
-    //
-    // @Override
-    // public ModelElementChangeLeftTarget caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
-    // return object;
-    // }
-    //
-    // };
-    //
-    // packageSwitch = new CoreSwitch<Package>() {
-    //
-    // @Override
-    // public Package casePackage(Package object) {
-    // return object;
-    // }
-    // };
-    // diffGroupSwitch = new DiffSwitch<DiffGroup>() {
-    //
-    // @Override
-    // public DiffGroup caseDiffGroup(DiffGroup object) {
-    // return object;
-    // };
-    // };
-    // }
 
     @Override
     public Connection reloadCurrentLevelElement() throws ReloadCompareException {
@@ -213,7 +178,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         // DQStructureComparer.openDiffCompareEditor(getLeftResource(), getRightResource(), options, guiHandler,
         // DQStructureComparer.getDiffResourceFile(), oldDataProvider.getName(), needReloadObject, false);
 
-        // testInit();
+        testInit();
 
     }
 
@@ -254,22 +219,15 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         return tempConnectionFile;
     }
 
-    // private void testInit() throws ReloadCompareException {
-    //
-    // URI uri =
-    // URI.createPlatformResourceURI(DQStructureComparer.getNeedReloadElementsFile
-    // ().getFullPath().toString(),
-    // false);
-    // Resource leftResource = EMFSharedResources.getInstance().getResource(uri,
-    // true);
-    // uri =
-    // URI.createPlatformResourceURI(DQStructureComparer.getTempRefreshFile
-    // ().getFullPath().toString(), false);
-    // Resource rightResource =
-    // EMFSharedResources.getInstance().getResource(uri, true);
-    //
-    // openDiffCompareEditor(leftResource, rightResource, options);
-    // }
+    private void testInit() throws ReloadCompareException {
+
+        URI uri = URI.createPlatformResourceURI(DQStructureComparer.getNeedReloadElementsFile().getFullPath().toString(), false);
+        Resource leftResource = EMFSharedResources.getInstance().getResource(uri, true);
+        uri = URI.createPlatformResourceURI(DQStructureComparer.getTempRefreshFile().getFullPath().toString(), false);
+        Resource rightResource = EMFSharedResources.getInstance().getResource(uri, true);
+
+        // openDiffCompareEditor(leftResource, rightResource, options);
+    }
 
     protected abstract EObject getSavedReloadObject() throws ReloadCompareException;
 
@@ -339,103 +297,25 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
      * @throws ReloadCompareException
      */
     protected boolean compareWithReloadObject() throws ReloadCompareException {
-        // options.put(MatchOptions.OPTION_SEARCH_WINDOW, 500);
+        Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
+        EMFCompare comparator = createDefaultEMFCompare();
+        IComparisonScope scope = new DefaultComparisonScope(oldDataProvider, getSavedReloadObject(), null);
+        Comparison compare = comparator.compare(scope);
 
-        // MatchModel match = null;
-        // try {
-        // // remove the jrxml from the ResourceSet before doMatch
-        // Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
-        //
-        // match = MatchService.doMatch(oldDataProvider, getSavedReloadObject(), options);
-        //
-        // // add the jrxml into the ResourceSet after doMatch
-        // addJrxmlsIntoResourceSet(rsJrxmlMap);
-        // } catch (InterruptedException e) {
-        // log.error(e, e);
-        // return false;
-        // }
-        // final DiffModel diff = DiffService.doDiff(match);
-        //
-        // EList<DiffElement> ownedElements = diff.getOwnedElements();
-        // for (DiffElement de : ownedElements) {
-        // EList<DiffElement> subDiffElements = de.getSubDiffElements();
-        // for (DiffElement difElement : subDiffElements) {
-        // handleDiffPackageElement(difElement);
-        // }
-        // }
+        // add the jrxml into the ResourceSet after doMatch
+        addJrxmlsIntoResourceSet(rsJrxmlMap);
+        EList<Diff> differences = compare.getDifferences();
+        for (Diff diff : differences) {
+            // ignore the move Kind
+            if (diff.getKind() == DifferenceKind.MOVE) {
+                continue;
+            }
+            copyRightToLeft(diff);
+        }
         return true;
     }
 
     protected abstract Resource getLeftResource() throws ReloadCompareException;
-
-    // protected void handleDiffPackageElement(DiffElement difElement) {
-    // DiffGroup diffGroup = diffGroupSwitch.doSwitch(difElement);
-    // if (diffGroup != null) {
-    // EList<DiffElement> subDiffElements = diffGroup.getSubDiffElements();
-    // // Handle diff group
-    // for (DiffElement de : subDiffElements) {
-    // handleDiffPackageElement(de);
-    // }
-    // return;
-    // }
-    //
-    // ModelElementChangeRightTarget addElement = addModelSwitch.doSwitch(difElement);
-    // if (addElement != null) {
-    // handleAddElement(addElement);
-    // return;
-    // }
-    //
-    // // If attribute changes. MOD hcheng 2009-06-26,for 7772,error reload
-    // // column list.
-    // if (difElement instanceof UpdateAttribute) {
-    // handleUpdateElement((UpdateAttribute) difElement);
-    // return;
-    // }
-    // if (difElement instanceof ReferenceChangeLeftTarget) {
-    // handleReferenceValuesChange((ReferenceChangeLeftTarget) difElement);
-    // return;
-    // }
-    //
-    // if (difElement instanceof ReferenceChangeRightTarget) {
-    // handleReferenceValuesChange((ReferenceChangeRightTarget) difElement);
-    // return;
-    // }
-    // ModelElementChangeLeftTarget removeElement = removeModelSwitch.doSwitch(difElement);
-    // if (removeElement != null) {
-    // handleRemoveElement(removeElement);
-    // }
-    // }
-
-    // private void handleReferenceValuesChange(ReferenceChangeLeftTarget difElement) {
-    // removeRelationalSwitch.setLeftElement(difElement.getLeftElement());
-    // final Boolean updated = removeRelationalSwitch.doSwitch(difElement.getLeftTarget());
-    // if (!Boolean.TRUE.equals(updated)) {
-    //            log.warn(DefaultMessagesImpl.getString("AbstractComparisonLevel.ElementNotUpdated", difElement.getLeftElement()));//$NON-NLS-1$
-    // }
-    // }
-    //
-    // private void handleReferenceValuesChange(ReferenceChangeRightTarget difElement) {
-    // addRelationalSwitch.setLeftElement(difElement.getLeftElement());
-    // final Boolean updated = addRelationalSwitch.doSwitch(difElement.getRightTarget());
-    // if (!Boolean.TRUE.equals(updated)) {
-    //            log.warn(DefaultMessagesImpl.getString("AbstractComparisonLevel.ElementNotUpdated", difElement.getLeftElement()));//$NON-NLS-1$
-    // }
-    // }
-
-    // protected abstract void handleRemoveElement(ModelElementChangeLeftTarget removeElement);
-    //
-    // protected abstract void handleAddElement(ModelElementChangeRightTarget addElement);
-
-    // protected void handleUpdateElement(UpdateAttribute updateAttribute) {
-    // EObject leftElement = updateAttribute.getLeftElement();
-    // EObject rightElement = updateAttribute.getRightElement();
-    // this.updateRelationalStructSwitch.setLeftElement(leftElement);
-    // this.updateRelationalStructSwitch.setRightElement(rightElement);
-    // final Boolean updated = updateRelationalStructSwitch.doSwitch(leftElement);
-    // if (!Boolean.TRUE.equals(updated)) {
-    //            log.warn(DefaultMessagesImpl.getString("AbstractComparisonLevel.ElementNotUpdated", leftElement));//$NON-NLS-1$
-    // }
-    // }
 
     protected void popRemoveElementConfirm() {
         if (!removeElementConfirm) {
@@ -484,4 +364,75 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
             columnSet.setName(columnSet.getName() == null ? "" : columnSet.getName().toUpperCase());//$NON-NLS-1$
         }
     }
+
+    /**
+     * 
+     * create a EMFCompare with default configuration.
+     * 
+     * @return
+     */
+    protected EMFCompare createDefaultEMFCompare() {
+        // Configure EMF Compare
+        IEObjectMatcher matcher = ModelElementMatchEngine.createDQEObjectMatcher(UseIdentifiers.NEVER);
+        DefaultEqualityHelperFactory equalityHelperFactory = new DefaultEqualityHelperFactory();
+        IComparisonFactory comparisonFactory = new DefaultComparisonFactory(equalityHelperFactory);
+        IMatchEngine.Factory.Registry matchEngineRegistry = new MatchEngineFactoryRegistryImpl();
+        // IMatchEngine.Factory.Registry matchEngineRegistry =
+        // EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
+        DQMatchEngineFactory matchEngineFactoryImpl = new DQMatchEngineFactory(matcher, comparisonFactory);
+        matchEngineRegistry.add(matchEngineFactoryImpl);
+
+        Builder builder = EMFCompare.builder();
+        builder.setDiffEngine(diffEngineWithFilter());
+        EMFCompare comparator = builder.setMatchEngineFactoryRegistry(matchEngineRegistry).build();
+        return comparator;
+
+    }
+
+    /**
+     * 
+     * ignore the difference of id(not xmi id) Atrribute.
+     * 
+     * @return
+     */
+    protected IDiffEngine diffEngineWithFilter() {
+        IDiffProcessor diffProcessor = new DiffBuilder();
+        IDiffEngine diffEngine = new DefaultDiffEngine(diffProcessor) {
+
+            @Override
+            protected FeatureFilter createFeatureFilter() {
+                return new FeatureFilter() {
+
+                    // @Override
+                    @Override
+                    public boolean checkForOrderingChanges(EStructuralFeature feature) {
+                        return false;
+                    }
+
+                    @Override
+                    protected boolean isIgnoredAttribute(EAttribute attribute) {
+                        return "id".equals(attribute.getName()) || attribute.isID() || super.isIgnoredAttribute(attribute); //$NON-NLS-1$
+                    }
+
+                };
+            }
+        };
+        return diffEngine;
+    }
+
+    /**
+     * DOC qiongli Comment method "copyRightToLeft".
+     * 
+     * @param diff
+     */
+    protected void copyRightToLeft(Diff diff) {
+        // copy right to left
+        Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
+        DQReferenceMerger dqReferenceMerger = new DQReferenceMerger();
+        dqReferenceMerger.setRanking(50);
+        registry.add(dqReferenceMerger);
+        final IMerger merger = registry.getHighestRankingMerger(diff);
+        merger.copyRightToLeft(diff, new BasicMonitor());
+    }
+
 }

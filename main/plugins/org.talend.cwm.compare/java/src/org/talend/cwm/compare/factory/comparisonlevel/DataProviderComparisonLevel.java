@@ -14,11 +14,21 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.database.EDatabaseTypeName;
@@ -35,6 +45,7 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -42,6 +53,8 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -57,6 +70,53 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected boolean isValid() {
         return selectedObj instanceof Connection || ((IFile) selectedObj).getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV);
+    }
+
+    @Override
+    protected boolean compareWithReloadObject() throws ReloadCompareException {
+        Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
+        EMFCompare comparator = createDefaultEMFCompare();
+        IComparisonScope scope = new DefaultComparisonScope(oldDataProvider, getSavedReloadObject(), null);
+        Comparison compare = comparator.compare(scope);
+
+        // add the jrxml into the ResourceSet after doMatch
+        addJrxmlsIntoResourceSet(rsJrxmlMap);
+        EList<Diff> differences = compare.getDifferences();
+        for (Diff diff : differences) {
+            // ignore the move Kind
+            if (diff.getKind() == DifferenceKind.MOVE) {
+                continue;
+            }
+            if (diff instanceof ReferenceChange) {
+                EObject value = ((ReferenceChange) diff).getValue();
+                if (isAloneCatalogOrSchema(value)) {
+                    copyRightToLeft(diff);
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 
+     * if it has only catalog or only schema(like as:yes for mysql and oracle,no for MSSQL SEVER ).
+     * 
+     * @param obj
+     * @return
+     */
+    private boolean isAloneCatalogOrSchema(EObject obj) {
+        Catalog cat = SwitchHelpers.CATALOG_SWITCH.doSwitch(obj);
+        if (cat != null) {
+            return true;
+        }
+        Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(obj);
+        if (schema != null) {
+            EObject eContainer = schema.eContainer();
+            if (eContainer == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
