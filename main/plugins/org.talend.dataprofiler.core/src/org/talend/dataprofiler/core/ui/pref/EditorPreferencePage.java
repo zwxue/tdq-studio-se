@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.pref;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -415,8 +416,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
      * @return
      */
     public static String getDQRuleSize() {
-        String result = Platform.getPreferencesService().get(CorePlugin.PLUGIN_ID, DQ_RULES_PER_PAGE, null);
-        if (result == null || PluginConstant.EMPTY_STRING.equals(result.trim())) {
+        String result = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID, DQ_RULES_PER_PAGE, null, null);
+        if (StringUtils.isBlank(result)) {
             result = DEFAULT_PAGE_SIZE;
         }
         return result;

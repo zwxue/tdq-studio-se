@@ -104,7 +104,8 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
         for (LocalToLanguageEnum oneEnum : LocalToLanguageEnum.values()) {
             execCombo.add(oneEnum.getLocale());
         }
-        String language = getPreferenceStore().getString(PluginConstant.LANGUAGE_SELECTOR);
+        String language = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID, PluginConstant.LANGUAGE_SELECTOR,
+                LocalToLanguageEnum.ENGLISH.getShortOfLocale(), null);
         LocalToLanguageEnum languageType = LocalToLanguageEnum.findLocalByShort(language);
         execCombo.setText(language == null ? LocalToLanguageEnum.ENGLISH.getLocale() : languageType.getLocale());
         GridData d = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -156,7 +157,8 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
     @Override
     protected void performDefaults() {
         execCombo.deselectAll();
-        getPreferenceStore().setValue(PluginConstant.LANGUAGE_SELECTOR, LocalToLanguageEnum.ENGLISH.getShortOfLocale());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).put(PluginConstant.LANGUAGE_SELECTOR,
+                LocalToLanguageEnum.ENGLISH.getShortOfLocale());
         execCombo.setText(LocalToLanguageEnum.ENGLISH.getLocale());
         super.performDefaults();
     }
@@ -228,7 +230,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
     public boolean performOk() {
         boolean ok = super.performOk();
         LocalToLanguageEnum language = LocalToLanguageEnum.findLocal(execCombo.getText());
-        getPreferenceStore().setValue(PluginConstant.LANGUAGE_SELECTOR, language.getShortOfLocale());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).put(PluginConstant.LANGUAGE_SELECTOR, language.getShortOfLocale());
         try {
             InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).flush();
         } catch (BackingStoreException e) {
@@ -253,8 +255,8 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
             File iniFile = new File(url.getFile(), "config.ini"); //$NON-NLS-1$
             fin = new FileInputStream(iniFile);
             p.load(fin);
-            String languageType = Platform.getPreferencesService().get(CorePlugin.PLUGIN_ID, PluginConstant.LANGUAGE_SELECTOR,
-                    null);
+            String languageType = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID,
+                    PluginConstant.LANGUAGE_SELECTOR, LocalToLanguageEnum.ENGLISH.getShortOfLocale(), null);
 
             if (languageType == null || languageType.equals(p.getProperty(EclipseStarter.PROP_NL))) {
                 return;

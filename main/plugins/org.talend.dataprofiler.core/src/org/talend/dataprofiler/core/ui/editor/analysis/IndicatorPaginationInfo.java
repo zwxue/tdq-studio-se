@@ -18,11 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
@@ -69,8 +70,8 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
     @SuppressWarnings("deprecation")
     public static int getPageSize() {
         try {
-            String defaultPageSize = ResourcesPlugin.getPlugin().getPluginPreferences()
-                    .getString(EditorPreferencePage.ANALYZED_ITEMS_PER_PAGE);
+            String defaultPageSize = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID,
+                    EditorPreferencePage.ANALYZED_ITEMS_PER_PAGE, null, null);
             if (!"".equals(defaultPageSize)) { //$NON-NLS-1$
                 return Integer.parseInt(defaultPageSize);
             }

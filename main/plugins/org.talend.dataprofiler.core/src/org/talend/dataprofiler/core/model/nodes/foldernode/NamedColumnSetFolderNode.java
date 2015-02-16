@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -41,8 +42,8 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
 
     public static final int TABLE_VIEW_MAX = 2000;
 
-    private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences()
-            .getBoolean(PluginConstant.FILTER_TABLE_VIEW_COLUMN);
+    private static final boolean FILTER_FLAG = Platform.getPreferencesService().getBoolean(
+            CWMPlugin.getDefault().getBundle().getSymbolicName(), PluginConstant.FILTER_TABLE_VIEW_COLUMN, false, null);
 
     /**
      * @param name

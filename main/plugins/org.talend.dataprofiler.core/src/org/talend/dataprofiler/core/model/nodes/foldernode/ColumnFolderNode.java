@@ -26,9 +26,9 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -50,8 +50,8 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         super(DefaultMessagesImpl.getString("ColumnFolderNode.columns")); //$NON-NLS-1$
     }
 
-    private static final boolean FILTER_FLAG = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID,
-            PluginConstant.FILTER_TABLE_VIEW_COLUMN, false, null);
+    private static final boolean FILTER_FLAG = Platform.getPreferencesService().getBoolean(
+            CWMPlugin.getDefault().getBundle().getSymbolicName(), PluginConstant.FILTER_TABLE_VIEW_COLUMN, false, null);
 
     /*
      * (non-Javadoc)
