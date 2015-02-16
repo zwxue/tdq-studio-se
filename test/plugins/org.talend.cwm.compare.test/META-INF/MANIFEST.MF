@@ -14,7 +14,6 @@ Require-Bundle: org.talend.testutils,
  org.eclipse.emf.compare.ide,
  org.eclipse.emf.compare.edit,
  com.google.guava,
- org.eclipse.emf.transaction,
- org.eclipse.emf.compare.rcp.ui
+ org.eclipse.emf.transaction
 Bundle-ClassPath: .
 Export-Package: org.talend.cwm.compare
