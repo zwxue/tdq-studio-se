@@ -55,6 +55,7 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.ui.CoreUIPlugin;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -131,7 +132,8 @@ public class PatternTestView extends ViewPart {
 
     @Override
     public void createPartControl(final Composite parent) {
-
+        // css
+        CoreUIPlugin.setCSSClass(parent, this.getClass().getSimpleName());
         createPatternTestCom(parent);
 
     }

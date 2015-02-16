@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.FormAttachment;
@@ -44,6 +45,7 @@ import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.core.ui.CoreUIPlugin;
 import org.talend.core.ui.context.view.AbstractContextView;
 import org.talend.core.ui.context.view.Contexts;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -113,9 +115,25 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         this.editorObject = editorObject;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.forms.editor.FormEditor#createPages()
+     */
     @Override
-    protected void addPages() {
-        // TODO Auto-generated method stub
+    protected void createPages() {
+        addPages();
+        setCssStyleForTabFolder();
+    }
+
+    /**
+     * Set the Css style for tab folder
+     */
+    protected void setCssStyleForTabFolder() {
+        Composite container = getContainer();
+        if (container instanceof CTabFolder) {
+            CoreUIPlugin.setCSSClass(container, "org-talend-rcp-abstractMultiPageEditor-footer"); //$NON-NLS-1$
+        }
     }
 
     /** The editor's element state listener. */

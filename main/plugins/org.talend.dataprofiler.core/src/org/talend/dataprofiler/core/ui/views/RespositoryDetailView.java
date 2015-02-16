@@ -54,6 +54,7 @@ import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.ui.CoreUIPlugin;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
@@ -129,10 +130,13 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * DOC qzhang RespositoryDetailView constructor comment.
      */
     public RespositoryDetailView() {
+
     }
 
     @Override
     public void createPartControl(Composite parent) {
+        // css
+        CoreUIPlugin.setCSSClass(parent, this.getClass().getSimpleName());
         Composite comp = new Composite(parent, SWT.NONE);
         comp.setLayout(new FillLayout());
         scomp = new ScrolledComposite(comp, SWT.H_SCROLL | SWT.V_SCROLL);
@@ -147,6 +151,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         scomp.setContent(composite);
 
         gContainer = new Group(composite, SWT.NONE);
+
         gContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.General")); //$NON-NLS-1$
         GridLayout layout = new GridLayout(2, false);
         GridData data = new GridData(GridData.FILL_BOTH);
@@ -159,7 +164,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             tContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.Technical")); //$NON-NLS-1$
             tContainer.setLayout(new GridLayout(2, false));
             tContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
-
             createExtDefault();
         }
 

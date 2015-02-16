@@ -48,6 +48,14 @@
                name="startupMessageRect"
                value="12,202,415,22">
          </property>
+         <property
+               name="applicationCSSResources"
+               value="platform:/plugin/org.talend.themes.talend_theme/themes/">
+         </property>
+         <property
+               name="cssTheme"
+               value="org.talend.themes.talend_theme.default">
+         </property>
       </product>
    </extension>
    <extension
