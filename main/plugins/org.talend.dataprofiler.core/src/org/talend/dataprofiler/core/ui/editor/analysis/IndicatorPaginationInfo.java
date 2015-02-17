@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Menu;
@@ -72,7 +73,7 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
         try {
             String defaultPageSize = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID,
                     EditorPreferencePage.ANALYZED_ITEMS_PER_PAGE, null, null);
-            if (!"".equals(defaultPageSize)) { //$NON-NLS-1$
+            if (!StringUtils.isBlank(defaultPageSize)) {
                 return Integer.parseInt(defaultPageSize);
             }
         } catch (NumberFormatException e) {

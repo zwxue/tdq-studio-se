@@ -36,7 +36,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.osgi.service.prefs.BackingStoreException;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.PluginConstant;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -294,7 +293,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         pageSizeText = new Text(pageSizeComp, SWT.BORDER);
         String pageSize = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID, ANALYZED_ITEMS_PER_PAGE, null, null);
-        if (pageSize == null || pageSize.equals(PluginConstant.EMPTY_STRING)) {
+        if (StringUtils.isBlank(pageSize)) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
         pageSizeText.setText(pageSize);
@@ -307,7 +306,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         dqruleSizeText = new Text(pageSizeComp, SWT.BORDER);
         String dqruleSize = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID, DQ_RULES_PER_PAGE, null, null);
-        if (dqruleSize == null || dqruleSize.equals(PluginConstant.EMPTY_STRING)) {
+        if (StringUtils.isBlank(dqruleSize)) {
             dqruleSize = DEFAULT_PAGE_SIZE;
         }
         dqruleSizeText.setText(dqruleSize);
