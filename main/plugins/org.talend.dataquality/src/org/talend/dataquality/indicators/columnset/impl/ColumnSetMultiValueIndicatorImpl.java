@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -456,28 +455,11 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                     log.error("invalid data mining type for " + column);
                 }
             } else {
-                if (isNominalColumn(column.getName())) {
-                    headers.add(column.getName());
-                }
+                headers.add(column.getName());
             }
         }
         headers.add(this.getCountAll());
         return headers;
-    }
-
-    /**
-     * if the column's mining type is nominal return true, else return false.
-     * 
-     * @param columnName
-     * @return
-     */
-    private boolean isNominalColumn(String columnName) {
-        for (ModelElement me : this.getNominalColumns()) {
-            if (StringUtils.equals(columnName, me.getName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -524,14 +506,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @param headers
      * @param column
-     * @param numericFunctionsList
+     * @param functionsList
      */
-    private void addColumnToHeaderList(EList<String> headers, ModelElement column, EList<String> numericFunctionsList) {
-        if (!numericFunctionsList.isEmpty()) {
-            for (String f : this.getNumericFunctions()) {
+    private void addColumnToHeaderList(EList<String> headers, ModelElement column, EList<String> functionsList) {
+        if (functionsList != null && !functionsList.isEmpty()) {
+            for (String f : functionsList) {
                 headers.add(MessageFormat.format(f, column.getName()));
-                // break , one function is enough for formating the header name.
-                break;
             }
         } else {
             // No functions defined for this indicator definition.

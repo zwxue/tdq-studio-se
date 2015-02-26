@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -335,8 +336,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
     }
 
-    private Section createTableSectionPart(Composite parentComp, String title,
-            ColumnSetMultiValueIndicator columnSetMultiIndicator) {
+    private Section createTableSectionPart(Composite parentComp, String title, ColumnSetMultiValueIndicator csMultiIndicator) {
         Section columnSetElementSection = this.createSection(form, parentComp, title, null);
         Composite sectionTableComp = toolkit.createComposite(columnSetElementSection);
         sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -345,7 +345,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         TableViewer columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
         Table table = columnsElementViewer.getTable();
 
-        List<String> tableColumnNames = columnSetMultiIndicator.getColumnHeaders();
+        List<String> tableColumnNames = getTableColumnNames(csMultiIndicator);
         for (String tableColumnName : tableColumnNames) {
             final TableColumn columnHeader = new TableColumn(table, SWT.NONE);
             columnHeader.setText(tableColumnName);
@@ -353,7 +353,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
         TableSectionViewerProvider provider = new TableSectionViewerProvider();
-        List<Object[]> tableRows = columnSetMultiIndicator.getListRows();
+        List<Object[]> tableRows = csMultiIndicator.getListRows();
         columnsElementViewer.setContentProvider(provider);
         columnsElementViewer.setLabelProvider(provider);
         columnsElementViewer.setInput(tableRows);
@@ -368,6 +368,38 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
         columnSetElementSection.setExpanded(false);
         return columnSetElementSection;
+    }
+
+    /**
+     * get the table column names from ColumnSetMultiValueIndicator, all the column with nominal type should be ahead of
+     * the column with other types.
+     * 
+     * @param csMultiIndicator
+     * @return
+     */
+    private List<String> getTableColumnNames(ColumnSetMultiValueIndicator csMultiIndicator) {
+        EList<ModelElement> nominalColumns = csMultiIndicator.getNominalColumns();
+        List<String> nominalColumnNames = new ArrayList<String>();
+        for (ModelElement me : nominalColumns) {
+            nominalColumnNames.add(me.getName());
+        }
+
+        List<String> nominalHeaders = new ArrayList<String>();
+        List<String> otherHeaders = new ArrayList<String>();
+        EList<String> columnHeaders = csMultiIndicator.getColumnHeaders();
+        for (String s : columnHeaders) {
+            if (nominalColumnNames.contains(s)) {
+                nominalHeaders.add(s);
+            } else {
+                otherHeaders.add(s);
+            }
+        }
+
+        List<String> finalHeaders = new ArrayList<String>();
+        finalHeaders.addAll(nominalColumnNames);
+        finalHeaders.addAll(otherHeaders);
+
+        return finalHeaders;
     }
 
     /**
