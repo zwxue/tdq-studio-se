@@ -449,28 +449,11 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                     log.error("invalid data mining type for " + column);
                 }
             } else {
-                if (isNominalColumn(column.getName())) {
-                    headers.add(column.getName());
-                }
+                headers.add(column.getName());
             }
         }
         headers.add(this.getCountAll());
         return headers;
-    }
-
-    /**
-     * if the column's mining type is nominal return true, else return false.
-     * 
-     * @param columnName
-     * @return
-     */
-    private boolean isNominalColumn(String columnName) {
-        for (ModelElement me : this.getNominalColumns()) {
-            if (StringUtils.equals(columnName, me.getName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
