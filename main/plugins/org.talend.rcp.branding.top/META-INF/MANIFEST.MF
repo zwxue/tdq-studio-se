@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.cheatsheets,
  org.eclipse.ui.forms,
  org.talend.core.runtime,
- org.talend.themes.talend_theme
+ org.talend.themes.css.talend
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Eclipse-BundleShape: dir
