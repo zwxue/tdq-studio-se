@@ -710,6 +710,13 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         initializedConnection(this.modelElementIndicators);
     }
 
+    /**
+     * Open the dialog for select indicator
+     * 
+     * @param shell
+     * @return The array of ModelElementIndicator which selected by user if user click ok button. If cancel button be
+     * clicked then the size of return array will be zero. If have a Where Clause is error will return null
+     */
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
         String whereExpression = AnalysisHelper.getStringDataFilter(this.getAnalysis());
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
@@ -736,13 +743,14 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                 }
             });
         }
-        if (dialog.checkWhereClause() && dialog.open() == Window.OK) {
+        if (!dialog.checkWhereClause()) {
+            return null;
+        }
+        if (dialog.open() == Window.OK) {
             ModelElementIndicator[] result = dialog.getResult();
             for (ModelElementIndicator modelElementIndicator : result) {
                 modelElementIndicator.storeTempIndicator();
             }
-
-            // this.setElements(result);
             return result;
         } else {
             ModelElementIndicator[] result = dialog.getResult();
@@ -860,7 +868,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                         // open indicator selector
                         ModelElementIndicator[] modelElementIndicator = openIndicatorSelectDialog(masterPage.getEditor()
                                 .getEditorSite().getShell());
-                        masterPage.refreshCurrentTreeViewer(modelElementIndicator);
+                        if (modelElementIndicator != null) {
+                            masterPage.refreshCurrentTreeViewer(modelElementIndicator);
+                            masterPage.refreshPreviewTable();
+                        }
                     } else if (meobj != null && indicatorobj != null) {
                         // open indicator option wizard
                         openIndicatorOptionDialog(Display.getCurrent().getActiveShell(), item);
@@ -1014,6 +1025,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         @Override
         protected void removeSelectedElements2(Tree tree) {
             removeSelectedElements(tree);
+            notifyObservers();
         }
 
     }
@@ -1099,6 +1111,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                 columnIndexMap);
         masterPage.refreshTheTree(reorderModelElement);
         masterPage.restorePage();
+        masterPage.setDirty(true);
     }
 
     /**

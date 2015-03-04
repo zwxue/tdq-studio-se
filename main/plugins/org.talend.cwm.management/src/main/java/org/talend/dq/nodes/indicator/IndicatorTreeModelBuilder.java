@@ -23,6 +23,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
@@ -165,11 +166,14 @@ public final class IndicatorTreeModelBuilder {
      * @param folder
      * @param indiEnum
      * @param resourceMap
-     * @return
+     * @return nodes if folder is not empty else return empty array
      */
     public static IIndicatorNode[] getNestFolderNodes(IFolder folder, IndicatorEnum indiEnum, ResourceFileMap resourceMap) {
         List<IIndicatorNode> chilren = new ArrayList<IIndicatorNode>();
         try {
+            if (UDIHelper.isUDILibFolder(folder)) {
+                return new IIndicatorNode[0];
+            }
             for (IResource resource : folder.members()) {
                 if (resource instanceof IFile) {
                     ModelElement modelElement = resourceMap.getModelElement((IFile) resource);

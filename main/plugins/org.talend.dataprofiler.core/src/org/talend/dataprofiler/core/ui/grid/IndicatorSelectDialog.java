@@ -41,6 +41,7 @@ import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 
 /**
@@ -221,22 +222,22 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
     }
 
     public boolean isMatchCurrentIndicator(ModelElementIndicator currentIndicator, IIndicatorNode indicatorNode) {
-        boolean returnCurrentIndicator = true;
+        boolean returnValueForCurrentIndicator = true;
         IIndicatorNode parentNode = indicatorNode.getParent();
         boolean isParentPhoneStatistics = parentNode != null && parentNode.getIndicatorInstance() != null
                 && parentNode.getIndicatorInstance() instanceof PhoneNumbStatisticsIndicator;
         if (!ModelElementIndicatorRule.match(indicatorNode, currentIndicator, this.language)) {
-            returnCurrentIndicator = false;
+            returnValueForCurrentIndicator = false;
         }
         Indicator indicatorInstance = indicatorNode.getIndicatorInstance();
         if (null != indicatorInstance && !(indicatorInstance instanceof DatePatternFreqIndicator)
                 && null != indicatorInstance.getIndicatorDefinition()
                 && indicatorInstance.getIndicatorDefinition().getSqlGenericExpression().size() < 1
-                && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)
-                && !isParentPhoneStatistics) {
-            returnCurrentIndicator = false;
+                && !UDIHelper.isJavaUDI(indicatorInstance) && !indicatorNode.hasChildren()
+                && !(currentIndicator instanceof DelimitedFileIndicator) && !isParentPhoneStatistics) {
+            returnValueForCurrentIndicator = false;
         }
-        return returnCurrentIndicator;
+        return returnValueForCurrentIndicator;
     }
 
     @Override

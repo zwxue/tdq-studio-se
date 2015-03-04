@@ -843,6 +843,9 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
             this.specialIndicatorUnitList = new ArrayList<IndicatorUnit>();
         }
         IndicatorUnit indicatorUnit = new ColumnIndicatorUnit(indicatorEnum, tempIndicator, this);
+        if (tempSpecialIndicatorUnitList.contains(indicatorUnit)) {
+            return indicatorUnit;
+        }
         tempSpecialIndicatorUnitList.add(indicatorUnit);
         this.specialIndicatorUnitMap.put(tempIndicator.getName(), indicatorUnit);
         return indicatorUnit;

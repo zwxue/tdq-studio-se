@@ -14,13 +14,16 @@ package org.talend.dataquality.record.linkage.ui.composite.table;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
@@ -47,7 +50,6 @@ import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
-import org.eclipse.nebula.widgets.nattable.layer.event.StructuralDiff;
 import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundPainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.ICellPainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.TextPainter;
@@ -79,6 +81,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -95,6 +98,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
     private ListObjectDataProvider bodyDataProvider;
 
     private String[] propertyNames;
+
+    private List<String> lastTimePropertyNameOrder;
 
     private Map<String, String> propertyToLabels;
 
@@ -354,48 +359,125 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
                         handleColumnSelectionChange(range.start);
                     }
                 } else if (event instanceof ColumnReorderEvent) {
-                    ColumnReorderEvent columnReorderEvent = (ColumnReorderEvent) event;
-                    Collection<StructuralDiff> columnDiffs = columnReorderEvent.getColumnDiffs();
-                    ColumnIndexMap = new HashMap<String, Integer>();
-                    fillPreElement(propertyNames[natTable.getColumnIndexByPosition(1)]);
-                    for (int index = 1; index < natTable.getColumnCount(); index++) {
-                        int columnIndexByPosition = natTable.getColumnIndexByPosition(index);
-
-                        ColumnIndexMap.put(propertyNames[columnIndexByPosition], ColumnIndexMap.size());
-
+                    if (ColumnIndexMap == null) {
+                        ColumnIndexMap = new HashMap<String, Integer>();
+                    } else {
+                        ColumnIndexMap.clear();
                     }
+                    // save propertyNames oder into lastTimePropertyNameOrder
+                    initPropertyNameOrder();
+                    // Fill elements into ColumnIndexMap before the order change ones.
+                    fillPreElement();
+                    // Fill the oder all of elements which display on the table into ColumnIndexMap
+                    fillElementWhichDisplayOnTable();
+                    // Fill the oder all of elements which after the order change ones.
                     fillEndElement();
+                    // update newest order state on the lastTimePropertyNameOrder list
+                    savePropertyNameState();
                     notifyObservers();
                 }
             }
 
-            private void fillEndElement() {
-
-                for (int index = ColumnIndexMap.size(); index < propertyNames.length; index++) {
-                    if (index < ColumnIndexMap.size()) {
-                        index++;
-                        continue;
-                    }
-                    ColumnIndexMap.put(propertyNames[index], index);
+            /**
+             * DOC talend Comment method "fillElementWhichDisplayOnTable". copy by #fillElementWhichDisplayOnTable
+             */
+            private void fillElementWhichDisplayOnTable() {
+                for (int index = 1; index < natTable.getColumnCount(); index++) {
+                    int columnIndexByPosition = natTable.getColumnIndexByPosition(index);
+                    ColumnIndexMap.put(propertyNames[columnIndexByPosition], ColumnIndexMap.size());
                 }
-
             }
 
-            private void fillPreElement(String endName) {
-                int index = 0;
-                String tempStr = endName;
-                if (tempStr.equals(propertyNames[propertyNames.length - 1])) {
-                    tempStr = propertyNames[natTable.getColumnCount() - 2];
+            private void fillEndElement() {
+                for (int index = ColumnIndexMap.size(); index < propertyNames.length; index++) {
+                    ColumnIndexMap.put(lastTimePropertyNameOrder.get(index), index);
                 }
-                for (String propertyName : propertyNames) {
-                    if (tempStr.equals(propertyName)) {
+            }
+
+            private void fillPreElement() {
+
+                int disColumnCount = natTable.getColumnCount() - 1;
+                // display all case so that no preElement one need to be filled
+                if (disColumnCount >= lastTimePropertyNameOrder.size()) {
+                    return;
+                }
+
+                // not all display
+                String endName = propertyNames[natTable.getColumnIndexByPosition(1)];
+                int firstOneLastPosition = lastTimePropertyNameOrder.indexOf(endName);
+                endName = propertyNames[natTable.getColumnIndexByPosition(2)];
+                int secondOneLastPosition = lastTimePropertyNameOrder.indexOf(endName);
+                if (secondOneLastPosition - firstOneLastPosition > 0) {
+                    // 1 is not be change order case
+                    endName = lastTimePropertyNameOrder.get(firstOneLastPosition);
+                    // For example 1->2+
+                    if (secondOneLastPosition - firstOneLastPosition == 1) {
+                        String moveColName = findMoveColumnName(firstOneLastPosition - 1);
+                        if (moveColName != null) {
+                            endName = moveColName;
+                        }
+                    }
+                    // For example 1->2,2+->1
+                } else if (secondOneLastPosition - firstOneLastPosition < 0) {
+                    // in fact the value shoud be
+                    // firstOneLastPosition+secondOneLastPosition-firstOneLastPosition
+                    endName = lastTimePropertyNameOrder.get(secondOneLastPosition);
+                }
+                // ~ not all display
+                int index = 0;
+                for (String propertyName : lastTimePropertyNameOrder) {
+                    if (endName.equals(propertyName)) {
                         break;
                     }
                     ColumnIndexMap.put(propertyName, index++);
                 }
 
             }
+
+            /**
+             * 
+             * Find the column name which be moved on the ui
+             * 
+             * @param spacing
+             * @return
+             */
+            private String findMoveColumnName(int spacing) {
+                for (int index = 3; index < natTable.getColumnCount() - 1; index++) {
+                    String propertyName = propertyNames[natTable.getColumnIndexByPosition(index)];
+                    int lastPosition = lastTimePropertyNameOrder.indexOf(propertyName);
+                    if (spacing > lastPosition - index) {
+                        return propertyName;
+                    } else if (spacing == lastPosition - index) {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+                return null;
+            }
         });
+    }
+
+    private void savePropertyNameState() {
+        lastTimePropertyNameOrder.clear();
+        String[] nameOrderArray = new String[ColumnIndexMap.size()];
+        for (String propertyName : ColumnIndexMap.keySet()) {
+            nameOrderArray[ColumnIndexMap.get(propertyName)] = propertyName;
+        }
+        this.lastTimePropertyNameOrder.addAll(Arrays.asList(nameOrderArray));
+
+    }
+
+    /**
+     * DOC talend Comment method "initPropertyNameOrder".
+     */
+    private void initPropertyNameOrder() {
+        if (lastTimePropertyNameOrder == null) {
+            lastTimePropertyNameOrder = new ArrayList<String>();
+            for (String name : propertyNames) {
+                lastTimePropertyNameOrder.add(name);
+            }
+        }
     }
 
     private void handleColumnSelectionChange(int index) {
@@ -945,8 +1027,15 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             tablePanel.dispose();
         }
         needLoadData = withData;
-        createNatTable(columns, withData);
-        drawCanvas.layout();
+        try {
+            createNatTable(columns, withData);
+            drawCanvas.layout();
+        } catch (SQLException e) {
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("ColumnAnalysisDataSamTable.InValidWhereClause"), //$NON-NLS-1$
+                    e.getMessage());
+            needLoadData = false;
+        }
+
     }
 
     /**
@@ -954,8 +1043,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * 
      * @param listOfData
      * @param dataTableComp
+     * @throws SQLException
      */
-    public void createNatTable(ModelElement[] columns, boolean withData) {
+    public void createNatTable(ModelElement[] columns, boolean withData) throws SQLException {
         List<Object[]> listOfData = getPreviewData(columns, withData);
         createNatTable(listOfData, drawCanvas, columns);
     }
@@ -964,8 +1054,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * DOC talend Comment method "getPreviewData".
      * 
      * @return
+     * @throws SQLException
      */
-    private List<Object[]> getPreviewData(ModelElement[] columns, boolean withData) {
+    private List<Object[]> getPreviewData(ModelElement[] columns, boolean withData) throws SQLException {
         if (withData && isSameTable) {
             return createPreviewData(columns);
         } else {
@@ -977,8 +1068,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * DOC talend Comment method "createPreviewData".
      * 
      * @param columns
+     * @throws SQLException
      */
-    protected List<Object[]> createPreviewData(ModelElement[] columns) {
+    protected List<Object[]> createPreviewData(ModelElement[] columns) throws SQLException {
         return new ArrayList<Object[]>();
 
     }
@@ -988,8 +1080,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * 
      * @param listOfData
      * @param dataTableComp
+     * @throws SQLException
      */
-    public void createNatTable(List<Object[]> listOfData, Composite dataTableComp, ModelElement[] columns) {
+    public void createNatTable(List<Object[]> listOfData, Composite dataTableComp, ModelElement[] columns) throws SQLException {
         checkSameTableConstraint(columns);
         List<Object[]> previewData = null;
         drawCanvas = dataTableComp;
@@ -1005,6 +1098,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         subPanel.setLayout(new GridLayout(1, true));
         if (listOfData == null || listOfData.size() == 0) {
             previewData = getPreviewData(columns, false);
+
         } else {
             previewData = listOfData;
         }

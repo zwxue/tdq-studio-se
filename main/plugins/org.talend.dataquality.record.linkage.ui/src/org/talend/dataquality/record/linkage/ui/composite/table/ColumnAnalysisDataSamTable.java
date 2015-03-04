@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -94,7 +93,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
      * @see org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable#getPreviewData()
      */
     @Override
-    protected List<Object[]> createPreviewData(ModelElement[] columns) {
+    protected List<Object[]> createPreviewData(ModelElement[] columns) throws SQLException {
         List<Object[]> previewData = new ArrayList<Object[]>();
         DataManager connection = null;
         boolean isDelimitedFile = false;
@@ -121,15 +120,10 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
         } else {// is database
             sqlExecutor = new DatabaseSQLExecutor();
         }
-        try {
-            // set limit
-            sqlExecutor.setLimit(getLimitNumber());
-            return sqlExecutor.executeQuery(connection, Arrays.asList(columns), dataFilter);
-        } catch (SQLException e) {
-            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("ColumnAnalysisDataSamTable.InValidWhereClause"), //$NON-NLS-1$
-                    e.getMessage());
-            return previewData;
-        }
+        // set limit
+        sqlExecutor.setLimit(getLimitNumber());
+        return sqlExecutor.executeQuery(connection, Arrays.asList(columns), dataFilter);
+
     }
 
     /*

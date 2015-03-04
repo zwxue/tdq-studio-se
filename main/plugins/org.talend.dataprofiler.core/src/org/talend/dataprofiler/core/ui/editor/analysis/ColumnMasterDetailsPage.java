@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -353,8 +354,10 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
                     ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnMasterDetailsPage.this.getSite()
                             .getShell());
-                    refreshCurrentTreeViewer(result);
-                    refreshPreviewTable();
+                    if (result != null) {
+                        refreshCurrentTreeViewer(result);
+                        refreshPreviewTable();
+                    }
                 }
 
             }
@@ -462,7 +465,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         dataTableComp.layout(new Control[] { warningLabel });
     }
 
-    private void refreshPreviewTable() {
+    public void refreshPreviewTable() {
         initSampleTableParameter();
         sampleTable.reDrawTable(getSelectedColumns());
         redrawWarningLabel();
@@ -502,7 +505,13 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
     // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
     private void createNatTable() {
-        sampleTable.createNatTable(null, dataTableComp, analysisHandler.getSelectedColumns());
+        try {
+            sampleTable.createNatTable(null, dataTableComp, analysisHandler.getSelectedColumns());
+        } catch (SQLException e) {
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("ColumnAnalysisDataSamTable.InValidWhereClause"), //$NON-NLS-1$
+                    e.getMessage());
+        }
+
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form1, Composite anasisDataComp) {
@@ -717,7 +726,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      */
     public void refreshPreviewTable(ModelElementIndicator[] modelElements) {
         this.currentModelElementIndicators = modelElements;
-        this.refreshPreviewTable();
+        this.refreshPreviewTable(true);
 
     }
 

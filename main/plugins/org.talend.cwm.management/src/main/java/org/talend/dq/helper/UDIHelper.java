@@ -51,6 +51,7 @@ import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.classloader.TalendURLClassLoader;
 import org.talend.utils.sugars.ReturnCode;
@@ -480,6 +481,19 @@ public final class UDIHelper {
             }
         }
         return fileList;
+    }
+
+    /**
+     * Judge whether current folder is udi jar folder
+     * 
+     * @param folder
+     * @return true if it is else false
+     */
+    public static boolean isUDILibFolder(IFolder folder) {
+        return folder.getName().equals(EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName())
+                && folder.getFullPath().segmentCount() > 2
+                && folder.getFullPath().segment(folder.getFullPath().segmentCount() - 2)
+                        .equals(EResourceConstant.USER_DEFINED_INDICATORS.getName());
     }
 
     /**

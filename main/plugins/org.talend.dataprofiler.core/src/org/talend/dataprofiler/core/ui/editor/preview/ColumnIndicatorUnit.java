@@ -71,4 +71,28 @@ public class ColumnIndicatorUnit extends IndicatorUnit {
         return FormEnum.getFormEnumArray(this.getIndicator().getIndicatorDefinition(), sqlType, dataminingType, type,
                 getExecutionLanguage());
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (ColumnIndicatorUnit.class.isInstance(obj)) {
+            if (!type.equals(((ColumnIndicatorUnit) obj).type)) {
+                return false;
+            }
+            if (!indicator.equals(((ColumnIndicatorUnit) obj).indicator)) {
+                return false;
+            }
+            if (!modelElementIndicator.equals(((ColumnIndicatorUnit) obj).modelElementIndicator)) {
+                return false;
+            }
+            return true;
+        }
+
+        return super.equals(obj);
+    }
+
 }

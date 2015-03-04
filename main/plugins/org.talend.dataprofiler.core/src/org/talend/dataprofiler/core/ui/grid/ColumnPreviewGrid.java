@@ -300,8 +300,8 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             if (!getVerticalBar().isVisible() && Boolean.parseBoolean(show.toString())) {
                 // make current table bounds change to small
                 GridData previewGridData = (GridData) this.getLayoutData();
-                previewGridData.widthHint = this.getBounds().width - 70;
-                previewGridData.minimumWidth = this.getBounds().width - 70;
+                previewGridData.widthHint = this.getBounds().width - 50 - getVerticalBar().getSize().x;
+                previewGridData.minimumWidth = this.getBounds().width - 50 - getVerticalBar().getSize().x;
                 previewGridData.horizontalAlignment = SWT.BEGINNING;
                 this.getParent().layout();
             }

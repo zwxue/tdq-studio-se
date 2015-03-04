@@ -21,12 +21,9 @@ import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.nebula.widgets.grid.TalendGrid;
 import org.eclipse.nebula.widgets.grid.TalendGridItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
@@ -87,7 +84,7 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
 
     protected ModelElementIndicator[] result;
 
-    private HoverScrollThread thread;
+    // private HoverScrollThread thread;
 
     private boolean isScrolling;
 
@@ -147,7 +144,7 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
     }
 
     /**
-     * DOC talend Comment method "fillWidth".
+     * Fill the content when width is changed
      */
     protected void fillWidth() {
         GridData previewGridData = (GridData) this.getLayoutData();
@@ -158,12 +155,12 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
     }
 
     /**
-     * DOC talend Comment method "fillWidth".
+     * The width of begin
      */
     protected void beginningWidth() {
         GridData previewGridData = (GridData) this.getLayoutData();
-        previewGridData.widthHint = this.getBounds().width - 70;
-        previewGridData.minimumWidth = this.getBounds().width - 70;
+        previewGridData.widthHint = this.getBounds().width - 50 - getVerticalBar().getSize().x;
+        previewGridData.minimumWidth = this.getBounds().width - 50 - getVerticalBar().getSize().x;
         previewGridData.horizontalAlignment = SWT.BEGINNING;
         this.getParent().layout();
     }
@@ -336,22 +333,22 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
     private void addExtraListeners() {
         // remove double click event from parent class
         this.removeListener(SWT.MouseDoubleClick, this.getListeners(SWT.MouseDoubleClick)[0]);
-        addMouseTrackListener(new MouseTrackListener() {
-
-            public void mouseEnter(MouseEvent e) {
-            }
-
-            public void mouseExit(MouseEvent e) {
-                if (isScrolling) {
-                    isScrolling = false;
-                    Display.getDefault().timerExec(-1, thread); // interrupt the thread
-                }
-            }
-
-            public void mouseHover(MouseEvent e) {
-            }
-
-        });
+        // addMouseTrackListener(new MouseTrackListener() {
+        //
+        // public void mouseEnter(MouseEvent e) {
+        // }
+        //
+        // public void mouseExit(MouseEvent e) {
+        // if (isScrolling) {
+        // isScrolling = false;
+        // Display.getDefault().timerExec(-1, thread); // interrupt the thread
+        // }
+        // }
+        //
+        // public void mouseHover(MouseEvent e) {
+        // }
+        //
+        // });
 
         addMouseMoveListener(new MouseMoveListener() {
 
@@ -375,15 +372,15 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
 
         });
 
-        addDisposeListener(new DisposeListener() {
-
-            public void widgetDisposed(DisposeEvent e) {
-                if (isScrolling) {
-                    isScrolling = false;
-                    Display.getDefault().timerExec(-1, thread); // interrupt the thread
-                }
-            }
-        });
+        // addDisposeListener(new DisposeListener() {
+        //
+        // public void widgetDisposed(DisposeEvent e) {
+        // if (isScrolling) {
+        // isScrolling = false;
+        // Display.getDefault().timerExec(-1, thread); // interrupt the thread
+        // }
+        // }
+        // });
     }
 
     private void onMouseDown(MouseEvent e) {
@@ -437,9 +434,9 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
     }
 
     private void onMouseMove(MouseEvent e) {
-        if (handleMouseScroll(e)) { // when the grid is scrolling, do not handle mouse move highlight.
-            return;
-        }
+        // if (handleMouseScroll(e)) { // when the grid is scrolling, do not handle mouse move highlight.
+        // return;
+        // }
 
         GridVisibleRange range = getVisibleRange();
         if (handleCellHighlight(e, range)) {
@@ -481,46 +478,46 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
         }
     }
 
-    private boolean handleMouseScroll(MouseEvent e) {
-        if (e.x > getRowHeaderWidth() && e.x < getRowHeaderWidth() + 150) {
-            ScrollBar hScrollBar = getHorizontalBar();
-            if (hScrollBar.getSelection() == hScrollBar.getMinimum()) {
-                return false;
-            }
-            if (!isScrolling && e.x < getRowHeaderWidth() + 100) {
-                isScrolling = true;
-                thread = new HoverScrollThread(-1, hScrollBar);
-                Display.getDefault().timerExec(200, thread);
-                handleCellHighlight(e, getVisibleRange());
-            }
-            if (isScrolling) {
-                thread.setAccelaration(getRowHeaderWidth() + 150 - e.x);
-                startColumnIndex = -1;
-                endColumnIndex = -1;
-                return true;
-            }
-        } else if (e.x > getBounds().width - 150 && e.x < getBounds().width) {
-            ScrollBar hScrollBar = getHorizontalBar();
-            if (!isScrolling && e.x > getBounds().width - 100) {
-                isScrolling = true;
-                thread = new HoverScrollThread(1, hScrollBar);
-                Display.getDefault().timerExec(200, thread);
-                handleCellHighlight(e, getVisibleRange());
-            }
-            if (isScrolling) {
-                thread.setAccelaration(e.x + 150 - getBounds().width);
-                startColumnIndex = -1;
-                endColumnIndex = -1;
-                return true;
-            }
-        } else {
-            if (isScrolling) {
-                isScrolling = false;
-                Display.getDefault().timerExec(-1, thread); // interrupt the thread
-            }
-        }
-        return false;
-    }
+    // private boolean handleMouseScroll(MouseEvent e) {
+    // if (e.x > getRowHeaderWidth() && e.x < getRowHeaderWidth() + 150) {
+    // ScrollBar hScrollBar = getHorizontalBar();
+    // if (hScrollBar.getSelection() == hScrollBar.getMinimum()) {
+    // return false;
+    // }
+    // if (!isScrolling && e.x < getRowHeaderWidth() + 100) {
+    // isScrolling = true;
+    // thread = new HoverScrollThread(-1, hScrollBar);
+    // Display.getDefault().timerExec(200, thread);
+    // handleCellHighlight(e, getVisibleRange());
+    // }
+    // if (isScrolling) {
+    // thread.setAccelaration(getRowHeaderWidth() + 150 - e.x);
+    // startColumnIndex = -1;
+    // endColumnIndex = -1;
+    // return true;
+    // }
+    // } else if (e.x > getBounds().width - 150 && e.x < getBounds().width) {
+    // ScrollBar hScrollBar = getHorizontalBar();
+    // if (!isScrolling && e.x > getBounds().width - 100) {
+    // isScrolling = true;
+    // thread = new HoverScrollThread(1, hScrollBar);
+    // Display.getDefault().timerExec(200, thread);
+    // handleCellHighlight(e, getVisibleRange());
+    // }
+    // if (isScrolling) {
+    // thread.setAccelaration(e.x + 150 - getBounds().width);
+    // startColumnIndex = -1;
+    // endColumnIndex = -1;
+    // return true;
+    // }
+    // } else {
+    // if (isScrolling) {
+    // isScrolling = false;
+    // Display.getDefault().timerExec(-1, thread); // interrupt the thread
+    // }
+    // }
+    // return false;
+    // }
 
     private boolean handleCellHighlight(MouseEvent e, GridVisibleRange range) {
         Point cell = getCell(new Point(e.x, e.y));
@@ -899,13 +896,18 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
 
     @Override
     protected int getHScrollSelectionInPixels() {
+
         ScrollBar hScrollBar = getHorizontalBar();
-        int res = hScrollBar.getSelection() * COLUMN_WIDTH;
-        int max = hScrollBar.getMaximum();
-        if (max > 1 && hScrollBar.getSelection() >= max - 1) {
-            return res + 100;
+        int selection = hScrollBar.getSelection();
+        if (getColumnScrolling()) {
+            int pixels = 0;
+            for (int i = 0; i < selection; i++) {
+                int[] columnDisOrder = this.getColumnOrder();
+                pixels += this.getColumn(columnDisOrder[i + 2]).getWidth();
+            }
+            selection = pixels;
         }
-        return res;
+        return selection;
     }
 
     public ModelElementIndicator[] getResult() {

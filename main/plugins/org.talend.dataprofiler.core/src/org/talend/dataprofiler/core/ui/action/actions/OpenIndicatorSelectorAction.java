@@ -52,8 +52,9 @@ public class OpenIndicatorSelectorAction extends Action implements ICheatSheetAc
         if (treeViewer instanceof AnalysisColumnTreeViewer) {
             AnalysisColumnTreeViewer columnTreeViewer = (AnalysisColumnTreeViewer) treeViewer;
             ModelElementIndicator[] modelElementIndicator = columnTreeViewer.openIndicatorSelectDialog(null);
-            if (modelElementIndicator.length > 0) {
-                columnTreeViewer.setElements(modelElementIndicator);
+            if (modelElementIndicator != null) {
+                page.refreshCurrentTreeViewer(modelElementIndicator);
+                page.refreshPreviewTable();
             }
         }
     }
