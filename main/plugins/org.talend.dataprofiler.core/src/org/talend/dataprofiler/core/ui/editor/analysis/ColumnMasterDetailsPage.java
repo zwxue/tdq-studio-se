@@ -860,7 +860,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                             DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"))); //$NON-NLS-1$ 
             maxNumText.setText(String.valueOf(analysis.getParameters().getMaxNumberRows()));
         }
-        analysis.getParameters().setMaxNumberRows(analysis.getParameters().getMaxNumberRows());
         analysis.getParameters().setStoreData(drillDownCheck.getSelection());
         // ~12919
 
