@@ -18,3 +18,5 @@ Export-Package: org.talend.dataprofiler.chart
 Import-Package: org.apache.commons.logging;version="1.1.1",
  org.talend.dataprofiler.service
 Service-Component: OSGI-INF/TOPChart.xml
+Bundle-ClassPath: .,
+ dist/org.talend.dataprofiler.top.chart.jar
