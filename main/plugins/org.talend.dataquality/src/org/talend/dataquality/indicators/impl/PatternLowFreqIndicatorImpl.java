@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
@@ -50,8 +51,18 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
         final TextParameters textParameter = this.getParameters() == null ? null : this.getParameters().getTextParameter();
         // ~
         if (textParameter != null) {
-            this.replacementChars = textParameter.getReplacementCharacters();
-            this.charsToReplace = textParameter.getCharactersToReplace();
+            // TDQ-10044: fix when the user didn't set the replace and charactersToReplace, use the default value(only
+            // for jave engine)
+            String replacementCharacters = textParameter.getReplacementCharacters();
+            if (!StringUtils.isBlank(replacementCharacters)) {
+                this.replacementChars = replacementCharacters;
+            }
+
+            String charactersToReplace = textParameter.getCharactersToReplace();
+            if (!StringUtils.isBlank(charactersToReplace)) {
+                this.charsToReplace = charactersToReplace;
+            }
+            // TDQ-10044~
         }
         return super.prepare();
     }
