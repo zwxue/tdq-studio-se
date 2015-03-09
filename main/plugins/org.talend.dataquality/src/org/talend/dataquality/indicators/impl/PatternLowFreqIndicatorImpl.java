@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
@@ -27,6 +28,7 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected PatternLowFreqIndicatorImpl() {
@@ -35,6 +37,7 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -48,8 +51,18 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
         final TextParameters textParameter = this.getParameters() == null ? null : this.getParameters().getTextParameter();
         // ~
         if (textParameter != null) {
-            this.replacementChars = textParameter.getReplacementCharacters();
-            this.charsToReplace = textParameter.getCharactersToReplace();
+            // TDQ-10044: fix when the user didn't set the replace and charactersToReplace, use the default value(only
+            // for jave engine)
+            String replacementCharacters = textParameter.getReplacementCharacters();
+            if (!StringUtils.isBlank(replacementCharacters)) {
+                this.replacementChars = replacementCharacters;
+            }
+
+            String charactersToReplace = textParameter.getCharactersToReplace();
+            if (!StringUtils.isBlank(charactersToReplace)) {
+                this.charsToReplace = charactersToReplace;
+            }
+            // TDQ-10044~
         }
         return super.prepare();
     }
@@ -67,6 +80,7 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
     /**
      * add by zshen for feature 12919 to convertCharacter when save data into analysisDataSet with java engin
      */
+    @Override
     public String convertCharacters(String data) {
         return AsciiUtils.replaceCharacters(String.valueOf(data), this.charsToReplace, this.replacementChars);
     }
