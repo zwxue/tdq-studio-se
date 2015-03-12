@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.dqrules;
 
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
@@ -22,9 +21,6 @@ import org.talend.dataquality.properties.TDQBusinessRuleItem;
  * DOC klliu business rule editor input.
  */
 public class BusinessRuleItemEditorInput extends AbstractItemEditorInput {
-
-    // FIXME remove it.
-    private IRepositoryViewObject viewObject = null;
 
     private TDQBusinessRuleItem item = null;
 
@@ -53,6 +49,7 @@ public class BusinessRuleItemEditorInput extends AbstractItemEditorInput {
         return item;
     }
 
+    @Override
     public String getModelElementUuid() {
         if (this.item != null) {
             return ResourceHelper.getUUID(this.item.getDqrule());

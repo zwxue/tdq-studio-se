@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.views;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -447,7 +448,7 @@ public class PatternTestView extends ViewPart {
         // MOD qiongli 2011-1-7.Add java in Pattern Test View
         if (isJavaEngine) {
             String regexStr = regularText.getText();
-            if (regexStr.length() >= 2 && regexStr.startsWith("'") && regexStr.endsWith("'")) {
+            if (regexStr.length() >= 2 && regexStr.startsWith("'") && regexStr.endsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
                 regexStr = regexStr.substring(1, regexStr.length() - 1);
             }
             boolean flag = java.util.regex.Pattern.compile(regexStr).matcher(testText.getText()).find();
@@ -484,20 +485,20 @@ public class PatternTestView extends ViewPart {
                         return;
                     }
                     TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(tddataprovider);
+                    Statement createStatement = null;
                     try {
                         if (!rcConn.isOk()) {
                             throw new DataprofilerCoreException(rcConn.getMessage());
                         }
                         java.sql.Connection connection = rcConn.getObject();
-                        // FIXME createStatement should be closed.
-                        Statement createStatement = connection.createStatement();
+                        createStatement = connection.createStatement();
                         ResultSet resultSet = createStatement.executeQuery(selectRegexpTestString);
                         while (resultSet.next()) {
                             String okString = resultSet.getString(1);
                             // MOD msjian 2011-11-15 TDQ-3967: in the postgres db, the match return value is "t"
                             if ("1".equalsIgnoreCase(okString) //$NON-NLS-1$
-                                    || (createDbmsLanguage.getDbmsName().equals(
-                                            SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage()) && "t".equalsIgnoreCase(okString))) { //$NON-NLS-1$
+                                    || (createDbmsLanguage != null && (createDbmsLanguage.getDbmsName().equals(
+                                            SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage()) && "t".equalsIgnoreCase(okString)))) { //$NON-NLS-1$
                                 // TDQ-3967 ~
                                 emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
                                 resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
@@ -510,13 +511,19 @@ public class PatternTestView extends ViewPart {
                     } catch (Exception exception) {
                         log.error(exception, exception);
                         // bug TDQ-2066-->TDQ-3594 for mysql
-                        String exceptionName = exception.getClass().getName();
                         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
                         MessageBoxExceptionHandler.process(exception, shell);
                         // ~
                         emoticonLabel.setImage(null);
                         return;
                     } finally {
+                        if (createStatement != null) {
+                            try {
+                                createStatement.close();
+                            } catch (SQLException e) {
+                                // do nothing until now
+                            }
+                        }
                         ConnectionUtils.closeConnection(rcConn.getObject());
                     }
                 }
@@ -722,6 +729,7 @@ public class PatternTestView extends ViewPart {
         dbCombo.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
+                widgetSelected(arg0);
             }
 
             public void widgetSelected(SelectionEvent arg0) {

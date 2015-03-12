@@ -58,8 +58,6 @@ import com.talend.csv.CSVReader;
  */
 public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
-    private Analysis analysis = null; // FIXME do we need to hide the same field from the parent class?
-
     private DelimitedFileConnection delimitedFileconnection = null;
 
     private Logger log = Logger.getLogger(DelimitedFileIndicatorEvaluator.class);

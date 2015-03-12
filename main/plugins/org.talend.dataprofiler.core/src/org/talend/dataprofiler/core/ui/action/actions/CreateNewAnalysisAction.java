@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.Properties;
 
 import org.apache.commons.lang.math.NumberUtils;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -57,20 +56,9 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
 
     public RepositoryNode node;
 
-    // FIXME folder is never used.
-    private IFolder folder;
-
-    // FIXME remove it.
-    String defaultLabel;
-
     public CreateNewAnalysisAction() {
         super(DefaultMessagesImpl.getString("CreateNewAnalysisAction.newAnalysis")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
-    }
-
-    public CreateNewAnalysisAction(IFolder folder) {
-        this();
-        this.folder = folder;
     }
 
     /**
@@ -93,17 +81,6 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
      */
     @Override
     public void run() {
-        // FolderProvider currentFolderProvider = new FolderProvider();
-        // currentFolderProvider.setFolderResource(folder);
-        //
-        // CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard();
-        // wizard.setCurrentFolderProvider(currentFolderProvider);
-        // wizard.setForcePreviousAndNextButtons(true);
-        // WizardDialog dialog = new OpeningHelpWizardDialog(null, wizard, null);
-        // wizard.setContainer(dialog);
-        // if (WizardDialog.OK == dialog.open())
-        // ProxyRepositoryManager.getInstance().save();
-
         // DOC MOD klliu define the path and node
         CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard(path, node);
         wizard.setForcePreviousAndNextButtons(true);

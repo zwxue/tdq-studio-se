@@ -25,7 +25,6 @@ public class IndicatorParametersCellModifier implements ICellModifier {
     private TableViewer viewer;
 
     public IndicatorParametersCellModifier(TableViewer viewer) {
-        // TODO Auto-generated constructor stub
         this.viewer = viewer;
     }
 
@@ -39,7 +38,6 @@ public class IndicatorParametersCellModifier implements ICellModifier {
     }
 
     public void modify(Object element, String property, Object value) {
-        // TODO Auto-generated method stub
 
     }
 

@@ -238,18 +238,9 @@ public abstract class ModelElementTreeMenuProvider {
             public void widgetSelected(SelectionEvent e) {
                 TreeItem[] selection = tree.getSelection();
                 if (selection.length > 0) {
-                    TreeItem treeItem = selection[0];
-                    ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem
-                            .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
-                    IRepositoryNode rd = meIndicator.getModelElementRepositoryNode();
-                    ModelElement me = ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn();
                     AnalysisRepNode ana = getAnalysis2();
                     // MOD qiongli 2011-1-12 feature 16796 :handle the case of ModelElement name is null
-                    // ana.setName(ModelElementHelper.getName(me));
-                    // FIXME instanceof always return true.
-                    if (me instanceof ModelElement) {
-                        (new TdAddTaskAction(tree.getShell(), ana)).run();
-                    }
+                    (new TdAddTaskAction(tree.getShell(), ana)).run();
                 }
 
             }

@@ -210,12 +210,8 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         IProgressMonitor rememberedProgressMonitor = null;
         provider = new TextFileDocumentProvider();
         provider.addElementStateListener(fElementStateListener);
-        // FIXME instanceof always return true.
-        if (provider instanceof IDocumentProviderExtension2) {
-            IDocumentProviderExtension2 extension = (IDocumentProviderExtension2) provider;
-            extension.setProgressMonitor(rememberedProgressMonitor);
-        }
-
+        IDocumentProviderExtension2 extension = (IDocumentProviderExtension2) provider;
+        extension.setProgressMonitor(rememberedProgressMonitor);
         provider.connect(input);
     }
 

@@ -45,25 +45,19 @@ public class ViewOfCatalogOrSchemaProvider extends LabelProvider implements ITab
     }
 
     public String getColumnText(Object element, int columnIndex) {
-        String text = PluginConstant.EMPTY_STRING;
         if (element instanceof ViewIndicator) {
             ViewIndicator indicatorUIEle = (ViewIndicator) element;
             switch (columnIndex) {
             case 0:
-                text = indicatorUIEle.getTableName();
-                return text;
+                return indicatorUIEle.getTableName();
             case 1:
-                // FIXME instanceof always return true.
-                if (element instanceof ViewIndicator) {
-                    text = PluginConstant.EMPTY_STRING + ((ViewIndicator) indicatorUIEle).getRowCount();
-                }
-                return text;
+                return PluginConstant.EMPTY_STRING + indicatorUIEle.getRowCount();
             default:
                 break;
             }
         }
 
-        return text;
+        return PluginConstant.EMPTY_STRING;
     }
 
     public Image getColumnImage(Object element, int columnIndex) {

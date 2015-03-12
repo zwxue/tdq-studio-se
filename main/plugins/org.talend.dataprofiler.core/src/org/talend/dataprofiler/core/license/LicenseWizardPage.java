@@ -85,13 +85,13 @@ public class LicenseWizardPage extends WizardPage {
 
     private String getLicense() {
         String license = ""; //$NON-NLS-1$
+        BufferedReader in = null;
         try {
             IBrandingService brandingService = GlobalServiceRegister.getDefault().getBrandingService(IBrandingService.class);
             final URL url = brandingService.getLicenseFile();
 
             FileReader fileReader = new FileReader(new File(url.getPath()));
-            // FIXME in should be closed.
-            BufferedReader in = new BufferedReader(fileReader);
+            in = new BufferedReader(fileReader);
 
             String licenseLine = ""; //$NON-NLS-1$
             while ((licenseLine = in.readLine()) != null) {
@@ -102,6 +102,14 @@ public class LicenseWizardPage extends WizardPage {
             log.error(e, e);
         } catch (IOException e) {
             log.error(e, e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    log.error(e, e);
+                }
+            }
         }
         return license;
     }

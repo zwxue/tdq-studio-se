@@ -12,18 +12,12 @@
 // ============================================================================
 package org.talend.dq.analysis.memory;
 
-import org.talend.commons.utils.platform.PluginChecker;
-
 /**
  * Singleton class to manage memory when running analyses.
  */
 public final class AnalysisThreadMemoryChangeNotifier extends AbstractMemoryChangeNotifier {
 
     private static AnalysisThreadMemoryChangeNotifier instance;
-
-    private static final int DEFALUT_MEMORY_THRESHOLD_TOP = 4;// 4MB free by default for TOP
-
-    private static final int DEFALUT_MEMORY_THRESHOLD_TDQ = 16;// 16MB free by default for TOP
 
     /**
      * Method "getInstance".
@@ -54,21 +48,6 @@ public final class AnalysisThreadMemoryChangeNotifier extends AbstractMemoryChan
      */
     public static int convertToMB(long numByte) {
         return Math.round(numByte / 1024 / 1024);
-    }
-
-    // Get top or d defulat method.
-    /**
-     * FIXME remove this method in 6.0
-     * 
-     * @deprecated this method will be removed. Do not use it.
-     */
-    @Deprecated
-    public static int getDefaultThresholdValue() {
-        if (PluginChecker.isOnlyTopLoaded()) {
-            return DEFALUT_MEMORY_THRESHOLD_TOP;
-        }
-        return DEFALUT_MEMORY_THRESHOLD_TDQ;
-
     }
 
 }

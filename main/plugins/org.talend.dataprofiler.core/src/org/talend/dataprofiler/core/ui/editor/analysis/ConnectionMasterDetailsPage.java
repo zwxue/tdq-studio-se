@@ -17,11 +17,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -33,8 +30,6 @@ import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ConnectionRepNode;
-import org.talend.repository.model.IProxyRepositoryFactory;
-import org.talend.repository.model.IProxyRepositoryService;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -55,16 +50,6 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
     protected void fillDataProvider() {
         connectionNode = (ConnectionRepNode) getCurrentRepNodeOnUI();
         if (connectionNode != null) {
-            IProxyRepositoryFactory factory = ((IProxyRepositoryService) GlobalServiceRegister.getDefault().getService(
-                    IProxyRepositoryService.class)).getProxyRepositoryFactory();
-            // FIXME lastVersion is never used.
-            IRepositoryViewObject lastVersion = null;
-            try {
-                lastVersion = factory.getLastVersion(connectionNode.getObject().getId());
-            } catch (PersistenceException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
             ConnectionItem item = (ConnectionItem) connectionNode.getObject().getProperty().getItem();
             tdDataProvider = item.getConnection();
         } else {

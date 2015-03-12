@@ -78,11 +78,6 @@ public class SynonymIndexBuilder {
         this.separator = synonymSeparator;
     }
 
-    // FIXME not used yet. Need to be implemented
-    // public void initIndexInRAM() {
-    // indexDir = new RAMDirectory();
-    // }
-
     /**
      * Method "initIndexInFS" initializes the lucene index folder.
      * 
@@ -100,7 +95,6 @@ public class SynonymIndexBuilder {
             indexDir = FSDirectory.open(file);
         } catch (IOException e) {
             error.set(false, Messages.getString("SynonymIndexBuilder.failLoad"));//$NON-NLS-1$
-            // e.printStackTrace();
         }
     }
 

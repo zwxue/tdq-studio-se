@@ -37,9 +37,6 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
 
     protected IFormPage fPage;
 
-    // FIXME remove it.
-    private GlobalAction runAnalysisAction = null;
-
     private Hashtable<String, Action> fGlobalActions = new Hashtable<String, Action>();
 
     public AnalysisFormEditorContributor() {
@@ -57,6 +54,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
             this.id = id;
         }
 
+        @Override
         public void run() {
             fEditor.performGlobalAction(id);
         }
@@ -73,15 +71,19 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
         getActionBars().setGlobalActionHandler(id, action);
     }
 
+    @Override
     public void contributeToMenu(IMenuManager mm) {
     }
 
+    @Override
     public void contributeToStatusLine(IStatusLineManager slm) {
     }
 
+    @Override
     public void contributeToToolBar(IToolBarManager tbm) {
     }
 
+    @Override
     public void contributeToCoolBar(ICoolBarManager cbm) {
     }
 
@@ -90,7 +92,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
     }
 
     public IAction getGlobalAction(String id) {
-        return (IAction) fGlobalActions.get(id);
+        return fGlobalActions.get(id);
     }
 
     public IStatusLineManager getStatusLineManager() {
@@ -103,6 +105,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
         addGlobalAction(RunAnalysisAction.ID);
     }
 
+    @Override
     public void setActiveEditor(IEditorPart targetEditor) {
         if (!(targetEditor instanceof AnalysisEditor)) {
             return;
@@ -113,6 +116,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
 
     }
 
+    @Override
     public void setActivePage(IEditorPart newEditor) {
         if (fEditor == null) {
             return;
@@ -128,6 +132,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
         addGlobalAction(RunAnalysisAction.ID, fGlobalActions.get(RunAnalysisAction.ID));
     }
 
+    @Override
     public void init(IActionBars bars) {
         super.init(bars);
         makeActions();

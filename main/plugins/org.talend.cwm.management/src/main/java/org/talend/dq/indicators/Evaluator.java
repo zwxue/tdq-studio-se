@@ -44,7 +44,6 @@ import org.talend.utils.sugars.ReturnCode;
  * Abstract class for computing indicators.
  * @param <T> the type of the object identifying the analyzed element (usually a string).
  * 
- * FIXME remove the deprecated IMemoryChangeListener implementation.
  */
 public abstract class Evaluator<T> {
 
@@ -322,16 +321,6 @@ public abstract class Evaluator<T> {
         }
         return keepRunning;
 
-    }
-
-    /**
-     * FIXME remove this unused method.
-     * 
-     * @deprecated do not use
-     */
-    @Deprecated
-    public void onMemoryChange(long freeMemory) {
-        this.isLowMemory = true;
     }
 
     /**

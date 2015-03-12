@@ -749,8 +749,6 @@ public class ColumnViewerDND {
             IRepositoryViewObject repViewObj = firstElement.getObject();
             if (repViewObj instanceof MetadataColumnRepositoryObject) {
                 // MOD klliu 2011-03-08 bug 19286
-                // FIXME column never used.
-                DBColumnRepNode column = (DBColumnRepNode) firstElement;
                 Table table = (Table) ((DropTarget) event.widget).getControl();
                 AbstractColumnDropTree viewer = (AbstractColumnDropTree) table.getData();
                 if (viewer != null && viewer.canDrop(firstElement)) {
@@ -760,7 +758,6 @@ public class ColumnViewerDND {
             }
         }
 
-        @SuppressWarnings("unchecked")
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();
