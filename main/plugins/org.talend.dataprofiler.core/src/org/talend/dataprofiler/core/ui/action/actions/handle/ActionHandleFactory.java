@@ -58,6 +58,7 @@ public final class ActionHandleFactory {
             case PATTERNS:
             case RULES_PARSER:
             case RULES_SQL:
+            case RULES_MATCHER:
                 handle = new ModelElementDuplicateHandle();
                 break;
             case INDICATORS:

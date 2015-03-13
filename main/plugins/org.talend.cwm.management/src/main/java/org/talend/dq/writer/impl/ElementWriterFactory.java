@@ -162,7 +162,7 @@ public final class ElementWriterFactory {
         } else if (ModelElementIdentifier.isPattern(element)) {
             return createPatternWriter();
         } else if (ModelElementIdentifier.isID(element)) {
-            if (ModelElementIdentifier.isDQRule(element)) {
+            if (ModelElementIdentifier.isDQRule(element) || ModelElementIdentifier.isMatchRule(element)) {
                 return createdRuleWriter();
             }
             return createIndicatorDefinitionWriter();
