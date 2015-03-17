@@ -80,9 +80,8 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                 IRunnableWithProgress notInstalledModulesRunnable = RemoteModulesHelper.getInstance()
                         .getNotInstalledModulesRunnable(allUninstalledModules, modulesRequiredToBeInstalled);
                 // jface because it adds graphical dependencies.
-                if (!runNotInstallModule(mainSubMonitor, notInstalledModulesRunnable)) {// some data need to be fetched
-                    return;
-                }// else all data already fetched or already try and failed so keep going
+                runNotInstallModule(mainSubMonitor, notInstalledModulesRunnable);// some data need to be fetched
+                // else all data already fetched or already try and failed so keep going
                 if (mainSubMonitor.isCanceled()) {
                     return;
                 }// else keep going.
@@ -99,8 +98,8 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                 addToSet(
                         uninstalledExtraFeatures,
                         new TalendWebServiceUpdateExtraFeature(modulesForAutomaticInstall, DefaultMessagesImpl
-                                .getString(getDownloadName()), DefaultMessagesImpl
-                                .getString("DownloadSqlexplorerPluginJarFactory.description"), true) { //$NON-NLS-1$
+                                .getString(getDownloadName()), DefaultMessagesImpl.getString(
+                                "DownloadSqlexplorerPluginJarFactory.description", getContainPluginNames()), true) { //$NON-NLS-1$
 
                             @Override
                             public IStatus install(IProgressMonitor progress, List<URI> allRepoUris) throws Exception {
@@ -150,6 +149,13 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
             // if it is not TOP loaded only, need not to do anyting
         }
     }
+
+    /**
+     * Get the name of plugin which will contain in the download action
+     * 
+     * @return
+     */
+    abstract protected Object getContainPluginNames();
 
     /**
      * DOC yyin Comment method "getDownloadName".

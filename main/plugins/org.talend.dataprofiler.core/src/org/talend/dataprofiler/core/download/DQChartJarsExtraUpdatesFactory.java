@@ -51,4 +51,15 @@ public class DQChartJarsExtraUpdatesFactory extends AbstractDQMissingJarsExtraUp
         return "DownloadChartPluginJarFactory.name"; //$NON-NLS-1$
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.download.AbstractDQMissingJarsExtraUpdatesFactory#getContainPluginNames()
+     */
+    @Override
+    protected Object getContainPluginNames() {
+
+        return "TOP Chart"; //$NON-NLS-1$
+    }
+
 }

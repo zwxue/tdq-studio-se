@@ -46,4 +46,15 @@ public class DQSqlExplorerJarsExtraUpdatesFactory extends AbstractDQMissingJarsE
     protected String getDownloadName() {
         return "DownloadSqlexplorerPluginJarFactory.name"; //$NON-NLS-1$
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.download.AbstractDQMissingJarsExtraUpdatesFactory#getContainPluginNames()
+     */
+    @Override
+    protected Object getContainPluginNames() {
+        return "SQL Explorer"; //$NON-NLS-1$
+    }
+
 }
