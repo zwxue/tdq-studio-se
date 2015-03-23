@@ -49,10 +49,19 @@ trait ElasticData[+ComputeModel] extends Serializable {
   def take(num: Int): Array[Any]
 
   /**
-   * Take the very first data.
+   * Take the very first row of data.
    * @since 1.0
    * @author mzhao
-   * @return The data indexed 1 from dataset.
+   * @return The row data indexed 1 from dataset.
    */
   def first(): Any
+  
+  
+  /**
+   * Take the column of data given field index.
+   * @since 1.0
+   * @auth mzhao
+   * @return the column data given field index from dataset.
+   */
+  def select(fieldIdx:Int):ElasticData[Any]
 }

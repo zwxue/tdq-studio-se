@@ -18,5 +18,5 @@ package org.talend.datascience.common.statistics
  * @author mzhao
  */
 class TextualFieldStatistics extends FieldStatistics {
-  var minTextLength,maxTextLength, averageTextLength: Long = 0
+  var minTextLength,maxTextLength,blanks, averageTextLength: Long = 0
 }

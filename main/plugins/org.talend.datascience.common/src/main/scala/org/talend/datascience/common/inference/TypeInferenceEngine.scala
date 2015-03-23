@@ -13,6 +13,7 @@
 package org.talend.datascience.common.inference
 
 import scala.util.parsing.combinator.RegexParsers
+import org.talend.dataquality.semantic.classifier.FieldClassifier
 /**
  * Type inference engine to guess if a value belongs to a type according to predefined rules. <br> the infer engine can be extended.
  * @author mzhao
@@ -100,8 +101,15 @@ object TypeInferenceEngine extends RegexParsers {
         case failure: NoSuccess => false
       }
     }
-    isMatch
 
+    //Call semantic API to infer the data type.
+    val typeWithSemantic = FieldClassifier.classify(value)
+    val typeWithSemanticArray = typeWithSemantic.split("::");
+    //TODO see if these "Data" and "Datetime" literal can be replace by enum name later from semantic API.
+    if ("Date".equals(typeWithSemanticArray(0))||"Datetime".equals(typeWithSemanticArray(0))) {
+      isMatch = true
+    }
+    isMatch
   }
 
 }

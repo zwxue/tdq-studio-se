@@ -17,7 +17,5 @@ package org.talend.datascience.common.statistics
  * @since 1.0
  * @author mzhao
  */
-class NumericalFieldStatistics extends FieldStatistics {
-  var max, min, mean, variance, median, upperQuartile, lowerQuartile: Double = Double.NaN
-  var count, distincts,uniques, duplicates: Long = 0l
+class NumericalFieldStatistics extends MeasurableFieldStatistics {
 }

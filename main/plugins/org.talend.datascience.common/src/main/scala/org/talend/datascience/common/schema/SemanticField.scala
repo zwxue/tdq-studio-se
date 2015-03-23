@@ -27,13 +27,9 @@ trait SemanticField extends Field[Any] {
    */
   val sampleValues: Seq[String] = Seq()
   /**
-   * Numerical statistics.
+   * statistics.
    */
-  var numericalStatistics = new NumericalFieldStatistics
-  /**
-   * Textual statistics.
-   */
-  var textualStatistics = new TextualFieldStatistics
+  var statistics: FieldStatistics
   /**
    * Suggested data type with type infer details.<br>
    * (data type name, type infer details) Map[types inferred from this field, number of record which has this type]

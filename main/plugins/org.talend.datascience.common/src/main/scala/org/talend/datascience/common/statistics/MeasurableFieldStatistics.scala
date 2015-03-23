@@ -13,11 +13,11 @@
 package org.talend.datascience.common.statistics
 
 /**
- * Abstract statistics class of a given field.
+ * @author zhao
  * @since 1.0
- * @author mzhao
+ * A generic statistic class for numerical and date type of data.
  */
-abstract class FieldStatistics extends Serializable{
-   var count, distincts,uniques, duplicates: Long = 0l
-   var frequencyTable:Seq[(String, Long)]=Seq()
+class MeasurableFieldStatistics extends FieldStatistics {
+  var max, min, mean, variance, median, upperQuartile, lowerQuartile: Double = Double.NaN
+  var histogram:(Array[Double],Array[Long])=(Array(),Array());
 }
