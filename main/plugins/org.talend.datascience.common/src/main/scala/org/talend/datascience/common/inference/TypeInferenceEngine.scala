@@ -13,7 +13,8 @@
 package org.talend.datascience.common.inference
 
 import scala.util.parsing.combinator.RegexParsers
-import org.talend.dataquality.semantic.classifier.FieldClassifier
+import org.pojava.datetime.DateTime
+
 /**
  * Type inference engine to guess if a value belongs to a type according to predefined rules. <br> the infer engine can be extended.
  * @author mzhao
@@ -26,6 +27,8 @@ object TypeInferenceEngine extends RegexParsers {
   private[inference] def datetime: Parser[String] = """^(19[0-9]{2}|[2-9][0-9]{3})-((0(1|3|5|7|8)|10|12)-(0[1-9]|1[0-9]|2[0-9]|3[0-1])|(0(4|6|9)|11)-(0[1-9]|1[0-9]|2[0-9]|30)|(02)-(0[1-9]|1[0-9]|2[0-9]))\x20(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$""".r ^^ { _.toString() } //match dd/MM/YYYY see: http://regexlib.com/REDetails.aspx?regexp_id=250
 
   private[inference] def dnumber: Parser[Double] = """^[-+]?\d*\.?\d*$""".r ^^ { _.toDouble }
+  private[inference] def string: Parser[String] = """[a-z]+""".r ^^ { _.toString() }
+
   private[inference] def factor: Parser[Double] = dnumber | "(" ~> expr <~ ")"
   private[inference] def term: Parser[Double] = factor ~ rep("*" ~ factor | "/" ~ factor) ^^ {
     case number ~ list => (number /: list) {
@@ -50,6 +53,13 @@ object TypeInferenceEngine extends RegexParsers {
     case failure: NoSuccess => Double.NaN
   }
 
+  def isString(value: String): Boolean = {
+    parseAll(string, value) match {
+      case Success(result, _) => true
+      case failure: NoSuccess => false
+    }
+  }
+
   /**
    * Get double value given a string value. Compute the expression if allow calculation parameter is set to true.
    * @author mzhao
@@ -59,6 +69,9 @@ object TypeInferenceEngine extends RegexParsers {
    * @return converted double value , Doulbe.NaN if the string value cannot be converted as double.
    */
   def getDouble(value: String, allowCalculas: Boolean): Double = {
+    if (value == null || value.trim() == "") {
+      return Double.NaN
+    }
     var dvalue = Double.NaN
     if (allowCalculas) dvalue = apply(value)
     else dvalue = applyWithoutCalculas(value)
@@ -98,17 +111,18 @@ object TypeInferenceEngine extends RegexParsers {
     if (!isMatch) {
       isMatch = parseAll(datetime, value) match {
         case Success(result, _) => return true
-        case failure: NoSuccess => false
+        case failure: NoSuccess => {
+          try {
+            //Use this tricky way to see if a string value is a date or not.
+            val dateTime = new DateTime(value)
+          } catch {
+            case e: Exception => return false
+          }
+          true
+        }
       }
     }
 
-    //Call semantic API to infer the data type.
-    val typeWithSemantic = FieldClassifier.classify(value)
-    val typeWithSemanticArray = typeWithSemantic.split("::");
-    //TODO see if these "Data" and "Datetime" literal can be replace by enum name later from semantic API.
-    if ("Date".equals(typeWithSemanticArray(0))||"Datetime".equals(typeWithSemanticArray(0))) {
-      isMatch = true
-    }
     isMatch
   }
 
