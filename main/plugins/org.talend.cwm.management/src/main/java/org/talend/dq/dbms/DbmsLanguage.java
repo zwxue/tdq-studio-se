@@ -1959,49 +1959,39 @@ public class DbmsLanguage {
      * "* + when REGULAR_FUNCTION(+ * +) + *". else this method will not return correct result which you want
      * 
      * @param expression
-     * @return the name of regular Expression Function or null when the expression is invalid
+     * @return the name of regular Expression Function or empty string when the expression is invalid
+     * @exception If current language is not implement this method will thorw UnsupportedOperationException
      * 
      */
-    public String extractRegularExpressionFunction(Expression expression) {
-        String functionName = null;
-        try {
-            String tempString = splictExpression(expression);
-            functionName = tempString.split("\\(").length > 1 ? tempString.split("\\(")[0] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-            functionName = functionName.trim();
-        } catch (NullPointerException e) {
-            log.error(e, e);
-        }
-        return functionName;
-    }
-
-    /**
-     * DOC talend Comment method "splictExpression".
-     * 
-     * @param expression
-     * @return
-     */
-    private String splictExpression(Expression expression) {
-        String body = expression.getBody().toUpperCase();
-        String tempString = body.split("WHEN").length > 1 ? body.split("WHEN")[1] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-        return tempString;
+    public String extractRegularExpressionFunction(Expression expression, String regexp) {
+        throw new UnsupportedOperationException();
     }
 
     /**
      * 
-     * remember the result value for regular expression.So that we can get complete expression and Normal it should be
-     * "=1"
+     * Extract the return value of regular Expression Function If current database type need to use UDF deal regular
+     * expression, the expresssion which will definition on "Regular Expression Matching.definition" should like below:
+     * 
+     * "* + when REGULAR_FUNCTION(+ * +) + return value + then". else this method will not return correct result which
+     * you want
+     * 
+     * @param expression
+     * @return the return value of regular Expression Function or empty string when the expression is invalid
+     * 
+     */
+    public String extractRegularExpressionFunctionReturnValue(Expression expression, String regexp) {
+        return PluginConstant.EMPTY_STRING;
+    }
+
+    /**
+     * 
+     * remember the result value for regular expression.So that we can get complete expression and it should be "=1"
+     * always
      * 
      * @param expression
      */
-    public void setFunctionReturnValue(Expression expression) {
-        try {
-            String tempString = splictExpression(expression);
-            tempString = tempString.split("\\)").length > 1 ? tempString.split("\\)")[1] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            tempString = tempString.split("THEN").length > 1 ? tempString.split("THEN")[0] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            regularfunctionReturnValue = tempString.trim();
-        } catch (NullPointerException e) {
-            log.error(e, e);
-        }
+    public void setFunctionReturnValue(String returnValue) {
+        regularfunctionReturnValue = returnValue.trim();
     }
 
     /**
@@ -2045,4 +2035,5 @@ public class DbmsLanguage {
         }
         return colName;
     }
+
 }
