@@ -182,7 +182,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
      */
     @Override
-    public String extractRegularExpressionFunction(Expression expression) {
+    public String extractRegularExpressionFunction(Expression expression, String regex) {
         return getRegularExpressionFunction();
     }
 

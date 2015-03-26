@@ -104,7 +104,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
      * @see org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(orgomg.cwm.objectmodel.core.Expression)
      */
     @Override
-    public String extractRegularExpressionFunction(Expression expression) {
+    public String extractRegularExpressionFunction(Expression expression, String regex) {
         return getRegularExpressionFunction();
     }
 

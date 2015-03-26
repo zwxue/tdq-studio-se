@@ -53,14 +53,14 @@ public class PatternExplorer extends DataExplorer {
             return map;
         }
         // engin on result page
-        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
+        boolean isSqlEngine = ExecutionLanguage.SQL.equals(analysis.getParameters().getExecutionLanguage());
         // MOD gdbu 2011-12-5 TDQ-4087 get function name from sql sentence when use MSSQL
-        EList<Expression> instantiatedExpressions = this.indicator.getInstantiatedExpressions();
+        EList<Expression> instantiatedExpressions = indicator.getInstantiatedExpressions();
         if (instantiatedExpressions.size() > 0) {
             Expression expression = instantiatedExpressions.get(0);
-            String regularExpressionFunctionName = dbmsLanguage.extractRegularExpressionFunction(expression);
-            dbmsLanguage.setRegularExpressionFunction(regularExpressionFunctionName);
-            dbmsLanguage.setFunctionReturnValue(expression);
+            String regexp = dbmsLanguage.getRegexPatternString(indicator);
+            dbmsLanguage.setRegularExpressionFunction(dbmsLanguage.extractRegularExpressionFunction(expression, regexp));
+            dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(expression, regexp));
         }
         // ~TDQ-4087
 
