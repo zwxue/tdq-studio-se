@@ -188,14 +188,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // --- create select statement
         // get indicator's sql columnS (generate the real SQL statement from its definition)
 
-        IndicatorDefinition indicatorDefinition;
-        String label = indicator.getIndicatorDefinition().getLabel();
-        if (label == null || PluginConstant.EMPTY_STRING.equals(label)) {
-            indicatorDefinition = indicator.getIndicatorDefinition();
-        } else {
-            indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
-        }
-
+        IndicatorDefinition indicatorDefinition = getIndicatorDefinition(indicator);
         if (indicatorDefinition == null) {
             traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
             return Boolean.FALSE;
@@ -400,6 +393,23 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         return false;
+    }
+
+    /**
+     * DOC talend Comment method "getIndicatorDefinition".
+     * 
+     * @param indicator
+     * @return
+     */
+    private IndicatorDefinition getIndicatorDefinition(Indicator indicator) {
+        IndicatorDefinition indicatorDefinition;
+        String label = indicator.getIndicatorDefinition().getLabel();
+        if (label == null || PluginConstant.EMPTY_STRING.equals(label)) {
+            indicatorDefinition = indicator.getIndicatorDefinition();
+        } else {
+            indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
+        }
+        return indicatorDefinition;
     }
 
     /**
