@@ -67,10 +67,11 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * @author scorreia
  * 
- * This class handle DBMS specific SQL terms and functions. It provides methods to handle SQL clause and evrything related to a specific
- * DBMS.
+ * This class handle DBMS specific SQL terms and functions. It provides methods to handle SQL clause and evrything
+ * related to a specific DBMS.
  * 
- * this class provides a default implementation. Subclasses exist for each DBMS so that specific implementation can be written.
+ * this class provides a default implementation. Subclasses exist for each DBMS so that specific implementation can be
+ * written.
  */
 public class DbmsLanguage {
 
@@ -414,7 +415,8 @@ public class DbmsLanguage {
         if (charactersMap == null) {
             return null;
         }
-        return this.getPatternFinderFunction(colName, charactersMap.getCharactersToReplace(), charactersMap.getReplacementCharacters());
+        return this.getPatternFinderFunction(colName, charactersMap.getCharactersToReplace(),
+                charactersMap.getReplacementCharacters());
     }
 
     /**
@@ -422,7 +424,8 @@ public class DbmsLanguage {
      * Get CharactersMapping from charactersMappingList, if not found, use the default "SQL" CharactersMapping.
      * 
      * @param charactersMappingList all of charactersMapping
-     * @return if there is CharactersMapping return it else if there is default "SQL" CharactersMapping else return null.
+     * @return if there is CharactersMapping return it else if there is default "SQL" CharactersMapping else return
+     * null.
      */
     private CharactersMapping adaptCharactersMapping(EList<CharactersMapping> charactersMappingList) {
         CharactersMapping defaultCharactersMapping = null;
@@ -735,8 +738,8 @@ public class DbmsLanguage {
      * 
      * @param table, the name of table.
      * @param colName, the name of column.
-     * @return sub Select Statement which instead the function of soundex().And if the database support for soundex() then return old table
-     * name.
+     * @return sub Select Statement which instead the function of soundex().And if the database support for soundex()
+     * then return old table name.
      */
     public String getSoundexFunction(String table, String colName) {
 
@@ -897,8 +900,8 @@ public class DbmsLanguage {
     /**
      * Method "getRegexp".
      * 
-     * When in SQL engine, retrieve the regex with the matching Dbms Language. If null, return the regex with default SQL (even if it's
-     * null)
+     * When in SQL engine, retrieve the regex with the matching Dbms Language. If null, return the regex with default
+     * SQL (even if it's null)
      * 
      * @param pattern a pattern
      * @return the body of the regular expression applicable to this dbms or null
@@ -987,7 +990,8 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "getRegexpTestString" returns the SQL SELECT statement that can be used to check a string against a regular expression.
+     * Method "getRegexpTestString" returns the SQL SELECT statement that can be used to check a string against a
+     * regular expression.
      * 
      * @param stringToCheck a string to check (not a column name)
      * @param regularExpression
@@ -1027,9 +1031,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "regexLike". By default, it will try to extract the function name from user defined regular expression. If the database
-     * support the regex like regular expression function , the sub-class will have to override this method in order to return the correct
-     * regex like name.
+     * Method "regexLike". By default, it will try to extract the function name from user defined regular expression. If
+     * the database support the regex like regular expression function , the sub-class will have to override this method
+     * in order to return the correct regex like name.
      * 
      * @param element
      * @param regex
@@ -1056,7 +1060,8 @@ public class DbmsLanguage {
      * @return false if every one is not empty else return true
      */
     private boolean existEmptyInParameter(String element, String regex) {
-        return null == element || PluginConstant.EMPTY_STRING.equals(element) || null == regex || PluginConstant.EMPTY_STRING.equals(regex);
+        return null == element || PluginConstant.EMPTY_STRING.equals(element) || null == regex
+                || PluginConstant.EMPTY_STRING.equals(regex);
     }
 
     /**
@@ -1080,8 +1085,8 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "getHardCodedQuoteIdentifier" returns the hard coded quote identifier string. You should call {@link #getDbQuoteString()}
-     * instead.
+     * Method "getHardCodedQuoteIdentifier" returns the hard coded quote identifier string. You should call
+     * {@link #getDbQuoteString()} instead.
      * 
      * @return hard coded quote identifier string
      */
@@ -1262,7 +1267,8 @@ public class DbmsLanguage {
     }
 
     public String fillGenericQueryWithColumnsABAndTable(String genericQuery, String columnA, String columnB, String table) {
-        return new GenericSQLHandler(genericQuery).replaceColumnA(columnA).replaceColumnB(columnB).replaceTable(table).getSqlString();
+        return new GenericSQLHandler(genericQuery).replaceColumnA(columnA).replaceColumnB(columnB).replaceTable(table)
+                .getSqlString();
     }
 
     public String fillGenericQueryWithColumnTablePattern(String genericQuery, String columns, String table, String regexp) {
@@ -1282,10 +1288,12 @@ public class DbmsLanguage {
      */
     public String fillGenericQueryWithColumnTableLimitOffset(String genericQuery, String colName, String table, String limitRow,
             String offset, String limitRowPlusOffset) {
-        return new GenericSQLHandler(genericQuery).replaceLimitOffset(colName, table, limitRow, offset, limitRowPlusOffset).getSqlString();
+        return new GenericSQLHandler(genericQuery).replaceLimitOffset(colName, table, limitRow, offset, limitRowPlusOffset)
+                .getSqlString();
     }
 
-    public String fillGenericQueryWithJoin(String genericSQL, String tableNameA, String tableNameB, String joinClause, String whereClause) {
+    public String fillGenericQueryWithJoin(String genericSQL, String tableNameA, String tableNameB, String joinClause,
+            String whereClause) {
         return new GenericSQLHandler(genericSQL).replaceWithJoin(tableNameA, tableNameB, joinClause, whereClause).getSqlString();
     }
 
@@ -1323,7 +1331,8 @@ public class DbmsLanguage {
     }
 
     // MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
-    public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName, String schemaName) {
+    public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName,
+            String schemaName) {
         return createJoinConditionAsString(leftTable, joinElements, catalogName, schemaName, null);
     }
 
@@ -1426,8 +1435,9 @@ public class DbmsLanguage {
         return builder.toString();
     }
 
-    private void buildJoinClause(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
-            String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator, String joinType) {
+    private void buildJoinClause(StringBuilder builder, String tableA, String tableAliasA, String columnAName,
+            boolean hasTableAliasA, String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB,
+            String operator, String joinType) {
         boolean hasAlreadyOneJoin = builder.toString().contains(this.join());
         // begin of query is built ouside this method and should be:
         // SELECT count(*) FROM leftTableName
@@ -1456,18 +1466,18 @@ public class DbmsLanguage {
     public String innerJoin(String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA, String tableB,
             String tableAliasB, String columnBName, boolean hasTableAliasB) {
         StringBuilder builder = new StringBuilder();
-        return this.join(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName, hasTableAliasB,
-                this.equal());
+        return this.join(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName,
+                hasTableAliasB, this.equal());
     }
 
-    public String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA, String tableB,
-            String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
-        return join(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName, hasTableAliasB, operator,
-                null);
+    public String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
+            String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
+        return join(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName, hasTableAliasB,
+                operator, null);
     }
 
-    public String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA, String tableB,
-            String tableAliasB, String columnBName, boolean hasTableAliasB, String operator, String joinType) {
+    public String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
+            String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator, String joinType) {
 
         String join = joinType == null ? join() : " " + joinType + join(); //$NON-NLS-1$
         builder.append(join);
@@ -1692,8 +1702,10 @@ public class DbmsLanguage {
             String tableName) {
         String catalogNameFromContext = getCatalogNameFromContext(dbConn);
         String schemaNameFromContext = getSchemaNameFromContext(dbConn);
-        String cName = catalogNameFromContext != null && catalogNameFromContext.trim().length() > 0 ? catalogNameFromContext : catalogName;
-        String sName = schemaNameFromContext != null && schemaNameFromContext.trim().length() > 0 ? schemaNameFromContext : schemaName;
+        String cName = catalogNameFromContext != null && catalogNameFromContext.trim().length() > 0 ? catalogNameFromContext
+                : catalogName;
+        String sName = schemaNameFromContext != null && schemaNameFromContext.trim().length() > 0 ? schemaNameFromContext
+                : schemaName;
         return toQualifiedName(cName, sName, tableName);
     }
 
@@ -1767,7 +1779,8 @@ public class DbmsLanguage {
     }
 
     /**
-     * clone the database connection with original value according to the context(the database connection must be context mode).
+     * clone the database connection with original value according to the context(the database connection must be
+     * context mode).
      * 
      * @param dbConn
      * @return
@@ -1795,7 +1808,8 @@ public class DbmsLanguage {
      * get the catalog or schema name according to the analyzed column.
      * 
      * @param analyzedColumn
-     * @return if the catalog is not null, return catalog's name, else if schema is not null, return schema's name, else return null
+     * @return if the catalog is not null, return catalog's name, else if schema is not null, return schema's name, else
+     * return null
      */
     public String getCatalogOrSchemaName(TdColumn tdColumn) {
         String name = null;
@@ -1870,25 +1884,34 @@ public class DbmsLanguage {
 
     /**
      * 
-     * Extract the name of regular Expression Function If current database type need to use UDF deal regular expression, the expresssion
-     * which will definition on "Regular Expression Matching.definition" should like below:
+     * Extract the name of regular Expression Function If current database type need to use UDF deal regular expression,
+     * the expresssion which will definition on "Regular Expression Matching.definition" should like below:
      * 
      * "* + when REGULAR_FUNCTION(+ * +) + *". else this method will not return correct result which you want
      * 
      * @param expression
-     * @return the name of regular Expression Function or null when the expression is invalid
+     * @return the name of regular Expression Function or empty string when the expression is invalid
+     * @exception If current language is not implement this method will thorw UnsupportedOperationException
      * 
      */
-    public String extractRegularExpressionFunction(Expression expression) {
-        String functionName = null;
-        try {
-            String tempString = splictExpression(expression);
-            functionName = tempString.split("\\(").length > 1 ? tempString.split("\\(")[0] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-            functionName = functionName.trim();
-        } catch (NullPointerException e) {
-            log.error(e, e);
-        }
-        return functionName;
+    public String extractRegularExpressionFunction(Expression expression, String regexp) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * 
+     * Extract the return value of regular Expression Function If current database type need to use UDF deal regular
+     * expression, the expresssion which will definition on "Regular Expression Matching.definition" should like below:
+     * 
+     * "* + when REGULAR_FUNCTION(+ * +) + return value + then". else this method will not return correct result which
+     * you want
+     * 
+     * @param expression
+     * @return the return value of regular Expression Function or empty string when the expression is invalid
+     * 
+     */
+    public String extractRegularExpressionFunctionReturnValue(Expression expression, String regexp) {
+        return PluginConstant.EMPTY_STRING;
     }
 
     /**
@@ -1905,19 +1928,13 @@ public class DbmsLanguage {
 
     /**
      * 
-     * remember the result value for regular expression.So that we can get complete expression and Normal it should be "=1"
+     * remember the result value for regular expression.So that we can get complete expression and it should be "=1"
+     * always
      * 
      * @param expression
      */
-    public void setFunctionReturnValue(Expression expression) {
-        try {
-            String tempString = splictExpression(expression);
-            tempString = tempString.split("\\)").length > 1 ? tempString.split("\\)")[1] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            tempString = tempString.split("THEN").length > 1 ? tempString.split("THEN")[0] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            regularfunctionReturnValue = tempString.trim();
-        } catch (NullPointerException e) {
-            log.error(e, e);
-        }
+    public void setFunctionReturnValue(String returnValue) {
+        regularfunctionReturnValue = returnValue.trim();
     }
 
     /**

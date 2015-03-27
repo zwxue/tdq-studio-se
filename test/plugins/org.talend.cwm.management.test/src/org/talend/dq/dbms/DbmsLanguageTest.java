@@ -33,6 +33,7 @@ import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -2425,7 +2426,7 @@ public class DbmsLanguageTest {
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // Vertica Database
         createExpression.setBody("**"); //$NON-NLS-1$
-        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression, "***"); //$NON-NLS-1$
         Assert.assertEquals("REGEXP_LIKE", regularFunctionName); //$NON-NLS-1$
     }
 
@@ -2441,7 +2442,7 @@ public class DbmsLanguageTest {
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // Hive Database
         createExpression.setBody("**"); //$NON-NLS-1$
-        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression, "***"); //$NON-NLS-1$
         Assert.assertEquals("REGEXP", regularFunctionName); //$NON-NLS-1$
     }
 
@@ -2457,7 +2458,7 @@ public class DbmsLanguageTest {
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // Postgresql Database
         createExpression.setBody("**"); //$NON-NLS-1$
-        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression, "***"); //$NON-NLS-1$
         Assert.assertEquals("~", regularFunctionName); //$NON-NLS-1$
     }
 
@@ -2473,7 +2474,7 @@ public class DbmsLanguageTest {
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // oracle Database
         createExpression.setBody("**"); //$NON-NLS-1$
-        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression, "***"); //$NON-NLS-1$
         Assert.assertEquals("REGEXP_LIKE", regularFunctionName); //$NON-NLS-1$
     }
 
@@ -2481,16 +2482,18 @@ public class DbmsLanguageTest {
      * 
      * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
      * 
-     * case 5:Mysql database expression
+     * case 8:Mssql database expression
      */
     @Test
-    public void testExtractRegularExpressionFunctionForMysql() {
-        DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MYSQLDEFAULTURL);
+    public void testExtractRegularExpressionFunctionForMssql() {
+        DbmsLanguage mssqlDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQL2008URL);
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
-        // mysql Database
-        createExpression.setBody("**"); //$NON-NLS-1$
-        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
-        Assert.assertEquals("REGEXP BINARY", regularFunctionName); //$NON-NLS-1$
+        // netezza Database UDP mode
+        createExpression
+                .setBody("SELECT COUNT(CASE WHEN dbo.fn_prec_match(<%=__COLUMN_NAMES__%>,<%=__PATTERN_EXPR__%>)=1 THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        String regularFunctionName = mssqlDbmsLanguage
+                .extractRegularExpressionFunction(createExpression, "<%=__PATTERN_EXPR__%>"); //$NON-NLS-1$
+        Assert.assertEquals("dbo.fn_prec_match".toUpperCase(), regularFunctionName); //$NON-NLS-1$
     }
 
     /**
@@ -2506,8 +2509,12 @@ public class DbmsLanguageTest {
         // netezza Database UDP mode
         createExpression
                 .setBody("SELECT COUNT(CASE WHEN REGEXP_EXTRACT(<%=__COLUMN_NAMES__%>,<%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
-        Assert.assertEquals("REGEXP_EXTRACT", regularFunctionName); //$NON-NLS-1$
+        try {
+            netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression, "<%=__PATTERN_EXPR__%>"); //$NON-NLS-1$
+        } catch (UnsupportedOperationException e) {
+            return;
+        }
+        Assert.fail("Default DbmsLanguage call extractRegularExpressionFunction method should thorw UnsupportedOperationException."); //$NON-NLS-1$
     }
 
     /**
@@ -2522,8 +2529,12 @@ public class DbmsLanguageTest {
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default case
         createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
-        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
-        Assert.assertEquals("REGULARFUNCTIONNAME", regularFunctionName); //$NON-NLS-1$
+        try {
+            netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression, "***"); //$NON-NLS-1$
+        } catch (UnsupportedOperationException e) {
+            return;
+        }
+        Assert.fail("Default DbmsLanguage call extractRegularExpressionFunction method should thorw UnsupportedOperationException."); //$NON-NLS-1$
     }
 
     /**
@@ -2547,9 +2558,9 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testSetFunctionReturnValueCase1() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
-        dbmsLanguage.setFunctionReturnValue(createExpression);
+        dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
         String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
         Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
     }
@@ -2562,11 +2573,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testSetFunctionReturnValueCase2() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
-        dbmsLanguage.setFunctionReturnValue(createExpression);
+        dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
         String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
         Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
     }
@@ -2579,11 +2590,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testSetFunctionReturnValueCase3() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** WHEN RegularFunctionName(***returnValue THEN ******"); //$NON-NLS-1$
-        dbmsLanguage.setFunctionReturnValue(createExpression);
+        dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
         String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
         Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
     }
@@ -2596,11 +2607,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testSetFunctionReturnValueCase4() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue **)****"); //$NON-NLS-1$
-        dbmsLanguage.setFunctionReturnValue(createExpression);
+        dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
         String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
         Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
     }
@@ -2613,13 +2624,30 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testSetFunctionReturnValueCase5() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
-        dbmsLanguage.setFunctionReturnValue(createExpression);
+        dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
         String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
         Assert.assertEquals("RETURNVALUE", regularfunctionReturnValue); //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
+     * 
+     * case 6: dbmsLanguage is sql
+     */
+    @Test
+    public void testSetFunctionReturnValueCase6() {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("sql", "1.0"); //$NON-NLS-1$ 
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // default Database
+        createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
+        dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
+        String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
+        Assert.assertEquals(PluginConstant.EMPTY_STRING, regularfunctionReturnValue);
     }
 
     /**
