@@ -16,7 +16,7 @@ package org.talend.datascience.common.data
  * The trait is a representation of a dataset with context. <br> the context is environment variable with probably several parameters , such as spark's SparkContext with HDFS storage path , or JobConf in map/reduce model.
  * @author mzhao
  */
-trait ElasticDataSet[Context] extends Serializable {
+trait ElasticDataSet extends Serializable {
   /**
    * Emit an unit data from data set. <br> The data emitted is confined to the computation model.
    * @since 1.0
@@ -33,14 +33,44 @@ trait ElasticDataSet[Context] extends Serializable {
    */
   def setDataSourcePath(path: String)
   
+  /**
+   * Set the data into the dataset.
+   * @since 1.0
+   * @author zhao
+   * @param data that is added to the dataset.
+   */
+  def setData(dataInString:String)
+  
+  /**
+   * Set the data field with path.
+   */
+  def setJsonFieldsPath(jsonFieldPath:String)
+  
+  /**
+   * Set the data input format.
+   * @since 1.0
+   * @author zhao
+   * @param data input format (json, csv etc. )
+   */
+  def setDataInputFormat(format:String)
+  
+  /**
+   * Set the field seperator
+   * @since 1.0
+   * @author mzhao
+   * @param seperator set the field split seperator..
+   */
+  def setFieldSeperator(seprator:String)
+  
   
   /**
    * Set the data set context.
    * @since 1.0
    * @author mzhao
-   * @param ctx The context which has adequate information about the data set.
+   * @param url context URL
+   * @param name context name.
    */
-  def setContext(ctx: Context)
+  def setContext(url:String,name:String)
 }
 
 object ElasticDataSet {
@@ -51,8 +81,9 @@ object ElasticDataSet {
    * @param ElasticDataSetClassName Full qualified class name to be instantiated.
    * @return Elastic data set instance.
    */
-  def createDataSet(elasticDataSetClassName: String): ElasticDataSet[Any] = {
+  def createDataSet(elasticDataSetClassName: String): ElasticDataSet = {
     val aclass = Class.forName(elasticDataSetClassName)
-    aclass.newInstance().asInstanceOf[ElasticDataSet[Any]]
+    aclass.newInstance().asInstanceOf[ElasticDataSet]
   }
+ 
 }

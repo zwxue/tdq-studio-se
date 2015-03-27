@@ -29,7 +29,7 @@ trait TypeInferExecutor {
    * @param eds Elastic data set without schemas
    * @return Semantic schemas.
    */
-  def inferTypes(eds: ElasticDataSet[Any]): SemanticSchema[Any]
+  def inferTypes(eds: ElasticDataSet): SemanticSchema[Any]
 
   /**
    * Set transformation parameters.

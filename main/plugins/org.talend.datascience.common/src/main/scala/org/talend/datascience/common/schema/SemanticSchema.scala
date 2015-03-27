@@ -26,4 +26,6 @@ trait SemanticSchema[+Schema] extends Serializable {
    * @return the implementor specific schema.
    */
   private[datascience] def getSchema: Schema
+  
+  def getJson:String
 }

@@ -27,8 +27,8 @@ object TypeInferenceEngine extends RegexParsers {
   private[inference] def datetime: Parser[String] = """^(19[0-9]{2}|[2-9][0-9]{3})-((0(1|3|5|7|8)|10|12)-(0[1-9]|1[0-9]|2[0-9]|3[0-1])|(0(4|6|9)|11)-(0[1-9]|1[0-9]|2[0-9]|30)|(02)-(0[1-9]|1[0-9]|2[0-9]))\x20(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$""".r ^^ { _.toString() } //match dd/MM/YYYY see: http://regexlib.com/REDetails.aspx?regexp_id=250
 
   private[inference] def dnumber: Parser[Double] = """^[-+]?\d*\.?\d*$""".r ^^ { _.toDouble }
-  private[inference] def string: Parser[String] = """[a-z]+""".r ^^ { _.toString() }
 
+  private[inference] def string: Parser[String] = """[a-z]+""".r ^^ { _.toString() }
   private[inference] def factor: Parser[Double] = dnumber | "(" ~> expr <~ ")"
   private[inference] def term: Parser[Double] = factor ~ rep("*" ~ factor | "/" ~ factor) ^^ {
     case number ~ list => (number /: list) {
@@ -52,13 +52,14 @@ object TypeInferenceEngine extends RegexParsers {
     case Success(result, _) => result
     case failure: NoSuccess => Double.NaN
   }
-
-  def isString(value: String): Boolean = {
-    parseAll(string, value) match {
+  
+  def isString(value:String):Boolean={
+      parseAll(string, value) match {
       case Success(result, _) => true
       case failure: NoSuccess => false
     }
   }
+
 
   /**
    * Get double value given a string value. Compute the expression if allow calculation parameter is set to true.

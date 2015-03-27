@@ -50,4 +50,6 @@ trait Field[StructField] extends Serializable{
    * @return data type of this field.
    */
   def getDataType=dataType
+  
+  def isNumericalField:Boolean
 }
