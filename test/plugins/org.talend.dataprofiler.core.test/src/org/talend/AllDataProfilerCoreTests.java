@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.migration.impl.UpdateIndicatorForHiveTaskTes
 import org.talend.dataprofiler.core.migration.impl.UpdateMsSqlToJdbcTaskTest;
 import org.talend.dataprofiler.core.pattern.ExportFactoryTest;
 import org.talend.dataprofiler.core.pattern.ImportFactoryTest;
+import org.talend.dataprofiler.core.pattern.USStateCodesPatternRegexTest;
 import org.talend.dataprofiler.core.service.TDQResourceChangeHandlerTest;
 import org.talend.dataprofiler.core.service.TOPRepositoryServiceTest;
 import org.talend.dataprofiler.core.ui.MultiColAnalysisCreationTest;
@@ -71,7 +72,7 @@ import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
         ResourceViewLabelProviderTest.class, MultiColAnalysisCreationTest.class, CorePluginTest.class,
         AnalysisCreationTest.class, SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class,
         ModelElementIndicatorRuleTest.class, RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class,
-        FileTreeLabelProviderTest.class, TextIndicatorForNetezzaTest.class })
+        FileTreeLabelProviderTest.class, TextIndicatorForNetezzaTest.class, USStateCodesPatternRegexTest.class })
 public class AllDataProfilerCoreTests {
 
 }
