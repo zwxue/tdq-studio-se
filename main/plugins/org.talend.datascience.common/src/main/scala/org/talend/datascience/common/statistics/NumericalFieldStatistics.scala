@@ -19,3 +19,4 @@ package org.talend.datascience.common.statistics
  */
 class NumericalFieldStatistics extends MeasurableFieldStatistics {
 }
+

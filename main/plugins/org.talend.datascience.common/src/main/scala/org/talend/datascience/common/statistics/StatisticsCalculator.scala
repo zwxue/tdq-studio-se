@@ -14,6 +14,7 @@ package org.talend.datascience.common.statistics
 
 import org.talend.datascience.common.data.ElasticData
 import org.talend.datascience.common.schema.SemanticField
+import org.talend.datascience.common.schema.SemanticSchema
 
 /**
  * @author zhao
@@ -51,6 +52,13 @@ trait StatisticsCalculator {
    * @param buckets: buckets specified for this data split.
    */
   def computeHistogram(field: SemanticField, fieldData: ElasticData[Any], buckets: Array[Double])
+  
+  /**
+   *compute all the statistics given the aggregated by field and schema.
+   */
+  def computeAggregatedStatistics(ed: ElasticData[Any],schema: SemanticSchema[Any],aggregatedBy: Int):Array[_ <: (String, Iterable[SemanticField])]
+  
+  
 }
 object StatisticsCalculator {
   def createStasCalculator(calculatorClassName: String): StatisticsCalculator = {
