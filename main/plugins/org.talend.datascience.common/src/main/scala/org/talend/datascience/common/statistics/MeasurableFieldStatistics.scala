@@ -18,6 +18,6 @@ package org.talend.datascience.common.statistics
  * A generic statistic class for numerical and date type of data.
  */
 class MeasurableFieldStatistics extends FieldStatistics {
-  var max, min, mean, variance, median, upperQuartile, lowerQuartile: Double = Double.NaN
+  var max, min, mean,sum, variance, median, upperQuartile, lowerQuartile: Double = Double.NaN
   var histogram:(Array[Double],Array[Long])=(Array(),Array());
 }
