@@ -52,13 +52,26 @@ trait StatisticsCalculator {
    * @param buckets: buckets specified for this data split.
    */
   def computeHistogram(field: SemanticField, fieldData: ElasticData[Any], buckets: Array[Double])
-  
+
   /**
-   *compute all the statistics given the aggregated by field and schema.
+   * compute all the statistics given the aggregated by field and schema.
+   * @author zhao
+   * @param ed elastic data set
+   * @param schema data schema
+   * @param topKfreqTable top k parameters for frequency tables
+   * @param binsOrBuckets customized bins set for histogram.
+   * @param aggregatedBy field index used as aggregated key.
    */
-  def computeAggregatedStatistics(ed: ElasticData[Any],schema: SemanticSchema[Any],aggregatedBy: Int):Array[_ <: (String, Iterable[SemanticField])]
-  
-  
+  def computeAggregatedStatistics(ed: ElasticData[Any], schema: SemanticSchema[Any], topKfreqTable: Int, binsOrBuckets: String, aggregatedBy: Int): Array[_ <: (String, Iterable[SemanticField])]
+  /**
+   * Compute all statistics given the dataset , this method will do statistics with one pass only
+   * @param ed elastic data set
+   * @param schema data schema
+   * @param topKfreqTable top k parameters for frequency tables
+   * @param binsOrBuckets customized bins set for histogram.
+   */
+  def computeStatistics(ed: ElasticData[Any], schema: SemanticSchema[Any], topKfreqTable: Int, binsOrBuckets: String): Iterable[SemanticField]
+
 }
 object StatisticsCalculator {
   def createStasCalculator(calculatorClassName: String): StatisticsCalculator = {

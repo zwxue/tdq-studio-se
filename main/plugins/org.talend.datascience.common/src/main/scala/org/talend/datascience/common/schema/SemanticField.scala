@@ -25,7 +25,7 @@ trait SemanticField extends Field[Any] {
   /**
    * A sample with typical uniform distributed values.
    */
-  val sampleValues: Seq[String] = Seq()
+  var sampleValues: Seq[String] = Seq()
   /**
    * statistics.
    */

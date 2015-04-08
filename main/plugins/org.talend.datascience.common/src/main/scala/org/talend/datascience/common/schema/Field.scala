@@ -21,8 +21,7 @@ trait Field[StructField] extends Serializable{
   private[schema] var dataType: DataType[Any]
   val nullable: Boolean = true
   val size: Int
-  val description: String
-  val pattern: String
+  var description: String
   /**
    * The index of this field in a record.
    */
