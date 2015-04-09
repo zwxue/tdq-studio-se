@@ -60,9 +60,9 @@ trait StatisticsCalculator {
    * @param schema data schema
    * @param topKfreqTable top k parameters for frequency tables
    * @param binsOrBuckets customized bins set for histogram.
-   * @param aggregatedBy field index used as aggregated key.
+   * @param fieldIdxToGroupBy field indices used as group keys, use "_" as separator when aggregate on multiple columns.
    */
-  def computeAggregatedStatistics(ed: ElasticData[Any], schema: SemanticSchema[Any], topKfreqTable: Int, binsOrBuckets: String, aggregatedBy: Int): Array[_ <: (String, Iterable[SemanticField])]
+  def computeAggregatedStatistics(ed: ElasticData[Any], schema: SemanticSchema[Any], topKfreqTable: Int, binsOrBuckets: String, fieldIdxToGroupBy: String): Array[_ <: (String, Iterable[SemanticField])]
   /**
    * Compute all statistics given the dataset , this method will do statistics with one pass only
    * @param ed elastic data set
