@@ -25,7 +25,7 @@ trait Field[StructField] extends Serializable{
   /**
    * The index of this field in a record.
    */
-  var index: Int
+  var index: Int = 0
   /**
    * Get the strut field that the implementor provided. This function is intended to be called from API internally.
    * @since 1.0
