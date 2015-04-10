@@ -304,7 +304,6 @@ public class ExportWizardPage extends WizardPage {
                     // dependency.
                     boolean checked = item.getChecked();
                     if (checked) {
-                        // for (File file : record.getDependencyMap().keySet()) {
                         for (File file : record.getDependencySet()) {
                             ItemRecord findRecord = ItemRecord.findRecord(file);
                             if (findRecord != null) {
@@ -354,7 +353,6 @@ public class ExportWizardPage extends WizardPage {
 
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
-            // Map<File, ModelElement> dependencyMap = record.getDependencyMap();
             for (File depFile : record.getDependencySet()) {
                 if (!repositoryTree.getChecked(ItemRecord.findRecord(depFile))) {
                     ModelElement element = ItemRecord.getElement(depFile);
@@ -505,7 +503,6 @@ public class ExportWizardPage extends WizardPage {
 
                 ItemRecord[] records = getElements();
                 for (ItemRecord record : records) {
-                    // Map<File, ModelElement> dependencyMap = record.getDependencyMap();
                     for (File depFile : record.getDependencySet()) {
                         ItemRecord depRecord = ItemRecord.findRecord(depFile);
                         if (!repositoryTree.getChecked(depRecord)) {

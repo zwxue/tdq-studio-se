@@ -249,7 +249,6 @@ public class ItemRecord {
                 for (AnalysisMap anaMap : report.getAnalysisMap()) {
                     if (StringUtils.equals(path, anaMap.getJrxmlSource())) {
                         // TODO the File is jrxml, but the ModelElement is report ???
-                        // addIntoFileElementMap(file, report);
                         this.dependencySet.add(file);
                     }
                 }
@@ -495,7 +494,6 @@ public class ItemRecord {
                 for (File udiJarFile : libJarFileList) {
                     for (String str : splitTagValues) {
                         if (udiJarFile.getName().equals(str)) {
-                            // addIntoFileElementMap(udiJarFile, null);
                             this.dependencySet.add(udiJarFile);
                         }
                     }
