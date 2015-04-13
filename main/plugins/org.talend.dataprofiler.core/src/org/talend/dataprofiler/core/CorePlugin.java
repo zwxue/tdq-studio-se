@@ -41,6 +41,7 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
@@ -75,6 +76,7 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
+import org.talend.dataprofiler.service.ISemanticStudioService;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.model.bridge.ReponsitoryContextBridge;
@@ -103,6 +105,8 @@ public class CorePlugin extends AbstractUIPlugin {
     private boolean repositoryInitialized = false;
 
     private BundleContext bundleContext;
+
+    private ISemanticStudioService service;
 
     /**
      * Getter for context.
@@ -587,6 +591,29 @@ public class CorePlugin extends AbstractUIPlugin {
         if (!Pattern.matches(pattern, fileName)) {
             throw new IllegalArgumentException(DefaultMessagesImpl.getString(
                     "ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", new Object[] { fileName, pattern })); //$NON-NLS-1$
+        }
+    }
+
+    public ISemanticStudioService getSemanticStudioService() {
+        if (service == null) {
+            System.out.println("Accessing Semantic Studio service via API ");
+            ServiceReference<?> serviceReference = bundleContext.getServiceReference(ISemanticStudioService.class.getName());
+            if (serviceReference != null) {
+                service = (ISemanticStudioService) bundleContext.getService(serviceReference);
+            }
+        }
+        return service;
+    }
+
+    public synchronized void setSemanticStudioService(ISemanticStudioService service) {
+        System.out.println("Service was set. Thank you DS!");
+        this.service = service;
+    }
+
+    public synchronized void unsetSemanticStudioService(ISemanticStudioService service) {
+        System.out.println("Service was unset. Why did you do this to me?");
+        if (this.service == service) {
+            this.service = null;
         }
     }
 }

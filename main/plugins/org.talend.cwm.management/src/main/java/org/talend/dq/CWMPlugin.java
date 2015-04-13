@@ -122,4 +122,5 @@ public class CWMPlugin extends Plugin {
         String installLocation = LibrariesManagerUtils.getLibrariesPath(ECodeLanguage.JAVA);
         return installLocation;
     }
+
 }

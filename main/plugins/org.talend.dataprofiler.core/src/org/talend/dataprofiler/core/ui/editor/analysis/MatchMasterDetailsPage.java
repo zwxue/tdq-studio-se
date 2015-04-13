@@ -51,10 +51,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
@@ -69,8 +67,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.action.actions.ImportMatchRuleLabelProvider;
-import org.talend.dataprofiler.core.ui.dialog.MatchRuleElementTreeSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.MetadataAndColumnSelectionDialog;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
@@ -103,7 +99,6 @@ import org.talend.dq.nodes.ColumnRepNode;
 import org.talend.dq.nodes.ColumnSetRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.ontology.repository.enrichment.AnalysisTableGenerator;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -630,38 +625,36 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             return;
         }
 
-        // //////
-        AnalysisTableGenerator analysisTableGenerator = new AnalysisTableGenerator();
-
-        // //////////////
-        ModelElement column = analysisHandler.getSelectedColumns()[0];
-        MetadataColumn mdColumn = (MetadataColumn) column;
-        MetadataTable mdTable = mdColumn.getTable();
-
-        List<BlockKeyDefinition> listBlockKey = null;
-        List<MatchKeyDefinition> listMatchRules = null;
-        try {
-            listBlockKey = analysisTableGenerator.handleBlockKeyForTable(mdTable);
-            listMatchRules = analysisTableGenerator.handleMatchRuleTable(mdTable);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        ;
-        MatchRuleDefinition mrDef = new SuggestionGenerator().generate(listBlockKey, listMatchRules);
-
-        final List<String> columnNames = new ArrayList<String>();
-
-        for (MetadataColumn col : mdTable.getColumns()) {
-            columnNames.add(col.getLabel());
-        }
-
-        MatchRuleElementTreeSelectionDialog rulesSelectionDialog = new MatchRuleElementTreeSelectionDialog(null,
-                new ImportMatchRuleLabelProvider(), new WorkbenchContentProvider(),
-                MatchRuleElementTreeSelectionDialog.SUGGEST_TYPE);
-        rulesSelectionDialog.setInputColumnNames(columnNames);
-        rulesSelectionDialog.setMatchRuleDefinitionInput(mrDef);
-        rulesSelectionDialog.open();
+        // FIXME implementation required
+        // AnalysisTableGenerator analysisTableGenerator = new AnalysisTableGenerator();
+        //
+        // ModelElement column = analysisHandler.getSelectedColumns()[0];
+        // MetadataColumn mdColumn = (MetadataColumn) column;
+        // MetadataTable mdTable = mdColumn.getTable();
+        //
+        // List<BlockKeyDefinition> listBlockKey = null;
+        // List<MatchKeyDefinition> listMatchRules = null;
+        // try {
+        // listBlockKey = analysisTableGenerator.handleBlockKeyForTable(mdTable);
+        // listMatchRules = analysisTableGenerator.handleMatchRuleTable(mdTable);
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
+        //
+        // MatchRuleDefinition mrDef = new SuggestionGenerator().generate(listBlockKey, listMatchRules);
+        //
+        // final List<String> columnNames = new ArrayList<String>();
+        //
+        // for (MetadataColumn col : mdTable.getColumns()) {
+        // columnNames.add(col.getLabel());
+        // }
+        //
+        // MatchRuleElementTreeSelectionDialog rulesSelectionDialog = new MatchRuleElementTreeSelectionDialog(null,
+        // new ImportMatchRuleLabelProvider(), new WorkbenchContentProvider(),
+        // MatchRuleElementTreeSelectionDialog.SUGGEST_TYPE);
+        // rulesSelectionDialog.setInputColumnNames(columnNames);
+        // rulesSelectionDialog.setMatchRuleDefinitionInput(mrDef);
+        // rulesSelectionDialog.open();
     }
 
     class SuggestionGenerator {

@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 
 import org.apache.commons.lang.StringUtils;
@@ -59,6 +58,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.DynamicAnalysisMasterPage
 import org.talend.dataprofiler.core.ui.editor.analysis.TableAnalysisResultPage;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.service.ISemanticStudioService;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -70,15 +70,10 @@ import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.ontology.repository.MetaSemHandler;
-import org.talend.ontology.repository.OntRepositoryManager;
-import org.talend.ontology.repository.enrichment.EntityIndicator;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.TaggedValue;
-
-import com.hp.hpl.jena.ontology.OntModel;
 
 /**
  * Run Analysis Action.
@@ -316,21 +311,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     private void addAnalysisToRef(Analysis analysis) {
-        EntityIndicator entity2Indicator = new EntityIndicator();
-        OntRepositoryManager ontRepositoryManager = new OntRepositoryManager();
-        MetaSemHandler metaSemHndlr = new MetaSemHandler();
-        try {
-            OntModel modelAnalysis = entity2Indicator.addIndicatorsToEntity(analysis);
-            OntModel newModel = entity2Indicator.getRepository();
-            newModel.add(modelAnalysis);
-            // OntModel newModel= (OntModel) ontRepositoryManager.getRepository().add(modelAnalysis);
-            ontRepositoryManager.saveModelRef(newModel);
-            // System.out.println("list existing analysis aafter adding new one "+newModel.listIndividuals(metaSemHndlr.getClassAnalysis()).toList());
 
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
+
+        service.addAnalysisToRef(analysis);
     }
 
     /**
