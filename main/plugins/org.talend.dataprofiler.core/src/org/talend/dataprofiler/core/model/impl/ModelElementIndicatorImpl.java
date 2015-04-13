@@ -235,6 +235,10 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         clear();
         for (Indicator oneIndicator : indicators) {
             IndicatorEnum findIndicatorEnum = IndicatorEnum.findIndicatorEnum(oneIndicator.eClass());
+            if(findIndicatorEnum==null){
+            	log.error("enum not found for indicator: "+ oneIndicator.getName() + " of type "+ oneIndicator.getClass());
+            	continue;
+            }
             if (IndicatorEnum.isPlainIndicatorEnum(findIndicatorEnum)) {
                 this.flatIndicatorEnumList.add(findIndicatorEnum);
                 fillCategoryIndicators(findIndicatorEnum, oneIndicator);
