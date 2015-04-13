@@ -596,7 +596,6 @@ public class CorePlugin extends AbstractUIPlugin {
 
     public ISemanticStudioService getSemanticStudioService() {
         if (service == null) {
-            System.out.println("Accessing Semantic Studio service via API ");
             ServiceReference<?> serviceReference = bundleContext.getServiceReference(ISemanticStudioService.class.getName());
             if (serviceReference != null) {
                 service = (ISemanticStudioService) bundleContext.getService(serviceReference);

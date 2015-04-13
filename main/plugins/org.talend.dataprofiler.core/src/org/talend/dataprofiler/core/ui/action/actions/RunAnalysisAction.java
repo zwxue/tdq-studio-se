@@ -313,8 +313,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private void addAnalysisToRef(Analysis analysis) {
 
         ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
-
-        service.addAnalysisToRef(analysis);
+        if (service != null) {
+            // service.addAnalysisToRef(analysis);
+        }
     }
 
     /**

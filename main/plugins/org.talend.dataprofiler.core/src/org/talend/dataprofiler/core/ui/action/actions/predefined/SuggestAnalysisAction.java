@@ -50,11 +50,11 @@ public class SuggestAnalysisAction extends Action {
      */
     @Override
     public void run() {
-        // TODO scorreia implement me
-
         ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
 
-        service.recommandAnalysis(this.metadataTable);
+        if (service != null) {
+            service.recommandAnalysis(this.metadataTable);
+        }
 
     }
 
