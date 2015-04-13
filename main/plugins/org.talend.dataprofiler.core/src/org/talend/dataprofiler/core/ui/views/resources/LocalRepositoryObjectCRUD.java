@@ -53,7 +53,7 @@ import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ProxyRepositoryManager;
-import org.talend.dq.helper.ReportUtils;
+import org.talend.dq.helper.ReportFileHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -488,7 +488,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         relocateJrxmlTemplates(sourceNode, targetNode);
 
         // get the report generated doc folder
-        IFolder outputFolder = ReportUtils.getOutputFolder((ReportRepNode) sourceNode);
+        IFolder outputFolder = ReportFileHelper.getOutputFolder((ReportRepNode) sourceNode);
 
         moveAnaConNode(sourceNode, targetNode);
 
@@ -496,7 +496,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         File srcFolder = WorkspaceUtils.ifolderToFile(outputFolder);
         IFolder targetFolder = RepositoryNodeHelper.getIFolder(targetNode);
         File tarFolder = WorkspaceUtils.ifolderToFile(targetFolder);
-        ReportUtils.moveReportGeneratedDocFolder(srcFolder, tarFolder);
+        ReportFileHelper.moveReportGeneratedDocFolder(srcFolder, tarFolder);
     }
 
     /**

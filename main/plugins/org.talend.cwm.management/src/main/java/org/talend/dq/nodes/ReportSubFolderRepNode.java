@@ -24,7 +24,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ReportUtils;
+import org.talend.dq.helper.ReportFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -87,7 +87,7 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
                 if (ReportSubFolderType.ANALYSIS.equals(getReportSubFolderType())) {
                     buildChildrenAnalysis(ReportHelper.getAnalyses(this.getReport()));
                 } else if (ReportSubFolderType.GENERATED_DOCS.equals(getReportSubFolderType())) {
-                    IResource[] repFiles = ReportUtils.getReportGeneratedDocs(ResourceFileMap.findCorrespondingFile(this
+                    IResource[] repFiles = ReportFileHelper.getReportGeneratedDocs(ResourceFileMap.findCorrespondingFile(this
                             .getReport()));
                     // MOD msjian TDQ-5128 2012-5-4: fixed when the user delete a file from file system display error
                     buildChildrenReportFile(repFiles);

@@ -65,7 +65,7 @@ import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDActi
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ReportUtils;
+import org.talend.dq.helper.ReportFileHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
@@ -610,7 +610,7 @@ public class DQDeleteAction extends DeleteAction {
         boolean isReport = item != null && item instanceof TDQReportItem;
         List<IFile> repDocLinkFiles = new ArrayList<IFile>();
         if (isReport) {
-            repDocLinkFiles = ReportUtils.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(repoNode));
+            repDocLinkFiles = ReportFileHelper.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(repoNode));
         }
 
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
@@ -631,7 +631,7 @@ public class DQDeleteAction extends DeleteAction {
             DQDeleteHelper.deleteRelations(item);
             // delete the link files which links to the Report Generated Doc File
             if (isReport && !repDocLinkFiles.isEmpty()) {
-                ReportUtils.removeRepDocLinkFiles(repDocLinkFiles);
+                ReportFileHelper.removeRepDocLinkFiles(repDocLinkFiles);
             }
         }
 

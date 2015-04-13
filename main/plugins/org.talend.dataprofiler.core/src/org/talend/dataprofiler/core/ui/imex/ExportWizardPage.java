@@ -55,7 +55,7 @@ import org.talend.dataprofiler.core.ui.utils.ImportAndExportUtils;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ReportUtils;
+import org.talend.dq.helper.ReportFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
@@ -673,7 +673,7 @@ public class ExportWizardPage extends WizardPage {
         if (subRepFolder == null || !subRepFolder.exists()) {
             return;
         }
-        Map<String, List<String>> mainSubRepMap = ReportUtils.getMainSubRepMap();
+        Map<String, List<String>> mainSubRepMap = ReportFileHelper.getMainSubRepMap();
         String fName;
         for (File f : subRepFolder.listFiles()) {
             fName = f.getName();

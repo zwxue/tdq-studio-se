@@ -61,7 +61,7 @@ public final class DQDeleteHelper {
         }
         if (item instanceof TDQReportItem) {
             try {
-                rc = ReportUtils.deleteRepOutputFolder(itemFile);
+                rc = ReportFileHelper.deleteRepOutputFolder(itemFile);
             } catch (Exception e) {
                 log.error(e);
                 rc.setMessage(e.getMessage());

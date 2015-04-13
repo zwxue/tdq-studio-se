@@ -47,7 +47,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * 
  */
 // @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportUtils.class, EObjectHelper.class, ProjectManager.class,
+@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportFileHelper.class, EObjectHelper.class, ProjectManager.class,
         WorkspaceUtils.class, ProxyRepositoryFactory.class })
 public class DQDeleteHelperTest {
 
@@ -69,7 +69,7 @@ public class DQDeleteHelperTest {
         when(item.getProperty()).thenReturn(prop);
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getItemFile(prop)).thenReturn(file);
-        stub(method(ReportUtils.class, "getOutputFolder", IFile.class)).toReturn(folder); //$NON-NLS-1$
+        stub(method(ReportFileHelper.class, "getOutputFolder", IFile.class)).toReturn(folder); //$NON-NLS-1$
         PowerMockito.mockStatic(ProjectManager.class);
         ProjectManager mockProjectManager = PowerMockito.mock(ProjectManager.class);
         when(ProjectManager.getInstance()).thenReturn(mockProjectManager);

@@ -31,7 +31,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.runtime.CoreRuntimePlugin;
-import org.talend.dq.helper.ReportUtils;
+import org.talend.dq.helper.ReportFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.repository.ProjectManager;
@@ -45,7 +45,7 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-@PrepareForTest({ ReportUtils.class, ResourceFileMap.class, IExtensionRegistry.class, IConfigurationElement.class,
+@PrepareForTest({ ReportFileHelper.class, ResourceFileMap.class, IExtensionRegistry.class, IConfigurationElement.class,
         ProjectManager.class, CoreRuntimePlugin.class })
 public class ReportSubFolderRepNodeTest {
 
@@ -203,9 +203,9 @@ public class ReportSubFolderRepNodeTest {
             when(fe.getFullPath()).thenReturn(new Path("")); //$NON-NLS-1$
             res[i] = fe;
         }
-        PowerMockito.mockStatic(ReportUtils.class);
+        PowerMockito.mockStatic(ReportFileHelper.class);
         IFile repFile = mock(IFile.class);
-        when(ReportUtils.getReportGeneratedDocs(repFile)).thenReturn(res);
+        when(ReportFileHelper.getReportGeneratedDocs(repFile)).thenReturn(res);
         PowerMockito.mockStatic(ResourceFileMap.class);
         when(ResourceFileMap.findCorrespondingFile(report)).thenReturn(repFile);
 

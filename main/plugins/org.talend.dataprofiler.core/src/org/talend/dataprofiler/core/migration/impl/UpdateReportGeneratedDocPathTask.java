@@ -20,8 +20,8 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dq.helper.ReportUtils;
-import org.talend.dq.helper.ReportUtils.ReportListParameters;
+import org.talend.dq.helper.ReportFileHelper;
+import org.talend.dq.helper.ReportFileHelper.ReportListParameters;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -46,12 +46,12 @@ public class UpdateReportGeneratedDocPathTask extends AbstractWorksapceUpdateTas
             if (me instanceof Report) {
                 IFile reportFile = ModelElementHelper.getIFile(me);
                 if (reportFile != null) {
-                    File reportListFile = ReportUtils.reportListFile(reportFile);
+                    File reportListFile = ReportFileHelper.reportListFile(reportFile);
                     if (reportListFile.exists() && reportListFile.isFile()) {
                         // get the report output folder
                         File parentFile = reportListFile.getParentFile();
                         // get the ReportListParameters from the .report.list file
-                        List<ReportListParameters> reportListParameters = ReportUtils.getReportListParameters(reportListFile);
+                        List<ReportListParameters> reportListParameters = ReportFileHelper.getReportListParameters(reportListFile);
                         // update old path
                         if (!reportListParameters.isEmpty()) {
                             String parentPath = parentFile.getAbsolutePath();
@@ -70,7 +70,7 @@ public class UpdateReportGeneratedDocPathTask extends AbstractWorksapceUpdateTas
                             String fileName = file.getName();
                             if (file.isFile() && !fileName.startsWith(".")) { //$NON-NLS-1$
                                 String name = fileName.substring(0, fileName.lastIndexOf(".")); //$NON-NLS-1$
-                                localParameters.add(ReportUtils.buildRepListParams(name, ".." + fileName, //$NON-NLS-1$
+                                localParameters.add(ReportFileHelper.buildRepListParams(name, ".." + fileName, //$NON-NLS-1$
                                         String.valueOf(System.currentTimeMillis())));
                             }
                         }
@@ -91,7 +91,7 @@ public class UpdateReportGeneratedDocPathTask extends AbstractWorksapceUpdateTas
                         }
                         allReportListParameters.addAll(localParameters);
                         // save new path
-                        ReportUtils.saveReportListFile(reportListFile, allReportListParameters);
+                        ReportFileHelper.saveReportListFile(reportListFile, allReportListParameters);
                     }
                 }
             }

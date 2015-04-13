@@ -29,7 +29,7 @@ import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.dq.helper.ReportUtils.ReportListParameters;
+import org.talend.dq.helper.ReportFileHelper.ReportListParameters;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
@@ -62,7 +62,7 @@ public class ReportUtilsRealTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ReportUtils#getTheLatestReport(org.eclipse.core.resources.IFile)}.
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#getTheLatestReport(org.eclipse.core.resources.IFile)}.
      * 
      * @throws Exception
      */
@@ -79,14 +79,14 @@ public class ReportUtilsRealTest {
             assertTrue(iFile.exists());
             assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
 
-            ReportUtils.recordReportFiles(iFile, "s-20141011-1801-00013", "..s-20141011-1801-00013.pdf", //$NON-NLS-1$ //$NON-NLS-2$
+            ReportFileHelper.recordReportFiles(iFile, "s-20141011-1801-00013", "..s-20141011-1801-00013.pdf", //$NON-NLS-1$ //$NON-NLS-2$
                     1);
-            ReportUtils.recordReportFiles(iFile, "s-20141011-1802-00026", "..s-20141011-1802-00026.pdf", //$NON-NLS-1$ //$NON-NLS-2$
+            ReportFileHelper.recordReportFiles(iFile, "s-20141011-1802-00026", "..s-20141011-1802-00026.pdf", //$NON-NLS-1$ //$NON-NLS-2$
                     2);
-            ReportUtils.recordReportFiles(iFile, "s-20141011-1809-00004", "..s-20141011-1809-00004.pdf", //$NON-NLS-1$ //$NON-NLS-2$
+            ReportFileHelper.recordReportFiles(iFile, "s-20141011-1809-00004", "..s-20141011-1809-00004.pdf", //$NON-NLS-1$ //$NON-NLS-2$
                     3);
 
-            ReportListParameters lastest = ReportUtils.getTheLatestReport(iFile);
+            ReportListParameters lastest = ReportFileHelper.getTheLatestReport(iFile);
             assertNotNull(lastest);
             Assert.assertEquals("s-20141011-1809-00004", lastest.getName()); //$NON-NLS-1$
         } else {
@@ -95,7 +95,7 @@ public class ReportUtilsRealTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ReportUtils#getReportListFile(org.eclipse.core.resources.IFile)}.
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#getReportListFile(org.eclipse.core.resources.IFile)}.
      */
     @Test
     public void testGetReportListFile() {
@@ -110,7 +110,7 @@ public class ReportUtilsRealTest {
             assertTrue(iFile.exists());
             assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
 
-            File reportListFile = ReportUtils.getReportListFile(iFile);
+            File reportListFile = ReportFileHelper.getReportListFile(iFile);
             assertTrue(reportListFile.exists());
         } else {
             fail("project is null!"); //$NON-NLS-1$
@@ -118,22 +118,22 @@ public class ReportUtilsRealTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ReportUtils#getSimpleName(java.lang.String)}.
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#getSimpleName(java.lang.String)}.
      */
     @Test
     public void testGetSimpleName() {
         String reportName = "B" + StringUtilities.getRandomString(7) + "_0.1"; //$NON-NLS-1$ //$NON-NLS-2$
         String reportFileName = reportName + ".rep"; //$NON-NLS-1$
-        String simpleName = ReportUtils.getSimpleName(reportFileName);
+        String simpleName = ReportFileHelper.getSimpleName(reportFileName);
         assertTrue(reportName.equals(simpleName));
 
         reportName = "B" + StringUtilities.getRandomString(7); //$NON-NLS-1$
-        simpleName = ReportUtils.getSimpleName(reportName);
+        simpleName = ReportFileHelper.getSimpleName(reportName);
         assertNull(simpleName);
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ReportUtils#getSimpleName(org.talend.core.model.properties.Property)}
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#getSimpleName(org.talend.core.model.properties.Property)}
      * .
      */
     @Test
@@ -143,12 +143,12 @@ public class ReportUtilsRealTest {
         String version = "0.1"; //$NON-NLS-1$
         prop.setLabel(label);
         prop.setVersion(version);
-        String simpleName = ReportUtils.getSimpleName(prop);
+        String simpleName = ReportFileHelper.getSimpleName(prop);
         assertTrue(simpleName.equals(label + "_" + version)); //$NON-NLS-1$
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ReportUtils#initRepListFile(org.eclipse.core.resources.IFile)} .
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#initRepListFile(org.eclipse.core.resources.IFile)} .
      */
     @Test
     public void testInitRepListFile() {
@@ -162,16 +162,16 @@ public class ReportUtilsRealTest {
             IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + "_0.1.rep"); //$NON-NLS-1$
             assertTrue(iFile.exists());
             assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
-            IFolder iFolder = UnitTestBuildHelper.createRealFolder(folder2, ReportUtils.getOutputFolder(iFile).getFullPath()
+            IFolder iFolder = UnitTestBuildHelper.createRealFolder(folder2, ReportFileHelper.getOutputFolder(iFile).getFullPath()
                     .lastSegment());
             assertTrue(iFolder.exists());
             assertTrue(WorkspaceUtils.ifolderToFile(iFolder).exists());
 
             try {
-                File repListFile = ReportUtils.getReportListFile(iFile);
+                File repListFile = ReportFileHelper.getReportListFile(iFile);
                 assertTrue(repListFile.exists());
 
-                ReportUtils.initRepListFile(iFile);
+                ReportFileHelper.initRepListFile(iFile);
                 assertTrue(repListFile.length() > 0);
             } catch (Exception e) {
                 fail(e.getMessage());
@@ -182,7 +182,7 @@ public class ReportUtilsRealTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ReportUtils#deleteRepOutputFolder(org.eclipse.core.resources.IFile)}
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#deleteRepOutputFolder(org.eclipse.core.resources.IFile)}
      * .
      */
     @Test
@@ -197,17 +197,17 @@ public class ReportUtilsRealTest {
             IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + "_0.1.rep"); //$NON-NLS-1$
             assertTrue(iFile.exists());
             assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
-            IFolder iFolder = UnitTestBuildHelper.createRealFolder(folder2, ReportUtils.getOutputFolder(iFile).getFullPath()
+            IFolder iFolder = UnitTestBuildHelper.createRealFolder(folder2, ReportFileHelper.getOutputFolder(iFile).getFullPath()
                     .lastSegment());
             assertTrue(iFolder.exists());
             assertTrue(WorkspaceUtils.ifolderToFile(iFolder).exists());
 
             try {
-                ReportUtils.getReportListFile(iFile);
+                ReportFileHelper.getReportListFile(iFile);
 
-                File outputFolder = WorkspaceUtils.ifolderToFile(ReportUtils.getOutputFolder(iFile));
+                File outputFolder = WorkspaceUtils.ifolderToFile(ReportFileHelper.getOutputFolder(iFile));
                 assertTrue(outputFolder.exists() && outputFolder.isDirectory());
-                ReturnCode rc = ReportUtils.deleteRepOutputFolder(iFile);
+                ReturnCode rc = ReportFileHelper.deleteRepOutputFolder(iFile);
                 assertTrue(rc.isOk());
                 assertFalse(outputFolder.exists());
             } catch (Exception e) {

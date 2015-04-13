@@ -62,7 +62,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ReportUtils;
+import org.talend.dq.helper.ReportFileHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -333,7 +333,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             TDQReportItem tdqReportItem = (TDQReportItem) tdqItem;
             Report report = tdqReportItem.getReport();
             IFile iFile = ModelElementHelper.getIFile(report);
-            IFolder outputFolder = ReportUtils.getOutputFolder(iFile);
+            IFolder outputFolder = ReportFileHelper.getOutputFolder(iFile);
             File srcFolder = WorkspaceUtils.ifolderToFile(outputFolder);
             FilesUtils.copyDirectoryWithoutSvnFolder(srcFolder, tarFolder);
             File newFolder = new File(tarFolder.getAbsolutePath() + File.separator + srcFolder.getName());

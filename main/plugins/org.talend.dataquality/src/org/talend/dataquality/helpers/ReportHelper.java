@@ -1020,4 +1020,5 @@ public final class ReportHelper {
         }
         return contextGroupNameInUse;
     }
+
 }

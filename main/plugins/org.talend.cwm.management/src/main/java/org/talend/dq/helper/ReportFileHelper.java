@@ -55,15 +55,15 @@ import com.talend.csv.CSVWriter;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public final class ReportUtils {
+public final class ReportFileHelper {
 
-    private static Logger log = Logger.getLogger(ReportUtils.class);
+    private static Logger log = Logger.getLogger(ReportFileHelper.class);
 
     public static final String REPORT_LIST = ".report.list";//$NON-NLS-1$
 
     private static Map<String, List<String>> mainSubRepMap;
 
-    private ReportUtils() {
+    private ReportFileHelper() {
     }
 
     /**
@@ -325,7 +325,7 @@ public final class ReportUtils {
                 try {
                     parentFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
                     // new report folder name
-                    String newFolderName = ReportUtils.getSimpleName(repItem.getProperty());
+                    String newFolderName = ReportFileHelper.getSimpleName(repItem.getProperty());
                     // if the report's name changed, need to rename the report generated doc folder also
                     if (!oldFolderName.equals(newFolderName)) {
                         File oldFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
@@ -385,7 +385,7 @@ public final class ReportUtils {
         List<IFile> linkFiles = new ArrayList<IFile>();
         if (file != null) {
             try {
-                IResource[] reportListFiles = ReportUtils.getReportGeneratedDocs(file);
+                IResource[] reportListFiles = ReportFileHelper.getReportGeneratedDocs(file);
                 for (IResource res : reportListFiles) {
                     IFile linkFile = ResourceManager.getRoot().getFile(res.getFullPath());
                     if (linkFile.exists() && linkFile.isLinked()) {
@@ -414,7 +414,7 @@ public final class ReportUtils {
                 if (property != null) {
                     Item item = property.getItem();
                     if (item != null && item instanceof TDQReportItem) {
-                        linkFiles.addAll(ReportUtils.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(iNode)));
+                        linkFiles.addAll(ReportFileHelper.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(iNode)));
                     }
                 }
             }
@@ -452,7 +452,7 @@ public final class ReportUtils {
 
             @Override
             protected void run() throws LoginException, PersistenceException {
-                IFolder reportOutputFolder = ReportUtils.getOutputFolder(reportFile);
+                IFolder reportOutputFolder = ReportFileHelper.getOutputFolder(reportFile);
                 if (reportOutputFolder != null && reportOutputFolder.exists()) {
                     try {
                         IContainer parent = reportOutputFolder.getParent();
@@ -613,7 +613,7 @@ public final class ReportUtils {
      * @return
      */
     public static ReportListParameters buildRepListParams(String name, String path, String createTime) {
-        ReportListParameters repListParameters = new ReportUtils().new ReportListParameters();
+        ReportListParameters repListParameters = new ReportFileHelper().new ReportListParameters();
         repListParameters.setName(name);
         repListParameters.setPath(path);
         repListParameters.setCreateTime(createTime);
@@ -687,10 +687,10 @@ public final class ReportUtils {
      * @return ReportListParameters
      */
     public static ReportListParameters getTheLatestReport(IFile reportFile) {
-        ReportListParameters lastest = new ReportUtils().new ReportListParameters();
+        ReportListParameters lastest = new ReportFileHelper().new ReportListParameters();
 
-        File reportListFile = ReportUtils.reportListFile(reportFile);
-        List<ReportListParameters> reportListParameters = ReportUtils.getReportListParameters(reportListFile);
+        File reportListFile = ReportFileHelper.reportListFile(reportFile);
+        List<ReportListParameters> reportListParameters = ReportFileHelper.getReportListParameters(reportListFile);
 
         for (ReportListParameters repParam : reportListParameters) {
             if (repParam.getCreateTime().compareTo(lastest.getCreateTime()) > 0) {
