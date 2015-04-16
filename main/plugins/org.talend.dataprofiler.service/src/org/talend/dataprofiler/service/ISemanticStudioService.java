@@ -5,7 +5,7 @@ import org.talend.dataquality.analysis.Analysis;
 
 public interface ISemanticStudioService {
 
-    void recommandAnalysis(MetadataTable metadataTable);
+    boolean suggestAnalysis(MetadataTable metadataTable);
 
     void addAnalysisToRef(Analysis analysis);
 

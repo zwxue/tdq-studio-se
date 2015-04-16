@@ -14,10 +14,15 @@ package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.service.ISemanticStudioService;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.EResourceConstant;
 
 /**
  * created by scorreia on Oct 1, 2013 Detailled comment
@@ -53,7 +58,14 @@ public class SuggestAnalysisAction extends Action {
         ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
 
         if (service != null) {
-            service.recommandAnalysis(this.metadataTable);
+            boolean success = service.suggestAnalysis(this.metadataTable);
+            if (success) {
+                IRepositoryNode node = RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.ANALYSIS);
+                CorePlugin.getDefault().refreshDQView(node);
+            } else {
+                MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error",
+                        "Failed to recommend analysis. See the log for more details.");
+            }
         }
 
     }
