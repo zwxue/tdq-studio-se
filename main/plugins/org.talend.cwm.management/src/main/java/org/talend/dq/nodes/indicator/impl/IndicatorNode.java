@@ -78,6 +78,6 @@ public class IndicatorNode extends AbstractNode {
      * @see org.talend.dq.nodes.indicator.IIndicatorNode#getImage()
      */
     public String getImageName() {
-        return "IndicatorDefinition.gif"; //$NON-NLS-1$
+        return "IndicatorDefinition.png"; //$NON-NLS-1$
     }
 }

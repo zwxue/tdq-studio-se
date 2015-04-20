@@ -123,7 +123,7 @@ public class IndicatorCategoryNode extends AbstractNode implements ICategoryNode
      * @see org.talend.dq.nodes.indicator.IIndicatorNode#getImageName()
      */
     public String getImageName() {
-        return "folder.gif"; //$NON-NLS-1$
+        return "folder.png"; //$NON-NLS-1$
     }
 
 }

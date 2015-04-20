@@ -341,7 +341,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         } else if (indicatorType == IndicatorEnum.UserDefinedIndicatorEnum) {
             if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory()
                     .equals(UDIHelper.getUDICategory(indicatorUnit.getIndicator().getIndicatorDefinition()))) {
-                // MOD yyi 2010-04-21 12724,unify the UDI icon as "IndicatorDefinition.gif"
+                // MOD yyi 2010-04-21 12724,unify the UDI icon as "IndicatorDefinition.png"
                 // return ImageLib.getImage(ImageLib.PATTERN_REG);
                 return ImageLib.getImage(ImageLib.IND_DEFINITION);
             } else {

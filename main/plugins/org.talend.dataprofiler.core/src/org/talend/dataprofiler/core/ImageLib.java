@@ -79,7 +79,7 @@ public final class ImageLib {
     /**
      * {@link IndicatorCategoryNode#getImageName()}
      */
-    public static final String FOLDERNODE_IMAGE = "folder.gif"; //$NON-NLS-1$
+    public static final String FOLDERNODE_IMAGE = "folder.png"; //$NON-NLS-1$
 
     public static final String FOLDER_WIZ_IMAGE = "folder_wiz.gif"; //$NON-NLS-1$
 
@@ -204,7 +204,7 @@ public final class ImageLib {
     /**
      * Icon of indicator's definition. {@link IndicatorNode#getImageName()}
      * */
-    public static final String IND_DEFINITION = "IndicatorDefinition.gif"; //$NON-NLS-1$
+    public static final String IND_DEFINITION = "IndicatorDefinition.png"; //$NON-NLS-1$
 
     public static final String ADD_IND_DEFINITION = "IndicatorAdd.gif"; //$NON-NLS-1$
 
@@ -246,7 +246,7 @@ public final class ImageLib {
 
     public static final String FILE_DELIMITED = "filedelimited.gif"; //$NON-NLS-1$
 
-    public static final String SOURCE_FILE = "editor.gif"; //$NON-NLS-1$
+    public static final String SOURCE_FILE = "editor.png"; //$NON-NLS-1$
 
     public static final String JAR_FILE = "jar_obj.gif"; //$NON-NLS-1$
 
@@ -260,7 +260,7 @@ public final class ImageLib {
 
     public static final String FILTER_DOWN = "search_next.gif"; //$NON-NLS-1$
 
-    public static final String FILTER_RUN = "searchres.gif"; //$NON-NLS-1$
+    public static final String FILTER_RUN = "searchres.png"; //$NON-NLS-1$
 
     public static final String FILTER_CLOSE = "search_rem.gif"; //$NON-NLS-1$
 
