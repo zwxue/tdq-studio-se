@@ -207,4 +207,15 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         }
         return toQualifiedName(catalogNameFromContext, schemaNameFromContext, tableName);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return null;
+    }
 }
