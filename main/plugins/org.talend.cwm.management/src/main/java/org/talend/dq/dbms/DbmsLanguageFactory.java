@@ -143,7 +143,7 @@ public final class DbmsLanguageFactory {
             // MOD zshen fixed bug 11005: SQL syntax error for all analysis on Informix databases in Talend Open
             // Profiler
             dbmsLanguage = new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
-        } else if (isHive(dbmsSubtype) || DbmsLanguage.IMPALA.equalsIgnoreCase(dbmsSubtype)) {
+        } else if (isHive(dbmsSubtype) || isImpala(dbmsSubtype)) {
             dbmsLanguage = new HiveDbmsLanguage(DbmsLanguage.HIVE, dbVersion);
         } else if (isVertica(dbmsSubtype)) {
             dbmsLanguage = new VerticaDbmsLanguage(dbmsSubtype, dbVersion);
@@ -156,6 +156,15 @@ public final class DbmsLanguageFactory {
             dbmsLanguage.setDbQuoteString(dbmsLanguage.getHardCodedQuoteIdentifier());
         }
         return dbmsLanguage;
+    }
+
+    /**
+     * DOC talend Comment method "isImpala".
+     * @param dbmsSubtype
+     * @return
+     */
+    private static boolean isImpala(String dbmsSubtype) {
+        return DbmsLanguage.IMPALA.equalsIgnoreCase(dbmsSubtype);
     }
 
     public static DbmsLanguage createDbmsLanguage(String dataType) {
