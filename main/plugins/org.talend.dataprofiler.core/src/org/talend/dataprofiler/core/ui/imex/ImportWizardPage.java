@@ -377,14 +377,13 @@ public class ImportWizardPage extends WizardPage {
             dErrors.addAll(record.getErrors());
             for (File depFile : record.getDependencySet()) {
                 ModelElement element = ItemRecord.getElement(depFile);
-
-                ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 // MOD qiongli 2012-12-13 TDQ-5356 use itself file name for jrxml
                 boolean isJrxmlDepFile = depFile.getName().endsWith(FactoriesUtil.JRXML);
                 // MOD msjian TDQ-5909: modify to displayName
                 String dptLabel = element != null && !isJrxmlDepFile && PropertyHelper.getProperty(element) != null ? PropertyHelper
                         .getProperty(element).getDisplayName() : depFile.getName();
                 // TDQ-5909~
+                ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
                     // if the element is IndicatorDefinition and it exist in the current project and don't include any
                     // sql and java templates and the AggregatedDefinitions is not empty or TableOverview/ViewOverview

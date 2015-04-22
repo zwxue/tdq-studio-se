@@ -258,7 +258,7 @@ public class ItemRecord {
             for (File df : dependencyFile) {
                 ModelElement modelElement = getElement(df);
                 if (modelElement != null) {
-                    File depFile = EObjectHelper.modelElement2File(mElement);
+                    File depFile = EObjectHelper.modelElement2File(modelElement);
                     if (depFile != null) {
                         this.dependencySet.add(depFile);
                     }

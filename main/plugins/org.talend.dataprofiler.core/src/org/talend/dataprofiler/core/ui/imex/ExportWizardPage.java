@@ -94,8 +94,6 @@ public class ExportWizardPage extends WizardPage {
 
     private IPath specifiedPath;
 
-    private List<String> errors;
-
     protected IExportWriter writer;
 
     public static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
@@ -127,9 +125,9 @@ public class ExportWizardPage extends WizardPage {
 
         createRepositoryTree(top);
 
-        addListeners();
-
         initControlState();
+
+        addListeners();
 
         setControl(top);
     }
@@ -318,13 +316,12 @@ public class ExportWizardPage extends WizardPage {
                             List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(element);
                             ImportAndExportUtils.iterateUncheckClientDependency(dependencyClients, repositoryTree);
                         }
-
                     }
-
-                    repositoryTree.refresh();
-
-                    checkForErrors();
                 }
+
+                repositoryTree.refresh();
+
+                checkForErrors();
             }
         });
 
@@ -347,23 +344,26 @@ public class ExportWizardPage extends WizardPage {
      * export.
      */
     protected void checkForErrors() {
-        errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<String>();
 
         errors.addAll(writer.check());
 
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
+            errors.addAll(record.getErrors());
             for (File depFile : record.getDependencySet()) {
-                if (!repositoryTree.getChecked(ItemRecord.findRecord(depFile))) {
-                    ModelElement element = ItemRecord.getElement(depFile);
-                    // MOD qiongli 2012-12-13 TDQ-5356 use itself file name for jrxml
-                    boolean isJrxmlDepFile = depFile.getName().endsWith(FactoriesUtil.JRXML);
-                    // MOD msjian TDQ-5909: modify to displayName
-                    String fileName = element != null && !isJrxmlDepFile ? PropertyHelper.getProperty(element).getDisplayName()
-                            : depFile.getName();
-                    // TDQ-5909~
-                    // if the dependency Indicator is Technial Indicator, don't add it into errors even if it is not
-                    // exist in the export wizard
+                ModelElement element = ItemRecord.getElement(depFile);
+                // MOD qiongli 2012-12-13 TDQ-5356 use itself file name for jrxml
+                boolean isJrxmlDepFile = depFile.getName().endsWith(FactoriesUtil.JRXML);
+                // MOD msjian TDQ-5909: modify to displayName
+                String fileName = element != null && !isJrxmlDepFile ? PropertyHelper.getProperty(element).getDisplayName()
+                        : depFile.getName();
+                // TDQ-5909~
+                ItemRecord findRecord = ItemRecord.findRecord(depFile);
+                if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
+                    // if the element is IndicatorDefinition and it exist in the current project and don't include any
+                    // sql and java templates and the AggregatedDefinitions is not empty or TableOverview/ViewOverview
+                    // Indicator, don't add it into errors even if it is not exist
                     if (element instanceof IndicatorDefinition) {
                         String uuid = ResourceHelper.getUUID(element);
                         if (IndicatorDefinitionFileHelper.isTechnialIndicator(uuid)) {
