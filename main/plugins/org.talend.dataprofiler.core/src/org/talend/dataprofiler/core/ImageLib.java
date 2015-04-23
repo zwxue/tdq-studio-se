@@ -199,7 +199,7 @@ public final class ImageLib {
     public static final String REFRESH_SPACE = "refresh.gif"; //$NON-NLS-1$
 
     /** Icon for Talend Exchange folder. */
-    public static final String EXCHANGE = "ecosystem_view.gif"; //$NON-NLS-1$
+    public static final String EXCHANGE = "ecosystem_view.png"; //$NON-NLS-1$
 
     /**
      * Icon of indicator's definition. {@link IndicatorNode#getImageName()}
