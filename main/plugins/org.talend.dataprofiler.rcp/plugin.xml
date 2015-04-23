@@ -783,9 +783,9 @@
             context="Postgresql wizard"
             language="java"
             message="Wizard use for TOP"
-            name="postgresql-9.2-1003.jdbc3.jar"
+            name="postgresql-9.4-1201.jdbc41.jar"
             required="true"
-            uripath="platform:/plugin/org.talend.libraries.jdbc.postgresql/lib/postgresql-9.2-1003.jdbc3.jar">
+            uripath="platform:/plugin/org.talend.libraries.jdbc.postgresql/lib/postgresql-9.4-1201.jdbc41.jar">
       </libraryNeeded>
       <libraryNeeded
             context="Hive wizard"
@@ -902,13 +902,6 @@
             name="zookeeper-3.4.5.2.1.1.0-385.jar"
             required="true"
             uripath="platform:/plugin/org.talend.libraries.zookeeper/lib/zookeeper-3.4.5.2.1.1.0-385.jar">
-      </libraryNeeded>      
-      <libraryNeeded
-            context="Postgresql 9.2 Wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="postgresql-9.2-1003.jdbc3.jar"
-            uripath="platform:/plugin/org.talend.libraries.jdbc.postgresql/lib/postgresql-9.2-1003.jdbc3.jar">
       </libraryNeeded>      
    </extension>
 </plugin>
