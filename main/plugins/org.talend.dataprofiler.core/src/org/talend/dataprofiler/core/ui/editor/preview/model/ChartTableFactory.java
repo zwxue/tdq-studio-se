@@ -589,7 +589,7 @@ public final class ChartTableFactory {
         if (indicator == null || indicator.getAnalyzedElement() == null) {
             return false;
         }
-        // only support 3 kinds of db: mysql, oracle, postgressql
+        // only support 5 kinds of db: mysql, oracle with sid, oracle with service name, oracle oci, postgressql
         String[] supportDB = { EDatabaseTypeName.MYSQL.getDisplayName(), EDatabaseTypeName.PSQL.getDisplayName(),
                 EDatabaseTypeName.ORACLEFORSID.getDisplayName(), EDatabaseTypeName.ORACLESN.getDisplayName(),
                 EDatabaseTypeName.ORACLE_OCI.getDisplayName() };
