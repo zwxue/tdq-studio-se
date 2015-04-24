@@ -33,19 +33,11 @@ trait ElasticDataSet extends Serializable {
    */
   def setDataSourcePath(path: String)
   
-  /**
-   * Set the data into the dataset.
-   * @since 1.0
-   * @author zhao
-   * @param data that is added to the dataset.
-   */
-  def setData(dataInString:String)
   
   /**
    * Set the data field with path.
    */
-  def setJsonFieldsPath(jsonFieldPath:String)
-  
+  def setJsonRecordPath(jsonFieldPath:String)
   /**
    * Set the data input format.
    * @since 1.0

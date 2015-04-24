@@ -40,4 +40,14 @@ trait SemanticSchema[+Schema] extends Serializable {
    * @return json string adapted to the grouped data. 
    */
   def getJsonGroupBy:String
+  
+  /**
+   * Get schema json information
+   * @since 1.0
+   * @return json representation of the schema.
+   */  
+    def getJsonSchema: String ;
+
+  
+  def getJsonSchemaGroupBy: String ;
 }

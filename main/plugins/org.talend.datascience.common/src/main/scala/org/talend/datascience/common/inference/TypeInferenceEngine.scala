@@ -28,7 +28,7 @@ object TypeInferenceEngine extends RegexParsers {
 
   private[inference] def dnumber: Parser[Double] = """^[-+]?\d*\.?\d*$""".r ^^ { _.toDouble }
 
-  private[inference] def string: Parser[String] = """[a-z]+""".r ^^ { _.toString() }
+  private[inference] def string: Parser[String] = """[a-z|A-Z]+""".r ^^ { _.toString() }
   private[inference] def factor: Parser[Double] = dnumber | "(" ~> expr <~ ")"
   private[inference] def term: Parser[Double] = factor ~ rep("*" ~ factor | "/" ~ factor) ^^ {
     case number ~ list => (number /: list) {

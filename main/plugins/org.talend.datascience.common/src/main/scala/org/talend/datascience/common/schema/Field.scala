@@ -17,6 +17,7 @@ package org.talend.datascience.common.schema
  * @author mzhao
  */
 trait Field[StructField] extends Serializable{
+	var id: String
   val name: String
   private[schema] var dataType: DataType[Any]
   val nullable: Boolean = true
