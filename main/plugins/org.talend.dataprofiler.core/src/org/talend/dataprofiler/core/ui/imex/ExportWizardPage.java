@@ -320,11 +320,11 @@ public class ExportWizardPage extends WizardPage {
                         }
 
                     }
-
-                    repositoryTree.refresh();
-
-                    checkForErrors();
                 }
+
+                repositoryTree.refresh();
+
+                checkForErrors();
             }
         });
 
