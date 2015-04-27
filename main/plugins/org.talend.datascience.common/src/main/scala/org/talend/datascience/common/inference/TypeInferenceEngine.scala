@@ -19,7 +19,7 @@ import org.pojava.datetime.DateTime
  * Type inference engine to guess if a value belongs to a type according to predefined rules. <br> the infer engine can be extended.
  * @author mzhao
  */
-object TypeInferenceEngine extends RegexParsers {
+class TypeInferenceEngine extends RegexParsers with Serializable{
   private[inference] def intnumber: Parser[Int] = """^(\+|-)?\d+$""".r ^^ { _.toInt }
   //matches YYYY-MM-dd see: http://regexlib.com/REDetails.aspx?regexp_id=890
   private[inference] def date: Parser[String] = """(?<Year>(19|20)[0-9][0-9])-(?<Month>0[1-9]|1[0-2])-(?<Day>0[1-9]|[12][0-9]|3[01])""".r ^^ { _.toString() }
