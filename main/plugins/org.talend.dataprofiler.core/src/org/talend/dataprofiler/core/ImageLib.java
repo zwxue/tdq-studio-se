@@ -83,7 +83,7 @@ public final class ImageLib {
 
     public static final String FOLDER_WIZ_IMAGE = "folder_wiz.gif"; //$NON-NLS-1$
 
-    public static final String FOLDER_NEW_IMAGE = "folder_new.gif"; //$NON-NLS-1$
+    public static final String FOLDER_NEW_IMAGE = "folder_new.png"; //$NON-NLS-1$
 
     public static final String PROJECT_ACTIVE = "prject_active.gif"; //$NON-NLS-1$
 
@@ -123,7 +123,7 @@ public final class ImageLib {
 
     public static final String EDITCONNECTION = "sample.gif"; //$NON-NLS-1$
 
-    public static final String CREATE_SQL_ACTION = "new_sqlEditor.gif"; //$NON-NLS-1$
+    public static final String CREATE_SQL_ACTION = "new_sqlEditor.png"; //$NON-NLS-1$
 
     public static final String LICENSE_WIZ = "license_wiz.png"; //$NON-NLS-1$
 
@@ -183,6 +183,8 @@ public final class ImageLib {
 
     public static final String EDIT_COPY = "copy.gif"; //$NON-NLS-1$
 
+    public static final String DUPLICATE = "duplicate.png"; //$NON-NLS-1$
+
     /** index icon from SQL Explorer. */
     public static final String INDEX_VIEW = "index.gif"; //$NON-NLS-1$
 
@@ -206,7 +208,7 @@ public final class ImageLib {
      * */
     public static final String IND_DEFINITION = "IndicatorDefinition.png"; //$NON-NLS-1$
 
-    public static final String ADD_IND_DEFINITION = "IndicatorAdd.gif"; //$NON-NLS-1$
+    public static final String ADD_IND_DEFINITION = "IndicatorAdd.png"; //$NON-NLS-1$
 
     /** Icon of indicator's category. */
     public static final String IND_CATEGORY = "IndicatorCategory.gif"; //$NON-NLS-1$
@@ -228,7 +230,7 @@ public final class ImageLib {
 
     public static final String XML_ELEMENT_DOC = "xmlele.gif"; //$NON-NLS-1$
 
-    public static final String ICON_PROCESS = "process_icon.gif"; //$NON-NLS-1$
+    public static final String ICON_PROCESS = "process_icon.png"; //$NON-NLS-1$
 
     public static final String ICON_PROCESS_WIZARD = "process_wiz.png"; //$NON-NLS-1$
 

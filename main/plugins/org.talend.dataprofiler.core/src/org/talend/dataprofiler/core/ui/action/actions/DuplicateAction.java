@@ -71,7 +71,7 @@ public class DuplicateAction extends Action {
      */
     public DuplicateAction() {
         super(DefaultMessagesImpl.getString("DuplicateCWMResourceAction.Duplicate")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EDIT_COPY));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DUPLICATE));
     }
 
     public DuplicateAction(IRepositoryNode[] nodeArray) {

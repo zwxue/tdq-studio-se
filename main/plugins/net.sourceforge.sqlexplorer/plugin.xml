@@ -89,7 +89,7 @@
             contributorClass="net.sourceforge.sqlexplorer.plugin.editors.SqlExplorerEditorActionBarContributor"
             default="true"
             extensions="sql"
-            icon="icons/editor.png"
+            icon="icons/editor_white.png"
             id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"
             name="%editor.name.SqlEditor">
       </editor>

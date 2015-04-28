@@ -41,7 +41,7 @@ public class CreateUDIAction extends Action implements ICheatSheetAction {
 
     public CreateUDIAction() {
         setText(DefaultMessagesImpl.getString("UserDefinedIndicatorsActionProvider.newIndicator")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_IND_DEFINITION));
     }
 
     public CreateUDIAction(IFolder folder) {
@@ -64,8 +64,9 @@ public class CreateUDIAction extends Action implements ICheatSheetAction {
         IHelpResource[] relatedTopics = context.getRelatedTopics();
         String href = relatedTopics[0].getHref();
         WizardDialog dialog = new OpeningHelpWizardDialog(null, fileWizard, href);
-        if (WizardDialog.OK == dialog.open())
+        if (WizardDialog.OK == dialog.open()) {
             ProxyRepositoryManager.getInstance().save();
+        }
     }
 
     public void run(String[] params, ICheatSheetManager manager) {

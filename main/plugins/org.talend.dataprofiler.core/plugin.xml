@@ -932,7 +932,7 @@
             class="org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"
             contributorClass="org.talend.dataprofiler.core.ui.editor.AnalysisFormEditorContributor"
             extensions="ana"
-            icon="icons/chart_bar.png"
+            icon="icons/chart_bar_white.png"
             id="org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"
             name="%editor.name.AnalysisEditor">
       </editor>
@@ -946,21 +946,21 @@
       <editor
             class="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
             extensions="pattern"
-            icon="icons/pattern.png"
+            icon="icons/pattern_white.png"
             id="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
             name="%editor.name.PatternEditor">
       </editor>
       <editor
             class="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
             extensions="rules"
-            icon="icons/dqrule_red.png"
+            icon="icons/dqrule_red_white.png"
             id="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
             name="%editor.name.DQRuleEditor">
       </editor>
       <editor
             class="org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"
             extensions="definition"
-            icon="icons/IndicatorDefinition.png"
+            icon="icons/IndicatorDefinition_white.png"
             id="org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"
             name="%editor.name.IndicatorEditor">
       </editor>
@@ -976,7 +976,7 @@
             contributorClass="org.talend.dataprofiler.core.ui.editor.AnalysisFormEditorContributor"
             default="false"
             extensions="ana"
-            icon="icons/chart_bar.png"
+            icon="icons/chart_bar_white.png"
             id="org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor"
             name="%editor.name.MatchAnalysisEditor">
       </editor>
