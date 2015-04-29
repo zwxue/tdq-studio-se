@@ -35,4 +35,6 @@ public interface ISemanticStudioService {
      */
     Map<Integer, List<SemanticCategory>> getSemanticCategory();
 
+    int openSemanticDiscoveryWizard(MetadataTable metadataTable);
+
 }
