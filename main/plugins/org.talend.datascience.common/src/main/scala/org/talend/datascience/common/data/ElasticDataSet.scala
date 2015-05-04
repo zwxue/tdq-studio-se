@@ -17,6 +17,8 @@ package org.talend.datascience.common.data
  * @author mzhao
  */
 trait ElasticDataSet extends Serializable {
+  def stop()
+
   /**
    * Emit an unit data from data set. <br> The data emitted is confined to the computation model.
    * @since 1.0
