@@ -284,7 +284,6 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
         if (selectedWizard == null) {
             return null;
         }
-
         if (selectedWizard.getStartingPage() == null) {
             selectedWizard.addPages();
         }

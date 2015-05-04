@@ -22,11 +22,12 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ColumnContentProvider;
+import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.repository.model.IRepositoryNode;
-import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC klliu class global comment. Detailled comment,2011-02-16 feature 15387
@@ -68,7 +69,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
 
             public void doubleClick(DoubleClickEvent event) {
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                if (object instanceof Catalog) {
+                if (object instanceof DBCatalogRepNode) {
                     advanceToNextPageOrFinish();
                 }
             }
@@ -81,10 +82,9 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
                     Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                     nodes = new ArrayList<IRepositoryNode>();
                     if (object instanceof IRepositoryNode) {
-                        @SuppressWarnings("unchecked")
                         List<IRepositoryNode> list = ((IStructuredSelection) event.getSelection()).toList();
                         nodes.addAll(list);
-                        setPageComplete(true);
+                        updateCompleteState();
                     } else {
                         setPageComplete(false);
                     }
@@ -92,6 +92,23 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
                     log.error(e, e);
                 }
             }
+
         });
+    }
+
+    /**
+     * 
+     * DOC talend Comment method "updateCompleteState".
+     */
+    private void updateCompleteState() {
+        // Nodes come from same table or empty both are valid
+        if (nodes.size() == 0 || RepNodeUtils.isValidSelectionFromSameTable(nodes)) {
+            setPageComplete(true);
+            this.setMessage(chooseConnStr);
+        } else {
+            setPageComplete(false);
+            this.setMessage("Columns can not be selected from different tables/views", ERROR);
+        }
+
     }
 }

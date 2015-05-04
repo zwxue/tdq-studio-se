@@ -35,7 +35,7 @@ public final class WorkspaceUtils {
 
     public static String SQL_EXTENSION = "sql"; //$NON-NLS-1$
 
-    public static final String NULL_FIELD = "Null field"; //$NON-NLS-1$
+    public static final String NULL_FIELD = "<null>"; //$NON-NLS-1$
 
     public static final String DEFAULT_VERSION = "0.1"; //$NON-NLS-1$
 

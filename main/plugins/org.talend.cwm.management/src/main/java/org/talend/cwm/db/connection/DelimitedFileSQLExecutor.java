@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.MetadataToolHelper;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -34,6 +35,7 @@ import org.talend.dataquality.matchmerge.Record;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
+import org.talend.metadata.managment.ui.preview.ShadowProcessPreview;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -117,8 +119,22 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
             // need to find the analysed element position , and only get these analysed column's values.
             List<String> columnLabels = new ArrayList<String>();
             for (int i = 0; i < headValue && csvReader.readNext(); i++) {
-                Collections.addAll(columnLabels, csvReader.getValues());
+
+                String[] values = csvReader.getValues();
+                for (int index = 0; index < values.length; index++) {
+                    String tempLabel = values[index];
+                    if (tempLabel != null && !("").equals(tempLabel)) { //$NON-NLS-1$
+                        tempLabel = tempLabel.trim().replaceAll(" ", "_"); //$NON-NLS-1$ //$NON-NLS-2$
+                        tempLabel = MetadataToolHelper.validateColumnName(tempLabel, index);
+                    } else {
+                        tempLabel = "Column" + index; //$NON-NLS-1$
+                    }
+                    values[index] = tempLabel;
+                }
+                ShadowProcessPreview.fixDuplicateNames(values);
+                Collections.addAll(columnLabels, values);
             }
+
             for (int j = 0; j < analysisElementList.size(); j++) {
                 analysedColumnIndex[j] = columnLabels.indexOf(analysisElementList.get(j).getName());
             }// ~

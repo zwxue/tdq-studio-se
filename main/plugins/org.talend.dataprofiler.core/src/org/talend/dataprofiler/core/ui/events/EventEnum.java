@@ -24,7 +24,8 @@ public enum EventEnum {
     // Update the software system when : new connection created; existing connection altered, exsiting connection
     // reloaded, connections checkedout from svn repository.
     DQ_SOFTWARESYSTEM_UPDATE,
-    DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION,
+    // Match analysis and Column analysis will need this action after create connection on the editor
+    DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
     DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
     // REFRESH db connection label in match analysis.
     DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL,

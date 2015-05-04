@@ -116,7 +116,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
 
     private Composite parentComp;
 
-    private ColumnMasterDetailsPage masterPage;
+    final private ColumnMasterDetailsPage masterPage;
 
     // ADD xqliu 2009-08-24 bug 8776
     private ExecutionLanguage language;
@@ -245,6 +245,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
             public void widgetSelected(SelectionEvent e) {
                 moveSelectedElements(tree, -1);
                 notifyObservers();
+                masterPage.redrawComposite();
             }
         });
 
@@ -432,6 +433,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         masterPage.recomputeIndicators();
         modelElementIndicators = masterPage.getCurrentModelElementIndicators();
         masterPage.refreshTheTree(modelElementIndicators);
+        masterPage.refreshPreviewTable(modelElementIndicators);
         // setElements(modelElementIndicators);
     }
 

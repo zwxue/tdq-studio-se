@@ -812,7 +812,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 return true;
             }
         };
-        EventManager.getInstance().register(dataSampleComposite, EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION,
+        EventManager.getInstance().register(dataSampleComposite, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
                 afterCreateConnectionReceiver);
 
         // register: refresh the data sample table to display the running result(with GID, SCORE, ...)
@@ -1504,7 +1504,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public void dispose() {
         // unregister the event after create the connection
         EventManager.getInstance().unRegister(this.dataSampleparentComposite,
-                EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, afterCreateConnectionReceiver);
+                EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION, afterCreateConnectionReceiver);
         EventManager.getInstance().unRegister(analysisHandler.getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
                 refreshTableDataReceiver);
         EventManager.getInstance().unRegister(analysisHandler.getAnalysis(),

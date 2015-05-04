@@ -65,6 +65,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -79,6 +80,9 @@ import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
@@ -142,6 +146,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     private Label warningLabel = null;
 
     private int lastTimePageNumber = 1;
+
+    private EventReceiver afterCreateConnectionReceiver = null;
 
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -213,7 +219,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
         createDataPreviewSection(form, topComp);
         createAnalysisColumnsSection(form, topComp);
-
+        redrawNatTableComposite();
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
 
@@ -253,6 +259,29 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         // create the data table
         createDataTableComposite(dataPreviewTableCom);
         dataPreviewSection.setClient(dataPreviewTableCom);
+        registerEvents();
+    }
+
+    private void registerEvents() {
+        // register: refresh the result page after running it from menu
+        afterCreateConnectionReceiver = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                // check if the connection is unavailable, give a warning dialog to user without opening the columns
+                // select dialog
+                Connection conn = (Connection) data;
+                if (ConnectionUtils.checkConnection(conn)) {
+                    // need to give the new connection to the dialog to show only this new one in the dialog.
+                    openColumnsSelectionDialog(conn);
+                }
+
+                return true;
+            }
+        };
+        EventManager.getInstance().register(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
+                afterCreateConnectionReceiver);
+
     }
 
     /**
@@ -396,7 +425,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
             @Override
             public void mouseDown(MouseEvent e) {
-                ConnectionWizard connectionWizard = new ConnectionWizard(PlatformUI.getWorkbench(), dataPreviewTableCom);
+                ConnectionWizard connectionWizard = new ConnectionWizard(PlatformUI.getWorkbench(), dataPreviewSection);
                 connectionWizard.setForcePreviousAndNextButtons(true);
                 WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), connectionWizard);
                 dialog.setPageSize(500, 200);
@@ -425,6 +454,17 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         createWarningLabel();
         redrawNatTableComposite();
         sampleTable.addPropertyChangeListener(this);
+
+    }
+
+    /**
+     * create DataTable Composite.
+     * 
+     * @param dataparent
+     */
+    public void redrawComposite() {
+        Composite parent = dataTableComp.getParent();
+        dataTableComp.redraw();
 
     }
 
@@ -693,6 +733,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      * open the column selection dialog.
      */
     public void openColumnsSelectionDialog() {
+        reloadDataproviderAndFillConnCombo();
         RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
         ModelElementIndicator[] modelElementIndicators = this.getCurrentModelElementIndicators();
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
@@ -710,11 +751,40 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         }
     }
 
+    /**
+     * open the column selection dialog.
+     */
+    public void openColumnsSelectionDialog(Connection conn) {
+        reloadDataproviderAndFillConnCombo();
+        List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
+        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
+        int connIndex = getConnCombo().getSelectionIndex();
+        String connName = conn.getName();
+        for (int index = 0; index < getConnCombo().getItemCount(); index++) {
+            if (connName.equalsIgnoreCase(getConnCombo().getItem(index))) {
+                connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(index));
+                connIndex = index;
+                break;
+            }
+        }
+        ColumnsSelectionDialog dialog = new ColumnsSelectWithConstraintDialog(
+                this,
+                null,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), reposViewObjList, connNode, DefaultMessagesImpl //$NON-NLS-1$
+                        .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
+        if (dialog.open() == Window.OK) {
+            getConnCombo().select(connIndex);
+            this.analysisItem.getAnalysis().getContext().setConnection(conn);
+            Object[] modelElements = dialog.getResult();
+            setTreeViewInput(modelElements);
+        }
+    }
+
     public void setTreeViewInput(Object[] modelElements) {
         // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
         treeViewer.filterInputData(modelElements);
         // RefreshPreviewTable should be first then the tree can be refresh
-        refreshPreviewTable(treeViewer.getModelElementIndicator());
+        refreshPreviewTable(treeViewer.getModelElementIndicator(), false);
         refreshTheTree(treeViewer.getModelElementIndicator());
         this.setDirty(true);
     }
@@ -725,9 +795,17 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      * @param modelElementIndicator
      */
     public void refreshPreviewTable(ModelElementIndicator[] modelElements) {
-        this.currentModelElementIndicators = modelElements;
-        this.refreshPreviewTable(true);
+        refreshPreviewTable(modelElements, true);
+    }
 
+    /**
+     * Refresh the preview Table
+     * 
+     * @param modelElementIndicator
+     */
+    public void refreshPreviewTable(ModelElementIndicator[] modelElements, boolean loadData) {
+        this.currentModelElementIndicators = modelElements;
+        this.refreshPreviewTable(loadData);
     }
 
     /**
@@ -969,6 +1047,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         if (dataFilterComp != null) {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
+        EventManager.getInstance().unRegister(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
+                afterCreateConnectionReceiver);
         MapDBManager.getInstance().closeDB(getAnalysis());
     }
 

@@ -93,4 +93,21 @@ public class PatternNode extends AbstractNode {
         return patternIndicatorInstance;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.indicator.IIndicatorNode#createNewIndicatorInstance()
+     */
+    @Override
+    public Indicator createNewIndicatorInstance() {
+        Indicator patternIndicatorInstance = super.createNewIndicatorInstance();
+        IndicatorParameters createIndicatorParameter = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        Domain createDomain = DomainFactory.eINSTANCE.createDomain();
+        createDomain.getPatterns().add(pattern);
+        createIndicatorParameter.setDataValidDomain(createDomain);
+        patternIndicatorInstance.setParameters(createIndicatorParameter);
+
+        return patternIndicatorInstance;
+    }
+
 }

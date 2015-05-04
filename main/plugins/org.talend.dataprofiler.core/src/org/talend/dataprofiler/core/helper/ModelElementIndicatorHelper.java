@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -184,6 +185,20 @@ public final class ModelElementIndicatorHelper {
 
     /**
      * 
+     * get DelimitedFileIndicator from ModelElementIndicator
+     * 
+     * @param indicatorUnit
+     * @return
+     */
+    public static final DelimitedFileIndicator switchDelimitedFileIndicator(ModelElementIndicator indicator) {
+        if (indicator instanceof DelimitedFileIndicator) {
+            return (DelimitedFileIndicator) indicator;
+        }
+        return null;
+    }
+
+    /**
+     * 
      * get Connection from ModelElementIndicator
      * 
      * @param indicator
@@ -195,6 +210,27 @@ public final class ModelElementIndicatorHelper {
             return ((ConnectionItem) property.getItem()).getConnection();
         }
         return null;
+    }
+
+    /**
+     * 
+     * Get column names from DelimitedFileIndicator
+     * 
+     * @param indicator
+     * @return
+     */
+    public static final List<String> getColumnNameList(DelimitedFileIndicator indicator) {
+        try {
+            EList<MetadataColumn> columns = indicator.getMetadataColumn().getTable().getColumns();
+            List<String> columnNames = new ArrayList<String>();
+            for (MetadataColumn columnsElement : columns) {
+                columnNames.add(columnsElement.getName());
+            }
+            return columnNames;
+        } catch (NullPointerException e) {
+            return null;
+        }
+
     }
 
     /**

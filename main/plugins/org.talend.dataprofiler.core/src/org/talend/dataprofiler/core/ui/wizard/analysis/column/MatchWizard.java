@@ -122,7 +122,7 @@ public class MatchWizard extends ColumnWizard {
             if (metadataPage.isPageComplete() && (nodes == null || nodes.size() == 0)) {
                 return true;
             }
-            return RepNodeUtils.isValidSelectionForMatchAnalysis(nodes);
+            return RepNodeUtils.isValidSelectionFromSameTable(nodes);
         }
 
         return super.canFinish();

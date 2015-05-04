@@ -228,32 +228,32 @@ public class RepNodeUtilsTest {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         ConnectionRepNode cNode = mock(ConnectionRepNode.class);
         nodes.add(cNode);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         DBConnectionRepNode dbNode = mock(DBConnectionRepNode.class);
         nodes.clear();
         nodes.add(dbNode);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         DBConnectionFolderRepNode dbfNode = mock(DBConnectionFolderRepNode.class);
         nodes.clear();
         nodes.add(dbfNode);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         DQDBFolderRepositoryNode folderNode = mock(DQDBFolderRepositoryNode.class);
         nodes.clear();
         nodes.add(folderNode);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         DBCatalogRepNode catalogNode = mock(DBCatalogRepNode.class);
         nodes.clear();
         nodes.add(catalogNode);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         DBSchemaRepNode schemaNode = mock(DBSchemaRepNode.class);
         nodes.clear();
         nodes.add(schemaNode);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
     }
 
     /**
@@ -268,14 +268,14 @@ public class RepNodeUtilsTest {
         nodes.clear();
         nodes.add(table1);
         nodes.add(table2);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         DBViewRepNode view1 = mock(DBViewRepNode.class);
         DBViewRepNode view2 = mock(DBViewRepNode.class);
         nodes.clear();
         nodes.add(view1);
         nodes.add(view2);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         ColumnRepNode col1 = mock(ColumnRepNode.class);
         ColumnRepNode col2 = mock(ColumnRepNode.class);
@@ -284,7 +284,7 @@ public class RepNodeUtilsTest {
         nodes.clear();
         nodes.add(col1);
         nodes.add(col2);
-        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertFalse(RepNodeUtils.isValidSelectionFromSameTable(nodes));
     }
 
     /**
@@ -299,16 +299,16 @@ public class RepNodeUtilsTest {
         // 3) when the selected node is: one single table/view/file table,will be valid;
         nodes.clear();
         nodes.add(table1);
-        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertTrue(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         nodes.clear();
         nodes.add(view1);
-        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertTrue(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         DFTableRepNode dfTable = mock(DFTableRepNode.class);
         nodes.clear();
         nodes.add(dfTable);
-        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertTrue(RepNodeUtils.isValidSelectionFromSameTable(nodes));
     }
 
     /**
@@ -328,20 +328,20 @@ public class RepNodeUtilsTest {
         nodes.clear();
         nodes.add(col1);
         nodes.add(col2);
-        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertTrue(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         when(col1.getParent()).thenReturn(view1);
         when(col2.getParent()).thenReturn(view1);
         nodes.clear();
         nodes.add(col1);
         nodes.add(col2);
-        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertTrue(RepNodeUtils.isValidSelectionFromSameTable(nodes));
 
         when(col1.getParent()).thenReturn(dfTable);
         when(col2.getParent()).thenReturn(dfTable);
         nodes.clear();
         nodes.add(col1);
         nodes.add(col2);
-        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+        Assert.assertTrue(RepNodeUtils.isValidSelectionFromSameTable(nodes));
     }
 }

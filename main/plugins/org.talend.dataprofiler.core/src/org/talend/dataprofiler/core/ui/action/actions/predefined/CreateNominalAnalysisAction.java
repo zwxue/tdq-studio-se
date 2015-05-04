@@ -21,6 +21,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -52,24 +53,27 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         if (addTextIndicator) {
             allwedEnumeLs.add(IndicatorEnum.TextIndicatorEnum);
         }
-        IndicatorEnum[] allwedEnumeArray = (IndicatorEnum[]) allwedEnumeLs.toArray(new IndicatorEnum[allwedEnumeLs.size()]);
+        IndicatorEnum[] allwedEnumeArray = allwedEnumeLs.toArray(new IndicatorEnum[allwedEnumeLs.size()]);
 
         return composePredefinedColumnIndicator(allwedEnumeArray);
     }
 
     @Override
     protected boolean isAllowed() {
-
+        if (!RepNodeUtils.isValidSelectionFromSameTable(getSelection().toList())) {
+            return false;
+        }
         return true;
     }
 
     @Override
     protected boolean preDo() {
-    	// MOD msjian TDQ-5530 2012-12-20: make the icon and text have the same look&feel as in the DQ repository view. 
+        // MOD msjian TDQ-5530 2012-12-20: make the icon and text have the same look&feel as in the DQ repository view.
         List<DFColumnRepNode> tempList = new ArrayList<DFColumnRepNode>();
         addTextIndicator = true;
         for (IRepositoryNode repositoryNode : getColumns()) {
-            DFColumnRepNode columnNode = new DFColumnRepNode(repositoryNode.getObject(), repositoryNode.getParent(), ENodeType.TDQ_REPOSITORY_ELEMENT);
+            DFColumnRepNode columnNode = new DFColumnRepNode(repositoryNode.getObject(), repositoryNode.getParent(),
+                    ENodeType.TDQ_REPOSITORY_ELEMENT);
             int javaSQLType = TalendTypeConvert.convertToJDBCType(columnNode.getMetadataColumn().getTalendType());
             if (!Java2SqlType.isTextInSQL(javaSQLType)) {
                 tempList.add(columnNode);

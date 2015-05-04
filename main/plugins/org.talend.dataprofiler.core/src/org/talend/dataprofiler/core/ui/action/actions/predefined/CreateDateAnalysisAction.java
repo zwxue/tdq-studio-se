@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm;
@@ -126,6 +127,9 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             if (!Java2SqlType.isDateInSQL(javaSQLType)) {
                 return false;
             }
+        }
+        if (!RepNodeUtils.isValidSelectionFromSameTable(getSelection().toList())) {
+            return false;
         }
 
         return true;

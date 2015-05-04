@@ -104,18 +104,28 @@ public abstract class AbstractNode implements IIndicatorNode {
         if (indicatorInstance != null) {
             return indicatorInstance;
         } else if (this.indicatorEnum != null) {
-            EFactoryImpl factory = (EFactoryImpl) indicatorEnum.getIndicatorType().getEPackage().getEFactoryInstance();
-            indicatorInstance = (Indicator) factory.create(indicatorEnum.getIndicatorType());
-            // special Enum is can not handle the name of indicator
-            if (indicatorInstance.getName() == indicatorInstance.eClass().getName()
-                    && IndicatorEnum.isSpecialIndicatorEnum(indicatorEnum)) {
-                indicatorInstance.setName(this.getLabel());
-            }
-            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicatorInstance);
+            indicatorInstance = createNewIndicatorInstance();
             return indicatorInstance;
         } else {
             return null;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.indicator.IIndicatorNode#createNewIndicatorInstance()
+     */
+    public Indicator createNewIndicatorInstance() {
+        EFactoryImpl factory = (EFactoryImpl) indicatorEnum.getIndicatorType().getEPackage().getEFactoryInstance();
+        Indicator indicatorInstance = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+        // special Enum is can not handle the name of indicator
+        if (indicatorInstance.getName() == indicatorInstance.eClass().getName()
+                && IndicatorEnum.isSpecialIndicatorEnum(indicatorEnum)) {
+            indicatorInstance.setName(this.getLabel());
+        }
+        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicatorInstance);
+        return indicatorInstance;
     }
 
 }

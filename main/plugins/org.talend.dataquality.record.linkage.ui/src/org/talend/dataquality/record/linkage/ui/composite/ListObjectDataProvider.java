@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.nebula.widgets.nattable.data.IColumnAccessor;
 import org.eclipse.nebula.widgets.nattable.data.ListDataProvider;
-
+import org.talend.dataquality.PluginConstant;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -33,7 +33,6 @@ public class ListObjectDataProvider<T> extends ListDataProvider<T> {
      */
     public ListObjectDataProvider(List<T> list, IColumnAccessor<T> columnAccessor) {
         super(list, columnAccessor);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -42,6 +41,7 @@ public class ListObjectDataProvider<T> extends ListDataProvider<T> {
         if (columnIndex >= rowObj.length) {
             return null;
         }
-        return rowObj[columnIndex];
+
+        return rowObj[columnIndex] == null ? PluginConstant.NULL_STRING : rowObj[columnIndex];
     }
 }

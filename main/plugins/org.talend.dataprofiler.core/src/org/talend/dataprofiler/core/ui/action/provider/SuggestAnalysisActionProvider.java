@@ -56,6 +56,8 @@ public class SuggestAnalysisActionProvider extends AbstractCommonActionProvider 
         if (firstElement instanceof DBTableRepNode) {
             DBTableRepNode node = (DBTableRepNode) firstElement;
             suggestAnalysisAction = new SuggestAnalysisAction(node.getTdTable());
+        } else {
+            return;
         }
 
         // suggestAnalysisAction.setColumnSelection(currentSelection);

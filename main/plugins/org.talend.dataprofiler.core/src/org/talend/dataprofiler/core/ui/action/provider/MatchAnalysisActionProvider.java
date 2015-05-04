@@ -57,7 +57,7 @@ public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
 
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         // Added TDQ-8647 yyin 20140221 :only when the selection is valid, the menu will be added
-        if (currentSelection != null && !RepNodeUtils.isValidSelectionForMatchAnalysis(currentSelection.toList())) {
+        if (currentSelection != null && !RepNodeUtils.isValidSelectionFromSameTable(currentSelection.toList())) {
             return;
         }
 

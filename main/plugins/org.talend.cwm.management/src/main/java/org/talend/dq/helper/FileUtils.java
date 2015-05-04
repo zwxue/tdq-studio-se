@@ -157,12 +157,40 @@ public final class FileUtils {
         return out;
     }
 
+    /**
+     * 
+     * Create CsvReader by special file and delimitedFileconnection
+     * 
+     * @param file the file which CsvReader need to read
+     * @param delimitedFileconnection the instance of file connection
+     * @return instance of CSVReader
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
+     */
     public static CSVReader createCsvReader(File file, DelimitedFileConnection delimitedFileconnection)
             throws UnsupportedEncodingException, FileNotFoundException {
         String separator = JavaSqlFactory.getFieldSeparatorValue(delimitedFileconnection);
         String encoding = JavaSqlFactory.getEncoding(delimitedFileconnection);
         return new CSVReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
                 encoding == null ? "UTF-8" : encoding)), ParameterUtil //$NON-NLS-1$
+                .trimParameter(separator).charAt(0));
+    }
+
+    /**
+     * 
+     * Create CsvReader by special delimitedFileconnection
+     * 
+     * @param delimitedFileconnection the instance of file connection
+     * @return instance of CSVReader
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
+     */
+    public static CSVReader createCsvReader(DelimitedFileConnection delimitedFileconnection) throws UnsupportedEncodingException,
+            FileNotFoundException {
+        String separator = JavaSqlFactory.getFieldSeparatorValue(delimitedFileconnection);
+        String encoding = JavaSqlFactory.getEncoding(delimitedFileconnection);
+        return new CSVReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(
+                delimitedFileconnection.getFilePath()), encoding == null ? "UTF-8" : encoding)), ParameterUtil //$NON-NLS-1$
                 .trimParameter(separator).charAt(0));
     }
 

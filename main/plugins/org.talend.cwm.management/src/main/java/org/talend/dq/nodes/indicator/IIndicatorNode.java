@@ -42,7 +42,21 @@ public interface IIndicatorNode {
      */
     public void setIndicatorEnum(IndicatorEnum indicatorEnum);
 
+    /**
+     * 
+     * Get the instance of indicator if don't create it yet then create one
+     * 
+     * @return
+     */
     public Indicator getIndicatorInstance();
+
+    /**
+     * 
+     * Create a new instance of indicator will not get from {@link #getIndicatorInstance()}
+     * 
+     * @return
+     */
+    public Indicator createNewIndicatorInstance();
 
     public String getLabel();
 

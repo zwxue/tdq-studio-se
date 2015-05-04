@@ -657,7 +657,7 @@ public class AbstractIndicatorSelectGrid extends TalendGrid {
             if (tick) {
                 if (IndicatorEnum.isSpecialIndicatorEnum(indicatorEnum)) {
 
-                    meIndicator.addTempSpecialIndicator(indicatorEnum, indicatorNode.getIndicatorInstance());
+                    meIndicator.addTempSpecialIndicator(indicatorEnum, indicatorNode.createNewIndicatorInstance());
                 } else {
                     meIndicator.addTempIndicatorEnum(indicatorEnum);
                 }

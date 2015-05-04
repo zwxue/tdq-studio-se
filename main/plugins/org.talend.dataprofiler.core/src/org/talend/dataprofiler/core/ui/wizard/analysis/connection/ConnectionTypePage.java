@@ -145,7 +145,7 @@ public class ConnectionTypePage extends WizardPage {
             // make it back to initial value after finish creating
             tdqRepService.setIsOpenConnectionEditorAfterCreate(Boolean.FALSE);
 
-            EventManager.getInstance().publish(relatedComposite, EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, connection);
+            EventManager.getInstance().publish(relatedComposite, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION, connection);
         }
     }
 

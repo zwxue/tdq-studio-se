@@ -18,6 +18,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositor
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
@@ -63,6 +64,9 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
             if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
                 return false;
             }
+        }
+        if (!RepNodeUtils.isValidSelectionFromSameTable(getSelection().toList())) {
+            return false;
         }
 
         return true;

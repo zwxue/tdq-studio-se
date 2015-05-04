@@ -12,12 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.grid;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.nebula.widgets.grid.GridCellRenderer;
 import org.eclipse.nebula.widgets.grid.GridColumn;
@@ -30,12 +32,20 @@ import org.eclipse.swt.widgets.Event;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.db.connection.talendResultSet.DatabaseResultSet;
+import org.talend.cwm.db.connection.talendResultSet.FileCSVResultSet;
+import org.talend.cwm.db.connection.talendResultSet.FileDelimitedResultSet;
+import org.talend.cwm.db.connection.talendResultSet.ITalendResultSet;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.grid.utils.Observerable;
 import org.talend.dataprofiler.core.ui.grid.utils.TDQObserver;
@@ -44,11 +54,15 @@ import org.talend.dataprofiler.core.ui.grid.utils.events.ObserverEventEnum;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.dq.helper.FileUtils;
+import org.talend.fileprocess.FileInputDelimited;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
-import org.talend.utils.sql.ResultSetUtils;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+
+import com.talend.csv.CSVReader;
 
 /**
  * The table which is used be preivew data
@@ -64,6 +78,8 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
     private final String COLUMN_RESULT_KEY = "columnResult"; //$NON-NLS-1$
 
     private List<TDQObserver<ObserverEvent>> observers = null;
+
+    private Logger log = Logger.getLogger(ColumnPreviewGrid.class);
 
     /**
      * ColumnPreviewGrid constructor comment.
@@ -153,28 +169,19 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
      * @throws SQLException
      */
     private String getColumnValue(GridColumn column, GridItem currentItem) throws SQLException {
-        ResultSet rs = (ResultSet) this.getData(COLUMN_RESULT_KEY);
+        ITalendResultSet rs = (ITalendResultSet) this.getData(COLUMN_RESULT_KEY);
         ModelElementIndicator modelElementIndicator = (ModelElementIndicator) column.getData();
-        // connection
-        Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicator);
-        ColumnIndicator columnIndicator = ModelElementIndicatorHelper.switchColumnIndicator(modelElementIndicator);
-        if (columnIndicator == null) {
-            return null;
-        }
-        // MetadataColumn metadataColumn = ((MetadataColumnRepositoryObject)
-        // modelElementIndicator.getModelElementRepositoryNode()
-        // .getObject()).getTdColumn();
-        TdColumn tdColumn = columnIndicator.getTdColumn();
 
+        String columnName = modelElementIndicator.getElementName();
         if (rs == null) {
 
-            rs = getResultSet(tdDataProvider, tdColumn);
+            rs = getResultSet(modelElementIndicator);
             this.setData(COLUMN_RESULT_KEY, rs);
         }
         // row index
         int indexOfRow = this.indexOf(currentItem);
-        while (rs.absolute(indexOfRow)) {
-            Object columnValue = ResultSetUtils.getObject(rs, tdColumn.getName());
+        if (rs.absolute(indexOfRow)) {
+            Object columnValue = rs.getObject(columnName);
             return columnValue == null ? PluginConstant.NULL_STRING : columnValue.toString();
         }
         return null;
@@ -188,45 +195,91 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
      * @return
      * @throws SQLException
      */
-    private ResultSet getResultSet(Connection tdDataProvider, TdColumn tdColumn) throws SQLException {
+    private ITalendResultSet getResultSet(ModelElementIndicator modelElementIndicator) throws SQLException {
+        ColumnIndicator columnIndicator = ModelElementIndicatorHelper.switchColumnIndicator(modelElementIndicator);
+        if (columnIndicator != null) {
+            return getResultSet(columnIndicator);
+        }
+        DelimitedFileIndicator delimitedFileIndicator = ModelElementIndicatorHelper
+                .switchDelimitedFileIndicator(modelElementIndicator);
+        if (delimitedFileIndicator != null) {
+            return getResultSet(delimitedFileIndicator);
+        }
+        return null;
+    }
+
+    /**
+     * DOC talend Comment method "getResultSet".
+     * 
+     * @param tdDataProvider
+     * @param tdColumn
+     * @return
+     * @throws SQLException
+     */
+    private ITalendResultSet getResultSet(ColumnIndicator columnIndicator) throws SQLException {
         ResultSet rs = null;
+        // connection
+        Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(columnIndicator);
+        TdColumn tdColumn = columnIndicator.getTdColumn();
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn, _dialog.getWhereExpression());
         IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
 
         createStatement = initStatement(metadataBean);
         rs = createStatement.executeQuery(columnQueryExpression.getBody());
-        return rs;
+        return new DatabaseResultSet(rs);
     }
 
     /**
-     * DOC talend Comment method "getColumnValue".
+     * DOC talend Comment method "getResultSet".
      * 
-     * @param column
-     * @param currentItem
-     * @return
+     * @param tdDataProvider
+     * @param tdColumn
+     * @returnDelimitedFileConnectionImpl
      * @throws SQLException
      */
-    private String getColumnValue(GridColumn column, int rowNumber) throws SQLException {
-        ResultSet rs = (ResultSet) this.getData(COLUMN_RESULT_KEY);
-        ModelElementIndicator modelElementIndicator = (ModelElementIndicator) column.getData();
-        // connection
-        Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicator);
-        ColumnIndicator columnIndicator = ModelElementIndicatorHelper.switchColumnIndicator(modelElementIndicator);
-        TdColumn tdColumn = columnIndicator.getTdColumn();
-        // row index
-        int indexOfRow = rowNumber;
-        if (rs == null) {
+    private ITalendResultSet getResultSet(DelimitedFileIndicator modelElementIndicator) throws SQLException {
+        DelimitedFileConnection delimitedFileconnection = (DelimitedFileConnection) ModelElementIndicatorHelper
+                .getTdDataProvider(modelElementIndicator);
 
-            rs = getResultSet(tdDataProvider, tdColumn);
-            this.setData(COLUMN_RESULT_KEY, rs);
+        // need to find the analysed element position , and only get these analysed column's values.
+        List<String> columnLabels = ModelElementIndicatorHelper.getColumnNameList(modelElementIndicator);
+        if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
+            CSVReader csvReader = null;
+            try {
+                int headValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
+                csvReader = FileUtils.createCsvReader(delimitedFileconnection);
+                FileUtils.initializeCsvReader(delimitedFileconnection, csvReader);
+                for (int i = 0; i < headValue; i++) {
+                    csvReader.readHeaders();
+                }
+                return new FileCSVResultSet(csvReader, columnLabels);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            } finally {
+                if (csvReader != null) {
+                    try {
+                        csvReader.close();
+                    } catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            }
+        } else {
+            FileInputDelimited fileInputDelimited = null;
+            try {
+                fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+            return new FileDelimitedResultSet(fileInputDelimited, columnLabels);
         }
-        while (rs.absolute(indexOfRow + 1)) {
-            Object columnValue = rs.getObject(tdColumn.getName());
-            return columnValue == null ? PluginConstant.NULL_STRING : columnValue.toString();
-        }
+
         return null;
     }
+
 
     /**
      * DOC talend Comment method "getColumnValue".
@@ -264,7 +317,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             sqlConn = createConnection.getObject();
         }
 
-        createStatement = sqlConn.createStatement();
+        createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         return createStatement;
     }
 
@@ -494,16 +547,8 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
         GridColumn column = getColumn(2);
         ModelElementIndicator modelElementIndicator = (ModelElementIndicator) column.getData();
-        // connection
-        Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicator);
-        ColumnIndicator columnIndicator = ModelElementIndicatorHelper.switchColumnIndicator(modelElementIndicator);
-        // proxy issue or some others it is not case about where clause
-        if (columnIndicator == null) {
-            return true;
-        }
-        TdColumn tdColumn = columnIndicator.getTdColumn();
         try {
-            getResultSet(tdDataProvider, tdColumn);
+            getResultSet(modelElementIndicator);
         } catch (SQLException e) {
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("ColumnPreviewGrid.InValidWhereClause"), //$NON-NLS-1$
                     e.getMessage());

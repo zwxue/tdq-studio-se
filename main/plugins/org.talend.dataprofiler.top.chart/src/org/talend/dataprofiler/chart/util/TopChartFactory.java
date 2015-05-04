@@ -82,7 +82,7 @@ public final class TopChartFactory {
 
     private static final int BASE_TITLE_LABEL_SIZE = 14;
 
-    public static final String NULL_FIELD = "Null field"; //$NON-NLS-1$
+    public static final String NULL_FIELD = "<null>"; //$NON-NLS-1$
 
     public static final String EMPTY_FIELD = "Empty field"; //$NON-NLS-1$
 

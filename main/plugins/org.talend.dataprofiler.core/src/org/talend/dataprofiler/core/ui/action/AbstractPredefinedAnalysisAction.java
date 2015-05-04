@@ -286,6 +286,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                     ColumnMasterDetailsPage masterPage = getMasterPage();
                     if (masterPage != null) {
                         masterPage.refreshTheTree(predefinedColumnIndicator);
+                        masterPage.refreshPreviewTable(predefinedColumnIndicator, false);
                         masterPage.doSave(null);
                     }
                 }

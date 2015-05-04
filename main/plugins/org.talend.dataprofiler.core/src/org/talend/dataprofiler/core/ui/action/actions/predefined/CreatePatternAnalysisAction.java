@@ -16,6 +16,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
@@ -65,7 +66,9 @@ public class CreatePatternAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected boolean isAllowed() {
-        // TODO Auto-generated method stub
+        if (!RepNodeUtils.isValidSelectionFromSameTable(getSelection().toList())) {
+            return false;
+        }
         return true;
     }
 

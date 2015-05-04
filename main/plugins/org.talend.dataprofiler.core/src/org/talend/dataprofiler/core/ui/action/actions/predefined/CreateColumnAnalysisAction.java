@@ -59,7 +59,10 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
      */
     @Override
     protected boolean isAllowed() {
-
+        //column analysis only suit same table case
+        if (getSelection().toList().size() > 1) {
+            return false;
+        }
         return true;
     }
 

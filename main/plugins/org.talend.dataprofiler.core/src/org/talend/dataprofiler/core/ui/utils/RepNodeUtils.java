@@ -368,7 +368,7 @@ public final class RepNodeUtils {
      * column set, or the user select one column set, the Finish button is enabled, all other selection will not enable
      * the Finish button.
      */
-    public static boolean isValidSelectionForMatchAnalysis(List<IRepositoryNode> nodes) {
+    public static boolean isValidSelectionFromSameTable(List<IRepositoryNode> nodes) {
         if (nodes != null && nodes.size() > 0) {
             // when the first selected node is a column set node type, then the size of the nodes list must be 1
             if ((nodes.get(0) instanceof ColumnSetRepNode) && nodes.size() == 1) {
