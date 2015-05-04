@@ -59,6 +59,10 @@ class TypeInferenceEngine extends RegexParsers with Serializable{
       case failure: NoSuccess => false
     }
   }
+  
+  def isBoolean(value:String):Boolean={
+    value.trim().equals("true") || value.trim().equals("false")
+  }
 
 
   /**
