@@ -45,7 +45,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.FileConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -782,24 +781,6 @@ public final class ConnectionUtils {
             dbConn.setName(name);
             dbConn.setLabel(name);
         }
-    }
-
-    /**
-     * DOC xqliu Comment method "fillMdmConnectionInformation".
-     * 
-     * @param mdmConn
-     * @return
-     */
-    public static MDMConnection fillMdmConnectionInformation(MDMConnection mdmConn) {
-        // fill database structure
-        Properties properties = new Properties();
-        properties.put(TaggedValueHelper.USER, mdmConn.getUsername());
-        properties.put(TaggedValueHelper.PASSWORD, mdmConn.getValue(mdmConn.getPassword(), false));
-        properties.put(TaggedValueHelper.UNIVERSE,
-                mdmConn.getUniverse() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : mdmConn.getUniverse());
-        MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), properties);
-        ConnectionHelper.addXMLDocuments(mdmWsConn.createConnection(mdmConn));
-        return mdmConn;
     }
 
     /**

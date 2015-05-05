@@ -170,7 +170,6 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         MDMConnection mdmConnection = (MDMConnection) connItem.getConnection();
         mdmConnection.setLabel(connItem.getProperty().getLabel() + "");
         mdmConnection.setName(connItem.getProperty().getLabel() + "");
-        ConnectionUtils.fillMdmConnectionInformation(mdmConnection);
         ElementWriterFactory.getInstance().createDataProviderWriter().save(mdmConnection);
         // ~22598
     }
