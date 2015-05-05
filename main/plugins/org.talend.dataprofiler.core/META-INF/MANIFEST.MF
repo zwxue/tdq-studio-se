@@ -114,3 +114,4 @@ Bundle-Localization: plugin
 Bundle-ClassPath: .
 Import-Package: org.talend.dataprofiler.service,
  org.talend.fileprocess
+ 
