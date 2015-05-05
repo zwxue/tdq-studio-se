@@ -278,8 +278,8 @@
       </actionProvider> 
       
       <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.MatchAnalysisActionProvider"
-            id="org.talend.dataprofiler.core.ui.action.provider.MatchAnalysisActionProvider">
+            class="org.talend.dataprofiler.core.ui.action.provider.SuggestAnalysisActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.SuggestAnalysisActionProvider">
          <enablement>
             <or>
                <instanceof
@@ -299,8 +299,8 @@
       </actionProvider> 
             
       <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.SuggestAnalysisActionProvider"
-            id="org.talend.dataprofiler.core.ui.action.provider.SuggestAnalysisActionProvider">
+            class="org.talend.dataprofiler.core.ui.action.provider.MatchAnalysisActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.MatchAnalysisActionProvider">
          <enablement>
             <or>
                <instanceof
