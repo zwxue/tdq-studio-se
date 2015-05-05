@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.datascience.common.data
 
+import org.apache.spark.SparkContext
+
 /**
  * The trait is a representation of a dataset with context. <br> the context is environment variable with probably several parameters , such as spark's SparkContext with HDFS storage path , or JobConf in map/reduce model.
  * @author mzhao
@@ -64,7 +66,7 @@ trait ElasticDataSet extends Serializable {
    * @param url context URL
    * @param name context name.
    */
-  def setContext(url:String,name:String)
+  def setContext(sparkContext: SparkContext)
 }
 
 object ElasticDataSet {
