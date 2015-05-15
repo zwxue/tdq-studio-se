@@ -168,7 +168,7 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
         IHDFSNode selectedFile = this.step1Page.getSelectedFile();
 
         createTableSQL.append("CREATE EXTERNAL TABLE "); //$NON-NLS-1$
-        createTableSQL.append(checkTableName(selectedFile));
+        createTableSQL.append(step3Page.getTableName());
         createTableSQL.append(" ("); //$NON-NLS-1$
 
         try {
@@ -242,5 +242,9 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
             name = name.replaceAll("-", "_"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return name;
+    }
+
+    protected String getDefaultTableName() {
+        return checkTableName(step1Page.getSelectedFile());
     }
 }

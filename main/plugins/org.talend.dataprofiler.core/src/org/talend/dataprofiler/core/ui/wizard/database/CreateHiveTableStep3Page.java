@@ -18,10 +18,14 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dq.nodes.hadoopcluster.HiveOfHCFolderRepNode;
@@ -44,6 +48,8 @@ public class CreateHiveTableStep3Page extends AbstractWizardPage {
     private Button selectOne;
 
     private Button createOne;
+
+    private Text tableNameText;
 
     /**
      * DOC yyin CreateHiveTableStep3Page constructor comment.
@@ -68,6 +74,30 @@ public class CreateHiveTableStep3Page extends AbstractWizardPage {
         gd.widthHint = 280;
         gd.heightHint = 22;
 
+        // the field of the table name
+        Label label1 = new Label(container, SWT.NONE);
+        label1.setText(DefaultMessagesImpl.getString("CreateHiveTableStep3Page.newTableName")); //$NON-NLS-1$
+
+        tableNameText = new Text(container, SWT.BORDER);
+        tableNameText.setText(StringUtils.EMPTY);
+        tableNameText.setLayoutData(gd);
+        tableNameText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                if (StringUtils.isBlank(tableNameText.getText())) {
+                    setErrorMessage(DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty")); //$NON-NLS-1$
+                    setPageComplete(false);
+                } else if (StringUtils.contains(tableNameText.getText(), '-')) {
+                    setErrorMessage(DefaultMessagesImpl.getString("CreateHiveTableStep3Page.nameNotQualified")); //$NON-NLS-1$
+                    setPageComplete(false);
+                } else {
+                    setErrorMessage(null);
+                    setPageComplete(true);
+                }
+            }
+
+        });
+
         selectOne = new Button(container, SWT.RADIO);
         selectOne.setText(DefaultMessagesImpl.getString("CreateHiveTableStep3Page.selectHive")); //$NON-NLS-1$
         selectOne.setSelection(true);
@@ -85,6 +115,16 @@ public class CreateHiveTableStep3Page extends AbstractWizardPage {
             hiveListCombo.select(0);// default to select the first
         }
         setControl(container);
+    }
+
+    /*
+     * when the current page is actived, get the selected file name from the wizard
+     */
+    @Override
+    public void setVisible(boolean visible) {
+        String defaultTableName = ((CreateHiveTableWizard) this.getWizard()).getDefaultTableName();
+        tableNameText.setText(defaultTableName);
+        super.setVisible(visible);
     }
 
     /**
@@ -106,6 +146,7 @@ public class CreateHiveTableStep3Page extends AbstractWizardPage {
         if (allHives.size() == 0) {// if no hives, make the choice of creating a new hive as default
             createOne.setSelection(true);
             selectOne.setSelection(false);
+            selectOne.setEnabled(false);
         }
 
         return allHives.toArray(new String[allHives.size()]);
@@ -126,5 +167,9 @@ public class CreateHiveTableStep3Page extends AbstractWizardPage {
             }
         }
         return null;
+    }
+
+    public String getTableName() {
+        return this.tableNameText.getText();
     }
 }
