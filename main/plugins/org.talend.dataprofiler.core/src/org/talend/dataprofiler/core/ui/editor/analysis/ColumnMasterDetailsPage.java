@@ -229,6 +229,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
             createPreviewSection(form, previewComp);
         }
+
+        setAllReadOnlyIfNeeded();
     }
 
     /**

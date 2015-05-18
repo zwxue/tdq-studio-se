@@ -39,7 +39,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
@@ -75,8 +74,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC rli class global comment. Detailled comment
  */
 public class PatternMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
-
-    private static final String SQL = "SQL"; //$NON-NLS-1$
 
     private Pattern pattern;
 
@@ -117,8 +114,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     private List<String> allDBTypeList;
 
     private List<String> remainDBTypeList;
-
-    private ScrolledForm form;
 
     private Section patternDefinitionSection;
 
@@ -176,6 +171,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         metadataSection.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternMetadata")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("PatternMasterDetailsPage.setProperties")); //$NON-NLS-1$
         creatPatternDefinitionSection(topComp);
+        setAllReadOnlyIfNeeded();
     }
 
     private void creatPatternDefinitionSection(Composite topCmp) {

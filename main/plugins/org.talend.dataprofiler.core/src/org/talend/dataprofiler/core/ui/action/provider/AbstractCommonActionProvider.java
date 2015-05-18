@@ -41,12 +41,14 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -58,6 +60,49 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     protected static final String NEW_MENU_NAME = "column.analysis.menu"; //$NON-NLS-1$
 
     public boolean isShowMenu() {
+        if (!isShowMenuWhenIsReadonlyUser()) {
+            return false;
+        }
+
+        // hidden all menues for all reference project node
+        Object object = getContextObject();
+        if (object instanceof DQRepositoryNode) {
+            DQRepositoryNode node = (DQRepositoryNode) object;
+            if (!node.getProject().isMainProject()) {
+                return false;
+            }
+        }
+
+        if (!isShowMenuForRefNode()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * DOC msjian Comment method "isShowMenuForRefNode".
+     */
+    public boolean isShowMenuForRefNode() {
+        IRepositoryNode fistContextNode = getFistContextNode();
+        ERepositoryObjectType contentType = fistContextNode.getContentType();
+        if (contentType != null) {
+            if (contentType == ERepositoryObjectType.SVN_ROOT || contentType == ERepositoryObjectType.REFERENCED_PROJECTS) {
+                return false;
+            }
+        }
+
+        if (ERepositoryObjectType.REFERENCED_PROJECTS.getLabel().equals(fistContextNode.getProperties(EProperties.LABEL))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * DOC msjian Comment method "isShowMenuWhenIsReadonlyUser".
+     */
+    public boolean isShowMenuWhenIsReadonlyUser() {
         // MOD mzhao user readonly role on svn repository mode.
         AbstractSvnRepositoryService svnReposService = GlobalServiceRegister.getDefault().getSvnRepositoryService(
                 AbstractSvnRepositoryService.class);

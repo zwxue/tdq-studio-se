@@ -144,7 +144,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     protected Section definitionSection;
 
-    private Composite definitionComp;
+    protected Composite definitionComp;
 
     protected List<String> allDBTypeList;
 
@@ -402,6 +402,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         metadataSection.setDescription(METADATA_SECTION_DESCRIPTION);
         // MOD by zshen move CategorySection before of DefinitionSection on UDI Editor
         createIndicatorContent();
+        setAllReadOnlyIfNeeded();
         form.reflow(true);
     }
 
@@ -2482,4 +2483,5 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         return rc;
     }
+
 }

@@ -67,7 +67,6 @@ import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -95,6 +94,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private Text passwordText;
 
     private Text urlText;
+
+    private Button editButton;
 
     private Section infomatioinSection = null;
 
@@ -136,7 +137,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
-        final ScrolledForm form = managedForm.getForm();
+        form = managedForm.getForm();
         form.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.connectionSettings")); //$NON-NLS-1$
         this.metadataSection.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.connectionMetadata")); //$NON-NLS-1$
         this.metadataSection.setDescription(DefaultMessagesImpl.getString("ConnectionInfoPage.propertiesOConnnection")); //$NON-NLS-1$
@@ -171,6 +172,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
 
         });
+
+        setAllReadOnlyIfNeeded();
 
     }
 
@@ -209,9 +212,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         urlText = new Text(urlComp, SWT.BORDER | SWT.READ_ONLY);
         GridDataFactory.fillDefaults().hint(100, -1).grab(true, true).applyTo(urlText);
 
-        // urlText.setEnabled(false);
-
-        Button editButton = new Button(urlComp, SWT.PUSH);
+        editButton = new Button(urlComp, SWT.PUSH);
         editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
         editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
         editButton.addSelectionListener(new SelectionAdapter() {

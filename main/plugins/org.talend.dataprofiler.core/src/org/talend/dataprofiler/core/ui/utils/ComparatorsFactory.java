@@ -20,9 +20,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.RepositoryNodeComparator;
@@ -30,8 +28,7 @@ import org.talend.dq.indicators.ext.FrequencyExt;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * The factory to build comparator.
- * DOC zqin class global comment. Detailled comment
+ * The factory to build comparator. DOC zqin class global comment. Detailled comment
  */
 public final class ComparatorsFactory {
 
@@ -56,8 +53,6 @@ public final class ComparatorsFactory {
     public static final int SOUNDEX_LOW_FREQUENCY_COMPARATOR_ID = 7;
 
     public static final int IREPOSITORYVIEWOBJECT_COMPARATOR_ID = 8;
-
-    public static final int DQRECYCLYBIN_COMPARATOR_ID = 9;
 
     public static final int REPOSITORY_NODE_COMPARATOR_ID = 10;
 
@@ -118,8 +113,6 @@ public final class ComparatorsFactory {
             return new LowFrequencyIndicatorComparator();
         case IREPOSITORYVIEWOBJECT_COMPARATOR_ID:
             return new IRepositoryViewObjectComparator();
-        case DQRECYCLYBIN_COMPARATOR_ID:
-            return new DQRecyclebinComparator();
         case REPOSITORY_NODE_COMPARATOR_ID:
             return new RepositoryNodeComparator();
         case BENFORDLAW_FREQUENCY_COMPARATOR_ID:// ADDED yyin 2012-08-28 TDQ_5076
@@ -319,41 +312,6 @@ public final class ComparatorsFactory {
             // FIXME name1 might be null.
             return name1.compareTo(name2);
         }
-    }
-
-    /**
-     * 
-     * DOC qiongli ComparatorsFactory class global comment. Detailled comment
-     */
-    static class DQRecyclebinComparator implements Comparator<DQRecycleBinNode> {
-
-        public int compare(DQRecycleBinNode node0, DQRecycleBinNode node1) {
-            if (node0 == null || node1 == null) {
-                return 0;
-            }
-            Object obj0 = node0.getObject();
-            Object obj1 = node1.getObject();
-            if (obj0 == null || obj1 == null) {
-                return 0;
-            }
-            String name0 = null;
-            String name1 = null;
-            if (obj0 instanceof Property) {
-                name0 = ((Property) obj0).getLabel();
-            } else if (obj0 instanceof IResource) {
-                name0 = ((IResource) obj0).getName();
-            }
-            if (obj1 instanceof Property) {
-                name1 = ((Property) obj1).getLabel();
-            } else if (obj1 instanceof IResource) {
-                name1 = ((IResource) obj1).getName();
-            }
-            if (name0 == null || name1 == null) {
-                return 0;
-            }
-            return name0.compareTo(name1);
-        }
-
     }
 
 }

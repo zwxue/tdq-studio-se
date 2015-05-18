@@ -98,7 +98,6 @@ public final class DQStructureManager {
 
     public static final String SYSTEM_INDICATOR_PATH = "/indicators";//$NON-NLS-1$
 
-    public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
 
     private static DQStructureManager manager;
 

@@ -291,6 +291,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             // ~
             createPreviewSection(form, previewComp);
         }
+
+        setAllReadOnlyIfNeeded();
     }
 
     private void addListenerToExecuteEngine(final CCombo execCombo1) {

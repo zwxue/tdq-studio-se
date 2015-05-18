@@ -31,6 +31,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -48,6 +49,7 @@ import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
@@ -59,10 +61,11 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -104,6 +107,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected boolean modify;
 
+    /**
+     * when the item comes from referenced project, all the fields are readonly. need to consider the case is that in
+     * remote project, the user only have readonly access.
+     */
+    protected boolean isReadOnly;
+
     protected CCombo statusCombo;
 
     protected Composite topComp;
@@ -113,6 +122,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected ModelElement currentModelElement;
 
     protected Section contextGroupSection = null;
+
+    protected ContextComposite contextComposite;
 
     /**
      * should not use this parameter because we can not make sure this parameter is synchornized with the node on the
@@ -144,11 +155,60 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         super(editor, id, title);
     }
 
+    /**
+     * set All fields ReadOnly If Needed.when the node item comes from referenced project.
+     */
+    protected void setAllReadOnlyIfNeeded() {
+        if (isReadOnly) {
+            makeAllFieldsReadonly(topComp);
+            statusCombo.setEnabled(!isReadOnly);
+            // if (numberOfConnectionsPerAnalysisText != null) {
+            // numberOfConnectionsPerAnalysisText.setEnabled(!isReadOnly);
+            // }
+            //
+            // if (contextComposite != null) {
+            // contextComposite.getContextComboViewer().getCCombo().setEnabled(!isReadOnly);
+            // }
+        }
+    }
+
+    public void makeAllFieldsReadonly(Composite composite) {
+        if (composite == null) {
+            return;
+        }
+        if (composite.isDisposed()) {
+            return;
+        }
+
+        if (composite instanceof CCombo || composite instanceof Combo) {
+            composite.setEnabled(false);
+            return;
+        }
+
+        Control[] children = composite.getChildren();
+        for (Control c : children) {
+            if (c instanceof Composite) {
+                makeAllFieldsReadonly((Composite) c);
+            } else {
+                c.setEnabled(false);
+            }
+        }
+    }
+
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         this.currentModelElement = getCurrentModelElement(editor);
-
+        DQRepositoryNode node = RepositoryNodeHelper.recursiveFind(currentModelElement);
+        // TODO: until now, for the referenced project, the node will always null
+        if (node == null) {
+            //
+            isReadOnly = true;
+        } else {
+            boolean isEditableAndLockIfPossible = ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(
+                    node.getObject().getProperty().getItem());
+            isReadOnly = !isEditableAndLockIfPossible;
+        }
     }
 
     @Override
@@ -636,9 +696,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 DefaultMessagesImpl.getString("AbstractMetadataFormPage.contextGroupSettingsSection"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.contextGroupSettingsSectionDescription")); //$NON-NLS-1$ //$NON-NLS-2$
         Composite contextGroupSectionComp = toolkit.createComposite(contextGroupSection);
         contextGroupSectionComp.setLayout(new GridLayout());
-        @SuppressWarnings("unused")
-        ContextComposite contextComposite = new ContextComposite((SupportContextEditor) currentEditor, contextGroupSectionComp,
-                SWT.NONE);
+        contextComposite = new ContextComposite((SupportContextEditor) currentEditor, contextGroupSectionComp, SWT.NONE);
         contextGroupSection.setClient(contextGroupSectionComp);
     }
 

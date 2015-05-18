@@ -339,6 +339,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         createContextGroupSection(form, topComp);
         createAnalysisSummarySection(topComp);
         createStatisticalSection(topComp);
+        setAllReadOnlyIfNeeded();
     }
 
     /**

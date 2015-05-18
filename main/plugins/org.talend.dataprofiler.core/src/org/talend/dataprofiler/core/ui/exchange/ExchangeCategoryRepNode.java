@@ -38,8 +38,6 @@ public class ExchangeCategoryRepNode extends DQRepositoryNode {
 
     private final IEcosCategory ecosCategory;
 
-    private ENodeType type;
-
     private String label;
 
     public IEcosCategory getEcosCategory() {
@@ -62,17 +60,13 @@ public class ExchangeCategoryRepNode extends DQRepositoryNode {
         this.msg = msg;
     }
 
-    @Override
-    public ENodeType getType() {
-        return this.type;
-    }
-
     public void setLabel(String label) {
         this.label = label;
     }
 
-    public ExchangeCategoryRepNode(IEcosCategory ecosCategory, RepositoryNode parent, ENodeType type) {
-        super(null, parent, type);
+    public ExchangeCategoryRepNode(IEcosCategory ecosCategory, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(null, parent, type, inWhichProject);
         this.type = type;
         this.ecosCategory = ecosCategory;
         if (ecosCategory != null) {
@@ -92,7 +86,7 @@ public class ExchangeCategoryRepNode extends DQRepositoryNode {
         if (this.isFlag()) {
             List<IEcosComponent> component = this.ecosCategory.getComponent(ExchangeCategoryRepNode.isOnFilterring());
             for (IEcosComponent eco : component) {
-                list.add(new ExchangeComponentRepNode(eco, this, ENodeType.REPOSITORY_ELEMENT));
+                list.add(new ExchangeComponentRepNode(eco, this, ENodeType.REPOSITORY_ELEMENT, getProject()));
             }
         }
         return filterResultsIfAny(list);

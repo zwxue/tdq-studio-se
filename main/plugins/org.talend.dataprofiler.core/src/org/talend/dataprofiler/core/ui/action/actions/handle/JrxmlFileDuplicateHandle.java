@@ -46,9 +46,10 @@ public class JrxmlFileDuplicateHandle extends AbstractTDQFileDuplicateHandle {
     @Override
     protected Item createFileItemByDuplicateFile(IFile newFile, String fileExtension, String newName) {
 
+        IPath makeRelativeTo = newFile.getFullPath().removeLastSegments(1)
+                .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1));
         return createJrxml(
-                newFile.getFullPath().removeLastSegments(1)
-                        .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1)), newName,
+                makeRelativeTo, newName,
                 WorkspaceUtils.ifileToFile(file), fileExtension);
     }
 

@@ -152,6 +152,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         createAnalysisParamSection(form, topComp);
 
         createContextGroupSection(form, topComp);
+
+        setAllReadOnlyIfNeeded();
     }
 
     @Override

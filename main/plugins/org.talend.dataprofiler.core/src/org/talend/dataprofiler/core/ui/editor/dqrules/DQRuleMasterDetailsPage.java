@@ -47,7 +47,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
@@ -126,8 +125,6 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         }
     }
 
-    private ScrolledForm form;
-
     private Section dqRuleDefinitionSection;
 
     private Section joinConditionSection;
@@ -197,6 +194,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         }
     }
 
+    @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         form = managedForm.getForm();
@@ -209,6 +207,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         createDQRuleDefinitionSection(topComp);
         createJoinConditionSection(topComp);
+
+        setAllReadOnlyIfNeeded();
     }
 
     /**
@@ -372,8 +372,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
                 break;
             } else if (tableAliasA.equals(tableAliasB)) {
                 ret = false;
-                String tableA = ColumnHelper.getColumnSetOwner((TdColumn) join.getColA()).getName();
-                String tableB = ColumnHelper.getColumnSetOwner((TdColumn) join.getColB()).getName();
+                String tableA = ColumnHelper.getColumnSetOwner(join.getColA()).getName();
+                String tableB = ColumnHelper.getColumnSetOwner(join.getColB()).getName();
                 msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.sameTableAlias", tableA, tableB) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
             } else {
                 if (!checkAlias(tableAliasA)) {
@@ -493,6 +493,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 jcTableViewer.addJoinElement();
             }
@@ -503,6 +504,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         delButton.setLayoutData(labelGd);
         delButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 JoinElement join = (JoinElement) ((IStructuredSelection) jcTableViewer.getSelection()).getFirstElement();
                 if (join != null) {
@@ -527,6 +529,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 JoinElement newJoinElement = RulesFactory.eINSTANCE.createJoinElement();
                 newJoinElement.setOperator(DEFAULT_OPERATOR);
@@ -573,6 +576,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(combo);
         combo.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 fje.setOperator(combo.getText());
                 setDirty(true);
@@ -599,6 +603,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(delButton);
         delButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 tempJoinElements.remove(fje);
                 expressComp.dispose();
@@ -678,8 +683,9 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         }
 
         public void dragEnter(DropTargetEvent event) {
-            if (event.detail == DND.DROP_DEFAULT)
+            if (event.detail == DND.DROP_DEFAULT) {
                 event.detail = DND.DROP_COPY;
+            }
         }
 
         public void dragOver(DropTargetEvent event) {
@@ -687,8 +693,9 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         }
 
         public void dragOperationChanged(DropTargetEvent event) {
-            if (event.detail == DND.DROP_DEFAULT)
+            if (event.detail == DND.DROP_DEFAULT) {
                 event.detail = DND.DROP_COPY;
+            }
         }
 
         public void dragLeave(DropTargetEvent event) {

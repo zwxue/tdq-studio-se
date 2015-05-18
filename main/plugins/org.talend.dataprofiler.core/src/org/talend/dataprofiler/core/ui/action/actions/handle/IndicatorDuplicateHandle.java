@@ -59,11 +59,11 @@ public class IndicatorDuplicateHandle extends ModelElementDuplicateHandle {
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataprofiler.core.ui.action.actions.duplicate.DuplicateEMFResourceHandle#extractFolder(orgomg.cwm.
-     * objectmodel.core.ModelElement)
+     * org.talend.dataprofiler.core.ui.action.actions.handle.ModelElementDuplicateHandle#extractFolder(org.talend.core
+     * .model.properties.Item, orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
-    protected IFolder extractFolder(ModelElement oldObject) {
+    protected IFolder extractFolder(Item oldItem, ModelElement oldObject) {
         return ResourceManager.getUDIFolder();
     }
 

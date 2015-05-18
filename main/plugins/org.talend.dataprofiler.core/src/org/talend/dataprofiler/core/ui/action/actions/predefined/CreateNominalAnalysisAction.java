@@ -52,7 +52,7 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         if (addTextIndicator) {
             allwedEnumeLs.add(IndicatorEnum.TextIndicatorEnum);
         }
-        IndicatorEnum[] allwedEnumeArray = (IndicatorEnum[]) allwedEnumeLs.toArray(new IndicatorEnum[allwedEnumeLs.size()]);
+        IndicatorEnum[] allwedEnumeArray = allwedEnumeLs.toArray(new IndicatorEnum[allwedEnumeLs.size()]);
 
         return composePredefinedColumnIndicator(allwedEnumeArray);
     }
@@ -65,11 +65,12 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
 
     @Override
     protected boolean preDo() {
-    	// MOD msjian TDQ-5530 2012-12-20: make the icon and text have the same look&feel as in the DQ repository view. 
+        // MOD msjian TDQ-5530 2012-12-20: make the icon and text have the same look&feel as in the DQ repository view.
         List<DFColumnRepNode> tempList = new ArrayList<DFColumnRepNode>();
         addTextIndicator = true;
         for (IRepositoryNode repositoryNode : getColumns()) {
-            DFColumnRepNode columnNode = new DFColumnRepNode(repositoryNode.getObject(), repositoryNode.getParent(), ENodeType.TDQ_REPOSITORY_ELEMENT);
+            DFColumnRepNode columnNode = new DFColumnRepNode(repositoryNode.getObject(), repositoryNode.getParent(),
+                    ENodeType.TDQ_REPOSITORY_ELEMENT, null);
             int javaSQLType = TalendTypeConvert.convertToJDBCType(columnNode.getMetadataColumn().getTalendType());
             if (!Java2SqlType.isTextInSQL(javaSQLType)) {
                 tempList.add(columnNode);

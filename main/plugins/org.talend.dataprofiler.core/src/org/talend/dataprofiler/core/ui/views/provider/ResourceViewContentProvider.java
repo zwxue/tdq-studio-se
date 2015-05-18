@@ -13,37 +13,47 @@
 package org.talend.dataprofiler.core.ui.views.provider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.ProjectReference;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryPrefConstants;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
@@ -57,9 +67,10 @@ import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.IRepositoryNode.EProperties;
+import org.talend.repository.model.IRepositoryService;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.exceptions.MissingDriverException;
 
 /**
@@ -70,6 +81,40 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
 
     private TreeViewer treeViewer = null;
+
+    private IPropertyChangeListener mergeRefListener;
+
+    /**
+     * DOC sgandon Comment method "registerMergeRefListgener".
+     */
+    private void registerMergeRefListener() {
+        if (mergeRefListener == null) {
+            mergeRefListener = new IPropertyChangeListener() {
+
+                public void propertyChange(PropertyChangeEvent event) {
+                    if (IRepositoryPrefConstants.MERGE_REFERENCE_PROJECT.equals(event.getProperty())) {
+                        try {
+                            ProxyRepositoryFactory.getInstance().initialize();
+                        } catch (PersistenceException e) {
+                            log.error(e, e);
+                        }
+                        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                        CommonNavigator findView = (CommonNavigator) activePage
+                                .findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
+                        findView.getCommonViewer().refresh();
+                    }
+
+                }
+            };
+            // the merge only for DI repository,need to judge null for other product
+            IRepositoryService repositoryService = CoreRuntimePlugin.getInstance().getRepositoryService();
+            if (repositoryService != null) {
+                IPreferenceStore preferenceStore = repositoryService.getRepositoryPreferenceStore();
+                preferenceStore.addPropertyChangeListener(mergeRefListener);
+            }
+
+        }
+    }
 
     /**
      * DOC rli ResourceViewContentProvider constructor comment.
@@ -87,7 +132,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
         try {
             if (element instanceof IWorkspaceRoot) {
-                return getWorkspaceRootChildren(element);
+                return createWorkspaceRootChildren(element);
             } else if (element instanceof RepositoryNode) {
                 return getRepositoryNodeChildren(element);
             }
@@ -106,10 +151,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      * @param instance
      * @return
      * @throws PersistenceException
+     * @throws CoreException
      */
-    private Object[] getRepositoryNodeChildren(Object element) throws PersistenceException {
+    private Object[] getRepositoryNodeChildren(Object element) throws PersistenceException, CoreException {
         RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
-        final RepositoryNode node = (RepositoryNode) element;
+        final DQRepositoryNode node = (DQRepositoryNode) element;
         // MOD gdbu 2011-7-20 bug : 23220
         DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
         List<IRepositoryNode> children = node.getChildren();
@@ -148,34 +194,61 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
         if (children.size() <= 0) {
             // ~23220
-            IRepositoryViewObject viewObject = node.getObject();
-            String label = viewObject == null ? null : viewObject.getLabel();
-            if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
-                List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                resContants.add(EResourceConstant.ANALYSIS);
-                if (PluginChecker.isTDQLoaded()) {
-                    resContants.add(EResourceConstant.REPORTS);
+            if (EResourceConstant.REFERENCED_PROJECT.getName().equals(node.getProperties(EProperties.LABEL))) {
+                if (!ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+                    // create children for referenced project node
+                    handleReferenced(node);
                 }
-                instance.createRepositoryNodeSystemFolders(node, resContants);
-            } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
+
+            } else {
                 List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                resContants.add(EResourceConstant.EXCHANGE);
-                resContants.add(EResourceConstant.INDICATORS);
-                if (PluginChecker.isTDQLoaded()) {
-                    resContants.add(EResourceConstant.JRXML_TEMPLATE);
+                IRepositoryViewObject viewObject = node.getObject();
+                String label = viewObject == null ? null : viewObject.getLabel();
+                if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
+                    resContants.add(EResourceConstant.ANALYSIS);
+                    if (PluginChecker.isTDQLoaded()) {
+                        resContants.add(EResourceConstant.REPORTS);
+                    }
+                } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
+                    resContants.add(EResourceConstant.EXCHANGE);
+                    resContants.add(EResourceConstant.INDICATORS);
+                    if (PluginChecker.isTDQLoaded()) {
+                        resContants.add(EResourceConstant.JRXML_TEMPLATE);
+                    }
+                    resContants.add(EResourceConstant.PATTERNS);
+                    resContants.add(EResourceConstant.RULES);
+                    resContants.add(EResourceConstant.SOURCE_FILES);
+                } else if (EResourceConstant.METADATA.getName().equals(label)) {
+                    resContants.add(EResourceConstant.DB_CONNECTIONS);
+                    resContants.add(EResourceConstant.FILEDELIMITED);
                 }
-                resContants.add(EResourceConstant.PATTERNS);
-                resContants.add(EResourceConstant.RULES);
-                resContants.add(EResourceConstant.SOURCE_FILES);
-                instance.createRepositoryNodeSystemFolders(node, resContants);
-            } else if (EResourceConstant.METADATA.getName().equals(label)) {
-                List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                resContants.add(EResourceConstant.DB_CONNECTIONS);
-                resContants.add(EResourceConstant.FILEDELIMITED);
-                instance.createRepositoryNodeSystemFolders(node, resContants);
+                instance.createRepositoryNodeSystemFolders(node, resContants, node.getProject());
+                // if (haveHandleReferencedProject) {
+                // // use referenced project
+                // Project currentProject = ProjectManager.getInstance().getCurrentProject();
+                // for (ProjectReference refProject : (List<ProjectReference>) currentProject.getEmfProject()
+                // .getReferencedProjects()) {
+                // String parentBranch = ProjectManager.getInstance().getMainProjectBranch(currentProject);
+                // // if not a DB ref project, modified by nma, order 12519
+                // if (refProject.getReferencedProject().getUrl() != null
+                //                                && refProject.getReferencedProject().getUrl().startsWith("teneo") //$NON-NLS-1$
+                // || (refProject.getBranch() != null && refProject.getBranch().equals(parentBranch))) {
+                // org.talend.core.model.properties.Project emfProject = refProject.getReferencedProject();
+                // instance.createRepositoryNodeSystemFolders(node, resContants, emfProject);
+                // }
+                // }
+                // } else {
+                // // use current project
+                // instance.createRepositoryNodeSystemFolders(node, resContants,);
+                // }
             }
         }
         return sortRepositoryNode(children.toArray());
+    }
+
+    private Object[] createWorkspaceRootChildren(Object element) throws CoreException {
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        return createWorkspaceRootChildren(element, currentProject);
     }
 
     /**
@@ -185,51 +258,77 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      * @return
      * @throws CoreException
      */
-    private Object[] getWorkspaceRootChildren(Object element) throws CoreException {
-        Object currentOpenProject = null;
-        RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
-        for (Object child : super.getChildren(element)) {
-            if (child instanceof IProject) {
-                if (((IProject) child).getName().equals(ResourceManager.getRootProjectName())) {
-                    currentOpenProject = child;
-                    break;
-                }
-            }
-        }
+    private Object[] createWorkspaceRootChildren(Object element, org.talend.core.model.general.Project inWhichProject)
+            throws CoreException {
         List<Object> folders = new ArrayList<Object>();
-
-        Object[] rootFolders = new Object[0];
-        if (currentOpenProject != null) {
-            rootFolders = ((IProject) currentOpenProject).members(false);
-
-            for (Object folder : rootFolders) {
-                IRepositoryNode node = null;
-                // here we use DQStructureManager.PREFIX_TDQ is because of we expect it is useful when we add some
-                // TDQ_XXX node on the DQRepository view
-                if (folder instanceof IFolder && ((IFolder) folder).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
-                    IFolder iFolder = (IFolder) folder;
-                    if (((IFolder) folder).getName().trim().equals("TDQ_reporting_db")) { //$NON-NLS-1$
-                        continue;
-                    }
-                    IPath relativePath = iFolder.getFullPath().makeRelativeTo(((IProject) currentOpenProject).getFullPath());
-                    ERepositoryObjectType respositoryObjectType = instance.retrieveRepObjectTypeByPath(relativePath.toOSString());
-                    node = createNewRepNode(respositoryObjectType);
+        org.talend.core.model.properties.Project currentEmfProject = inWhichProject.getEmfProject();
+        List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(currentEmfProject);
+        for (FolderItem folder : new ArrayList<FolderItem>(folderItems)) {
+            if (WorkbenchUtils.isTDQOrMetadataRootFolder(folder, currentEmfProject)) {
+                String label = folder.getProperty().getLabel();
+                if (label.trim().equals("TDQ_reporting_db")) { //$NON-NLS-1$
+                    continue;
                 }
-                // MOD mzhao for metadata folder
-                if (folder instanceof IFolder && ((IFolder) folder).getName().equals(EResourceConstant.METADATA.getName())) {
-                    node = createNewRepNode(ERepositoryObjectType.METADATA);
-                }
-                if (node != null) {
-                    folders.add(node);
-                }
+                ERepositoryObjectType respositoryObjectType = RepositoryNodeBuilder.getInstance().retrieveRepObjectTypeByPath(
+                        label);
+                DQRepositoryNode node = createNewRepNode(respositoryObjectType, inWhichProject);
+                folders.add(node);
             }
         }
 
         // add RecycleBinRepNode
-        RecycleBinRepNode recycleBin = new RecycleBinRepNode(DefaultMessagesImpl.getString("RecycleBin.resBinName")); //$NON-NLS-1$
+        RecycleBinRepNode recycleBin = new RecycleBinRepNode(
+                DefaultMessagesImpl.getString("RecycleBin.resBinName"), inWhichProject); //$NON-NLS-1$
         folders.add(recycleBin);
 
-        return folders.toArray();
+        // Reference Projects
+        if (org.talend.core.PluginChecker.isRefProjectLoaded() && currentEmfProject != null
+                && currentEmfProject.getReferencedProjects().size() > 0) {
+
+            if (!ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+                DQRepositoryNode refProjectNode = createNewRepNode(ERepositoryObjectType.REFERENCED_PROJECTS, inWhichProject);
+                refProjectNode.setProperties(EProperties.LABEL, ERepositoryObjectType.REFERENCED_PROJECTS.getLabel());
+                refProjectNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.REFERENCED_PROJECTS);
+                folders.add(refProjectNode);
+            }
+        }
+
+        return sortRepositoryNode(folders.toArray());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void handleReferenced(RepositoryNode parent) {
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        if (parent.getType().equals(ENodeType.SYSTEM_FOLDER)) {
+            for (ProjectReference refProject : (List<ProjectReference>) currentProject.getEmfProject().getReferencedProjects()) {
+                String parentBranch = ProjectManager.getInstance().getMainProjectBranch(currentProject);
+                // if not a DB ref project, modified by nma, order 12519
+                org.talend.core.model.properties.Project emfProject = refProject.getReferencedProject();
+                if (emfProject.getUrl() != null && emfProject.getUrl().startsWith("teneo") //$NON-NLS-1$
+                        || (refProject.getBranch() != null && refProject.getBranch().equals(parentBranch))) {
+
+                    DQRepositoryNode referencedProjectNode = new DQRepositoryNode(null, parent, ENodeType.REFERENCED_PROJECT,
+                            currentProject);
+                    referencedProjectNode.setProperties(EProperties.LABEL, emfProject.getLabel());
+                    referencedProjectNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.REFERENCED_PROJECTS);
+                    parent.getChildren().add(referencedProjectNode);
+                    // fix the bug for Ref-project
+                    // TDI-23358, revert to before
+                    // ProjectManager.getInstance().updateViewProjectNode(referencedProjectNode);
+
+                    try {
+                        org.talend.core.model.general.Project refGeneralProject = new org.talend.core.model.general.Project(
+                                emfProject, false);
+                        Object[] createWorkspaceRootChildren = createWorkspaceRootChildren(referencedProjectNode,
+                                refGeneralProject);
+                        referencedProjectNode.getChildren().addAll(
+                                (Collection<? extends IRepositoryNode>) Arrays.asList(createWorkspaceRootChildren));
+                    } catch (CoreException e) {
+                        log.error(e, e);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -258,18 +357,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         return children;
     }
 
-    /**
-     * create new Repositry node by specified type
-     * 
-     * @param folders
-     * @param folder
-     * @return new repository node
-     */
-    private IRepositoryNode createNewRepNode(ERepositoryObjectType type) {
+    private DQRepositoryNode createNewRepNode(ERepositoryObjectType type, org.talend.core.model.general.Project inWhichProject) {
         IRepositoryViewObject viewObject = null;
-
-        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                ProjectManager.getInstance().getCurrentProject(), type, Path.EMPTY);
+        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(inWhichProject, type, Path.EMPTY);
         if (folderItem == null) {
             String folderName = ERepositoryObjectType.getFolderName(type);
             viewObject = new Folder(folderName, folderName);
@@ -277,9 +367,21 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             viewObject = new Folder(folderItem.getProperty(), type);
         }
 
-        IRepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
+        DQRepositoryNode node = new DQRepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER, inWhichProject);
         viewObject.setRepositoryNode(node);
         return node;
+    }
+
+    /**
+     * create new Repositry node by specified type
+     * 
+     * @param folders
+     * @param folder
+     * @return new repository node
+     */
+    private DQRepositoryNode createNewRepNode(ERepositoryObjectType type) {
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        return createNewRepNode(type, currentProject);
     }
 
     /**
@@ -315,6 +417,37 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     return false;
                 } else if (node instanceof SysIndicatorFolderRepNode) {
                     return true;
+
+                } else if (element instanceof DBTableFolderRepNode) {
+                    // MOD gdbu 2011-9-1 TDQ-3457
+                    if (DQRepositoryNode.isOnFilterring()) {
+                        return true;
+                    }
+                    DBTableFolderRepNode dbTableFolder = (DBTableFolderRepNode) element;
+                    return dbTableFolder.hasChildren();
+                } else if (element instanceof DBTableRepNode) {
+                    return true;
+                } else if (element instanceof DBViewRepNode) {
+                    return true;
+                } else if (element instanceof DBCatalogRepNode) {
+                    return true;
+                } else if (element instanceof DBSchemaRepNode) {
+                    return true;
+                } else if (element instanceof DBViewFolderRepNode) {
+                    if (DQRepositoryNode.isOnFilterring()) {
+                        return true;
+                    }
+                    DBViewFolderRepNode dbViewFolder = (DBViewFolderRepNode) element;
+                    return dbViewFolder.hasChildren();
+                    // ~TDQ-3457
+                    // } else if (node instanceof DQProjectRepositoryNode) {
+                    // return true;
+                } else {
+                    // for reference project node
+                    // if (EResourceConstant.REFERENCED_PROJECT.getName().equals(node.getProperties(EProperties.LABEL)))
+                    // {
+                    // return true;
+                    // }
                 }
             }
             if (element instanceof IEcosCategory) {
@@ -345,40 +478,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             // }
             // return false;
             // }
-
-            // MOD gdbu 2011-9-1 TDQ-3457
-            if (element instanceof DBTableFolderRepNode) {
-                if (DQRepositoryNode.isOnFilterring()) {
-                    return true;
-                }
-                DBTableFolderRepNode dbTableFolder = (DBTableFolderRepNode) element;
-                return dbTableFolder.hasChildren();
-            }
-
-            if (element instanceof DBTableRepNode) {
-                return true;
-            }
-
-            if (element instanceof DBViewRepNode) {
-                return true;
-            }
-
-            if (element instanceof DBCatalogRepNode) {
-                return true;
-            }
-
-            if (element instanceof DBSchemaRepNode) {
-                return true;
-            }
-
-            if (element instanceof DBViewFolderRepNode) {
-                if (DQRepositoryNode.isOnFilterring()) {
-                    return true;
-                }
-                DBViewFolderRepNode dbViewFolder = (DBViewFolderRepNode) element;
-                return dbViewFolder.hasChildren();
-            }
-            // ~TDQ-3457
 
         } catch (MissingDriverException e) {
             if (PluginChecker.isOnlyTopLoaded()) {
@@ -411,6 +510,36 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     public void setTreeViewer(TreeViewer fViewer) {
         this.treeViewer = fViewer;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+     * java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        super.inputChanged(viewer, oldInput, newInput);
+        registerMergeRefListener();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.model.WorkbenchContentProvider#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (mergeRefListener != null) {
+            IRepositoryService repositoryService = CoreRuntimePlugin.getInstance().getRepositoryService();
+            if (repositoryService != null) {
+                IPreferenceStore preferenceStore = repositoryService.getRepositoryPreferenceStore();
+                preferenceStore.removePropertyChangeListener(mergeRefListener);
+            }
+            mergeRefListener = null;
+        }
     }
 
 }

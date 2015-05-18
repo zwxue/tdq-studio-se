@@ -295,6 +295,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             // ~
             createPreviewSection(form, previewComp);
         }
+
+        setAllReadOnlyIfNeeded();
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {

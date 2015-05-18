@@ -13,14 +13,16 @@
 package org.talend.dataprofiler.core.ui.views.provider;
 
 import java.sql.Driver;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.runtime.model.repository.ERepositoryStatus;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.database.EDatabaseTypeName;
@@ -42,11 +45,11 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.ui.IReferencedProjectService;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataquality.analysis.Analysis;
@@ -70,7 +73,6 @@ import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
-import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
@@ -80,6 +82,7 @@ import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
@@ -92,13 +95,19 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author rli
  */
-public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider implements IFontProvider {
-
-    /**
-     *
-     */
+public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider implements IFontProvider, IColorProvider {
 
     private static Font italicFont;
+
+    private static final Color STABLE_SECONDARY_ENTRY_COLOR = new Color(null, 100, 100, 100);
+
+    private static final Color STABLE_PRIMARY_ENTRY_COLOR = new Color(null, 0, 0, 0);
+
+    protected static final Color INACTIVE_ENTRY_COLOR = new Color(null, 200, 200, 200);
+
+    private static final Color LOCKED_ENTRY = new Color(null, 200, 0, 0);
+
+    private static final Color MERGED_REFERENCED_ITEMS_COLOR = new Color(null, 120, 120, 120);
 
     private Logger log = Logger.getLogger(DQRepositoryViewLabelProvider.class);
 
@@ -130,30 +139,36 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             if (element instanceof RecycleBinRepNode) {
                 image = ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
             } else if (type.equals(ENodeType.SYSTEM_FOLDER)) {
-                String label = viewObject.getLabel();
-                if (label.equals(EResourceConstant.DATA_PROFILING.getName())) {
-                    image = ImageLib.getImage(ImageLib.DATA_PROFILING);
-                } else if (label.equals(EResourceConstant.METADATA.getName())) {
-                    image = ImageLib.getImage(ImageLib.METADATA);
-                } else if (node instanceof DBConnectionFolderRepNode) {
-                    image = ImageLib.getImage(ImageLib.CONNECTION);
-                } else if (label.equals(EResourceConstant.FILEDELIMITED.getName())) {
-                    image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
-                } else if (label.equals(EResourceConstant.LIBRARIES.getName())) {
-                    image = ImageLib.getImage(ImageLib.LIBRARIES);
-                } else if (label.equals(EResourceConstant.EXCHANGE.getName())) {
-                    image = ImageLib.getImage(ImageLib.EXCHANGE);
+                if (EResourceConstant.REFERENCED_PROJECT.getName().equals(node.getProperties(EProperties.LABEL))) {
+                    image = ImageLib.getImage(ImageLib.REFERENCED_PROJECT);
                 } else {
-                    image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+                    String label = viewObject.getLabel();
+                    if (label.equals(EResourceConstant.DATA_PROFILING.getName())) {
+                        image = ImageLib.getImage(ImageLib.DATA_PROFILING);
+                    } else if (label.equals(EResourceConstant.METADATA.getName())) {
+                        image = ImageLib.getImage(ImageLib.METADATA);
+                    } else if (node instanceof DBConnectionFolderRepNode) {
+                        image = ImageLib.getImage(ImageLib.CONNECTION);
+                    } else if (label.equals(EResourceConstant.FILEDELIMITED.getName())) {
+                        image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
+                    } else if (label.equals(EResourceConstant.LIBRARIES.getName())) {
+                        image = ImageLib.getImage(ImageLib.LIBRARIES);
+                    } else if (label.equals(EResourceConstant.EXCHANGE.getName())) {
+                        image = ImageLib.getImage(ImageLib.EXCHANGE);
+                    } else {
+                        image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+                    }
                 }
             } else if (type.equals(ENodeType.SIMPLE_FOLDER)) {
                 image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+            } else if (type.equals(ENodeType.REFERENCED_PROJECT)) {
+                image = ImageLib.getImage(ImageLib.REFERENCED_PROJECT);
             } else if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
                 // TDQ-7560 when the image is a overlay image,use originalImageName to get the corresponding one.
                 String originalImageName = null;
                 if (node instanceof DBConnectionRepNode) {
                     originalImageName = ImageLib.TD_DATAPROVIDER;
-                    if (!isSupportedConnection(node) || isNeedAddDriverConnection(node)) {
+                    if (!RepositoryNodeHelper.isSupportedConnection(node) || isNeedAddDriverConnection(node)) {
                         image = ImageLib.createErrorIcon(originalImageName).createImage();
                     } else if (isInvalidJDBCConnection(node)) {
                         image = ImageLib.createInvalidIcon(originalImageName).createImage();
@@ -296,23 +311,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         try {
             if (element != null && element instanceof IRepositoryNode) {
                 IRepositoryNode node = (IRepositoryNode) element;
-
-                if (node instanceof DBConnectionRepNode) {
-                    if (!isSupportedConnection(node)) {
-                        return node.getObject().getLabel() + PluginConstant.UNSUPPORTED;
-                    }
-                }
-                if (node instanceof DQRepositoryNode) {
-                    return node.getDisplayText();
-                }
-
-                String label = node.getObject().getLabel();
-                if (label.startsWith(DQStructureManager.PREFIX_TDQ)) {
-                    return label.substring(4, label.length());
-                } else if (label.equals(EResourceConstant.METADATA.getName())) {
-                    return label.substring(0, 1).toUpperCase() + label.substring(1);
-                }
-                return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
+                return RepositoryNodeHelper.getDisplayLabel(node);
             }
         } catch (MissingDriverException e) {
             if (PluginChecker.isOnlyTopLoaded()) {
@@ -370,21 +369,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         }
         return null;
 
-    }
-
-    private boolean isSupportedConnection(IRepositoryNode repNode) {
-        ERepositoryObjectType objectType = repNode.getObjectType();
-
-        if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
-            ConnectionItem connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
-            if (connectionItem.getConnection() instanceof DatabaseConnection) {
-                String databaseType = ((DatabaseConnection) connectionItem.getConnection()).getDatabaseType();
-                List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
-                return tdqSupportDBType.contains(databaseType);
-            }
-        }
-
-        return false;
     }
 
     private boolean isNeedAddDriverConnection(IRepositoryNode repNode) {
@@ -449,19 +433,80 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         boolean changeURL = false;
         if (element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
-            ENodeType type = node.getType();
+            if (node instanceof RecycleBinRepNode) {
+                return super.getFont(element);
+            }
+            if (node.getObject() != null) {
+                switch (node.getType()) {
+                case STABLE_SYSTEM_FOLDER:
+                case SYSTEM_FOLDER:
+                    return JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+                case REPOSITORY_ELEMENT:
+                    if (node instanceof DBConnectionRepNode) {
+                        ConnectionItem connectionItem = (ConnectionItem) node.getObject().getProperty().getItem();
+                        if (connectionItem.getConnection() instanceof DatabaseConnection) {
+                            changeURL = ConnectionHelper.isUrlChanged(connectionItem.getConnection());
+                            if (changeURL) {
+                                return italicFont;
+                            }
+                        }
+                    }
+                default:
+                    return JFaceResources.getFontRegistry().defaultFont();
+                }
+            }
+        }
+        return super.getFont(element);
+    }
 
-            if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
-                if (node instanceof DBConnectionRepNode) {
-                    ConnectionItem connectionItem = (ConnectionItem) node.getObject().getProperty().getItem();
-                    if (connectionItem.getConnection() instanceof DatabaseConnection) {
-                        changeURL = ConnectionHelper.isUrlChanged(connectionItem.getConnection());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getForeground(java.lang.Object)
+     */
+    @Override
+    public Color getForeground(Object element) {
+        RepositoryNode node = (RepositoryNode) element;
+        if (node instanceof RecycleBinRepNode) {
+            return super.getForeground(element);
+        }
+        if (node.getObject() != null) {
+            switch (node.getType()) {
+            case REFERENCED_PROJECT:
+                return STABLE_PRIMARY_ENTRY_COLOR;
+            case STABLE_SYSTEM_FOLDER:
+            case SYSTEM_FOLDER:
+                if (node.getContentType() == ERepositoryObjectType.TDQ_DATA_PROFILING
+                        || node.getContentType() == ERepositoryObjectType.METADATA
+                        || node.getContentType() == ERepositoryObjectType.TDQ_SYSTEM_INDICATORS
+                        || node.getContentType() == ERepositoryObjectType.TDQ_PATTERN_REGEX) {
+                    return STABLE_PRIMARY_ENTRY_COLOR;
+                }
+                return STABLE_SECONDARY_ENTRY_COLOR;
+            default:
+                ERepositoryStatus repositoryStatus = node.getObject().getRepositoryStatus();
+                if (repositoryStatus == ERepositoryStatus.LOCK_BY_OTHER) {
+                    return LOCKED_ENTRY;
+                }
+
+                if (org.talend.core.PluginChecker.isRefProjectLoaded()) {
+                    IReferencedProjectService service = (IReferencedProjectService) GlobalServiceRegister.getDefault()
+                            .getService(IReferencedProjectService.class);
+                    if (service != null && service.isMergeRefProject()) {
+                        IRepositoryViewObject object = node.getObject();
+                        if (object != null) {
+                            org.talend.core.model.properties.Project mainProject = ProjectManager.getInstance()
+                                    .getCurrentProject().getEmfProject();
+                            String projectLabel = object.getProjectLabel();
+                            if (!mainProject.getLabel().equals(projectLabel)) {
+                                return MERGED_REFERENCED_ITEMS_COLOR;
+                            }
+                        }
                     }
                 }
             }
         }
-
-        return changeURL ? italicFont : super.getFont(element);
+        return super.getForeground(element);
     }
 
 }

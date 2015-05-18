@@ -15,8 +15,6 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
-import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
-import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDBConnectionAction;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDFConnectionAction;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
@@ -45,12 +43,6 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
     public void fillContextMenu(IMenuManager menu) {
         // MOD mzhao user readonly role on svn repository mode.
         if (!isShowMenu()) {
-            return;
-        }
-        // MOD mzhao user readonly role on svn repository mode.
-        AbstractSvnRepositoryService svnReposService = GlobalServiceRegister.getDefault().getSvnRepositoryService(
-                AbstractSvnRepositoryService.class);
-        if (svnReposService != null && svnReposService.isReadonly()) {
             return;
         }
 

@@ -40,8 +40,9 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public ExchangeFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public ExchangeFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
             if (result[0] instanceof String) {
                 for (Object obj : result) {
                     ExchangeCategoryRepNode exchangeCategoryRepNode = new ExchangeCategoryRepNode(null, this,
-                            ENodeType.REPOSITORY_ELEMENT);
+                            ENodeType.REPOSITORY_ELEMENT, getProject());
                     exchangeCategoryRepNode.setFlag(false);
                     exchangeCategoryRepNode.setMsg((String) obj);
                     list.add(exchangeCategoryRepNode);
@@ -92,7 +93,7 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
                     IEcosCategory category = (IEcosCategory) obj;
                     String name = category.getName();
                     ExchangeCategoryRepNode exchangeCategoryRepNode = new ExchangeCategoryRepNode(category, this,
-                            ENodeType.REPOSITORY_ELEMENT);
+                            ENodeType.REPOSITORY_ELEMENT, getProject());
                     exchangeCategoryRepNode.setFlag(true);
                     exchangeCategoryRepNode.setMsg("");//$NON-NLS-1$ 
                     if (!(name.equals("ParserRule") && PluginChecker.isOnlyTopLoaded())) {//$NON-NLS-1$ 

@@ -189,6 +189,8 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
 
             createPreviewSection(form, previewComp);
         }
+
+        setAllReadOnlyIfNeeded();
     }
 
     void createAnalysisTablesSection(final ScrolledForm form1, Composite anasisDataComp) {

@@ -255,7 +255,7 @@ public class DQDeleteAction extends DeleteAction {
             RepositoryNodeHelper.regainRecycleBinFilteredNode();
         }
         // the deleteReportFile() mothed have refresh the workspace and dqview
-        refreshWorkspaceAndRecycleBenNode();
+        refreshWorkspaceAndRecycleBinNodes();
     }
 
     /**
@@ -285,11 +285,12 @@ public class DQDeleteAction extends DeleteAction {
     }
 
     /**
-     * DOC zshen Comment method "refreshWorkspaceAndRecycleBenNode".
+     * DOC msjian Comment method "refreshWorkspaceAndRecycleBinNodes".
      */
-    protected void refreshWorkspaceAndRecycleBenNode() {
+    protected void refreshWorkspaceAndRecycleBinNodes() {
         CorePlugin.getDefault().refreshWorkSpace();
-        CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
+        // we need to refresh all recycle bin nodes including the recycle bin node under referenced projects.
+        CorePlugin.getDefault().refreshDQView();
     }
 
     /**

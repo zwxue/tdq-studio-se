@@ -34,8 +34,10 @@ import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.model.bridge.ReponsitoryContextBridge;
+import org.talend.repository.ProjectManager;
+import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -44,18 +46,28 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class ModelElementDuplicateHandle implements IDuplicateHandle {
 
     /**
-     * DOC bZhou Comment method "extractFolder".
+     * DOC msjian Comment method "extractFolder".
      * 
+     * @param oldItem
      * @param oldObject
      * @return
      */
-    protected IFolder extractFolder(ModelElement oldObject) {
+    protected IFolder extractFolder(Item oldItem, ModelElement oldObject) {
         Resource resource = oldObject.eResource();
-
         IPath path = new Path(resource.getURI().toPlatformString(false));
         IFile oldFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-
-        return (IFolder) oldFile.getParent();
+        boolean inCurrentMainProject = ProjectManager.getInstance().isInCurrentMainProject(oldItem);
+        IFolder parent = (IFolder) oldFile.getParent();
+        if (inCurrentMainProject) {
+            return parent;
+        } else {
+            // for the reference project node, we get its folder in current project.
+            EResourceConstant typedConstant = EResourceConstant.getTypedConstant(oldObject);
+            if (typedConstant != null) {
+                return ResourceManager.getOneFolder(typedConstant);
+            }
+        }
+        return parent;
     }
 
     /**
@@ -124,11 +136,11 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
     public Item duplicateItem(Item oldItem, String newName) throws BusinessException {
         // duplicate the related model element
         ModelElement oldModelElement = PropertyHelper.getModelElement(oldItem.getProperty());
-        ModelElement newModelElement = duplicateModelElement(oldModelElement, newName);
 
         // create the related item and save
         AElementPersistance elementWriter = ElementWriterFactory.getInstance().create(oldModelElement);
-        IFolder folder = extractFolder(oldModelElement);
+        ModelElement newModelElement = duplicateModelElement(oldModelElement, newName);
+        IFolder folder = extractFolder(oldItem, oldModelElement);
         TypedReturnCode<Object> returnCode = elementWriter.create(newModelElement, folder);
 
         if (returnCode.isOk()) {
