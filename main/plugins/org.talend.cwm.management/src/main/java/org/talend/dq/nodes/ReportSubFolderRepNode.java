@@ -70,8 +70,9 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
      * @param parent
      * @param type
      */
-    public ReportSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public ReportSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         this.reportSubFolderType = ReportSubFolderType.SUB_FOLDER;
     }
 
@@ -136,7 +137,8 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
             }
             // ~TDQ-3301
 
-            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                    getProject());
             node.setReport(this.getReport());
             node.setAnalysis(analysis);
             node.setId(this.getReport().getName() + analysis.getName());
@@ -159,7 +161,7 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
     private List<IRepositoryNode> buildChildrenReportFile(IResource[] repFiles) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         for (IResource res : repFiles) {
-            ReportFileRepNode node = new ReportFileRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            ReportFileRepNode node = new ReportFileRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
             node.setResource(res);
             node.setId(res.getFullPath().toOSString());
             nodes.add(node);

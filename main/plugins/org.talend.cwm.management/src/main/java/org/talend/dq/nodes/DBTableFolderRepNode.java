@@ -85,8 +85,9 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
-    public DBTableFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DBTableFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (parent == null) {
             RepositoryNode createParentNode = createParentNode(object);
             this.setParent(createParentNode);
@@ -121,9 +122,10 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
     private RepositoryNode createParentNode(IRepositoryViewObject object) {
         RepositoryNode dbParentRepNode = null;
         if (object instanceof MetadataCatalogRepositoryObject) {
-            dbParentRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                    getProject());
         } else if (object instanceof MetadataSchemaRepositoryObject) {
-            dbParentRepNode = new DBSchemaRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = new DBSchemaRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         }
         object.setRepositoryNode(dbParentRepNode);
         return dbParentRepNode;
@@ -237,7 +239,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
             metadataTable.setLabel(table.getName());
             metadataTable.setId(table.getName());
 
-            DBTableRepNode tableNode = new DBTableRepNode(metadataTable, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            DBTableRepNode tableNode = new DBTableRepNode(metadataTable, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
             tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
             tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
 

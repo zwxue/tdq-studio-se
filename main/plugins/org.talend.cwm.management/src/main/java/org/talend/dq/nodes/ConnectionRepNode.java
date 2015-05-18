@@ -14,6 +14,7 @@ package org.talend.dq.nodes;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -28,8 +29,10 @@ public class ConnectionRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public ConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public ConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
+        RepositoryNodeHelper.restoreCorruptedConn(object.getProperty());
     }
 
     /*

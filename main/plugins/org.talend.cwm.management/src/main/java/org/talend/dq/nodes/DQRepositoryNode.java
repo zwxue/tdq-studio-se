@@ -17,7 +17,9 @@ import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -25,6 +27,11 @@ import org.talend.repository.model.RepositoryNode;
  * DOC gdbu class global comment. Detailled comment
  */
 public class DQRepositoryNode extends RepositoryNode {
+
+    /**
+     * this can tell us which project(reference project, or current project) the node belongs to
+     */
+    private org.talend.core.model.general.Project project = null;
 
     /**
      * when filtering , record the filter's contents.
@@ -109,14 +116,17 @@ public class DQRepositoryNode extends RepositoryNode {
     }
 
     /**
-     * DOC gdbu DQRepositoryNode constructor comment.
+     * DQRepositoryNode constructor.(this is used for all type's node)
      * 
      * @param object
      * @param parent
      * @param type
+     * @param project if this is null, means we will use the current project
      */
-    public DQRepositoryNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
+    public DQRepositoryNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project project) {
         super(object, parent, type);
+        this.project = project;
     }
 
     /**
@@ -324,6 +334,31 @@ public class DQRepositoryNode extends RepositoryNode {
             return object.getLabel();
         }
         return super.getLabel();
+    }
+
+    /**
+     * Getter for project.
+     * 
+     * @return the project
+     */
+    public org.talend.core.model.general.Project getProject() {
+        if (project == null) {
+            return ProjectManager.getInstance().getCurrentProject();
+        }
+        return project;
+    }
+
+    public String getDisplayTextWithProjectName() {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            if (!this.getProject().isMainProject()) {
+                return getDisplayText() + getDisplayProjectName();
+            }
+        }
+        return getDisplayText();
+    }
+
+    public String getDisplayProjectName() {
+        return "(@" + this.getProject().getLabel() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ 
     }
 
 }

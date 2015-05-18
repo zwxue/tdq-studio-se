@@ -34,7 +34,7 @@ public class ReportFileRepNode extends DQRepositoryNode {
     public void setResource(IResource resource) {
         this.resource = resource;
     }
-    
+
     /**
      * DOC xqliu ReportFileRepNode constructor comment.
      * 
@@ -42,8 +42,9 @@ public class ReportFileRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public ReportFileRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public ReportFileRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     @Override

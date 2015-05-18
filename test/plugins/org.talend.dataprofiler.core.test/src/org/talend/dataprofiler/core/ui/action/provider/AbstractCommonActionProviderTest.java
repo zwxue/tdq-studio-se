@@ -199,7 +199,7 @@ public class AbstractCommonActionProviderTest {
             Assert.fail(e.getMessage());
         }
 
-        RepositoryNode dbConnRepNode = new DBConnectionRepNode(repViewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        RepositoryNode dbConnRepNode = new DBConnectionRepNode(repViewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT, null);
         return dbConnRepNode;
     }
 
@@ -262,7 +262,7 @@ public class AbstractCommonActionProviderTest {
         } catch (PersistenceException e) {
             Assert.fail(e.getMessage());
         }
-        RepositoryNode anaRepNode = new AnalysisRepNode(repViewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        RepositoryNode anaRepNode = new AnalysisRepNode(repViewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT, null);
         // set the contentType for anaRepNode from its parentNode
         setParentNode(anaRepNode, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
         // ~

@@ -486,7 +486,7 @@ public class UnitTestBuildHelper {
             ProxyRepositoryFactory.getInstance().create(reportItem, createPath, false);
 
             IRepositoryViewObject reportViewObject = new RepositoryViewObject(reportProperty);
-            reportRepNode = new ReportRepNode(reportViewObject, parentNode, ENodeType.REPOSITORY_ELEMENT);
+            reportRepNode = new ReportRepNode(reportViewObject, parentNode, ENodeType.REPOSITORY_ELEMENT, null);
         } catch (PersistenceException e) {
             Assert.fail(e.getMessage());
         }
@@ -567,7 +567,7 @@ public class UnitTestBuildHelper {
             ProxyRepositoryFactory.getInstance().create(sourceFileItem, createPath, false);
 
             IRepositoryViewObject fileViewObject = new RepositoryViewObject(fileProperty);
-            fileRepNode = new SourceFileRepNode(fileViewObject, parentNode, ENodeType.REPOSITORY_ELEMENT);
+            fileRepNode = new SourceFileRepNode(fileViewObject, parentNode, ENodeType.REPOSITORY_ELEMENT, null);
             fileRepNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
 
             fileRepNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);

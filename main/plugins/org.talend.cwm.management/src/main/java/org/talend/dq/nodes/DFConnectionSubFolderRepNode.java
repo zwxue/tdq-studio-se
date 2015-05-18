@@ -23,8 +23,9 @@ public class DFConnectionSubFolderRepNode extends DFConnectionFolderRepNode {
     /**
      * DOC qiongli DelimitedFileConnectionSubFolderRepNode constructor comment.
      */
-    public DFConnectionSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DFConnectionSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     /*

@@ -48,8 +48,9 @@ public class DBCatalogRepNode extends DQRepositoryNode {
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
-    public DBCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type) {
-        super(viewObject, parent, type);
+    public DBCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(viewObject, parent, type, inWhichProject);
 
         schemaChildren = new ArrayList<IRepositoryNode>();
         if (viewObject instanceof MetadataCatalogRepositoryObject) {
@@ -69,7 +70,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
      */
     private RepositoryNode createParentNode() {
         RepositoryNode dbParentRepNode = new DBConnectionRepNode(metadataCatalogObject.getViewObject(), null,
-                ENodeType.TDQ_REPOSITORY_ELEMENT);
+                ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         return dbParentRepNode;
     }
 
@@ -115,10 +116,11 @@ public class DBCatalogRepNode extends DQRepositoryNode {
         // IRepositoryViewObject viewObject = metadataCatalog.getViewObject();
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         // table folder node under catalog
-        DBTableFolderRepNode tableFloderNode = new DBTableFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBTableFolderRepNode tableFloderNode = new DBTableFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                getProject());
         repsNodes.add(tableFloderNode);
         // view folder node under catalog
-        DBViewFolderRepNode viewFolderNode = new DBViewFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBViewFolderRepNode viewFolderNode = new DBViewFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         repsNodes.add(viewFolderNode);
         return repsNodes;
     }
@@ -138,7 +140,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
             MetadataSchemaRepositoryObject metadataSchema = new MetadataSchemaRepositoryObject(
                     ((MetadataCatalogRepositoryObject) getObject()).getViewObject(), schema);
             metadataSchema.setParentCatalogObject(metadataCatalogObject);
-            RepositoryNode schemaNode = new DBSchemaRepNode(metadataSchema, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            RepositoryNode schemaNode = new DBSchemaRepNode(metadataSchema, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
             schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
             schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
             metadataSchema.setRepositoryNode(schemaNode);

@@ -14,27 +14,22 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * created by zshen on Aug 19, 2013
- * Detailled comment
+ * created by zshen on Aug 19, 2013 Detailled comment
  *
  */
-public class RulesMatcherFolderRepNode extends DQRepositoryNode {
-
-    private static Logger log = Logger.getLogger(RulesMatcherFolderRepNode.class);
+public class RulesMatcherFolderRepNode extends DQFolderRepNode {
 
     /**
      * DOC zshen RulesMatcherFolderRepNode constructor comment.
@@ -43,59 +38,53 @@ public class RulesMatcherFolderRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public RulesMatcherFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public RulesMatcherFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
     public List<IRepositoryNode> getChildren() {
-
         return getChildren(false);
     }
 
     /*
      * (non-Javadoc)
-     *
-     * @see org.talend.repository.model.RepositoryNode#getChildren(boolean)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
      */
     @Override
-    public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        try {
-            super.getChildren().clear();
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-            // sub folders
-            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_MATCHER);
-                if (!withDeleted && folder.isDeleted()) {
-                    continue;
-                }
-                RulesMatcherSubFolderRepNode childNodeFolder = new RulesMatcherSubFolderRepNode(folder, this,
-                        ENodeType.SIMPLE_FOLDER);
-                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_MATCHER);
-                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_MATCHER);
-                super.getChildren().add(childNodeFolder);
+    public void getChildrenForProject(boolean withDeleted, Project project) throws PersistenceException {
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
+        // sub folders
+        for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+            Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_MATCHER);
+            if (!withDeleted && folder.isDeleted()) {
+                continue;
             }
-            // rule files
-            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDeleted && viewObject.isDeleted()) {
-                    continue;
-                }
-                RuleRepNode repNode = new RuleRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_MATCHER);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_MATCHER);
-                viewObject.setRepositoryNode(repNode);
-                super.getChildren().add(repNode);
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
+            RulesMatcherSubFolderRepNode childNodeFolder = new RulesMatcherSubFolderRepNode(folder, this,
+                    ENodeType.SIMPLE_FOLDER, project);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_MATCHER);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_MATCHER);
+            super.getChildren().add(childNodeFolder);
         }
-        return filterResultsIfAny(super.getChildren());
+        // rule files
+        for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+            if (!withDeleted && viewObject.isDeleted()) {
+                continue;
+            }
+            RuleRepNode repNode = new RuleRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, project);
+            repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_MATCHER);
+            repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_MATCHER);
+            viewObject.setRepositoryNode(repNode);
+            super.getChildren().add(repNode);
+        }
+
     }
 
 }

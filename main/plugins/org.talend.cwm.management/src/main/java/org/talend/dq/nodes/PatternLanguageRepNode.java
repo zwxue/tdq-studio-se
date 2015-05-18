@@ -25,10 +25,8 @@ public class PatternLanguageRepNode extends DQRepositoryNode {
 
     private RegularExpression regularExpression = null;
 
-    public PatternLanguageRepNode(RepositoryNode parent, ENodeType type) {
-        super(null, parent, type);
-        this.type = type;
-
+    public PatternLanguageRepNode(RepositoryNode parent, ENodeType type, org.talend.core.model.general.Project inWhichProject) {
+        super(null, parent, type, inWhichProject);
     }
 
     public void setLabel(String label) {

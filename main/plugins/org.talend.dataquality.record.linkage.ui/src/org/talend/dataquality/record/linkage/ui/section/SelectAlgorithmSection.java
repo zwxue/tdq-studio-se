@@ -39,6 +39,24 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     private Button tSwooshButton = null;
 
+    /**
+     * Getter for vsrButton.
+     * 
+     * @return the vsrButton
+     */
+    public Button getVsrButton() {
+        return this.vsrButton;
+    }
+
+    /**
+     * Getter for tSwooshButton.
+     * 
+     * @return the tSwooshButton
+     */
+    public Button gettSwooshButton() {
+        return this.tSwooshButton;
+    }
+
     protected boolean isVSRMode = true;
 
     private BlockingKeySection blockKeySection = null;

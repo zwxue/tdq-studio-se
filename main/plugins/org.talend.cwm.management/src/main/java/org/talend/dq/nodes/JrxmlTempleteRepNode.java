@@ -17,9 +17,8 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class JrxmlTempleteRepNode extends DQRepositoryNode {
 
@@ -31,12 +30,14 @@ public class JrxmlTempleteRepNode extends DQRepositoryNode {
 
     /**
      * DOC klliu JrxmlTempleteRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
-    public JrxmlTempleteRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public JrxmlTempleteRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof TDQJrxmlItem) {

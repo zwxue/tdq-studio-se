@@ -240,7 +240,7 @@ public class InidcatorUnitTest {
         tdColumn.setSqlDataType(dataType);
         MetadataColumnRepositoryObject columnObject = new MetadataColumnRepositoryObject(null, tdColumn);
         IRepositoryNode columnRepNode = new DBColumnRepNode(columnObject, new RepositoryNode(null, null, null),
-                ENodeType.REPOSITORY_ELEMENT);
+                ENodeType.REPOSITORY_ELEMENT, null);
         ModelElementIndicator modelElementIndicator = new ColumnIndicatorImpl(columnRepNode);
 
         // Count UDI case

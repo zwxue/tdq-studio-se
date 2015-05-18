@@ -14,15 +14,15 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -30,9 +30,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC gdbu class global commente
  */
-public class IndicatorFolderRepNode extends DQRepositoryNode {
-
-    private static Logger log = Logger.getLogger(UserDefIndicatorFolderRepNode.class);
+public class IndicatorFolderRepNode extends DQFolderRepNode {
 
     /**
      * DOC klliu UserDefIndicatorFolderRepNode constructor comment.
@@ -41,58 +39,70 @@ public class IndicatorFolderRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public IndicatorFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public IndicatorFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
     @Override
     public List<IRepositoryNode> getChildren() {
         return getChildren(false);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
+     */
     @Override
-    public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        try {
-            super.getChildren().clear();
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-            // sub folders
-            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = null;
-                boolean isSystem = container.getLabel().equals("System Indicators");
-                if (isSystem) {
-                    folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
-                    if (!withDeleted && folder.isDeleted()) {
-                        continue;
-                    }
-                    SysIndicatorFolderRepNode systemIndicatorFolderNode = new SysIndicatorFolderRepNode(folder, this,
-                            ENodeType.SYSTEM_FOLDER);
-                    folder.setRepositoryNode(systemIndicatorFolderNode);
-                    systemIndicatorFolderNode
-                            .setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
-                    systemIndicatorFolderNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
-                    super.getChildren().add(systemIndicatorFolderNode);
+    public void getChildrenForProject(boolean withDeleted, Project project) throws PersistenceException {
+        // when merge display the ref project items, we will not show the system indicators
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            if (project.isMainProject()) {
+                createChildrenNode(withDeleted, project);
+            }
+        } else {
+            createChildrenNode(withDeleted, project);
+        }
 
-                } else {
-                    folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                    if (!withDeleted && folder.isDeleted()) {
-                        continue;
-                    }
-                    UserDefIndicatorSubFolderRepNode childNodeFolder = new UserDefIndicatorSubFolderRepNode(folder, this,
-                            ENodeType.SYSTEM_FOLDER);
-                    folder.setRepositoryNode(childNodeFolder);
-                    childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                    childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                    super.getChildren().add(childNodeFolder);
-                }
+    }
 
+    /**
+     * DOC msjian Comment method "createChildrenNode".
+     * 
+     * @param withDeleted
+     * @param project
+     * @throws PersistenceException
+     */
+    private void createChildrenNode(boolean withDeleted, Project project) throws PersistenceException {
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
+        // sub folders
+        for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+            boolean isSystem = container.getLabel().equals("System Indicators"); //$NON-NLS-1$
+
+            ERepositoryObjectType eRepositoryObjectType = isSystem ? ERepositoryObjectType.TDQ_SYSTEM_INDICATORS
+                    : ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
+
+            Folder folder = new Folder((Property) container.getProperty(), eRepositoryObjectType);
+            if (!withDeleted && folder.isDeleted()) {
+                continue;
             }
 
-        } catch (PersistenceException e) {
-            log.error(e, e);
+            DQRepositoryNode indicatorFolderNode;
+            if (isSystem) {
+                indicatorFolderNode = new SysIndicatorFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER, project);
+            } else {
+                indicatorFolderNode = new UserDefIndicatorSubFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER, project);
+            }
+            RepositoryNodeHelper.setPropertiesForNode(indicatorFolderNode, eRepositoryObjectType);
+            folder.setRepositoryNode(indicatorFolderNode);
+            super.getChildren().add(indicatorFolderNode);
         }
-        // MOD gdbu 2011-6-29 bug : 22204
-        return filterResultsIfAny(super.getChildren());
-        // ~22204
     }
+
 }

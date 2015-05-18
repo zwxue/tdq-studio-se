@@ -102,7 +102,7 @@ public class AbstractCommonActionProviderRealProjectTest {
         // ~connection data
         // ~FileConnection
         // create DFColumnFolderRepNode
-        DFColumnFolderRepNode dfcolFolderNode = new DFColumnFolderRepNode(lastVersion, null, null);
+        DFColumnFolderRepNode dfcolFolderNode = new DFColumnFolderRepNode(lastVersion, null, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dfcolFolderNode);
@@ -130,7 +130,7 @@ public class AbstractCommonActionProviderRealProjectTest {
         // ~FileConnection
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
-        DBConnectionRepNode dbConnRepNode = new DBConnectionRepNode(lastVersion, null, null);
+        DBConnectionRepNode dbConnRepNode = new DBConnectionRepNode(lastVersion, null, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dbConnRepNode);
@@ -161,7 +161,7 @@ public class AbstractCommonActionProviderRealProjectTest {
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
 
-        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null, null);
+        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dbCatalogRepNode);
@@ -204,7 +204,7 @@ public class AbstractCommonActionProviderRealProjectTest {
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
 
-        DBSchemaRepNode dbSchemaRepNode = new DBSchemaRepNode(lastVersion, null, null);
+        DBSchemaRepNode dbSchemaRepNode = new DBSchemaRepNode(lastVersion, null, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dbSchemaRepNode);
@@ -245,8 +245,8 @@ public class AbstractCommonActionProviderRealProjectTest {
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
         RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null,
-                ENodeType.TDQ_REPOSITORY_ELEMENT);
-        DBTableFolderRepNode dbTableFolderRepNode = new DBTableFolderRepNode(null, dbCatalogRepNode, null);
+                ENodeType.TDQ_REPOSITORY_ELEMENT, null);
+        DBTableFolderRepNode dbTableFolderRepNode = new DBTableFolderRepNode(null, dbCatalogRepNode, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dbTableFolderRepNode);
@@ -277,8 +277,8 @@ public class AbstractCommonActionProviderRealProjectTest {
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
         RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null,
-                ENodeType.TDQ_REPOSITORY_ELEMENT);
-        DBViewFolderRepNode dbViewFolderRepNode = new DBViewFolderRepNode(null, dbCatalogRepNode, null);
+                ENodeType.TDQ_REPOSITORY_ELEMENT, null);
+        DBViewFolderRepNode dbViewFolderRepNode = new DBViewFolderRepNode(null, dbCatalogRepNode, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dbViewFolderRepNode);
@@ -301,7 +301,8 @@ public class AbstractCommonActionProviderRealProjectTest {
         createTdTable.setName("table1"); //$NON-NLS-1$
         try {
             lastVersion = factory.getLastVersion(propertyID);
-            dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                    null);
             lastVersion = new TdTableRepositoryObject(lastVersion, createTdTable);
         } catch (PersistenceException e) {
             log.error(e, e);
@@ -312,8 +313,8 @@ public class AbstractCommonActionProviderRealProjectTest {
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
 
-        DBTableRepNode dbTableRepNode = new DBTableRepNode(lastVersion, dbCatalogRepNode, ENodeType.TDQ_REPOSITORY_ELEMENT);
-        DBColumnFolderRepNode dbColumnFolderRepNode = new DBColumnFolderRepNode(null, dbTableRepNode, null);
+        DBTableRepNode dbTableRepNode = new DBTableRepNode(lastVersion, dbCatalogRepNode, ENodeType.TDQ_REPOSITORY_ELEMENT, null);
+        DBColumnFolderRepNode dbColumnFolderRepNode = new DBColumnFolderRepNode(null, dbTableRepNode, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dbColumnFolderRepNode);

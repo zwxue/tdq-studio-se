@@ -53,9 +53,9 @@ public class DBConnectionRepNode extends ConnectionRepNode {
      * @param parent
      * @param type
      */
-    public DBConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
-        RepositoryNodeHelper.restoreCorruptedConn(object.getProperty());
+    public DBConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     /*
@@ -128,7 +128,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
 
     private void initializedSchemaRepNode(List<IRepositoryNode> nodes, Package pack) {
         MetadataSchemaRepositoryObject metadataSchema = new MetadataSchemaRepositoryObject(getObject(), (Schema) pack);
-        RepositoryNode schemaNode = new DBSchemaRepNode(metadataSchema, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        RepositoryNode schemaNode = new DBSchemaRepNode(metadataSchema, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
         schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
         metadataSchema.setRepositoryNode(schemaNode);
@@ -154,7 +154,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         if (pack instanceof Catalog) {
             MetadataCatalogRepositoryObject metadataCatalog = new MetadataCatalogRepositoryObject(getObject(), (Catalog) pack);
             RepositoryNode catalogNode = DQRepNodeCreateFactory.createDBCatalogRepNode(metadataCatalog, this,
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
+                    ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
             catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
             catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
             metadataCatalog.setRepositoryNode(catalogNode);

@@ -26,7 +26,6 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -51,10 +50,9 @@ public class DFConnectionRepNode extends ConnectionRepNode {
      * @param parent
      * @param type
      */
-    public DFConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
-        RepositoryNodeHelper.restoreCorruptedConn(object.getProperty());
-
+    public DFConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     @Override
@@ -81,7 +79,7 @@ public class DFConnectionRepNode extends ConnectionRepNode {
                 mtRepObject.setTableName(mtable.getLabel());
                 mtRepObject.setLabel(mtable.getLabel());
                 mtRepObject.setId(mtable.getLabel());
-                DFTableRepNode tableNode = new DFTableRepNode(mtRepObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                DFTableRepNode tableNode = new DFTableRepNode(mtRepObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
                 tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
                 tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
                 mtRepObject.setRepositoryNode(tableNode);

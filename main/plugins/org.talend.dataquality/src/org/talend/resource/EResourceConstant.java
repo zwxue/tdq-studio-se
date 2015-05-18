@@ -29,7 +29,9 @@ import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.properties.TDQAnalysisItem;
@@ -42,6 +44,7 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.properties.util.PropertiesSwitch;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -110,19 +113,23 @@ public enum EResourceConstant {
     SYSTEM_INDICATORS_FRAUDDETECTION("Fraud Detection",//$NON-NLS-1$
                                      "TDQ_Libraries/Indicators/System Indicators/Fraud Detection", ResourceConstant.READONLY), //$NON-NLS-1$
     JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
+
     PATTERNS("Patterns", "TDQ_Libraries/Patterns", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     PATTERN_REGEX("Regex", "TDQ_Libraries/Patterns/Regex", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
+
     RULES("Rules", "TDQ_Libraries/Rules", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     RULES_MATCHER("Match", "TDQ_Libraries/Rules/Match", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
-    // MOD klliu feature 23019
     RULES_PARSER("Parser", "TDQ_Libraries/Rules/Parser", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
+
     SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     DB_CONNECTIONS("connections", "metadata/connections", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     MDM_CONNECTIONS("MDMconnections", "metadata/MDMconnections", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     FILEDELIMITED("fileDelimited", "metadata/fileDelimited", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
-    REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY);//$NON-NLS-1$ $NON-NLS-2$
+    REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
+
+    REFERENCED_PROJECT("Referenced project", "Referenced project", ResourceConstant.READONLY); //$NON-NLS-1$ $NON-NLS-2$
 
     private String name;
 
@@ -235,13 +242,24 @@ public enum EResourceConstant {
         } else if (element instanceof IndicatorDefinition) {
             if (element instanceof WhereRule) {
                 constatnt = RULES_SQL;
+            } else if (element instanceof MatchRuleDefinition) {
+                constatnt = RULES_MATCHER;
+            } else if (element instanceof ParserRule) {
+                constatnt = RULES_PARSER;
             } else {
                 constatnt = USER_DEFINED_INDICATORS;
             }
         } else if (element instanceof IndicatorsDefinitions) {
             constatnt = LIBRARIES;
         } else if (element instanceof Pattern) {
-            constatnt = PATTERNS;
+            Pattern pattern = (Pattern) element;
+            String expressionType = DomainHelper.getExpressionType(pattern);
+            boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
+            if (isSQLPattern) {
+                constatnt = PATTERN_SQL;
+            } else {
+                constatnt = PATTERN_REGEX;
+            }
         } else if (element instanceof DatabaseConnection) {
             constatnt = DB_CONNECTIONS;
         }

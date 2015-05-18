@@ -27,7 +27,8 @@ public class RulesParserSubFolderRepNode extends RulesParserFolderRepNode {
      * @param parent
      * @param type
      */
-    public RulesParserSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public RulesParserSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 }

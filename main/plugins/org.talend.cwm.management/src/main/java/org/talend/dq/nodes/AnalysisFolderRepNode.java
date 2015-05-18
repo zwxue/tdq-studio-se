@@ -23,73 +23,75 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class AnalysisFolderRepNode extends DQRepositoryNode {
+public class AnalysisFolderRepNode extends DQFolderRepNode {
 
     private static Logger log = Logger.getLogger(AnalysisFolderRepNode.class);
 
     /**
-     * DOC klliu AnalysisFolderRepNode constructor comment.
+     * DOC talend AnalysisFolderRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
-     * @throws PersistenceException
+     * @param inWhichProject
      */
-    public AnalysisFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public AnalysisFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
     @Override
     public List<IRepositoryNode> getChildren() {
         return getChildren(false);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
+     */
     @Override
-    public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        try {
-            super.getChildren().clear();
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+    public void getChildrenForProject(boolean withDeleted, org.talend.core.model.general.Project project)
+            throws PersistenceException {
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
 
-            // sub folders
-            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                // MOD qiongli 2011-1-20.
-                if (!withDeleted && folder.isDeleted()) {
-                    continue;
-                }
-                AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
-                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                folder.setRepositoryNode(childNodeFolder);
-                super.getChildren().add(childNodeFolder);
+        // sub folders
+        for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+            Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+            // MOD qiongli 2011-1-20.
+            if (!withDeleted && folder.isDeleted()) {
+                continue;
             }
-
-            // ana files
-            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDeleted && viewObject.isDeleted()) {
-                    continue;
-                }
-                AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                viewObject.setRepositoryNode(anaNode);
-                super.getChildren().add(anaNode);
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
+            AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER,
+                    project);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+            folder.setRepositoryNode(childNodeFolder);
+            super.getChildren().add(childNodeFolder);
         }
-        // MOD gdbu 2011-7-1 bug : 22204
-        return filterResultsIfAny(super.getChildren());
-        // ~22204
+
+        // ana files
+        for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+            if (!withDeleted && viewObject.isDeleted()) {
+                continue;
+            }
+            AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, project);
+            anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+            anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+            viewObject.setRepositoryNode(anaNode);
+            super.getChildren().add(anaNode);
+        }
     }
 
     public String getLabelWithCount() {
@@ -115,8 +117,7 @@ public class AnalysisFolderRepNode extends DQRepositoryNode {
     public List<IRepositoryNode> getChildrenAll(boolean withDelete) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         try {
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(getProject(), this);
 
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
@@ -124,7 +125,8 @@ public class AnalysisFolderRepNode extends DQRepositoryNode {
                 if (!withDelete && folder.isDeleted()) {
                     continue;
                 }
-                AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER,
+                        getProject());
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
                 folder.setRepositoryNode(childNodeFolder);
@@ -136,7 +138,7 @@ public class AnalysisFolderRepNode extends DQRepositoryNode {
                 if (!withDelete && viewObject.isDeleted()) {
                     continue;
                 }
-                AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, getProject());
                 anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
                 anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
                 viewObject.setRepositoryNode(anaNode);

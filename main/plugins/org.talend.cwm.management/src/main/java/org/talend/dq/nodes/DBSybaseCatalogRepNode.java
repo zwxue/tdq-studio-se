@@ -33,7 +33,6 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -51,8 +50,9 @@ public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
      * @param parent
      * @param type
      */
-    public DBSybaseCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type) {
-        super(viewObject, parent, type);
+    public DBSybaseCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(viewObject, parent, type, inWhichProject);
     }
 
     /*

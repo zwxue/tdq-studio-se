@@ -17,12 +17,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.commons.exception.ExceptionHandler;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.commons.ui.runtime.image.ECoreImage;
 import org.talend.commons.ui.runtime.image.IImage;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
@@ -53,8 +50,8 @@ public class RecycleBinRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public RecycleBinRepNode(String label) {
-        super(null, null, ENodeType.STABLE_SYSTEM_FOLDER);
+    public RecycleBinRepNode(String label, org.talend.core.model.general.Project inWhichProject) {
+        super(null, null, ENodeType.STABLE_SYSTEM_FOLDER, inWhichProject);
         this.label = label;
         this.icon = ECoreImage.RECYCLE_BIN_EMPTY_ICON;
     }
@@ -115,8 +112,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     public List<IRepositoryNode> getChildren() {
         super.getChildren().clear();
         List<DQRepositoryNode> foldersList = new ArrayList<DQRepositoryNode>();
-        Project newProject = ProjectManager.getInstance().getCurrentProject();
-        List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(newProject.getEmfProject());
+        List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(getProject().getEmfProject());
         for (FolderItem folderItem : folderItems) {
             if (isTDQOrMetadataRootFolder(folderItem)) {
                 addItemToRecycleBin(this, folderItem, foldersList);
@@ -152,7 +148,6 @@ public class RecycleBinRepNode extends DQRepositoryNode {
         return folder.getProperty().getLabel() + "/" + path;//$NON-NLS-1$
     }
 
-    @SuppressWarnings("unchecked")
     private void addItemToRecycleBin(DQRepositoryNode parentNode, Item item, List<DQRepositoryNode> foldersList) {
         ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
         DQRepositoryNode currentParentNode = parentNode;
@@ -175,7 +170,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                     }
                 }
                 if (folderNode == null) {
-                    folderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SIMPLE_FOLDER);
+                    folderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SIMPLE_FOLDER, getProject());
                     folderNode.setProperties(EProperties.CONTENT_TYPE, itemType);
                     folderNode.setProperties(EProperties.LABEL, folder.getLabel());
                     foldersList.add(folderNode);
@@ -200,19 +195,21 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                 }
             }
         } else if (item.getState() != null && item.getState().isDeleted()) {
-            try {
-                if (item.getProperty().getVersion()
-                        .equals(ProxyRepositoryFactory.getInstance().getLastVersion(item.getProperty().getId()).getVersion())) {
-                    DQRepositoryNode repNode = new DQRepositoryNode(new RepositoryViewObject(item.getProperty()),
-                            currentParentNode, ENodeType.REPOSITORY_ELEMENT);
-                    repNode.setProperties(EProperties.CONTENT_TYPE, itemType);
-                    repNode.setProperties(EProperties.LABEL, item.getProperty().getLabel());
-                    currentParentNode.getChildren(false).add(repNode);
-                    repNode.setParent(currentParentNode);
-                }
-            } catch (PersistenceException e) {
-                ExceptionHandler.process(e);
-            }
+            // try {
+            // IRepositoryViewObject lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(getProject(),
+            // item.getProperty().getId());
+            // String version = lastVersion.getVersion();
+            // if (item.getProperty() .getVersion() .equals(version)) {
+            DQRepositoryNode repNode = new DQRepositoryNode(new RepositoryViewObject(item.getProperty()), currentParentNode,
+                    ENodeType.REPOSITORY_ELEMENT, getProject());
+            repNode.setProperties(EProperties.CONTENT_TYPE, itemType);
+            repNode.setProperties(EProperties.LABEL, item.getProperty().getLabel());
+            currentParentNode.getChildren(false).add(repNode);
+            repNode.setParent(currentParentNode);
+            // }
+            // } catch (PersistenceException e) {
+            // ExceptionHandler.process(e);
+            // }
         }
     }
 

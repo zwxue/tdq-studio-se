@@ -14,76 +14,94 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class PatternRegexFolderRepNode extends DQRepositoryNode {
-
-    private static Logger log = Logger.getLogger(PatternRegexFolderRepNode.class);
+public class PatternRegexFolderRepNode extends DQFolderRepNode {
 
     /**
-     * DOC klliu PatternFolderRepNode constructor comment.
+     * DOC msjian PatternRegexFolderRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
      */
-    public PatternRegexFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public PatternRegexFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
     @Override
     public List<IRepositoryNode> getChildren() {
         return getChildren(false);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
+     */
     @Override
-    public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        try {
-            super.getChildren().clear();
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-            // sub folders
-            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_PATTERN_REGEX);
-                if (!withDeleted && folder.isDeleted()) {
-                    continue;
-                }
-                PatternRegexSubFolderRepNode childNodeFolder = new PatternRegexSubFolderRepNode(folder, this,
-                        ENodeType.SIMPLE_FOLDER);
-                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-                super.getChildren().add(childNodeFolder);
+    public void getChildrenForProject(boolean withDeleted, Project project) throws PersistenceException {
+        // when merge display the ref project items, we will not show the system indicators
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            if (project.isMainProject()) {
+                createChildrenNode(withDeleted, project);
             }
-            // pattern regex files
-            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDeleted && viewObject.isDeleted()) {
-                    continue;
-                }
-                PatternRepNode repNode = new PatternRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-                viewObject.setRepositoryNode(repNode);
-                super.getChildren().add(repNode);
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
+        } else {
+            createChildrenNode(withDeleted, project);
         }
-        // MOD gdbu 2011-6-29 bug : 22204
-        return filterResultsIfAny(super.getChildren());
-        // ~22204
+    }
+
+    /**
+     * DOC msjian Comment method "createChildrenNode".
+     * 
+     * @param withDeleted
+     * @param project
+     * @throws PersistenceException
+     */
+    private void createChildrenNode(boolean withDeleted, Project project) throws PersistenceException {
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
+        // sub folders
+        for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+            Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            if (!withDeleted && folder.isDeleted()) {
+                continue;
+            }
+            PatternRegexSubFolderRepNode childNodeFolder = new PatternRegexSubFolderRepNode(folder, this,
+                    ENodeType.SIMPLE_FOLDER, project);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            super.getChildren().add(childNodeFolder);
+        }
+        // pattern regex files
+        for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+            if (!withDeleted && viewObject.isDeleted()) {
+                continue;
+            }
+            PatternRepNode repNode = new PatternRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, project);
+            repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            viewObject.setRepositoryNode(repNode);
+            super.getChildren().add(repNode);
+        }
     }
 }

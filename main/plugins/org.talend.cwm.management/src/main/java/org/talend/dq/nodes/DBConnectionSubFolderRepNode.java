@@ -27,8 +27,9 @@ public class DBConnectionSubFolderRepNode extends DBConnectionFolderRepNode {
      * @param parent
      * @param type
      */
-    public DBConnectionSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DBConnectionSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     /*

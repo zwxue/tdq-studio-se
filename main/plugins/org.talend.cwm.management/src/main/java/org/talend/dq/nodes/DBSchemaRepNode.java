@@ -54,8 +54,9 @@ public class DBSchemaRepNode extends DQRepositoryNode {
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
-    public DBSchemaRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DBSchemaRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object instanceof MetadataSchemaRepositoryObject) {
             metadataSchemaObject = (MetadataSchemaRepositoryObject) object;
             if (parent == null) {
@@ -75,10 +76,10 @@ public class DBSchemaRepNode extends DQRepositoryNode {
         RepositoryNode dbParentRepNode = null;
         Package parentPackage = PackageHelper.getParentPackage(getSchema());
         if (parentPackage == null) {
-            dbParentRepNode = new DBConnectionRepNode(getParentViewObject(), null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = new DBConnectionRepNode(getParentViewObject(), null, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         } else if (parentPackage instanceof Catalog) {
             dbParentRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(getParentViewObject(), null,
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
+                    ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         }
         return dbParentRepNode;
     }
@@ -116,10 +117,11 @@ public class DBSchemaRepNode extends DQRepositoryNode {
         // IRepositoryViewObject viewObject = metadataSchema.getViewObject();
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         // table folder node under catalog
-        DBTableFolderRepNode tableFloderNode = new DBTableFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBTableFolderRepNode tableFloderNode = new DBTableFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                getProject());
         repsNodes.add(tableFloderNode);
         // view folder node under catalog
-        DBViewFolderRepNode viewFolderNode = new DBViewFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBViewFolderRepNode viewFolderNode = new DBViewFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         repsNodes.add(viewFolderNode);
         return repsNodes;
     }

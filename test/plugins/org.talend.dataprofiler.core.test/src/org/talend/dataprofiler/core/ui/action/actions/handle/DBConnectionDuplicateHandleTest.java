@@ -155,7 +155,7 @@ public class DBConnectionDuplicateHandleTest {
             Assert.fail(e.getMessage());
         }
 
-        RepositoryNode dbParentRepNode = new DBConnectionRepNode(connectionViewObject, null, ENodeType.REPOSITORY_ELEMENT);
+        RepositoryNode dbParentRepNode = new DBConnectionRepNode(connectionViewObject, null, ENodeType.REPOSITORY_ELEMENT, null);
         return dbParentRepNode;
     }
 

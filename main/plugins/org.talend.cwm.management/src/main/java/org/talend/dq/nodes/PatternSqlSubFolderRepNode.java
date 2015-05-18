@@ -27,8 +27,9 @@ public class PatternSqlSubFolderRepNode extends PatternSqlFolderRepNode {
      * @param parent
      * @param type
      */
-    public PatternSqlSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public PatternSqlSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
 }

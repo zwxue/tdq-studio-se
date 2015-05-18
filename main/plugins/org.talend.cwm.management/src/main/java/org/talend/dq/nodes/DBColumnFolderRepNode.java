@@ -100,8 +100,9 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
-    public DBColumnFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DBColumnFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         children = new ArrayList<IRepositoryNode>();
         if (parent == null) {
             RepositoryNode createParentNode = createParentNode(object);
@@ -138,9 +139,9 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
         RepositoryNode dbParentRepNode = null;
 
         if (object instanceof TdTableRepositoryObject) {
-            dbParentRepNode = new DBTableRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = new DBTableRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         } else if (object instanceof TdViewRepositoryObject) {
-            dbParentRepNode = new DBViewRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = new DBViewRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         }
         object.setRepositoryNode(dbParentRepNode);
         return dbParentRepNode;
@@ -239,7 +240,8 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
                         tdColumn);
                 metadataColumn.setId(tdColumn.getName());
                 metadataColumn.setLabel(tdColumn.getName());
-                DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, this, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                        getProject());
                 columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
                 columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
                 metadataColumn.setRepositoryNode(columnNode);
