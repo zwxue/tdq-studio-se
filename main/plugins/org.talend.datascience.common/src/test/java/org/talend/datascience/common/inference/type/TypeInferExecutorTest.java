@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TypeInferExecutorTest {
@@ -56,8 +55,10 @@ public class TypeInferExecutorTest {
 			typeResult = inferExector.inferTypes(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("100 data set infer end at " + end);
+			printline("100 time difference " + TypeInferenceUtilsTest.getTimeDifference(start,
+					end));
 			Assert.assertTrue(TypeInferenceUtilsTest.getTimeDifference(start,
-					end) < 0.3);
+					end) < 0.18);
 			// Result
 			for (int idx = 0; idx < typeResult.size(); idx++) {
 				printline("column " + (idx + 1));
@@ -118,8 +119,10 @@ public class TypeInferExecutorTest {
 			typeResult = inferExector.inferTypes(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("1000 data set infer end at " + end);
+			printline("1000 time difference " + TypeInferenceUtilsTest.getTimeDifference(start,
+					end));
 			Assert.assertTrue(TypeInferenceUtilsTest.getTimeDifference(start,
-					end) < 0.5);
+					end) < 0.21);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -127,7 +130,8 @@ public class TypeInferExecutorTest {
 	}
 
 	//@Test don't run the perf test on testing server.
-	@Ignore 
+	//@Ignore 
+	@Test
 	public void testInferTypesPerformance() {
 		// -------4. assert dataset with 10 000 records, 18 columns ---------
 		InputStream in = null;;
@@ -156,7 +160,7 @@ public class TypeInferExecutorTest {
 			double timeDiff =TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
 			printline("10 000 time difference: "+timeDiff);
-			Assert.assertTrue(timeDiff < 1.5);
+			Assert.assertTrue(timeDiff < 0.8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -185,7 +189,7 @@ public class TypeInferExecutorTest {
 			double timeDiff =TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
 			printline("100 000 time difference: "+timeDiff);
-			Assert.assertTrue(timeDiff < 6.9);
+			Assert.assertTrue(timeDiff < 4.5);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -214,6 +218,10 @@ public class TypeInferExecutorTest {
 			}
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("1 000 000 data set infer end at " + end);
+			double timeDiff =TypeInferenceUtilsTest.getTimeDifference(start,
+					end);
+			printline("1000 000 time difference: "+timeDiff);
+			Assert.assertTrue(timeDiff < 45);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

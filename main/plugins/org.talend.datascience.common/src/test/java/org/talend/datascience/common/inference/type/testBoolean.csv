@@ -5,13 +5,13 @@ false
 M
 not a boolean
 
-true
+TRUE
 1990-10-10
 3.23
 1
 0
 F
-false
+False
 M
 not a boolean
 
@@ -21,7 +21,7 @@ true
 1
 0
 F
-false
+FALSE
 M
 not a boolean
 

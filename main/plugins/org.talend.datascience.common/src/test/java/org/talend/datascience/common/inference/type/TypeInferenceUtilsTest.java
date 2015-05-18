@@ -21,6 +21,7 @@ public class TypeInferenceUtilsTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+
 	@Test
 	public void testIsBoolean() throws Exception {
 		List<String> values = loadData("org/talend/datascience/common/inference/type/testBoolean.csv");
@@ -43,6 +44,7 @@ public class TypeInferenceUtilsTest {
 		System.out.println("Detect boolean time diff: " + difference + " s.");
 		Assert.assertTrue(difference < 0.005);
 	}
+
 	@Test
 	public void testIsEmpty() throws Exception {
 		List<String> values = loadData("org/talend/datascience/common/inference/type/testString.csv");
@@ -61,10 +63,11 @@ public class TypeInferenceUtilsTest {
 		// Assert count of matches.
 		Assert.assertEquals(2000, countOfEmpties);
 		double difference = getTimeDifference(timeStart, timeEnd);
-		
+
 		System.out.println("Detect empty time diff: " + difference + " s.");
 		Assert.assertTrue(difference < 0.005);
 	}
+
 	@Test
 	public void testIsChar() throws Exception {
 		List<String> values = loadData("org/talend/datascience/common/inference/type/testChar.csv");
@@ -87,7 +90,7 @@ public class TypeInferenceUtilsTest {
 		System.out.println("Detect char time diff: " + difference + " s.");
 		Assert.assertTrue(difference < 0.05);
 	}
-	
+
 	@Test
 	public void testIsInteger() throws Exception {
 		List<String> values = loadData("org/talend/datascience/common/inference/type/testInteger.csv");
@@ -112,7 +115,6 @@ public class TypeInferenceUtilsTest {
 		Assert.assertTrue(difference < 0.08);
 	}
 
-	
 	@Test
 	public void testIsDouble() throws Exception {
 		List<String> values = loadData("org/talend/datascience/common/inference/type/testDouble.csv");
@@ -129,7 +131,7 @@ public class TypeInferenceUtilsTest {
 		String timeEnd = getCurrentTimeStamp();
 		System.out.println("Detect double end at: " + timeEnd);
 		// Assert count of matches.
-		Assert.assertEquals(4000, countOfDoubles);
+		Assert.assertEquals(6000, countOfDoubles);
 		// Assert time span.
 		double difference = getTimeDifference(timeStart, timeEnd);
 
@@ -137,7 +139,6 @@ public class TypeInferenceUtilsTest {
 		Assert.assertTrue(difference < 0.09);
 	}
 
-	
 	@Test
 	public void testIsString() throws Exception {
 		List<String> values = loadData("org/talend/datascience/common/inference/type/testString.csv");
@@ -157,30 +158,30 @@ public class TypeInferenceUtilsTest {
 		Assert.assertEquals(2000, countOfStrings);
 		// Assert time span.
 		double difference = getTimeDifference(timeStart, timeEnd);
-		
+
 		System.out.println("Detect string time diff: " + difference + " s.");
 		Assert.assertTrue(difference < 0.11);
 	}
-	
+
 	@Test
 	public void testIsDate() throws Exception {
 		List<String> values = loadData("org/talend/datascience/common/inference/type/testDate.csv");
-		int countOfEmpties = 0;
+		int countOfDates = 0;
 		String timeStart = getCurrentTimeStamp();
 		System.out.println("Detect date start at: " + timeStart);
 		// Assert total count.
 		Assert.assertEquals(10000, values.size());
 		for (String value : values) {
 			if (TypeInferenceUtils.isDate(value)) {
-				countOfEmpties++;
+				countOfDates++;
 			}
 		}
 		String timeEnd = getCurrentTimeStamp();
 		System.out.println("Detect date end at: " + timeEnd);
 		// Assert count of matches.
-		Assert.assertEquals(6000, countOfEmpties);
+		Assert.assertEquals(6001, countOfDates);
 		double difference = getTimeDifference(timeStart, timeEnd);
-		
+
 		System.out.println("Detect date time diff: " + difference + " s.");
 		Assert.assertTrue(difference < 0.4);
 	}
@@ -191,7 +192,12 @@ public class TypeInferenceUtilsTest {
 		return values;
 	}
 
-	 static double getTimeDifference(String timeStart, String timeEnd) {
+	public static double getTimeDifference(String timeStart, String timeEnd) {
+		String startMin = StringUtils.substringAfterLast(
+				StringUtils.substringBeforeLast(timeStart, ":"), ":");
+		String endMin = StringUtils.substringAfterLast(
+				StringUtils.substringBeforeLast(timeEnd, ":"), ":");
+
 		String lEnd = StringUtils.substringAfterLast(timeEnd, ".");
 		String lStart = StringUtils.substringAfterLast(timeStart, ".");
 		double endTimeInSecond = Double.valueOf(StringUtils.substringAfterLast(
@@ -202,11 +208,11 @@ public class TypeInferenceUtilsTest {
 				.substringAfterLast(
 						StringUtils.substringBeforeLast(timeStart, "."), ":")
 				+ "." + lStart);
-		double difference = endTimeInSecond - startTimeInSecond;
-		return difference;
+		double difference = 0;
+		difference = endTimeInSecond - startTimeInSecond;
+		return difference
+				+ (Integer.valueOf(endMin) - Integer.valueOf(startMin)) * 60;
 	}
-
-	
 
 	public static String getCurrentTimeStamp() {
 		SimpleDateFormat sdfDate = new SimpleDateFormat(
