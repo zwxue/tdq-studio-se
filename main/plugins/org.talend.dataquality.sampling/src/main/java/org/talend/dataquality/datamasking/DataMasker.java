@@ -19,10 +19,12 @@ public abstract class DataMasker<TIn, TOut> {
 
     protected abstract TOut generateOutput(TIn v, boolean isOriginal);
 
-    public List<TOut> process(TIn v) {
+    public List<TOut> process(TIn v, boolean keepOriginal) {
         List<TOut> reslutList = new ArrayList<TOut>();
 
-        reslutList.add(generateOutput(v, true));
+        if (keepOriginal) {
+            reslutList.add(generateOutput(v, true));
+        }
         reslutList.add(generateOutput(v, false));
 
         return reslutList;
