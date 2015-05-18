@@ -13,9 +13,15 @@
 package org.talend.datascience.common.inference.type;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.talend.dataquality.semantic.recognizer.Category;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizer;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder.Mode;
 
 /**
  * Type inference executor which provide several methods computing the types.<br>
@@ -23,11 +29,27 @@ import java.util.Map;
  * 1. {{@link #init(String[])}, called once.<br>
  * 2. {{@link #handle(String[])} , called as many iterations as required.<br>
  * 3. {{@link #getResults()} , called once.<br>
+ * 
  * @author zhao
  *
  */
 class TypeInferExecutor {
-	private List<Map<String, Long>> typeToCountList = new ArrayList<Map<String, Long>>();
+	private List<Map<String, Long>> typeToCountList = null;
+	private List<Map<String, Long>> semanticNameToCountList = null;
+
+	private CategoryRecognizer categoryRecognizer = null;
+
+	private String ddPath = null, kwPath = null;
+
+	public TypeInferExecutor() {
+		typeToCountList = new ArrayList<Map<String, Long>>();
+		CategoryRecognizerBuilder b = CategoryRecognizerBuilder.newBuilder();
+		b.setMode(Mode.LUCENE);
+		// TODO where do we get the lucene index.
+		ddPath = "/home/zhao/Talend/codebase/GIT/tdq-siq/org.talend.dataquality.semantic/luceneIdx/dictionary";
+		kwPath = "/home/zhao/Talend/codebase/GIT/tdq-siq/org.talend.dataquality.semantic/luceneIdx/keyword";
+		categoryRecognizer = b.ddPath(ddPath).kwPath(kwPath).build();
+	}
 
 	/**
 	 * Inferring the types given a list of records.
@@ -90,6 +112,7 @@ class TypeInferExecutor {
 	 */
 	public boolean init(String[] record) {
 		typeToCountList.clear();
+		semanticNameToCountList.clear();
 		for (int idx = 0; idx < record.length; idx++) {
 			// create a map for each column.
 			Map<String, Long> columnMap = new HashMap<String, Long>();
@@ -97,7 +120,9 @@ class TypeInferExecutor {
 				columnMap.put(type, 0l);
 			}
 			typeToCountList.add(columnMap);
+			
 		}
+		categoryRecognizer.prepare();
 		return true;
 	}
 
@@ -114,12 +139,15 @@ class TypeInferExecutor {
 			String typeName = getTypeName(column);
 			typeToCountList.get(colIdx).put(typeName,
 					typeToCountList.get(colIdx).get(typeName) + 1);
+			// Get semantic name
+			categoryRecognizer.process(column);
 			colIdx++;
 		}
 		return true;
 	}
 
 	public boolean end() {
+		categoryRecognizer.reset();
 		return true;
 	}
 
@@ -132,4 +160,15 @@ class TypeInferExecutor {
 	public List<Map<String, Long>> getResults() {
 		return typeToCountList;
 	}
+
+	private String getSemanticCategory() {
+		Collection<Category> result = categoryRecognizer.getResult();
+		String semanticName = null;
+		if(result!=null&&!result.isEmpty()){
+//			semanticName=result.toArray()[0].getCategoryName();
+		}
+					
+		return semanticName;
+	}
+
 }

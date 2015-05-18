@@ -41,7 +41,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author zhao
  *
  */
-public class TypeInferHub {
+public class SemanticTypeInferenceHub {
 	private TypeInferExecutor inferExectutor = new TypeInferExecutor();
 
 	private String jsonRecordPath = "records";
@@ -167,6 +167,34 @@ public class TypeInferHub {
 		return jsonResult;
 	}
 
+
+	/**
+	 * Guess the semantic type given an json input stream
+	 * 
+	 * @param jsonStream
+	 * @return semantic name guessed in json format, the format is defined from
+	 *         https://jira.talendforge.org/browse/TDQ-10318 . This method will
+	 *         return null if exception occurs.
+	 */
+	public String guessSemanticSchema(InputStream jsonStream){
+		return null;
+	}
+	
+	/**
+	 * Compute the column quality (count, valid , invalid and empty ) given the data type and semantic type .
+	 * 
+	 * @param dataTypesInJson the data types come from the output of {{@link #inferTypes(InputStream)}
+	 * @param semanticTypesInJson the semantic data types come from the output of {{@link #guessSemanticSchema(InputStream)}
+	 * @return column quality, the format is defined from
+	 *         https://jira.talendforge.org/browse/TDQ-10318 . This method will
+	 *         return null if exception occurs.
+	 */	
+	public String computeColumnQuality(String dataTypesInJson,String semanticTypesInJson){
+		return null;
+	}
+	
+	
+	
 	private String getJsonResult(List<Map<String, Long>> results,
 			JsonFactory jsonFactory, List<String> columnNames) throws IOException {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();

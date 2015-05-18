@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TypeInferHubTest {
-	TypeInferHub inferHub = new TypeInferHub();
+	SemanticTypeInferenceHub inferHub = new SemanticTypeInferenceHub();
 
 	@Test
 	public void testInferTypesInputStream() {
