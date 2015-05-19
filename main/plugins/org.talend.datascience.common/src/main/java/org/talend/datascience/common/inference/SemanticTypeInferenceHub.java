@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.datascience.common.inference.type;
+package org.talend.datascience.common.inference;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.talend.datascience.common.inference.type.ColumnTypeBean;
+import org.talend.datascience.common.inference.type.DataTypeInferExecutor;
+import org.talend.datascience.common.inference.type.TypeInferenceUtils;
+
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -36,13 +40,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A interface processing input and output data with specific format (json for
- * example). this class hold one instance of {{@link TypeInferExecutor}
+ * example). this class hold one instance of {{@link DataTypeInferExecutor}
  * 
  * @author zhao
  *
  */
 public class SemanticTypeInferenceHub {
-	private TypeInferExecutor inferExectutor = new TypeInferExecutor();
+	private DataTypeInferExecutor inferExectutor = new DataTypeInferExecutor();
 
 	private String jsonRecordPath = "records";
 	private String jsonColumnPath = "columns";
@@ -161,7 +165,7 @@ public class SemanticTypeInferenceHub {
 		jParser.close();
 
 		// getJson string
-		List<Map<String, Long>> results = inferExectutor.getResults();
+		List<ColumnTypeBean> results = inferExectutor.getResults();
 
 		String jsonResult = getJsonResult(results, jsonFactory, columnNames);
 		return jsonResult;
@@ -195,7 +199,7 @@ public class SemanticTypeInferenceHub {
 	
 	
 	
-	private String getJsonResult(List<Map<String, Long>> results,
+	private String getJsonResult(List<ColumnTypeBean> results,
 			JsonFactory jsonFactory, List<String> columnNames) throws IOException {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		JsonGenerator jGenerator = jsonFactory.createGenerator(output,
@@ -204,7 +208,7 @@ public class SemanticTypeInferenceHub {
 		jGenerator.writeStartObject();// root object start
 		jGenerator.writeArrayFieldStart("column");// column array start
 		int colIdx = 0;
-		for (Map<String, Long> colMap : results) {
+		for (ColumnTypeBean colMap : results) {
 			jGenerator.writeStartObject();// Column start
 			// Write fixed metadata
 			jGenerator.writeStringField("id", columnNames.get(colIdx));
@@ -213,7 +217,7 @@ public class SemanticTypeInferenceHub {
 			// Write types
 			ValueComparator bvc = new ValueComparator(colMap);
 			Map<String, Long> sortMap = new TreeMap<String, Long>(bvc);
-			sortMap.putAll(colMap);
+			sortMap.putAll(colMap.getTypeToCountMap());
 			Iterator<String> typeKeyInterator = sortMap.keySet().iterator();
 			String suggestType = null;
 			jGenerator.writeArrayFieldStart("types"); // Type array start
@@ -279,15 +283,15 @@ public class SemanticTypeInferenceHub {
 
 class ValueComparator implements Comparator<String> {
 
-	Map<String, Long> base;
+	ColumnTypeBean base;
 
-	public ValueComparator(Map<String, Long> base) {
+	public ValueComparator(ColumnTypeBean base) {
 		this.base = base;
 	}
 
 	// Note: this comparator imposes orderings that are inconsistent with
 	// equals.
 	public int compare(String a, String b) {
-		return base.get(b).compareTo(base.get(a));
+		return base.getDataTypeCount(b).compareTo(base.getDataTypeCount(a));
 	}
 }

@@ -65,7 +65,7 @@ public class TypeInferenceUtilsTest {
 		double difference = getTimeDifference(timeStart, timeEnd);
 
 		System.out.println("Detect empty time diff: " + difference + " s.");
-		Assert.assertTrue(difference < 0.005);
+		Assert.assertTrue(difference < 0.006);
 	}
 
 	@Test
@@ -183,7 +183,7 @@ public class TypeInferenceUtilsTest {
 		double difference = getTimeDifference(timeStart, timeEnd);
 
 		System.out.println("Detect date time diff: " + difference + " s.");
-		Assert.assertTrue(difference < 0.4);
+		Assert.assertTrue(difference < 0.43);
 	}
 
 	private List<String> loadData(String path) throws IOException {

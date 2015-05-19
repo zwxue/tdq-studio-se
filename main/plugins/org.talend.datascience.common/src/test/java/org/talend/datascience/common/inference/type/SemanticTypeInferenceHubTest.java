@@ -5,10 +5,11 @@ import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.talend.datascience.common.inference.SemanticTypeInferenceHub;
 
-public class TypeInferHubTest {
+public class SemanticTypeInferenceHubTest {
 	SemanticTypeInferenceHub inferHub = new SemanticTypeInferenceHub();
-
+	
 	@Test
 	public void testInferTypesInputStream() {
 		try {

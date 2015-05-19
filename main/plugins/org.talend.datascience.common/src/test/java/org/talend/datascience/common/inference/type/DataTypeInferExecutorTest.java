@@ -10,15 +10,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TypeInferExecutorTest {
+public class DataTypeInferExecutorTest {
 
-	TypeInferExecutor inferExector = new TypeInferExecutor();
+	DataTypeInferExecutor inferExector = new DataTypeInferExecutor();
 	private boolean isPrintAllowed = true;
 
 	
@@ -28,7 +27,7 @@ public class TypeInferExecutorTest {
 		List<String[]> records = new ArrayList<String[]>();
 		String start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 		printline("Empty data set infer start at " + start);
-		List<Map<String, Long>> typeResult = inferExector.inferTypes(records);
+		List<ColumnTypeBean> typeResult = inferExector.inferTypes(records);
 		String end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 		printline("Empty data set infer end at " + end);
 		Assert.assertEquals(true, typeResult.isEmpty());
@@ -62,11 +61,11 @@ public class TypeInferExecutorTest {
 			// Result
 			for (int idx = 0; idx < typeResult.size(); idx++) {
 				printline("column " + (idx + 1));
-				Map<String, Long> types = typeResult.get(idx);
-				Iterator<String> typeKeys = types.keySet().iterator();
+				ColumnTypeBean types = typeResult.get(idx);
+				Iterator<String> typeKeys = types.getTypeToCountMap().keySet().iterator();
 				while (typeKeys.hasNext()) {
 					String key = typeKeys.next();
-					Long count = types.get(key);
+					Long count = types.getDataTypeCount(key);
 					printline("--- " + key + " : " + count);
 					if (18 == (idx + 1)) {
 						// Assert column 18, empty:10 string:90
@@ -160,7 +159,7 @@ public class TypeInferExecutorTest {
 			double timeDiff =TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
 			printline("10 000 time difference: "+timeDiff);
-			Assert.assertTrue(timeDiff < 0.8);
+			Assert.assertTrue(timeDiff < 0.9);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -189,7 +188,7 @@ public class TypeInferExecutorTest {
 			double timeDiff =TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
 			printline("100 000 time difference: "+timeDiff);
-			Assert.assertTrue(timeDiff < 4.5);
+			Assert.assertTrue(timeDiff < 4.8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
