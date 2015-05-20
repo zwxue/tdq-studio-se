@@ -195,22 +195,22 @@ public final class RepositoryNodeHelper {
     // │ US_State_Codes.pattern
     // │ US_Zipcode_Validation.pattern
     // │ Valid_UK_Post_Codes_Upper_and_Lower_Case.pattern
-    public static final String[] ADDRESS_PATTERN_UUIDS = {
+    private static final String[] PATTERN_ADDRESS_UUIDS = {
             "_NwUnsD4LEd20H7qFpzB9dg", "_KErdkIyeEd6Dle_8xC0lwg", "_rK7EgD4LEd20H7qFpzB9dg", "_EJ_moD4LEd20H7qFpzB9dg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_Ego7UIygEd6Dle_8xC0lwg", "__GBswIyfEd6Dle_8xC0lwg", "_pWgP8LkgEeSVYtNTxh_-xg", "_n2tqUIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_fi29wIybEd6Dle_8xC0lwg" }; //$NON-NLS-1$
 
     // │ Properties_Keys.pattern
-    public static final String[] CODE_PATTERN_UUIDS = { "_DVfAwAMtEd6stMai_3cDIQ" }; //$NON-NLS-1$
+    private static final String[] PATTERN_CODE_UUIDS = { "_DVfAwAMtEd6stMai_3cDIQ" }; //$NON-NLS-1$
 
     // │ Hex_Color.pattern
-    public static final String[] COLOR_PATTERN_UUIDS = { "_ly9QgcBQEd2Zap05uF3mKA" }; //$NON-NLS-1$
+    private static final String[] PATTERN_COLOR_UUIDS = { "_ly9QgcBQEd2Zap05uF3mKA" }; //$NON-NLS-1$
 
     // │ Austria_VAT_Number.pattern
     // │ Bulgaria_Vat_Number.pattern
     // │ FR_VAT_Number.pattern
     // │ Gender.pattern
-    public static final String[] CUSTOMER_PATTERN_UUIDS = { "_sHQnkIydEd6Dle_8xC0lwg", "_b95-YIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+    private static final String[] PATTERN_CUSTOMER_UUIDS = { "_sHQnkIydEd6Dle_8xC0lwg", "_b95-YIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
             "_ga6fofbIEd2c5L1gaJyUtQ", "_TXHDQceCEd2zV_ZhgRMOzA" }; //$NON-NLS-1$ //$NON-NLS-2$
 
     // │ 24 Hour Time.pattern
@@ -226,7 +226,7 @@ public final class RepositoryNodeHelper {
     // │ ISO Date.pattern
     // │ Month.pattern
     // │ Week Day.pattern
-    public static final String[] DATE_PATTERN_UUIDS = { "_nj3TsD4KEd20H7qFpzB9dg", "_khsAgIyhEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+    private static final String[] PATTERN_DATE_UUIDS = { "_nj3TsD4KEd20H7qFpzB9dg", "_khsAgIyhEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
             "_WAPQoIyeEd6Dle_8xC0lwg", "_pne9AIyeEd6Dle_8xC0lwg", "_4A6EMIyfEd6Dle_8xC0lwg", "_ypukIIyfEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_fLaxUIyfEd6Dle_8xC0lwg", "_pX0T4IyfEd6Dle_8xC0lwg", "_hytsED4YEd24WPpU35gV1A", "_tZlYsPbMEd2c5L1gaJyUtQ", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_M4zogD4ZEd24WPpU35gV1A", "_ZNaNsD4ZEd24WPpU35gV1A", "_Wub7wD4XEd24WPpU35gV1A" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -235,7 +235,7 @@ public final class RepositoryNodeHelper {
     // │ IP_Address.pattern
     // │ Website_URL.pattern
     // │ Website_validation.pattern
-    public static final String[] INTERNET_PATTERN_UUIDS = { "_rC5TcD4XEd24WPpU35gV1A", "_pOs9MAyEEd6OfvNiP9lrnQ", //$NON-NLS-1$ //$NON-NLS-2$
+    private static final String[] PATTERN_INTERNET_UUIDS = { "_rC5TcD4XEd24WPpU35gV1A", "_pOs9MAyEEd6OfvNiP9lrnQ", //$NON-NLS-1$ //$NON-NLS-2$
             "_yaXdsYZMEd2G3OfabUsfOQ", "_0_J_4IyeEd6Dle_8xC0lwg" }; //$NON-NLS-1$ //$NON-NLS-2$
 
     // │ American Express Card Number.pattern
@@ -255,7 +255,7 @@ public final class RepositoryNodeHelper {
     // │ Swedish_personnummer_with_accepted_foreigners.pattern
     // │ UK_Vehicle_Registration_Plate_Number_Plate.pattern
     // │ US SSN.pattern
-    public static final String[] NUMBER_PATTERN_UUIDS = { "_FcDG0D17Ed2p44yVAaDvbQ", "_j5FFMIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+    private static final String[] PATTERN_NUMBER_UUIDS = { "_FcDG0D17Ed2p44yVAaDvbQ", "_j5FFMIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
             "_Lnh0kGUuEd2RuP05jDphQg", "_8TNRwIydEd6Dle_8xC0lwg", "_OuO-UPbPEd2c5L1gaJyUtQ", "_0dzx4D4bEd24WPpU35gV1A", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_PRL0IIydEd6Dle_8xC0lwg", "_WGxL4IydEd6Dle_8xC0lwg", "_ZYFdkIybEd6Dle_8xC0lwg", "_CwBEgIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_6YWv4D16Ed2p44yVAaDvbQ", "_D7IDEAulEeKxJpyXB0egyQ", "_OAAOQD1iEd2irYhnXOOajA", "_07nrEIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -275,7 +275,7 @@ public final class RepositoryNodeHelper {
     // │ Phone_Number.pattern
     // │ UK Phone Number.pattern
     // │ US_Phone_Number.pattern
-    public static final String[] PHONE_PATTERN_UUIDS = { "_QbsC8IyeEd6Dle_8xC0lwg", "_CnD1cIyeEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+    private static final String[] PATTERN_PHONE_UUIDS = { "_QbsC8IyeEd6Dle_8xC0lwg", "_CnD1cIyeEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
             "_SPiUIPbKEd2c5L1gaJyUtQ", "_9LBjMIygEd6Dle_8xC0lwg", "_DqoD4IyhEd6Dle_8xC0lwg", "_W6xUUIygEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_NW0R0IygEd6Dle_8xC0lwg", "_eVNsoIygEd6Dle_8xC0lwg", "_Is95MIydEd6Dle_8xC0lwg", "__RSB4IycEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_mRzFgIycEd6Dle_8xC0lwg", "_S7m6oIyhEd6Dle_8xC0lwg", "_IIVOAD4XEd24WPpU35gV1A", "_bdjpwLr8Ed2z8Ya9pb9seQ" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -290,35 +290,44 @@ public final class RepositoryNodeHelper {
     // │ Starts_with_space.pattern
     // │ Starts_with_uppercase.pattern
     // │ Uppercased_Single_Word.pattern
-    public static final String[] TEXT_PATTERN_UUIDS = { "_N7yi0Gk3Ed2I1bT57-sHUw", "_vZ6_IGk6Ed2I1bT57-sHUw", //$NON-NLS-1$ //$NON-NLS-2$
+    private static final String[] PATTERN_TEXT_UUIDS = { "_N7yi0Gk3Ed2I1bT57-sHUw", "_vZ6_IGk6Ed2I1bT57-sHUw", //$NON-NLS-1$ //$NON-NLS-2$
             "_e4vUoYyZEd6Dle_8xC0lwg", "_IqpTEIyfEd6Dle_8xC0lwg", "_6rm3QIycEd6Dle_8xC0lwg", "_gDqDcP9eEd2mwaQf90ozSg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_18GtIIyaEd6Dle_8xC0lwg", "_scYqYIyaEd6Dle_8xC0lwg", "_53rX8AMvEeKk6OZDw5mXOQ", "_FyTwIHnTEd2weu9skTiCqA" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     // gmail.pattern
     // yahoo.pattern
-    public static final String[] INTERNET_SQL_PATTERN_UUIDS = { "_5tDp8LoaEd2CVq07lsaT2w", "_jyAMQbo4Ed2fB5cidg4eog" }; //$NON-NLS-1$ //$NON-NLS-2$
+    private static final String[] PATTERN_SQL_INTERNET_UUIDS = { "_5tDp8LoaEd2CVq07lsaT2w", "_jyAMQbo4Ed2fB5cidg4eog" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-    public static final List<?> SQL_PATTERN_UUIDS = Arrays.asList(INTERNET_SQL_PATTERN_UUIDS);
+    private static final List<?> PATTERN_SQL_UUIDS = Arrays.asList(PATTERN_SQL_INTERNET_UUIDS);
 
-    public static final List<?> ADDRESS_REGEX_PATTERN_UUIDS = Arrays.asList(ADDRESS_PATTERN_UUIDS);
+    private static final List<?> PATTERN_REGEX_ADDRESS_UUIDS = Arrays.asList(PATTERN_ADDRESS_UUIDS);
 
-    public static final List<?> CODE_REGEX_PATTERN_UUIDS = Arrays.asList(CODE_PATTERN_UUIDS);
+    private static final List<?> PATTERN_REGEX_CODE_UUIDS = Arrays.asList(PATTERN_CODE_UUIDS);
 
-    public static final List<?> COLOR_REGEX_PATTERN_UUIDS = Arrays.asList(COLOR_PATTERN_UUIDS, CUSTOMER_PATTERN_UUIDS);
+    private static final List<?> PATTERN_REGEX_COLOR_UUIDS = Arrays.asList(PATTERN_COLOR_UUIDS, PATTERN_CUSTOMER_UUIDS);
 
-    public static final List<?> DATE_REGEX_PATTERN_UUIDS = Arrays.asList(DATE_PATTERN_UUIDS);
+    private static final List<?> PATTERN_REGEX_DATE_UUIDS = Arrays.asList(PATTERN_DATE_UUIDS);
 
-    public static final List<?> INTERNET_REGEX_PATTERN_UUIDS = Arrays.asList(INTERNET_PATTERN_UUIDS);
+    private static final List<?> PATTERN_REGEX_INTERNET_UUIDS = Arrays.asList(PATTERN_INTERNET_UUIDS);
 
-    public static final List<?> NUMBER_REGEX_PATTERN_UUIDS = Arrays.asList(NUMBER_PATTERN_UUIDS);
+    private static final List<?> PATTERN_REGEX_NUMBER_UUIDS = Arrays.asList(PATTERN_NUMBER_UUIDS);
 
-    public static final List<?> PHONE_REGEX_PATTERN_UUIDS = Arrays.asList(PHONE_PATTERN_UUIDS);
+    private static final List<?> PATTERN_REGEX_PHONE_UUIDS = Arrays.asList(PATTERN_PHONE_UUIDS);
 
-    public static final List<?> TEXT_REGEX_PATTERN_UUIDS = Arrays.asList(TEXT_PATTERN_UUIDS);
+    private static final List<?> PATTERN_REGEX_TEXT_UUIDS = Arrays.asList(PATTERN_TEXT_UUIDS);
 
-    public static final String DEMO_RULE_UUID = "_hXIKcA-ZEd6qupbF9NyF4w"; //$NON-NLS-1$
+    private static final String[] PATTERN_REGEX_FOLDER_NAMES = {
+            "address", "code", "color", "customer", "date", "internet", "number", "phone", "text" }; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$//$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 
-    public static final String DEMO_SOURCEFILE_LABEL = "TEST_TOP"; //$NON-NLS-1$
+    private static final String[] PATTERN_SQL_FOLDER_NAMES = { "internet" }; //$NON-NLS-1$
+
+    private static final List<String> PATTERN_REGEX_FOLDER_NAMES_LIST = Arrays.asList(PATTERN_REGEX_FOLDER_NAMES);
+
+    private static final List<String> PATTERN_SQL_FOLDER_NAMES_LIST = Arrays.asList(PATTERN_SQL_FOLDER_NAMES);
+
+    private static final String DEMO_RULE_UUID = "_hXIKcA-ZEd6qupbF9NyF4w"; //$NON-NLS-1$
+
+    private static final String DEMO_SOURCEFILE_LABEL = "TEST_TOP"; //$NON-NLS-1$
 
     public static RecycleBinRepNode getRecycleBinRepNode() {
         if (recycleBinRepNode == null) {
@@ -327,19 +336,31 @@ public final class RepositoryNodeHelper {
         return recycleBinRepNode;
     }
 
+    public static boolean isSystemRegexPatternFolder(String folderName) {
+        return PATTERN_REGEX_FOLDER_NAMES_LIST.contains(folderName);
+    }
+
+    public static boolean isSystemSQLPatternFolder(String folderName) {
+        return PATTERN_SQL_FOLDER_NAMES_LIST.contains(folderName);
+    }
+
     public static boolean isSystemRegexPattern(String uuid) {
-        return ADDRESS_REGEX_PATTERN_UUIDS.contains(uuid) || CODE_REGEX_PATTERN_UUIDS.contains(uuid)
-                || COLOR_REGEX_PATTERN_UUIDS.contains(uuid) || DATE_REGEX_PATTERN_UUIDS.contains(uuid)
-                || INTERNET_REGEX_PATTERN_UUIDS.contains(uuid) || NUMBER_REGEX_PATTERN_UUIDS.contains(uuid)
-                || PHONE_REGEX_PATTERN_UUIDS.contains(uuid) || TEXT_REGEX_PATTERN_UUIDS.contains(uuid);
+        return PATTERN_REGEX_ADDRESS_UUIDS.contains(uuid) || PATTERN_REGEX_CODE_UUIDS.contains(uuid)
+                || PATTERN_REGEX_COLOR_UUIDS.contains(uuid) || PATTERN_REGEX_DATE_UUIDS.contains(uuid)
+                || PATTERN_REGEX_INTERNET_UUIDS.contains(uuid) || PATTERN_REGEX_NUMBER_UUIDS.contains(uuid)
+                || PATTERN_REGEX_PHONE_UUIDS.contains(uuid) || PATTERN_REGEX_TEXT_UUIDS.contains(uuid);
     }
 
     public static boolean isSystemSQLPattern(String uuid) {
-        return SQL_PATTERN_UUIDS.contains(uuid);
+        return PATTERN_SQL_UUIDS.contains(uuid);
     }
 
     public static boolean isSystemDemoRule(String uuid) {
         return DEMO_RULE_UUID.equals(uuid);
+    }
+
+    public static boolean isSystemDemoSourceFile(String label) {
+        return DEMO_SOURCEFILE_LABEL.equals(label);
     }
 
     /**
@@ -2190,26 +2211,45 @@ public final class RepositoryNodeHelper {
             TreeItem[] items = commonViewer.getTree().getItems();
             for (TreeItem item : items) {
                 node = (DQRepositoryNode) item.getData();
-
-                // have reference project node, get its children' children
-                if (ERepositoryObjectType.REFERENCED_PROJECTS.getLabel().equals(node.getProperties(EProperties.LABEL))) {
-                    for (IRepositoryNode node1 : node.getChildren()) {
-                        for (IRepositoryNode node2 : node1.getChildren()) {
-                            if (isNodeMatch(project, (DQRepositoryNode) node2, folderItem)) {
-                                return (DQRepositoryNode) node2;
-                            }
-                        }
-                    }
+                DQRepositoryNode matchNode = getMatchNode(project, node, folderItem);
+                if (matchNode == null) {
+                    continue;
                 } else {
-                    if (isNodeMatch(project, node, folderItem)) {
-                        return node;
-                    }
+                    return matchNode;
                 }
-
             }
             log.error(Messages.getString("RepositoryNodeHelper.canNotFindRootNode") + nodeType.getLabel()); //$NON-NLS-1$
         }
         return node;
+    }
+
+    /**
+     * DOC msjian Comment method "checkNodeMatch".
+     * 
+     * @param project
+     * @param node
+     * @param folderItem
+     */
+    private static DQRepositoryNode getMatchNode(org.talend.core.model.general.Project project, DQRepositoryNode node,
+            FolderItem folderItem) {
+        // have reference project node, get its children' children
+        if (ERepositoryObjectType.REFERENCED_PROJECTS.getLabel().equals(node.getProperties(EProperties.LABEL))) {
+            for (IRepositoryNode node1 : node.getChildren()) {
+                for (IRepositoryNode node2 : node1.getChildren()) {
+                    DQRepositoryNode matchNode = getMatchNode(project, (DQRepositoryNode) node2, folderItem);
+                    if (matchNode == null) {
+                        continue;
+                    } else {
+                        return matchNode;
+                    }
+                }
+            }
+        } else {
+            if (isNodeMatch(project, node, folderItem)) {
+                return node;
+            }
+        }
+        return null;
     }
 
     /**

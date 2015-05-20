@@ -21,6 +21,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -81,9 +82,11 @@ public class SourceFileFolderRepNode extends DQFolderRepNode {
             }
 
             // ADD msjian TDQ-4914: when the node is SystemDemoRule from ref project, we don't show it
-            if (!project.isMainProject()) {
-                if (viewObject.getLabel().equals(RepositoryNodeHelper.DEMO_SOURCEFILE_LABEL)) {
-                    continue;
+            if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+                if (!project.isMainProject()) {
+                    if (RepositoryNodeHelper.isSystemDemoSourceFile(viewObject.getLabel())) {
+                        continue;
+                    }
                 }
             }
             // TDQ-4914~

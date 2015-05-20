@@ -22,6 +22,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -81,8 +82,12 @@ public class PatternRegexFolderRepNode extends DQFolderRepNode {
                 continue;
             }
 
-            if (!project.isMainProject()) {
-                continue;
+            if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+                if (!project.isMainProject()) {
+                    if (RepositoryNodeHelper.isSystemRegexPatternFolder(folder.getLabel())) {
+                        continue;
+                    }
+                }
             }
             PatternRegexSubFolderRepNode childNodeFolder = new PatternRegexSubFolderRepNode(folder, this,
                     ENodeType.SIMPLE_FOLDER, project);
@@ -100,13 +105,16 @@ public class PatternRegexFolderRepNode extends DQFolderRepNode {
             repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
             viewObject.setRepositoryNode(repNode);
 
-            // ADD msjian TDQ-4914: when the node is System regex pattern from ref project, we don't show it
-            if (!project.isMainProject()) {
-                ModelElement meNode = RepositoryNodeHelper.getResourceModelElement(repNode);
-                if (meNode != null) {
-                    String uuid = RepositoryNodeHelper.getUUID(meNode);
-                    if (RepositoryNodeHelper.isSystemRegexPattern(uuid)) {
-                        continue;
+            // ADD msjian TDQ-4914: when the node is System regex pattern from ref project, we don't show it(only for
+            // merge mode)
+            if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+                if (!project.isMainProject()) {
+                    ModelElement meNode = RepositoryNodeHelper.getResourceModelElement(repNode);
+                    if (meNode != null) {
+                        String uuid = RepositoryNodeHelper.getUUID(meNode);
+                        if (RepositoryNodeHelper.isSystemRegexPattern(uuid)) {
+                            continue;
+                        }
                     }
                 }
             }

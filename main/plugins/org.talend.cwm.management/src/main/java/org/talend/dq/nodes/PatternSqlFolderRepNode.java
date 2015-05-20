@@ -22,6 +22,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -79,8 +80,12 @@ public class PatternSqlFolderRepNode extends DQFolderRepNode {
             if (!withDeleted && folder.isDeleted()) {
                 continue;
             }
-            if (!project.isMainProject()) {
-                continue;
+            if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+                if (!project.isMainProject()) {
+                    if (RepositoryNodeHelper.isSystemSQLPatternFolder(folder.getLabel())) {
+                        continue;
+                    }
+                }
             }
             PatternSqlSubFolderRepNode childNodeFolder = new PatternSqlSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER,
                     project);
@@ -99,13 +104,16 @@ public class PatternSqlFolderRepNode extends DQFolderRepNode {
             repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_SQL);
             viewObject.setRepositoryNode(repNode);
 
-            // ADD msjian TDQ-4914: when the node is System sql pattern from ref project, we don't show it
-            if (!project.isMainProject()) {
-                ModelElement meNode = RepositoryNodeHelper.getResourceModelElement(repNode);
-                if (meNode != null) {
-                    String uuid = RepositoryNodeHelper.getUUID(meNode);
-                    if (RepositoryNodeHelper.isSystemSQLPattern(uuid)) {
-                        continue;
+            // ADD msjian TDQ-4914: when the node is System sql pattern from ref project, we don't show it(only for
+            // merge mode)
+            if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+                if (!project.isMainProject()) {
+                    ModelElement meNode = RepositoryNodeHelper.getResourceModelElement(repNode);
+                    if (meNode != null) {
+                        String uuid = RepositoryNodeHelper.getUUID(meNode);
+                        if (RepositoryNodeHelper.isSystemSQLPattern(uuid)) {
+                            continue;
+                        }
                     }
                 }
             }

@@ -303,7 +303,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     @SuppressWarnings("unchecked")
     private void handleReferenced(RepositoryNode parent) {
-        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        Project currentProject = ((DQRepositoryNode) parent).getProject();
         if (parent.getType().equals(ENodeType.SYSTEM_FOLDER)) {
             for (ProjectReference refProject : (List<ProjectReference>) currentProject.getEmfProject().getReferencedProjects()) {
                 String parentBranch = ProjectManager.getInstance().getMainProjectBranch(currentProject);
@@ -317,9 +317,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     referencedProjectNode.setProperties(EProperties.LABEL, emfProject.getLabel());
                     referencedProjectNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.REFERENCED_PROJECTS);
                     parent.getChildren().add(referencedProjectNode);
-                    // fix the bug for Ref-project
-                    // TDI-23358, revert to before
-                    // ProjectManager.getInstance().updateViewProjectNode(referencedProjectNode);
 
                     try {
                         org.talend.core.model.general.Project refGeneralProject = new org.talend.core.model.general.Project(

@@ -195,7 +195,7 @@ public class ProxyRepositoryManager {
     public List<org.talend.core.model.general.Project> getAllProjects() {
         List<Project> result = new ArrayList<Project>();
         Project currentProject = ProjectManager.getInstance().getCurrentProject();
-        List<Project> referencedProjects = ProjectManager.getInstance().getReferencedProjects(currentProject);
+        List<Project> referencedProjects = ProjectManager.getInstance().getAllReferencedProjects();
         for (Project pro : referencedProjects) {
             pro.setMainProject(false);
         }

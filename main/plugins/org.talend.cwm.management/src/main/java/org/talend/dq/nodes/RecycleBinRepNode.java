@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.commons.ui.runtime.image.ECoreImage;
 import org.talend.commons.ui.runtime.image.IImage;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
@@ -111,14 +112,30 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         super.getChildren().clear();
+
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            List<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+            for (Project project : allProjects) {
+                addItemToRecycleBin(project);
+            }
+        } else {
+            addItemToRecycleBin(getProject());
+        }
+
+        return filterRecycleBin(super.getChildren());
+    }
+
+    /**
+     * DOC msjian Comment method "addItemToRecycleBin".
+     */
+    private void addItemToRecycleBin(Project project) {
         List<DQRepositoryNode> foldersList = new ArrayList<DQRepositoryNode>();
-        List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(getProject().getEmfProject());
+        List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(project.getEmfProject());
         for (FolderItem folderItem : folderItems) {
             if (isTDQOrMetadataRootFolder(folderItem)) {
-                addItemToRecycleBin(this, folderItem, foldersList);
+                addItemToRecycleBin(this, folderItem, foldersList, project);
             }
         }
-        return filterRecycleBin(super.getChildren());
     }
 
     /*
@@ -148,7 +165,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
         return folder.getProperty().getLabel() + "/" + path;//$NON-NLS-1$
     }
 
-    private void addItemToRecycleBin(DQRepositoryNode parentNode, Item item, List<DQRepositoryNode> foldersList) {
+    private void addItemToRecycleBin(DQRepositoryNode parentNode, Item item, List<DQRepositoryNode> foldersList, Project project) {
         ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
         DQRepositoryNode currentParentNode = parentNode;
         if (item instanceof FolderItem) {
@@ -170,7 +187,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                     }
                 }
                 if (folderNode == null) {
-                    folderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SIMPLE_FOLDER, getProject());
+                    folderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SIMPLE_FOLDER, project);
                     folderNode.setProperties(EProperties.CONTENT_TYPE, itemType);
                     folderNode.setProperties(EProperties.LABEL, folder.getLabel());
                     foldersList.add(folderNode);
@@ -181,7 +198,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                     initChildForRemoteProject((FolderItem) item, itemType);
                 }
                 for (Item curItem : new ArrayList<Item>(((FolderItem) item).getChildren())) {
-                    addItemToRecycleBin(folderNode, curItem, foldersList);
+                    addItemToRecycleBin(folderNode, curItem, foldersList, project);
                 }
                 currentParentNode = folderNode;
             } else {
@@ -191,7 +208,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                     initChildForRemoteProject((FolderItem) item, itemType);
                 }
                 for (Item curItem : new ArrayList<Item>(((FolderItem) item).getChildren())) {
-                    addItemToRecycleBin(parentNode, curItem, foldersList);
+                    addItemToRecycleBin(parentNode, curItem, foldersList, project);
                 }
             }
         } else if (item.getState() != null && item.getState().isDeleted()) {
@@ -201,7 +218,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
             // String version = lastVersion.getVersion();
             // if (item.getProperty() .getVersion() .equals(version)) {
             DQRepositoryNode repNode = new DQRepositoryNode(new RepositoryViewObject(item.getProperty()), currentParentNode,
-                    ENodeType.REPOSITORY_ELEMENT, getProject());
+                    ENodeType.REPOSITORY_ELEMENT, project);
             repNode.setProperties(EProperties.CONTENT_TYPE, itemType);
             repNode.setProperties(EProperties.LABEL, item.getProperty().getLabel());
             currentParentNode.getChildren(false).add(repNode);
