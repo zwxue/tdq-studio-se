@@ -3,9 +3,11 @@ package org.talend.dataquality.datamasking;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 import org.talend.dataquality.datamasking.CreditCardGenerator.CreditCardType;
 import org.talend.dataquality.duplicating.DateChanger;
@@ -30,6 +32,7 @@ public class FunctionApplier {
     public enum Function {
         SET_TO_NULL,
         DATE_VARIANCE,
+        KEEP_YEAR,
         NUMERIC_VARIANCE,
         GENERATE_CREDIT_CARD,
         GENERATE_CREDIT_CARD_FORMAT,
@@ -40,6 +43,8 @@ public class FunctionApplier {
         GENERATE_BETWEEN,
         GENERATE_FROM_LIST,
         GENERATE_FROM_FILE,
+        HASH_GENERATE_LIST,
+        HASH_GENERATE_FILE,
         REPLACE_ALL,
         REPLACE_NUMERIC,
         REPLACE_CHARACTERS,
@@ -50,7 +55,8 @@ public class FunctionApplier {
         REMOVE_FIRST_CHARS,
         REMOVE_LAST_CHARS,
         REPLACE_FIRST_CHARS,
-        REPLACE_LAST_CHARS
+        REPLACE_LAST_CHARS,
+        GENERATE_UUID
     };
 
     private DateChanger dateChanger = new DateChanger();
@@ -101,6 +107,17 @@ public class FunctionApplier {
             } else {
                 newDate = dateChanger.generateDateBetween(parameters[0], parameters[1], rnd);
             }
+            break;
+        case KEEP_YEAR:
+            Calendar c = Calendar.getInstance();
+            if (date != null) {
+                c.setTime(date);
+            } else {
+                c.setTime(newDate);
+            }
+            c.set(Calendar.DAY_OF_MONTH, 1);
+            c.set(Calendar.MONTH, Calendar.JANUARY);
+            newDate = c.getTime();
             break;
         default:
             return new Date(System.currentTimeMillis());
@@ -204,17 +221,25 @@ public class FunctionApplier {
             }
             break;
         case REPLACE_NUMERIC:
-            if (str == null || extraParameter == null || !extraParameter.matches("[0-9]|[a-zA-Z]")) { //$NON-NLS-1$
+            if (str == null || extraParameter == null || !extraParameter.matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
                 sb = new StringBuilder(EMPTY_STRING);
             } else {
-                sb = new StringBuilder(str.replaceAll("\\d", extraParameter)); //$NON-NLS-1$
+                if (extraParameter.equals(" ")) { //$NON-NLS-1$
+                    sb = new StringBuilder(str.replaceAll("\\d", extraParameter).replaceAll(" ", EMPTY_STRING)); //$NON-NLS-1$ //$NON-NLS-2$
+                } else {
+                    sb = new StringBuilder(str.replaceAll("\\d", extraParameter)); //$NON-NLS-1$
+                }
             }
             break;
         case REPLACE_CHARACTERS:
-            if (str == null || extraParameter == null || !extraParameter.matches("[0-9]|[a-zA-Z]")) { //$NON-NLS-1$
+            if (str == null || extraParameter == null || !extraParameter.matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
                 sb = new StringBuilder(EMPTY_STRING);
             } else {
-                sb = new StringBuilder(str.replaceAll("[a-zA-Z]", extraParameter)); //$NON-NLS-1$
+                if (extraParameter.equals(" ")) { //$NON-NLS-1$
+                    sb = new StringBuilder(str.replaceAll("[a-zA-Z]", extraParameter).replaceAll(" ", EMPTY_STRING)); //$NON-NLS-1$ //$NON-NLS-2$   
+                } else {
+                    sb = new StringBuilder(str.replaceAll("[a-zA-Z]", extraParameter)); //$NON-NLS-1$
+                }
             }
             break;
         case REPLACE_SSN:
@@ -274,6 +299,39 @@ public class FunctionApplier {
                     tokens.add(in.next());
                 }
                 sb = new StringBuilder(tokens.get(rnd.nextInt(tokens.size())));
+            } catch (FileNotFoundException e) {
+                sb = new StringBuilder(EMPTY_STRING);
+            }
+            break;
+        case HASH_GENERATE_LIST:
+            String[] parametersss = extraParameter.split(","); //$NON-NLS-1$
+            if (parametersss.length > 0) {
+                for (int i = 0; i < parametersss.length; ++i) {
+                    String tmp = parametersss[i].trim();
+                    parametersss[i] = tmp;
+                }
+                if (str == null) {
+                    sb = new StringBuilder(parametersss[rnd.nextInt(parametersss.length)]);
+                } else {
+                    sb = new StringBuilder(parametersss[(Math.abs(str.hashCode()) % parametersss.length)]);
+                }
+            } else {
+                sb = new StringBuilder(EMPTY_STRING);
+            }
+            break;
+        case HASH_GENERATE_FILE:
+            try {
+                @SuppressWarnings("resource")
+                Scanner in = new Scanner(new FileReader(extraParameter));
+                List<String> tokens = new ArrayList<String>();
+                while (in.hasNext()) {
+                    tokens.add(in.next());
+                }
+                if (str == null) {
+                    sb = new StringBuilder(tokens.get(rnd.nextInt(tokens.size())));
+                } else {
+                    sb = new StringBuilder(tokens.get(Math.abs(str.hashCode()) % tokens.size()));
+                }
             } catch (FileNotFoundException e) {
                 sb = new StringBuilder(EMPTY_STRING);
             }
@@ -439,6 +497,9 @@ public class FunctionApplier {
             }
             sb.replace(str.length() - extraPar, str.length(), repla.toString());
             break;
+        case GENERATE_UUID:
+            sb = new StringBuilder(UUID.randomUUID().toString());
+            break;
         default:
             break;
         }
@@ -491,8 +552,8 @@ public class FunctionApplier {
                 extraParam = 0;
             }
             String str = valueIn.toString();
-            str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
-            finalValue = Double.valueOf(str);
+            String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
+            finalValue = Double.valueOf(res);
             break;
         case GENERATE_BETWEEN:
             String[] parameters = extraParameter.split(","); //$NON-NLS-1$
@@ -565,8 +626,8 @@ public class FunctionApplier {
                 extraParam = 0;
             }
             String str = valueIn.toString();
-            str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
-            finalValue = Float.valueOf(str);
+            String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
+            finalValue = Float.valueOf(res);
             break;
         case GENERATE_BETWEEN:
             String[] parameters = extraParameter.split(","); //$NON-NLS-1$
@@ -664,8 +725,8 @@ public class FunctionApplier {
                 extraParam = 0;
             }
             String str = valueIn.toString();
-            str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
-            finalValue = Long.valueOf(str);
+            String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
+            finalValue = Long.valueOf(res);
             break;
         case GENERATE_BETWEEN:
             String[] parameters = extraParameter.split(","); //$NON-NLS-1$
@@ -698,10 +759,10 @@ public class FunctionApplier {
                 } else if (str_nospaces.replaceAll("\\D", EMPTY_STRING).length() == 15) { //$NON-NLS-1$
                     digits_to_keep = 5;
                 }
-                String res = str_nospaces.substring(0, str_nospaces.length() - digits_to_keep)
-                        .replaceAll("[0-9]", extraParameter); //$NON-NLS-1$ 
-                res = res + str_nospaces.substring(str_nospaces.length() - digits_to_keep, str_nospaces.length());
-                finalValue = Long.parseLong(res);
+                String res_ssn = str_nospaces.substring(0, str_nospaces.length() - digits_to_keep).replaceAll(
+                        "[0-9]", extraParameter); //$NON-NLS-1$ 
+                res_ssn = res_ssn + str_nospaces.substring(str_nospaces.length() - digits_to_keep, str_nospaces.length());
+                finalValue = Long.parseLong(res_ssn);
             }
             break;
         case GENERATE_FROM_LIST:
@@ -736,6 +797,42 @@ public class FunctionApplier {
                     }
                 }
                 finalValue = tokens.get(rnd.nextInt(tokens.size()));
+            } catch (FileNotFoundException e) {
+                finalValue = 0L;
+            }
+            break;
+        case HASH_GENERATE_LIST:
+            String[] parametersh = extraParameter.split(","); //$NON-NLS-1$
+            int[] parametersIh = new int[parametersh.length];
+            if (parametersIh.length > 0) {
+                for (int i = 0; i < parametersh.length; ++i) {
+                    String tmp = parametersh[i].replaceAll("\\s+", EMPTY_STRING); //$NON-NLS-1$
+                    try {
+                        parametersIh[i] = Integer.parseInt(tmp);
+                    } catch (NumberFormatException e) {
+                        finalValue = 0L;
+                        break;
+                    }
+                }
+                finalValue = (long) parametersIh[Math.abs(valueIn.hashCode()) % parametersIh.length];
+            } else {
+                finalValue = 0L;
+            }
+            break;
+        case HASH_GENERATE_FILE:
+            try {
+                @SuppressWarnings("resource")
+                Scanner in = new Scanner(new FileReader(extraParameter));
+                List<Integer> tokens = new ArrayList<Integer>();
+                while (in.hasNext()) {
+                    try {
+                        tokens.add(Integer.parseInt(in.next()));
+                    } catch (NumberFormatException e) {
+                        finalValue = 0L;
+                        break;
+                    }
+                }
+                finalValue = (long) tokens.get(Math.abs(valueIn.hashCode()) % tokens.size());
             } catch (FileNotFoundException e) {
                 finalValue = 0L;
             }
@@ -861,8 +958,8 @@ public class FunctionApplier {
                 extraParam = 0;
             }
             String str = valueIn.toString();
-            str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
-            finalValue = Integer.valueOf(str);
+            String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
+            finalValue = Integer.valueOf(res);
             break;
         case GENERATE_BETWEEN:
             String[] parameters = extraParameter.split(","); //$NON-NLS-1$
@@ -895,10 +992,10 @@ public class FunctionApplier {
                 } else if (str_nospaces.replaceAll("\\D", EMPTY_STRING).length() == 15) { //$NON-NLS-1$
                     digits_to_keep = 5;
                 }
-                String res = str_nospaces.substring(0, str_nospaces.length() - digits_to_keep)
-                        .replaceAll("[0-9]", extraParameter); //$NON-NLS-1$ 
-                res = res + str_nospaces.substring(str_nospaces.length() - digits_to_keep, str_nospaces.length());
-                finalValue = Integer.parseInt(res);
+                String res_ssn = str_nospaces.substring(0, str_nospaces.length() - digits_to_keep).replaceAll(
+                        "[0-9]", extraParameter); //$NON-NLS-1$ 
+                res_ssn = res_ssn + str_nospaces.substring(str_nospaces.length() - digits_to_keep, str_nospaces.length());
+                finalValue = Integer.parseInt(res_ssn);
             }
             break;
         case GENERATE_FROM_LIST:
@@ -933,6 +1030,42 @@ public class FunctionApplier {
                     }
                 }
                 finalValue = tokens.get(rnd.nextInt(tokens.size()));
+            } catch (FileNotFoundException e) {
+                finalValue = 0;
+            }
+            break;
+        case HASH_GENERATE_LIST:
+            String[] parametersh = extraParameter.split(","); //$NON-NLS-1$
+            int[] parametersIh = new int[parametersh.length];
+            if (parametersIh.length > 0) {
+                for (int i = 0; i < parametersh.length; ++i) {
+                    String tmp = parametersh[i].replaceAll("\\s+", EMPTY_STRING); //$NON-NLS-1$
+                    try {
+                        parametersIh[i] = Integer.parseInt(tmp);
+                    } catch (NumberFormatException e) {
+                        finalValue = 0;
+                        break;
+                    }
+                }
+                finalValue = parametersIh[Math.abs(valueIn.hashCode()) % parametersIh.length];
+            } else {
+                finalValue = 0;
+            }
+            break;
+        case HASH_GENERATE_FILE:
+            try {
+                @SuppressWarnings("resource")
+                Scanner in = new Scanner(new FileReader(extraParameter));
+                List<Integer> tokens = new ArrayList<Integer>();
+                while (in.hasNext()) {
+                    try {
+                        tokens.add(Integer.parseInt(in.next()));
+                    } catch (NumberFormatException e) {
+                        finalValue = 0;
+                        break;
+                    }
+                }
+                finalValue = tokens.get(Math.abs(valueIn.hashCode()) % tokens.size());
             } catch (FileNotFoundException e) {
                 finalValue = 0;
             }
