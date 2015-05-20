@@ -59,18 +59,16 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
 
     @Override
     public void addPages() {
-        step1Page = new HDFSFileSelectorWizardPage(connectionItem, isRepositoryObjectEditable(), this.getTempHDFSConnection());
+        step1Page = new CreateHiveTableStep1Page(connectionItem, isRepositoryObjectEditable(), this.getTempHDFSConnection());
         step1Page.setTitle(DefaultMessagesImpl.getString(
                 "HDFSSchemaWizardPage.titleCreate", connectionItem.getProperty().getLabel())); //$NON-NLS-1$
         step1Page.setDescription(DefaultMessagesImpl.getString("CreateHiveTableStep2page.descriptionCreate")); //$NON-NLS-1$
-        step1Page.setPageComplete(false);
         addPage(step1Page);
 
         step2page = new CreateHiveTableStep2page(connectionItem, getTempHDFSConnection());
         step2page.setTitle(DefaultMessagesImpl.getString("CreateHiveTableStep2page.titleCreate", connectionItem.getProperty() //$NON-NLS-1$
                 .getLabel()));
         step2page.setDescription(DefaultMessagesImpl.getString("CreateHiveTableStep2page.descriptionCreate")); //$NON-NLS-1$
-        step2page.setPageComplete(false);
         addPage(step2page);
 
         // add step 3 page:
@@ -79,6 +77,8 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
         step3Page.setDescription(DefaultMessagesImpl.getString("CreateHiveTableStep3Page.description")); //$NON-NLS-1$
         step3Page.setPageComplete(true);
         addPage(step3Page);
+
+        step2page.setPageComplete(false);
     }
 
     @Override
