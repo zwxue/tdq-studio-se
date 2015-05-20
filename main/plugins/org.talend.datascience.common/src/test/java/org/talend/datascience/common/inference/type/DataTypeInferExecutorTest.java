@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class DataTypeInferExecutorTest {
@@ -20,7 +21,6 @@ public class DataTypeInferExecutorTest {
 	DataTypeInferExecutor inferExector = new DataTypeInferExecutor();
 	private boolean isPrintAllowed = true;
 
-	
 	@Test
 	public void testInferTypes() {
 		// -------1. assert empty dataset ---------
@@ -54,15 +54,16 @@ public class DataTypeInferExecutorTest {
 			typeResult = inferExector.inferTypes(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("100 data set infer end at " + end);
-			printline("100 time difference " + TypeInferenceUtilsTest.getTimeDifference(start,
-					end));
+			printline("100 time difference "
+					+ TypeInferenceUtilsTest.getTimeDifference(start, end));
 			Assert.assertTrue(TypeInferenceUtilsTest.getTimeDifference(start,
 					end) < 0.18);
 			// Result
 			for (int idx = 0; idx < typeResult.size(); idx++) {
 				printline("column " + (idx + 1));
 				ColumnTypeBean types = typeResult.get(idx);
-				Iterator<String> typeKeys = types.getTypeToCountMap().keySet().iterator();
+				Iterator<String> typeKeys = types.getTypeToCountMap().keySet()
+						.iterator();
 				while (typeKeys.hasNext()) {
 					String key = typeKeys.next();
 					Long count = types.getDataTypeCount(key);
@@ -104,8 +105,7 @@ public class DataTypeInferExecutorTest {
 				.getClassLoader()
 				.getResourceAsStream(
 						"org/talend/datascience/common/inference/type/employee_1000.csv");
-		inBuffReader = new BufferedReader(new InputStreamReader(
-				in));
+		inBuffReader = new BufferedReader(new InputStreamReader(in));
 		records = new ArrayList<String[]>();
 		try {
 			while ((line = inBuffReader.readLine()) != null) {
@@ -118,33 +118,30 @@ public class DataTypeInferExecutorTest {
 			typeResult = inferExector.inferTypes(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("1000 data set infer end at " + end);
-			printline("1000 time difference " + TypeInferenceUtilsTest.getTimeDifference(start,
-					end));
+			printline("1000 time difference "
+					+ TypeInferenceUtilsTest.getTimeDifference(start, end));
 			Assert.assertTrue(TypeInferenceUtilsTest.getTimeDifference(start,
 					end) < 0.21);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+
 	}
 
-	//@Test don't run the perf test on testing server.
-	//@Ignore 
-	@Test
+	// @Test don't run the perf test on testing server.
+	@Ignore
 	public void testInferTypesPerformance() {
 		// -------4. assert dataset with 10 000 records, 18 columns ---------
-		InputStream in = null;;
-		try {
-			in = new FileInputStream(new File(
-							"/home/zhao/Talend/product/6.0/TOS_DI-20150426_0751-V5.6.2/workspace/employee_10000.csv"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
+		InputStream in = this
+				.getClass()
+				.getClassLoader()
+				.getResourceAsStream(
+						"org/talend/datascience/common/inference/type/employee_10000.csv");
 		BufferedReader inBuffReader = new BufferedReader(new InputStreamReader(
 				in));
 		List<String[]> records = new ArrayList<String[]>();
 		String line = null;
-		String start , end;
+		String start, end;
 		try {
 			while ((line = inBuffReader.readLine()) != null) {
 				String[] record = StringUtils
@@ -153,26 +150,26 @@ public class DataTypeInferExecutorTest {
 			}
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("10 000 data set infer start at " + start);
-			 inferExector.inferTypes(records);
+			inferExector.inferTypes(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("10 000 data set infer end at " + end);
-			double timeDiff =TypeInferenceUtilsTest.getTimeDifference(start,
+			double timeDiff = TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
-			printline("10 000 time difference: "+timeDiff);
+			printline("10 000 time difference: " + timeDiff);
 			Assert.assertTrue(timeDiff < 0.9);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// -------5. assert dataset with 100 000 records, 18 columns ---------
-		in = null;;
+		in = null;
 		try {
-			in = new FileInputStream(new File(
+			in = new FileInputStream(
+					new File(
 							"/home/zhao/Talend/product/6.0/TOS_DI-20150426_0751-V5.6.2/workspace/employee_100000.csv"));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		inBuffReader = new BufferedReader(new InputStreamReader(
-				in));
+		inBuffReader = new BufferedReader(new InputStreamReader(in));
 		records = new ArrayList<String[]>();
 		try {
 			while ((line = inBuffReader.readLine()) != null) {
@@ -185,23 +182,23 @@ public class DataTypeInferExecutorTest {
 			inferExector.inferTypes(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("100 000 data set infer end at " + end);
-			double timeDiff =TypeInferenceUtilsTest.getTimeDifference(start,
+			double timeDiff = TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
-			printline("100 000 time difference: "+timeDiff);
+			printline("100 000 time difference: " + timeDiff);
 			Assert.assertTrue(timeDiff < 4.8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// -------6. assert dataset with 1 000 000 records, 18 columns ---------
-		in = null;;
+		in = null;
 		try {
-			in = new FileInputStream(new File(
+			in = new FileInputStream(
+					new File(
 							"/home/zhao/Talend/product/6.0/TOS_DI-20150426_0751-V5.6.2/workspace/employee_1000000.csv"));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		inBuffReader = new BufferedReader(new InputStreamReader(
-				in));
+		inBuffReader = new BufferedReader(new InputStreamReader(in));
 		try {
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("1 000 000 data set infer start at " + start);
@@ -209,7 +206,7 @@ public class DataTypeInferExecutorTest {
 			while ((line = inBuffReader.readLine()) != null) {
 				String[] record = StringUtils
 						.splitByWholeSeparatorPreserveAllTokens(line, ";");
-				if(isFirstLine){
+				if (isFirstLine) {
 					isFirstLine = false;
 					inferExector.init(record);
 				}
@@ -217,14 +214,15 @@ public class DataTypeInferExecutorTest {
 			}
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("1 000 000 data set infer end at " + end);
-			double timeDiff =TypeInferenceUtilsTest.getTimeDifference(start,
+			double timeDiff = TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
-			printline("1000 000 time difference: "+timeDiff);
+			printline("1000 000 time difference: " + timeDiff);
 			Assert.assertTrue(timeDiff < 45);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
 	private void printline(String valueToPrint) {
 		if (isPrintAllowed) {
 			System.out.println(valueToPrint);

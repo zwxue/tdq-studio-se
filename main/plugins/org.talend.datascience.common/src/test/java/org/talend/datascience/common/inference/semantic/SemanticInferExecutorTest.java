@@ -35,14 +35,11 @@ public class SemanticInferExecutorTest {
 	@Test
 	public void testHandle() {
 		// ---------1. test given 1000 data ---------
-		InputStream in = null;
-		try {
-			in = new FileInputStream(
-					new File(
-							"/home/zhao/Talend/product/6.0/TOS_DI-20150426_0751-V5.6.2/workspace/employee_1000.csv"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
+		InputStream in = this
+					.getClass()
+					.getClassLoader()
+					.getResourceAsStream(
+							"org/talend/datascience/common/inference/type/employee_1000.csv");
 		BufferedReader inBuffReader = new BufferedReader(new InputStreamReader(
 				in));
 		String start = "";
@@ -66,7 +63,7 @@ public class SemanticInferExecutorTest {
 			double timeDiff = TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
 			printline("1 000 time difference: " + timeDiff);
-			Assert.assertTrue(timeDiff < 6);
+			Assert.assertTrue(timeDiff < 7);
 
 			// Get the semantic name result .
 			List<ColumnTypeBean> semanticTypeList = semanticInferExecutor
@@ -106,13 +103,11 @@ public class SemanticInferExecutorTest {
 			}
 
 			// ---------2. test given 10000 data ---------
-			try {
-				in = new FileInputStream(
-						new File(
-								"/home/zhao/Talend/product/6.0/TOS_DI-20150426_0751-V5.6.2/workspace/employee_10000.csv"));
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			}
+			 in = this
+					.getClass()
+					.getClassLoader()
+					.getResourceAsStream(
+							"org/talend/datascience/common/inference/type/employee_10000.csv");
 			inBuffReader = new BufferedReader(new InputStreamReader(in));
 			start = "";
 			end = "";
@@ -133,7 +128,7 @@ public class SemanticInferExecutorTest {
 			printline("1 0000 data set infer end at " + end);
 			timeDiff = TypeInferenceUtilsTest.getTimeDifference(start, end);
 			printline("1 0000 time difference: " + timeDiff);
-			Assert.assertTrue(timeDiff < 8);
+			Assert.assertTrue(timeDiff < 9);
 
 			// Get the semantic name result .
 			semanticTypeList = semanticInferExecutor.getResults();
