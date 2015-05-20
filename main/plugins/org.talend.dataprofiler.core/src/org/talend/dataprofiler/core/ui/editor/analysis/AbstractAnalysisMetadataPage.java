@@ -972,7 +972,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     @Override
     protected void setAllReadOnlyIfNeeded() {
         super.setAllReadOnlyIfNeeded();
-        connCombo.setEnabled(!isReadOnly);
+        connCombo.setEnabled(!isReadOnly());
     }
 
 }

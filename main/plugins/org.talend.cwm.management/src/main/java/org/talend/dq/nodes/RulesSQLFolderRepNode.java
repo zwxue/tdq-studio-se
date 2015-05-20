@@ -22,8 +22,10 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -81,6 +83,18 @@ public class RulesSQLFolderRepNode extends DQFolderRepNode {
             repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
             repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
             viewObject.setRepositoryNode(repNode);
+
+            // ADD msjian TDQ-4914: when the node is SystemDemoRule from ref project, we don't show it
+            if (!project.isMainProject()) {
+                ModelElement meNode = RepositoryNodeHelper.getResourceModelElement(repNode);
+                if (meNode != null) {
+                    String uuid = RepositoryNodeHelper.getUUID(meNode);
+                    if (RepositoryNodeHelper.isSystemDemoRule(uuid)) {
+                        continue;
+                    }
+                }
+            }
+            // TDQ-4914~
             super.getChildren().add(repNode);
         }
 

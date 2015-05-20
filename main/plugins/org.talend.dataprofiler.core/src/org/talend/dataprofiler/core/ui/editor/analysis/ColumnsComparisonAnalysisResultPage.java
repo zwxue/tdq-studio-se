@@ -126,7 +126,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         // resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         // resultComp.setLayout(new GridLayout());
         // createResultSection(resultComp);
-
+        setAllReadOnlyIfNeeded();
         form.reflow(true);
     }
 

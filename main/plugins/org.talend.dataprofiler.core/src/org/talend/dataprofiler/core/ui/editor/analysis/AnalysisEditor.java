@@ -87,9 +87,6 @@ public class AnalysisEditor extends SupportContextEditor {
 
     private EventReceiver checkBeforeRunReceiver = null;
 
-    // Added 20140411 TDQ-8360 yyin
-    private EventReceiver refreshDataProvider = null;
-
     private EventReceiver refresh2ShowMatchIndicator = null;
 
     private EventReceiver reopenEditor = null;
@@ -181,6 +178,11 @@ public class AnalysisEditor extends SupportContextEditor {
                 addPage(resultPage);
             } else {
                 setRefreshActionButtonState(false);
+            }
+
+            // when the page is readonly, make the run buttion can not use
+            if (masterPage.isReadOnly()) {
+                setRunActionButtonState(false);
             }
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);

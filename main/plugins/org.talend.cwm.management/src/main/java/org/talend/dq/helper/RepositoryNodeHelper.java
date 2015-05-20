@@ -186,11 +186,160 @@ public final class RepositoryNodeHelper {
 
     public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
 
+    // │ BE Code postal.pattern
+    // │ Companies_House.pattern
+    // │ DE Postleitzahl (postal code).pattern
+    // │ FR Code postal.pattern
+    // │ Postal_code_or_Pin_code_of_India.pattern
+    // │ Swiss_Zip_Code_validation.pattern
+    // │ US_State_Codes.pattern
+    // │ US_Zipcode_Validation.pattern
+    // │ Valid_UK_Post_Codes_Upper_and_Lower_Case.pattern
+    public static final String[] ADDRESS_PATTERN_UUIDS = {
+            "_NwUnsD4LEd20H7qFpzB9dg", "_KErdkIyeEd6Dle_8xC0lwg", "_rK7EgD4LEd20H7qFpzB9dg", "_EJ_moD4LEd20H7qFpzB9dg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_Ego7UIygEd6Dle_8xC0lwg", "__GBswIyfEd6Dle_8xC0lwg", "_pWgP8LkgEeSVYtNTxh_-xg", "_n2tqUIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_fi29wIybEd6Dle_8xC0lwg" }; //$NON-NLS-1$
+
+    // │ Properties_Keys.pattern
+    public static final String[] CODE_PATTERN_UUIDS = { "_DVfAwAMtEd6stMai_3cDIQ" }; //$NON-NLS-1$
+
+    // │ Hex_Color.pattern
+    public static final String[] COLOR_PATTERN_UUIDS = { "_ly9QgcBQEd2Zap05uF3mKA" }; //$NON-NLS-1$
+
+    // │ Austria_VAT_Number.pattern
+    // │ Bulgaria_Vat_Number.pattern
+    // │ FR_VAT_Number.pattern
+    // │ Gender.pattern
+    public static final String[] CUSTOMER_PATTERN_UUIDS = { "_sHQnkIydEd6Dle_8xC0lwg", "_b95-YIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+            "_ga6fofbIEd2c5L1gaJyUtQ", "_TXHDQceCEd2zV_ZhgRMOzA" }; //$NON-NLS-1$ //$NON-NLS-2$
+
+    // │ 24 Hour Time.pattern
+    // │ Current_Century_Date.pattern
+    // │ Datetime_mm_dd_yyyy_hh_mm.pattern
+    // │ Datetime_mm_dd_yyyy_hh_mm_ss.pattern
+    // │ Date_ddMMM.pattern
+    // │ Date_DD_MMM_YYYY.pattern
+    // │ Date_MM_DD_YY.pattern
+    // │ Date_MM_DD_YYYY.pattern
+    // │ Extended Hour Time.pattern
+    // │ FR_Date.pattern
+    // │ ISO Date.pattern
+    // │ Month.pattern
+    // │ Week Day.pattern
+    public static final String[] DATE_PATTERN_UUIDS = { "_nj3TsD4KEd20H7qFpzB9dg", "_khsAgIyhEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+            "_WAPQoIyeEd6Dle_8xC0lwg", "_pne9AIyeEd6Dle_8xC0lwg", "_4A6EMIyfEd6Dle_8xC0lwg", "_ypukIIyfEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_fLaxUIyfEd6Dle_8xC0lwg", "_pX0T4IyfEd6Dle_8xC0lwg", "_hytsED4YEd24WPpU35gV1A", "_tZlYsPbMEd2c5L1gaJyUtQ", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_M4zogD4ZEd24WPpU35gV1A", "_ZNaNsD4ZEd24WPpU35gV1A", "_Wub7wD4XEd24WPpU35gV1A" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    // │ Email Address.pattern
+    // │ IP_Address.pattern
+    // │ Website_URL.pattern
+    // │ Website_validation.pattern
+    public static final String[] INTERNET_PATTERN_UUIDS = { "_rC5TcD4XEd24WPpU35gV1A", "_pOs9MAyEEd6OfvNiP9lrnQ", //$NON-NLS-1$ //$NON-NLS-2$
+            "_yaXdsYZMEd2G3OfabUsfOQ", "_0_J_4IyeEd6Dle_8xC0lwg" }; //$NON-NLS-1$ //$NON-NLS-2$
+
+    // │ American Express Card Number.pattern
+    // │ Bank_Routing_Transit_Number_(RTN).pattern
+    // │ ContainsNumbers.pattern
+    // │ Currency_16,3.pattern
+    // │ FR_SSN.pattern
+    // │ Integer.pattern
+    // │ International_Passport.pattern
+    // │ ISBN_Checker.pattern
+    // │ Istat_Code.pattern
+    // │ Longitude_Validation.pattern
+    // │ Master Card Number.pattern
+    // │ Non_Zero_1st_Digit.pattern
+    // │ Numeric.pattern
+    // │ Swedish_Personal_Nr_(Personnummer).pattern
+    // │ Swedish_personnummer_with_accepted_foreigners.pattern
+    // │ UK_Vehicle_Registration_Plate_Number_Plate.pattern
+    // │ US SSN.pattern
+    public static final String[] NUMBER_PATTERN_UUIDS = { "_FcDG0D17Ed2p44yVAaDvbQ", "_j5FFMIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+            "_Lnh0kGUuEd2RuP05jDphQg", "_8TNRwIydEd6Dle_8xC0lwg", "_OuO-UPbPEd2c5L1gaJyUtQ", "_0dzx4D4bEd24WPpU35gV1A", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_PRL0IIydEd6Dle_8xC0lwg", "_WGxL4IydEd6Dle_8xC0lwg", "_ZYFdkIybEd6Dle_8xC0lwg", "_CwBEgIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_6YWv4D16Ed2p44yVAaDvbQ", "_D7IDEAulEeKxJpyXB0egyQ", "_OAAOQD1iEd2irYhnXOOajA", "_07nrEIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_shG84IybEd6Dle_8xC0lwg", "_8U2icIybEd6Dle_8xC0lwg", "_BpSRwD15Ed2p44yVAaDvbQ" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    // │ 10_Digit_US_Phone_Number.pattern
+    // │ Complex_Australian_Phone_Number.pattern
+    // │ FR_Phone_Number.pattern
+    // │ FR_Phone_Number_(International).pattern
+    // │ FR_Phone_Number_(Local_or_International).pattern
+    // │ German_Phone_number_(International).pattern
+    // │ German_Phone_number_(Local ).pattern
+    // │ German_Phone_number_(Local_or_International ).pattern
+    // │ International_phone_number.pattern
+    // │ Mobile_number_of_India.pattern
+    // │ Phone_Brazil.pattern
+    // │ Phone_Number.pattern
+    // │ UK Phone Number.pattern
+    // │ US_Phone_Number.pattern
+    public static final String[] PHONE_PATTERN_UUIDS = { "_QbsC8IyeEd6Dle_8xC0lwg", "_CnD1cIyeEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+            "_SPiUIPbKEd2c5L1gaJyUtQ", "_9LBjMIygEd6Dle_8xC0lwg", "_DqoD4IyhEd6Dle_8xC0lwg", "_W6xUUIygEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_NW0R0IygEd6Dle_8xC0lwg", "_eVNsoIygEd6Dle_8xC0lwg", "_Is95MIydEd6Dle_8xC0lwg", "__RSB4IycEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_mRzFgIycEd6Dle_8xC0lwg", "_S7m6oIyhEd6Dle_8xC0lwg", "_IIVOAD4XEd24WPpU35gV1A", "_bdjpwLr8Ed2z8Ya9pb9seQ" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+    // │ Blank_Text.pattern
+    // │ Empty_Text.pattern
+    // │ Home_Row_Text.pattern
+    // │ Linux_Path_Verify.pattern
+    // │ No_special_chart.pattern
+    // │ Random_Consonants.pattern
+    // │ Starts_with_blank.pattern
+    // │ Starts_with_space.pattern
+    // │ Starts_with_uppercase.pattern
+    // │ Uppercased_Single_Word.pattern
+    public static final String[] TEXT_PATTERN_UUIDS = { "_N7yi0Gk3Ed2I1bT57-sHUw", "_vZ6_IGk6Ed2I1bT57-sHUw", //$NON-NLS-1$ //$NON-NLS-2$
+            "_e4vUoYyZEd6Dle_8xC0lwg", "_IqpTEIyfEd6Dle_8xC0lwg", "_6rm3QIycEd6Dle_8xC0lwg", "_gDqDcP9eEd2mwaQf90ozSg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_18GtIIyaEd6Dle_8xC0lwg", "_scYqYIyaEd6Dle_8xC0lwg", "_53rX8AMvEeKk6OZDw5mXOQ", "_FyTwIHnTEd2weu9skTiCqA" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+    // gmail.pattern
+    // yahoo.pattern
+    public static final String[] INTERNET_SQL_PATTERN_UUIDS = { "_5tDp8LoaEd2CVq07lsaT2w", "_jyAMQbo4Ed2fB5cidg4eog" }; //$NON-NLS-1$ //$NON-NLS-2$
+
+    public static final List<?> SQL_PATTERN_UUIDS = Arrays.asList(INTERNET_SQL_PATTERN_UUIDS);
+
+    public static final List<?> ADDRESS_REGEX_PATTERN_UUIDS = Arrays.asList(ADDRESS_PATTERN_UUIDS);
+
+    public static final List<?> CODE_REGEX_PATTERN_UUIDS = Arrays.asList(CODE_PATTERN_UUIDS);
+
+    public static final List<?> COLOR_REGEX_PATTERN_UUIDS = Arrays.asList(COLOR_PATTERN_UUIDS, CUSTOMER_PATTERN_UUIDS);
+
+    public static final List<?> DATE_REGEX_PATTERN_UUIDS = Arrays.asList(DATE_PATTERN_UUIDS);
+
+    public static final List<?> INTERNET_REGEX_PATTERN_UUIDS = Arrays.asList(INTERNET_PATTERN_UUIDS);
+
+    public static final List<?> NUMBER_REGEX_PATTERN_UUIDS = Arrays.asList(NUMBER_PATTERN_UUIDS);
+
+    public static final List<?> PHONE_REGEX_PATTERN_UUIDS = Arrays.asList(PHONE_PATTERN_UUIDS);
+
+    public static final List<?> TEXT_REGEX_PATTERN_UUIDS = Arrays.asList(TEXT_PATTERN_UUIDS);
+
+    public static final String DEMO_RULE_UUID = "_hXIKcA-ZEd6qupbF9NyF4w"; //$NON-NLS-1$
+
+    public static final String DEMO_SOURCEFILE_LABEL = "TEST_TOP"; //$NON-NLS-1$
+
     public static RecycleBinRepNode getRecycleBinRepNode() {
         if (recycleBinRepNode == null) {
             recycleBinRepNode = initRecycleBinRepNode();
         }
         return recycleBinRepNode;
+    }
+
+    public static boolean isSystemRegexPattern(String uuid) {
+        return ADDRESS_REGEX_PATTERN_UUIDS.contains(uuid) || CODE_REGEX_PATTERN_UUIDS.contains(uuid)
+                || COLOR_REGEX_PATTERN_UUIDS.contains(uuid) || DATE_REGEX_PATTERN_UUIDS.contains(uuid)
+                || INTERNET_REGEX_PATTERN_UUIDS.contains(uuid) || NUMBER_REGEX_PATTERN_UUIDS.contains(uuid)
+                || PHONE_REGEX_PATTERN_UUIDS.contains(uuid) || TEXT_REGEX_PATTERN_UUIDS.contains(uuid);
+    }
+
+    public static boolean isSystemSQLPattern(String uuid) {
+        return SQL_PATTERN_UUIDS.contains(uuid);
+    }
+
+    public static boolean isSystemDemoRule(String uuid) {
+        return DEMO_RULE_UUID.equals(uuid);
     }
 
     /**
@@ -748,9 +897,8 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        Project inWhichProject = getInWhichProject(rule);
-        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_PARSER, inWhichProject),
-                true, true);
+        IRepositoryNode librariesFolderNode = getParserRuleFolderNode(rule);
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(librariesFolderNode, true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
                 if (uuid.equals(getUUID(childNode.getRule()))) {
@@ -759,6 +907,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC msjian Comment method "getParserRuleFolderNode".
+     * 
+     * @param rule
+     * @return
+     */
+    private static IRepositoryNode getParserRuleFolderNode(ParserRule rule) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getLibrariesFolderNode(EResourceConstant.RULES_PARSER);
+        } else {
+            Project inWhichProject = getInWhichProject(rule);
+            return getLibrariesFolderNode(EResourceConstant.RULES_PARSER, inWhichProject);
+        }
     }
 
     /**
@@ -775,9 +938,8 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        Project inWhichProject = getInWhichProject(rule);
-        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_MATCHER, inWhichProject),
-                true, true);
+        IRepositoryNode librariesFolderNode = getMatchRuleFolderNode(rule);
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(librariesFolderNode, true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
                 if (uuid.equals(getUUID(childNode.getRule()))) {
@@ -786,6 +948,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC msjian Comment method "getMatchRuleFolderNode".
+     * 
+     * @param rule
+     * @return
+     */
+    private static IRepositoryNode getMatchRuleFolderNode(MatchRuleDefinition rule) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getLibrariesFolderNode(EResourceConstant.RULES_MATCHER);
+        } else {
+            Project inWhichProject = getInWhichProject(rule);
+            return getLibrariesFolderNode(EResourceConstant.RULES_MATCHER, inWhichProject);
+        }
     }
 
     public static List<DBConnectionRepNode> getDBConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
@@ -946,13 +1123,9 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        //
-        // Property property = PropertyHelper.getProperty(dbConn);
-        // org.talend.core.model.properties.Project project = ProjectManager.getInstance().getProject(property);
-        Project inWhichProject = getInWhichProject(dbConn);
 
-        List<DBConnectionRepNode> dbConnectionRepNodes = getDBConnectionRepNodes(
-                getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS, inWhichProject), true, true);
+        IRepositoryNode MetadataDBConnectionFolderNode = getMetadataDBConnectionFolderNode(dbConn);
+        List<DBConnectionRepNode> dbConnectionRepNodes = getDBConnectionRepNodes(MetadataDBConnectionFolderNode, true, true);
         if (dbConnectionRepNodes.size() > 0) {
             for (DBConnectionRepNode childNode : dbConnectionRepNodes) {
                 if (uuid.equals(getUUID(childNode.getDatabaseConnection()))) {
@@ -961,6 +1134,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC msjian Comment method "getMetadataDBConnectionFolderNode".
+     * 
+     * @param dbConn
+     * @return
+     */
+    private static IRepositoryNode getMetadataDBConnectionFolderNode(DatabaseConnection dbConn) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
+        } else {
+            Project inWhichProject = getInWhichProject(dbConn);
+            return getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS, inWhichProject);
+        }
     }
 
     public static DFConnectionRepNode recursiveFindDFConnection(DelimitedFileConnection dfConn) {
@@ -972,9 +1160,8 @@ public final class RepositoryNodeHelper {
             return null;
         }
 
-        Project inWhichProject = getInWhichProject(dfConn);
-        List<DFConnectionRepNode> dfConnectionRepNodes = getDFConnectionRepNodes(
-                getMetadataFolderNode(EResourceConstant.FILEDELIMITED, inWhichProject), true, true);
+        IRepositoryNode MetadataFileDelimitedFolderNode = getMetadataFileDelimitedFolderNode(dfConn);
+        List<DFConnectionRepNode> dfConnectionRepNodes = getDFConnectionRepNodes(MetadataFileDelimitedFolderNode, true, true);
         if (dfConnectionRepNodes.size() > 0) {
             for (DFConnectionRepNode childNode : dfConnectionRepNodes) {
                 if (uuid.equals(getUUID(childNode.getDfConnection()))) {
@@ -983,6 +1170,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC msjian Comment method "getMetadataFileDelimitedFolderNode".
+     * 
+     * @param dfConn
+     * @return
+     */
+    private static IRepositoryNode getMetadataFileDelimitedFolderNode(DelimitedFileConnection dfConn) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getMetadataFolderNode(EResourceConstant.FILEDELIMITED);
+        } else {
+            Project inWhichProject = getInWhichProject(dfConn);
+            return getMetadataFolderNode(EResourceConstant.FILEDELIMITED, inWhichProject);
+        }
     }
 
     public static AnalysisRepNode recursiveFindAnalysis(Analysis analysis) {
@@ -994,11 +1196,9 @@ public final class RepositoryNodeHelper {
             return null;
         }
 
-        org.talend.core.model.general.Project project = getInWhichProject(analysis);
-
+        IRepositoryNode DataProfilingAnalysisFolderNode = getDataProfilingAnalysisFolderNode(analysis);
         // MOD qiongli 2011-4-6,bug 20218,add parameter withDeleted(true), contain child is in recycle bin.
-        List<AnalysisRepNode> analysisRepNodes = getAnalysisRepNodes(
-                getDataProfilingFolderNode(EResourceConstant.ANALYSIS, project), true, true);
+        List<AnalysisRepNode> analysisRepNodes = getAnalysisRepNodes(DataProfilingAnalysisFolderNode, true, true);
         if (analysisRepNodes.size() > 0) {
             for (AnalysisRepNode childNode : analysisRepNodes) {
                 if (uuid.equals(getUUID(childNode.getAnalysis()))) {
@@ -1007,6 +1207,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC msjian Comment method "getDataProfilingAnalysisFolderNode".
+     * 
+     * @param analysis
+     * @return
+     */
+    private static IRepositoryNode getDataProfilingAnalysisFolderNode(Analysis analysis) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getDataProfilingFolderNode(EResourceConstant.ANALYSIS);
+        } else {
+            org.talend.core.model.general.Project project = getInWhichProject(analysis);
+            return getDataProfilingFolderNode(EResourceConstant.ANALYSIS, project);
+        }
     }
 
     /**
@@ -1030,10 +1245,8 @@ public final class RepositoryNodeHelper {
             return null;
         }
 
-        org.talend.core.model.general.Project project = getInWhichProject(report);
-
-        List<ReportRepNode> reportRepNodes = getReportRepNodes(getDataProfilingFolderNode(EResourceConstant.REPORTS, project),
-                true, true);
+        IRepositoryNode DataProfilingReportFolderNode = getDataProfilingReportFolderNode(report);
+        List<ReportRepNode> reportRepNodes = getReportRepNodes(DataProfilingReportFolderNode, true, true);
         if (reportRepNodes.size() > 0) {
             for (ReportRepNode childNode : reportRepNodes) {
                 if (uuid.equals(getUUID(childNode.getReport()))) {
@@ -1042,6 +1255,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC msjian Comment method "getDataProfilingReportFolderNodew".
+     * 
+     * @param report
+     * @return
+     */
+    private static IRepositoryNode getDataProfilingReportFolderNode(Report report) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getDataProfilingFolderNode(EResourceConstant.REPORTS);
+        } else {
+            org.talend.core.model.general.Project project = getInWhichProject(report);
+            return getDataProfilingFolderNode(EResourceConstant.REPORTS, project);
+        }
     }
 
     public static SysIndicatorDefinitionRepNode recursiveFindIndicatorDefinition(IndicatorDefinition indDef) {
@@ -1053,12 +1281,20 @@ public final class RepositoryNodeHelper {
             return null;
         }
 
-        Project inWhichProject = getInWhichProject(indDef);
+        List<SysIndicatorDefinitionRepNode> indicatorDefinitionRepNodes;
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            indicatorDefinitionRepNodes = getIndicatorDefinitionRepNodes(
+                    getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS), true, true);
+            indicatorDefinitionRepNodes.addAll(getIndicatorDefinitionRepNodes(
+                    getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS), true, true));
+        } else {
+            Project inWhichProject = getInWhichProject(indDef);
+            indicatorDefinitionRepNodes = getIndicatorDefinitionRepNodes(
+                    getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS, inWhichProject), true, true);
+            indicatorDefinitionRepNodes.addAll(getIndicatorDefinitionRepNodes(
+                    getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS, inWhichProject), true, true));
+        }
 
-        List<SysIndicatorDefinitionRepNode> indicatorDefinitionRepNodes = getIndicatorDefinitionRepNodes(
-                getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS, inWhichProject), true, true);
-        indicatorDefinitionRepNodes.addAll(getIndicatorDefinitionRepNodes(
-                getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS), true, true));
         if (indicatorDefinitionRepNodes.size() > 0) {
             for (SysIndicatorDefinitionRepNode childNode : indicatorDefinitionRepNodes) {
                 if (uuid.equals(getUUID(childNode.getIndicatorDefinition()))) {
@@ -1078,11 +1314,18 @@ public final class RepositoryNodeHelper {
             return null;
         }
 
-        Project inWhichProject = getInWhichProject(pattern);
-        List<PatternRepNode> patternRepNodes = getPatternRepNodes(
-                getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX, inWhichProject), true, true);
-        patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL, inWhichProject), true,
-                true));
+        List<PatternRepNode> patternRepNodes;
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            patternRepNodes = getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX), true, true);
+            patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL), true, true));
+        } else {
+            Project inWhichProject = getInWhichProject(pattern);
+            patternRepNodes = getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX, inWhichProject), true,
+                    true);
+            patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL, inWhichProject),
+                    true, true));
+        }
+
         if (patternRepNodes.size() > 0) {
             for (PatternRepNode childNode : patternRepNodes) {
                 if (uuid.equals(getUUID(childNode.getPattern()))) {
@@ -1102,9 +1345,8 @@ public final class RepositoryNodeHelper {
             return null;
         }
 
-        Project inWhichProject = getInWhichProject(rule);
-        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_SQL, inWhichProject),
-                true, true);
+        IRepositoryNode ruleSQLFolderNode = getRuleSQLFolderNode(rule);
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(ruleSQLFolderNode, true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
                 if (uuid.equals(getUUID(childNode.getRule()))) {
@@ -1113,6 +1355,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC msjian Comment method "getRuleSQLFolderNode".
+     * 
+     * @param rule
+     * @return
+     */
+    private static IRepositoryNode getRuleSQLFolderNode(DQRule rule) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getLibrariesFolderNode(EResourceConstant.RULES_SQL);
+        } else {
+            Project inWhichProject = getInWhichProject(rule);
+            return getLibrariesFolderNode(EResourceConstant.RULES_SQL, inWhichProject);
+        }
     }
 
     public static DBCatalogRepNode recursiveFindCatalog(Catalog catalog) {
@@ -1962,8 +2219,7 @@ public final class RepositoryNodeHelper {
      * @param node
      * @param folderItem
      */
-    private static boolean isNodeMatch(org.talend.core.model.general.Project project, DQRepositoryNode node,
-            FolderItem folderItem) {
+    private static boolean isNodeMatch(org.talend.core.model.general.Project project, DQRepositoryNode node, FolderItem folderItem) {
         // MOD qiongli 2011-2-16,bug 18642.filter recycle bin node.
         if (node.isBin()) {
             return false;

@@ -63,9 +63,13 @@ public final class ResourceManager {
      * 
      * @return
      */
-    public static IProject getRootProject() {
 
+    public static IProject getRootProject() {
         return ReponsitoryContextBridge.getRootProject();
+    }
+
+    public static IProject getProject(String projectName) {
+        return ReponsitoryContextBridge.findProject(projectName);
     }
 
     /**

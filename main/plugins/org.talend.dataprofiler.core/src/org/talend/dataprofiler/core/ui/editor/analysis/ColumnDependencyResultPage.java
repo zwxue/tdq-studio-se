@@ -131,8 +131,6 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithCh
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
 
-        // Analysis analysis = this.getAnalysisHandler().getAnalysis();
-
         analyzedColumnSetsComp = toolkit.createComposite(topComposite);
         analyzedColumnSetsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         analyzedColumnSetsComp.setLayout(new GridLayout());
@@ -141,7 +139,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithCh
         analysisResultsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         analysisResultsComp.setLayout(new GridLayout());
         createResultSection(analysisResultsComp);
-
+        setAllReadOnlyIfNeeded();
         form.reflow(true);
     }
 

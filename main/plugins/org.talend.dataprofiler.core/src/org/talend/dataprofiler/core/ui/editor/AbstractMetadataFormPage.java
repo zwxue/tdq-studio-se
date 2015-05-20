@@ -31,7 +31,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -107,12 +106,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected boolean modify;
 
-    /**
-     * when the item comes from referenced project, all the fields are readonly. need to consider the case is that in
-     * remote project, the user only have readonly access.
-     */
-    protected boolean isReadOnly;
-
     protected CCombo statusCombo;
 
     protected Composite topComp;
@@ -155,43 +148,16 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         super(editor, id, title);
     }
 
-    /**
-     * set All fields ReadOnly If Needed.when the node item comes from referenced project.
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setAllReadOnlyIfNeeded()
      */
+    @Override
     protected void setAllReadOnlyIfNeeded() {
-        if (isReadOnly) {
+        if (isReadOnly()) {
             makeAllFieldsReadonly(topComp);
-            statusCombo.setEnabled(!isReadOnly);
-            // if (numberOfConnectionsPerAnalysisText != null) {
-            // numberOfConnectionsPerAnalysisText.setEnabled(!isReadOnly);
-            // }
-            //
-            // if (contextComposite != null) {
-            // contextComposite.getContextComboViewer().getCCombo().setEnabled(!isReadOnly);
-            // }
-        }
-    }
-
-    public void makeAllFieldsReadonly(Composite composite) {
-        if (composite == null) {
-            return;
-        }
-        if (composite.isDisposed()) {
-            return;
-        }
-
-        if (composite instanceof CCombo || composite instanceof Combo) {
-            composite.setEnabled(false);
-            return;
-        }
-
-        Control[] children = composite.getChildren();
-        for (Control c : children) {
-            if (c instanceof Composite) {
-                makeAllFieldsReadonly((Composite) c);
-            } else {
-                c.setEnabled(false);
-            }
+            statusCombo.setEnabled(false);
         }
     }
 
@@ -200,14 +166,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         super.initialize(editor);
         this.currentModelElement = getCurrentModelElement(editor);
         DQRepositoryNode node = RepositoryNodeHelper.recursiveFind(currentModelElement);
-        // TODO: until now, for the referenced project, the node will always null
         if (node == null) {
-            //
-            isReadOnly = true;
+            setReadOnly(true);
         } else {
             boolean isEditableAndLockIfPossible = ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(
                     node.getObject().getProperty().getItem());
-            isReadOnly = !isEditableAndLockIfPossible;
+            setReadOnly(!isEditableAndLockIfPossible);
         }
     }
 

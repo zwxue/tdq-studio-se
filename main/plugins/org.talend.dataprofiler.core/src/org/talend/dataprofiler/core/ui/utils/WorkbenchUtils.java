@@ -85,7 +85,6 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
@@ -139,15 +138,6 @@ public final class WorkbenchUtils {
     }
 
     public static IPath getPath(IRepositoryNode node) {
-        if (node instanceof DQRepositoryNode) {
-            Project project = ((DQRepositoryNode) node).getProject();
-            if (!project.isMainProject()) {
-                // the node is in refenrence project
-                return new Path(project.getLabel()).append(RepositoryNodeHelper.getPath(node));
-
-            }
-        }
-
         return RepositoryNodeHelper.getPath(node);
     }
 

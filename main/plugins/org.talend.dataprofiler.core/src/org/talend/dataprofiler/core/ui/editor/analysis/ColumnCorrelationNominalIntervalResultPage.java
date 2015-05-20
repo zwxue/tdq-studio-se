@@ -119,6 +119,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         graphicsAndTableComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         graphicsAndTableComp.setLayout(new GridLayout());
         createResultSection(graphicsAndTableComp);
+        setAllReadOnlyIfNeeded();
         form.reflow(true);
     }
 

@@ -14,19 +14,16 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.repository.ProjectManager;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -39,7 +36,8 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
 
     AbstractTDQFileDuplicateHandle(IRepositoryNode node) {
         IPath itemPath = WorkbenchUtils.getFilePath(node);
-        file = ResourceManager.getRoot().getFile(itemPath);
+        DQRepositoryNode node2 = (DQRepositoryNode) node;
+        file = ResourceManager.getRoot().getProject(node2.getProject().getTechnicalLabel()).getFile(itemPath);
     }
 
     /*
@@ -74,8 +72,8 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
 
         IPath newFileNamePath = new Path(newName).addFileExtension(fileExtension);
 
+        // IFile newFile = file.getParent().getFile(newFileNamePath);
         ModelElement oldModelElement = PropertyHelper.getModelElement(oldItem.getProperty());
-
         IFolder folder = extractFolder(oldItem, oldModelElement);
         IFile newFile = folder.getFile(newFileNamePath);
 
@@ -97,17 +95,5 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
      * @param oldModelElement
      * @return
      */
-    protected IFolder extractFolder(Item oldItem, ModelElement oldObject) {
-        Resource resource = oldItem.eResource();
-        IPath path = new Path(resource.getURI().toPlatformString(false));
-        IFile oldFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-        boolean inCurrentMainProject = ProjectManager.getInstance().isInCurrentMainProject(oldItem);
-        IFolder parent = (IFolder) oldFile.getParent();
-        if (inCurrentMainProject) {
-            return parent;
-        } else {
-            // for the reference project node, we get its folder in current project.
-            return ResourceManager.getOneFolder(EResourceConstant.JRXML_TEMPLATE);
-        }
-    }
+    abstract protected IFolder extractFolder(Item oldItem, ModelElement oldObject);
 }

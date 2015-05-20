@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.general.Project;
@@ -52,6 +53,7 @@ import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -99,9 +101,12 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                             log.error(e, e);
                         }
                         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                        CommonNavigator findView = (CommonNavigator) activePage
-                                .findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
-                        findView.getCommonViewer().refresh();
+                        CommonNavigator findView = (CommonNavigator) activePage.findView(DQRespositoryView.ID);
+
+                        CommonViewer commonViewer = findView.getCommonViewer();
+                        if (commonViewer != null) {
+                            commonViewer.refresh();
+                        }
                     }
 
                 }

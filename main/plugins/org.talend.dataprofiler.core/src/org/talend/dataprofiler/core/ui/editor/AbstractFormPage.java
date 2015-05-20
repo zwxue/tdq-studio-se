@@ -15,8 +15,11 @@ package org.talend.dataprofiler.core.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -38,6 +41,12 @@ public abstract class AbstractFormPage extends FormPage {
 
     protected boolean isDirty = false;
 
+    /**
+     * when the item comes from referenced project, all the fields in the page are readonly. need to consider the case
+     * that in remote project, the user only has readonly access.
+     */
+    private boolean isReadOnly;
+
     protected FormToolkit toolkit;
 
     protected CommonFormEditor currentEditor;
@@ -53,6 +62,24 @@ public abstract class AbstractFormPage extends FormPage {
         this.toolkit = this.getEditor().getToolkit();
         this.currentEditor = (CommonFormEditor) editor;
         this.expandCompositeList = new ArrayList<ExpandableComposite>();
+    }
+
+    /**
+     * Getter for isReadOnly.
+     * 
+     * @return the isReadOnly
+     */
+    public boolean isReadOnly() {
+        return this.isReadOnly;
+    }
+
+    /**
+     * Sets the isReadOnly.
+     * 
+     * @param isReadOnly the isReadOnly to set
+     */
+    public void setReadOnly(boolean isReadOnly) {
+        this.isReadOnly = isReadOnly;
     }
 
     /*
@@ -194,4 +221,36 @@ public abstract class AbstractFormPage extends FormPage {
         return (!EditorPreferencePage.isHideGraphics() && TOPChartUtils.getInstance().isTOPChartInstalled());
     }
 
+    /**
+     * set All fields ReadOnly If Needed.when the node item comes from referenced project.
+     */
+    protected abstract void setAllReadOnlyIfNeeded();
+
+    /**
+     * DOC msjian Comment method "makeAllFieldsReadonly".
+     * 
+     * @param composite
+     */
+    public void makeAllFieldsReadonly(Composite composite) {
+        if (composite == null) {
+            return;
+        }
+        if (composite.isDisposed()) {
+            return;
+        }
+
+        if (composite instanceof CCombo || composite instanceof Combo) {
+            composite.setEnabled(false);
+            return;
+        }
+
+        Control[] children = composite.getChildren();
+        for (Control c : children) {
+            if (c instanceof Composite) {
+                makeAllFieldsReadonly((Composite) c);
+            } else {
+                c.setEnabled(false);
+            }
+        }
+    }
 }

@@ -21,6 +21,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -78,6 +79,15 @@ public class SourceFileFolderRepNode extends DQFolderRepNode {
             if (!withDeleted && viewObject.isDeleted()) {
                 continue;
             }
+
+            // ADD msjian TDQ-4914: when the node is SystemDemoRule from ref project, we don't show it
+            if (!project.isMainProject()) {
+                if (viewObject.getLabel().equals(RepositoryNodeHelper.DEMO_SOURCEFILE_LABEL)) {
+                    continue;
+                }
+            }
+            // TDQ-4914~
+
             SourceFileRepNode repNode = new SourceFileRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, project);
             repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
             repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);

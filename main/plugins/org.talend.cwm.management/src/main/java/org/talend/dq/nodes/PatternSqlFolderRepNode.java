@@ -22,9 +22,10 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -60,14 +61,7 @@ public class PatternSqlFolderRepNode extends DQFolderRepNode {
      */
     @Override
     public void getChildrenForProject(boolean withDeleted, Project project) throws PersistenceException {
-        // when merge display the ref project items, we will not show the system indicators
-        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
-            if (project.isMainProject()) {
-                createChildrenNode(withDeleted, project);
-            }
-        } else {
-            createChildrenNode(withDeleted, project);
-        }
+        createChildrenNode(withDeleted, project);
     }
 
     /**
@@ -85,6 +79,9 @@ public class PatternSqlFolderRepNode extends DQFolderRepNode {
             if (!withDeleted && folder.isDeleted()) {
                 continue;
             }
+            if (!project.isMainProject()) {
+                continue;
+            }
             PatternSqlSubFolderRepNode childNodeFolder = new PatternSqlSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER,
                     project);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_SQL);
@@ -96,10 +93,23 @@ public class PatternSqlFolderRepNode extends DQFolderRepNode {
             if (!withDeleted && viewObject.isDeleted()) {
                 continue;
             }
+
             PatternRepNode repNode = new PatternRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, project);
             repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_SQL);
             repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_SQL);
             viewObject.setRepositoryNode(repNode);
+
+            // ADD msjian TDQ-4914: when the node is System sql pattern from ref project, we don't show it
+            if (!project.isMainProject()) {
+                ModelElement meNode = RepositoryNodeHelper.getResourceModelElement(repNode);
+                if (meNode != null) {
+                    String uuid = RepositoryNodeHelper.getUUID(meNode);
+                    if (RepositoryNodeHelper.isSystemSQLPattern(uuid)) {
+                        continue;
+                    }
+                }
+            }
+            // TDQ-4914~
             super.getChildren().add(repNode);
         }
     }

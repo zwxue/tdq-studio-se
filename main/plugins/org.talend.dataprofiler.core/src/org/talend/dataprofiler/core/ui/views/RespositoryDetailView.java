@@ -314,7 +314,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 } else if (fe instanceof SourceFileRepNode) {
                     // MOD klliu 2001-02-28 bug 19154
                     IPath filePath = WorkbenchUtils.getFilePath((SourceFileRepNode) fe);
-                    IFile file = ResourceManager.getRootProject().getFile(filePath);
+                    DQRepositoryNode node = (DQRepositoryNode) fe;
+                    IFile file = ResourceManager.getRoot().getProject(node.getProject().getTechnicalLabel()).getFile(filePath);
                     createSqlFileDetail(file);
                 } else if (fe instanceof ExchangeComponentRepNode) {
                     // MOD klliu 2001-02-28 bug 19154

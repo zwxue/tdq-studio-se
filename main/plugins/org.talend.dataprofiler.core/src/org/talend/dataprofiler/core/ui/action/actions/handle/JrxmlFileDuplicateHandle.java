@@ -17,7 +17,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
@@ -30,9 +34,12 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataquality.properties.TDQJrxmlItem;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * Duplicate a Jrxml file
@@ -48,9 +55,7 @@ public class JrxmlFileDuplicateHandle extends AbstractTDQFileDuplicateHandle {
 
         IPath makeRelativeTo = newFile.getFullPath().removeLastSegments(1)
                 .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1));
-        return createJrxml(
-                makeRelativeTo, newName,
-                WorkspaceUtils.ifileToFile(file), fileExtension);
+        return createJrxml(makeRelativeTo, newName, WorkspaceUtils.ifileToFile(file), fileExtension);
     }
 
     /**
@@ -112,5 +117,27 @@ public class JrxmlFileDuplicateHandle extends AbstractTDQFileDuplicateHandle {
         String routineContent = new String(byteArray.getInnerContent());
         byteArray.setInnerContent(routineContent.getBytes());
         return byteArray;
+    }
+
+    /**
+     * DOC msjian Comment method "extractFolder".
+     * 
+     * @param oldItem
+     * @param oldModelElement
+     * @return
+     */
+    @Override
+    protected IFolder extractFolder(Item oldItem, ModelElement oldObject) {
+        Resource resource = oldItem.eResource();
+        IPath path = new Path(resource.getURI().toPlatformString(false));
+        IFile oldFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+        boolean inCurrentMainProject = ProjectManager.getInstance().isInCurrentMainProject(oldItem);
+        IFolder parent = (IFolder) oldFile.getParent();
+        if (inCurrentMainProject) {
+            return parent;
+        } else {
+            // for the reference project node, we get its folder in current project.
+            return ResourceManager.getOneFolder(EResourceConstant.JRXML_TEMPLATE);
+        }
     }
 }
