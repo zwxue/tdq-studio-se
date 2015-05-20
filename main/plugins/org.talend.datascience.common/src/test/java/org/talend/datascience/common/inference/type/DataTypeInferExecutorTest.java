@@ -27,7 +27,7 @@ public class DataTypeInferExecutorTest {
 		List<String[]> records = new ArrayList<String[]>();
 		String start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 		printline("Empty data set infer start at " + start);
-		List<ColumnTypeBean> typeResult = inferExector.inferTypes(records);
+		List<ColumnTypeBean> typeResult = inferExector.handle(records);
 		String end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 		printline("Empty data set infer end at " + end);
 		Assert.assertEquals(true, typeResult.isEmpty());
@@ -51,7 +51,7 @@ public class DataTypeInferExecutorTest {
 			}
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("100 data set infer start at " + start);
-			typeResult = inferExector.inferTypes(records);
+			typeResult = inferExector.handle(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("100 data set infer end at " + end);
 			printline("100 time difference "
@@ -115,7 +115,7 @@ public class DataTypeInferExecutorTest {
 			}
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("1000 data set infer start at " + start);
-			typeResult = inferExector.inferTypes(records);
+			typeResult = inferExector.handle(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("1000 data set infer end at " + end);
 			printline("1000 time difference "
@@ -150,7 +150,7 @@ public class DataTypeInferExecutorTest {
 			}
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("10 000 data set infer start at " + start);
-			inferExector.inferTypes(records);
+			 inferExector.handle(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("10 000 data set infer end at " + end);
 			double timeDiff = TypeInferenceUtilsTest.getTimeDifference(start,
@@ -179,7 +179,7 @@ public class DataTypeInferExecutorTest {
 			}
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("100 000 data set infer start at " + start);
-			inferExector.inferTypes(records);
+			inferExector.handle(records);
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("100 000 data set infer end at " + end);
 			double timeDiff = TypeInferenceUtilsTest.getTimeDifference(start,

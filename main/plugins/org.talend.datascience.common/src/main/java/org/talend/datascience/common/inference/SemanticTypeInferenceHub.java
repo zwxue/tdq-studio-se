@@ -12,29 +12,14 @@
 // ============================================================================
 package org.talend.datascience.common.inference;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.*;
+import java.util.*;
 
 import org.talend.datascience.common.inference.type.ColumnTypeBean;
 import org.talend.datascience.common.inference.type.DataTypeInferExecutor;
 import org.talend.datascience.common.inference.type.TypeInferenceUtils;
 
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -110,7 +95,6 @@ public class SemanticTypeInferenceHub {
 		// Column names (id from source json)
 		List<String> columnNames = null;
 
-		boolean isTypeInferExecutorInited = false;
 		ObjectMapper mapper = new ObjectMapper();
 		while (jParser.nextToken() != JsonToken.END_OBJECT) {
 			String fieldname = jParser.getCurrentName();
@@ -145,10 +129,6 @@ public class SemanticTypeInferenceHub {
 									.asText() : "";
 							record[fieldIdx] = fieldValue;
 							fieldIdx++;
-						}
-						if (!isTypeInferExecutorInited) {
-							isTypeInferExecutorInited = true;
-							inferExectutor.init(record);
 						}
 						inferExectutor.handle(record);
 					}
