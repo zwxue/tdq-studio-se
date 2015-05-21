@@ -375,18 +375,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     }
 
     /**
-     * create new Repositry node by specified type
-     * 
-     * @param folders
-     * @param folder
-     * @return new repository node
-     */
-    private DQRepositoryNode createNewRepNode(ERepositoryObjectType type) {
-        Project currentProject = ProjectManager.getInstance().getCurrentProject();
-        return createNewRepNode(type, currentProject);
-    }
-
-    /**
      * sort element on the tree.
      * 
      * @param array
@@ -442,14 +430,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     DBViewFolderRepNode dbViewFolder = (DBViewFolderRepNode) element;
                     return dbViewFolder.hasChildren();
                     // ~TDQ-3457
-                    // } else if (node instanceof DQProjectRepositoryNode) {
-                    // return true;
-                } else {
-                    // for reference project node
-                    // if (EResourceConstant.REFERENCED_PROJECT.getName().equals(node.getProperties(EProperties.LABEL)))
-                    // {
-                    // return true;
-                    // }
                 }
             }
             if (element instanceof IEcosCategory) {

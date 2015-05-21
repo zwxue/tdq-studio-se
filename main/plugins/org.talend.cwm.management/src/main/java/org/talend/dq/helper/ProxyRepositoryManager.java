@@ -187,8 +187,6 @@ public class ProxyRepositoryManager {
                 return service.isMergeRefProject();
             }
         }
-        // IPreferenceStore preferenceStore = RepositoryManager.getRepositoryPreferenceStore();
-        // return preferenceStore.getBoolean(IRepositoryPrefConstants.MERGE_REFERENCE_PROJECT);
         return false;
     }
 

@@ -950,7 +950,8 @@ public class DQRespositoryView extends CommonNavigator {
         List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(newProject.getEmfProject());
         try {
             for (FolderItem folder : new ArrayList<FolderItem>(folderItems)) {
-                if (WorkbenchUtils.isTDQOrMetadataRootFolder(folder)) {
+                if (WorkbenchUtils.isTDQOrMetadataRootFolder(folder, ProjectManager.getInstance().getCurrentProject()
+                        .getEmfProject())) {
                     ERepositoryObjectType type = WorkbenchUtils.getFolderContentType(folder);
                     // MOD by zshen to avoid NullPointerException.
                     if (type != null) {

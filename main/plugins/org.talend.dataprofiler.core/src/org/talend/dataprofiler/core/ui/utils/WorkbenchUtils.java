@@ -46,7 +46,6 @@ import org.eclipse.ui.WorkbenchException;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -87,7 +86,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -137,21 +135,17 @@ public final class WorkbenchUtils {
         return rootProject.getFolder(folder.getPath());
     }
 
-    public static IPath getPath(IRepositoryNode node) {
-        return RepositoryNodeHelper.getPath(node);
-    }
-
     public static IPath getPath(RepositoryViewObject viewObject) {
-        return getPath(viewObject.getRepositoryNode());
+        return RepositoryNodeHelper.getPath(viewObject.getRepositoryNode());
     }
 
     public static IFolder getFolder(RepositoryNode node) {
         // MOD qiongli 2011-1-18 if it is recyclebin,return the root folder
-        IPath path = getPath(node);
+        IPath path = RepositoryNodeHelper.getPath(node);
         if (path.toString().equals(PluginConstant.EMPTY_STRING)) {
             return ResourceManager.getRootProject().getFolder(ResourceManager.getRootFolderLocation());
         }
-        return ResourceManager.getRootProject().getFolder(getPath(node));
+        return ResourceManager.getRootProject().getFolder(RepositoryNodeHelper.getPath(node));
     }
 
     public static IFolder getFolder(RepositoryViewObject viewObject) {
@@ -191,7 +185,7 @@ public final class WorkbenchUtils {
 
     public static IPath getFilePath(IRepositoryNode node) {
         Item item = node.getObject().getProperty().getItem();
-        IPath folderPath = WorkbenchUtils.getPath(node);
+        IPath folderPath = RepositoryNodeHelper.getPath(node);
         String name = node.getObject()
                 .getProperty()
                 .getLabel()
@@ -220,11 +214,6 @@ public final class WorkbenchUtils {
             return true;
         }
         return false;
-    }
-
-    public static boolean isTDQOrMetadataRootFolder(FolderItem folderItem) {
-        Project newProject = ProjectManager.getInstance().getCurrentProject();
-        return isTDQOrMetadataRootFolder(folderItem, newProject.getEmfProject());
     }
 
     /**

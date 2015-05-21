@@ -186,116 +186,156 @@ public final class RepositoryNodeHelper {
 
     public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
 
-    // │ BE Code postal.pattern
-    // │ Companies_House.pattern
-    // │ DE Postleitzahl (postal code).pattern
-    // │ FR Code postal.pattern
-    // │ Postal_code_or_Pin_code_of_India.pattern
-    // │ Swiss_Zip_Code_validation.pattern
-    // │ US_State_Codes.pattern
-    // │ US_Zipcode_Validation.pattern
-    // │ Valid_UK_Post_Codes_Upper_and_Lower_Case.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * BE Code postal.pattern <br>
+     * Companies_House.pattern <br>
+     * DE Postleitzahl (postal code).pattern <br>
+     * FR Code postal.pattern <br>
+     * Postal_code_or_Pin_code_of_India.pattern <br>
+     * Swiss_Zip_Code_validation.pattern <br>
+     * US_State_Codes.pattern <br>
+     * US_Zipcode_Validation.pattern <br>
+     * Valid_UK_Post_Codes_Upper_and_Lower_Case.pattern
+     */
     private static final String[] PATTERN_ADDRESS_UUIDS = {
             "_NwUnsD4LEd20H7qFpzB9dg", "_KErdkIyeEd6Dle_8xC0lwg", "_rK7EgD4LEd20H7qFpzB9dg", "_EJ_moD4LEd20H7qFpzB9dg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_Ego7UIygEd6Dle_8xC0lwg", "__GBswIyfEd6Dle_8xC0lwg", "_pWgP8LkgEeSVYtNTxh_-xg", "_n2tqUIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_fi29wIybEd6Dle_8xC0lwg" }; //$NON-NLS-1$
 
-    // │ Properties_Keys.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Properties_Keys.pattern
+     */
     private static final String[] PATTERN_CODE_UUIDS = { "_DVfAwAMtEd6stMai_3cDIQ" }; //$NON-NLS-1$
 
-    // │ Hex_Color.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Hex_Color.pattern
+     */
     private static final String[] PATTERN_COLOR_UUIDS = { "_ly9QgcBQEd2Zap05uF3mKA" }; //$NON-NLS-1$
 
-    // │ Austria_VAT_Number.pattern
-    // │ Bulgaria_Vat_Number.pattern
-    // │ FR_VAT_Number.pattern
-    // │ Gender.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Austria_VAT_Number.pattern <br>
+     * Bulgaria_Vat_Number.pattern <br>
+     * FR_VAT_Number.pattern <br>
+     * Gender.pattern
+     */
     private static final String[] PATTERN_CUSTOMER_UUIDS = { "_sHQnkIydEd6Dle_8xC0lwg", "_b95-YIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
             "_ga6fofbIEd2c5L1gaJyUtQ", "_TXHDQceCEd2zV_ZhgRMOzA" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-    // │ 24 Hour Time.pattern
-    // │ Current_Century_Date.pattern
-    // │ Datetime_mm_dd_yyyy_hh_mm.pattern
-    // │ Datetime_mm_dd_yyyy_hh_mm_ss.pattern
-    // │ Date_ddMMM.pattern
-    // │ Date_DD_MMM_YYYY.pattern
-    // │ Date_MM_DD_YY.pattern
-    // │ Date_MM_DD_YYYY.pattern
-    // │ Extended Hour Time.pattern
-    // │ FR_Date.pattern
-    // │ ISO Date.pattern
-    // │ Month.pattern
-    // │ Week Day.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * 24 Hour Time.pattern <br>
+     * Current_Century_Date.pattern <br>
+     * Datetime_mm_dd_yyyy_hh_mm.pattern <br>
+     * Datetime_mm_dd_yyyy_hh_mm_ss.pattern <br>
+     * Date_ddMMM.pattern <br>
+     * Date_DD_MMM_YYYY.pattern <br>
+     * Date_MM_DD_YY.pattern <br>
+     * Date_MM_DD_YYYY.pattern <br>
+     * Extended Hour Time.pattern <br>
+     * FR_Date.pattern <br>
+     * ISO Date.pattern <br>
+     * Month.pattern <br>
+     * Week Day.pattern
+     */
     private static final String[] PATTERN_DATE_UUIDS = { "_nj3TsD4KEd20H7qFpzB9dg", "_khsAgIyhEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
             "_WAPQoIyeEd6Dle_8xC0lwg", "_pne9AIyeEd6Dle_8xC0lwg", "_4A6EMIyfEd6Dle_8xC0lwg", "_ypukIIyfEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_fLaxUIyfEd6Dle_8xC0lwg", "_pX0T4IyfEd6Dle_8xC0lwg", "_hytsED4YEd24WPpU35gV1A", "_tZlYsPbMEd2c5L1gaJyUtQ", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_M4zogD4ZEd24WPpU35gV1A", "_ZNaNsD4ZEd24WPpU35gV1A", "_Wub7wD4XEd24WPpU35gV1A" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    // │ Email Address.pattern
-    // │ IP_Address.pattern
-    // │ Website_URL.pattern
-    // │ Website_validation.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Email Address.pattern <br>
+     * IP_Address.pattern <br>
+     * Website_URL.pattern <br>
+     * Website_validation.pattern
+     */
     private static final String[] PATTERN_INTERNET_UUIDS = { "_rC5TcD4XEd24WPpU35gV1A", "_pOs9MAyEEd6OfvNiP9lrnQ", //$NON-NLS-1$ //$NON-NLS-2$
             "_yaXdsYZMEd2G3OfabUsfOQ", "_0_J_4IyeEd6Dle_8xC0lwg" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-    // │ American Express Card Number.pattern
-    // │ Bank_Routing_Transit_Number_(RTN).pattern
-    // │ ContainsNumbers.pattern
-    // │ Currency_16,3.pattern
-    // │ FR_SSN.pattern
-    // │ Integer.pattern
-    // │ International_Passport.pattern
-    // │ ISBN_Checker.pattern
-    // │ Istat_Code.pattern
-    // │ Longitude_Validation.pattern
-    // │ Master Card Number.pattern
-    // │ Non_Zero_1st_Digit.pattern
-    // │ Numeric.pattern
-    // │ Swedish_Personal_Nr_(Personnummer).pattern
-    // │ Swedish_personnummer_with_accepted_foreigners.pattern
-    // │ UK_Vehicle_Registration_Plate_Number_Plate.pattern
-    // │ US SSN.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * American Express Card Number.pattern <br>
+     * Bank_Routing_Transit_Number_(RTN).pattern <br>
+     * ContainsNumbers.pattern <br>
+     * Currency_16,3.pattern <br>
+     * FR_SSN.pattern <br>
+     * Integer.pattern <br>
+     * International_Passport.pattern <br>
+     * ISBN_Checker.pattern <br>
+     * Istat_Code.pattern <br>
+     * Longitude_Validation.pattern <br>
+     * Master Card Number.pattern <br>
+     * Non_Zero_1st_Digit.pattern <br>
+     * Numeric.pattern <br>
+     * Swedish_Personal_Nr_(Personnummer).pattern <br>
+     * Swedish_personnummer_with_accepted_foreigners.pattern <br>
+     * UK_Vehicle_Registration_Plate_Number_Plate.pattern <br>
+     * US SSN.pattern
+     */
     private static final String[] PATTERN_NUMBER_UUIDS = { "_FcDG0D17Ed2p44yVAaDvbQ", "_j5FFMIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
             "_Lnh0kGUuEd2RuP05jDphQg", "_8TNRwIydEd6Dle_8xC0lwg", "_OuO-UPbPEd2c5L1gaJyUtQ", "_0dzx4D4bEd24WPpU35gV1A", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_PRL0IIydEd6Dle_8xC0lwg", "_WGxL4IydEd6Dle_8xC0lwg", "_ZYFdkIybEd6Dle_8xC0lwg", "_CwBEgIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_6YWv4D16Ed2p44yVAaDvbQ", "_D7IDEAulEeKxJpyXB0egyQ", "_OAAOQD1iEd2irYhnXOOajA", "_07nrEIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_shG84IybEd6Dle_8xC0lwg", "_8U2icIybEd6Dle_8xC0lwg", "_BpSRwD15Ed2p44yVAaDvbQ" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    // │ 10_Digit_US_Phone_Number.pattern
-    // │ Complex_Australian_Phone_Number.pattern
-    // │ FR_Phone_Number.pattern
-    // │ FR_Phone_Number_(International).pattern
-    // │ FR_Phone_Number_(Local_or_International).pattern
-    // │ German_Phone_number_(International).pattern
-    // │ German_Phone_number_(Local ).pattern
-    // │ German_Phone_number_(Local_or_International ).pattern
-    // │ International_phone_number.pattern
-    // │ Mobile_number_of_India.pattern
-    // │ Phone_Brazil.pattern
-    // │ Phone_Number.pattern
-    // │ UK Phone Number.pattern
-    // │ US_Phone_Number.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * 10_Digit_US_Phone_Number.pattern<br>
+     * Complex_Australian_Phone_Number.pattern<br>
+     * FR_Phone_Number.pattern<br>
+     * FR_Phone_Number_(International).pattern<br>
+     * FR_Phone_Number_(Local_or_International).pattern<br>
+     * German_Phone_number_(International).pattern<br>
+     * German_Phone_number_(Local ).pattern<br>
+     * German_Phone_number_(Local_or_International ).pattern<br>
+     * International_phone_number.pattern<br>
+     * Mobile_number_of_India.pattern<br>
+     * Phone_Brazil.pattern<br>
+     * Phone_Number.pattern<br>
+     * UK Phone Number.pattern <br>
+     * US_Phone_Number.pattern
+     */
     private static final String[] PATTERN_PHONE_UUIDS = { "_QbsC8IyeEd6Dle_8xC0lwg", "_CnD1cIyeEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
             "_SPiUIPbKEd2c5L1gaJyUtQ", "_9LBjMIygEd6Dle_8xC0lwg", "_DqoD4IyhEd6Dle_8xC0lwg", "_W6xUUIygEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_NW0R0IygEd6Dle_8xC0lwg", "_eVNsoIygEd6Dle_8xC0lwg", "_Is95MIydEd6Dle_8xC0lwg", "__RSB4IycEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_mRzFgIycEd6Dle_8xC0lwg", "_S7m6oIyhEd6Dle_8xC0lwg", "_IIVOAD4XEd24WPpU35gV1A", "_bdjpwLr8Ed2z8Ya9pb9seQ" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    // │ Blank_Text.pattern
-    // │ Empty_Text.pattern
-    // │ Home_Row_Text.pattern
-    // │ Linux_Path_Verify.pattern
-    // │ No_special_chart.pattern
-    // │ Random_Consonants.pattern
-    // │ Starts_with_blank.pattern
-    // │ Starts_with_space.pattern
-    // │ Starts_with_uppercase.pattern
-    // │ Uppercased_Single_Word.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Blank_Text.pattern <br>
+     * Empty_Text.pattern <br>
+     * Home_Row_Text.pattern <br>
+     * Linux_Path_Verify.pattern <br>
+     * No_special_chart.pattern <br>
+     * Random_Consonants.pattern <br>
+     * Starts_with_blank.pattern <br>
+     * Starts_with_space.pattern <br>
+     * Starts_with_uppercase.pattern <br>
+     * Uppercased_Single_Word.pattern
+     */
     private static final String[] PATTERN_TEXT_UUIDS = { "_N7yi0Gk3Ed2I1bT57-sHUw", "_vZ6_IGk6Ed2I1bT57-sHUw", //$NON-NLS-1$ //$NON-NLS-2$
             "_e4vUoYyZEd6Dle_8xC0lwg", "_IqpTEIyfEd6Dle_8xC0lwg", "_6rm3QIycEd6Dle_8xC0lwg", "_gDqDcP9eEd2mwaQf90ozSg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "_18GtIIyaEd6Dle_8xC0lwg", "_scYqYIyaEd6Dle_8xC0lwg", "_53rX8AMvEeKk6OZDw5mXOQ", "_FyTwIHnTEd2weu9skTiCqA" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    // gmail.pattern
-    // yahoo.pattern
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * gmail.pattern<br>
+     * yahoo.pattern
+     */
     private static final String[] PATTERN_SQL_INTERNET_UUIDS = { "_5tDp8LoaEd2CVq07lsaT2w", "_jyAMQbo4Ed2fB5cidg4eog" }; //$NON-NLS-1$ //$NON-NLS-2$
 
     private static final List<?> PATTERN_SQL_UUIDS = Arrays.asList(PATTERN_SQL_INTERNET_UUIDS);
@@ -380,21 +420,6 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
-    }
-
-    public static List<RecycleBinRepNode> getAllRecyleBinNodes() {
-        List<RecycleBinRepNode> result = new ArrayList<RecycleBinRepNode>();
-        CommonViewer commonViewer = getDQCommonViewer(true);
-        if (commonViewer != null) {
-            TreeItem[] items = commonViewer.getTree().getItems();
-            for (TreeItem item : items) {
-                DQRepositoryNode node = (DQRepositoryNode) item.getData();
-                if (node.isBin()) {
-                    result.add((RecycleBinRepNode) node);
-                }
-            }
-        }
-        return result;
     }
 
     public static void setRecycleBinRepNode(RecycleBinRepNode recycleBinRepNode) {

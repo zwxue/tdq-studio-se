@@ -46,7 +46,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
@@ -128,8 +127,8 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
     private boolean allowDND(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         // MOD klliu Bug TDQ-4330 if targetCount's length is 1,that means targetNode is the root and system node.
         // so there is not any operations on it,then the operation of DND is not allowed.
-        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath(targetNode);
+        IPath sourcePath = RepositoryNodeHelper.getPath(sourceNode);
+        IPath targetPath = RepositoryNodeHelper.getPath(targetNode);
         int sourceCount = sourcePath.segmentCount();
         int targetCount = targetPath.segmentCount();
         if (sourceCount == 1 || targetCount == 1) {
@@ -512,7 +511,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      * @link {@link #moveReportRepNode(IRepositoryNode, IRepositoryNode)}
      */
     private void relocateJrxmlTemplates(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
-        IPath targetPath = WorkbenchUtils.getPath(targetNode);
+        IPath targetPath = RepositoryNodeHelper.getPath(targetNode);
         IFolder targetFolder = ResourceManager.getRootProject().getFolder(targetPath);
 
         TdReport rep = (TdReport) RepositoryNodeHelper.getModelElementFromRepositoryNode(sourceNode);
@@ -630,8 +629,8 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         // ~
 
         // check root node
-        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath(targetNode);
+        IPath sourcePath = RepositoryNodeHelper.getPath(sourceNode);
+        IPath targetPath = RepositoryNodeHelper.getPath(targetNode);
         int sourceCount = sourcePath.segmentCount();
         int targetCount = targetPath.segmentCount();
         String sourceString = sourcePath.removeLastSegments(sourceCount - 2).toOSString();
@@ -683,8 +682,8 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      * @throws PersistenceException
      */
     private void moveFolder(final IRepositoryNode sourceNode, final IRepositoryNode targetNode) throws PersistenceException {
-        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath(targetNode);
+        IPath sourcePath = RepositoryNodeHelper.getPath(sourceNode);
+        IPath targetPath = RepositoryNodeHelper.getPath(targetNode);
         IPath makeRelativeTo = getMakeRelativeTo(targetNode);
         final IPath sourceMakeRelativeTo = sourcePath.makeRelativeTo(makeRelativeTo);
         final IPath targetMakeRelativeTo = targetPath.makeRelativeTo(makeRelativeTo);
@@ -726,7 +725,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      * @param basePath
      */
     private void moveObject(final IRepositoryNode sourceNode, final IRepositoryNode targetNode, final IPath basePath) {
-        final IPath targetPath = WorkbenchUtils.getPath(targetNode);
+        final IPath targetPath = RepositoryNodeHelper.getPath(targetNode);
         RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>(
                 DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.MOVE_ITEM") //$NON-NLS-1$
                         + sourceNode.getObject().getProperty().getDisplayName()) {
