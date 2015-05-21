@@ -89,16 +89,20 @@ public class FunctionApplier {
         Date newDate = new Date(System.currentTimeMillis());
         switch (function) {
         case DATE_VARIANCE:
-            Integer extraParam;
-            try {
-                extraParam = Integer.parseInt(extraParameter);
-            } catch (NumberFormatException e) {
-                extraParam = 31;
+            if (date != null) {
+                Integer extraParam;
+                try {
+                    extraParam = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    extraParam = 31;
+                }
+                if (extraParam < 0) {
+                    extraParam *= -1;
+                } else if (extraParam == 0) {
+                    extraParam = 31;
+                }
+                newDate = dateChanger.dateVariance(date, extraParam);
             }
-            if (extraParam <= 0) {
-                extraParam *= -1;
-            }
-            newDate = dateChanger.dateVariance(date, extraParam);
             break;
         case GENERATE_BETWEEN:
             String[] parameters = extraParameter.split(","); //$NON-NLS-1$
@@ -275,7 +279,7 @@ public class FunctionApplier {
                 }
                 int min = (a < b) ? a : b;
                 int max = (a < b) ? b : a;
-                sb = new StringBuilder(rnd.nextInt((max - min) + 1) + min);
+                sb = new StringBuilder(String.valueOf(rnd.nextInt((max - min) + 1) + min));
             }
             break;
         case GENERATE_FROM_LIST:
@@ -351,11 +355,9 @@ public class FunctionApplier {
                 }
                 int begin = (a < b) ? a : b;
                 int end = (a > b) ? a : b;
-                if (begin <= 0 || end > str.length()) {
-                    sb = new StringBuilder(EMPTY_STRING);
-                } else {
-                    sb = new StringBuilder(str.substring(begin - 1, end));
-                }
+                begin = (begin < 1) ? 1 : begin;
+                end = (end > str.length()) ? str.length() : end;
+                sb = new StringBuilder(str.substring(begin - 1, end));
             }
             break;
         case REMOVE_BETWEEN_INDEXES:
@@ -373,11 +375,9 @@ public class FunctionApplier {
                 }
                 int begin = (a < b) ? a : b;
                 int end = (a > b) ? a : b;
-                if (begin <= 0 || end > str.length()) {
-                    sb = new StringBuilder(EMPTY_STRING);
-                } else {
-                    sb = new StringBuilder(str.substring(0, begin - 1) + str.substring(end, str.length()));
-                }
+                begin = (begin < 1) ? 1 : begin;
+                end = (end > str.length()) ? str.length() : end;
+                sb = new StringBuilder(str.substring(0, begin - 1) + str.substring(end, str.length()));
             }
             break;
         case REPLACE_BETWEEN_INDEXES:
@@ -395,18 +395,32 @@ public class FunctionApplier {
                 int begin = (a < b) ? a : b;
                 int end = (a > b) ? a : b;
                 String s = null;
+                boolean isThird = true;
                 try {
                     s = indexesss[2].trim();
                     if (!s.matches("[0-9]|[a-zA-Z]")) { //$NON-NLS-1$                                                                                                               
-                        s = String.valueOf(UPPER.charAt(rnd.nextInt(26)));
+                        isThird = false;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    s = String.valueOf(UPPER.charAt(rnd.nextInt(26)));
+                    isThird = false;
                 }
-                if (begin <= 0 || end > str.length()) {
-                    sb = new StringBuilder(EMPTY_STRING);
+                begin = (begin < 1) ? 1 : begin;
+                end = (end > str.length()) ? str.length() : end;
+                sb = new StringBuilder(str);
+                if (!isThird) {
+                    for (int i = begin - 1; i < end; ++i) {
+                        if (Character.isDigit(str.charAt(i))) {
+                            sb.setCharAt(i, Character.forDigit(rnd.nextInt(9), 10));
+                        } else if (Character.isUpperCase(str.charAt(i))) {
+                            sb.setCharAt(i, UPPER.charAt(rnd.nextInt(26)));
+                        } else if (Character.isLowerCase(str.charAt(i))) {
+                            sb.setCharAt(i, LOWER.charAt(rnd.nextInt(26)));
+                        } else {
+                            sb.setCharAt(i, str.charAt(i));
+                        }
+                    }
                 } else {
-                    sb = new StringBuilder(str);
+                    @SuppressWarnings("null")
                     char c = s.toCharArray()[0];
                     for (int i = begin - 1; i < end; ++i) {
                         sb.setCharAt(i, c);
@@ -423,10 +437,11 @@ public class FunctionApplier {
                 sb = new StringBuilder(EMPTY_STRING);
                 break;
             }
-            if (str == null || extra >= str.length() || extra < 0) {
+            if (str == null || extra < 0) {
                 sb = new StringBuilder(EMPTY_STRING);
                 break;
             }
+            extra = (extra > str.length()) ? str.length() : extra;
             sb = new StringBuilder(str.substring(extra));
             break;
         case REMOVE_LAST_CHARS:
@@ -437,10 +452,11 @@ public class FunctionApplier {
                 sb = new StringBuilder(EMPTY_STRING);
                 break;
             }
-            if (str == null || extraP >= str.length() || extraP < 0) {
+            if (str == null || extraP < 0) {
                 sb = new StringBuilder(EMPTY_STRING);
                 break;
             }
+            extraP = (extraP > str.length()) ? str.length() : extraP;
             sb = new StringBuilder(str.substring(0, str.length() - extraP));
             break;
         case REPLACE_FIRST_CHARS:
@@ -451,10 +467,11 @@ public class FunctionApplier {
                 sb = new StringBuilder(EMPTY_STRING);
                 break;
             }
-            if (str == null || extraPa >= str.length() || extraPa < 0) {
+            if (str == null || extraPa < 0) {
                 sb = new StringBuilder(EMPTY_STRING);
                 break;
             }
+            extraPa = (extraPa > str.length()) ? str.length() : extraPa;
             sb = new StringBuilder(str);
             StringBuilder repl = new StringBuilder(EMPTY_STRING);
             for (int i = 0; i < extraPa; ++i) {
@@ -478,10 +495,11 @@ public class FunctionApplier {
                 sb = new StringBuilder(EMPTY_STRING);
                 break;
             }
-            if (str == null || extraPar >= str.length() || extraPar < 0) {
+            if (str == null || extraPar < 0) {
                 sb = new StringBuilder(EMPTY_STRING);
                 break;
             }
+            extraPar = (extraPar > str.length()) ? str.length() : extraPar;
             sb = new StringBuilder(str);
             StringBuilder repla = new StringBuilder(EMPTY_STRING);
             for (int i = sb.length() - extraPar; i < sb.length(); ++i) {
@@ -533,6 +551,8 @@ public class FunctionApplier {
             }
             if (extraParam <= 0) {
                 extraParam *= -1;
+            } else if (extraParam == 0) {
+                extraParam = 10;
             }
             int rate = 0;
             do {
@@ -605,8 +625,10 @@ public class FunctionApplier {
             } catch (NumberFormatException e) {
                 extraParam = 10;
             }
-            if (extraParam <= 0) {
+            if (extraParam < 0) {
                 extraParam *= -1;
+            } else if (extraParam == 0) {
+                extraParam = 10;
             }
             int rate = 0;
             do {
@@ -679,15 +701,17 @@ public class FunctionApplier {
             } catch (NumberFormatException e) {
                 extraParam = 10;
             }
-            if (extraParam <= 0) {
+            if (extraParam < 0) {
                 extraParam *= -1;
+            } else if (extraParam == 0) {
+                extraParam = 10;
             }
             int rate = 0;
             do {
                 rate = rnd.nextInt(2 * extraParam) - extraParam;
             } while (rate == 0);
-            Float value = Float.parseFloat(valueIn.toString());
-            value *= ((float) rate + 100) / 100;
+            Double value = Double.parseDouble(valueIn.toString());
+            value *= ((double) rate + 100) / 100;
             finalValue = new Long(Math.round(value));
             break;
         case GENERATE_CREDIT_CARD:
@@ -713,7 +737,7 @@ public class FunctionApplier {
             }
             break;
         case REPLACE_NUMERIC:
-            if (valueIn == null) {
+            if (valueIn == null || !extraParameter.matches("[0-9]")) { //$NON-NLS-1$
                 return 0L;
             }
             try {
@@ -753,15 +777,13 @@ public class FunctionApplier {
             } else {
                 int digits_to_keep = 0;
                 String strI = valueIn.toString();
-                String str_nospaces = strI.replaceAll("\\s+", EMPTY_STRING); //$NON-NLS-1$
-                if (str_nospaces.replaceAll("\\D", EMPTY_STRING).length() == 9) {//$NON-NLS-1$
+                if ((int) Math.log10(valueIn) + 1 == 9) {
                     digits_to_keep = 4;
-                } else if (str_nospaces.replaceAll("\\D", EMPTY_STRING).length() == 15) { //$NON-NLS-1$
+                } else if ((int) Math.log10(valueIn) + 1 == 15) {
                     digits_to_keep = 5;
                 }
-                String res_ssn = str_nospaces.substring(0, str_nospaces.length() - digits_to_keep).replaceAll(
-                        "[0-9]", extraParameter); //$NON-NLS-1$ 
-                res_ssn = res_ssn + str_nospaces.substring(str_nospaces.length() - digits_to_keep, str_nospaces.length());
+                String res_ssn = strI.substring(0, strI.length() - digits_to_keep).replaceAll("[0-9]", extraParameter); //$NON-NLS-1$ 
+                res_ssn = res_ssn + strI.substring(strI.length() - digits_to_keep, strI.length());
                 finalValue = Long.parseLong(res_ssn);
             }
             break;
@@ -874,10 +896,11 @@ public class FunctionApplier {
                 finalValue = 0L;
                 break;
             }
-            if (valueIn == null || (int) Math.log10(valueIn) + 1 <= extraPa || extraPa < 0) {
+            if (valueIn == null || extraPa < 0) {
                 finalValue = 0L;
                 break;
             }
+            extraPa = ((int) Math.log10(valueIn) + 1 <= extraPa) ? (int) Math.log10(valueIn) + 1 : extraPa;
             StringBuilder sbu = new StringBuilder(valueIn.toString());
             StringBuilder remp = new StringBuilder(EMPTY_STRING);
             for (int i = 0; i < extraPa; ++i) {
@@ -894,10 +917,11 @@ public class FunctionApplier {
                 finalValue = 0L;
                 break;
             }
-            if (valueIn == null || (int) Math.log10(valueIn) + 1 <= extraPar || extraPar < 0) {
+            if (valueIn == null || extraPar < 0) {
                 finalValue = 0L;
                 break;
             }
+            extraPar = ((int) Math.log10(valueIn) + 1 <= extraPar) ? (int) Math.log10(valueIn) + 1 : extraPar;
             StringBuilder sbui = new StringBuilder(valueIn.toString());
             StringBuilder rempl = new StringBuilder(EMPTY_STRING);
             for (int i = 0; i < extraPar; ++i) {
@@ -937,8 +961,10 @@ public class FunctionApplier {
             } catch (NumberFormatException e) {
                 extraParam = 10;
             }
-            if (extraParam <= 0) {
+            if (extraParam < 0) {
                 extraParam *= -1;
+            } else if (extraParam == 0) {
+                extraParam = 10;
             }
             int rate = 0;
             do {
@@ -978,24 +1004,6 @@ public class FunctionApplier {
                 int min = (a < b) ? a : b;
                 int max = (a < b) ? b : a;
                 finalValue = rnd.nextInt((max - min) + 1) + min;
-            }
-            break;
-        case REPLACE_SSN:
-            if (extraParameter == null || !extraParameter.matches("[0-9]")) { //$NON-NLS-1$
-                finalValue = 0;
-            } else {
-                int digits_to_keep = 0;
-                String strI = valueIn.toString();
-                String str_nospaces = strI.replaceAll("\\s+", EMPTY_STRING); //$NON-NLS-1$
-                if (str_nospaces.replaceAll("\\D", EMPTY_STRING).length() == 9) {//$NON-NLS-1$
-                    digits_to_keep = 4;
-                } else if (str_nospaces.replaceAll("\\D", EMPTY_STRING).length() == 15) { //$NON-NLS-1$
-                    digits_to_keep = 5;
-                }
-                String res_ssn = str_nospaces.substring(0, str_nospaces.length() - digits_to_keep).replaceAll(
-                        "[0-9]", extraParameter); //$NON-NLS-1$ 
-                res_ssn = res_ssn + str_nospaces.substring(str_nospaces.length() - digits_to_keep, str_nospaces.length());
-                finalValue = Integer.parseInt(res_ssn);
             }
             break;
         case GENERATE_FROM_LIST:
@@ -1073,7 +1081,7 @@ public class FunctionApplier {
         case REMOVE_FIRST_CHARS:
             Integer extra = null;
             try {
-                extra = Integer.parseInt(extraParameter);
+                extra = Integer.parseInt(extraParameter.trim());
             } catch (NumberFormatException e) {
                 finalValue = 0;
                 break;
@@ -1086,9 +1094,9 @@ public class FunctionApplier {
             finalValue = Integer.parseInt(sb.toString());
             break;
         case REMOVE_LAST_CHARS:
-            Double extraP = null;
+            Integer extraP = null;
             try {
-                extraP = Double.parseDouble(extraParameter);
+                extraP = Integer.parseInt(extraParameter.trim());
             } catch (NumberFormatException e) {
                 finalValue = 0;
                 break;
@@ -1102,15 +1110,16 @@ public class FunctionApplier {
         case REPLACE_FIRST_CHARS:
             Integer extraPa = null;
             try {
-                extraPa = Integer.parseInt(extraParameter);
+                extraPa = Integer.parseInt(extraParameter.trim());
             } catch (NumberFormatException e) {
                 finalValue = 0;
                 break;
             }
-            if ((int) Math.log10(valueIn) + 1 <= extraPa || extraPa < 0) {
+            if (extraPa < 0) {
                 finalValue = 0;
                 break;
             }
+            extraPa = ((int) Math.log10(valueIn) + 1 <= extraPa) ? (int) Math.log10(valueIn) + 1 : extraPa;
             StringBuilder sbu = new StringBuilder(valueIn.toString());
             StringBuilder remp = new StringBuilder(EMPTY_STRING);
             for (int i = 0; i < extraPa; ++i) {
@@ -1122,15 +1131,16 @@ public class FunctionApplier {
         case REPLACE_LAST_CHARS:
             Integer extraPar = null;
             try {
-                extraPar = Integer.parseInt(extraParameter);
+                extraPar = Integer.parseInt(extraParameter.trim());
             } catch (NumberFormatException e) {
                 finalValue = 0;
                 break;
             }
-            if ((int) Math.log10(valueIn) + 1 <= extraPar || extraPar < 0) {
+            if (extraPar < 0) {
                 finalValue = 0;
                 break;
             }
+            extraPar = ((int) Math.log10(valueIn) + 1 <= extraPar) ? (int) Math.log10(valueIn) + 1 : extraPar;
             StringBuilder sbui = new StringBuilder(valueIn.toString());
             StringBuilder rempl = new StringBuilder(EMPTY_STRING);
             for (int i = 0; i < extraPar; ++i) {

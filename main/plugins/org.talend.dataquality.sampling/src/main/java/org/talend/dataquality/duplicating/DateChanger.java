@@ -97,7 +97,7 @@ public class DateChanger {
             minDate = df.parse(minString);
             maxDate = df.parse(maxString);
         } catch (ParseException e) {
-            return null;
+            return new Date(System.currentTimeMillis());
         }
         if (minDate.after(maxDate)) {
             Date tmp = minDate;
