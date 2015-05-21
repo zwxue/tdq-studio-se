@@ -20,6 +20,8 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEffect;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.widgets.Control;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -47,6 +49,7 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
      * 
      * @see org.eclipse.swt.dnd.DropTargetAdapter#dragEnter(org.eclipse.swt.dnd.DropTargetEvent)
      */
+    @Override
     public void dragEnter(DropTargetEvent event) {
         super.dragEnter(event);
         execValidation(event, doDropValidation(event, LocalSelectionTransfer.getTransfer()));
@@ -98,7 +101,14 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
                     ret = true;
                 }
             } else if (object instanceof IRepositoryNode) {
-                IPath itemPath = PropertyHelper.getItemPath(((IRepositoryNode) object).getObject().getProperty());
+                // ADD msjian TDQ-4919: can not drag the ref project analysis to report
+                IRepositoryViewObject obj = ((IRepositoryNode) object).getObject();
+                if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(obj)) {
+                    return false;
+                }
+                // TDQ-4919~
+
+                IPath itemPath = PropertyHelper.getItemPath(obj.getProperty());
                 if (itemPath == null) {
                     continue;
                 }
@@ -113,6 +123,7 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
         return ret;
     }
 
+    @Override
     public void drop(DropTargetEvent event) {
         super.drop(event);
         drop(event, LocalSelectionTransfer.getTransfer());

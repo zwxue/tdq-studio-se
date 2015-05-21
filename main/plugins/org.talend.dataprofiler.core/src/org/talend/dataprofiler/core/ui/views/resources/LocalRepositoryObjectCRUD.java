@@ -179,6 +179,11 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             }
         }
 
+        // if the source node is readonly(like the reference project node or the user has readonly access), can not drag
+        if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(sourceNode.getObject())) {
+            return false;
+        }
+
         return true;
     }
 
