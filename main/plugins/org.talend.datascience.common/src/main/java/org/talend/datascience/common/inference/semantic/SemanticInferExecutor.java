@@ -58,24 +58,25 @@ public class SemanticInferExecutor extends AbstractInferExecutor {
 	}
 
 	@Override
-	public void initInRecordLevel() {
-		typeToCountBean.clear();
+	public boolean init() {
 		columnIdxToCategoryRecognizer.clear();
+		return super.init();
 	}
 
 	@Override
-	public void initEachColumn(Integer colIdx,ColumnTypeBean typeBean) {
+	public boolean initColumnTypeBean(ColumnTypeBean typeBean, int colIdx) {
 		CategoryRecognizer recognizer = builder.ddPath(ddPath).kwPath(kwPath)
 				.build();
 		columnIdxToCategoryRecognizer.put(colIdx, recognizer);
 		ColumnTypeBean bean = typeBean;
 		if(bean == null){
 			bean = new ColumnTypeBean();
+			bean.setColumnIdx(colIdx);
 		}
-		bean.setColumnIdx(colIdx);
 		typeToCountBean.add(bean);
-
+		return true;
 	}
+	
 
 	@Override
 	public void handleColumn(String column, int colIdx) {
@@ -99,7 +100,6 @@ public class SemanticInferExecutor extends AbstractInferExecutor {
 			Collection<Category> result = columnIdxToCategoryRecognizer.get(
 					colIdx).getResult();
 			ColumnTypeBean bean = typeToCountBean.get(colIdx);
-			bean.setColumnIdx(colIdx);
 			for (Category semCategory : result) {
 				bean.putSemanticNameToCount(semCategory.getCategoryName(),
 						semCategory.getCount());
@@ -107,4 +107,6 @@ public class SemanticInferExecutor extends AbstractInferExecutor {
 		}
 		return typeToCountBean;
 	}
+
+	
 }

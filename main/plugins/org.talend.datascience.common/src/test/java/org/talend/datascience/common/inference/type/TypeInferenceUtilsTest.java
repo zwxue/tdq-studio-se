@@ -24,7 +24,7 @@ public class TypeInferenceUtilsTest {
 
 	@Test
 	public void testIsBoolean() throws Exception {
-		List<String> values = loadData("src/test/resources/org/talend/datascience/common/inference/type/testBoolean.csv");
+		List<String> values = loadData("org/talend/datascience/common/inference/type/testBoolean.csv");
 		int countOfBooleans = 0;
 		String timeStart = getCurrentTimeStamp();
 		System.out.println("Detect boolean start at: " + timeStart);
@@ -47,7 +47,7 @@ public class TypeInferenceUtilsTest {
 
 	@Test
 	public void testIsEmpty() throws Exception {
-		List<String> values = loadData("src/test/resources/org/talend/datascience/common/inference/type/testString.csv");
+		List<String> values = loadData("org/talend/datascience/common/inference/type/testString.csv");
 		int countOfEmpties = 0;
 		String timeStart = getCurrentTimeStamp();
 		System.out.println("Detect empty start at: " + timeStart);
@@ -70,7 +70,7 @@ public class TypeInferenceUtilsTest {
 
 	@Test
 	public void testIsChar() throws Exception {
-		List<String> values = loadData("src/test/resources/org/talend/datascience/common/inference/type/testChar.csv");
+		List<String> values = loadData("org/talend/datascience/common/inference/type/testChar.csv");
 		int countOfChars = 0;
 		String timeStart = getCurrentTimeStamp();
 		System.out.println("Detect char start at: " + timeStart);
@@ -93,7 +93,7 @@ public class TypeInferenceUtilsTest {
 
 	@Test
 	public void testIsInteger() throws Exception {
-		List<String> values = loadData("src/test/resources/org/talend/datascience/common/inference/type/testInteger.csv");
+		List<String> values = loadData("org/talend/datascience/common/inference/type/testInteger.csv");
 		int countOfIntegers = 0;
 		String timeStart = getCurrentTimeStamp();
 		System.out.println("Detect integer start at: " + timeStart);
@@ -117,7 +117,7 @@ public class TypeInferenceUtilsTest {
 
 	@Test
 	public void testIsDouble() throws Exception {
-		List<String> values = loadData("src/test/resources/org/talend/datascience/common/inference/type/testDouble.csv");
+		List<String> values = loadData("org/talend/datascience/common/inference/type/testDouble.csv");
 		int countOfDoubles = 0;
 		String timeStart = getCurrentTimeStamp();
 		System.out.println("Detect double start at: " + timeStart);
@@ -141,7 +141,7 @@ public class TypeInferenceUtilsTest {
 
 	@Test
 	public void testIsString() throws Exception {
-		List<String> values = loadData("src/test/resources/org/talend/datascience/common/inference/type/testString.csv");
+		List<String> values = loadData("org/talend/datascience/common/inference/type/testString.csv");
 		int countOfStrings = 0;
 		String timeStart = getCurrentTimeStamp();
 		System.out.println("Detect string start at: " + timeStart);
@@ -165,7 +165,7 @@ public class TypeInferenceUtilsTest {
 
 	@Test
 	public void testIsDate() throws Exception {
-		List<String> values = loadData("src/test/resources/org/talend/datascience/common/inference/type/testDate.csv");
+		List<String> values = loadData("org/talend/datascience/common/inference/type/testDate.csv");
 		int countOfDates = 0;
 		String timeStart = getCurrentTimeStamp();
 		System.out.println("Detect date start at: " + timeStart);

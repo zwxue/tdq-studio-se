@@ -1,9 +1,6 @@
 package org.talend.datascience.common.inference.semantic;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,10 +14,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.datascience.common.inference.type.ColumnTypeBean;
+import org.talend.datascience.common.inference.type.DataTypeInferExecutorTest;
 import org.talend.datascience.common.inference.type.TypeInferenceUtilsTest;
 
 public class SemanticInferExecutorTest {
-	private boolean isPrintAllowed = true;
 	SemanticInferExecutor semanticInferExecutor = null;
 
 	@Before
@@ -36,33 +33,30 @@ public class SemanticInferExecutorTest {
 	public void testHandle() {
 		// ---------1. test given 1000 data ---------
 		InputStream in = this
-					.getClass()
-					.getClassLoader()
-					.getResourceAsStream(
-							"org/talend/datascience/common/inference/type/employee_1000.csv");
+				.getClass()
+				.getClassLoader()
+				.getResourceAsStream(
+						"org/talend/datascience/common/inference/type/employee_1000.csv");
 		BufferedReader inBuffReader = new BufferedReader(new InputStreamReader(
 				in));
 		String start = "";
 		String end = "";
 		String line = null;
+		DataTypeInferExecutorTest printService = new DataTypeInferExecutorTest();
 		try {
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
-			printline("1 000 data set infer start at " + start);
-			boolean isFirstLine = true;
+			printService.printline("1 000 data set infer start at " + start);
+			semanticInferExecutor.init();
 			while ((line = inBuffReader.readLine()) != null) {
 				String[] record = StringUtils
 						.splitByWholeSeparatorPreserveAllTokens(line, ";");
-				if (isFirstLine) {
-					isFirstLine = false;
-					semanticInferExecutor.init(record);
-				}
 				semanticInferExecutor.handle(record);
 			}
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
-			printline("1 000 data set infer end at " + end);
+			printService.printline("1 000 data set infer end at " + end);
 			double timeDiff = TypeInferenceUtilsTest.getTimeDifference(start,
 					end);
-			printline("1 000 time difference: " + timeDiff);
+			printService.printline("1 000 time difference: " + timeDiff);
 			Assert.assertTrue(timeDiff < 7);
 
 			// Get the semantic name result .
@@ -103,7 +97,7 @@ public class SemanticInferExecutorTest {
 			}
 
 			// ---------2. test given 10000 data ---------
-			 in = this
+			in = this
 					.getClass()
 					.getClassLoader()
 					.getResourceAsStream(
@@ -113,21 +107,17 @@ public class SemanticInferExecutorTest {
 			end = "";
 			line = null;
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
-			printline("1 0000 data set infer start at " + start);
-			isFirstLine = true;
+			printService.printline("1 0000 data set infer start at " + start);
+			semanticInferExecutor.init();
 			while ((line = inBuffReader.readLine()) != null) {
 				String[] record = StringUtils
 						.splitByWholeSeparatorPreserveAllTokens(line, ";");
-				if (isFirstLine) {
-					isFirstLine = false;
-					semanticInferExecutor.init(record);
-				}
 				semanticInferExecutor.handle(record);
 			}
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
-			printline("1 0000 data set infer end at " + end);
+			printService.printline("1 0000 data set infer end at " + end);
 			timeDiff = TypeInferenceUtilsTest.getTimeDifference(start, end);
-			printline("1 0000 time difference: " + timeDiff);
+			printService.printline("1 0000 time difference: " + timeDiff);
 			Assert.assertTrue(timeDiff < 9);
 
 			// Get the semantic name result .
@@ -167,12 +157,6 @@ public class SemanticInferExecutorTest {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	private void printline(String valueToPrint) {
-		if (isPrintAllowed) {
-			System.out.println(valueToPrint);
 		}
 	}
 

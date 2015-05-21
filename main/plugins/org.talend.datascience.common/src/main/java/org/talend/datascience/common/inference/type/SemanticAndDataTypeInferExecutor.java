@@ -49,22 +49,38 @@ public class SemanticAndDataTypeInferExecutor extends AbstractInferExecutor {
 
 	@Override
 	public List<ColumnTypeBean> getResults() {
-		// The column type bean instaince is same from data type executor to
+		// The column type bean instance is same from data type executor to
 		// semantic executor.
-		return dataTypeInferExecutor.getResults();
+		semanticInferExecutor.getResults();// This step is required to get
+											// semantic information and populate
+											// to bean.
+		return dataTypeInferExecutor.getResults();// Bean instance is same from
+													// data type exectutor to
+													// semantic type executor.
 	}
 
 	@Override
-	protected void initInRecordLevel() {
-		dataTypeInferExecutor.initInRecordLevel();
-		semanticInferExecutor.initInRecordLevel();
+	public boolean init() {
+		boolean isInited = dataTypeInferExecutor.init();
+		if (isInited) {
+			isInited = semanticInferExecutor.init();
+		}
+		return isInited;
 	}
 
 	@Override
-	protected void initEachColumn(Integer colIdx, ColumnTypeBean bean) {
+	protected boolean initColumnTypeBean(ColumnTypeBean bean, int colIdx) {
 		ColumnTypeBean newBean = new ColumnTypeBean();
-		dataTypeInferExecutor.initEachColumn(colIdx, newBean);
-		semanticInferExecutor.initEachColumn(colIdx, newBean);
+		newBean.setColumnIdx(colIdx);
+		// Use same bean instance for both data type and semantic type executor.
+		boolean isInited = dataTypeInferExecutor.initColumnTypeBean(newBean,
+				colIdx);
+		if (isInited) {
+			isInited = semanticInferExecutor
+					.initColumnTypeBean(newBean, colIdx);
+		}
+		typeToCountBean.add(newBean);
+		return isInited;
 	}
 
 }

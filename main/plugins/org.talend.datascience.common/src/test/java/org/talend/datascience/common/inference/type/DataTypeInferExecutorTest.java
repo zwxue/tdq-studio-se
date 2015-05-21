@@ -22,7 +22,7 @@ public class DataTypeInferExecutorTest {
 	private boolean isPrintAllowed = true;
 
 	@Test
-	public void testInferTypes() {
+	public void testInferDataTypes() {
 		// -------1. assert empty dataset ---------
 		List<String[]> records = new ArrayList<String[]>();
 		String start = TypeInferenceUtilsTest.getCurrentTimeStamp();
@@ -57,7 +57,7 @@ public class DataTypeInferExecutorTest {
 			printline("100 time difference "
 					+ TypeInferenceUtilsTest.getTimeDifference(start, end));
 			Assert.assertTrue(TypeInferenceUtilsTest.getTimeDifference(start,
-					end) < 0.18);
+					end) < 0.25);
 			// Result
 			for (int idx = 0; idx < typeResult.size(); idx++) {
 				printline("column " + (idx + 1));
@@ -75,7 +75,7 @@ public class DataTypeInferExecutorTest {
 						} else if (TypeInferenceUtils.TYPE_STRING.equals(key)) {
 							Assert.assertEquals(90, count, 0l);
 						}
-					} else if (16 == (idx + 1)) {
+					} else if (16 ==(types.getColumnIdx()+1)) {
 						// Assert column 16, char:90 integer:10
 						if (TypeInferenceUtils.TYPE_CHAR.equals(key)) {
 							Assert.assertEquals(90, count, 0.00d);
@@ -121,7 +121,7 @@ public class DataTypeInferExecutorTest {
 			printline("1000 time difference "
 					+ TypeInferenceUtilsTest.getTimeDifference(start, end));
 			Assert.assertTrue(TypeInferenceUtilsTest.getTimeDifference(start,
-					end) < 0.21);
+					end) < 0.27);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -202,14 +202,10 @@ public class DataTypeInferExecutorTest {
 		try {
 			start = TypeInferenceUtilsTest.getCurrentTimeStamp();
 			printline("1 000 000 data set infer start at " + start);
-			boolean isFirstLine = true;
+			inferExector.init();
 			while ((line = inBuffReader.readLine()) != null) {
 				String[] record = StringUtils
 						.splitByWholeSeparatorPreserveAllTokens(line, ";");
-				if (isFirstLine) {
-					isFirstLine = false;
-					inferExector.init(record);
-				}
 				inferExector.handle(record);
 			}
 			end = TypeInferenceUtilsTest.getCurrentTimeStamp();
@@ -223,7 +219,61 @@ public class DataTypeInferExecutorTest {
 		}
 	}
 
-	private void printline(String valueToPrint) {
+	/**
+	 * Test the order of column index to see whether it is same after the
+	 * inferring type done comparing the before or not.
+	 */
+	@Test
+	public void testInferTypesColumnIndexOrder() {
+		// -------6. assert dataset with 1 000 000 records, 18 columns ---------
+		InputStream in = this
+				.getClass()
+				.getClassLoader()
+				.getResourceAsStream(
+						"org/talend/datascience/common/inference/type/customers_100_bug_TDQ10380.csv");
+		BufferedReader inBuffReader = new BufferedReader(new InputStreamReader(
+				in));
+		try {
+			String line = null;
+			inferExector.init();
+			while ((line = inBuffReader.readLine()) != null) {
+				String[] record = StringUtils
+						.splitByWholeSeparatorPreserveAllTokens(line, ";");
+				inferExector.handle(record);
+			}
+
+			List<ColumnTypeBean> typeResult = inferExector.getResults();
+			// Result
+			for (int idx = 0; idx < typeResult.size(); idx++) {
+				printline("column " + (idx + 1));
+				ColumnTypeBean types = typeResult.get(idx);
+				Iterator<String> typeKeys = types.getTypeToCountMap().keySet()
+						.iterator();
+				while (typeKeys.hasNext()) {
+					String key = typeKeys.next();
+					Long count = types.getDataTypeCount(key);
+					printline("--- " + key + " : " + count);
+					if (8 == (idx + 1)) {
+						// Assert column 18, empty:10 string:90
+						if (TypeInferenceUtils.TYPE_EMPTY.equals(key)) {
+							Assert.assertEquals(4, count, 0.00d);
+						} else if (TypeInferenceUtils.TYPE_STRING.equals(key)) {
+							Assert.assertEquals(5, count, 0l);
+						}else if (TypeInferenceUtils.TYPE_DOUBLE.equals(key)) {
+							Assert.assertEquals(1, count, 0l);
+						}else if (TypeInferenceUtils.TYPE_INTEGER.equals(key)) {
+							Assert.assertEquals(90, count, 0l);
+						}
+					} 
+				}
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void printline(String valueToPrint) {
 		if (isPrintAllowed) {
 			System.out.println(valueToPrint);
 		}
