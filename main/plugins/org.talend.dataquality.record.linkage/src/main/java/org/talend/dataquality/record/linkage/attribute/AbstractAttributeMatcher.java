@@ -69,7 +69,15 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
 
         assert !isNullOrEmpty(str1) : "string should not be null or empty here"; //$NON-NLS-1$
         assert !isNullOrEmpty(str2) : "string should not be null or empty here"; //$NON-NLS-1$
-        return getWeight(str1, str2);
+        // TDQ-10366 qiongli,catch the Exception.
+        double weight = 0;
+        try {
+            weight = getWeight(str1, str2);
+        } catch (Exception exc) {
+            // return 0 if it has exception.
+            return 0;
+        }
+        return weight;
     }
 
     private boolean isNullOrEmpty(String str) {
