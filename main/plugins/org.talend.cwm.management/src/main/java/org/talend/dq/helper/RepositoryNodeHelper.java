@@ -2139,6 +2139,13 @@ public final class RepositoryNodeHelper {
     private static List<IRepositoryNode> getModelElementFromFolder(IRepositoryNode folderNode, boolean withDelted) {
         // MOD qiongli 2011-2-23,bug 17588 ,add param withDeleted.
         List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
+
+        // ADD msjian TDQ-4914: let the user can not use the reference project node(e.g.: connection node)
+        if (!((DQRepositoryNode) folderNode).getProject().isMainProject()) {
+            return repositoryNodeList;
+        }
+        // TDQ-4914~
+
         if (isFolderNode(folderNode.getType())) {
             for (IRepositoryNode thefolderNode : folderNode.getChildren(withDelted)) {
                 repositoryNodeList.addAll(getModelElementFromFolder(thefolderNode, withDelted));
