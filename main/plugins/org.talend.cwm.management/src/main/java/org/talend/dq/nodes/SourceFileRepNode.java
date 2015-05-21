@@ -35,8 +35,9 @@ public class SourceFileRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public SourceFileRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public SourceFileRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof TDQSourceFileItem) {

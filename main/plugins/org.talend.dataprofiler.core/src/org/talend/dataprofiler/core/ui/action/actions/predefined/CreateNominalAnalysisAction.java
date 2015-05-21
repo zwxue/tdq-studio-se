@@ -73,7 +73,7 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         addTextIndicator = true;
         for (IRepositoryNode repositoryNode : getColumns()) {
             DFColumnRepNode columnNode = new DFColumnRepNode(repositoryNode.getObject(), repositoryNode.getParent(),
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
+                    ENodeType.TDQ_REPOSITORY_ELEMENT, null);
             int javaSQLType = TalendTypeConvert.convertToJDBCType(columnNode.getMetadataColumn().getTalendType());
             if (!Java2SqlType.isTextInSQL(javaSQLType)) {
                 tempList.add(columnNode);

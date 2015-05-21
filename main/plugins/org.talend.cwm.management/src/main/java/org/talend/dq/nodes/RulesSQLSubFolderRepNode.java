@@ -27,7 +27,8 @@ public class RulesSQLSubFolderRepNode extends RulesSQLFolderRepNode {
      * @param parent
      * @param type
      */
-    public RulesSQLSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public RulesSQLSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 }

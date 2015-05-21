@@ -1270,4 +1270,5 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
             return false;
         }
     }
+
 }

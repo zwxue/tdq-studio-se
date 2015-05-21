@@ -27,8 +27,9 @@ public class PatternRegexSubFolderRepNode extends PatternRegexFolderRepNode {
      * @param parent
      * @param type
      */
-    public PatternRegexSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public PatternRegexSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
 }

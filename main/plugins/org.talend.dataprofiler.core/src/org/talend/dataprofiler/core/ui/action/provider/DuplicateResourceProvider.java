@@ -36,7 +36,7 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
     @Override
     public void fillContextMenu(IMenuManager menu) {
         // MOD mzhao user readonly role on svn repository mode.
-        if (!isShowMenu()) {
+        if (!isShowMenuWhenIsReadonlyUser()) {
             return;
         }
         TreeSelection selection = (TreeSelection) this.getContext().getSelection();

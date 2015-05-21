@@ -33,7 +33,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.manager.DQStructureMessage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -42,6 +41,7 @@ import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -183,8 +183,8 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         String tempInput = DQStructureMessage.getString(super.decorateText(input, element));
 
         if (element instanceof IFolder) {
-            if (tempInput.startsWith(DQStructureManager.PREFIX_TDQ)) {
-                tempInput = tempInput.replaceFirst(DQStructureManager.PREFIX_TDQ, ""); //$NON-NLS-1$
+            if (tempInput.startsWith(RepositoryNodeHelper.PREFIX_TDQ)) {
+                tempInput = tempInput.replaceFirst(RepositoryNodeHelper.PREFIX_TDQ, ""); //$NON-NLS-1$
             }
 
             IFolder folder = (IFolder) element;

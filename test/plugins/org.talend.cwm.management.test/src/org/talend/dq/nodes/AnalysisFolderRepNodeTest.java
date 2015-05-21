@@ -74,7 +74,8 @@ public class AnalysisFolderRepNodeTest {
 
             RepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
             viewObject.setRepositoryNode(node);
-            AnalysisFolderRepNode AnalysisFolderRepNode = new AnalysisFolderRepNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
+            AnalysisFolderRepNode AnalysisFolderRepNode = new AnalysisFolderRepNode(viewObject, null, ENodeType.SYSTEM_FOLDER,
+                    tProject);
             List<IRepositoryNode> children = AnalysisFolderRepNode.getChildren(false);
             assertTrue(children.isEmpty());
             // after creation analysis,the children should not be empty.

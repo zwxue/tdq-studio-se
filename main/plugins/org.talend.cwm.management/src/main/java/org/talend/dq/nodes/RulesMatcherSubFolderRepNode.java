@@ -16,8 +16,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * created by zshen on Aug 19, 2013
- * Detailled comment
+ * created by zshen on Aug 19, 2013 Detailled comment
  *
  */
 public class RulesMatcherSubFolderRepNode extends RulesMatcherFolderRepNode {
@@ -28,8 +27,9 @@ public class RulesMatcherSubFolderRepNode extends RulesMatcherFolderRepNode {
      * @param parent
      * @param type
      */
-    public RulesMatcherSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public RulesMatcherSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
 }

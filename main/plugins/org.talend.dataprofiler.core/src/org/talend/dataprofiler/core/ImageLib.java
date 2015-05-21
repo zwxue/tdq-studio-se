@@ -290,6 +290,8 @@ public final class ImageLib {
 
     public static final String HDFS = "HDFS_icon16.png"; //$NON-NLS-1$
 
+    public static final String REFERENCED_PROJECT = "referenced.png"; //$NON-NLS-1$
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */

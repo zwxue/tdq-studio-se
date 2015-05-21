@@ -23,16 +23,16 @@ import org.talend.repository.model.IRepositoryNode;
  */
 public class RepositoryNodeComparator implements Comparator<IRepositoryNode> {
 
-        public int compare(IRepositoryNode o1, IRepositoryNode o2) {
-            if (o1 == null || o2 == null) {
-                return 0;
-            }
-            String label1 = o1.getLabel();
-            String label2 = o2.getLabel();
-            if (label1 == null || label2 == null) {
-                return 0;
-            }
-            return label1.compareTo(label2);
+    public int compare(IRepositoryNode o1, IRepositoryNode o2) {
+        if (o1 == null || o2 == null) {
+            return 0;
         }
-
+        String label1 = RepositoryNodeHelper.getDisplayLabel(o1);
+        String label2 = RepositoryNodeHelper.getDisplayLabel(o2);
+        if ("".equals(label1) || "".equals(label2)) { //$NON-NLS-1$ //$NON-NLS-2$
+            return 0;
+        }
+        return label1.compareTo(label2);
     }
+
+}

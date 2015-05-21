@@ -63,7 +63,7 @@ public class ReportSubFolderRepNodeTest {
      */
     @Before
     public void setUp() throws Exception {
-        reportSubRepNode = new ReportSubFolderRepNode(null, null, ENodeType.REPOSITORY_ELEMENT);
+        reportSubRepNode = new ReportSubFolderRepNode(null, null, ENodeType.REPOSITORY_ELEMENT, null);
         reportSubRepNode.setFiltering(false);
         report = mock(Report.class);
         reportSubRepNode.setReport(report);

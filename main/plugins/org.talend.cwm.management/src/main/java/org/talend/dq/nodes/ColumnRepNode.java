@@ -30,8 +30,9 @@ public class ColumnRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public ColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public ColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     public MetadataColumnRepositoryObject getMetadataColumnRepositoryObject() {

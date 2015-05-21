@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.exception.BusinessException;
@@ -20,8 +21,11 @@ import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * This class is used for duplicate TDQFile which only use ByteArray, instead of ModelElement.
@@ -32,7 +36,8 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
 
     AbstractTDQFileDuplicateHandle(IRepositoryNode node) {
         IPath itemPath = WorkbenchUtils.getFilePath(node);
-        file = ResourceManager.getRoot().getFile(itemPath);
+        DQRepositoryNode node2 = (DQRepositoryNode) node;
+        file = ResourceManager.getRoot().getProject(node2.getProject().getTechnicalLabel()).getFile(itemPath);
     }
 
     /*
@@ -66,7 +71,11 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
         String fileExtension = file.getFileExtension();
 
         IPath newFileNamePath = new Path(newName).addFileExtension(fileExtension);
-        IFile newFile = file.getParent().getFile(newFileNamePath);
+
+        // IFile newFile = file.getParent().getFile(newFileNamePath);
+        ModelElement oldModelElement = PropertyHelper.getModelElement(oldItem.getProperty());
+        IFolder folder = extractFolder(oldItem, oldModelElement);
+        IFile newFile = folder.getFile(newFileNamePath);
 
         // createt the file item by the duplicated file
         Item duplicate = createFileItemByDuplicateFile(newFile, fileExtension, newName);
@@ -78,4 +87,13 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
         }
         return duplicate;
     }
+
+    /**
+     * DOC msjian Comment method "extractFolder".
+     * 
+     * @param oldItem
+     * @param oldModelElement
+     * @return
+     */
+    abstract protected IFolder extractFolder(Item oldItem, ModelElement oldObject);
 }

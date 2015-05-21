@@ -144,6 +144,7 @@ import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.hadoopcluster.node.model.HadoopClusterRepositoryNodeType;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -182,6 +183,193 @@ public final class RepositoryNodeHelper {
 
     private static IRepositoryNode filteredNode = null;// Record the current filter position
 
+    public static final String UNSUPPORTED = "(Unsupported)"; //$NON-NLS-1$
+
+    public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * BE Code postal.pattern <br>
+     * Companies_House.pattern <br>
+     * DE Postleitzahl (postal code).pattern <br>
+     * FR Code postal.pattern <br>
+     * Postal_code_or_Pin_code_of_India.pattern <br>
+     * Swiss_Zip_Code_validation.pattern <br>
+     * US_State_Codes.pattern <br>
+     * US_Zipcode_Validation.pattern <br>
+     * Valid_UK_Post_Codes_Upper_and_Lower_Case.pattern
+     */
+    private static final String[] PATTERN_ADDRESS_UUIDS = {
+            "_NwUnsD4LEd20H7qFpzB9dg", "_KErdkIyeEd6Dle_8xC0lwg", "_rK7EgD4LEd20H7qFpzB9dg", "_EJ_moD4LEd20H7qFpzB9dg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_Ego7UIygEd6Dle_8xC0lwg", "__GBswIyfEd6Dle_8xC0lwg", "_pWgP8LkgEeSVYtNTxh_-xg", "_n2tqUIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_fi29wIybEd6Dle_8xC0lwg" }; //$NON-NLS-1$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Properties_Keys.pattern
+     */
+    private static final String[] PATTERN_CODE_UUIDS = { "_DVfAwAMtEd6stMai_3cDIQ" }; //$NON-NLS-1$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Hex_Color.pattern
+     */
+    private static final String[] PATTERN_COLOR_UUIDS = { "_ly9QgcBQEd2Zap05uF3mKA" }; //$NON-NLS-1$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Austria_VAT_Number.pattern <br>
+     * Bulgaria_Vat_Number.pattern <br>
+     * FR_VAT_Number.pattern <br>
+     * Gender.pattern
+     */
+    private static final String[] PATTERN_CUSTOMER_UUIDS = { "_sHQnkIydEd6Dle_8xC0lwg", "_b95-YIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+            "_ga6fofbIEd2c5L1gaJyUtQ", "_TXHDQceCEd2zV_ZhgRMOzA" }; //$NON-NLS-1$ //$NON-NLS-2$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * 24 Hour Time.pattern <br>
+     * Current_Century_Date.pattern <br>
+     * Datetime_mm_dd_yyyy_hh_mm.pattern <br>
+     * Datetime_mm_dd_yyyy_hh_mm_ss.pattern <br>
+     * Date_ddMMM.pattern <br>
+     * Date_DD_MMM_YYYY.pattern <br>
+     * Date_MM_DD_YY.pattern <br>
+     * Date_MM_DD_YYYY.pattern <br>
+     * Extended Hour Time.pattern <br>
+     * FR_Date.pattern <br>
+     * ISO Date.pattern <br>
+     * Month.pattern <br>
+     * Week Day.pattern
+     */
+    private static final String[] PATTERN_DATE_UUIDS = { "_nj3TsD4KEd20H7qFpzB9dg", "_khsAgIyhEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+            "_WAPQoIyeEd6Dle_8xC0lwg", "_pne9AIyeEd6Dle_8xC0lwg", "_4A6EMIyfEd6Dle_8xC0lwg", "_ypukIIyfEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_fLaxUIyfEd6Dle_8xC0lwg", "_pX0T4IyfEd6Dle_8xC0lwg", "_hytsED4YEd24WPpU35gV1A", "_tZlYsPbMEd2c5L1gaJyUtQ", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_M4zogD4ZEd24WPpU35gV1A", "_ZNaNsD4ZEd24WPpU35gV1A", "_Wub7wD4XEd24WPpU35gV1A" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Email Address.pattern <br>
+     * IP_Address.pattern <br>
+     * Website_URL.pattern <br>
+     * Website_validation.pattern
+     */
+    private static final String[] PATTERN_INTERNET_UUIDS = { "_rC5TcD4XEd24WPpU35gV1A", "_pOs9MAyEEd6OfvNiP9lrnQ", //$NON-NLS-1$ //$NON-NLS-2$
+            "_yaXdsYZMEd2G3OfabUsfOQ", "_0_J_4IyeEd6Dle_8xC0lwg" }; //$NON-NLS-1$ //$NON-NLS-2$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * American Express Card Number.pattern <br>
+     * Bank_Routing_Transit_Number_(RTN).pattern <br>
+     * ContainsNumbers.pattern <br>
+     * Currency_16,3.pattern <br>
+     * FR_SSN.pattern <br>
+     * Integer.pattern <br>
+     * International_Passport.pattern <br>
+     * ISBN_Checker.pattern <br>
+     * Istat_Code.pattern <br>
+     * Longitude_Validation.pattern <br>
+     * Master Card Number.pattern <br>
+     * Non_Zero_1st_Digit.pattern <br>
+     * Numeric.pattern <br>
+     * Swedish_Personal_Nr_(Personnummer).pattern <br>
+     * Swedish_personnummer_with_accepted_foreigners.pattern <br>
+     * UK_Vehicle_Registration_Plate_Number_Plate.pattern <br>
+     * US SSN.pattern
+     */
+    private static final String[] PATTERN_NUMBER_UUIDS = { "_FcDG0D17Ed2p44yVAaDvbQ", "_j5FFMIydEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+            "_Lnh0kGUuEd2RuP05jDphQg", "_8TNRwIydEd6Dle_8xC0lwg", "_OuO-UPbPEd2c5L1gaJyUtQ", "_0dzx4D4bEd24WPpU35gV1A", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_PRL0IIydEd6Dle_8xC0lwg", "_WGxL4IydEd6Dle_8xC0lwg", "_ZYFdkIybEd6Dle_8xC0lwg", "_CwBEgIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_6YWv4D16Ed2p44yVAaDvbQ", "_D7IDEAulEeKxJpyXB0egyQ", "_OAAOQD1iEd2irYhnXOOajA", "_07nrEIybEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_shG84IybEd6Dle_8xC0lwg", "_8U2icIybEd6Dle_8xC0lwg", "_BpSRwD15Ed2p44yVAaDvbQ" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * 10_Digit_US_Phone_Number.pattern<br>
+     * Complex_Australian_Phone_Number.pattern<br>
+     * FR_Phone_Number.pattern<br>
+     * FR_Phone_Number_(International).pattern<br>
+     * FR_Phone_Number_(Local_or_International).pattern<br>
+     * German_Phone_number_(International).pattern<br>
+     * German_Phone_number_(Local ).pattern<br>
+     * German_Phone_number_(Local_or_International ).pattern<br>
+     * International_phone_number.pattern<br>
+     * Mobile_number_of_India.pattern<br>
+     * Phone_Brazil.pattern<br>
+     * Phone_Number.pattern<br>
+     * UK Phone Number.pattern <br>
+     * US_Phone_Number.pattern
+     */
+    private static final String[] PATTERN_PHONE_UUIDS = { "_QbsC8IyeEd6Dle_8xC0lwg", "_CnD1cIyeEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$
+            "_SPiUIPbKEd2c5L1gaJyUtQ", "_9LBjMIygEd6Dle_8xC0lwg", "_DqoD4IyhEd6Dle_8xC0lwg", "_W6xUUIygEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_NW0R0IygEd6Dle_8xC0lwg", "_eVNsoIygEd6Dle_8xC0lwg", "_Is95MIydEd6Dle_8xC0lwg", "__RSB4IycEd6Dle_8xC0lwg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_mRzFgIycEd6Dle_8xC0lwg", "_S7m6oIyhEd6Dle_8xC0lwg", "_IIVOAD4XEd24WPpU35gV1A", "_bdjpwLr8Ed2z8Ya9pb9seQ" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * Blank_Text.pattern <br>
+     * Empty_Text.pattern <br>
+     * Home_Row_Text.pattern <br>
+     * Linux_Path_Verify.pattern <br>
+     * No_special_chart.pattern <br>
+     * Random_Consonants.pattern <br>
+     * Starts_with_blank.pattern <br>
+     * Starts_with_space.pattern <br>
+     * Starts_with_uppercase.pattern <br>
+     * Uppercased_Single_Word.pattern
+     */
+    private static final String[] PATTERN_TEXT_UUIDS = { "_N7yi0Gk3Ed2I1bT57-sHUw", "_vZ6_IGk6Ed2I1bT57-sHUw", //$NON-NLS-1$ //$NON-NLS-2$
+            "_e4vUoYyZEd6Dle_8xC0lwg", "_IqpTEIyfEd6Dle_8xC0lwg", "_6rm3QIycEd6Dle_8xC0lwg", "_gDqDcP9eEd2mwaQf90ozSg", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "_18GtIIyaEd6Dle_8xC0lwg", "_scYqYIyaEd6Dle_8xC0lwg", "_53rX8AMvEeKk6OZDw5mXOQ", "_FyTwIHnTEd2weu9skTiCqA" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+    /**
+     * the follows' uuids<br>
+     * <br>
+     * gmail.pattern<br>
+     * yahoo.pattern
+     */
+    private static final String[] PATTERN_SQL_INTERNET_UUIDS = { "_5tDp8LoaEd2CVq07lsaT2w", "_jyAMQbo4Ed2fB5cidg4eog" }; //$NON-NLS-1$ //$NON-NLS-2$
+
+    private static final List<?> PATTERN_SQL_UUIDS = Arrays.asList(PATTERN_SQL_INTERNET_UUIDS);
+
+    private static final List<?> PATTERN_REGEX_ADDRESS_UUIDS = Arrays.asList(PATTERN_ADDRESS_UUIDS);
+
+    private static final List<?> PATTERN_REGEX_CODE_UUIDS = Arrays.asList(PATTERN_CODE_UUIDS);
+
+    private static final List<?> PATTERN_REGEX_COLOR_UUIDS = Arrays.asList(PATTERN_COLOR_UUIDS, PATTERN_CUSTOMER_UUIDS);
+
+    private static final List<?> PATTERN_REGEX_DATE_UUIDS = Arrays.asList(PATTERN_DATE_UUIDS);
+
+    private static final List<?> PATTERN_REGEX_INTERNET_UUIDS = Arrays.asList(PATTERN_INTERNET_UUIDS);
+
+    private static final List<?> PATTERN_REGEX_NUMBER_UUIDS = Arrays.asList(PATTERN_NUMBER_UUIDS);
+
+    private static final List<?> PATTERN_REGEX_PHONE_UUIDS = Arrays.asList(PATTERN_PHONE_UUIDS);
+
+    private static final List<?> PATTERN_REGEX_TEXT_UUIDS = Arrays.asList(PATTERN_TEXT_UUIDS);
+
+    private static final String[] PATTERN_REGEX_FOLDER_NAMES = {
+            "address", "code", "color", "customer", "date", "internet", "number", "phone", "text" }; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$//$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+
+    private static final String[] PATTERN_SQL_FOLDER_NAMES = { "internet" }; //$NON-NLS-1$
+
+    private static final List<String> PATTERN_REGEX_FOLDER_NAMES_LIST = Arrays.asList(PATTERN_REGEX_FOLDER_NAMES);
+
+    private static final List<String> PATTERN_SQL_FOLDER_NAMES_LIST = Arrays.asList(PATTERN_SQL_FOLDER_NAMES);
+
+    private static final String DEMO_RULE_UUID = "_hXIKcA-ZEd6qupbF9NyF4w"; //$NON-NLS-1$
+
+    private static final String DEMO_SOURCEFILE_LABEL = "TEST_TOP"; //$NON-NLS-1$
+
     public static RecycleBinRepNode getRecycleBinRepNode() {
         if (recycleBinRepNode == null) {
             recycleBinRepNode = initRecycleBinRepNode();
@@ -189,13 +377,45 @@ public final class RepositoryNodeHelper {
         return recycleBinRepNode;
     }
 
+    public static boolean isSystemRegexPatternFolder(String folderName) {
+        return PATTERN_REGEX_FOLDER_NAMES_LIST.contains(folderName);
+    }
+
+    public static boolean isSystemSQLPatternFolder(String folderName) {
+        return PATTERN_SQL_FOLDER_NAMES_LIST.contains(folderName);
+    }
+
+    public static boolean isSystemRegexPattern(String uuid) {
+        return PATTERN_REGEX_ADDRESS_UUIDS.contains(uuid) || PATTERN_REGEX_CODE_UUIDS.contains(uuid)
+                || PATTERN_REGEX_COLOR_UUIDS.contains(uuid) || PATTERN_REGEX_DATE_UUIDS.contains(uuid)
+                || PATTERN_REGEX_INTERNET_UUIDS.contains(uuid) || PATTERN_REGEX_NUMBER_UUIDS.contains(uuid)
+                || PATTERN_REGEX_PHONE_UUIDS.contains(uuid) || PATTERN_REGEX_TEXT_UUIDS.contains(uuid);
+    }
+
+    public static boolean isSystemSQLPattern(String uuid) {
+        return PATTERN_SQL_UUIDS.contains(uuid);
+    }
+
+    public static boolean isSystemDemoRule(String uuid) {
+        return DEMO_RULE_UUID.equals(uuid);
+    }
+
+    public static boolean isSystemDemoSourceFile(String label) {
+        return DEMO_SOURCEFILE_LABEL.equals(label);
+    }
+
+    /**
+     * TODO: until now, we only consider the recycle bin node in the current main project in this method
+     * 
+     * @return RecycleBinRepNode
+     */
     private static RecycleBinRepNode initRecycleBinRepNode() {
         CommonViewer commonViewer = getDQCommonViewer(true);
         if (commonViewer != null) {
             TreeItem[] items = commonViewer.getTree().getItems();
             for (TreeItem item : items) {
-                RepositoryNode node = (RepositoryNode) item.getData();
-                if (node.isBin()) {
+                DQRepositoryNode node = (DQRepositoryNode) item.getData();
+                if (node.isBin() && node.getProject().isMainProject()) {
                     return (RecycleBinRepNode) node;
                 }
             }
@@ -311,6 +531,48 @@ public final class RepositoryNodeHelper {
         } else if (EResourceConstant.HADOOP_CLUSTER.getPath().equals(path)) {
             return HadoopClusterRepositoryNodeType.HADOOPCLUSTER;
         } else if (EResourceConstant.SYSTEM_INDICATORS_FRAUDDETECTION.getPath().equals(path)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION;
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "getSystemIndicatorFolderRepositoryType".
+     * 
+     * @param label
+     * @return
+     */
+    public static ERepositoryObjectType getSystemIndicatorFolderRepositoryType(String label) {
+        if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_ADVANCED_STATISTICS).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_ADVANCED_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_BUSINESS_RULES).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_BUSINESS_RULES;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_CORRELATION).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_CORRELATION;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY).endsWith(
+                label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_ROW_COMPARISON).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_ROW_COMPARISON;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_SIMPLE_STATISTICS).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_SIMPLE_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_SOUNDEX).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_SOUNDEX;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_SUMMARY_STATISTICS)
+                .endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_SUMMARY_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS).endsWith(
+                label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION).endsWith(label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION;
         }
         return null;
@@ -485,49 +747,48 @@ public final class RepositoryNodeHelper {
      * @param isCreate whether create new one when can't find the node from RepositoryView
      * @return
      */
-    public static RepositoryNode recursiveFind(ModelElement modelElement) {
-        RepositoryNode node = null;
+    public static DQRepositoryNode recursiveFind(ModelElement modelElement) {
         if (modelElement instanceof Analysis) {
-            node = recursiveFindAnalysis((Analysis) modelElement);
+            return recursiveFindAnalysis((Analysis) modelElement);
         } else if (modelElement instanceof TdReport) {
-            node = recursiveFindReport((Report) modelElement);
+            return recursiveFindReport((Report) modelElement);
         } else if (modelElement instanceof DatabaseConnection) {
-            node = recursiveFindDatabaseConnection((DatabaseConnection) modelElement);
+            return recursiveFindDatabaseConnection((DatabaseConnection) modelElement);
         } else if (modelElement instanceof Catalog) {
-            node = recursiveFindCatalog((Catalog) modelElement);
+            return recursiveFindCatalog((Catalog) modelElement);
         } else if (modelElement instanceof Schema) {
-            node = recursiveFindSchema((Schema) modelElement);
+            return recursiveFindSchema((Schema) modelElement);
         } else if (modelElement instanceof TdTable) {
-            node = recursiveFindTdTable((TdTable) modelElement);
+            return recursiveFindTdTable((TdTable) modelElement);
         } else if (modelElement instanceof TdView) {
-            node = recursiveFindTdView((TdView) modelElement);
+            return recursiveFindTdView((TdView) modelElement);
         } else if (modelElement instanceof TdColumn) {
-            node = recursiveFindTdColumn((TdColumn) modelElement);
+            return recursiveFindTdColumn((TdColumn) modelElement);
         } else if (modelElement instanceof DelimitedFileConnection) {
-            node = recursiveFindDFConnection((DelimitedFileConnection) modelElement);
-        } else if (modelElement instanceof MetadataTable) {// can we use this type? it is duplicate with tdView and
-                                                           // tdTable.
-            node = recursiveFindMetadataTable((MetadataTable) modelElement);
+            return recursiveFindDFConnection((DelimitedFileConnection) modelElement);
+        } else if (modelElement instanceof MetadataTable) {
+            // can we use this type? it is duplicate with tdView and tdTable.
+            return recursiveFindMetadataTable((MetadataTable) modelElement);
         } else if (modelElement instanceof MetadataColumn) {
-            node = recursiveFindMetadataColumn((MetadataColumn) modelElement);
+            return recursiveFindMetadataColumn((MetadataColumn) modelElement);
         } else if (modelElement instanceof Pattern) {
-            node = recursiveFindPattern((Pattern) modelElement);
+            return recursiveFindPattern((Pattern) modelElement);
         } else if (modelElement instanceof IndicatorDefinition) {
             if (modelElement instanceof WhereRule) {
-                node = recursiveFindRuleSql((WhereRule) modelElement);
+                return recursiveFindRuleSql((WhereRule) modelElement);
             } else if (modelElement instanceof ParserRule) {
-                node = recursiveFindRuleParser((ParserRule) modelElement);
+                return recursiveFindRuleParser((ParserRule) modelElement);
             } else if (modelElement instanceof MatchRuleDefinition) {
-                node = recursiveFindMatcherRule((MatchRuleDefinition) modelElement);
+                return recursiveFindMatcherRule((MatchRuleDefinition) modelElement);
             } else {
-                node = recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
+                return recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
             }
             // ADD msjian TDQ-4209 2012-02-03: find the *.jrxml and *.sql file
         } else if (modelElement instanceof IFile) {
-            node = recursiveFindFile((IFile) modelElement);
+            return recursiveFindFile((IFile) modelElement);
             // TDQ-4209 ~
         }
-        return node;
+        return null;
         // !!!following codes are testing codes, please don't delete them, thanks!!!
         // RepositoryNode repNode = recursiveFindByUuid(uuid, nodes);
         // if (repNode != null) {
@@ -590,7 +851,7 @@ public final class RepositoryNodeHelper {
         TdViewRepositoryObject tdViewRepositoryObject = new TdViewRepositoryObject(lastVersion, findModelElement);
         tdViewRepositoryObject.setId(findModelElement.getName());
         tdViewRepositoryObject.setLabel(findModelElement.getName());
-        DBViewRepNode dbViewRepNode = new DBViewRepNode(tdViewRepositoryObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBViewRepNode dbViewRepNode = new DBViewRepNode(tdViewRepositoryObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT, null);
         dbViewRepNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
         dbViewRepNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
         tdViewRepositoryObject.setRepositoryNode(dbViewRepNode);
@@ -607,42 +868,13 @@ public final class RepositoryNodeHelper {
         TdTableRepositoryObject tdTableRepositoryObject = new TdTableRepositoryObject(lastVersion, findModelElement);
         tdTableRepositoryObject.setId(findModelElement.getName());
         tdTableRepositoryObject.setLabel(findModelElement.getName());
-        DBTableRepNode dbTableRepNode = new DBTableRepNode(tdTableRepositoryObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBTableRepNode dbTableRepNode = new DBTableRepNode(tdTableRepositoryObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT, null);
         dbTableRepNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
         dbTableRepNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
         tdTableRepositoryObject.setRepositoryNode(dbTableRepNode);
         return dbTableRepNode;
     }
 
-    // /**
-    // * create a temp RepNode there is a lack of parent attribute
-    // *
-    // * @param findColumn
-    // */
-    // private static DBColumnRepNode createMetadataColumnRepObj(ModelElement findColumn) {
-    // Property property = PropertyHelper.getProperty(findColumn);
-    // IRepositoryViewObject lastVersion = null;
-    // if (property == null) {
-    //            log.error("Can not find property from column: " + findColumn.getName()); //$NON-NLS-1$
-    // } else {
-    // try {
-    // lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
-    // } catch (PersistenceException e) {
-    // log.error(e, e);
-    // }
-    // if (lastVersion == null) {
-    //                log.error("Can not find lastVersion from property: " + property.getDisplayName()); //$NON-NLS-1$
-    // }
-    // }
-    // MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(lastVersion, findColumn);
-    // metadataColumn.setId(findColumn.getName());
-    // metadataColumn.setLabel(findColumn.getName());
-    // DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
-    // columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
-    // metadataColumn.setRepositoryNode(columnNode);
-    // return columnNode;
-    // }
     /**
      * create a temp RepNode there is a lack of parent attribute
      * 
@@ -652,7 +884,7 @@ public final class RepositoryNodeHelper {
         MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(lastVersion, findColumn);
         metadataColumn.setId(findColumn.getName());
         metadataColumn.setLabel(findColumn.getName());
-        DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, null, ENodeType.TDQ_REPOSITORY_ELEMENT, null);
         columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
         columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
         metadataColumn.setRepositoryNode(columnNode);
@@ -665,7 +897,7 @@ public final class RepositoryNodeHelper {
      * @param file
      * @return
      */
-    public static RepositoryNode recursiveFindFile(IFile file) {
+    public static DQRepositoryNode recursiveFindFile(IFile file) {
         if (file == null) {
             return null;
         }
@@ -681,7 +913,7 @@ public final class RepositoryNodeHelper {
 
         if (fileRepNodes != null) {
             for (int i = 0; i < fileRepNodes.size(); i++) {
-                RepositoryNode childNode = (RepositoryNode) fileRepNodes.get(i);
+                DQRepositoryNode childNode = (DQRepositoryNode) fileRepNodes.get(i);
 
                 String childNodeFileName = PluginConstant.EMPTY_STRING;
                 if (childNode instanceof JrxmlTempleteRepNode) {
@@ -706,7 +938,7 @@ public final class RepositoryNodeHelper {
      * @param modelElement
      * @return
      */
-    private static RepositoryNode recursiveFindRuleParser(ParserRule rule) {
+    private static DQRepositoryNode recursiveFindRuleParser(ParserRule rule) {
         if (rule == null) {
             return null;
         }
@@ -714,7 +946,8 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_PARSER), true, true);
+        IRepositoryNode librariesFolderNode = getParserRuleFolderNode(rule);
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(librariesFolderNode, true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
                 if (uuid.equals(getUUID(childNode.getRule()))) {
@@ -726,12 +959,27 @@ public final class RepositoryNodeHelper {
     }
 
     /**
+     * DOC msjian Comment method "getParserRuleFolderNode".
+     * 
+     * @param rule
+     * @return
+     */
+    private static IRepositoryNode getParserRuleFolderNode(ParserRule rule) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getLibrariesFolderNode(EResourceConstant.RULES_PARSER);
+        } else {
+            Project inWhichProject = getInWhichProject(rule);
+            return getLibrariesFolderNode(EResourceConstant.RULES_PARSER, inWhichProject);
+        }
+    }
+
+    /**
      * recursiveFind MatcherRule
      * 
      * @param modelElement
      * @return
      */
-    private static RepositoryNode recursiveFindMatcherRule(MatchRuleDefinition rule) {
+    private static DQRepositoryNode recursiveFindMatcherRule(MatchRuleDefinition rule) {
         if (rule == null) {
             return null;
         }
@@ -739,7 +987,8 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_MATCHER), true, true);
+        IRepositoryNode librariesFolderNode = getMatchRuleFolderNode(rule);
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(librariesFolderNode, true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
                 if (uuid.equals(getUUID(childNode.getRule()))) {
@@ -748,6 +997,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC msjian Comment method "getMatchRuleFolderNode".
+     * 
+     * @param rule
+     * @return
+     */
+    private static IRepositoryNode getMatchRuleFolderNode(MatchRuleDefinition rule) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getLibrariesFolderNode(EResourceConstant.RULES_MATCHER);
+        } else {
+            Project inWhichProject = getInWhichProject(rule);
+            return getLibrariesFolderNode(EResourceConstant.RULES_MATCHER, inWhichProject);
+        }
     }
 
     public static List<DBConnectionRepNode> getDBConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
@@ -908,8 +1172,9 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<DBConnectionRepNode> dbConnectionRepNodes = getDBConnectionRepNodes(
-                getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS), true, true);
+
+        IRepositoryNode MetadataDBConnectionFolderNode = getMetadataDBConnectionFolderNode(dbConn);
+        List<DBConnectionRepNode> dbConnectionRepNodes = getDBConnectionRepNodes(MetadataDBConnectionFolderNode, true, true);
         if (dbConnectionRepNodes.size() > 0) {
             for (DBConnectionRepNode childNode : dbConnectionRepNodes) {
                 if (uuid.equals(getUUID(childNode.getDatabaseConnection()))) {
@@ -920,6 +1185,21 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+    /**
+     * DOC msjian Comment method "getMetadataDBConnectionFolderNode".
+     * 
+     * @param dbConn
+     * @return
+     */
+    private static IRepositoryNode getMetadataDBConnectionFolderNode(DatabaseConnection dbConn) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
+        } else {
+            Project inWhichProject = getInWhichProject(dbConn);
+            return getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS, inWhichProject);
+        }
+    }
+
     public static DFConnectionRepNode recursiveFindDFConnection(DelimitedFileConnection dfConn) {
         if (dfConn == null) {
             return null;
@@ -928,8 +1208,9 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<DFConnectionRepNode> dfConnectionRepNodes = getDFConnectionRepNodes(
-                getMetadataFolderNode(EResourceConstant.FILEDELIMITED), true, true);
+
+        IRepositoryNode MetadataFileDelimitedFolderNode = getMetadataFileDelimitedFolderNode(dfConn);
+        List<DFConnectionRepNode> dfConnectionRepNodes = getDFConnectionRepNodes(MetadataFileDelimitedFolderNode, true, true);
         if (dfConnectionRepNodes.size() > 0) {
             for (DFConnectionRepNode childNode : dfConnectionRepNodes) {
                 if (uuid.equals(getUUID(childNode.getDfConnection()))) {
@@ -940,6 +1221,21 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+    /**
+     * DOC msjian Comment method "getMetadataFileDelimitedFolderNode".
+     * 
+     * @param dfConn
+     * @return
+     */
+    private static IRepositoryNode getMetadataFileDelimitedFolderNode(DelimitedFileConnection dfConn) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getMetadataFolderNode(EResourceConstant.FILEDELIMITED);
+        } else {
+            Project inWhichProject = getInWhichProject(dfConn);
+            return getMetadataFolderNode(EResourceConstant.FILEDELIMITED, inWhichProject);
+        }
+    }
+
     public static AnalysisRepNode recursiveFindAnalysis(Analysis analysis) {
         if (analysis == null) {
             return null;
@@ -948,9 +1244,10 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
+
+        IRepositoryNode DataProfilingAnalysisFolderNode = getDataProfilingAnalysisFolderNode(analysis);
         // MOD qiongli 2011-4-6,bug 20218,add parameter withDeleted(true), contain child is in recycle bin.
-        List<AnalysisRepNode> analysisRepNodes = getAnalysisRepNodes(getDataProfilingFolderNode(EResourceConstant.ANALYSIS),
-                true, true);
+        List<AnalysisRepNode> analysisRepNodes = getAnalysisRepNodes(DataProfilingAnalysisFolderNode, true, true);
         if (analysisRepNodes.size() > 0) {
             for (AnalysisRepNode childNode : analysisRepNodes) {
                 if (uuid.equals(getUUID(childNode.getAnalysis()))) {
@@ -961,6 +1258,42 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+    /**
+     * DOC msjian Comment method "getDataProfilingAnalysisFolderNode".
+     * 
+     * @param analysis
+     * @return
+     */
+    private static IRepositoryNode getDataProfilingAnalysisFolderNode(Analysis analysis) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getDataProfilingFolderNode(EResourceConstant.ANALYSIS);
+        } else {
+            org.talend.core.model.general.Project project = getInWhichProject(analysis);
+            return getDataProfilingFolderNode(EResourceConstant.ANALYSIS, project);
+        }
+    }
+
+    /**
+     * the modelelement can belong to current project or referenced project.
+     * 
+     * @param analysis
+     * @return
+     */
+    private static org.talend.core.model.general.Project getInWhichProject(ModelElement modelElement) {
+        if (modelElement instanceof DatabaseConnection) {
+            String projectName = modelElement.eResource().getURI().segment(1);
+            List<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+            for (Project project : allProjects) {
+                if (project.getTechnicalLabel().equals(projectName)) {
+                    return project;
+                }
+            }
+        }
+        Property property = PropertyHelper.getProperty(modelElement);
+        org.talend.core.model.properties.Project project = ProjectManager.getInstance().getProject(property);
+        return new org.talend.core.model.general.Project(project);
+    }
+
     public static ReportRepNode recursiveFindReport(Report report) {
         if (report == null) {
             return null;
@@ -969,7 +1302,9 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<ReportRepNode> reportRepNodes = getReportRepNodes(getDataProfilingFolderNode(EResourceConstant.REPORTS), true, true);
+
+        IRepositoryNode DataProfilingReportFolderNode = getDataProfilingReportFolderNode(report);
+        List<ReportRepNode> reportRepNodes = getReportRepNodes(DataProfilingReportFolderNode, true, true);
         if (reportRepNodes.size() > 0) {
             for (ReportRepNode childNode : reportRepNodes) {
                 if (uuid.equals(getUUID(childNode.getReport()))) {
@@ -980,6 +1315,21 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+    /**
+     * DOC msjian Comment method "getDataProfilingReportFolderNodew".
+     * 
+     * @param report
+     * @return
+     */
+    private static IRepositoryNode getDataProfilingReportFolderNode(Report report) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getDataProfilingFolderNode(EResourceConstant.REPORTS);
+        } else {
+            org.talend.core.model.general.Project project = getInWhichProject(report);
+            return getDataProfilingFolderNode(EResourceConstant.REPORTS, project);
+        }
+    }
+
     public static SysIndicatorDefinitionRepNode recursiveFindIndicatorDefinition(IndicatorDefinition indDef) {
         if (indDef == null) {
             return null;
@@ -988,10 +1338,21 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<SysIndicatorDefinitionRepNode> indicatorDefinitionRepNodes = getIndicatorDefinitionRepNodes(
-                getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS), true, true);
-        indicatorDefinitionRepNodes.addAll(getIndicatorDefinitionRepNodes(
-                getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS), true, true));
+
+        List<SysIndicatorDefinitionRepNode> indicatorDefinitionRepNodes;
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            indicatorDefinitionRepNodes = getIndicatorDefinitionRepNodes(
+                    getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS), true, true);
+            indicatorDefinitionRepNodes.addAll(getIndicatorDefinitionRepNodes(
+                    getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS), true, true));
+        } else {
+            Project inWhichProject = getInWhichProject(indDef);
+            indicatorDefinitionRepNodes = getIndicatorDefinitionRepNodes(
+                    getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS, inWhichProject), true, true);
+            indicatorDefinitionRepNodes.addAll(getIndicatorDefinitionRepNodes(
+                    getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS, inWhichProject), true, true));
+        }
+
         if (indicatorDefinitionRepNodes.size() > 0) {
             for (SysIndicatorDefinitionRepNode childNode : indicatorDefinitionRepNodes) {
                 if (uuid.equals(getUUID(childNode.getIndicatorDefinition()))) {
@@ -1010,9 +1371,19 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<PatternRepNode> patternRepNodes = getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX), true,
-                true);
-        patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL), true, true));
+
+        List<PatternRepNode> patternRepNodes;
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            patternRepNodes = getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX), true, true);
+            patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL), true, true));
+        } else {
+            Project inWhichProject = getInWhichProject(pattern);
+            patternRepNodes = getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX, inWhichProject), true,
+                    true);
+            patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL, inWhichProject),
+                    true, true));
+        }
+
         if (patternRepNodes.size() > 0) {
             for (PatternRepNode childNode : patternRepNodes) {
                 if (uuid.equals(getUUID(childNode.getPattern()))) {
@@ -1031,7 +1402,9 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_SQL), true, true);
+
+        IRepositoryNode ruleSQLFolderNode = getRuleSQLFolderNode(rule);
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(ruleSQLFolderNode, true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
                 if (uuid.equals(getUUID(childNode.getRule()))) {
@@ -1042,6 +1415,21 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+    /**
+     * DOC msjian Comment method "getRuleSQLFolderNode".
+     * 
+     * @param rule
+     * @return
+     */
+    private static IRepositoryNode getRuleSQLFolderNode(DQRule rule) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            return getLibrariesFolderNode(EResourceConstant.RULES_SQL);
+        } else {
+            Project inWhichProject = getInWhichProject(rule);
+            return getLibrariesFolderNode(EResourceConstant.RULES_SQL, inWhichProject);
+        }
+    }
+
     public static DBCatalogRepNode recursiveFindCatalog(Catalog catalog) {
         if (catalog == null) {
             return null;
@@ -1050,6 +1438,7 @@ public final class RepositoryNodeHelper {
         if (uuidCatalog == null) {
             return null;
         }
+
         IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(catalog));
         if (connNode == null) {
             return null;
@@ -1623,6 +2012,10 @@ public final class RepositoryNodeHelper {
         return connNodes;
     }
 
+    public static IRepositoryNode getMetadataFolderNode(EResourceConstant folderConstant) {
+        return getMetadataFolderNode(folderConstant, ProjectManager.getInstance().getCurrentProject());
+    }
+
     /**
      * 
      * zshen Comment method "getRepositoryFolderNode".
@@ -1630,12 +2023,13 @@ public final class RepositoryNodeHelper {
      * @param folderConstant
      * @return one RepositoryFolderNode which corresponding to the value of folderConstant
      */
-    public static IRepositoryNode getMetadataFolderNode(EResourceConstant folderConstant) {
+    public static IRepositoryNode getMetadataFolderNode(EResourceConstant folderConstant,
+            org.talend.core.model.general.Project project) {
         String[] folderPathArray = folderConstant.getPath().split("/");//$NON-NLS-1$
         if (folderPathArray.length <= 0) {
             return null;
         }
-        IRepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
+        IRepositoryNode node = getRootNode(ERepositoryObjectType.METADATA, true, project);
         if (node != null) {
             for (int i = 1; folderPathArray.length > i; i++) {
                 for (IRepositoryNode childNode : node.getChildren()) {
@@ -1650,12 +2044,17 @@ public final class RepositoryNodeHelper {
     }
 
     public static IRepositoryNode getDataProfilingFolderNode(EResourceConstant folderConstant) {
+        return getDataProfilingFolderNode(folderConstant, ProjectManager.getInstance().getCurrentProject());
+    }
+
+    public static IRepositoryNode getDataProfilingFolderNode(EResourceConstant folderConstant,
+            org.talend.core.model.general.Project project) {
         String[] folderPathArray = folderConstant.getPath().split("/");//$NON-NLS-1$
         if (folderPathArray.length <= 0) {
             return null;
         }
 
-        IRepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING);
+        IRepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true, project);
         if (node != null) {
             for (int i = 1; folderPathArray.length > i; i++) {
                 for (IRepositoryNode childNode : node.getChildren()) {
@@ -1670,12 +2069,17 @@ public final class RepositoryNodeHelper {
     }
 
     public static IRepositoryNode getLibrariesFolderNode(EResourceConstant folderConstant) {
+        return getLibrariesFolderNode(folderConstant, ProjectManager.getInstance().getCurrentProject());
+    }
+
+    public static IRepositoryNode getLibrariesFolderNode(EResourceConstant folderConstant,
+            org.talend.core.model.general.Project project) {
         String[] folderPathArray = folderConstant.getPath().split("/");//$NON-NLS-1$
         if (folderPathArray.length <= 0) {
             return null;
         }
 
-        IRepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);
+        IRepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true, project);
         if (node != null) {
             for (int i = 1; folderPathArray.length > i; i++) {
                 for (IRepositoryNode childNode : node.getChildren()) {
@@ -1702,18 +2106,6 @@ public final class RepositoryNodeHelper {
         }
         return dataProfilingNodes;
     }
-
-    // private static List<IRepositoryNode> getAnalysisFromFolder(IRepositoryNode folderNode) {
-    // List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
-    // if (isFolderNode(folderNode.getType())) {
-    // for (IRepositoryNode thefolderNode : folderNode.getChildren()) {
-    // repositoryNodeList.addAll(getAnalysisFromFolder(thefolderNode));
-    // }
-    // } else {
-    // repositoryNodeList.add(folderNode);
-    // }
-    // return repositoryNodeList;
-    // }
 
     public static List<IRepositoryNode> getPatternsRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);// .LIBRARIES.getName());
@@ -1775,6 +2167,13 @@ public final class RepositoryNodeHelper {
     private static List<IRepositoryNode> getModelElementFromFolder(IRepositoryNode folderNode, boolean withDelted) {
         // MOD qiongli 2011-2-23,bug 17588 ,add param withDeleted.
         List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
+
+        // ADD msjian TDQ-4914: let the user can not use the reference project node(e.g.: connection node)
+        if (!((DQRepositoryNode) folderNode).getProject().isMainProject()) {
+            return repositoryNodeList;
+        }
+        // TDQ-4914~
+
         if (isFolderNode(folderNode.getType())) {
             for (IRepositoryNode thefolderNode : folderNode.getChildren(withDelted)) {
                 repositoryNodeList.addAll(getModelElementFromFolder(thefolderNode, withDelted));
@@ -1834,6 +2233,7 @@ public final class RepositoryNodeHelper {
     public static RepositoryNode getRootNode(ERepositoryObjectType nodeName) {
         // MOD klliu bug 19138 In DI that can't find MDMConnectionFolderRepNode when create MDM connection
         // ~2011-03-22
+        // FIXME: why we need this check?? we have the same two returns.
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (activeWorkbenchWindow != null) {
             IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
@@ -1846,6 +2246,88 @@ public final class RepositoryNodeHelper {
         return getRootNode(nodeName, true);
     }
 
+    public static RepositoryNode getRootNode(ERepositoryObjectType nodeType, boolean open,
+            org.talend.core.model.general.Project project) {
+        DQRepositoryNode node = null;
+        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(project, nodeType, Path.EMPTY);
+        CommonViewer commonViewer = getDQCommonViewer(open);
+        if (commonViewer != null) {
+            TreeItem[] items = commonViewer.getTree().getItems();
+            for (TreeItem item : items) {
+                node = (DQRepositoryNode) item.getData();
+                DQRepositoryNode matchNode = getMatchNode(project, node, folderItem);
+                if (matchNode == null) {
+                    continue;
+                } else {
+                    return matchNode;
+                }
+            }
+            log.error(Messages.getString("RepositoryNodeHelper.canNotFindRootNode") + nodeType.getLabel()); //$NON-NLS-1$
+        }
+        return node;
+    }
+
+    /**
+     * DOC msjian Comment method "checkNodeMatch".
+     * 
+     * @param project
+     * @param node
+     * @param folderItem
+     */
+    private static DQRepositoryNode getMatchNode(org.talend.core.model.general.Project project, DQRepositoryNode node,
+            FolderItem folderItem) {
+        // have reference project node, get its children' children
+        if (ERepositoryObjectType.REFERENCED_PROJECTS.getLabel().equals(node.getProperties(EProperties.LABEL))) {
+            for (IRepositoryNode node1 : node.getChildren()) {
+                for (IRepositoryNode node2 : node1.getChildren()) {
+                    DQRepositoryNode matchNode = getMatchNode(project, (DQRepositoryNode) node2, folderItem);
+                    if (matchNode == null) {
+                        continue;
+                    } else {
+                        return matchNode;
+                    }
+                }
+            }
+        } else {
+            if (isNodeMatch(project, node, folderItem)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * DOC msjian Comment method "isFindTheMatchNode".
+     * 
+     * @param project
+     * @param node
+     * @param folderItem
+     */
+    private static boolean isNodeMatch(org.talend.core.model.general.Project project, DQRepositoryNode node, FolderItem folderItem) {
+        // MOD qiongli 2011-2-16,bug 18642.filter recycle bin node.
+        if (node.isBin()) {
+            return false;
+        }
+
+        if (folderItem != null) {
+            // sometimes the systemFolderItem will be recreate so we compare label attribute instead of compare
+            // id(for example, SvnBaseRepositoryFactory#updateProject() line:1277)
+            boolean isSysFolder = ENodeType.SYSTEM_FOLDER == node.getType()
+                    || FolderType.SYSTEM_FOLDER_LITERAL == folderItem.getType();
+            if (isSysFolder) {
+                String viewFolderLabel = folderItem.getProperty().getLabel();
+                String folderLabel = node.getObject().getProperty().getLabel();
+                if (viewFolderLabel.equals(folderLabel)) {
+                    // the node's project is the same as the project parameter
+                    if (project.getTechnicalLabel().equals(node.getProject().getEmfProject().getTechnicalLabel())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * get the RepositoryNode according to the ERepositoryObjectType(the ERepositoryObjectType should not be
      * RECYCLE_BIN, because there doesn't exist a physical folder, so there will return null and log an error message;
@@ -1856,35 +2338,7 @@ public final class RepositoryNodeHelper {
      * @return
      */
     public static RepositoryNode getRootNode(ERepositoryObjectType nodeType, boolean open) {
-        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                ProjectManager.getInstance().getCurrentProject(), nodeType, Path.EMPTY);
-        RepositoryNode node = null;
-        CommonViewer commonViewer = getDQCommonViewer(open);
-        if (commonViewer != null) {
-            TreeItem[] items = commonViewer.getTree().getItems();
-            for (TreeItem item : items) {
-                node = (RepositoryNode) item.getData();
-                // MOD qiongli 2011-2-16,bug 18642.filter recycle bin node.
-                if (node.isBin()) {
-                    continue;
-                }
-                // sometimes the systemFolderItem will be recreate so we compare label attribute instead of compare
-                // id(for example, SvnBaseRepositoryFactory#updateProject() line:1277)
-                if (folderItem != null) {
-                    boolean isSysFolder = ENodeType.SYSTEM_FOLDER == node.getType()
-                            && FolderType.SYSTEM_FOLDER_LITERAL == folderItem.getType();
-                    if (isSysFolder) {
-                        String viewFolderLabel = folderItem.getProperty().getLabel();
-                        String folderLabel = node.getObject().getProperty().getLabel();
-                        if (viewFolderLabel.equals(folderLabel)) {
-                            return node;
-                        }
-                    }
-                }
-            }
-            log.error(Messages.getString("RepositoryNodeHelper.canNotFindRootNode") + nodeType.getLabel()); //$NON-NLS-1$
-        }
-        return node;
+        return getRootNode(nodeType, open, ProjectManager.getInstance().getCurrentProject());
     }
 
     /**
@@ -2849,6 +3303,19 @@ public final class RepositoryNodeHelper {
         list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
         list.add(getRootNode(ERepositoryObjectType.METADATA, true));
         list.add(getRecycleBinRepNode());
+        // for the reference project NOT merge mode
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        List<Project> allReferencedProjects = ProjectManager.getInstance().getAllReferencedProjects();
+        if (org.talend.core.PluginChecker.isRefProjectLoaded() && currentProject != null && allReferencedProjects.size() > 0) {
+            if (!ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+                for (Project refProject : allReferencedProjects) {
+                    list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true, refProject));
+                    list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true, refProject));
+                    list.add(getRootNode(ERepositoryObjectType.METADATA, true, refProject));
+                }
+            }
+        }
+
         for (IRepositoryNode iRepositoryNode : list) {
             allFilteredNodeList.addAll(getTreeList(iRepositoryNode));
             if (null != monitor) {
@@ -3316,6 +3783,7 @@ public final class RepositoryNodeHelper {
 
     }
 
+
     public static RepositoryNode getDBConnectionRootNode() {
         RepositoryNode metaRootNode = RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA);
         if (metaRootNode != null) {
@@ -3329,4 +3797,57 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+
+    public static String getDisplayLabel(IRepositoryNode node) {
+        if (node instanceof DQRepositoryNode) {
+            if (node instanceof DBConnectionRepNode) {
+                if (!isSupportedConnection(node)) {
+                    return node.getObject().getLabel() + UNSUPPORTED;
+                }
+            }
+            if (EResourceConstant.REFERENCED_PROJECT.getName().equals(node.getProperties(EProperties.LABEL))) {
+                return (String) node.getProperties(EProperties.LABEL);
+            }
+
+            if (node.getObject() != null) {
+                String label = node.getObject().getLabel();
+                if (label != null) {
+                    if (label.startsWith("TDQ_")) { //$NON-NLS-1$
+                        return label.substring(4, label.length());
+                    } else if (label.equals(EResourceConstant.METADATA.getName())) {
+                        return label.substring(0, 1).toUpperCase() + label.substring(1);
+                    }
+                }
+            }
+            return ((DQRepositoryNode) node).getDisplayTextWithProjectName();
+        }
+
+        return ""; //$NON-NLS-1$
+    }
+
+    public static boolean isSupportedConnection(IRepositoryNode repNode) {
+        ERepositoryObjectType objectType = repNode.getObjectType();
+
+        if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
+            ConnectionItem connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
+            if (connectionItem.getConnection() instanceof DatabaseConnection) {
+                String databaseType = ((DatabaseConnection) connectionItem.getConnection()).getDatabaseType();
+                List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
+                return tdqSupportDBType.contains(databaseType);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * DOC msjian Comment method "setPropertiesForNode".
+     * 
+     * @param node
+     * @param eRepositoryObjectType
+     */
+    public static void setPropertiesForNode(DQRepositoryNode node, ERepositoryObjectType eRepositoryObjectType) {
+        node.setProperties(EProperties.CONTENT_TYPE, eRepositoryObjectType);
+        node.setProperties(EProperties.LABEL, eRepositoryObjectType);
+    }
 }

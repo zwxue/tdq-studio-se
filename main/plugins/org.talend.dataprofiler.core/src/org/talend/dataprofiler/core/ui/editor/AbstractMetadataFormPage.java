@@ -62,7 +62,6 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -114,6 +113,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected Section contextGroupSection = null;
 
+    protected ContextComposite contextComposite;
+
     /**
      * should not use this parameter because we can not make sure this parameter is synchornized with the node on the
      * repository View
@@ -148,7 +149,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         this.currentModelElement = getCurrentModelElement(editor);
-
     }
 
     @Override
@@ -636,9 +636,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 DefaultMessagesImpl.getString("AbstractMetadataFormPage.contextGroupSettingsSection"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.contextGroupSettingsSectionDescription")); //$NON-NLS-1$ //$NON-NLS-2$
         Composite contextGroupSectionComp = toolkit.createComposite(contextGroupSection);
         contextGroupSectionComp.setLayout(new GridLayout());
-        @SuppressWarnings("unused")
-        ContextComposite contextComposite = new ContextComposite((SupportContextEditor) currentEditor, contextGroupSectionComp,
-                SWT.NONE);
+        contextComposite = new ContextComposite((SupportContextEditor) currentEditor, contextGroupSectionComp, SWT.NONE);
         contextGroupSection.setClient(contextGroupSectionComp);
     }
 

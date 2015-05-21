@@ -22,11 +22,13 @@ public class UserDefIndicatorSubFolderRepNode extends UserDefIndicatorFolderRepN
 
     /**
      * DOC klliu UserDefIndicatorSubFolderRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
-    public UserDefIndicatorSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public UserDefIndicatorSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 }

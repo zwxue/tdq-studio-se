@@ -27,14 +27,16 @@ import org.talend.repository.model.RepositoryNode;
 public class ColumnSetRepNode extends DQRepositoryNode {
 
     /**
-     * ColumnSetRepNode constructor.
+     * DOC talend ColumnSetRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
      */
-    public ColumnSetRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public ColumnSetRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     /**

@@ -46,8 +46,9 @@ public class ReportRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public ReportRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public ReportRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof TDQReportItem) {
@@ -59,13 +60,13 @@ public class ReportRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         List<IRepositoryNode> childrenNodes = new ArrayList<IRepositoryNode>();
-        ReportSubFolderRepNode anaNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
+        ReportSubFolderRepNode anaNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER, getProject());
         anaNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
         anaNodeFolder.setProperties(EProperties.LABEL, ANA_FLODER);
         anaNodeFolder.setReportSubFolderType(ReportSubFolderType.ANALYSIS);
         anaNodeFolder.setReport(this.getReport());
         childrenNodes.add(anaNodeFolder);
-        ReportSubFolderRepNode grenNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
+        ReportSubFolderRepNode grenNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER, getProject());
         grenNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
         grenNodeFolder.setProperties(EProperties.LABEL, GEN_FLODER);
         grenNodeFolder.setReportSubFolderType(ReportSubFolderType.GENERATED_DOCS);

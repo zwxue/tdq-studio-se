@@ -44,8 +44,9 @@ public class PatternRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public PatternRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public PatternRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof TDQPatternItem) {
@@ -65,7 +66,7 @@ public class PatternRepNode extends DQRepositoryNode {
             RegularExpression re = (RegularExpression) component;
             Expression expression = re.getExpression();
             String language = expression.getLanguage();
-            PatternLanguageRepNode plrn = new PatternLanguageRepNode(this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            PatternLanguageRepNode plrn = new PatternLanguageRepNode(this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
             plrn.setRegularExpression(re);
             plrn.setId(language);
             plrn.setLabel(language);

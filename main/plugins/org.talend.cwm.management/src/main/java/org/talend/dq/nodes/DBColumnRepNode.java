@@ -39,8 +39,9 @@ public class DBColumnRepNode extends ColumnRepNode {
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
-    public DBColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DBColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object instanceof MetadataColumnRepositoryObject) {
             metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
             if (parent == null) {
@@ -57,7 +58,7 @@ public class DBColumnRepNode extends ColumnRepNode {
      */
     private RepositoryNode createParentNode() {
         DBColumnFolderRepNode dbColumnFolderRepNode = new DBColumnFolderRepNode(getParentViewObject(), null,
-                ENodeType.TDQ_REPOSITORY_ELEMENT);
+                ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         dbColumnFolderRepNode.setId(NO_ID);
         return dbColumnFolderRepNode;
     }

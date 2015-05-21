@@ -12,16 +12,22 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.runtime.model.repository.ERepositoryStatus;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.ui.IReferencedProjectService;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
 
 /**
@@ -171,5 +177,28 @@ public class ProxyRepositoryManager {
         default:
             return false;
         }
+    }
+
+    public boolean isMergeRefProject() {
+        if (org.talend.core.PluginChecker.isRefProjectLoaded()) {
+            IReferencedProjectService service = (IReferencedProjectService) GlobalServiceRegister.getDefault().getService(
+                    IReferencedProjectService.class);
+            if (service != null) {
+                return service.isMergeRefProject();
+            }
+        }
+        return false;
+    }
+
+    public List<org.talend.core.model.general.Project> getAllProjects() {
+        List<Project> result = new ArrayList<Project>();
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        List<Project> referencedProjects = ProjectManager.getInstance().getAllReferencedProjects();
+        for (Project pro : referencedProjects) {
+            pro.setMainProject(false);
+        }
+        result.add(currentProject);
+        result.addAll(referencedProjects);
+        return result;
     }
 }

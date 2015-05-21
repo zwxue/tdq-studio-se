@@ -41,8 +41,9 @@ public class RuleRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public RuleRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public RuleRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof TDQBusinessRuleItem) {
@@ -74,7 +75,7 @@ public class RuleRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.repository.model.RepositoryNode#getDisplayText()
      */
     @Override

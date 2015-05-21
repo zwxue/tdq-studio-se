@@ -45,8 +45,9 @@ public class AnalysisRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public AnalysisRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public AnalysisRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof TDQAnalysisItem) {
@@ -60,7 +61,8 @@ public class AnalysisRepNode extends DQRepositoryNode {
         List<IRepositoryNode> anaElement = new ArrayList<IRepositoryNode>();
         RepositoryNode parent = this.getParent();
         if (!(parent instanceof ReportSubFolderRepNode)) {
-            AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
+            AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER,
+                    getProject());
             childNodeFolder.setProperties(EProperties.LABEL, "analyzed elements"); //$NON-NLS-1$
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
             anaElement.add(childNodeFolder);

@@ -30,8 +30,9 @@ public class DFColumnRepNode extends ColumnRepNode {
      * @param parent
      * @param type
      */
-    public DFColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DFColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
     }
 

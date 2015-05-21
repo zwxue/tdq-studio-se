@@ -43,8 +43,9 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public DFColumnFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DFColumnFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
             MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(object, mdColumn);
             metadataColumn.setId(mdColumn.getLabel());
             metadataColumn.setLabel(mdColumn.getLabel());
-            DFColumnRepNode columnNode = new DFColumnRepNode(metadataColumn, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            DFColumnRepNode columnNode = new DFColumnRepNode(metadataColumn, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
             columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
             columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
             metadataColumn.setRepositoryNode(columnNode);

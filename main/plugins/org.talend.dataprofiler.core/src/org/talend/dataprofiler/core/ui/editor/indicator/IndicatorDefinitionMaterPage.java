@@ -144,7 +144,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     protected Section definitionSection;
 
-    private Composite definitionComp;
+    protected Composite definitionComp;
 
     protected List<String> allDBTypeList;
 
@@ -2482,4 +2482,5 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         return rc;
     }
+
 }

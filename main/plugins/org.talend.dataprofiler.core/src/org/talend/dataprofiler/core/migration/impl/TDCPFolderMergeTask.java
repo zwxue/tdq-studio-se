@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -33,6 +32,7 @@ import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
@@ -72,7 +72,7 @@ public class TDCPFolderMergeTask extends AbstractWorksapceUpdateTask {
                         || resource.getName().equals("Libraries") //$NON-NLS-1$
                         || resource.getName().equals("Metadata")) { //$NON-NLS-1$
                     IPath destination = null;
-                    IFolder prefixFolder = rootProject.getFolder(DQStructureManager.PREFIX_TDQ + resource.getName());
+                    IFolder prefixFolder = rootProject.getFolder(RepositoryNodeHelper.PREFIX_TDQ + resource.getName());
                     prefixFolder.create(IResource.FORCE, true, new NullProgressMonitor());
                     for (IResource rs : ((IProject) resource).members()) {
                         if (rs.getName().equals(".project")) { //$NON-NLS-1$
@@ -100,8 +100,8 @@ public class TDCPFolderMergeTask extends AbstractWorksapceUpdateTask {
         String[] extensions = { FactoriesUtil.ANA, FactoriesUtil.PROV, FactoriesUtil.REP, FactoriesUtil.SOFTWARE_SYSTEM };
         boolean recursive = true;
         Collection<?> files = FileUtils.listFiles(new File(rootProject.getLocation().toOSString()), extensions, recursive);
-        for (Iterator<?> iterator = files.iterator(); iterator.hasNext();) {
-            File file = (File) iterator.next();
+        for (Object name2 : files) {
+            File file = (File) name2;
             if (file != null) {
                 try {
                     String content = FileUtils.readFileToString(file, EMFUtil.ENCODING);

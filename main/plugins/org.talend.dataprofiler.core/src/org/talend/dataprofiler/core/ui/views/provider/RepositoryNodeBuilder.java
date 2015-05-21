@@ -40,9 +40,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
-import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
-import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.IndicatorFolderRepNode;
@@ -117,7 +115,7 @@ public final class RepositoryNodeBuilder {
             folder = ProxyRepositoryFactory.getInstance().createFolder(retrieveRepObjectTypeByPath(resConstant.getPath()),
                     Path.EMPTY, resConstant.getName());
         }
-        return createRepositoryNode(folder, node, resConstant);
+        return createRepositoryNode(folder, node, resConstant, null);
     }
 
     /**
@@ -130,68 +128,90 @@ public final class RepositoryNodeBuilder {
      */
     public RepositoryNode createRepositoryNodeSubSystemFolder(RepositoryNode node, EResourceConstant resConstant)
             throws PersistenceException {
-        IRepositoryViewObject folder = null;
         Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        return createRepositoryNodeSubSystemFolder(node, resConstant, currentProject);
+
+    }
+
+    /**
+     * create repository node for sub system folder
+     * 
+     * @param node create repository node
+     * @param resConstant sub folder type
+     * @return sub node
+     * @throws PersistenceException
+     */
+    public RepositoryNode createRepositoryNodeSubSystemFolder(RepositoryNode node, EResourceConstant resConstant,
+            org.talend.core.model.general.Project currentProject) throws PersistenceException {
+        IRepositoryViewObject folder = null;
         ERepositoryObjectType repositoryObjectType = retrieveRepObjectTypeByPath(resConstant.getPath());
+
         FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(currentProject, repositoryObjectType,
                 Path.EMPTY);
         if (folderItem != null) {
-            folder = new Folder(folderItem.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
+            folder = new Folder(folderItem.getProperty(), repositoryObjectType);
         } else {
             folder = ProxyRepositoryFactory.getInstance().createFolder(
                     retrieveRepObjectTypeByPath(getParentPath(resConstant.getPath())), Path.EMPTY, resConstant.getName());
         }
-        return createRepositoryNode(folder, node, resConstant);
+        return createRepositoryNode(folder, node, resConstant, currentProject);
     }
 
     private RepositoryNode createRepositoryNode(IRepositoryViewObject folder, RepositoryNode parentNode,
-            EResourceConstant resConstant) throws PersistenceException {
+            EResourceConstant resConstant, org.talend.core.model.general.Project inWhichProject) throws PersistenceException {
         DQRepositoryNode subFolderNode = null;
 
         switch (resConstant) {
         case ANALYSIS:
-            AnalysisFolderRepNode anaFolderNode = new AnalysisFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            AnalysisFolderRepNode anaFolderNode = new AnalysisFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
             folder.setRepositoryNode(anaFolderNode);
             parentNode.getChildren().add(anaFolderNode);
             return anaFolderNode;
         case REPORTS:
-            ReportFolderRepNode repFolderNode = new ReportFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            ReportFolderRepNode repFolderNode = new ReportFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
             folder.setRepositoryNode(repFolderNode);
             parentNode.getChildren().add(repFolderNode);
             return repFolderNode;
         case INDICATORS:
             IndicatorFolderRepNode indicatorFolderRepNode = new IndicatorFolderRepNode(folder, parentNode,
-                    ENodeType.SYSTEM_FOLDER);
+                    ENodeType.SYSTEM_FOLDER, inWhichProject);
             folder.setRepositoryNode(indicatorFolderRepNode);
             parentNode.getChildren().add(indicatorFolderRepNode);
             return indicatorFolderRepNode;
         case JRXML_TEMPLATE:
-            JrxmlTempFolderRepNode jrxmlFolderNode = new JrxmlTempFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            JrxmlTempFolderRepNode jrxmlFolderNode = new JrxmlTempFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
             folder.setRepositoryNode(jrxmlFolderNode);
             parentNode.getChildren().add(jrxmlFolderNode);
             return jrxmlFolderNode;
         case SOURCE_FILES:
-            SourceFileFolderRepNode sourceFileFolder = new SourceFileFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            SourceFileFolderRepNode sourceFileFolder = new SourceFileFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
             folder.setRepositoryNode(sourceFileFolder);
             parentNode.getChildren().add(sourceFileFolder);
             return sourceFileFolder;
         case PATTERNS:
-            PatternFolderRepNode regexFolder2 = new PatternFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
-            folder.setRepositoryNode(regexFolder2);
-            parentNode.getChildren().add(regexFolder2);
-            return regexFolder2;
+            PatternFolderRepNode patternFolder = new PatternFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
+            folder.setRepositoryNode(patternFolder);
+            parentNode.getChildren().add(patternFolder);
+            return patternFolder;
         case RULES:
-            RulesFolderRepNode ruleFolder = new RulesFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            RulesFolderRepNode ruleFolder = new RulesFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER, inWhichProject);
             folder.setRepositoryNode(ruleFolder);
             parentNode.getChildren().add(ruleFolder);
             return ruleFolder;
         case DB_CONNECTIONS:
-            DBConnectionFolderRepNode dbFolder = new DBConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            DBConnectionFolderRepNode dbFolder = new DBConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
             folder.setRepositoryNode(dbFolder);
             parentNode.getChildren().add(dbFolder);
             return dbFolder;
         case FILEDELIMITED:
-            DFConnectionFolderRepNode dfmFolder = new DFConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            DFConnectionFolderRepNode dfmFolder = new DFConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
             folder.setRepositoryNode(dfmFolder);
             parentNode.getChildren().add(dfmFolder);
             return dfmFolder;
@@ -201,18 +221,20 @@ public final class RepositoryNodeBuilder {
             parentNode.getChildren().add(hcFolder);
             return hcFolder;
         case EXCHANGE:
-            ExchangeFolderRepNode exchangeFolder = new ExchangeFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            ExchangeFolderRepNode exchangeFolder = new ExchangeFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
             folder.setRepositoryNode(exchangeFolder);
             parentNode.getChildren().add(exchangeFolder);
             return exchangeFolder;
+            // case REFERENCED_PROJECT:
         default:
-            subFolderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            subFolderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SYSTEM_FOLDER, inWhichProject);
             folder.setRepositoryNode(subFolderNode);
             parentNode.getChildren().add(subFolderNode);
             if (resConstant.equals(EResourceConstant.PATTERNS)) {
                 // MOD gdbu 2011-8-26 bug 23303 : initialization regex and sql folder when initialization pattern folder
-                createRepositoryNodeSubSystemFolder(subFolderNode, EResourceConstant.PATTERN_REGEX);
-                createRepositoryNodeSubSystemFolder(subFolderNode, EResourceConstant.PATTERN_SQL);
+                createRepositoryNodeSubSystemFolder(subFolderNode, EResourceConstant.PATTERN_REGEX, inWhichProject);
+                createRepositoryNodeSubSystemFolder(subFolderNode, EResourceConstant.PATTERN_SQL, inWhichProject);
             }
             break;
         }
@@ -257,49 +279,20 @@ public final class RepositoryNodeBuilder {
     }
 
     /**
-     * DOC klliu Comment method "getRepositoryViewObjectChildren".
+     * create repository node for a system folder
      * 
-     * @param repositoryViewObjects
      * @param node
-     * @param withDelete
-     * @return
+     * @param resConstants
+     * @return sub node list
+     * @throws PersistenceException
      */
-    public List<IRepositoryNode> getRepositoryViewObjectChildren(List<IRepositoryViewObject> repositoryViewObjects,
-            RepositoryNode node, boolean withDelete) {
-        List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
-        Iterator<IRepositoryViewObject> iterator = repositoryViewObjects.iterator();
-        while (iterator.hasNext()) {
-            IRepositoryViewObject viewObject = iterator.next();
-            if (viewObject.isDeleted() && !withDelete) {
-                iterator.remove();
-            } else {
-                rectiveNodebyFolderNode(list, viewObject, node);
-            }
+    public List<RepositoryNode> createRepositoryNodeSystemFolders(RepositoryNode node, List<EResourceConstant> resConstants,
+            org.talend.core.model.general.Project currentProject) throws PersistenceException {
+        List<RepositoryNode> repositoryNodes = new ArrayList<RepositoryNode>();
+        for (EResourceConstant resConstant : resConstants) {
+            repositoryNodes.add(createRepositoryNodeSubSystemFolder(node, resConstant, currentProject));
         }
-        return list;
-    }
-
-    /**
-     * DOC klliu Comment method "rectiveNodebyFolderNode".
-     * 
-     * @param list
-     * @param folderNode
-     * @return
-     */
-    public RepositoryNode rectiveNodebyFolderNode(List<IRepositoryNode> list, IRepositoryViewObject viewObject,
-            RepositoryNode folderNode) {
-        if (folderNode instanceof AnalysisFolderRepNode) {
-            AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, folderNode, ENodeType.REPOSITORY_ELEMENT);
-            viewObject.setRepositoryNode(anaNode);
-            list.add(anaNode);
-            return anaNode;
-        } else if (folderNode instanceof DBConnectionFolderRepNode) {
-            RepositoryNode connNode = new DBConnectionRepNode(viewObject, folderNode, ENodeType.REPOSITORY_ELEMENT);
-            viewObject.setRepositoryNode(connNode);
-            list.add(connNode);
-            return connNode;
-        }
-        return null;
+        return repositoryNodes;
     }
 
     /**
@@ -392,4 +385,5 @@ public final class RepositoryNodeBuilder {
         Folder folder = new Folder(folderItem.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
         return folder;
     }
+
 }

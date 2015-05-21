@@ -27,8 +27,9 @@ public class JrxmlTempSubFolderNode extends JrxmlTempFolderRepNode {
      * @param parent
      * @param type
      */
-    public JrxmlTempSubFolderNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public JrxmlTempSubFolderNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
 }

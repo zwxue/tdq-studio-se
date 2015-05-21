@@ -35,7 +35,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
@@ -73,8 +72,6 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
     protected RuleRepNode ruleRepNode;
 
     protected TDQBusinessRuleItem parserRuleItem;
-
-    private ScrolledForm form;
 
     private Section parserRuleDefinitionSection;
 

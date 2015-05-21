@@ -80,6 +80,7 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
@@ -180,7 +181,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 // if there don't found the correct ItemEditorInput and it is not Report's genetated doc file, try to
                 // open it as a File, this code will not be execute when method computeEditorInput() work well
                 IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
-                file = ResourceManager.getRootProject().getFile(append);
+                DQRepositoryNode node = (DQRepositoryNode) repViewObj.getRepositoryNode();
+                file = ResourceManager.getRoot().getProject(node.getProject().getTechnicalLabel()).getFile(append);
+
                 if (!file.exists()) {
                     BusinessException createBusinessException = ExceptionFactory.getInstance()
                             .createBusinessException(repViewObj);
@@ -323,7 +326,8 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else if (ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)
                     || ERepositoryObjectType.TDQ_JRAXML_ELEMENT.getKey().equals(key)) {
                 IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
-                file = ResourceManager.getRootProject().getFile(append);
+                DQRepositoryNode node = (DQRepositoryNode) repViewObj.getRepositoryNode();
+                file = ResourceManager.getRoot().getProject(node.getProject().getTechnicalLabel()).getFile(append);
                 if (!file.exists()) {
                     BusinessException createBusinessException = ExceptionFactory.getInstance()
                             .createBusinessException(repViewObj);
@@ -346,8 +350,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         || ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
 
                     // if there don't found the correct ItemEditorInput, try to open it as a File
-                    IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
-                    result = new FileEditorInput(ResourceManager.getRootProject().getFile(append));
+                    result = new FileEditorInput(file);
                     editorID = FileEditorInput.class.getName();
                 }
             }

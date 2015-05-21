@@ -34,7 +34,6 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeLabelProvider;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -45,6 +44,7 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.FuncationDependencyParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -74,7 +74,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
     public NewWizardSelectionPage(RepositoryNode node) {
         super();
         if (node != null) {
-            initCurrentFolderProvider(WorkbenchUtils.getPath(node));
+            initCurrentFolderProvider(RepositoryNodeHelper.getPath(node));
         }
     }
 

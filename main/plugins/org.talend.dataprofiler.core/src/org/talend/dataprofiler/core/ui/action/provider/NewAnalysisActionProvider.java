@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
@@ -35,6 +35,7 @@ public class NewAnalysisActionProvider extends AbstractCommonActionProvider {
     /**
      * Adds a submenu to the given menu with the name "New Component".
      */
+    @Override
     public void fillContextMenu(IMenuManager menu) {
         // MOD mzhao user readonly role on svn repository mode.
         if (!isShowMenu()) {
@@ -56,7 +57,8 @@ public class NewAnalysisActionProvider extends AbstractCommonActionProvider {
             RepositoryNode node = (RepositoryNode) obj;
             if ((node instanceof AnalysisFolderRepNode && !(node instanceof AnalysisSubFolderRepNode))
                     || (node instanceof AnalysisSubFolderRepNode && node.getObject() != null)) {
-                CreateNewAnalysisAction createAnalysisAction = new CreateNewAnalysisAction(WorkbenchUtils.getPath(node), node);
+                CreateNewAnalysisAction createAnalysisAction = new CreateNewAnalysisAction(RepositoryNodeHelper.getPath(node),
+                        node);
                 menu.add(createAnalysisAction);
             }
         }

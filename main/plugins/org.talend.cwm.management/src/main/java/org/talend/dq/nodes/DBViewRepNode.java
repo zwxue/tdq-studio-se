@@ -49,8 +49,9 @@ public class DBViewRepNode extends ColumnSetRepNode {
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
-    public DBViewRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DBViewRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         if (object instanceof TdViewRepositoryObject) {
             this.tdViewRepositoryObject = (TdViewRepositoryObject) object;
             if (parent == null) {
@@ -68,7 +69,7 @@ public class DBViewRepNode extends ColumnSetRepNode {
      */
     private RepositoryNode createParentNode() {
         DBViewFolderRepNode dbViewFolderRepNode = new DBViewFolderRepNode(getParentViewObject(), null,
-                ENodeType.TDQ_REPOSITORY_ELEMENT);
+                ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         dbViewFolderRepNode.setId(NO_ID);
         return dbViewFolderRepNode;
 
@@ -101,7 +102,8 @@ public class DBViewRepNode extends ColumnSetRepNode {
     public List<IRepositoryNode> getChildren() {
         // MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-        DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(getObject(), this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(getObject(), this, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                getProject());
         nodes.add(columnFolderNode);
         return filterResultsIfAny(nodes);
         // ~22204

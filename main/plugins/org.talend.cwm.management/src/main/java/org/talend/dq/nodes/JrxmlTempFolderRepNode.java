@@ -14,25 +14,21 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class JrxmlTempFolderRepNode extends DQRepositoryNode {
-
-    private static Logger log = Logger.getLogger(JrxmlTempFolderRepNode.class);
+public class JrxmlTempFolderRepNode extends DQFolderRepNode {
 
     /**
      * DOC klliu JrxmlTempFolderRepNode constructor comment.
@@ -41,55 +37,9 @@ public class JrxmlTempFolderRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public JrxmlTempFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
-    }
-
-    @Override
-    public List<IRepositoryNode> getChildren() {
-        return getChildren(false);
-    }
-
-    @Override
-    public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        try {
-            super.getChildren().clear();
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-
-            // sub folders
-            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
-                if (!withDeleted && folder.isDeleted()) {
-                    continue;
-                }
-                JrxmlTempSubFolderNode childNodeFolder = new JrxmlTempSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER);
-                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
-                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
-                folder.setRepositoryNode(childNodeFolder);
-                super.getChildren().add(childNodeFolder);
-            }
-
-            // jrxml templates
-            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDeleted && viewObject.isDeleted()) {
-                    continue;
-                }
-                JrxmlTempleteRepNode jrxmlNode = new JrxmlTempleteRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                jrxmlNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
-                jrxmlNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
-                viewObject.setRepositoryNode(jrxmlNode);
-                // MOD yyi 2011-04-21 19977 duplicate template after replace
-                if (!duplicateNode(super.getChildren(), jrxmlNode)) {
-                    super.getChildren().add(jrxmlNode);
-                }
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-        // MOD gdbu 2011-6-29 bug : 22204
-        return filterResultsIfAny(super.getChildren());
-        // ~22204
+    public JrxmlTempFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     private boolean duplicateNode(List<IRepositoryNode> children, JrxmlTempleteRepNode jrxmlNode) {
@@ -99,6 +49,54 @@ public class JrxmlTempFolderRepNode extends DQRepositoryNode {
             }
         }
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
+    @Override
+    public List<IRepositoryNode> getChildren() {
+        return getChildren(false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
+     */
+    @Override
+    public void getChildrenForProject(boolean withDeleted, Project project) throws PersistenceException {
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
+
+        // sub folders
+        for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+            Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+            if (!withDeleted && folder.isDeleted()) {
+                continue;
+            }
+            JrxmlTempSubFolderNode childNodeFolder = new JrxmlTempSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER, project);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+            folder.setRepositoryNode(childNodeFolder);
+            super.getChildren().add(childNodeFolder);
+        }
+
+        // jrxml templates
+        for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+            if (!withDeleted && viewObject.isDeleted()) {
+                continue;
+            }
+            JrxmlTempleteRepNode jrxmlNode = new JrxmlTempleteRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, project);
+            jrxmlNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+            jrxmlNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+            viewObject.setRepositoryNode(jrxmlNode);
+            // MOD yyi 2011-04-21 19977 duplicate template after replace
+            if (!duplicateNode(super.getChildren(), jrxmlNode)) {
+                super.getChildren().add(jrxmlNode);
+            }
+        }
     }
 
 }

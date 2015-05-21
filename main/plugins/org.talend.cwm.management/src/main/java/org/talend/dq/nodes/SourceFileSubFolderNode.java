@@ -15,19 +15,20 @@ package org.talend.dq.nodes;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class SourceFileSubFolderNode extends SourceFileFolderRepNode {
 
     /**
      * DOC klliu SourceFileSubFolderNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
-    public SourceFileSubFolderNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public SourceFileSubFolderNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 }

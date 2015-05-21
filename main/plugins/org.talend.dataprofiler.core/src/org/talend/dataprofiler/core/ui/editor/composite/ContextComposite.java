@@ -54,6 +54,15 @@ public class ContextComposite extends Composite {
 
     private ComboViewer contextComboViewer;
 
+    /**
+     * Getter for contextComboViewer.
+     * 
+     * @return the contextComboViewer
+     */
+    public ComboViewer getContextComboViewer() {
+        return this.contextComboViewer;
+    }
+
     private TableViewer contextTableViewer;
 
     private SupportContextEditor currentEditor;

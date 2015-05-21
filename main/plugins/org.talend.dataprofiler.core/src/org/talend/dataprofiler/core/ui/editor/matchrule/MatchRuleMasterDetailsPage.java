@@ -196,7 +196,6 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
         createDefaultSurvivorshipSection(topComp);
         selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
-
     }
 
     /**

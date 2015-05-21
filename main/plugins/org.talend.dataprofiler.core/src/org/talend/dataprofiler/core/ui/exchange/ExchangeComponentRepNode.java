@@ -23,24 +23,19 @@ public class ExchangeComponentRepNode extends DQRepositoryNode {
 
     private final IEcosComponent ecosComponent;
 
-    private ENodeType type;
-
     private String label;
 
     public IEcosComponent getEcosComponent() {
         return this.ecosComponent;
     }
 
-    public ENodeType getType() {
-        return this.type;
-    }
-
     public void setLabel(String label) {
         this.label = label;
     }
 
-    public ExchangeComponentRepNode(IEcosComponent ecosComponent, RepositoryNode parent, ENodeType type) {
-        super(null, parent, type);
+    public ExchangeComponentRepNode(IEcosComponent ecosComponent, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(null, parent, type, inWhichProject);
         this.type = type;
         this.ecosComponent = ecosComponent;
         this.setId(ecosComponent.getName());

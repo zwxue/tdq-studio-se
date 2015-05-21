@@ -39,15 +39,16 @@ public class DQRepNodeCreateFactory {
      * @param type
      * @return
      */
-    public static RepositoryNode createDBCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type) {
+    public static RepositoryNode createDBCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
         Item databaseItem = viewObject.getProperty().getItem();
         DatabaseConnection dbConnection = (DatabaseConnection) ((DatabaseConnectionItem) databaseItem).getConnection();
         SupportDBUrlType dbTypeByKey = SupportDBUrlType.getDBTypeByKey(dbConnection.getDatabaseType());
         switch (dbTypeByKey) {
         case SYBASEDEFAULTURL:
-            return new DBSybaseCatalogRepNode(viewObject, parent, type);
+            return new DBSybaseCatalogRepNode(viewObject, parent, type, inWhichProject);
         default:
-            return new DBCatalogRepNode(viewObject, parent, type);
+            return new DBCatalogRepNode(viewObject, parent, type, inWhichProject);
         }
     }
 

@@ -85,8 +85,9 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
-    public DBViewFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DBViewFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         this.viewObject = object;
         if (parent == null) {
             RepositoryNode createParentNode = createParentNode();
@@ -123,9 +124,10 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
     private RepositoryNode createParentNode() {
         RepositoryNode dbParentRepNode = null;
         if (viewObject instanceof MetadataCatalogRepositoryObject) {
-            dbParentRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(viewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(viewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                    getProject());
         } else if (viewObject instanceof MetadataSchemaRepositoryObject) {
-            dbParentRepNode = new DBSchemaRepNode(viewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = new DBSchemaRepNode(viewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
         }
         viewObject.setRepositoryNode(dbParentRepNode);
         return dbParentRepNode;
@@ -242,7 +244,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
                 metadataView.setLabel(view.getName());
                 metadataView.setId(view.getName());
                 // create a node for ui
-                DBViewRepNode viewNode = new DBViewRepNode(metadataView, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                DBViewRepNode viewNode = new DBViewRepNode(metadataView, this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
                 viewNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
                 viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_VIEW);
 

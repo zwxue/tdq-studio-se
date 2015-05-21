@@ -54,14 +54,16 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
     private List<IRepositoryNode> anaElement;
 
     /**
-     * DOC klliu AnalysisSubFolderRepNode constructor comment.
+     * DOC talend AnalysisSubFolderRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
      */
-    public AnalysisSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public AnalysisSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     /*
@@ -124,28 +126,29 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
         // }
         if (medataViewObject != null) {
             if (analyzedElement instanceof DatabaseConnection) {
-                DBConnectionRepNode connNode = new DBConnectionRepNode(medataViewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                DBConnectionRepNode connNode = new DBConnectionRepNode(medataViewObject, this, ENodeType.REPOSITORY_ELEMENT,
+                        getProject());
                 connNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
                 connNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
                 medataViewObject.setRepositoryNode(connNode);
                 return connNode;
             } else if (analyzedElement instanceof Catalog) {
                 RepositoryNode catalogNode = DQRepNodeCreateFactory.createDBCatalogRepNode(new MetadataCatalogRepositoryObject(
-                        medataViewObject, (Catalog) analyzedElement), this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                        medataViewObject, (Catalog) analyzedElement), this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
                 catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
                 catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 medataViewObject.setRepositoryNode(catalogNode);
                 return catalogNode;
             } else if (analyzedElement instanceof Schema) {
                 RepositoryNode schemaNode = new DBSchemaRepNode(new MetadataSchemaRepositoryObject(medataViewObject,
-                        (Schema) analyzedElement), this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                        (Schema) analyzedElement), this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
                 schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
                 schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
                 medataViewObject.setRepositoryNode(schemaNode);
                 return schemaNode;
             } else if (analyzedElement instanceof TdTable) {
                 DBTableRepNode tableNode = new DBTableRepNode(new TdTableRepositoryObject(medataViewObject,
-                        (TdTable) analyzedElement), childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                        (TdTable) analyzedElement), childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
                 tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
                 tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
                 medataViewObject.setRepositoryNode(tableNode);
@@ -153,7 +156,7 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
             } else if (analyzedElement instanceof TdView) {
                 DBViewRepNode viewNode = new DBViewRepNode(
                         new TdViewRepositoryObject(medataViewObject, (TdView) analyzedElement), childNodeFolder,
-                        ENodeType.TDQ_REPOSITORY_ELEMENT);
+                        ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
                 viewNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_VIEW);
                 viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_VIEW);
                 medataViewObject.setRepositoryNode(viewNode);
@@ -162,10 +165,10 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
                 RepositoryNode columnNode = null;
                 if (analyzedElement instanceof TdColumn) {
                     columnNode = new DBColumnRepNode(new MetadataColumnRepositoryObject(medataViewObject,
-                            (MetadataColumn) analyzedElement), childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                            (MetadataColumn) analyzedElement), childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
                 } else {
                     columnNode = new DFColumnRepNode(new MetadataColumnRepositoryObject(medataViewObject,
-                            (MetadataColumn) analyzedElement), this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                            (MetadataColumn) analyzedElement), this, ENodeType.TDQ_REPOSITORY_ELEMENT, getProject());
                 }
                 columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
                 columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);

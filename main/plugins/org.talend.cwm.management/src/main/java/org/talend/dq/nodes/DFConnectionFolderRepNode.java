@@ -14,26 +14,22 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class DFConnectionFolderRepNode extends DQRepositoryNode {
-
-    private static Logger log = Logger.getLogger(DFConnectionFolderRepNode.class);
+public class DFConnectionFolderRepNode extends DQFolderRepNode {
 
     /**
      * DOC qiongli FileDelimitedFolderRepNode constructor comment.
@@ -42,52 +38,9 @@ public class DFConnectionFolderRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public DFConnectionFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
-    }
-
-    @Override
-    public List<IRepositoryNode> getChildren() {
-        return getChildren(false);
-    }
-
-    @Override
-    public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        try {
-            super.getChildren().clear();
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-            // sub folders
-            // MOD qiongli 2011-1-18.setProperties for every node
-            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.METADATA_FILE_DELIMITED);
-                if (!withDeleted && folder.isDeleted()) {
-                    continue;
-                }
-                DFConnectionSubFolderRepNode childNodeFolder = new DFConnectionSubFolderRepNode(folder, this,
-                        ENodeType.SIMPLE_FOLDER);
-                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
-                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
-                super.getChildren().add(childNodeFolder);
-            }
-            // connection files
-            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDeleted && viewObject.isDeleted()) {
-                    continue;
-                }
-
-                DFConnectionRepNode repNode = new DFConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
-                viewObject.setRepositoryNode(repNode);
-                super.getChildren().add(repNode);
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-        // MOD gdbu 2011-7-1 bug : 22204
-        return filterResultsIfAny(super.getChildren());
-        // ~22204
+    public DFConnectionFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     /*
@@ -111,6 +64,51 @@ public class DFConnectionFolderRepNode extends DQRepositoryNode {
     @Override
     public String getDisplayText() {
         return Messages.getString("DQRepositoryViewLabelProvider.DFConnectionFolderName"); //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
+    @Override
+    public List<IRepositoryNode> getChildren() {
+        return getChildren(false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
+     */
+    @Override
+    public void getChildrenForProject(boolean withDeleted, Project project) throws PersistenceException {
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
+        // sub folders
+        // MOD qiongli 2011-1-18.setProperties for every node
+        for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+            Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.METADATA_FILE_DELIMITED);
+            if (!withDeleted && folder.isDeleted()) {
+                continue;
+            }
+            DFConnectionSubFolderRepNode childNodeFolder = new DFConnectionSubFolderRepNode(folder, this,
+                    ENodeType.SIMPLE_FOLDER, project);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+            super.getChildren().add(childNodeFolder);
+        }
+        // connection files
+        for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+            if (!withDeleted && viewObject.isDeleted()) {
+                continue;
+            }
+
+            DFConnectionRepNode repNode = new DFConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, project);
+            repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+            repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+            viewObject.setRepositoryNode(repNode);
+            super.getChildren().add(repNode);
+        }
     }
 
 }

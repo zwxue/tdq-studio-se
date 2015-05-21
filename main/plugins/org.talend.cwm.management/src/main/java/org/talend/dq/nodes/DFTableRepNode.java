@@ -35,8 +35,9 @@ public class DFTableRepNode extends ColumnSetRepNode {
      * @param parent
      * @param type
      */
-    public DFTableRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public DFTableRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         this.mdTableRepositoryObject = (MetadataTableRepositoryObject) object;
     }
 
@@ -44,7 +45,8 @@ public class DFTableRepNode extends ColumnSetRepNode {
     public List<IRepositoryNode> getChildren() {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         MetadataTableRepositoryObject viewObject = (MetadataTableRepositoryObject) this.getObject();
-        DFColumnFolderRepNode columnFolderNode = new DFColumnFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DFColumnFolderRepNode columnFolderNode = new DFColumnFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT,
+                getProject());
         nodes.add(columnFolderNode);
         return filterResultsIfAny(nodes);
     }

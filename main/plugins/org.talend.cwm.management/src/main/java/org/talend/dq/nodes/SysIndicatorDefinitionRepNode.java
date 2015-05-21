@@ -44,8 +44,9 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public SysIndicatorDefinitionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public SysIndicatorDefinitionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
         Property property = object.getProperty();
         if (property != null) {
             Item item = property.getItem();

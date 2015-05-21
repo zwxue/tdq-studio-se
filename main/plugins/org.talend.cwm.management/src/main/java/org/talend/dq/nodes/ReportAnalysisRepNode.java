@@ -50,8 +50,9 @@ public class ReportAnalysisRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public ReportAnalysisRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public ReportAnalysisRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     @Override
