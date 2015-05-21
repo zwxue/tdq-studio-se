@@ -172,9 +172,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
 
         });
-
-        setAllReadOnlyIfNeeded();
-
     }
 
     /**

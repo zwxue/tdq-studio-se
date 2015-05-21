@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -35,8 +34,6 @@ import org.talend.repository.model.RepositoryNode;
  * @author qiongli Restore recycle bin element
  */
 public class DQRestoreAction extends RestoreAction {
-
-    private static Logger log = Logger.getLogger(DQRestoreAction.class);
 
     private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 

@@ -53,7 +53,7 @@ public class JrxmlFileDuplicateHandle extends AbstractTDQFileDuplicateHandle {
     @Override
     protected Item createFileItemByDuplicateFile(IFile newFile, String fileExtension, String newName) {
 
-        IPath makeRelativeTo = newFile.getFullPath().removeLastSegments(1)
+        IPath makeRelativeTo = newFile.getFullPath().removeFirstSegments(1).removeLastSegments(1)
                 .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1));
         return createJrxml(makeRelativeTo, newName, WorkspaceUtils.ifileToFile(file), fileExtension);
     }
@@ -128,13 +128,12 @@ public class JrxmlFileDuplicateHandle extends AbstractTDQFileDuplicateHandle {
      */
     @Override
     protected IFolder extractFolder(Item oldItem, ModelElement oldObject) {
-        Resource resource = oldItem.eResource();
-        IPath path = new Path(resource.getURI().toPlatformString(false));
-        IFile oldFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
         boolean inCurrentMainProject = ProjectManager.getInstance().isInCurrentMainProject(oldItem);
-        IFolder parent = (IFolder) oldFile.getParent();
         if (inCurrentMainProject) {
-            return parent;
+            Resource resource = oldItem.eResource();
+            IPath path = new Path(resource.getURI().toPlatformString(false));
+            IFile oldFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+            return (IFolder) oldFile.getParent();
         } else {
             // for the reference project node, we get its folder in current project.
             return ResourceManager.getOneFolder(EResourceConstant.JRXML_TEMPLATE);

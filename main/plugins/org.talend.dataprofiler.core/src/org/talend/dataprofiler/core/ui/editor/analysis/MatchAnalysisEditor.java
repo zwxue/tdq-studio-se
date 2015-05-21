@@ -44,13 +44,6 @@ public class MatchAnalysisEditor extends AnalysisEditor {
                 exportMatchRuleAction.setToolTipText(DefaultMessagesImpl.getString("MatchAnalysisEditor.exportMatchRule"));//$NON-NLS-1$
                 toolbar.addActions(exportMatchRuleAction);
             }
-
-            if (masterPage.isReadOnly()) {
-                importMatchRuleAction.setEnabled(false);
-                if (exportMatchRuleAction != null) {
-                    exportMatchRuleAction.setEnabled(false);
-                }
-            }
         }
     }
 }

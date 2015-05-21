@@ -139,7 +139,6 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithCh
         analysisResultsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         analysisResultsComp.setLayout(new GridLayout());
         createResultSection(analysisResultsComp);
-        setAllReadOnlyIfNeeded();
         form.reflow(true);
     }
 

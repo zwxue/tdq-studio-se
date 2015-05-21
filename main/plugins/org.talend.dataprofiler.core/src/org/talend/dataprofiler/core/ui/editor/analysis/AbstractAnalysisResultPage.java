@@ -203,15 +203,4 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         table.setLayoutData(data);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setAllReadOnlyIfNeeded()
-     */
-    @Override
-    protected void setAllReadOnlyIfNeeded() {
-        if (isReadOnly()) {
-            makeAllFieldsReadonly(topComposite);
-        }
-    }
 }

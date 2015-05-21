@@ -402,7 +402,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         metadataSection.setDescription(METADATA_SECTION_DESCRIPTION);
         // MOD by zshen move CategorySection before of DefinitionSection on UDI Editor
         createIndicatorContent();
-        setAllReadOnlyIfNeeded();
         form.reflow(true);
     }
 

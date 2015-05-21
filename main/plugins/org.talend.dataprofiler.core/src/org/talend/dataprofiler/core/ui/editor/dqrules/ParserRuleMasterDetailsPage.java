@@ -153,7 +153,6 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         metadataSection.setText("Parser Rule Metadata"); //$NON-NLS-1$
         metadataSection.setDescription("Set Properties of Parser Rule."); //$NON-NLS-1$
         createParserRuleDefinitionSection(topComp);
-        setAllReadOnlyIfNeeded();
     }
 
     @Override

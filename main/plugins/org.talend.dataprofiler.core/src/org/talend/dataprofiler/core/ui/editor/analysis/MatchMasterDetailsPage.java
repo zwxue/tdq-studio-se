@@ -212,7 +212,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         createDefaultSurvivorshipSection();
         createMatchParameterSection();
 
-        setAllReadOnlyIfNeeded();
         // TDQ-7781: we must do this, this will recompute the layout and scroll bars
         form.reflow(true);
     }

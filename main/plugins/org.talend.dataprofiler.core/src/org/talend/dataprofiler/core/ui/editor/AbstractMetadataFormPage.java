@@ -48,7 +48,6 @@ import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.RepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
@@ -60,8 +59,6 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -148,31 +145,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         super(editor, id, title);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setAllReadOnlyIfNeeded()
-     */
-    @Override
-    protected void setAllReadOnlyIfNeeded() {
-        if (isReadOnly()) {
-            makeAllFieldsReadonly(topComp);
-            statusCombo.setEnabled(false);
-        }
-    }
-
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         this.currentModelElement = getCurrentModelElement(editor);
-        DQRepositoryNode node = RepositoryNodeHelper.recursiveFind(currentModelElement);
-        if (node == null) {
-            setReadOnly(true);
-        } else {
-            boolean isEditableAndLockIfPossible = ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(
-                    node.getObject().getProperty().getItem());
-            setReadOnly(!isEditableAndLockIfPossible);
-        }
     }
 
     @Override

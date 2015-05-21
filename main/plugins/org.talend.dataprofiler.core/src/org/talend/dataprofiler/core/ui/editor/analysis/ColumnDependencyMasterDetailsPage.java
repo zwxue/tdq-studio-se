@@ -132,7 +132,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
         columnsComparisonSection = anaColumnCompareViewer.getColumnsComparisonSection();
         anaColumnCompareViewer.addPropertyChangeListener(this);
-        setAllReadOnlyIfNeeded();
         form.reflow(true);
     }
 

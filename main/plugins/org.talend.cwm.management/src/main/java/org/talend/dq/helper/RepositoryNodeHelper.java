@@ -1252,6 +1252,15 @@ public final class RepositoryNodeHelper {
      * @return
      */
     private static org.talend.core.model.general.Project getInWhichProject(ModelElement modelElement) {
+        if (modelElement instanceof DatabaseConnection) {
+            String projectName = modelElement.eResource().getURI().segment(1);
+            List<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+            for (Project project : allProjects) {
+                if (project.getTechnicalLabel().equals(projectName)) {
+                    return project;
+                }
+            }
+        }
         Property property = PropertyHelper.getProperty(modelElement);
         org.talend.core.model.properties.Project project = ProjectManager.getInstance().getProject(property);
         return new org.talend.core.model.general.Project(project);

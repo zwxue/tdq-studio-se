@@ -964,15 +964,4 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#setAllReadOnlyIfNeeded()
-     */
-    @Override
-    protected void setAllReadOnlyIfNeeded() {
-        super.setAllReadOnlyIfNeeded();
-        connCombo.setEnabled(!isReadOnly());
-    }
-
 }

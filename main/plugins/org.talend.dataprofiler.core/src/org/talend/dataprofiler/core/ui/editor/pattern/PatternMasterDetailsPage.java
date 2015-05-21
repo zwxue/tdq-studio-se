@@ -171,7 +171,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         metadataSection.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternMetadata")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("PatternMasterDetailsPage.setProperties")); //$NON-NLS-1$
         creatPatternDefinitionSection(topComp);
-        setAllReadOnlyIfNeeded();
     }
 
     private void creatPatternDefinitionSection(Composite topCmp) {

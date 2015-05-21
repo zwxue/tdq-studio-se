@@ -80,7 +80,6 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
      */
     public DynamicAnalysisMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
-        // TODO Auto-generated constructor stub
     }
 
     protected void createPreviewComposite() {

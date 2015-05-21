@@ -207,8 +207,6 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         createDQRuleDefinitionSection(topComp);
         createJoinConditionSection(topComp);
-
-        setAllReadOnlyIfNeeded();
     }
 
     /**

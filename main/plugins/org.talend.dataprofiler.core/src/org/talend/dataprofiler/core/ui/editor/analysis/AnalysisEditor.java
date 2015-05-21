@@ -180,10 +180,6 @@ public class AnalysisEditor extends SupportContextEditor {
                 setRefreshActionButtonState(false);
             }
 
-            // when the page is readonly, make the run buttion can not use
-            if (masterPage.isReadOnly()) {
-                setRunActionButtonState(false);
-            }
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
