@@ -13,13 +13,14 @@
 package org.talend.datascience.common.inference
 
 import scala.util.parsing.combinator.RegexParsers
+
 import org.pojava.datetime.DateTime
 
 /**
  * Type inference engine to guess if a value belongs to a type according to predefined rules. <br> the infer engine can be extended.
  * @author mzhao
  */
-class TypeInferenceEngine extends RegexParsers with Serializable{
+class TypeInferenceEngine extends RegexParsers with Serializable {
   private[inference] def intnumber: Parser[Int] = """^(\+|-)?\d+$""".r ^^ { _.toInt }
   //matches YYYY-MM-dd see: http://regexlib.com/REDetails.aspx?regexp_id=890
   private[inference] def date: Parser[String] = """(?<Year>(19|20)[0-9][0-9])-(?<Month>0[1-9]|1[0-2])-(?<Day>0[1-9]|[12][0-9]|3[01])""".r ^^ { _.toString() }
@@ -43,27 +44,38 @@ class TypeInferenceEngine extends RegexParsers with Serializable{
     }
   }
 
-  private[inference] def apply(input: String): Double = parseAll(expr, input) match {
-    case Success(result, _) => result
-    case failure: NoSuccess => Double.NaN
+  private[inference] def apply(input: String): Double = {
+    try {
+      parseAll(expr, input) match {
+        case Success(result, _) => result
+        case failure: NoSuccess => Double.NaN
+      }
+    } catch {
+      case _: Throwable => Double.NaN
+    }
   }
 
-  def applyWithoutCalculas(input: String): Double = parseAll(dnumber, input) match {
-    case Success(result, _) => result
-    case failure: NoSuccess => Double.NaN
+  def applyWithoutCalculas(input: String): Double = {
+    try {
+      parseAll(dnumber, input) match {
+        case Success(result, _) => result
+        case failure: NoSuccess => Double.NaN
+      }
+    } catch {
+      case _: Throwable => Double.NaN
+    }
   }
-  
-  def isString(value:String):Boolean={
-      parseAll(string, value) match {
+
+  def isString(value: String): Boolean = {
+    parseAll(string, value) match {
       case Success(result, _) => true
       case failure: NoSuccess => false
     }
   }
-  
-  def isBoolean(value:String):Boolean={
+
+  def isBoolean(value: String): Boolean = {
     value.trim().equals("true") || value.trim().equals("false")
   }
-
 
   /**
    * Get double value given a string value. Compute the expression if allow calculation parameter is set to true.
@@ -95,9 +107,13 @@ class TypeInferenceEngine extends RegexParsers with Serializable{
    * @return true if it's a integer or false otherwise.
    */
   def isInteger(value: String): Boolean = {
-    parseAll(intnumber, value) match {
-      case Success(result, _) => true
-      case failure: NoSuccess => false
+    try {
+      parseAll(intnumber, value) match {
+        case Success(result, _) => true
+        case failure: NoSuccess => false
+      }
+    } catch {
+      case _: Throwable => false
     }
   }
 
@@ -109,23 +125,28 @@ class TypeInferenceEngine extends RegexParsers with Serializable{
    * @return true if it's a date type or false otherwise.
    */
   def isDate(value: String): Boolean = {
-    var isMatch = parseAll(date, value) match {
-      case Success(result, _) => true
-      case failure: NoSuccess => false
-    }
-    if (!isMatch) {
-      isMatch = parseAll(datetime, value) match {
-        case Success(result, _) => return true
-        case failure: NoSuccess => {
-          try {
-            //Use this tricky way to see if a string value is a date or not.
-            val dateTime = new DateTime(value)
-          } catch {
-            case e: Exception => return false
+    var isMatch = false
+    try {
+      isMatch = parseAll(date, value) match {
+        case Success(result, _) => true
+        case failure: NoSuccess => false
+      }
+      if (!isMatch) {
+        isMatch = parseAll(datetime, value) match {
+          case Success(result, _) => return true
+          case failure: NoSuccess => {
+            try {
+              //Use this tricky way to see if a string value is a date or not.
+              val dateTime = new DateTime(value)
+            } catch {
+              case e: Exception => return false
+            }
+            true
           }
-          true
         }
       }
+    } catch {
+      case _: Throwable => isMatch = false
     }
 
     isMatch

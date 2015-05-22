@@ -29,10 +29,10 @@ public final class TypeInferenceUtils {
 	private static Pattern patternDouble = Pattern
 			.compile("^[-+]?\\d*\\.\\d*$"); // \\d*(\\.?\\d+)
 	private static Pattern patternInteger = Pattern.compile("^(\\+|-)?\\d+$");
-	//private static Pattern patternDateA = Pattern
-	//		.compile("^(((((0[13578])|([13578])|(1[02]))[\\-\\/\\s]?((0[1-9])|([1-9])|([1-2][0-9])|(3[01])))|((([469])|(11))[\\-\\/\\s]?((0[1-9])|([1-9])|([1-2][0-9])|(30)))|((02|2)[\\-\\/\\s]?((0[1-9])|([1-9])|([1-2][0-9]))))[\\-\\/\\s]?\\d{4})(\\s(((0[1-9])|([1-9])|(1[0-2]))\\:([0-5][0-9])((\\s)|(\\:([0-5][0-9])\\s))([AM|PM|am|pm]{2,2})))?$");
-	//private static Pattern patternDateB = Pattern
-	//		.compile("(?<Year>(19|20)[0-9][0-9])-(?<Month>0[1-9]|1[0-2])-(?<Day>0[1-9]|[12][0-9]|3[01])(T|\\s)(([0-1][0-9])|(2[0-3])):([0-5][0-9]):([0-5][0-9])(\\.[0-9]*)?");
+	// private static Pattern patternDateA = Pattern
+	// .compile("^(((((0[13578])|([13578])|(1[02]))[\\-\\/\\s]?((0[1-9])|([1-9])|([1-2][0-9])|(3[01])))|((([469])|(11))[\\-\\/\\s]?((0[1-9])|([1-9])|([1-2][0-9])|(30)))|((02|2)[\\-\\/\\s]?((0[1-9])|([1-9])|([1-2][0-9]))))[\\-\\/\\s]?\\d{4})(\\s(((0[1-9])|([1-9])|(1[0-2]))\\:([0-5][0-9])((\\s)|(\\:([0-5][0-9])\\s))([AM|PM|am|pm]{2,2})))?$");
+	// private static Pattern patternDateB = Pattern
+	// .compile("(?<Year>(19|20)[0-9][0-9])-(?<Month>0[1-9]|1[0-2])-(?<Day>0[1-9]|[12][0-9]|3[01])(T|\\s)(([0-1][0-9])|(2[0-3])):([0-5][0-9]):([0-5][0-9])(\\.[0-9]*)?");
 	private static Pattern patternNoneDigit = Pattern.compile("\\D");
 
 	/**
@@ -52,23 +52,24 @@ public final class TypeInferenceUtils {
 	}
 
 	/**
-	 * Detect if the given value is a double type.
-	 * Note that 3,4 is not valid double with the rule of this method. 
+	 * Detect if the given value is a double type. Note that 3,4 is not valid
+	 * double with the rule of this method.
+	 * 
 	 * @param value
 	 *            the value to be detected.
 	 * @return true if the value is a double type, false otherwise.
 	 */
 	public static boolean isDouble(String value) {
 		if (value != null) {
-			if (patternDouble.matcher(value).find()) {
-				return true;
-			} else {
-				try {
+			try {
+				if (patternDouble.matcher(value).find()) {
+					return true;
+				} else {
 					Double.valueOf(value);
 					return true;
-				} catch (NumberFormatException e) {
-					return false;
 				}
+			} catch (Throwable e) {
+				return false;
 			}
 		}
 		return false;
@@ -83,8 +84,12 @@ public final class TypeInferenceUtils {
 	 */
 	public static boolean isInteger(String value) {
 		if (value != null) {
-			if (patternInteger.matcher(value).find()) {
-				return true;
+			try {
+				if (patternInteger.matcher(value).find()) {
+					return true;
+				}
+			} catch (Throwable e) {
+				return false;
 			}
 		}
 		return false;
@@ -104,7 +109,8 @@ public final class TypeInferenceUtils {
 		if (value != null) {
 			try {
 				new DateTime(value);
-				//TODO Need to test if this lib can match all the pattern in PatternsNameAndRegularExpressions.txt.
+				// TODO Need to test if this lib can match all the pattern in
+				// PatternsNameAndRegularExpressions.txt.
 				return true;
 			} catch (Exception e) {
 				return false;
