@@ -568,7 +568,7 @@ public class FunctionApplier {
             } catch (NumberFormatException e) {
                 extraParam = 0;
             }
-            if (extraParam < 0) {
+            if (extraParam < 0 || extraParam > 9) {
                 extraParam = 0;
             }
             String str = valueIn.toString();
@@ -644,7 +644,7 @@ public class FunctionApplier {
             } catch (NumberFormatException e) {
                 extraParam = 0;
             }
-            if (extraParam < 0) {
+            if (extraParam < 0 || extraParam > 9) {
                 extraParam = 0;
             }
             String str = valueIn.toString();
@@ -745,7 +745,7 @@ public class FunctionApplier {
             } catch (NumberFormatException e) {
                 extraParam = 0;
             }
-            if (extraParam < 0) {
+            if (extraParam < 0 || extraParam > 9) {
                 extraParam = 0;
             }
             String str = valueIn.toString();
@@ -980,7 +980,7 @@ public class FunctionApplier {
             } catch (NumberFormatException e) {
                 extraParam = 0;
             }
-            if (extraParam < 0) {
+            if (extraParam < 0 || extraParam > 9) {
                 extraParam = 0;
             }
             String str = valueIn.toString();
