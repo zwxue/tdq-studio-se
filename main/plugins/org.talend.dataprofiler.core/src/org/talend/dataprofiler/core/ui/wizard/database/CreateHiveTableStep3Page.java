@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -125,6 +127,14 @@ public class CreateHiveTableStep3Page extends AbstractWizardPage {
         String defaultTableName = ((CreateHiveTableWizard) this.getWizard()).getDefaultTableName();
         tableNameText.setText(defaultTableName);
         super.setVisible(visible);
+
+        // make the previous pages is pageComplete
+        for (int i = 0; i < getWizard().getPageCount(); i++) {
+            IWizardPage[] pages = getWizard().getPages();
+            ((WizardPage) pages[i]).setPageComplete(true);
+        }
+
+        getContainer().updateButtons();// need to update
     }
 
     /**

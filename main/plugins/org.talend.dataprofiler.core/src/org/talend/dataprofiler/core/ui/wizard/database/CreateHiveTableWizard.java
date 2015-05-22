@@ -16,6 +16,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IWorkbench;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -23,11 +29,16 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.types.TypesManager;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.compare.factory.ComparisonLevelFactory;
+import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.CreateHiveOfHCAction;
 import org.talend.designer.hdfsbrowse.model.EHadoopFileTypes;
 import org.talend.designer.hdfsbrowse.model.IHDFSNode;
+import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.metadata.managment.hive.handler.HiveConnectionHandler;
 import org.talend.repository.hdfs.ui.HDFSFileSelectorWizardPage;
@@ -54,7 +65,7 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
     public CreateHiveTableWizard(IWorkbench workbench, RepositoryNode repositoryNode, String[] existingNames) {
         super(workbench, true, repositoryNode.getObject(), null, existingNames, false);
         currentNode = repositoryNode;
-        this.setNeedsProgressMonitor(true);
+        setNeedsProgressMonitor(true);
     }
 
     @Override
@@ -119,6 +130,7 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
                 stmt = hiveConnection.createStatement();
                 stmt.execute(createTableSql);
             }
+            reloadTableList(selectedHive);
             return true;
         } catch (java.sql.SQLException e) {
             showErrorOnPage(e);
@@ -139,6 +151,48 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
         }
 
         return false;
+    }
+
+    /**
+     * reload the table folder under "default" in the selected hive connection.
+     * 
+     * @param selectedHive
+     */
+    private void reloadTableList(final IRepositoryNode selectedHive) {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
+        IWorkspaceRunnable operation = new IWorkspaceRunnable() {
+
+            public void run(IProgressMonitor monitor) throws CoreException {
+                List<IRepositoryNode> children = selectedHive.getChildren();
+                RepositoryNode tableFolder = null;
+                for (IRepositoryNode child : children) {
+                    if (StringUtils.equals("default", child.getLabel())) {
+                        List<IRepositoryNode> folders = child.getChildren();
+                        for (IRepositoryNode folder : folders) {
+                            if (folder instanceof DBTableFolderRepNode) {
+                                tableFolder = (RepositoryNode) folder;
+                            }
+                        }
+                    }
+                }
+                if (tableFolder != null) {
+                    IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(tableFolder);
+                    try {
+                        creatComparisonLevel.reloadCurrentLevelElement();
+                    } catch (ReloadCompareException e) {
+                        log.error(e, e);
+                    }
+                    CorePlugin.getDefault().refreshDQView(tableFolder);
+                }
+            }
+        };
+        try {
+            workspace.run(operation, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+
     }
 
     /**
