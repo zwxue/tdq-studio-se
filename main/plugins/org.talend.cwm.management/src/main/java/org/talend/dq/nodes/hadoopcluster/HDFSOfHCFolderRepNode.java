@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IPath;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.management.i18n.Messages;
@@ -85,7 +84,7 @@ public class HDFSOfHCFolderRepNode extends DBConnectionFolderRepNode {
                     continue;
                 }
                 repNode.setProperties(EProperties.LABEL, viewObject.getLabel());
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
+                // repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
                 viewObject.setRepositoryNode(repNode);
                 children.add(repNode);
             }

@@ -847,6 +847,19 @@
              </enablement>
       </actionProvider>
       <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.EditHadoopClusterActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.EditHadoopClusterActionProvider">
+            <enablement> 
+                    <or>
+                        <adapt type="org.talend.dq.nodes.hadoopcluster.HadoopClusterConnectionRepNode" />
+                        <adapt  type="org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode" />
+                        <adapt type="java.util.Collection"> 
+                            <count value="0" />
+                        </adapt>
+                    </or>
+             </enablement>
+      </actionProvider>
+      <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.CreateHiveOfHCActionProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.CreateHiveOfHCActionProvider">
             <enablement> 

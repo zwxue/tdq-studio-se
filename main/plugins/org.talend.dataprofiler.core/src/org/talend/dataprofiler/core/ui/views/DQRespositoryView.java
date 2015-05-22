@@ -102,6 +102,8 @@ import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
 import org.talend.dataprofiler.core.ui.action.actions.EditDFTableAction;
 import org.talend.dataprofiler.core.ui.action.actions.EditFileDelimitedAction;
+import org.talend.dataprofiler.core.ui.action.actions.EditHDFSConnectionAction;
+import org.talend.dataprofiler.core.ui.action.actions.EditHadoopClusterAction;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditorInput;
@@ -130,6 +132,8 @@ import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
+import org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode;
+import org.talend.dq.nodes.hadoopcluster.HadoopClusterConnectionRepNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
@@ -379,9 +383,13 @@ public class DQRespositoryView extends CommonNavigator {
                     if (obj instanceof DQRepositoryNode) {
                         if (obj instanceof ReportFileRepNode) {
                             new OpenItemEditorAction((IRepositoryNode) obj).run();
-                        } else if (obj instanceof DFConnectionRepNode) { // MOD gdbu 2011-4-1 bug 20051
+                        } else if (obj instanceof DFConnectionRepNode) {
                             new EditFileDelimitedAction((IRepositoryNode) obj).run();
-                        } else if (obj instanceof DFTableRepNode) {// MOD qiongli 2011-10-21 bug TDQ-3797
+                        } else if (obj instanceof HadoopClusterConnectionRepNode) {
+                            new EditHadoopClusterAction((IRepositoryNode) obj).run();
+                        } else if (obj instanceof HDFSOfHCConnectionNode) {
+                            new EditHDFSConnectionAction((IRepositoryNode) obj).run();
+                        } else if (obj instanceof DFTableRepNode) {
                             new EditDFTableAction((IRepositoryNode) obj).run();
                         } else {
                             DQRepositoryNode repoNode = (DQRepositoryNode) obj;

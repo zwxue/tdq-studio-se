@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.wizard.database;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.metadata.managment.ui.wizard.AbstractForm;
 import org.talend.repository.hdfs.ui.HDFSSchemaForm;
 import org.talend.repository.model.hdfs.HDFSConnection;
 
@@ -38,23 +37,20 @@ public class CreateHiveTableStep2page extends WizardPage {
     }
 
     public void createControl(final Composite parent) {
-        schemaForm = new HDFSSchemaForm(parent, connectionItem, null, this, temConnection);
+        schemaForm = new HDFSSchemaDQForm(parent, connectionItem, null, this, temConnection);
         schemaForm.setReadOnly(false);
-        AbstractForm.ICheckListener listener = new AbstractForm.ICheckListener() {
-
-            public void checkPerformed(final AbstractForm source) {
-                if (source.isStatusOnError()) {
-                    setPageComplete(false);
-                    setErrorMessage(source.getStatus());
-                } else {
-                    setPageComplete(true);
-                    CreateHiveTableStep2page.this.schemaForm.setButtonsVisibility(true);
-                    setErrorMessage(null);
-                    setMessage(source.getStatus(), source.getStatusLevel());
-                }
-            }
-        };
-        schemaForm.setListener(listener);
         setControl(schemaForm);
+        setPageComplete(false);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
+     */
+    @Override
+    public boolean canFlipToNextPage() {
+        return ((HDFSSchemaDQForm) schemaForm).canFlipToNext();
+    }
+
 }

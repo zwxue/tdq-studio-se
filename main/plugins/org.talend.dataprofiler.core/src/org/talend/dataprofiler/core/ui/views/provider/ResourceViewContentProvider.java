@@ -226,11 +226,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 } else if (EResourceConstant.METADATA.getName().equals(label)) {
                     resContants.add(EResourceConstant.DB_CONNECTIONS);
                     resContants.add(EResourceConstant.FILEDELIMITED);
-                    resContants.add(EResourceConstant.HADOOP_CLUSTER);
+                    if (PluginChecker.isTDQLoaded()) {
+                        resContants.add(EResourceConstant.HADOOP_CLUSTER);
+                    }
                 }
-
                 instance.createRepositoryNodeSystemFolders(node, resContants, node.getProject());
-
             }
         }
         return sortRepositoryNode(children.toArray());
