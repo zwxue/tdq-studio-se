@@ -45,8 +45,9 @@ public class HadoopClusterConnectionRepNode extends ConnectionRepNode {
      * @param parent
      * @param type
      */
-    public HadoopClusterConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public HadoopClusterConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
 
     }
 
@@ -58,8 +59,10 @@ public class HadoopClusterConnectionRepNode extends ConnectionRepNode {
     public List<IRepositoryNode> getChildren() {
         List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         // first : create two sub folders:
-        HDFSOfHCFolderRepNode hdfsFolder = new HDFSOfHCFolderRepNode(this.getObject(), this, ENodeType.SIMPLE_FOLDER);
-        HiveOfHCFolderRepNode hiveFolder = new HiveOfHCFolderRepNode(this.getObject(), this, ENodeType.SIMPLE_FOLDER);
+        HDFSOfHCFolderRepNode hdfsFolder = new HDFSOfHCFolderRepNode(this.getObject(), this, ENodeType.SIMPLE_FOLDER,
+                getProject());
+        HiveOfHCFolderRepNode hiveFolder = new HiveOfHCFolderRepNode(this.getObject(), this, ENodeType.SIMPLE_FOLDER,
+                getProject());
         addSubFolder(children, hdfsFolder);
         addSubFolder(children, hiveFolder);
 

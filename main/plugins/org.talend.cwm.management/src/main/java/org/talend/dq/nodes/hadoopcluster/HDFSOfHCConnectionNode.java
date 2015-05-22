@@ -29,8 +29,9 @@ public class HDFSOfHCConnectionNode extends ConnectionRepNode {
      * @param parent
      * @param type
      */
-    public HDFSOfHCConnectionNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public HDFSOfHCConnectionNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
 
     }
 

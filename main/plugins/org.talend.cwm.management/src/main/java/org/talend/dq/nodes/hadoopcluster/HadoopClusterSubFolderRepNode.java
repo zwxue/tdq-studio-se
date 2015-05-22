@@ -28,8 +28,9 @@ public class HadoopClusterSubFolderRepNode extends HadoopClusterFolderRepNode {
      * @param parent
      * @param type
      */
-    public HadoopClusterSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public HadoopClusterSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     @Override

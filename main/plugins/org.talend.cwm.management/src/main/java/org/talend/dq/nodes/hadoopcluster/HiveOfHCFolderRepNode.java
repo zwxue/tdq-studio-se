@@ -46,9 +46,9 @@ public class HiveOfHCFolderRepNode extends DBConnectionFolderRepNode {
      * @param parent
      * @param type
      */
-    public HiveOfHCFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
-        // TODO Auto-generated constructor stub
+    public HiveOfHCFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     /**
@@ -83,7 +83,7 @@ public class HiveOfHCFolderRepNode extends DBConnectionFolderRepNode {
                 }
 
                 try {
-                    repNode = new HiveOfHCConnectionNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    repNode = new HiveOfHCConnectionNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, getProject());
                 } catch (Exception e) {
                     log.error(e, e);
                     continue;

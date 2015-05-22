@@ -29,9 +29,9 @@ public class HiveOfHCConnectionNode extends ConnectionRepNode {
      * @param parent
      * @param type
      */
-    public HiveOfHCConnectionNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
-        // TODO Auto-generated constructor stub
+    public HiveOfHCConnectionNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
 }

@@ -41,8 +41,9 @@ public class HDFSOfHCFolderRepNode extends DBConnectionFolderRepNode {
 
     private static Logger log = Logger.getLogger(HDFSOfHCFolderRepNode.class);
 
-    public HDFSOfHCFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public HDFSOfHCFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
 
     }
 
@@ -78,7 +79,7 @@ public class HDFSOfHCFolderRepNode extends DBConnectionFolderRepNode {
                     }
                 }
                 try {
-                    repNode = new HDFSOfHCConnectionNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    repNode = new HDFSOfHCConnectionNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, getProject());
                 } catch (Exception e) {
                     log.error(e, e);
                     continue;

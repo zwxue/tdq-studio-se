@@ -41,8 +41,9 @@ public class HadoopClusterFolderRepNode extends DQRepositoryNode {
      * @param parent
      * @param type
      */
-    public HadoopClusterFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
+    public HadoopClusterFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
+            org.talend.core.model.general.Project inWhichProject) {
+        super(object, parent, type, inWhichProject);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class HadoopClusterFolderRepNode extends DQRepositoryNode {
                 }
 
                 HadoopClusterConnectionRepNode repNode = new HadoopClusterConnectionRepNode(viewObject, this,
-                        ENodeType.REPOSITORY_ELEMENT);
+                        ENodeType.REPOSITORY_ELEMENT, getProject());
                 repNode.setProperties(EProperties.LABEL, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
                 repNode.setProperties(EProperties.CONTENT_TYPE, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
                 viewObject.setRepositoryNode(repNode);

@@ -216,7 +216,8 @@ public final class RepositoryNodeBuilder {
             parentNode.getChildren().add(dfmFolder);
             return dfmFolder;
         case HADOOP_CLUSTER:
-            HadoopClusterFolderRepNode hcFolder = new HadoopClusterFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
+            HadoopClusterFolderRepNode hcFolder = new HadoopClusterFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                    inWhichProject);
             folder.setRepositoryNode(hcFolder);
             parentNode.getChildren().add(hcFolder);
             return hcFolder;
