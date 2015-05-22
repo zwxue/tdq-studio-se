@@ -28,7 +28,6 @@ public class ColumnTypeBean {
 	private String type;
 	private String suggestedType;
 	private long validCount;
-	private long invalidCount;
 	private long count;
 	private long empties;
 	private Map<String, Long> typeToCountMap = new HashMap<String, Long>();
@@ -81,12 +80,9 @@ public class ColumnTypeBean {
 	}
 
 	public long getInvalidCount() {
-		return invalidCount;
+		return count - empties-validCount;
 	}
 
-	public void setInvalidCount(long invalidCount) {
-		this.invalidCount = invalidCount;
-	}
 
 	public long getCount() {
 		return count;

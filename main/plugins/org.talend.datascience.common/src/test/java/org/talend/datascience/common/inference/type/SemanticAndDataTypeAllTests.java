@@ -8,7 +8,7 @@ import org.talend.datascience.common.inference.semantic.SemanticInferExecutorTes
 @RunWith(Suite.class)
 @SuiteClasses({ DataTypeInferExecutorTest.class,
 		SemanticAndDataTypeInferExecutorTest.class,
-		SemanticTypeInferenceHubTest.class, TypeInferenceUtilsTest.class,SemanticInferExecutorTest.class })
+		InferenceHubTest.class, TypeInferenceUtilsTest.class,SemanticInferExecutorTest.class })
 public class SemanticAndDataTypeAllTests {
 
 }

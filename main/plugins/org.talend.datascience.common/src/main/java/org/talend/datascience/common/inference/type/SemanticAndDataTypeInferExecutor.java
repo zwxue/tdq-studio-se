@@ -14,6 +14,7 @@ package org.talend.datascience.common.inference.type;
 
 import java.util.List;
 
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder.Mode;
 import org.talend.datascience.common.inference.semantic.SemanticInferExecutor;
 
 /**
@@ -30,6 +31,12 @@ public class SemanticAndDataTypeInferExecutor extends AbstractInferExecutor {
 	public SemanticAndDataTypeInferExecutor() {
 		semanticInferExecutor = new SemanticInferExecutor();
 		dataTypeInferExecutor = new DataTypeInferExecutor();
+	}
+	
+	public void setSemanticProperties(String ddPath,String kwPath,Mode searchMode){
+		semanticInferExecutor.setDdPath(ddPath);
+		semanticInferExecutor.setKwPath(kwPath);
+		semanticInferExecutor.setSemanticRecognizerMode(searchMode);
 	}
 
 	@Override

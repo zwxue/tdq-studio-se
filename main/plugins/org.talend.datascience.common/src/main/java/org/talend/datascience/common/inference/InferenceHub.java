@@ -27,10 +27,12 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder.Mode;
 import org.talend.datascience.common.inference.semantic.SemanticInferExecutor;
 import org.talend.datascience.common.inference.type.AbstractInferExecutor;
 import org.talend.datascience.common.inference.type.ColumnTypeBean;
 import org.talend.datascience.common.inference.type.DataTypeInferExecutor;
+import org.talend.datascience.common.inference.type.SemanticAndDataTypeInferExecutor;
 import org.talend.datascience.common.inference.type.TypeInferenceUtils;
 
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -44,21 +46,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A interface processing input and output data with specific format (json for
- * example). this class hold one instance of {{@link DataTypeInferExecutor}
+ * example).
  * 
  * @author zhao
  *
  */
-public class SemanticTypeInferenceHub {
+public class InferenceHub {
 
 	private String jsonRecordPath = "records";
 	private String jsonColumnPath = "columns";
 	private String id = "id";
 	private String type = "type";
 	private String typeOccurrences = "types";
+	private String fieldName = "name";
+
 	protected static final String TYPE_NAME = "name";
 	protected static final String OCCUR = "occurrences";
 	private static final String SEMANTICS = "semantics";
+	private static final String SUGGEST_TYPE = "suggestedType";
+	private static final String STATS = "statistics";
+	private static final String COUNT = "count";
+	private static final String VALIDE = "valid";
+	private static final String INVALIDE = "invalid";
+	private static final String EMPTY = "empty";
+
 	public void setJsonRecordPath(String jsonRecordPath) {
 		this.jsonRecordPath = jsonRecordPath;
 	}
@@ -192,11 +203,40 @@ public class SemanticTypeInferenceHub {
 	 * @throws {@link IOException}
 	 * @throws {@link JsonParseException}
 	 */
-	public String inferSemanticTypes(InputStream jsonStream)
-			throws JsonParseException, IOException {
-		AbstractInferExecutor inferExectutor = new SemanticInferExecutor();
+	public String inferSemanticTypes(InputStream jsonStream, String ddPath,
+			String kwPath, Mode searchMode) throws JsonParseException,
+			IOException {
+		SemanticInferExecutor inferExectutor = new SemanticInferExecutor();
+		inferExectutor.setDdPath(ddPath);
+		inferExectutor.setKwPath(kwPath);
+		inferExectutor.setSemanticRecognizerMode(searchMode);
 		String jsonResult = infer(jsonStream, inferExectutor,
 				InferTypeEnum.Semantic);
+		return jsonResult;
+	}
+
+	/**
+	 * Get the data type and semantics together
+	 * 
+	 * @param jsonStream
+	 *            input to be inferred from.
+	 * @param ddPath
+	 *            semantic repository dictionary path
+	 * @param kwPath
+	 *            semantic repository key word path
+	 * @param searchMode
+	 *            search mode , either {@link Mode#ELASTIC_SEARCH} or
+	 *            {@link Mode#LUCENE}.
+	 * @return schema together with data type and semantic.
+	 * @throws IOException
+	 * @throws JsonParseException
+	 */
+	public String inferDataTypeAndSemantics(InputStream jsonStream,
+			String ddPath, String kwPath, Mode searchMode)
+			throws JsonParseException, IOException {
+		SemanticAndDataTypeInferExecutor inferExectutor = new SemanticAndDataTypeInferExecutor();
+		inferExectutor.setSemanticProperties(ddPath, kwPath, searchMode);
+		String jsonResult = infer(jsonStream, inferExectutor, InferTypeEnum.All);
 		return jsonResult;
 	}
 
@@ -209,8 +249,7 @@ public class SemanticTypeInferenceHub {
 	 *            the data types come from the output of {
 	 *            {@link #inferDataTypes(InputStream)}.
 	 * @return column quality, the format is defined from
-	 *         https://jira.talendforge.org/browse/TDQ-10318 . This method will
-	 *         return null if exception occurs.
+	 *         https://jira.talendforge.org/browse/TDQ-10318.
 	 * @throws IOException
 	 * @throws JsonParseException
 	 */
@@ -248,7 +287,6 @@ public class SemanticTypeInferenceHub {
 						typeBean.setId(node.get(id).asText());
 						typeOccurConsumer.setTypeBean(typeBean);
 						node.get(typeOccurrences).forEach(typeOccurConsumer);
-						;
 					}
 				}
 			} else {
@@ -272,7 +310,7 @@ public class SemanticTypeInferenceHub {
 		jGenerator.writeArrayFieldStart(jsonColumnPath);// column array start
 		int colIdx = 0;
 		String typeValue = null;
-		for (ColumnTypeBean colMap : results) {
+		for (ColumnTypeBean columnTypeBean : results) {
 			jGenerator.writeStartObject();// Column start
 			// Write fixed metadata
 			jGenerator.writeStringField(
@@ -282,81 +320,16 @@ public class SemanticTypeInferenceHub {
 			typeValue = types.isEmpty() ? StringUtils.EMPTY : types.get(colIdx);
 			jGenerator.writeStringField(this.type, typeValue);
 			colIdx++;
-			jGenerator.writeStringField("name", "");
-			Map<String, Long> typeToCountMap = null;
+			jGenerator.writeStringField(fieldName, "");
 			if (inferType == InferTypeEnum.DataType) {
-				// Write types
-				ValueComparator bvc = new ValueComparator(colMap);
-				typeToCountMap = new TreeMap<String, Long>(bvc);
-				typeToCountMap.putAll(colMap.getTypeToCountMap());
+				writeTypesAndOccurrences(jGenerator, typeValue, columnTypeBean);
+			} else if (inferType == InferTypeEnum.Semantic) {
+				writeSemanticOccurrences(jGenerator, columnTypeBean);
 			} else {
-				typeToCountMap = colMap.getSemanticNameToCountMap();
+				// Infer both data type and semantic type.
+				writeTypesAndOccurrences(jGenerator, typeValue, columnTypeBean);
+				writeSemanticOccurrences(jGenerator, columnTypeBean);
 			}
-			Iterator<String> typeKeyInterator = typeToCountMap.keySet()
-					.iterator();
-			String suggestType = null;
-			if (inferType == InferTypeEnum.DataType) {
-				jGenerator.writeArrayFieldStart(this.typeOccurrences); // Type array start
-			} else {
-				jGenerator.writeArrayFieldStart(SEMANTICS); // Type array
-																// start
-			}
-			long validCount = 0;
-			long emptyCount = 0;
-			long totalCount = 0;
-			while (typeKeyInterator.hasNext()) {
-				String nextType = typeKeyInterator.next();
-				Long count = typeToCountMap.get(nextType);
-				if (count == null || count == 0) {
-					// Ignore empty count
-					continue;
-				}
-				jGenerator.writeStartObject();// Type object start.
-				if (inferType == InferTypeEnum.DataType) {
-					// Only when inferring data types, computing the suggested
-					// type , valid and invalid count etc.
-					if (!TypeInferenceUtils.TYPE_EMPTY.equals(nextType)) {
-						// get suggested type
-						if (suggestType == null) {
-							suggestType = nextType;
-							if (StringUtils.isEmpty(typeValue)) {
-								// If the type is not given , valid count will
-								// be
-								// the count from suggested type.
-								validCount = count;
-							}
-						}
-						// get valid count
-						if (!StringUtils.isEmpty(typeValue)
-								&& StringUtils.equalsIgnoreCase(typeValue, nextType)) {
-							validCount = count;
-						}
-					} else {
-						emptyCount = count;
-					}
-					totalCount += count;
-				}
-				jGenerator.writeStringField(TYPE_NAME, nextType);
-				jGenerator.writeNumberField(OCCUR, count);
-				jGenerator.writeEndObject();// Type object end.
-			}
-			if (suggestType == null) {
-				// If empty type only
-				suggestType = TypeInferenceUtils.TYPE_STRING;
-			}
-
-			jGenerator.writeEndArray();// Type array end
-			jGenerator.writeStringField("suggestedType", suggestType);
-			// Stats.
-			jGenerator.writeObjectFieldStart("statistics");// Statistics object
-															// start
-			jGenerator.writeNumberField("count", totalCount);
-			jGenerator.writeNumberField("valid", validCount);
-			jGenerator.writeNumberField("invalid", totalCount - validCount
-					- emptyCount);
-			jGenerator.writeNumberField("empty", emptyCount);
-			jGenerator.writeEndObject();// Statistics object end
-
 			jGenerator.writeEndObject();// Column end
 		}
 		jGenerator.writeEndArray();// column array end
@@ -365,6 +338,99 @@ public class SemanticTypeInferenceHub {
 		String jsonResult = output.toString();
 		output.close();
 		return jsonResult;
+	}
+
+	private void writeSemanticOccurrences(JsonGenerator jGenerator,
+			ColumnTypeBean columnTypeBean) throws IOException {
+		Map<String, Long> typeToCountMap = columnTypeBean
+				.getSemanticNameToCountMap();
+		Iterator<String> typeKeyInterator = typeToCountMap.keySet().iterator();
+
+		jGenerator.writeArrayFieldStart(SEMANTICS); // Type array
+		while (typeKeyInterator.hasNext()) {
+			String nextType = typeKeyInterator.next();
+			Long count = typeToCountMap.get(nextType);
+			if (count == null || count == 0) {
+				// Ignore empty count
+				continue;
+			}
+			jGenerator.writeStartObject();// Type object start.
+			jGenerator.writeStringField(TYPE_NAME, nextType);
+			jGenerator.writeNumberField(OCCUR, count);
+			jGenerator.writeEndObject();// Type object end.
+		} // start
+		jGenerator.writeEndArray();// Type array end
+	}
+
+	private void writeTypesAndOccurrences(JsonGenerator jGenerator,
+			String typeValue, ColumnTypeBean columnTypeBean) throws IOException {
+		// Write types
+		ValueComparator bvc = new ValueComparator(columnTypeBean);
+		Map<String, Long> typeToCountMap = new TreeMap<String, Long>(bvc);
+		typeToCountMap.putAll(columnTypeBean.getTypeToCountMap());
+		Iterator<String> typeKeyInterator = typeToCountMap.keySet().iterator();
+
+		// Type array start
+		jGenerator.writeArrayFieldStart(this.typeOccurrences);
+		while (typeKeyInterator.hasNext()) {
+			String nextType = typeKeyInterator.next();
+			Long count = typeToCountMap.get(nextType);
+			if (count == null || count == 0) {
+				// Ignore empty count
+				continue;
+			}
+			// Only when inferring data types, computing the suggested
+			// type , valid and invalid count etc.
+			writeDataTypeOccurrences(jGenerator, columnTypeBean, nextType,
+					count, typeValue);
+		}
+		jGenerator.writeEndArray();// Type array end
+		if (columnTypeBean.getSuggestedType() == null) {
+			// If empty type only
+			columnTypeBean.setSuggestedType(TypeInferenceUtils.TYPE_STRING);
+		}
+
+		jGenerator.writeStringField(SUGGEST_TYPE,
+				columnTypeBean.getSuggestedType());
+		// Stats.
+		jGenerator.writeObjectFieldStart(STATS);// Statistics object
+												// start
+		jGenerator.writeNumberField(COUNT, columnTypeBean.getCount());
+		jGenerator.writeNumberField(VALIDE, columnTypeBean.getValidCount());
+		jGenerator.writeNumberField(INVALIDE, columnTypeBean.getCount()
+				- columnTypeBean.getValidCount() - columnTypeBean.getEmpties());
+		jGenerator.writeNumberField(EMPTY, columnTypeBean.getEmpties());
+		jGenerator.writeEndObject();// Statistics object end
+	}
+
+	private void writeDataTypeOccurrences(JsonGenerator jGenerator,
+			ColumnTypeBean columnTypeBean, String nextType, long count,
+			String typeValue) throws IOException {
+		jGenerator.writeStartObject();// Type object start.
+
+		if (!TypeInferenceUtils.TYPE_EMPTY.equals(nextType)) {
+			// get suggested type
+			if (columnTypeBean.getSuggestedType() == null) {
+				columnTypeBean.setSuggestedType(nextType);
+				if (StringUtils.isEmpty(typeValue)) {
+					// If the type is not given , valid count will
+					// be
+					// the count from suggested type.
+					columnTypeBean.setValidCount(count);
+				}
+			}
+			// get valid count
+			if (!StringUtils.isEmpty(typeValue)
+					&& StringUtils.equalsIgnoreCase(typeValue, nextType)) {
+				columnTypeBean.setValidCount(count);
+			}
+		} else {
+			columnTypeBean.setEmpties(count);
+		}
+		columnTypeBean.setCount(columnTypeBean.getCount() + count);
+		jGenerator.writeStringField(TYPE_NAME, nextType);
+		jGenerator.writeNumberField(OCCUR, count);
+		jGenerator.writeEndObject();// Type object end.
 	}
 
 }
@@ -379,15 +445,15 @@ class TypeOccuConsumer implements Consumer<JsonNode> {
 
 	@Override
 	public void accept(JsonNode node) {
-		String typeName = node.get(SemanticTypeInferenceHub.TYPE_NAME).asText();
-		Long occurs = node.get(SemanticTypeInferenceHub.OCCUR).asLong();
+		String typeName = node.get(InferenceHub.TYPE_NAME).asText();
+		Long occurs = node.get(InferenceHub.OCCUR).asLong();
 		typeBean.putTypeToCount(typeName, occurs);
 	}
 
 }
 
 enum InferTypeEnum {
-	DataType, Semantic
+	DataType, Semantic, All
 }
 
 class ValueComparator implements Comparator<String> {

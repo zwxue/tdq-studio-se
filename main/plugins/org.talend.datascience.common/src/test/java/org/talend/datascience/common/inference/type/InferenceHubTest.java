@@ -4,13 +4,16 @@ import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.talend.datascience.common.inference.SemanticTypeInferenceHub;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder.Mode;
+import org.talend.datascience.common.inference.InferenceHub;
+import org.talend.datascience.common.inference.semantic.SemanticInferExecutorTest;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
-public class SemanticTypeInferenceHubTest {
-	SemanticTypeInferenceHub inferHub = new SemanticTypeInferenceHub();
+public class InferenceHubTest {
+	InferenceHub inferHub = new InferenceHub();
 
 	@Test
 	public void testInferTypesInputStream() {
@@ -54,11 +57,21 @@ public class SemanticTypeInferenceHubTest {
 		}
 	}
 
-	@Test
+	/**
+	 * This test is ignored for the time being because the dictionary path and
+	 * key word path is hard coded, they should be replaced later by elastic
+	 * search server.
+	 * 
+	 * @throws JsonParseException
+	 * @throws IOException
+	 */
+	@Ignore
 	public void testInferSemanticTypesInputStream() throws JsonParseException,
 			IOException {
 		String schemaInJson = inferHub.inferSemanticTypes(getClass()
-				.getResourceAsStream("data10Records.json"));
+				.getResourceAsStream("data10Records.json"),
+				SemanticInferExecutorTest.ddPath,
+				SemanticInferExecutorTest.kwPath, Mode.LUCENE);
 		Assert.assertEquals(
 				IOUtils.readLines(
 						getClass().getResourceAsStream(
@@ -78,6 +91,28 @@ public class SemanticTypeInferenceHubTest {
 				IOUtils.readLines(
 						getClass().getResourceAsStream(
 								"data10ComputeQuality.json")).get(0),
+				schemaInJson);
+	}
+
+	/**
+	 * This test is ignored for the time being because the dictionary path and
+	 * key word path is hard coded, they should be replaced later by elastic
+	 * search server.
+	 * 
+	 * @throws JsonParseException
+	 * @throws IOException
+	 */
+	@Ignore
+	public void testInferDataTypeAndSemantic() throws JsonParseException,
+			IOException {
+		String schemaInJson = inferHub.inferDataTypeAndSemantics(getClass()
+				.getResourceAsStream("data10Records.json"),
+				SemanticInferExecutorTest.ddPath,
+				SemanticInferExecutorTest.kwPath, Mode.LUCENE);
+		Assert.assertEquals(
+				IOUtils.readLines(
+						getClass().getResourceAsStream(
+								"data10DataTypeAndSemanticAssert.json")).get(0),
 				schemaInJson);
 	}
 }

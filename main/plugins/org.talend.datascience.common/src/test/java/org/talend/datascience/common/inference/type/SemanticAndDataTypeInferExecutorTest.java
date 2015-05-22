@@ -12,7 +12,9 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.Ignore;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder.Mode;
+import org.talend.datascience.common.inference.semantic.SemanticInferExecutorTest;
 
 public class SemanticAndDataTypeInferExecutorTest {
 	SemanticAndDataTypeInferExecutor executor = null;
@@ -25,9 +27,17 @@ public class SemanticAndDataTypeInferExecutorTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	/**
+	 * This test is ignored for the time being because the dictionary path and
+	 * key word path is hard coded, they should be replaced later by elastic
+	 * search server.
+	 * 
+	 * @throws IOException
+	 */
+	@Ignore
 	public void testHandle() throws IOException {
 		executor = new SemanticAndDataTypeInferExecutor();
+		executor.setSemanticProperties(SemanticInferExecutorTest.ddPath, SemanticInferExecutorTest.kwPath, Mode.LUCENE);
 		DataTypeInferExecutorTest printService = new DataTypeInferExecutorTest();
 		InputStream in = this
 				.getClass()
