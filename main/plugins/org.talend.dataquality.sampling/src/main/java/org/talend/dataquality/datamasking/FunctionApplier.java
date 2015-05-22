@@ -182,7 +182,7 @@ public class FunctionApplier {
         case GENERATE_ACCOUNT_NUMBER_FORMAT:
             AccountNumberGenerator angf = new AccountNumberGenerator(rnd);
             String accountNumberFormat = EMPTY_STRING;
-            if (str != null) {
+            if (str != null && str.length() > 9) {
                 try {
                     accountNumberFormat = angf.generateIban(str);
                 } catch (NumberFormatException e) {
