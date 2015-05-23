@@ -12,9 +12,16 @@
 // ============================================================================
 package org.talend.datascience.common.inference.type;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
-import org.pojava.datetime.DateTime;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class refering data types given single value
@@ -31,6 +38,22 @@ public class TypeInferenceUtils {
     private static final Pattern patternInteger = Pattern.compile("^(\\+|-)?\\d+$");
 
     private static final Pattern patternNoneDigit = Pattern.compile("\\D");
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TypeInferenceUtils.class);
+
+    private static final Collection<Pattern> dateTimePatterns = new LinkedList<Pattern>();
+
+    static {
+        try {
+            final InputStream stream = TypeInferenceUtils.class.getResourceAsStream("dateTimePatterns.txt");
+            final List<String> lines = IOUtils.readLines(stream);
+            for (String line : lines) {
+                dateTimePatterns.add(Pattern.compile(line));
+            }
+        } catch (IOException e) {
+            LOGGER.error("Unable to get date time patterns.", e);
+        }
+    }
 
     /**
      * Detect if the given value is a string type.
@@ -98,14 +121,12 @@ public class TypeInferenceUtils {
      */
     public static boolean isDate(String value) {
         if (value != null) {
-            try {
-                new DateTime(value);
-                // TODO Need to test if this lib can match all the pattern in
-                // PatternsNameAndRegularExpressions.txt.
-                return true;
-            } catch (Exception e) {
-                return false;
+            for (Pattern dateTimePattern : dateTimePatterns) {
+                if (dateTimePattern.matcher(value).matches()) {
+                    return true;
+                }
             }
+            return false;
         } else {
             return false;
         }
