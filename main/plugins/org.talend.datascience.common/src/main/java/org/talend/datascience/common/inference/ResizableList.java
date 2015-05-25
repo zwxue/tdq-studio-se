@@ -6,12 +6,25 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+/**
+ * A {@link List} that can resize to a given maximum size and ensure that all index in list have an instance of
+ * <i>T</i>. <b>Important:</b>type <i>T</i> must have a public zero args constructor.
+ * 
+ * @param <T> A class with a zero-arg constructor.
+ * @see #resize(int)
+ */
 public class ResizableList<T> implements List<T> {
 
     private Class<T> itemClass;
 
     private List<T> innerList;
 
+    /**
+     * Creates a list with explicit {@link #resize(int) resize} that contains instances of <i>T</i>.
+     * 
+     * @param itemClass The class of <i>T</i>.
+     * @throws IllegalArgumentException If <code>itemClass</code> does not have a zero args constructor.
+     */
     public ResizableList(Class<T> itemClass) {
         try {
             itemClass.getConstructor();
@@ -22,6 +35,11 @@ public class ResizableList<T> implements List<T> {
         this.innerList = new ArrayList<T>();
     }
 
+    /**
+     * Resize the list so it contains <code>size</code> instances of <i>T</i>. Method only scales up, never down.
+     * 
+     * @param size The new size for the list. Must be a positive number.
+     */
     public void resize(int size) {
         try {
             if (size < 0) {
