@@ -74,7 +74,7 @@ public class CreateHiveTableAction extends CreateHDFSSchemaAction {
 
     }
 
-    private void openHDFSSchemaWizard(final HDFSConnectionItem item) {
+    protected void openHDFSSchemaWizard(final HDFSConnectionItem item) {
         WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), new CreateHiveTableWizard(
                 PlatformUI.getWorkbench(), repositoryNode, getExistingNames()));
         wizardDialog.setPageSize(WIZARD_WIDTH, WIZARD_HEIGHT);
