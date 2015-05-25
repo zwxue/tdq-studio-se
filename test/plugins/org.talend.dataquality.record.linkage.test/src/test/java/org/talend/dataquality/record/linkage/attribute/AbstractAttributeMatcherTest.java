@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.attribute;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
@@ -30,10 +30,12 @@ public class AbstractAttributeMatcherTest {
             // tests for Exact matcher
             { AttributeMatcherType.EXACT.toString(), "E", "E", "1.0" },
             { AttributeMatcherType.EXACT.toString(), "E", "e", "0.0" },
+            { AttributeMatcherType.EXACT.toString(), "A", "Ä", "0.0" },
 
             // tests for ExactIgnoreCase matcher
             { AttributeMatcherType.EXACT_IGNORE_CASE.toString(), "E", "e", "1.0" },
             { AttributeMatcherType.EXACT_IGNORE_CASE.toString(), "Î", "î", "1.0" },
+            { AttributeMatcherType.EXACT_IGNORE_CASE.toString(), "A", "Ä", "0.0" },
 
             // tests for Soundex matcher
             { AttributeMatcherType.SOUNDEX.toString(), "kate", "Cade", "0.75" },
@@ -41,6 +43,7 @@ public class AbstractAttributeMatcherTest {
             { AttributeMatcherType.SOUNDEX.toString(), "steff", "stephanie", "0.75" },
             { AttributeMatcherType.SOUNDEX.toString(), "Sebastiao", "Sepastien", "1.0" },
             { AttributeMatcherType.SOUNDEX.toString(), "Sizhao", "sejao", "1.0" },
+            { AttributeMatcherType.SOUNDEX.toString(), "A", "Ä", "0.0" },
 
             // tests for SoundexFR matcher
 
@@ -49,6 +52,7 @@ public class AbstractAttributeMatcherTest {
             { AttributeMatcherType.SOUNDEX_FR.toString(), "steff", "stephanie", "0.75" },
             { AttributeMatcherType.SOUNDEX_FR.toString(), "Sebastiao", "Sepastien", "0.75" },
             { AttributeMatcherType.SOUNDEX_FR.toString(), "Sizhao", "sejao", "0.75" },
+            { AttributeMatcherType.SOUNDEX_FR.toString(), "A", "Ä", "0.75" },
 
             // tests for Metaphone/DoubleMataphone matcher
             { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "kate", "Cade", "1.0" },
@@ -56,6 +60,7 @@ public class AbstractAttributeMatcherTest {
             { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "steff", "stephanie", "0.75" },
             { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "Sebastiao", "Sepastien", "0.75" },
             { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "Sizhao", "sejao", "1.0" },
+            { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "A", "Ä", "0.0" },
 
             // tests for Levenshtein matcher
             { AttributeMatcherType.LEVENSHTEIN.toString(), "kate", "Cade", "0.5" },
@@ -63,6 +68,7 @@ public class AbstractAttributeMatcherTest {
             { AttributeMatcherType.LEVENSHTEIN.toString(), "steff", "stephanie", "0.33" },
             { AttributeMatcherType.LEVENSHTEIN.toString(), "Sebastiao", "Sepastien", "0.67" },
             { AttributeMatcherType.LEVENSHTEIN.toString(), "Sizhao", "sejao", "0.33" },
+            { AttributeMatcherType.LEVENSHTEIN.toString(), "A", "Ä", "0.0" },
 
             // tests for Jaro(-Winkler) matcher
             { AttributeMatcherType.JARO.toString(), "kate", "Cade", "0.66" },
@@ -70,6 +76,7 @@ public class AbstractAttributeMatcherTest {
             { AttributeMatcherType.JARO.toString(), "steff", "stephanie", "0.64" },
             { AttributeMatcherType.JARO.toString(), "Sebastiao", "Sepastien", "0.78" },
             { AttributeMatcherType.JARO.toString(), "Sizhao", "sejao", "0.57" },
+            { AttributeMatcherType.JARO.toString(), "A", "Ä", "0.0" },
 
             // tests for Qgrams matcher
             { AttributeMatcherType.Q_GRAMS.toString(), "kate", "Cade", "0.16" },
@@ -77,11 +84,13 @@ public class AbstractAttributeMatcherTest {
             { AttributeMatcherType.Q_GRAMS.toString(), "steff", "stephanie", "0.33" },
             { AttributeMatcherType.Q_GRAMS.toString(), "Sebastiao", "Sepastien", "0.36" },
             { AttributeMatcherType.Q_GRAMS.toString(), "Sizhao", "sejao", "0.26" },
+            { AttributeMatcherType.Q_GRAMS.toString(), "A", "Ä", "0.0" },
 
             // tests for blank fields
             { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "", "stephanie", "0.0" },
             { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "stephanie", "", "0.0" },
             { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "", "", "1.0" },
+            { AttributeMatcherType.DOUBLE_METAPHONE.toString(), "A", "Ä", "0.0" },
 
             // tests for null fields (default null option)
             { AttributeMatcherType.DOUBLE_METAPHONE.toString(), null, "stephanie", "0.0" },
@@ -115,6 +124,7 @@ public class AbstractAttributeMatcherTest {
             Assert.assertEquals(1.0d, matcher.getMatchingWeight("", "toto"), 0);
             Assert.assertEquals(1.0d, matcher.getMatchingWeight("", ""), 0);
             Assert.assertEquals(1.0d, matcher.getMatchingWeight("a", "a"), 0);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight(null, "Ä"), 0);
 
             // change option
             matcher.setNullOption(NullOption.nullMatchNone);
@@ -123,6 +133,7 @@ public class AbstractAttributeMatcherTest {
             Assert.assertEquals(0.0d, matcher.getMatchingWeight("", "toto"), 0);
             Assert.assertEquals(0.0d, matcher.getMatchingWeight("", ""), 0);
             Assert.assertEquals(1.0d, matcher.getMatchingWeight("a", "a"), 0);
+            Assert.assertEquals(0.0d, matcher.getMatchingWeight(null, "Ä"), 0);
 
             // change option
             matcher.setNullOption(NullOption.nullMatchNull);
@@ -131,8 +142,10 @@ public class AbstractAttributeMatcherTest {
             Assert.assertEquals(0.0d, matcher.getMatchingWeight("", "toto"), 0);
             Assert.assertEquals(1.0d, matcher.getMatchingWeight("", ""), 0);
             Assert.assertEquals(1.0d, matcher.getMatchingWeight("a", "a"), 0);
+            Assert.assertEquals(0.0d, matcher.getMatchingWeight(null, "Ä"), 0);
 
         }
 
     }
+
 }
