@@ -188,12 +188,12 @@ public class TreeMessageInfoDialog extends MessageDialog {
                         modelElement = ModelElementFileFactory.getModelElement((IFile) obj);
                     } else if (obj instanceof RepositoryViewObject) {
                         // Added 20130226 TDQ-6899 show the name for Jrxml object (which has no related ModelElement)
-                        return ImageLib.getImage(ImageLib.XML_DOC);
+                        return ImageLib.getImage(ImageLib.JRXML_ICON);
                     }
                     // ~
                     if (modelElement == null) {
                         if (((ImpactNode) obj).getNode() != null) {
-                            return ImageLib.getImage(ImageLib.XML_DOC);
+                            return ImageLib.getImage(ImageLib.JRXML_ICON);
                         }
                         return super.getImage(obj);
                     }

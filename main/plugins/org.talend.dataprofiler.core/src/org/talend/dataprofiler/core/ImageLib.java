@@ -226,7 +226,9 @@ public final class ImageLib {
 
     public static final String ICON_LOCK = "lock.gif"; //$NON-NLS-1$
 
-    public static final String XML_DOC = "xmldoc.gif"; //$NON-NLS-1$
+    public static final String JRXML_ICON = "jrxml.png"; //$NON-NLS-1$
+
+    public static final String JRXML_WHITE_ICON = "jrxml_white.png"; //$NON-NLS-1$
 
     public static final String XML_ELEMENT_DOC = "xmlele.gif"; //$NON-NLS-1$
 
@@ -279,6 +281,8 @@ public final class ImageLib {
     public static final String EXPORT_MATCH_RULE_ICON = "match_rule_export.png"; //$NON-NLS-1$
 
     public static final String MATCH_RULE_ICON = "match_rule.png"; //$NON-NLS-1$
+
+    public static final String MATCH_RULE_WHITE_ICON = "match_rule_white.png"; //$NON-NLS-1$
 
     public static final String APPLICATION_HOME = "application_home.png"; //$NON-NLS-1$
 
@@ -668,7 +672,7 @@ public final class ImageLib {
             } else if (node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode) {
                 imageName = ImageLib.EXCHANGE;
             } else if (node instanceof JrxmlTempleteRepNode) {
-                imageName = ImageLib.XML_DOC;
+                imageName = ImageLib.JRXML_ICON;
             }
         } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
             if (node instanceof DBCatalogRepNode) {

@@ -266,7 +266,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
                     image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 } else if (node instanceof JrxmlTempleteRepNode) {
-                    image = ImageLib.getImage(ImageLib.XML_DOC);
+                    image = ImageLib.getImage(ImageLib.JRXML_ICON);
                 }
             }
         }
@@ -374,7 +374,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         } else if (type == ERepositoryObjectType.FOLDER) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else if (type == ERepositoryObjectType.TDQ_JRAXML_ELEMENT) {
-            return ImageLib.getImage(ImageLib.XML_DOC);
+            return ImageLib.getImage(ImageLib.JRXML_ICON);
         }
         return null;
 

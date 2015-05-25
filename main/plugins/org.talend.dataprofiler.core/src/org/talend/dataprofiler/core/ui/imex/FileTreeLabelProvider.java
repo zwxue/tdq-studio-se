@@ -97,7 +97,7 @@ public class FileTreeLabelProvider extends LabelProvider {
                 } else if (fileName.endsWith(FactoriesUtil.JAR)) {
                     image = ImageLib.getImage(ImageLib.JAR_FILE);
                 } else if (fileName.endsWith(FactoriesUtil.JRXML)) {
-                    image = ImageLib.getImage(ImageLib.XML_DOC);
+                    image = ImageLib.getImage(ImageLib.JRXML_ICON);
                 }
             }
         }
