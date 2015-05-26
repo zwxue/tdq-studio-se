@@ -18,7 +18,7 @@ import java.util.List;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dq.nodes.ConnectionRepNode;
-import org.talend.dq.nodes.DBConnectionFolderRepNode;
+import org.talend.dq.nodes.DQFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -28,27 +28,17 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class HadoopClusterConnectionRepNode extends ConnectionRepNode {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.repository.model.RepositoryNode#hasChildren()
-     */
-    @Override
-    public boolean hasChildren() {
-        return super.hasChildren();
-    }
-
     /**
      * DOC yyin HadoopClusterConnectionRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
      */
     public HadoopClusterConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
-
     }
 
     /**
@@ -65,15 +55,13 @@ public class HadoopClusterConnectionRepNode extends ConnectionRepNode {
                 getProject());
         addSubFolder(children, hdfsFolder);
         addSubFolder(children, hiveFolder);
-
         return children;
     }
 
     // only show it when the related folder has child
-    private void addSubFolder(List<IRepositoryNode> children, DBConnectionFolderRepNode childNodeFolder) {
+    private void addSubFolder(List<IRepositoryNode> children, DQFolderRepNode childNodeFolder) {
         List<IRepositoryNode> childOfFolder = childNodeFolder.getChildren();
         if (childOfFolder != null && childOfFolder.size() > 0) {
-
             childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
             // folder.setRepositoryNode(childNodeFolder);

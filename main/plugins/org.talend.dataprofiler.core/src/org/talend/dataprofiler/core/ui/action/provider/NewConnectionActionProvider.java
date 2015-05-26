@@ -19,9 +19,11 @@ import org.talend.dataprofiler.core.ui.action.actions.CreateDBConnectionAction;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDFConnectionAction;
 import org.talend.dataprofiler.core.ui.action.actions.CreateHadoopClusterAction;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
+import org.talend.dq.nodes.DBConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.hadoopcluster.HadoopClusterFolderRepNode;
+import org.talend.dq.nodes.hadoopcluster.HadoopClusterSubFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -54,13 +56,11 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
         if (node != null) {
             // ~20051
             IAction action = null;
-            if (node instanceof DBConnectionFolderRepNode) {
-                if (((DBConnectionFolderRepNode) node).isSupportCreateDBMenu()) {
-                    action = new CreateDBConnectionAction(node);
-                }
+            if (node instanceof DBConnectionFolderRepNode || node instanceof DBConnectionSubFolderRepNode) {
+                action = new CreateDBConnectionAction(node);
             } else if (node instanceof DFConnectionFolderRepNode || node instanceof DFConnectionSubFolderRepNode) {
                 action = new CreateDFConnectionAction(node);
-            } else if (node instanceof HadoopClusterFolderRepNode) {
+            } else if (node instanceof HadoopClusterFolderRepNode || node instanceof HadoopClusterSubFolderRepNode) {
                 action = new CreateHadoopClusterAction(node);
             }
             if (action != null) {

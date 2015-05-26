@@ -14,14 +14,12 @@ package org.talend.dq.nodes.hadoopcluster;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.dq.nodes.DQFolderRepNode;
 import org.talend.repository.hadoopcluster.node.model.HadoopClusterRepositoryNodeType;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -30,9 +28,7 @@ import org.talend.repository.model.RepositoryNode;
  * created by yyin on 2015年4月21日 Detailled comment
  *
  */
-public class HadoopClusterFolderRepNode extends DQRepositoryNode {
-
-    private static Logger log = Logger.getLogger(HadoopClusterFolderRepNode.class);
+public class HadoopClusterFolderRepNode extends DQFolderRepNode {
 
     /**
      * DOC yyin HadoopClusterFolderRepNode constructor comment.
@@ -40,42 +36,21 @@ public class HadoopClusterFolderRepNode extends DQRepositoryNode {
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
      */
     public HadoopClusterFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
     @Override
     public List<IRepositoryNode> getChildren() {
         return getChildren(false);
-    }
-
-    @Override
-    public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        try {
-            super.getChildren().clear();
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(HadoopClusterRepositoryNodeType.HADOOPCLUSTER,
-                            RepositoryNodeHelper.getPath(this).toString());
-            // sub folders
-            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDeleted && viewObject.isDeleted()) {
-                    continue;
-                }
-
-                HadoopClusterConnectionRepNode repNode = new HadoopClusterConnectionRepNode(viewObject, this,
-                        ENodeType.REPOSITORY_ELEMENT, getProject());
-                repNode.setProperties(EProperties.LABEL, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
-                repNode.setProperties(EProperties.CONTENT_TYPE, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
-                viewObject.setRepositoryNode(repNode);
-                super.getChildren().add(repNode);
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-        // MOD gdbu 2011-7-1 bug : 22204
-        return filterResultsIfAny(super.getChildren());
     }
 
     @Override
@@ -94,6 +69,30 @@ public class HadoopClusterFolderRepNode extends DQRepositoryNode {
     @Override
     public String getDisplayText() {
         return Messages.getString("DQRepositoryViewLabelProvider.HadoopClusterFolderName"); //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
+     */
+    @Override
+    public void getChildrenForProject(boolean withDeleted, Project project) throws PersistenceException {
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
+
+        // sub folders
+        for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+            if (!withDeleted && viewObject.isDeleted()) {
+                continue;
+            }
+
+            HadoopClusterConnectionRepNode repNode = new HadoopClusterConnectionRepNode(viewObject, this,
+                    ENodeType.REPOSITORY_ELEMENT, project);
+            repNode.setProperties(EProperties.LABEL, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
+            repNode.setProperties(EProperties.CONTENT_TYPE, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
+            viewObject.setRepositoryNode(repNode);
+            super.getChildren().add(repNode);
+        }
     }
 
 }

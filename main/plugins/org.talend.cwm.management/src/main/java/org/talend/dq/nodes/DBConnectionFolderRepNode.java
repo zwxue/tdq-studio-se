@@ -101,11 +101,6 @@ public class DBConnectionFolderRepNode extends DQFolderRepNode {
         return getChildren(false);
     }
 
-
-    public boolean isSupportCreateDBMenu() {
-        return true;
-    }
-
     /*
      * (non-Javadoc)
      * 

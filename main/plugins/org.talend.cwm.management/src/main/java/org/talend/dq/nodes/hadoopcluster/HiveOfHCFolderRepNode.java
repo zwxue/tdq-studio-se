@@ -12,13 +12,13 @@
 // ============================================================================
 package org.talend.dq.nodes.hadoopcluster;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -26,7 +26,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DBConnectionFolderRepNode;
+import org.talend.dq.nodes.DQFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -35,7 +35,7 @@ import org.talend.resource.EResourceConstant;
  * created by yyin on 2015年4月24日 Detailled comment
  *
  */
-public class HiveOfHCFolderRepNode extends DBConnectionFolderRepNode {
+public class HiveOfHCFolderRepNode extends DQFolderRepNode {
 
     private static Logger log = Logger.getLogger(HiveOfHCFolderRepNode.class);
 
@@ -51,12 +51,26 @@ public class HiveOfHCFolderRepNode extends DBConnectionFolderRepNode {
         super(object, parent, type, inWhichProject);
     }
 
-    /**
-     * for hive folder, its children are under connections folder, not here, so find children there, and show link here.
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
-    public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
+    public List<IRepositoryNode> getChildren() {
+        return getChildren(false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
+     */
+    @Override
+    public void getChildrenForProject(boolean withDeleted, Project project) throws PersistenceException {
+        // for hive folder, its children are under connections folder, not here, so find children there, and show link
+        // here.
+
         IPath path = RepositoryNodeHelper.getPath(this.getParent());// =metadata/hadoop/hadoopcluster
         // change it to: metadata/connections
         path = path.removeLastSegments(2);
@@ -65,39 +79,33 @@ public class HiveOfHCFolderRepNode extends DBConnectionFolderRepNode {
         Item clusterConnectionItem = getParent().getObject().getProperty().getItem();
         String clusterId = clusterConnectionItem.getProperty().getId();
 
-        try {
-            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(ERepositoryObjectType.METADATA_CONNECTIONS, path.toString());
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
+                .getTdqRepositoryViewObjects(project, ERepositoryObjectType.METADATA_CONNECTIONS, path.toString());
 
-            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDeleted && viewObject.isDeleted()) {
+        for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+            if (!withDeleted && viewObject.isDeleted()) {
+                continue;
+            }
+            HiveOfHCConnectionNode repNode = null;
+            // check if ConnParameterKeys.CONN_PARA_KEY_HADOOP_CLUSTER_ID = current hadoop cluster's id
+            if (viewObject != null && viewObject.getProperty() != null) {
+                String hcId = ConnectionUtils.getHadoopClusterIDOfHive(viewObject);
+                if (!clusterId.equals(hcId)) {
                     continue;
                 }
-                HiveOfHCConnectionNode repNode = null;
-                // check if ConnParameterKeys.CONN_PARA_KEY_HADOOP_CLUSTER_ID = current hadoop cluster's id
-                if (viewObject != null && viewObject.getProperty() != null) {
-                    String hcId = ConnectionUtils.getHadoopClusterIDOfHive(viewObject);
-                    if (!clusterId.equals(hcId)) {
-                        continue;
-                    }
-                }
-
-                try {
-                    repNode = new HiveOfHCConnectionNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, getProject());
-                } catch (Exception e) {
-                    log.error(e, e);
-                    continue;
-                }
-                repNode.setProperties(EProperties.LABEL, viewObject.getLabel());
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
-                viewObject.setRepositoryNode(repNode);
-                children.add(repNode);
             }
 
-        } catch (PersistenceException e) {
-            log.error(e, e);
+            try {
+                repNode = new HiveOfHCConnectionNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, project);
+            } catch (Exception e) {
+                log.error(e, e);
+                continue;
+            }
+            repNode.setProperties(EProperties.LABEL, viewObject.getLabel());
+            repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
+            viewObject.setRepositoryNode(repNode);
+            super.getChildren().add(repNode);
         }
-        return children;
     }
 
     @Override
@@ -105,8 +113,4 @@ public class HiveOfHCFolderRepNode extends DBConnectionFolderRepNode {
         return Messages.getString("HiveOfHCFolderRepNode.displayText"); //$NON-NLS-1$
     }
 
-    @Override
-    public boolean isSupportCreateDBMenu() {
-        return false;
-    }
 }
