@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dq.nodes.indicator.type;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -366,6 +369,8 @@ public enum IndicatorEnum {
 
     private final int indicatorClassifierId;
 
+    private static Map<String, IndicatorEnum> labelMap;
+
     IndicatorEnum(int indicatorClassifierId, EClass indicatorType, String label, IndicatorEnum[] children) {
         this.indicatorClassifierId = indicatorClassifierId;
         this.indicatorType = indicatorType;
@@ -437,6 +442,16 @@ public enum IndicatorEnum {
      */
     public IndicatorEnum getParent() {
         return parent;
+    }
+
+    public static IndicatorEnum findIndicatorEnumByLabel(String label) {
+        if (labelMap == null) {
+            labelMap = new HashMap<String, IndicatorEnum>();
+            for (IndicatorEnum indiEnum : IndicatorEnum.values()) {
+                labelMap.put(indiEnum.getLabel(), indiEnum);
+            }
+        }
+        return labelMap.get(label);
     }
 
     public static IndicatorEnum findIndicatorEnum(EClass indicatorType) {

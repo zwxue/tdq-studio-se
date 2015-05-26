@@ -56,7 +56,6 @@ import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.model.emf.CwmResource;
 import org.talend.resource.ResourceManager;
-
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -136,7 +135,7 @@ public final class DefinitionHandler {
         if (Platform.isRunning()) {
             indicatorDefinitions.addAll((List<IndicatorDefinition>) IndicatorResourceFileHelper.getInstance().getAllElement());
         } else {// reporting engine is running as library
-            indicatorDefinitions.addAll((List<IndicatorDefinition>) getAllIndicatorElement(getTdqLibPath() + "/Indicators")); //$NON-NLS-1$
+            indicatorDefinitions.addAll((List<IndicatorDefinition>) getAllIndicatorElement(getTdqLibPath() + "Indicators")); //$NON-NLS-1$
         }
     }
 
