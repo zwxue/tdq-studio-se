@@ -69,9 +69,15 @@ public class FunctionApplier {
 
     private RandomWrapper rnd = new RandomWrapper();
 
+    private boolean keepNull = false;
+
     public void setSeed(long seed) {
         dateChanger.setSeed(seed);
         rnd = new RandomWrapper(seed);
+    }
+
+    public void init(boolean keep_null) {
+        keepNull = keep_null;
     }
 
     /**
@@ -83,7 +89,7 @@ public class FunctionApplier {
      * @return This method returns a Date after the application of the parameter function.
      */
     public Date generateDuplicate(Date date, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL) {
+        if (function == Function.SET_TO_NULL || date == null && keepNull) {
             return null;
         }
         Date newDate = new Date(System.currentTimeMillis());
@@ -139,7 +145,7 @@ public class FunctionApplier {
      */
 
     public String generateDuplicate(String str, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL) {
+        if (function == Function.SET_TO_NULL || str == null && keepNull) {
             return null;
         }
         StringBuilder sb = new StringBuilder(EMPTY_STRING);
@@ -519,7 +525,7 @@ public class FunctionApplier {
             sb = new StringBuilder(UUID.randomUUID().toString());
             break;
         default:
-            break;
+            return sb.toString();
         }
         return sb.toString();
     }
@@ -534,51 +540,52 @@ public class FunctionApplier {
      */
 
     public Double generateDuplicate(Double valueIn, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL) {
+        if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
             return null;
         }
-        if (valueIn == null) {
-            return 0.0;
-        }
-        Double finalValue = null;
+        Double finalValue = 0.0;
         Integer extraParam = null;
         switch (function) {
         case NUMERIC_VARIANCE:
-            try {
-                extraParam = Integer.parseInt(extraParameter);
-            } catch (NumberFormatException e) {
-                extraParam = 10;
+            if (valueIn != null) {
+                try {
+                    extraParam = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    extraParam = 10;
+                }
+                if (extraParam <= 0) {
+                    extraParam *= -1;
+                } else if (extraParam == 0) {
+                    extraParam = 10;
+                }
+                int rate = 0;
+                do {
+                    rate = rnd.nextInt(2 * extraParam) - extraParam;
+                } while (rate == 0);
+                Float value = Float.parseFloat(valueIn.toString());
+                value *= ((float) rate + 100) / 100;
+                finalValue = new Double(value);
             }
-            if (extraParam <= 0) {
-                extraParam *= -1;
-            } else if (extraParam == 0) {
-                extraParam = 10;
-            }
-            int rate = 0;
-            do {
-                rate = rnd.nextInt(2 * extraParam) - extraParam;
-            } while (rate == 0);
-            Float value = Float.parseFloat(valueIn.toString());
-            value *= ((float) rate + 100) / 100;
-            finalValue = new Double(value);
             break;
         case REPLACE_NUMERIC:
-            try {
-                extraParam = Integer.parseInt(extraParameter);
-            } catch (NumberFormatException e) {
-                extraParam = 0;
+            if (valueIn != null) {
+                try {
+                    extraParam = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    extraParam = 0;
+                }
+                if (extraParam < 0 || extraParam > 9) {
+                    extraParam = 0;
+                }
+                String str = valueIn.toString();
+                String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
+                finalValue = Double.valueOf(res);
             }
-            if (extraParam < 0 || extraParam > 9) {
-                extraParam = 0;
-            }
-            String str = valueIn.toString();
-            String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
-            finalValue = Double.valueOf(res);
             break;
         case GENERATE_BETWEEN:
             String[] parameters = extraParameter.split(","); //$NON-NLS-1$
             if (parameters.length != 2) {
-                finalValue = 0.0;
+                break;
             } else {
                 int a = 0;
                 int b = 0;
@@ -595,7 +602,7 @@ public class FunctionApplier {
             }
             break;
         default:
-            return valueIn;
+            return finalValue;
         }
         return finalValue;
     }
@@ -610,46 +617,47 @@ public class FunctionApplier {
      */
 
     public Float generateDuplicate(Float valueIn, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL) {
+        if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
             return null;
         }
-        if (valueIn == null) {
-            return 0.0f;
-        }
-        Float finalValue = null;
+        Float finalValue = 0.0f;
+        Integer extraParam = null;
         switch (function) {
         case NUMERIC_VARIANCE:
-            Integer extraParam;
-            try {
-                extraParam = Integer.parseInt(extraParameter);
-            } catch (NumberFormatException e) {
-                extraParam = 10;
+            if (valueIn != null) {
+                try {
+                    extraParam = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    extraParam = 10;
+                }
+                if (extraParam < 0) {
+                    extraParam *= -1;
+                } else if (extraParam == 0) {
+                    extraParam = 10;
+                }
+                int rate = 0;
+                do {
+                    rate = rnd.nextInt(2 * extraParam) - extraParam;
+                } while (rate == 0);
+                Float value = Float.parseFloat(valueIn.toString());
+                value *= ((float) rate + 100) / 100;
+                finalValue = new Float(value);
             }
-            if (extraParam < 0) {
-                extraParam *= -1;
-            } else if (extraParam == 0) {
-                extraParam = 10;
-            }
-            int rate = 0;
-            do {
-                rate = rnd.nextInt(2 * extraParam) - extraParam;
-            } while (rate == 0);
-            Float value = Float.parseFloat(valueIn.toString());
-            value *= ((float) rate + 100) / 100;
-            finalValue = new Float(value);
             break;
         case REPLACE_NUMERIC:
-            try {
-                extraParam = Integer.parseInt(extraParameter);
-            } catch (NumberFormatException e) {
-                extraParam = 0;
+            if (valueIn != null) {
+                try {
+                    extraParam = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    extraParam = 0;
+                }
+                if (extraParam < 0 || extraParam > 9) {
+                    extraParam = 0;
+                }
+                String str = valueIn.toString();
+                String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
+                finalValue = Float.valueOf(res);
             }
-            if (extraParam < 0 || extraParam > 9) {
-                extraParam = 0;
-            }
-            String str = valueIn.toString();
-            String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
-            finalValue = Float.valueOf(res);
             break;
         case GENERATE_BETWEEN:
             String[] parameters = extraParameter.split(","); //$NON-NLS-1$
@@ -671,7 +679,7 @@ public class FunctionApplier {
             }
             break;
         default:
-            finalValue = 0f;
+            return finalValue;
         }
         return finalValue;
     }
@@ -686,7 +694,7 @@ public class FunctionApplier {
      */
 
     public Long generateDuplicate(Long valueIn, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL) {
+        if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
             return null;
         }
         Long finalValue = null;
@@ -836,7 +844,11 @@ public class FunctionApplier {
                         break;
                     }
                 }
-                finalValue = (long) parametersIh[Math.abs(valueIn.hashCode()) % parametersIh.length];
+                if (valueIn == null) {
+                    finalValue = (long) parametersIh[rnd.nextInt(parametersIh.length)];
+                } else {
+                    finalValue = (long) parametersIh[Math.abs(valueIn.hashCode()) % parametersIh.length];
+                }
             } else {
                 finalValue = 0L;
             }
@@ -854,7 +866,11 @@ public class FunctionApplier {
                         break;
                     }
                 }
-                finalValue = (long) tokens.get(Math.abs(valueIn.hashCode()) % tokens.size());
+                if (valueIn == null) {
+                    finalValue = (long) tokens.get(rnd.nextInt(tokens.size()));
+                } else {
+                    finalValue = (long) tokens.get(Math.abs(valueIn.hashCode()) % tokens.size());
+                }
             } catch (FileNotFoundException e) {
                 finalValue = 0L;
             }
@@ -946,46 +962,47 @@ public class FunctionApplier {
      */
 
     public Integer generateDuplicate(Integer valueIn, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL) {
+        if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
             return null;
         }
-        if (valueIn == null) {
-            return 0;
-        }
-        Integer finalValue = null;
+        Integer finalValue = 0;
+        Integer extraParam = null;
         switch (function) {
         case NUMERIC_VARIANCE:
-            Integer extraParam;
-            try {
-                extraParam = Integer.parseInt(extraParameter);
-            } catch (NumberFormatException e) {
-                extraParam = 10;
+            if (valueIn != null) {
+                try {
+                    extraParam = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    extraParam = 10;
+                }
+                if (extraParam < 0) {
+                    extraParam *= -1;
+                } else if (extraParam == 0) {
+                    extraParam = 10;
+                }
+                int rate = 0;
+                do {
+                    rate = rnd.nextInt(2 * extraParam) - extraParam;
+                } while (rate == 0);
+                Float value = Float.parseFloat(valueIn.toString());
+                value *= ((float) rate + 100) / 100;
+                finalValue = new Integer(Math.round(value));
             }
-            if (extraParam < 0) {
-                extraParam *= -1;
-            } else if (extraParam == 0) {
-                extraParam = 10;
-            }
-            int rate = 0;
-            do {
-                rate = rnd.nextInt(2 * extraParam) - extraParam;
-            } while (rate == 0);
-            Float value = Float.parseFloat(valueIn.toString());
-            value *= ((float) rate + 100) / 100;
-            finalValue = new Integer(Math.round(value));
             break;
         case REPLACE_NUMERIC:
-            try {
-                extraParam = Integer.parseInt(extraParameter);
-            } catch (NumberFormatException e) {
-                extraParam = 0;
+            if (valueIn != null) {
+                try {
+                    extraParam = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    extraParam = 0;
+                }
+                if (extraParam < 0 || extraParam > 9) {
+                    extraParam = 0;
+                }
+                String str = valueIn.toString();
+                String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
+                finalValue = Integer.valueOf(res);
             }
-            if (extraParam < 0 || extraParam > 9) {
-                extraParam = 0;
-            }
-            String str = valueIn.toString();
-            String res = str.replaceAll("\\d", extraParam.toString()); //$NON-NLS-1$
-            finalValue = Integer.valueOf(res);
             break;
         case GENERATE_BETWEEN:
             String[] parameters = extraParameter.split(","); //$NON-NLS-1$
@@ -1055,7 +1072,11 @@ public class FunctionApplier {
                         break;
                     }
                 }
-                finalValue = parametersIh[Math.abs(valueIn.hashCode()) % parametersIh.length];
+                if (valueIn == null) {
+                    finalValue = parametersIh[rnd.nextInt(parametersIh.length)];
+                } else {
+                    finalValue = parametersIh[Math.abs(valueIn.hashCode()) % parametersIh.length];
+                }
             } else {
                 finalValue = 0;
             }
@@ -1073,84 +1094,96 @@ public class FunctionApplier {
                         break;
                     }
                 }
-                finalValue = tokens.get(Math.abs(valueIn.hashCode()) % tokens.size());
+                if (valueIn == null) {
+                    finalValue = tokens.get(rnd.nextInt(tokens.size()));
+                } else {
+                    finalValue = tokens.get(Math.abs(valueIn.hashCode()) % tokens.size());
+                }
             } catch (FileNotFoundException e) {
                 finalValue = 0;
             }
             break;
         case REMOVE_FIRST_CHARS:
-            Integer extra = null;
-            try {
-                extra = Integer.parseInt(extraParameter.trim());
-            } catch (NumberFormatException e) {
-                finalValue = 0;
-                break;
+            if (valueIn != null) {
+                Integer extra = null;
+                try {
+                    extra = Integer.parseInt(extraParameter.trim());
+                } catch (NumberFormatException e) {
+                    finalValue = 0;
+                    break;
+                }
+                if ((int) Math.log10(valueIn) + 1 <= extra || extra < 0) {
+                    finalValue = 0;
+                    break;
+                }
+                StringBuilder sb = new StringBuilder(valueIn.toString().substring(extra));
+                finalValue = Integer.parseInt(sb.toString());
             }
-            if ((int) Math.log10(valueIn) + 1 <= extra || extra < 0) {
-                finalValue = 0;
-                break;
-            }
-            StringBuilder sb = new StringBuilder(valueIn.toString().substring(extra));
-            finalValue = Integer.parseInt(sb.toString());
             break;
         case REMOVE_LAST_CHARS:
-            Integer extraP = null;
-            try {
-                extraP = Integer.parseInt(extraParameter.trim());
-            } catch (NumberFormatException e) {
-                finalValue = 0;
-                break;
+            if (valueIn != null) {
+                Integer extraP = null;
+                try {
+                    extraP = Integer.parseInt(extraParameter.trim());
+                } catch (NumberFormatException e) {
+                    finalValue = 0;
+                    break;
+                }
+                if ((int) Math.log10(valueIn) + 1 <= extraP || extraP < 0) {
+                    finalValue = 0;
+                    break;
+                }
+                finalValue = valueIn / (int) Math.pow(10.0, extraP);
             }
-            if ((int) Math.log10(valueIn) + 1 <= extraP || extraP < 0) {
-                finalValue = 0;
-                break;
-            }
-            finalValue = valueIn / (int) Math.pow(10.0, extraP);
             break;
         case REPLACE_FIRST_CHARS:
-            Integer extraPa = null;
-            try {
-                extraPa = Integer.parseInt(extraParameter.trim());
-            } catch (NumberFormatException e) {
-                finalValue = 0;
-                break;
+            if (valueIn != null) {
+                Integer extraPa = null;
+                try {
+                    extraPa = Integer.parseInt(extraParameter.trim());
+                } catch (NumberFormatException e) {
+                    finalValue = 0;
+                    break;
+                }
+                if (extraPa < 0) {
+                    finalValue = 0;
+                    break;
+                }
+                extraPa = ((int) Math.log10(valueIn) + 1 <= extraPa) ? (int) Math.log10(valueIn) + 1 : extraPa;
+                StringBuilder sbu = new StringBuilder(valueIn.toString());
+                StringBuilder remp = new StringBuilder(EMPTY_STRING);
+                for (int i = 0; i < extraPa; ++i) {
+                    remp.append(rnd.nextInt(9));
+                }
+                sbu.replace(0, extraPa, remp.toString());
+                finalValue = Integer.parseInt(sbu.toString());
             }
-            if (extraPa < 0) {
-                finalValue = 0;
-                break;
-            }
-            extraPa = ((int) Math.log10(valueIn) + 1 <= extraPa) ? (int) Math.log10(valueIn) + 1 : extraPa;
-            StringBuilder sbu = new StringBuilder(valueIn.toString());
-            StringBuilder remp = new StringBuilder(EMPTY_STRING);
-            for (int i = 0; i < extraPa; ++i) {
-                remp.append(rnd.nextInt(9));
-            }
-            sbu.replace(0, extraPa, remp.toString());
-            finalValue = Integer.parseInt(sbu.toString());
             break;
         case REPLACE_LAST_CHARS:
-            Integer extraPar = null;
-            try {
-                extraPar = Integer.parseInt(extraParameter.trim());
-            } catch (NumberFormatException e) {
-                finalValue = 0;
-                break;
+            if (valueIn != null) {
+                Integer extraPar = null;
+                try {
+                    extraPar = Integer.parseInt(extraParameter.trim());
+                } catch (NumberFormatException e) {
+                    finalValue = 0;
+                    break;
+                }
+                if (extraPar < 0) {
+                    finalValue = 0;
+                    break;
+                }
+                extraPar = ((int) Math.log10(valueIn) + 1 <= extraPar) ? (int) Math.log10(valueIn) + 1 : extraPar;
+                StringBuilder sbui = new StringBuilder(valueIn.toString());
+                StringBuilder rempl = new StringBuilder(EMPTY_STRING);
+                for (int i = 0; i < extraPar; ++i) {
+                    rempl.append(rnd.nextInt(9));
+                }
+                sbui.replace(sbui.length() - extraPar, sbui.length(), rempl.toString());
+                finalValue = Integer.parseInt(sbui.toString());
             }
-            if (extraPar < 0) {
-                finalValue = 0;
-                break;
-            }
-            extraPar = ((int) Math.log10(valueIn) + 1 <= extraPar) ? (int) Math.log10(valueIn) + 1 : extraPar;
-            StringBuilder sbui = new StringBuilder(valueIn.toString());
-            StringBuilder rempl = new StringBuilder(EMPTY_STRING);
-            for (int i = 0; i < extraPar; ++i) {
-                rempl.append(rnd.nextInt(9));
-            }
-            sbui.replace(sbui.length() - extraPar, sbui.length(), rempl.toString());
-            finalValue = Integer.parseInt(sbui.toString());
             break;
         default:
-            finalValue = 0;
+            return finalValue;
         }
         return finalValue;
     }
