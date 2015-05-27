@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.datascience.common.inference.AnalyzerTest;
 
@@ -74,6 +75,24 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         assertEquals(1, analyzer.getResult().size());
         assertEquals(DataType.Type.INTEGER, analyzer.getResult().get(0).getSuggestedType());
     }
+
+    @Test
+    @Ignore
+    public void testIncorrectCharDetection() throws Exception {
+        // One character
+        analyzer.analyze("M");
+        assertEquals(1, analyzer.getResult().size());
+        assertEquals(DataType.Type.CHAR, analyzer.getResult().get(0).getSuggestedType());
+        // Two characters
+        analyzer.analyze("M");
+        assertEquals(1, analyzer.getResult().size());
+        assertEquals(DataType.Type.CHAR, analyzer.getResult().get(0).getSuggestedType());
+        // The new value should invalidate previous assumptions about CHAR value (no longer a CHAR).
+        analyzer.analyze("Mme");
+        assertEquals(1, analyzer.getResult().size());
+        assertEquals(DataType.Type.STRING, analyzer.getResult().get(0).getSuggestedType());
+    }
+
 
     // TODO All other data types
 
