@@ -39,7 +39,6 @@ public class FunctionApplier {
         GENERATE_ACCOUNT_NUMBER,
         GENERATE_ACCOUNT_NUMBER_FORMAT,
         GENERATE_PHONE_NUMBER,
-        GENERATE_PHONE_NUMBER_FORMAT,
         GENERATE_BETWEEN,
         GENERATE_FROM_LIST,
         GENERATE_FROM_FILE,
@@ -81,14 +80,14 @@ public class FunctionApplier {
     }
 
     /**
-     * Method "generateDuplicate". This method is called when the input is a Date.
+     * Method "generateMaskedRow". This method is called when the input is a Date.
      * 
      * @param date The input sent to the function.
      * @param function The function used on the date parameter (see the enum Function).
      * @param extraParameter A parameter required by some functions (eg, Date Variance).
      * @return This method returns a Date after the application of the parameter function.
      */
-    public Date generateDuplicate(Date date, Function function, String extraParameter) {
+    public Date generateMaskedRow(Date date, Function function, String extraParameter) {
         if (function == Function.SET_TO_NULL || date == null && keepNull) {
             return null;
         }
@@ -136,7 +135,7 @@ public class FunctionApplier {
     }
 
     /**
-     * Method "generateDuplicate". This method is called when the input is a String.
+     * Method "generateMaskedRow". This method is called when the input is a String.
      * 
      * @param str The input sent to the function.
      * @param function The function used on the str parameter (see the enum Function).
@@ -144,7 +143,7 @@ public class FunctionApplier {
      * @return This method returns a String after the application of the parameter function.
      */
 
-    public String generateDuplicate(String str, Function function, String extraParameter) {
+    public String generateMaskedRow(String str, Function function, String extraParameter) {
         if (function == Function.SET_TO_NULL || str == null && keepNull) {
             return null;
         }
@@ -156,13 +155,13 @@ public class FunctionApplier {
             sb = new StringBuilder(ccg.generateCreditCard(cct).toString());
             break;
         case GENERATE_CREDIT_CARD_FORMAT:
+            boolean keep_format = ("true").equals(extraParameter); //$NON-NLS-1$ 
             CreditCardGenerator ccgf = new CreditCardGenerator(rnd);
             CreditCardType cct_format = null;
             if (str == null) {
                 cct_format = ccgf.chooseCreditCardType();
                 sb = new StringBuilder(ccgf.generateCreditCard(cct_format).toString());
-                break;
-            } else if (str != null) {
+            } else {
                 try {
                     cct_format = ccgf.getCreditCardType(Long.parseLong(str.replaceAll("\\s+", EMPTY_STRING))); //$NON-NLS-1$ 
                 } catch (NumberFormatException e) {
@@ -171,8 +170,7 @@ public class FunctionApplier {
                     break;
                 }
                 if (cct_format != null) {
-                    sb = new StringBuilder(ccgf.generateCreditCardFormat(cct_format,
-                            Long.parseLong(str.replaceAll("\\s+", EMPTY_STRING))).toString()); //$NON-NLS-1$ 
+                    sb = new StringBuilder(ccgf.generateCreditCardFormat(cct_format, str, keep_format));
                     break;
                 } else {
                     cct_format = ccgf.chooseCreditCardType();
@@ -186,11 +184,12 @@ public class FunctionApplier {
             sb = new StringBuilder(accountNumber);
             break;
         case GENERATE_ACCOUNT_NUMBER_FORMAT:
+            boolean keepFormat = ("true").equals(extraParameter); //$NON-NLS-1$
             AccountNumberGenerator angf = new AccountNumberGenerator(rnd);
             String accountNumberFormat = EMPTY_STRING;
             if (str != null && str.length() > 9) {
                 try {
-                    accountNumberFormat = angf.generateIban(str);
+                    accountNumberFormat = angf.generateIban(str, keepFormat);
                 } catch (NumberFormatException e) {
                     accountNumberFormat = angf.generateIban();
                 }
@@ -203,25 +202,6 @@ public class FunctionApplier {
             PhoneNumberGenerator png = new PhoneNumberGenerator(rnd);
             String phoneNumber = png.generatePhoneNumber();
             sb = new StringBuilder(phoneNumber);
-            break;
-        case GENERATE_PHONE_NUMBER_FORMAT:
-            PhoneNumberGenerator pngf = new PhoneNumberGenerator(rnd);
-            String phoneNumberFormat = EMPTY_STRING;
-            int extraParam = 0;
-            try {
-                extraParam = Integer.parseInt(extraParameter);
-            } catch (NumberFormatException e) {
-                phoneNumberFormat = pngf.generatePhoneNumber();
-                sb = new StringBuilder(phoneNumberFormat);
-            }
-            if (str == null || extraParam <= 0
-                    || !(str.replaceAll("\\s+", EMPTY_STRING).matches("^(\\+)?[0-9]+(-[0-9]+)+$|^(\\+)?[0-9]+$")) //$NON-NLS-1$ //$NON-NLS-2$ 
-                    || extraParam >= str.length()) {
-                phoneNumberFormat = pngf.generatePhoneNumber();
-            } else {
-                phoneNumberFormat = pngf.generatePhoneNumber(str, extraParam);
-            }
-            sb = new StringBuilder(phoneNumberFormat);
             break;
         case REPLACE_ALL:
             if (str == null || extraParameter == null || !extraParameter.matches("[0-9]|[a-zA-Z]")) { //$NON-NLS-1$
@@ -531,7 +511,7 @@ public class FunctionApplier {
     }
 
     /**
-     * Method "generateDuplicate". This method is called when the input is a Double.
+     * Method "generateMaskedRow". This method is called when the input is a Double.
      * 
      * @param valueIn The input sent to the function.
      * @param function The function used on the date parameter (see the enum Function).
@@ -539,7 +519,7 @@ public class FunctionApplier {
      * @return This method returns a Double after the application of the parameter function.
      */
 
-    public Double generateDuplicate(Double valueIn, Function function, String extraParameter) {
+    public Double generateMaskedRow(Double valueIn, Function function, String extraParameter) {
         if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
             return null;
         }
@@ -608,7 +588,7 @@ public class FunctionApplier {
     }
 
     /**
-     * Method "generateDuplicate". This method is called when the input is a Float.
+     * Method "generateMaskedRow". This method is called when the input is a Float.
      * 
      * @param valueIn The input sent to the function.
      * @param function The function used on the date parameter (see the enum Function).
@@ -616,7 +596,7 @@ public class FunctionApplier {
      * @return This method returns a Float after the application of the parameter function.
      */
 
-    public Float generateDuplicate(Float valueIn, Function function, String extraParameter) {
+    public Float generateMaskedRow(Float valueIn, Function function, String extraParameter) {
         if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
             return null;
         }
@@ -685,7 +665,7 @@ public class FunctionApplier {
     }
 
     /**
-     * Method "generateDuplicate". This method is called when the input is a Long.
+     * Method "generateMaskedRow". This method is called when the input is a Long.
      * 
      * @param valueIn The input sent to the function.
      * @param function The function used on the date parameter (see the enum Function).
@@ -693,7 +673,7 @@ public class FunctionApplier {
      * @return This method returns a Long after the application of the parameter function.
      */
 
-    public Long generateDuplicate(Long valueIn, Function function, String extraParameter) {
+    public Long generateMaskedRow(Long valueIn, Function function, String extraParameter) {
         if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
             return null;
         }
@@ -953,7 +933,7 @@ public class FunctionApplier {
     }
 
     /**
-     * Method "generateDuplicate". This method is called when the input is a Integer.
+     * Method "generateMaskedRow". This method is called when the input is a Integer.
      * 
      * @param valueIn The input sent to the function.
      * @param function The function used on the date parameter (see the enum Function).
@@ -961,7 +941,7 @@ public class FunctionApplier {
      * @return This method returns a Integer after the application of the parameter function.
      */
 
-    public Integer generateDuplicate(Integer valueIn, Function function, String extraParameter) {
+    public Integer generateMaskedRow(Integer valueIn, Function function, String extraParameter) {
         if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
             return null;
         }

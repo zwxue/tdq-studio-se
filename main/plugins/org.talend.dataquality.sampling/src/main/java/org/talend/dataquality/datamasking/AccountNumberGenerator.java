@@ -87,12 +87,20 @@ public class AccountNumberGenerator {
      * @return An american account number, the nine first digits belonging to the original input and the others randomly
      * generated.
      */
-    private static String generateAmericanAccountNumber(String accountNumber) {
-        StringBuilder sb = new StringBuilder(accountNumber.substring(0, 9));
+    private static String generateAmericanAccountNumber(String accountNumber, boolean keep) {
+        StringBuilder sb = new StringBuilder(accountNumber.replaceAll("\\s+", "").substring(0, 9)); //$NON-NLS-1$ //$NON-NLS-2$
         for (int i = 0; i < 10; ++i) {
             sb.append(String.valueOf(rnd.nextInt(10)));
         }
-        sb.insert(9, ' ');
+        if (keep) {
+            for (int i = 0; i < accountNumber.length(); ++i) {
+                if (String.valueOf(accountNumber.charAt(i)).equals(" ")) { //$NON-NLS-1$
+                    sb.insert(i, ' ');
+                }
+            }
+        } else {
+            sb.insert(9, ' ');
+        }
         return sb.toString();
     }
 
@@ -130,10 +138,10 @@ public class AccountNumberGenerator {
      * @param number The account number given in input.
      * @return A correct account number.
      */
-    String generateIban(String number) {
+    String generateIban(String number, boolean keep) {
         if (Character.isDigit(number.charAt(0))) {
             if (isAmericanAccount(number)) {
-                return generateAmericanAccountNumber(number).toString();
+                return generateAmericanAccountNumber(number, keep).toString();
             }
         }
 
@@ -162,8 +170,16 @@ public class AccountNumberGenerator {
         sb.setCharAt(2, Character.forDigit(check_digits / 10, 10));
         sb.setCharAt(3, Character.forDigit(check_digits % 10, 10));
 
-        for (int i = 4; i < sb.length(); i += 5) {
-            sb.insert(i, ' ');
+        if (keep) {
+            for (int i = 0; i < number.length(); ++i) {
+                if (String.valueOf(number.charAt(i)).equals(" ")) { //$NON-NLS-1$
+                    sb.insert(i, ' ');
+                }
+            }
+        } else {
+            for (int i = 4; i < sb.length(); i += 5) {
+                sb.insert(i, ' ');
+            }
         }
 
         return sb.toString();

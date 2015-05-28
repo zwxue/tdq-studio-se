@@ -89,6 +89,39 @@ public class CreditCardGenerator {
         return result;
     }
 
+    public String generateCreditCardFormat(CreditCardType cct, String valueIn, boolean keep) {
+        StringBuilder res = new StringBuilder(""); //$NON-NLS-1$
+        String str = valueIn.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        String prefix = ""; //$NON-NLS-1$
+        if (cct == CreditCardType.VISA) {
+            prefix = str.substring(0, 1);
+        } else {
+            prefix = str.substring(0, 2);
+        }
+        res.append(prefix);
+        for (int i = prefix.length(); i < str.length(); ++i) {
+            int tmp = rnd.nextInt(10);
+            res.append(tmp);
+        }
+
+        for (int i = 0; i < 10; ++i) {
+            res.setCharAt(res.length() - 1, DIGITS.charAt(i));
+            if (luhnTest(res) == true) {
+                break;
+            }
+        }
+
+        if (keep) {
+            for (int i = 0; i < valueIn.length(); ++i) {
+                if (valueIn.charAt(i) == ' ') {
+                    res.insert(i, ' ');
+                }
+            }
+        }
+
+        return res.toString();
+    }
+
     /**
      * This function creates a new Credit Card Number.
      * 
