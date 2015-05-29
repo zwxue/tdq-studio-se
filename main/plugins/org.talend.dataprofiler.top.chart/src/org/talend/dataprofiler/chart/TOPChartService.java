@@ -94,7 +94,7 @@ public class TOPChartService implements ITOPChartService {
 
     public static final int CHART_STANDARD_HEIGHT = 275;
 
-    public static final Logger log = Logger.getLogger(TOPChartService.class);
+    private static final Logger log = Logger.getLogger(TOPChartService.class);
 
     @Override
     public Object getDatasetFromChart(Object chart, int datasetIndex) {
