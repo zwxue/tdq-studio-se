@@ -4,7 +4,8 @@ Bundle-Name: TOP Chart plugin
 Bundle-SymbolicName: org.talend.dataprofiler.top.chart;singleton:=true
 Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.chart.TOPChartPlugin
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: org.apache.log4j,
+ org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.browser;bundle-version="3.3.0",
  org.talend.libraries.jfreechart,

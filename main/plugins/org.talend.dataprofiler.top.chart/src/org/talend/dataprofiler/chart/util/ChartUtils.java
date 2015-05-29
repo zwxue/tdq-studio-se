@@ -18,9 +18,9 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -43,7 +43,7 @@ import org.jfree.chart.JFreeChart;
  */
 public final class ChartUtils {
 
-    private static Logger log = Logger.getLogger("ChartUtils");
+    private static final Logger log = Logger.getLogger(ChartUtils.class);
 
     private ChartUtils() {
 
@@ -118,7 +118,7 @@ public final class ChartUtils {
             try {
                 WebBrowserEditor.open(new WebBrowserEditorInput(new URL(httpurl)));
             } catch (MalformedURLException e1) {
-                log.log(Level.WARNING, e1.getMessage());
+                log.log(Level.WARN, e1.getMessage());
             }
         }
     }

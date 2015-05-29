@@ -15,15 +15,12 @@ package org.talend.dataprofiler.chart.i18n;
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * created by yyin on 2014-12-8 Detailled comment
  * 
  */
 public class Messages {
-
-    private static Logger log = Logger.getLogger("topchart");
 
     private static final String BUNDLE_NAME = "org.talend.dataprofiler.chart.i18n.messages"; //$NON-NLS-1$
 

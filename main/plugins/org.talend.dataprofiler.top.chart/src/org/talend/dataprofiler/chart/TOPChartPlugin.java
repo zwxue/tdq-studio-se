@@ -11,8 +11,7 @@
 // ============================================================================
 package org.talend.dataprofiler.chart;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -24,7 +23,7 @@ import org.osgi.framework.BundleContext;
  */
 public class TOPChartPlugin extends AbstractUIPlugin {
 
-    private static final Log _logger = LogFactory.getLog(TOPChartPlugin.class);
+    private static final Logger _logger = Logger.getLogger(TOPChartPlugin.class);
 
     private static final String PLUGIN_ID = "org.talend.dataprofiler.top.chart"; //$NON-NLS-1$
 
