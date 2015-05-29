@@ -180,7 +180,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
             final double w = weights[i];
             // total = 0 already handled before
             final BigDecimal l = new BigDecimal(Double.toString(w / total));
-            normalized[i] = l.setScale(16, BigDecimal.ROUND_HALF_UP).doubleValue();
+            normalized[i] = l.setScale(16, BigDecimal.ROUND_UP).doubleValue();
         }
         return normalized;
     }
