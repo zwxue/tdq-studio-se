@@ -223,6 +223,45 @@ public class SimpleVSRRecordMatcherTest {
         assertTrue(matchingProbb >= 1.0);
     }
 
+    /**
+     * Added test case for TDQ-10391, when 1 not divide into the number of columns: 19,21
+     */
+    @Test
+    public void testGetMatchingWeightWithDistance_3() {
+        IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
+
+        // ////////////// INITIALIZATION (MUST BE DONE ONCE ONLY) /////////////////////
+
+        // initialize matcher
+        int nbRecords = 21; // this value is the number of columns used in the JOIN_KEY parameter
+        recordMatcher.setRecordSize(nbRecords);
+
+        // create attribute matchers for each of the join key
+        int nbJoinKey = 21;
+        IAttributeMatcher[] attributeMatchers = new IAttributeMatcher[nbJoinKey];
+        for (int i = 0; i < attributeMatchers.length; i++) {
+            attributeMatchers[i] = AttributeMatcherFactory.createMatcher("Exact");
+        }
+        recordMatcher.setAttributeMatchers(attributeMatchers);
+
+        double[] attributeWeight = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                1.0, 10, 1.0 };
+        // set the weights chosen by the user
+        Assert.assertTrue(recordMatcher.setAttributeWeights(attributeWeight));
+
+        String[] record1 = { "aTO1mK", "dXatJF", "6vVVQl", "5ILPaE", "cwBh91", "WEWkkS", "cIWupW", "2fj8BW", "melpcx", "8MOIxp",
+                "NrJKCh", "XgFwsN", "f8OXQS", "iSJjtn", "Nflx4L", "lEEXi8", "mLi1Fy", "JiQvqQ", "onvRDZ", "JiQvqQ", "onvRDZ" };
+        String[] record2 = { "ThSymJ", "ymLm1u", "ZM7ilc", "0nCUz8", "SOPHs7", "boqY3Y", "OWzqig", "eypLAO", "rJzJGe", "fwhrJT",
+                "j8Ekqm", "8q9Jcr", "sSKY7P", "SQxLve", "vQRPJd", "gqvZeq", "ENchvh", "YKHGxQ", "xgkjjf", "JiQvqQ", "onvRDZ" };
+
+        // /////////// MAIN LOOP now /////////////// compute proba
+        int idx = 0;
+        final double matchingProba = recordMatcher.getMatchingWeight(record1, record1);
+        assertTrue(matchingProba >= 1.0);
+        final double matchingProbb = recordMatcher.getMatchingWeight(record2, record2);
+        assertTrue(matchingProbb >= 1.0);
+    }
+
     private static String printRecord(double[] record) {
         Double[] array = new Double[record.length];
         for (int i = 0; i < record.length; i++) {
@@ -369,8 +408,8 @@ public class SimpleVSRRecordMatcherTest {
             { 0.36874999701976774, 0.7402777731418609, 0.36874999701976774, 0.11527777314186097, 1.0, 0.10500000119209289,
                     0.10500000119209289, 1.0 },
             { 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0 },
-            { 0.8846153662754941, 0.7863247577960675, 0.8846153662754941, 0.7094016808729906, 1.0, 0.6461538534898025,
-                    0.6461538534898025, 1.0 },
+            { 0.8846153662754941, 0.7863247577960676, 0.8846153662754941, 0.7094016808729906, 1.0000000000000002,
+                    0.6461538534898025, 0.6461538534898025, 1.0000000000000002 },
             { 0.48333332538604745, 0.8074073950449625, 0.48333332538604745, 0.30740739504496256, 1.0, 0.2800000031789144,
                     0.2800000031789144, 1.0 },
             { 0.48333332538604745, 0.8074073950449625, 0.48333332538604745, 0.30740739504496256, 1.0, 0.2800000031789144,
