@@ -86,4 +86,34 @@ public class ResultSetHelper {
         createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         return createStatement;
     }
+
+    /**
+     * DOC talend Comment method "getStatement".
+     * 
+     * @param metadataBean
+     * @return
+     * @throws SQLException
+     */
+    private static Statement initStatement(java.sql.Connection sqlConn) throws SQLException {
+        Statement createStatement = null;
+
+        createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        return createStatement;
+    }
+
+    /**
+     * DOC talend Comment method "getResultSet".
+     * 
+     * @param metadataTable
+     * @param connection
+     * @return
+     */
+    public static ResultSet getResultSet(MetadataTable metadataTable, java.sql.Connection sqlConn, String whereExpression)
+            throws SQLException {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(sqlConn);
+        Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
+
+        Statement createStatement = initStatement(sqlConn);
+        return createStatement.executeQuery(columnQueryExpression.getBody());
+    }
 }

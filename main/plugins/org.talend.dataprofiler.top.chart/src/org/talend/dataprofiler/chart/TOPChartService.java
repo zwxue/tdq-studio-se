@@ -556,7 +556,7 @@ public class TOPChartService implements ITOPChartService {
         plot.setDomainGridlinesVisible(true);
         plot.setRangeGridlinePaint(Color.white);
 
-        plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(0.4f);
+        plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(0.9f);
         // set the range axis to display integers only...
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
@@ -564,9 +564,9 @@ public class TOPChartService implements ITOPChartService {
         // disable bar outlines...
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
         renderer.setDrawBarOutline(false);
-
+        renderer.setShadowVisible(false);
         // set up gradient paints for series...
-        GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f, 0.0f, new Color(0, 0, 64));
+        GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f, 0.0f, Color.blue);
         renderer.setSeriesPaint(0, gp0);
 
         return chart;
