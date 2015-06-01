@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.datascience.common.inference
 
+import java.math.BigInteger
+
+import scala.annotation.migration
 import scala.util.parsing.combinator.RegexParsers
 
 import org.pojava.datetime.DateTime
@@ -21,7 +24,7 @@ import org.pojava.datetime.DateTime
  * @author mzhao
  */
 class TypeInferenceEngine extends RegexParsers with Serializable {
-  private[inference] def intnumber: Parser[Int] = """^(\+|-)?\d+$""".r ^^ { _.toInt }
+  private[inference] def intnumber: Parser[BigInteger] = """^(\+|-)?\d+$""".r ^^ { new BigInteger( _) }
   //matches YYYY-MM-dd see: http://regexlib.com/REDetails.aspx?regexp_id=890
   private[inference] def date: Parser[String] = """(?<Year>(19|20)[0-9][0-9])-(?<Month>0[1-9]|1[0-2])-(?<Day>0[1-9]|[12][0-9]|3[01])""".r ^^ { _.toString() }
   //matches yyyy-MM-dd HH:mm:ss see: http://regexlib.com/REDetails.aspx?regexp_id=798
@@ -107,14 +110,10 @@ class TypeInferenceEngine extends RegexParsers with Serializable {
    * @return true if it's a integer or false otherwise.
    */
   def isInteger(value: String): Boolean = {
-    try {
       parseAll(intnumber, value) match {
         case Success(result, _) => true
         case failure: NoSuccess => false
       }
-    } catch {
-      case _: Throwable => false
-    }
   }
 
   /**
