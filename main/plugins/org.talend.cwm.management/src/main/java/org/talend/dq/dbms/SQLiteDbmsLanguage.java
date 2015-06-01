@@ -188,4 +188,14 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
     protected Schema getSchema(ModelElement columnSetOwner) {
         return null;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
+     */
+    @Override
+    public String getRandomQuery(String query) {
+        return query + orderBy() + "RANDOM() "; //$NON-NLS-1$
+    }
 }

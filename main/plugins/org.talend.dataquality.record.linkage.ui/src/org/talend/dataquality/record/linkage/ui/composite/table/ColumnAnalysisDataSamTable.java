@@ -122,6 +122,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
         }
         // set limit
         sqlExecutor.setLimit(getLimitNumber());
+        sqlExecutor.setShowRandomData(isShowRandomData());
         return sqlExecutor.executeQuery(connection, Arrays.asList(columns), dataFilter);
 
     }

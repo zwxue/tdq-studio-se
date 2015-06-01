@@ -104,4 +104,14 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
     public String castColumnNameToChar(String columnName) {
         return "to_char(" + columnName + ")"; //$NON-NLS-1$//$NON-NLS-2$
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
+     */
+    @Override
+    public String getRandomQuery(String query) {
+        return query + orderBy() + "RANDOM() "; //$NON-NLS-1$
+    }
 }

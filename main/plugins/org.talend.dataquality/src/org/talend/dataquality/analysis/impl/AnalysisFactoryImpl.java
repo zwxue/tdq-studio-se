@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.analysis.*;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -41,7 +42,7 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
      */
     public static AnalysisFactory init() {
         try {
-            AnalysisFactory theAnalysisFactory = (AnalysisFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.analysis"); 
+            AnalysisFactory theAnalysisFactory = (AnalysisFactory)EPackage.Registry.INSTANCE.getEFactory(AnalysisPackage.eNS_URI);
             if (theAnalysisFactory != null) {
                 return theAnalysisFactory;
             }
@@ -94,6 +95,8 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
                 return createAnalysisTypeFromString(eDataType, initialValue);
             case AnalysisPackage.EXECUTION_LANGUAGE:
                 return createExecutionLanguageFromString(eDataType, initialValue);
+            case AnalysisPackage.SAMPLE_DATA_SHOW_WAY:
+                return createSampleDataShowWayFromString(eDataType, initialValue);
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
@@ -111,6 +114,8 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
                 return convertAnalysisTypeToString(eDataType, instanceValue);
             case AnalysisPackage.EXECUTION_LANGUAGE:
                 return convertExecutionLanguageToString(eDataType, instanceValue);
+            case AnalysisPackage.SAMPLE_DATA_SHOW_WAY:
+                return convertSampleDataShowWayToString(eDataType, instanceValue);
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
@@ -223,6 +228,26 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
      * @generated
      */
     public String convertExecutionLanguageToString(EDataType eDataType, Object instanceValue) {
+        return instanceValue == null ? null : instanceValue.toString();
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public SampleDataShowWay createSampleDataShowWayFromString(EDataType eDataType, String initialValue) {
+        SampleDataShowWay result = SampleDataShowWay.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+        return result;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String convertSampleDataShowWayToString(EDataType eDataType, Object instanceValue) {
         return instanceValue == null ? null : instanceValue.toString();
     }
 

@@ -90,6 +90,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWiza
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.analysis.SampleDataShowWay;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -142,6 +143,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     private UIPagination uiPagination;
 
     private Text rowLoadedText = null;
+
+    private CCombo sampleDataShowWayCombo;
 
     private Label warningLabel = null;
 
@@ -291,7 +294,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      */
     private void createDataQueryButtonComp(Composite parent) {
         Composite dataQueryComp = toolkit.createComposite(parent, SWT.NONE);
-        GridLayout dataQueryCompLayout = new GridLayout(3, Boolean.FALSE);
+        GridLayout dataQueryCompLayout = new GridLayout(4, Boolean.FALSE);
         dataQueryComp.setLayout(dataQueryCompLayout);
 
         Button refreshDataBtn = toolkit.createButton(dataQueryComp,
@@ -335,6 +338,23 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
                 setDirty(true);
             }
         });
+
+        // ADD msjian TDQ-8428: add random way to show data
+        sampleDataShowWayCombo = new CCombo(dataQueryComp, SWT.BORDER);
+        sampleDataShowWayCombo.setEditable(false);
+        for (SampleDataShowWay value : SampleDataShowWay.VALUES) {
+            sampleDataShowWayCombo.add(value.getLiteral());
+        }
+
+        SampleDataShowWay sampleDataShowWay = analysisItem.getAnalysis().getParameters().getSampleDataShowWay();
+        sampleDataShowWayCombo.setText(sampleDataShowWay.getLiteral());
+        sampleDataShowWayCombo.addModifyListener(new ModifyListener() {
+
+            public void modifyText(final ModifyEvent e) {
+                setDirty(true);
+            }
+        });
+        // TDQ-8428~
     }
 
     /**
@@ -517,6 +537,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      */
     private void initSampleTableParameter() {
         sampleTable.setLimitNumber(Integer.parseInt(rowLoadedText.getText()));
+        sampleTable.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
         sampleTable.setDataFilter(dataFilterComp.getDataFilterString());
     }
 
@@ -889,6 +910,9 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
                     DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
             return;
         }
+
+        analysisHandler.changeSampleDataShowWay(sampleDataShowWayCombo.getText());
+
         IRepositoryViewObject reposObject = null;
         analysisHandler.clearAnalysis();
         ModelElementIndicator[] modelElementIndicators = this.getCurrentModelElementIndicators();

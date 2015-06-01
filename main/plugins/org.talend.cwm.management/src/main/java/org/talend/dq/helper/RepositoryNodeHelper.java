@@ -1281,6 +1281,9 @@ public final class RepositoryNodeHelper {
      */
     private static org.talend.core.model.general.Project getInWhichProject(ModelElement modelElement) {
         if (modelElement instanceof DatabaseConnection) {
+            if (modelElement.eIsProxy()) {
+                modelElement = (ModelElement) EObjectHelper.resolveObject(modelElement);
+            }
             String projectName = modelElement.eResource().getURI().segment(1);
             List<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
             for (Project project : allProjects) {
@@ -3783,7 +3786,6 @@ public final class RepositoryNodeHelper {
 
     }
 
-
     public static RepositoryNode getDBConnectionRootNode() {
         RepositoryNode metaRootNode = RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA);
         if (metaRootNode != null) {
@@ -3796,7 +3798,6 @@ public final class RepositoryNodeHelper {
         }
         return null;
     }
-
 
     public static String getDisplayLabel(IRepositoryNode node) {
         if (node instanceof DQRepositoryNode) {
@@ -3812,7 +3813,8 @@ public final class RepositoryNodeHelper {
             if (node.getObject() != null) {
                 String label = node.getObject().getLabel();
                 if (label != null) {
-                    if (label.startsWith("TDQ_")) { //$NON-NLS-1$
+                    if (label.equals(EResourceConstant.DATA_PROFILING.getName())
+                            || label.equals(EResourceConstant.LIBRARIES.getName())) {
                         return label.substring(4, label.length());
                     } else if (label.equals(EResourceConstant.METADATA.getName())) {
                         return label.substring(0, 1).toUpperCase() + label.substring(1);

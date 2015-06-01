@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.analysis.category.*;
 import org.talend.dataquality.analysis.category.AnalysisCategories;
 import org.talend.dataquality.analysis.category.AnalysisCategory;
 import org.talend.dataquality.analysis.category.CategoryFactory;
@@ -31,7 +32,7 @@ public class CategoryFactoryImpl extends EFactoryImpl implements CategoryFactory
      */
     public static CategoryFactory init() {
         try {
-            CategoryFactory theCategoryFactory = (CategoryFactory)EPackage.Registry.INSTANCE.getEFactory("http://org.talend.dataquality.category"); 
+            CategoryFactory theCategoryFactory = (CategoryFactory)EPackage.Registry.INSTANCE.getEFactory(CategoryPackage.eNS_URI);
             if (theCategoryFactory != null) {
                 return theCategoryFactory;
             }

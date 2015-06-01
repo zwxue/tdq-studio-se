@@ -71,6 +71,7 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
      * 
      * @see org.talend.cwm.management.api.DbmsLanguage#getPatternFinderDefaultFunction(java.lang.String)
      */
+    @Deprecated
     @Override
     public String getPatternFinderDefaultFunction(String expression) {
         return StringUtils.repeat("REPLACE(", 59) + expression //$NON-NLS-1$
@@ -120,8 +121,8 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
 
         } else if (columns.indexOf(groupByAliases) > -1) {
             String[] aliasArray = groupByAliases.split(" , "); //$NON-NLS-1$
-            if(aliasArray.length!=0){
-                groupByIndex=PluginConstant.EMPTY_STRING;
+            if (aliasArray.length != 0) {
+                groupByIndex = PluginConstant.EMPTY_STRING;
             }
             for (int i = 0; i < aliasArray.length; i++) {
                 if (columns.contains(aliasArray[i])) {
@@ -246,5 +247,15 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
         String nbdays = columnDate + "-" + day1; //$NON-NLS-1$
         return "1+FLOOR((" + nbdays + "+WEEKDAY(" + day1 + "))/7)"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
+     */
+    @Override
+    public String getRandomQuery(String query) {
+        return query + orderBy() + "dbms_random_random() "; //$NON-NLS-1$
     }
 }

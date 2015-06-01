@@ -2062,4 +2062,15 @@ public class DbmsLanguage {
         return colName;
     }
 
+    /**
+     * DOC msjian Comment method "getRandomQuery".
+     * 
+     * @param query
+     * @return query with random method
+     */
+    public String getRandomQuery(String query) {
+        // this method can be used for as400, db2, hive, ingres, mysql
+        return query + orderBy() + "RAND() "; //$NON-NLS-1$
+    }
+
 }

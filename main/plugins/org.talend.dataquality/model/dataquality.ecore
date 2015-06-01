@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="dataquality"
-    nsURI="http://dataquality" nsPrefix="dataquality">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="dataquality" nsURI="http://dataquality" nsPrefix="dataquality">
   <eSubpackages name="analysis" nsURI="http://dataquality.analysis" nsPrefix="dataquality.analysis">
     <eClassifiers xsi:type="ecore:EClass" name="Analysis" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwmx/analysis/informationreporting/ReportGroup">
       <eStructuralFeatures xsi:type="ecore:EReference" name="context" eType="#//analysis/AnalysisContext"
@@ -68,6 +66,12 @@
           defaultValueLiteral="50">
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
           <details key="documentation" value="The maximum number of rows kept in each indicator when analyzing data with the Java engine. "/>
+        </eAnnotations>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sampleDataShowWay" eType="#//analysis/SampleDataShowWay"
+          defaultValueLiteral="">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The sample data show way:  the analysis sample data show data either first rows or random rows"/>
         </eAnnotations>
       </eStructuralFeatures>
     </eClassifiers>
@@ -159,6 +163,10 @@
           <eTypeArguments eClassifier="#//indicators/ObjectArray"/>
         </eGenericType>
       </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="SampleDataShowWay">
+      <eLiterals name="FIRST" literal="n first rows"/>
+      <eLiterals name="RANDOM" value="1" literal="n random rows"/>
     </eClassifiers>
     <eSubpackages name="category" nsURI="http://org.talend.dataquality.category" nsPrefix="dataquality.category">
       <eClassifiers xsi:type="ecore:EClass" name="AnalysisCategory">

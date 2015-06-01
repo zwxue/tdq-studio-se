@@ -31,7 +31,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     private static Logger log = Logger.getLogger(SQLExecutor.class);
 
-    protected Boolean storeOnDisk = Boolean.FALSE;
+    private Boolean isStoreOnDisk = Boolean.FALSE;
 
     protected StoreOnDiskHandler storeOnDiskHandler = null;
 
@@ -42,13 +42,62 @@ public abstract class SQLExecutor implements ISQLExecutor {
     public static final String TEMP_DATA_DIR = "TEMP_DATA_DIR";//$NON-NLS-1$
 
     /**
+     * the limit count number of rows.
+     */
+    private int limit = 0;
+
+    private Boolean isShowRandomData = Boolean.FALSE;
+
+    /**
      * List of rows obtained from data source.
      */
     protected List<Object[]> dataFromTable = new ArrayList<Object[]>();
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.ISQLExecutor#getLimit()
+     */
+    public int getLimit() {
+        return this.limit;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.ISQLExecutor#setLimit(int)
+     */
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.ISQLExecutor#isShowRandomData()
+     */
+    public Boolean isShowRandomData() {
+        return this.isShowRandomData;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.ISQLExecutor#setShowRandomData(java.lang.Boolean)
+     */
+    public void setShowRandomData(Boolean isShowRandomData) {
+        this.isShowRandomData = isShowRandomData;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.ISQLExecutor#initStoreOnDiskHandler(org.talend.dataquality.analysis.Analysis,
+     * org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.Map)
+     */
     public void initStoreOnDiskHandler(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
             Map<MetadataColumn, String> columnMap) {
-        if (storeOnDisk) {
+        if (isStoreOnDisk()) {
             try {
                 String tempDataPath = TaggedValueHelper.getValueString(TEMP_DATA_DIR, analysis);
                 int bufferSize = Integer.valueOf(TaggedValueHelper.getValueString(MAX_BUFFER_SIZE, analysis));
@@ -64,7 +113,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
      * The client can override the method to prepare an environment before query.
      */
     protected void beginQuery() throws Exception {
-        if (storeOnDisk) {
+        if (isStoreOnDisk()) {
             storeOnDiskHandler.beginQuery();
         }
     }
@@ -73,13 +122,13 @@ public abstract class SQLExecutor implements ISQLExecutor {
      * mzhao finalize the query, the client can override this method.
      */
     protected void endQuery() throws Exception {
-        if (storeOnDisk) {
+        if (isStoreOnDisk()) {
             storeOnDiskHandler.endQuery();
         }
     }
 
     protected void handleRow(Object[] oneRow) throws Exception {
-        if (storeOnDisk) {
+        if (isStoreOnDisk()) {
             storeOnDiskHandler.handleRow(oneRow);
         } else {
             dataFromTable.add(oneRow);
@@ -92,16 +141,16 @@ public abstract class SQLExecutor implements ISQLExecutor {
      * @param storeOnDisk the storeOnDisk to set
      */
     public void setStoreOnDisk(Boolean storeOnDisk) {
-        this.storeOnDisk = storeOnDisk;
+        this.isStoreOnDisk = storeOnDisk;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.cwm.db.connection.ISQLExecutor#getStoreOnDisk()
+     * @see org.talend.cwm.db.connection.ISQLExecutor#isStoreOnDisk()
      */
-    public Boolean getStoreOnDisk() {
-        return storeOnDisk;
+    public Boolean isStoreOnDisk() {
+        return isStoreOnDisk;
     }
 
     /**

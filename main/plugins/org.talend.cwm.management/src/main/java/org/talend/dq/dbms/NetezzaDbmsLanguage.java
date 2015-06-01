@@ -212,4 +212,14 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
         s = StringUtils.upperCase(s);
         return super.toQualifiedName(c, s, table);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
+     */
+    @Override
+    public String getRandomQuery(String query) {
+        return query + orderBy() + "RANDOM() "; //$NON-NLS-1$
+    }
 }

@@ -29,6 +29,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
@@ -75,6 +76,7 @@ import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWizard;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.SampleDataShowWay;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
@@ -155,6 +157,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private Composite dataTableComp;
 
     private Text rowLoadedText = null;
+
+    private CCombo sampleDataShowWayCombo;
 
     private Label analyzeDataLabel;
 
@@ -690,7 +694,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     private void createDataQueryButtonComp(Composite parent) {
         Composite dataQueryComp = toolkit.createComposite(parent);
-        GridLayout dataQueryCompLayout = new GridLayout(3, Boolean.FALSE);
+        GridLayout dataQueryCompLayout = new GridLayout(4, Boolean.FALSE);
         dataQueryComp.setLayout(dataQueryCompLayout);
 
         Button refreshDataBtn = toolkit.createButton(dataQueryComp,
@@ -734,6 +738,23 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 setDirty(true);
             }
         });
+
+        // ADD msjian TDQ-8428: add random way to show data
+        sampleDataShowWayCombo = new CCombo(dataQueryComp, SWT.BORDER);
+        sampleDataShowWayCombo.setEditable(false);
+        for (SampleDataShowWay value : SampleDataShowWay.VALUES) {
+            sampleDataShowWayCombo.add(value.getLiteral());
+        }
+
+        SampleDataShowWay sampleDataShowWay = analysisItem.getAnalysis().getParameters().getSampleDataShowWay();
+        sampleDataShowWayCombo.setText(sampleDataShowWay.getLiteral());
+        sampleDataShowWayCombo.addModifyListener(new ModifyListener() {
+
+            public void modifyText(final ModifyEvent e) {
+                setDirty(true);
+            }
+        });
+        // TDQ-8428~
     }
 
     /**
@@ -1296,6 +1317,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         try {
             // set limit
             sqlExecutor.setLimit(Integer.valueOf(rowLoadedText.getText()));
+            sqlExecutor.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
             return sqlExecutor.executeQuery(this.analysisHandler.getConnection(),
                     Arrays.asList(analysisHandler.getSelectedColumns()));
         } catch (SQLException e) {
@@ -1472,6 +1494,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
             return;
         }
+
+        analysisHandler.changeSampleDataShowWay(sampleDataShowWayCombo.getText());
 
         analysisHandler.saveSelectedAnalyzedElements();
         analysisHandler.updateAnaConnRelationship(analysisItem);

@@ -151,6 +151,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     private int limitNumber = 0;
 
+    private Boolean isShowRandomData = Boolean.FALSE;
+
     private boolean isSameTable = true;
 
     private List<TDQObserver<Map<String, Integer>>> Observers = null;
@@ -1245,6 +1247,22 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             Observers = new ArrayList<TDQObserver<Map<String, Integer>>>();
         }
 
+    }
+
+    /**
+     * Getter for isShowRandomData.
+     * @return the isShowRandomData
+     */
+    public Boolean isShowRandomData() {
+        return isShowRandomData;
+    }
+
+    /**
+     * Sets the isShowRandomData.
+     * @param isShowRandomData the isShowRandomData to set
+     */
+    public void setShowRandomData(Boolean isShowRandomData) {
+        this.isShowRandomData = isShowRandomData;
     }
 
 }

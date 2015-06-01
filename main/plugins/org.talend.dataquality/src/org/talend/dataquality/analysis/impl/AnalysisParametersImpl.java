@@ -17,6 +17,7 @@ import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.analysis.SampleDataShowWay;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
@@ -36,6 +37,7 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getExecutionLanguage <em>Execution Language</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#isStoreData <em>Store Data</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getMaxNumberRows <em>Max Number Rows</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getSampleDataShowWay <em>Sample Data Show Way</em>}</li>
  * </ul>
  * </p>
  *
@@ -161,6 +163,26 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * @ordered
      */
     protected int maxNumberRows = MAX_NUMBER_ROWS_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getSampleDataShowWay() <em>Sample Data Show Way</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getSampleDataShowWay()
+     * @generated
+     * @ordered
+     */
+    protected static final SampleDataShowWay SAMPLE_DATA_SHOW_WAY_EDEFAULT = SampleDataShowWay.FIRST;
+
+    /**
+     * The cached value of the '{@link #getSampleDataShowWay() <em>Sample Data Show Way</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getSampleDataShowWay()
+     * @generated
+     * @ordered
+     */
+    protected SampleDataShowWay sampleDataShowWay = SAMPLE_DATA_SHOW_WAY_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -318,6 +340,27 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * <!-- end-user-doc -->
      * @generated
      */
+    public SampleDataShowWay getSampleDataShowWay() {
+        return sampleDataShowWay;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setSampleDataShowWay(SampleDataShowWay newSampleDataShowWay) {
+        SampleDataShowWay oldSampleDataShowWay = sampleDataShowWay;
+        sampleDataShowWay = newSampleDataShowWay == null ? SAMPLE_DATA_SHOW_WAY_EDEFAULT : newSampleDataShowWay;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__SAMPLE_DATA_SHOW_WAY, oldSampleDataShowWay, sampleDataShowWay));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -337,6 +380,8 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 return isStoreData();
             case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
                 return getMaxNumberRows();
+            case AnalysisPackage.ANALYSIS_PARAMETERS__SAMPLE_DATA_SHOW_WAY:
+                return getSampleDataShowWay();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -378,6 +423,9 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
             case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
                 setMaxNumberRows((Integer)newValue);
                 return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__SAMPLE_DATA_SHOW_WAY:
+                setSampleDataShowWay((SampleDataShowWay)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -414,6 +462,9 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
             case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
                 setMaxNumberRows(MAX_NUMBER_ROWS_EDEFAULT);
                 return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__SAMPLE_DATA_SHOW_WAY:
+                setSampleDataShowWay(SAMPLE_DATA_SHOW_WAY_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -442,6 +493,8 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 return storeData != STORE_DATA_EDEFAULT;
             case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
                 return maxNumberRows != MAX_NUMBER_ROWS_EDEFAULT;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__SAMPLE_DATA_SHOW_WAY:
+                return sampleDataShowWay != SAMPLE_DATA_SHOW_WAY_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -464,6 +517,8 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
         result.append(storeData);
         result.append(", maxNumberRows: ");
         result.append(maxNumberRows);
+        result.append(", sampleDataShowWay: ");
+        result.append(sampleDataShowWay);
         result.append(')');
         return result.toString();
     }

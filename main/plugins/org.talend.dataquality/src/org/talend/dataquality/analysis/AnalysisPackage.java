@@ -1550,13 +1550,22 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 7;
 
     /**
+     * The feature id for the '<em><b>Sample Data Show Way</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_PARAMETERS__SAMPLE_DATA_SHOW_WAY = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 8;
+
+    /**
      * The number of structural features of the '<em>Parameters</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_PARAMETERS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 8;
+    int ANALYSIS_PARAMETERS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 9;
 
 
     /**
@@ -2253,6 +2262,17 @@ public interface AnalysisPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.analysis.SampleDataShowWay <em>Sample Data Show Way</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.analysis.SampleDataShowWay
+     * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getSampleDataShowWay()
+     * @generated
+     */
+    int SAMPLE_DATA_SHOW_WAY = 9;
+
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.analysis.Analysis <em>Analysis</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2457,6 +2477,17 @@ public interface AnalysisPackage extends EPackage {
      * @generated
      */
     EAttribute getAnalysisParameters_MaxNumberRows();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalysisParameters#getSampleDataShowWay <em>Sample Data Show Way</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Sample Data Show Way</em>'.
+     * @see org.talend.dataquality.analysis.AnalysisParameters#getSampleDataShowWay()
+     * @see #getAnalysisParameters()
+     * @generated
+     */
+    EAttribute getAnalysisParameters_SampleDataShowWay();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.analysis.AnalysisResult <em>Result</em>}'.
@@ -2719,6 +2750,16 @@ public interface AnalysisPackage extends EPackage {
     EEnum getExecutionLanguage();
 
     /**
+     * Returns the meta object for enum '{@link org.talend.dataquality.analysis.SampleDataShowWay <em>Sample Data Show Way</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for enum '<em>Sample Data Show Way</em>'.
+     * @see org.talend.dataquality.analysis.SampleDataShowWay
+     * @generated
+     */
+    EEnum getSampleDataShowWay();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2897,6 +2938,14 @@ public interface AnalysisPackage extends EPackage {
          * @generated
          */
         EAttribute ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS = eINSTANCE.getAnalysisParameters_MaxNumberRows();
+
+        /**
+         * The meta object literal for the '<em><b>Sample Data Show Way</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYSIS_PARAMETERS__SAMPLE_DATA_SHOW_WAY = eINSTANCE.getAnalysisParameters_SampleDataShowWay();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl <em>Result</em>}' class.
@@ -3101,6 +3150,16 @@ public interface AnalysisPackage extends EPackage {
          * @generated
          */
         EEnum EXECUTION_LANGUAGE = eINSTANCE.getExecutionLanguage();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.analysis.SampleDataShowWay <em>Sample Data Show Way</em>}' enum.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.analysis.SampleDataShowWay
+         * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getSampleDataShowWay()
+         * @generated
+         */
+        EEnum SAMPLE_DATA_SHOW_WAY = eINSTANCE.getSampleDataShowWay();
 
     }
 
