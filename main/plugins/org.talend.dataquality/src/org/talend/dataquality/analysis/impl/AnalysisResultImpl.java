@@ -101,7 +101,7 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      */
     public Analysis getAnalysis() {
         if (eContainerFeatureID() != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS) return null;
-        return (Analysis)eContainer();
+        return (Analysis)eInternalContainer();
     }
 
     /**

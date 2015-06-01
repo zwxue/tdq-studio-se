@@ -143,7 +143,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         recordMatchingIndicator.reset();
 
         MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(recordMatchingIndicator);
-        if (sqlExecutor.getStoreOnDisk()) {
+        if (sqlExecutor.isStoreOnDisk()) {
             // need to execute the query
             try {
                 sqlExecutor.executeQuery(analysis.getContext().getConnection(), analysis.getContext().getAnalysedElements());

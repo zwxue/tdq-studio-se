@@ -27,6 +27,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.analysis.SampleDataShowWay;
 import org.talend.dataquality.analysis.category.CategoryPackage;
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;
 import org.talend.dataquality.domain.DomainPackage;
@@ -128,6 +129,13 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
      * @generated
      */
     private EEnum executionLanguageEEnum = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EEnum sampleDataShowWayEEnum = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -414,6 +422,15 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getAnalysisParameters_SampleDataShowWay() {
+        return (EAttribute)analysisParametersEClass.getEStructuralFeatures().get(8);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getAnalysisResult() {
         return analysisResultEClass;
     }
@@ -630,6 +647,15 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
      * <!-- end-user-doc -->
      * @generated
      */
+    public EEnum getSampleDataShowWay() {
+        return sampleDataShowWayEEnum;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public AnalysisFactory getAnalysisFactory() {
         return (AnalysisFactory)getEFactoryInstance();
     }
@@ -674,6 +700,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         createEAttribute(analysisParametersEClass, ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE);
         createEAttribute(analysisParametersEClass, ANALYSIS_PARAMETERS__STORE_DATA);
         createEAttribute(analysisParametersEClass, ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS);
+        createEAttribute(analysisParametersEClass, ANALYSIS_PARAMETERS__SAMPLE_DATA_SHOW_WAY);
 
         analysisResultEClass = createEClass(ANALYSIS_RESULT);
         createEReference(analysisResultEClass, ANALYSIS_RESULT__ANALYSIS);
@@ -704,6 +731,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         // Create enums
         analysisTypeEEnum = createEEnum(ANALYSIS_TYPE);
         executionLanguageEEnum = createEEnum(EXECUTION_LANGUAGE);
+        sampleDataShowWayEEnum = createEEnum(SAMPLE_DATA_SHOW_WAY);
     }
 
     /**
@@ -775,6 +803,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         initEAttribute(getAnalysisParameters_ExecutionLanguage(), this.getExecutionLanguage(), "executionLanguage", null, 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getAnalysisParameters_StoreData(), ecorePackage.getEBoolean(), "storeData", "true", 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getAnalysisParameters_MaxNumberRows(), ecorePackage.getEInt(), "maxNumberRows", "50", 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAnalysisParameters_SampleDataShowWay(), this.getSampleDataShowWay(), "sampleDataShowWay", "", 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(analysisResultEClass, AnalysisResult.class, "AnalysisResult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getAnalysisResult_Analysis(), this.getAnalysis(), this.getAnalysis_Results(), "analysis", null, 0, 1, AnalysisResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -826,6 +855,10 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         initEEnum(executionLanguageEEnum, ExecutionLanguage.class, "ExecutionLanguage");
         addEEnumLiteral(executionLanguageEEnum, ExecutionLanguage.SQL);
         addEEnumLiteral(executionLanguageEEnum, ExecutionLanguage.JAVA);
+
+        initEEnum(sampleDataShowWayEEnum, SampleDataShowWay.class, "SampleDataShowWay");
+        addEEnumLiteral(sampleDataShowWayEEnum, SampleDataShowWay.FIRST);
+        addEEnumLiteral(sampleDataShowWayEEnum, SampleDataShowWay.RANDOM);
 
         // Create resource
         createResource(eNS_URI);

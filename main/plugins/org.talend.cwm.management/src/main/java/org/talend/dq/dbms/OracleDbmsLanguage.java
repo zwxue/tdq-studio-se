@@ -339,4 +339,14 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     private String lengthForSumColumn(String columnName) {
         return "CASE WHEN " + trim(columnName) + " IS NULL THEN 0 ELSE LENGTH(" + columnName + ") END"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
+     */
+    @Override
+    public String getRandomQuery(String query) {
+        return query + orderBy() + "dbms_random.value "; //$NON-NLS-1$
+    }
 }

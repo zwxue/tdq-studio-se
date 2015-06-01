@@ -203,4 +203,14 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
         Catalog catalog = super.getCatalog(schema);
         return catalog;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
+     */
+    @Override
+    public String getRandomQuery(String query) {
+        return query + orderBy() + "RANDOM() "; //$NON-NLS-1$
+    }
 }

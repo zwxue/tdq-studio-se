@@ -44,8 +44,6 @@ public class DatabaseSQLExecutor extends SQLExecutor {
 
     private static Logger log = Logger.getLogger(DatabaseSQLExecutor.class);
 
-    private int limit = 0;
-
     /*
      * (non-Javadoc)
      * 
@@ -81,21 +79,8 @@ public class DatabaseSQLExecutor extends SQLExecutor {
      * @param analysedElements
      * @return
      */
-    private String createSqlStatement(DataManager connection, List<ModelElement> analysedElements) {
-        return createSqlStatement(connection, analysedElements, null);
-
-    }
-
-    /**
-     * 
-     * createSqlStatement: if has limit, add it, else do not use limit
-     * 
-     * @param connection
-     * @param analysedElements
-     * @return
-     */
     private String createSqlStatement(DataManager connection, List<ModelElement> analysedElements, String where) {
-        DbmsLanguage dbms = createDbmsLanguage(connection);
+        DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(connection);
         TdColumn col = null;
         StringBuilder sql = new StringBuilder("SELECT ");//$NON-NLS-1$
         final Iterator<ModelElement> iterator = analysedElements.iterator();
@@ -114,26 +99,18 @@ public class DatabaseSQLExecutor extends SQLExecutor {
             sql.append(dbms.where());
             sql.append(where);
         }
-        if (limit > 0) {
-            return dbms.getTopNQuery(sql.toString(), limit);
-        } else {
-            return sql.toString();
+
+        String finalQuery = sql.toString();
+
+        if (isShowRandomData()) {
+            finalQuery = dbms.getRandomQuery(finalQuery);
         }
 
-    }
-
-    private DbmsLanguage createDbmsLanguage(DataManager connection) {
-        // DataManager connection = analysis.getContext().getConnection();
-        return DbmsLanguageFactory.createDbmsLanguage(connection);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.db.connection.ISQLExecutor#setLimit(int)
-     */
-    public void setLimit(int limit) {
-        this.limit = limit;
+        if (getLimit() > 0) {
+            return dbms.getTopNQuery(finalQuery, getLimit());
+        } else {
+            return finalQuery;
+        }
 
     }
 
@@ -145,7 +122,7 @@ public class DatabaseSQLExecutor extends SQLExecutor {
      * , java.util.List)
      */
     public Iterator<Record> getResultSetIterator(DataManager connection, List<ModelElement> analysedElements) throws SQLException {
-        String sqlString = createSqlStatement(connection, analysedElements);
+        String sqlString = createSqlStatement(connection, analysedElements, null);
         TypedReturnCode<java.sql.Connection> sqlconnection = getSQLConnection(connection);
         List<String> elementsName = new ArrayList<String>();
         for (ModelElement element : analysedElements) {
@@ -159,7 +136,7 @@ public class DatabaseSQLExecutor extends SQLExecutor {
      * (non-Javadoc)
      * 
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(orgomg.cwm.foundation.softwaredeployment.DataManager,
-     * java.util.List, java.lang.String)
+     * java.util.List, java.lang.String, org.talend.dataquality.analysis.SampleDataShowWay)
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements, String where)
             throws SQLException {

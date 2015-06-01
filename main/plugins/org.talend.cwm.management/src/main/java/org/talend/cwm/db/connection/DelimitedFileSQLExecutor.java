@@ -48,9 +48,6 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
     private static Logger log = Logger.getLogger(DelimitedFileSQLExecutor.class);
 
-    // if limit = 0. do not use the limit, only when it is set >0, use the limit
-    private int limit = 0;
-
     /*
      * (non-Javadoc)
      * 
@@ -81,7 +78,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
                 rowValues[i] = fileInputDelimited.get(analysedColumnIndex[i]);
             }
             handleRow(rowValues);
-            if (limit > 0 && index >= limit) {
+            if (getLimit() > 0 && index >= getLimit()) {
                 break;
             }
 
@@ -166,16 +163,6 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
                 }
             }
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.db.connection.ISQLExecutor#setLimit(int)
-     */
-    public void setLimit(int limit) {
-        this.limit = limit;
-
     }
 
     /*

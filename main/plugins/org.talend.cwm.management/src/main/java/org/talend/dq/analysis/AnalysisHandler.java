@@ -29,6 +29,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.analysis.SampleDataShowWay;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -342,5 +343,14 @@ public class AnalysisHandler {
      */
     public void changeDefaultRowLoaded(String text) {
         analysis.getParameters().setMaxNumberRows(Integer.valueOf(text));
+    }
+
+    /**
+     * Change the max number of rows
+     * 
+     * @param text
+     */
+    public void changeSampleDataShowWay(String text) {
+        analysis.getParameters().setSampleDataShowWay(SampleDataShowWay.get(text));
     }
 }

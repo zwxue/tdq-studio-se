@@ -34,14 +34,20 @@ public interface ISQLExecutor {
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements, String where)
             throws SQLException;
 
-    void setLimit(int limit);
+    public int getLimit();
+
+    public void setLimit(int limit);
+
+    public Boolean isShowRandomData();
+
+    public void setShowRandomData(Boolean isShowRandomData);
+
+    public Boolean isStoreOnDisk();
 
     public void setStoreOnDisk(Boolean storeOnDisk);
 
     public void initStoreOnDiskHandler(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
             Map<MetadataColumn, String> columnMap);
-
-    public Boolean getStoreOnDisk();
 
     public StoreOnDiskHandler getStoreOnDiskHandler();
 

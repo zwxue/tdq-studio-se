@@ -297,4 +297,13 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
         return tempString.trim();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
+     */
+    @Override
+    public String getRandomQuery(String query) {
+        return query + orderBy() + "NEWID() "; //$NON-NLS-1$
+    }
 }
