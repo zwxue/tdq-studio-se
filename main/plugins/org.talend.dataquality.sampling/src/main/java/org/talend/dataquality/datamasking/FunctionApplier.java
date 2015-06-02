@@ -3,6 +3,7 @@ package org.talend.dataquality.datamasking;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,25 +16,13 @@ import org.talend.dataquality.duplicating.RandomWrapper;
 
 public class FunctionApplier {
 
-    /**
-     * This enum holds all the function that can be applied when masking data.
-     *
-     * Set_To_Null : This function will return null Date_variance(n) : This function will change a date by a random
-     * number of days between -n and n. Numeric_Variance(n) : This function will multiply a numeric value by a random
-     * number between -n and n. Generate_Credit_Card : This function will create a new credit card number which will be
-     * false but still pass the checksum algorithm. Generate_Credit_Card_Format : Similar to the previous function but
-     * will keep the input format (type, length and prefix). Generate_Account_Number : This function will create a valid
-     * but false French IBAN number. Generate_Account_Number_Format : Similar to the previous function but will keep the
-     * original country of the input (if given). Generate_Phone_Number : This function generates a correct randomly
-     * generated French phone number in international format. Generate_Phone_Number_Format(n) : Similar to the previous
-     * one, but will keep the n first digits.
-     * 
-     */
     public enum Function {
         SET_TO_NULL,
-        DATE_VARIANCE,
         KEEP_YEAR,
+        DATE_VARIANCE,
         NUMERIC_VARIANCE,
+        MASK_EMAIL,
+        MASK_ADDRESS,
         GENERATE_CREDIT_CARD,
         GENERATE_CREDIT_CARD_FORMAT,
         GENERATE_ACCOUNT_NUMBER,
@@ -55,7 +44,10 @@ public class FunctionApplier {
         REMOVE_LAST_CHARS,
         REPLACE_FIRST_CHARS,
         REPLACE_LAST_CHARS,
-        GENERATE_UUID
+        KEEP_FIRST_AND_GENERATE,
+        KEEP_LAST_AND_GENERATE,
+        GENERATE_UUID,
+        GENERATE_SEQUENCE
     };
 
     private DateChanger dateChanger = new DateChanger();
@@ -67,6 +59,17 @@ public class FunctionApplier {
     private String LOWER = "abcdefghijklmnopqrstuvwxyz"; //$NON-NLS-1$
 
     private RandomWrapper rnd = new RandomWrapper();
+
+    private int seq = 0;
+
+    private boolean first = true;
+
+    public void setSeq(int i) {
+        if (first) {
+            seq = i;
+            first = false;
+        }
+    }
 
     private boolean keepNull = false;
 
@@ -144,11 +147,51 @@ public class FunctionApplier {
      */
 
     public String generateMaskedRow(String str, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL || str == null && keepNull) {
+        if (function == Function.SET_TO_NULL || str == null && keepNull && function != Function.GENERATE_SEQUENCE) {
             return null;
         }
         StringBuilder sb = new StringBuilder(EMPTY_STRING);
         switch (function) {
+        case MASK_EMAIL:
+            if (str != null) {
+                int count = str.lastIndexOf('@');
+                count = (count == -1) ? str.length() : count;
+                for (int i = 0; i < count; ++i) {
+                    sb.append("*"); //$NON-NLS-1$
+                }
+                sb.append(str.substring(count, str.length()));
+            }
+            break;
+        case MASK_ADDRESS:
+            if (str != null) {
+                String[] keys = {
+                        "Rue", "rue", "r.", "de", "la", "le", "du", "l'", "des", "les", "Street", "street", "St.", "St", "Straße", "Strada", "Rua", "Calle", "Ave.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$ //$NON-NLS-17$ //$NON-NLS-18$ //$NON-NLS-19$ 
+                        "avenue", "Av.", "Allee", "allee", "allée", "Avenue", "Avenida", "Bvd.", "Bd.", "Boulevard", "boulevard", "Blv.", "Viale", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ 
+                        "Avenida", "Bulevar", "Route", "route", "road", "Road", "Rd.", "Chemin", "Way", "Cour", "Court", "Ct.", "Place", "place", "Pl.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$
+                        "Square", "Impasse", "Allée", "Driveway", "Auffahrt", "Viale", "Esplanade", "Esplanade", "Promenade", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+                        "Lungomare", "Esplanada", "Esplanada", "Faubourg", "faubourg", "Suburb", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
+                        "Vorort", "Periferia", "Subúrbio", "Suburbio", "Via", "Via", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
+                        "Périphérique", "Peripheral", "Voie", "voie", "Track", "Gleis", "Carreggiata", "Caminho", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ 
+                        "Pista", "Forum", "of", "OF", "STREET", "RUE", "ST.", "AVENUE", "BOULEVARD", "BLV.", "BD", "ROAD", "ROUTE", "RD.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$
+                        "RTE", "WAY", "CHEMIN", "COURT", "CT.", "SQUARE", "DRIVEWAY", "ALLEE", "DR.", "ESPLANADE", "SUBURB", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
+                        "BANLIEUE", "VIA", "PERIPHERAL", "PERIPHERIQUE", "TRACK", "VOIE", "FORUM" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ 
+                String[] address = str.split(",| "); //$NON-NLS-1$
+                for (String tmp : address) {
+                    if (Arrays.asList(keys).contains(tmp)) {
+                        sb.append(tmp + " "); //$NON-NLS-1$
+                    } else {
+                        for (int i = 0; i < tmp.length(); ++i) {
+                            if (Character.isDigit(tmp.charAt(i))) {
+                                sb.append(Character.forDigit(rnd.nextInt(9), 10));
+                            } else {
+                                sb.append("*"); //$NON-NLS-1$
+                            }
+                        }
+                        sb.append(" "); //$NON-NLS-1$
+                    }
+                }
+            }
+            break;
         case GENERATE_CREDIT_CARD:
             CreditCardGenerator ccg = new CreditCardGenerator(rnd);
             CreditCardType cct = ccg.chooseCreditCardType();
@@ -501,8 +544,75 @@ public class FunctionApplier {
             }
             sb.replace(str.length() - extraPar, str.length(), repla.toString());
             break;
+        case KEEP_FIRST_AND_GENERATE:
+            if (str == null || extraParameter == null || !extraParameter.matches("[0-9]+")) { //$NON-NLS-1$
+                sb = new StringBuilder(EMPTY_STRING);
+            } else {
+                String s = str.trim();
+                Integer extraPara = null;
+                try {
+                    extraPara = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    sb = new StringBuilder(EMPTY_STRING);
+                    break;
+                }
+                if (extraPara > s.length() || extraPara == 0) {
+                    sb = new StringBuilder(EMPTY_STRING);
+                } else {
+                    for (int i = 0; i < extraPara; ++i) {
+                        sb.append(s.charAt(i));
+                        if (!Character.isDigit(s.charAt(i))) {
+                            extraPara++;
+                        }
+                    }
+                    for (int i = extraPara; i < s.length(); ++i) {
+                        if (Character.isDigit(s.charAt(i))) {
+                            sb.append(rnd.nextInt(9));
+                        } else {
+                            sb.append(s.charAt(i));
+                        }
+                    }
+                }
+            }
+            break;
+        case KEEP_LAST_AND_GENERATE:
+            if (str == null || extraParameter == null || !extraParameter.matches("[0-9]+")) { //$NON-NLS-1$
+                sb = new StringBuilder(EMPTY_STRING);
+            } else {
+                String s = str.trim();
+                Integer extraPara = null;
+                try {
+                    extraPara = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    sb = new StringBuilder(EMPTY_STRING);
+                    break;
+                }
+                if (extraPara > s.length() || extraPara == 0) {
+                    sb = new StringBuilder(EMPTY_STRING);
+                } else {
+                    StringBuilder end = new StringBuilder(EMPTY_STRING);
+                    for (int i = s.length() - 1; i >= s.length() - extraPara; --i) {
+                        end.append(s.charAt(i));
+                        if (!Character.isDigit(s.charAt(i))) {
+                            extraPara++;
+                        }
+                    }
+                    for (int i = 0; i < s.length() - extraPara; ++i) {
+                        if (Character.isDigit(s.charAt(i))) {
+                            sb.append(rnd.nextInt(9));
+                        } else {
+                            sb.append(s.charAt(i));
+                        }
+                    }
+                    sb.append(end.reverse());
+                }
+            }
+            break;
         case GENERATE_UUID:
             sb = new StringBuilder(UUID.randomUUID().toString());
+            break;
+        case GENERATE_SEQUENCE:
+            sb.append(seq++);
             break;
         default:
             return sb.toString();
@@ -520,7 +630,7 @@ public class FunctionApplier {
      */
 
     public Double generateMaskedRow(Double valueIn, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
+        if (function == Function.SET_TO_NULL || valueIn == null && keepNull && function != Function.GENERATE_SEQUENCE) {
             return null;
         }
         Double finalValue = 0.0;
@@ -581,6 +691,9 @@ public class FunctionApplier {
                 finalValue = (double) rnd.nextInt((max - min) + 1) + min;
             }
             break;
+        case GENERATE_SEQUENCE:
+            finalValue = Double.valueOf(seq++);
+            break;
         default:
             return finalValue;
         }
@@ -597,7 +710,7 @@ public class FunctionApplier {
      */
 
     public Float generateMaskedRow(Float valueIn, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
+        if (function == Function.SET_TO_NULL || valueIn == null && keepNull && function != Function.GENERATE_SEQUENCE) {
             return null;
         }
         Float finalValue = 0.0f;
@@ -658,6 +771,9 @@ public class FunctionApplier {
                 finalValue = (float) rnd.nextInt((max - min) + 1) + min;
             }
             break;
+        case GENERATE_SEQUENCE:
+            finalValue = Float.valueOf(seq++);
+            break;
         default:
             return finalValue;
         }
@@ -674,7 +790,7 @@ public class FunctionApplier {
      */
 
     public Long generateMaskedRow(Long valueIn, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
+        if (function == Function.SET_TO_NULL || valueIn == null && keepNull && function != Function.GENERATE_SEQUENCE) {
             return null;
         }
         Long finalValue = null;
@@ -926,6 +1042,51 @@ public class FunctionApplier {
             sbui.replace(sbui.length() - extraPar, sbui.length(), rempl.toString());
             finalValue = Long.parseLong(sbui.toString());
             break;
+        case KEEP_FIRST_AND_GENERATE:
+            if (valueIn != null) {
+                Integer extraPara = null;
+                try {
+                    extraPara = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    finalValue = 0L;
+                    break;
+                }
+                if (extraPara == 0) {
+                    finalValue = 0L;
+                } else {
+                    extraPara = ((int) Math.log10(valueIn) + 1 <= extraPara) ? (int) Math.log10(valueIn) + 1 : extraPara;
+                    StringBuilder val = new StringBuilder(valueIn.toString().substring(0, extraPara));
+                    for (int i = extraPara; i < valueIn.toString().length(); ++i) {
+                        val.append(rnd.nextInt(9));
+                    }
+                    finalValue = Long.parseLong(val.toString());
+                }
+            }
+            break;
+        case KEEP_LAST_AND_GENERATE:
+            if (valueIn != null) {
+                Integer extraPara = null;
+                try {
+                    extraPara = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    finalValue = 0L;
+                    break;
+                }
+                if (extraPara == 0 || (int) Math.log10(valueIn) + 1 <= extraPara) {
+                    finalValue = 0L;
+                } else {
+                    StringBuilder val = new StringBuilder(EMPTY_STRING);
+                    for (int i = 0; i < valueIn.toString().length() - extraPara; ++i) {
+                        val.append(rnd.nextInt(9));
+                    }
+                    val.append(valueIn.toString().substring(valueIn.toString().length() - extraPara, valueIn.toString().length()));
+                    finalValue = Long.parseLong(val.toString());
+                }
+            }
+            break;
+        case GENERATE_SEQUENCE:
+            finalValue = (long) seq++;
+            break;
         default:
             finalValue = 0L;
         }
@@ -942,7 +1103,7 @@ public class FunctionApplier {
      */
 
     public Integer generateMaskedRow(Integer valueIn, Function function, String extraParameter) {
-        if (function == Function.SET_TO_NULL || valueIn == null && keepNull) {
+        if (function == Function.SET_TO_NULL || valueIn == null && keepNull && function != Function.GENERATE_SEQUENCE) {
             return null;
         }
         Integer finalValue = 0;
@@ -1161,6 +1322,51 @@ public class FunctionApplier {
                 sbui.replace(sbui.length() - extraPar, sbui.length(), rempl.toString());
                 finalValue = Integer.parseInt(sbui.toString());
             }
+            break;
+        case KEEP_FIRST_AND_GENERATE:
+            if (valueIn != null) {
+                Integer extraPara = null;
+                try {
+                    extraPara = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    finalValue = 0;
+                    break;
+                }
+                if (extraPara == 0) {
+                    finalValue = 0;
+                } else {
+                    extraPara = ((int) Math.log10(valueIn) + 1 <= extraPara) ? (int) Math.log10(valueIn) + 1 : extraPara;
+                    StringBuilder sb = new StringBuilder(valueIn.toString().substring(0, extraPara));
+                    for (int i = extraPara; i < valueIn.toString().length(); ++i) {
+                        sb.append(rnd.nextInt(9));
+                    }
+                    finalValue = Integer.parseInt(sb.toString());
+                }
+            }
+            break;
+        case KEEP_LAST_AND_GENERATE:
+            if (valueIn != null) {
+                Integer extraPara = null;
+                try {
+                    extraPara = Integer.parseInt(extraParameter);
+                } catch (NumberFormatException e) {
+                    finalValue = 0;
+                    break;
+                }
+                if (extraPara == 0 || (int) Math.log10(valueIn) + 1 <= extraPara) {
+                    finalValue = 0;
+                } else {
+                    StringBuilder sb = new StringBuilder(EMPTY_STRING);
+                    for (int i = 0; i < valueIn.toString().length() - extraPara; ++i) {
+                        sb.append(rnd.nextInt(9));
+                    }
+                    sb.append(valueIn.toString().substring(valueIn.toString().length() - extraPara, valueIn.toString().length()));
+                    finalValue = Integer.parseInt(sb.toString());
+                }
+            }
+            break;
+        case GENERATE_SEQUENCE:
+            finalValue = seq++;
             break;
         default:
             return finalValue;
