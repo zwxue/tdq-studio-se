@@ -523,6 +523,10 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         for (Map<String, String> recordMap : matchRule) {
             algorithmName[keyIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
             if (AttributeMatcherType.DUMMY.name().equals(algorithmName[keyIdx][0])) {
+                // Set confidence weight if exist
+                if (null != recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT)) {
+                    arrAttrWeights[keyIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
+                }
                 keyIdx++;
                 continue;
             }
