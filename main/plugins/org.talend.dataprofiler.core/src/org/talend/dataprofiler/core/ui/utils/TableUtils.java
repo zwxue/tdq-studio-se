@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -24,7 +27,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -134,4 +142,46 @@ public final class TableUtils {
         table.addListener(SWT.MouseMove, tableListener);
         table.addListener(SWT.MouseHover, tableListener);
     }
+
+    /**
+     * find the table folder node under selectedHive node. currently, only under default db. Added TDQ-10328
+     * 
+     * @param hiveConnectionItem2
+     * @return
+     */
+    public static RepositoryNode getTableFolder(final DatabaseConnectionItem hiveConnectionItem) {
+        RepositoryNode hiveNode = RepositoryNodeHelper.recursiveFind(hiveConnectionItem.getProperty());
+        List<IRepositoryNode> children = hiveNode.getChildren();
+        RepositoryNode tableFolder = null;
+        for (IRepositoryNode child : children) {
+            if (StringUtils.equals("default", child.getLabel())) { //$NON-NLS-1$
+                List<IRepositoryNode> folders = child.getChildren();
+                for (IRepositoryNode folder : folders) {
+                    if (folder instanceof DBTableFolderRepNode) {
+                        return (RepositoryNode) folder;
+                    }
+                }
+            }
+        }
+        return tableFolder;
+    }
+
+    /**
+     * find the pointed table node under the selected Hive connection. currently, only for default.Added TDQ-10328
+     * 
+     * @param hiveNode
+     * @param tableName
+     * @return
+     */
+    public static IRepositoryNode findTableInConnection(final DatabaseConnectionItem hiveNode, String tableName) {
+        RepositoryNode tableFolder = getTableFolder(hiveNode);
+        List<IRepositoryNode> allTables = tableFolder.getChildren();
+        for (IRepositoryNode table : allTables) {
+            if (StringUtils.equals(table.getLabel(), tableName)) {
+                return table;
+            }
+        }
+        return null;
+    }
+
 }

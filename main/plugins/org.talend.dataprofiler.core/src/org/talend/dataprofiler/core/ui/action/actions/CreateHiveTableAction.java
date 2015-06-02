@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.ui.runtime.image.ECoreImage;
 import org.talend.commons.ui.runtime.image.ImageProvider;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.database.CreateHiveTableWizard;
@@ -34,6 +36,10 @@ import org.talend.repository.model.hdfs.HDFSConnectionItem;
 public class CreateHiveTableAction extends CreateHDFSSchemaAction {
 
     private static final String label = DefaultMessagesImpl.getString("CreateHiveTableAction.create"); //$NON-NLS-1$
+
+    private DatabaseConnectionItem hiveConnectionItem = null;
+
+    private String createTableName;
 
     public CreateHiveTableAction(RepositoryNode node) {
         super();
@@ -75,12 +81,34 @@ public class CreateHiveTableAction extends CreateHDFSSchemaAction {
     }
 
     protected void openHDFSSchemaWizard(final HDFSConnectionItem item) {
-        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), new CreateHiveTableWizard(
-                PlatformUI.getWorkbench(), repositoryNode, getExistingNames()));
+        CreateHiveTableWizard createHiveTableWizard = new CreateHiveTableWizard(PlatformUI.getWorkbench(), repositoryNode,
+                getExistingNames());
+        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), createHiveTableWizard);
         wizardDialog.setPageSize(WIZARD_WIDTH, WIZARD_HEIGHT);
         wizardDialog.create();
-        wizardDialog.open();
 
+        if (Window.OK == wizardDialog.open()) {
+            hiveConnectionItem = createHiveTableWizard.getHiveConnection();
+            createTableName = createHiveTableWizard.getCreatedTableName();
+        }
+    }
+
+    /**
+     * Getter for hiveConnectionItem.
+     * 
+     * @return the hiveConnectionItem
+     */
+    public DatabaseConnectionItem getHiveConnectionItem() {
+        return this.hiveConnectionItem;
+    }
+
+    /**
+     * Getter for createTableName.
+     * 
+     * @return the createTableName
+     */
+    public String getCreateTableName() {
+        return this.createTableName;
     }
 
 }

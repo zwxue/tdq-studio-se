@@ -16,7 +16,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -36,15 +35,17 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.CreateHiveOfHCAction;
+import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.designer.hdfsbrowse.model.EHadoopFileTypes;
 import org.talend.designer.hdfsbrowse.model.IHDFSNode;
-import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.metadata.managment.hive.handler.HiveConnectionHandler;
 import org.talend.repository.hdfs.ui.HDFSFileSelectorWizardPage;
 import org.talend.repository.hdfs.ui.HDFSSchemaWizard;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.hdfs.HDFSConnection;
+import org.talend.repository.model.hdfs.HDFSConnectionItem;
 
 /**
  * created by yyin on 2015年4月28日 Detailled comment
@@ -61,6 +62,10 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
     private RepositoryNode currentNode;
 
     private String mappingId;
+
+    private DatabaseConnectionItem hiveConnectionItem = null;
+
+    private String tableName;
 
     public CreateHiveTableWizard(IWorkbench workbench, RepositoryNode repositoryNode, String[] existingNames) {
         super(workbench, true, repositoryNode.getObject(), null, existingNames, false);
@@ -100,7 +105,7 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
         }
 
         IRepositoryNode selectedHive = step3Page.getSelectedHive();
-        DatabaseConnectionItem hiveConnectionItem = null;
+
         if (selectedHive == null) {
             // to open the wizard: create hive
             CreateHiveOfHCAction createHive = new CreateHiveOfHCAction(currentNode.getParent().getParent());
@@ -130,7 +135,8 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
                 stmt = hiveConnection.createStatement();
                 stmt.execute(createTableSql);
             }
-            reloadTableList(selectedHive);
+            reloadTableList(hiveConnectionItem);
+            this.tableName = step3Page.getTableName();
             return true;
         } catch (java.sql.SQLException e) {
             showErrorOnPage(e);
@@ -156,26 +162,16 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
     /**
      * reload the table folder under "default" in the selected hive connection.
      * 
-     * @param selectedHive
+     * @param hiveConnectionItem2
      */
-    private void reloadTableList(final IRepositoryNode selectedHive) {
+    private void reloadTableList(final DatabaseConnectionItem hiveConnectionItem2) {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
         IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 
             public void run(IProgressMonitor monitor) throws CoreException {
-                List<IRepositoryNode> children = selectedHive.getChildren();
-                RepositoryNode tableFolder = null;
-                for (IRepositoryNode child : children) {
-                    if (StringUtils.equals("default", child.getLabel())) {
-                        List<IRepositoryNode> folders = child.getChildren();
-                        for (IRepositoryNode folder : folders) {
-                            if (folder instanceof DBTableFolderRepNode) {
-                                tableFolder = (RepositoryNode) folder;
-                            }
-                        }
-                    }
-                }
+
+                RepositoryNode tableFolder = TableUtils.getTableFolder(hiveConnectionItem2);
                 if (tableFolder != null) {
                     IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(tableFolder);
                     try {
@@ -186,6 +182,7 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
                     CorePlugin.getDefault().refreshDQView(tableFolder);
                 }
             }
+
         };
         try {
             workspace.run(operation, null);
@@ -254,7 +251,13 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
             showErrorOnPage(e);
         }
 
-        createTableSQL.append(" row format delimited fields terminated by '\\n' stored as textfile"); //$NON-NLS-1$
+        HDFSConnectionItem HDFSConnectionItem = (HDFSConnectionItem) currentNode.getObject().getProperty().getItem();
+        HDFSConnection connection = (HDFSConnection) HDFSConnectionItem.getConnection();
+        String fieldSep = connection.getFieldSeparator();
+        String lineSep = connection.getRowSeparator();
+        createTableSQL.append(" row format " //$NON-NLS-1$
+                + " delimited fields terminated by " + fieldSep //$NON-NLS-1$
+                + " lines terminated by " + lineSep + " stored as textfile"); //$NON-NLS-1$ //$NON-NLS-2$
 
         createTableSQL.append(" LOCATION '"); //$NON-NLS-1$
         createTableSQL.append(getlocation(selectedFile));
@@ -300,5 +303,13 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
 
     protected String getDefaultTableName() {
         return checkTableName(step1Page.getSelectedFile());
+    }
+
+    public DatabaseConnectionItem getHiveConnection() {
+        return hiveConnectionItem;
+    }
+
+    public String getCreatedTableName() {
+        return this.tableName;
     }
 }
