@@ -20,7 +20,7 @@ public class DataSamplingBridgeTest {
         // 2.2 set sampling size , by default 1000 if not set.
         samplingBridge.setSampleSize(4);
         // 2.3 prepare the data sampling data source.
-        samplingBridge.prepareData();
+        samplingBridge.prepareData(DataSamplingBridge.RANDOM_SEED);
         // 2.4 get data
         while (samplingBridge.hasNext()) {
             System.out.println(getString(samplingBridge.getRecord()));

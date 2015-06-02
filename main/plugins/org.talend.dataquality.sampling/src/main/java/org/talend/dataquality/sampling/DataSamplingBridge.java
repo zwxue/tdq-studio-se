@@ -81,7 +81,7 @@ public class DataSamplingBridge {
      * @return true if success, false otherwise.
      * @throws Exception When unexpected exception occurs
      */
-    public boolean prepareData() throws Exception {
+    public boolean prepareData(long randomSeed) throws Exception {
         // Reset record cursor
         reservoirSamplingData = new ArrayList<Object[]>();
         switch (samplingOption) {
@@ -91,7 +91,7 @@ public class DataSamplingBridge {
             break;
         case Reservoir:
             recordCursor = 0;
-            reservoirSampler = new ReservoirSampler<Object[]>(sampleSize, RANDOM_SEED);
+            reservoirSampler = new ReservoirSampler<Object[]>(sampleSize, randomSeed);
             reservoirSampler.clear();
             while (dataSource.hasNext()) {
                 reservoirSampler.onNext(dataSource.getRecord());
@@ -103,6 +103,10 @@ public class DataSamplingBridge {
             break;
         }
         return false;
+    }
+
+    public void prepareData() throws Exception {
+        prepareData(System.currentTimeMillis());
     }
 
     /**
