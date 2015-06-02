@@ -256,6 +256,7 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getRandomQuery(String query) {
-        return query + orderBy() + "dbms_random_random() "; //$NON-NLS-1$
+        // TODO: need to implement this
+        return query;
     }
 }

@@ -201,4 +201,13 @@ public class ProxyRepositoryManager {
         result.addAll(referencedProjects);
         return result;
     }
+
+    public Project getProjectFromProjectTechnicalLabel(String technicalLabel) {
+        for (Project project : getAllProjects()) {
+            if (project.getTechnicalLabel().equals(technicalLabel)) {
+                return project;
+            }
+        }
+        return null;
+    }
 }
