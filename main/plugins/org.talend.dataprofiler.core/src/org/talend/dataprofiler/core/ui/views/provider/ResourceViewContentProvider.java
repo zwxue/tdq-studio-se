@@ -18,8 +18,11 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -52,7 +55,6 @@ import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -73,6 +75,7 @@ import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.IRepositoryService;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.exceptions.MissingDriverException;
 
 /**
@@ -237,8 +240,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     }
 
     private Object[] createWorkspaceRootChildren(Object element) throws CoreException {
-        Project currentProject = ProjectManager.getInstance().getCurrentProject();
-        return createWorkspaceRootChildren(element, currentProject);
+        return createWorkspaceRootChildren(element, ResourceManager.getRootProjectName());
     }
 
     /**
@@ -248,21 +250,45 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      * @return
      * @throws CoreException
      */
-    private Object[] createWorkspaceRootChildren(Object element, org.talend.core.model.general.Project inWhichProject)
-            throws CoreException {
-        List<Object> folders = new ArrayList<Object>();
-        org.talend.core.model.properties.Project currentEmfProject = inWhichProject.getEmfProject();
-        List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(currentEmfProject);
-        for (FolderItem folder : new ArrayList<FolderItem>(folderItems)) {
-            if (WorkbenchUtils.isTDQOrMetadataRootFolder(folder, currentEmfProject)) {
-                String label = folder.getProperty().getLabel();
-                if (label.trim().equals("TDQ_reporting_db")) { //$NON-NLS-1$
-                    continue;
+    private Object[] createWorkspaceRootChildren(Object element, String projectTechnicalLabel) throws CoreException {
+        Project inWhichProject = ProxyRepositoryManager.getInstance().getProjectFromProjectTechnicalLabel(projectTechnicalLabel);
+
+        Object currentOpenProject = null;
+        for (Object child : super.getChildren(element)) {
+            if (child instanceof IProject) {
+                if (((IProject) child).getName().equals(projectTechnicalLabel)) {
+                    currentOpenProject = child;
+                    break;
                 }
-                ERepositoryObjectType respositoryObjectType = RepositoryNodeBuilder.getInstance().retrieveRepObjectTypeByPath(
-                        label);
-                DQRepositoryNode node = createNewRepNode(respositoryObjectType, inWhichProject);
-                folders.add(node);
+            }
+        }
+        List<Object> folders = new ArrayList<Object>();
+
+        Object[] rootFolders = new Object[0];
+        if (currentOpenProject != null) {
+            rootFolders = ((IProject) currentOpenProject).members(false);
+
+            for (Object folder : rootFolders) {
+                IRepositoryNode node = null;
+                // here we use RepositoryNodeHelper.PREFIX_TDQ is because of we expect it is useful when we add some
+                // TDQ_XXX node on the DQRepository view
+                if (folder instanceof IFolder && ((IFolder) folder).getName().startsWith(RepositoryNodeHelper.PREFIX_TDQ)) {
+                    IFolder iFolder = (IFolder) folder;
+                    if (((IFolder) folder).getName().trim().equals("TDQ_reporting_db")) { //$NON-NLS-1$
+                        continue;
+                    }
+                    IPath relativePath = iFolder.getFullPath().makeRelativeTo(((IProject) currentOpenProject).getFullPath());
+                    ERepositoryObjectType respositoryObjectType = RepositoryNodeBuilder.getInstance()
+                            .retrieveRepObjectTypeByPath(relativePath.toOSString());
+                    node = createNewRepNode(respositoryObjectType, inWhichProject);
+                }
+                // MOD mzhao for metadata folder
+                if (folder instanceof IFolder && ((IFolder) folder).getName().equals(EResourceConstant.METADATA.getName())) {
+                    node = createNewRepNode(ERepositoryObjectType.METADATA, inWhichProject);
+                }
+                if (node != null) {
+                    folders.add(node);
+                }
             }
         }
 
@@ -272,8 +298,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         folders.add(recycleBin);
 
         // Reference Projects
-        if (org.talend.core.PluginChecker.isRefProjectLoaded() && currentEmfProject != null
-                && currentEmfProject.getReferencedProjects().size() > 0) {
+        if (org.talend.core.PluginChecker.isRefProjectLoaded() && inWhichProject.getEmfProject() != null
+                && inWhichProject.getEmfProject().getReferencedProjects().size() > 0) {
 
             if (!ProxyRepositoryManager.getInstance().isMergeRefProject()) {
                 DQRepositoryNode refProjectNode = createNewRepNode(ERepositoryObjectType.REFERENCED_PROJECTS, inWhichProject);
@@ -283,7 +309,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             }
         }
 
-        return sortRepositoryNode(folders.toArray());
+        return folders.toArray();
     }
 
     @SuppressWarnings("unchecked")
@@ -304,10 +330,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     parent.getChildren().add(referencedProjectNode);
 
                     try {
-                        org.talend.core.model.general.Project refGeneralProject = new org.talend.core.model.general.Project(
-                                emfProject, false);
-                        Object[] createWorkspaceRootChildren = createWorkspaceRootChildren(referencedProjectNode,
-                                refGeneralProject);
+                        // org.talend.core.model.general.Project refGeneralProject = new
+                        // org.talend.core.model.general.Project(
+                        // emfProject, false);
+                        Object[] createWorkspaceRootChildren = createWorkspaceRootChildren(ResourceManager.getRoot(),
+                                emfProject.getTechnicalLabel());
                         referencedProjectNode.getChildren().addAll(
                                 (Collection<? extends IRepositoryNode>) Arrays.asList(createWorkspaceRootChildren));
                     } catch (CoreException e) {
