@@ -278,8 +278,8 @@
       </actionProvider> 
       
       <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.SuggestAnalysisActionProvider"
-            id="org.talend.dataprofiler.core.ui.action.provider.SuggestAnalysisActionProvider">
+            class="org.talend.dataprofiler.core.ui.action.provider.SemanticDiscoveryActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.SemanticDiscoveryActionProvider">
          <enablement>
             <or>
                <instanceof

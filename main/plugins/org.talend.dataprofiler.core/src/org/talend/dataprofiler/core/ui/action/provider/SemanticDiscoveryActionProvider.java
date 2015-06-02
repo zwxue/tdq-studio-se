@@ -15,15 +15,16 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.SuggestAnalysisAction;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.SemanticDiscoveryAction;
 import org.talend.dq.nodes.ColumnSetRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 
-public class SuggestAnalysisActionProvider extends AbstractCommonActionProvider {
+public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvider {
 
-    private SuggestAnalysisAction suggestAnalysisAction;
+    private SemanticDiscoveryAction semanticDiscoveryAction;
 
-    public SuggestAnalysisActionProvider() {
+    public SemanticDiscoveryActionProvider() {
 
     }
 
@@ -50,12 +51,16 @@ public class SuggestAnalysisActionProvider extends AbstractCommonActionProvider 
             return;
         }
 
+        if (CorePlugin.getDefault().getSemanticStudioService() == null) {
+            return;
+        }
+
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
         Object firstElement = currentSelection.getFirstElement();
         if (firstElement instanceof DBTableRepNode) {
             DBTableRepNode node = (DBTableRepNode) firstElement;
-            suggestAnalysisAction = new SuggestAnalysisAction(node.getTdTable());
+            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
         } else {
             return;
         }
@@ -65,11 +70,11 @@ public class SuggestAnalysisActionProvider extends AbstractCommonActionProvider 
         // when the selection is valid, only two possible status: only one columnset is select, otherwise is some
         // columns in the same columnset are selected; so only check the fist node in the selection is enough.
         if (currentSelection.toList().get(0) instanceof ColumnSetRepNode) {
-            suggestAnalysisAction.setText("Suggest Analysis");
+            semanticDiscoveryAction.setText("Semantic Discovery");
         } else {
-            suggestAnalysisAction.setText("SuggestAnalysis");
+            semanticDiscoveryAction.setText("Semantic Discovery");
         }
-        menu.add(suggestAnalysisAction);
+        menu.add(semanticDiscoveryAction);
     }
 
 }

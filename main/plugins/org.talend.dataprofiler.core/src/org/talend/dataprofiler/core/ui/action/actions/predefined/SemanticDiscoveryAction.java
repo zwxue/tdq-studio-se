@@ -30,20 +30,20 @@ import org.talend.resource.EResourceConstant;
  * created by scorreia on Oct 1, 2013 Detailled comment
  * 
  */
-public class SuggestAnalysisAction extends Action {
+public class SemanticDiscoveryAction extends Action {
 
-    private static Logger log = Logger.getLogger(SuggestAnalysisAction.class);
+    private static Logger log = Logger.getLogger(SemanticDiscoveryAction.class);
 
     private ISemanticStudioService service;
 
     private MetadataTable metadataTable;
 
-    public SuggestAnalysisAction(MetadataTable set) {
+    public SemanticDiscoveryAction(MetadataTable set) {
         this();
         this.metadataTable = set;
     }
 
-    public SuggestAnalysisAction() {
+    public SemanticDiscoveryAction() {
         super(DefaultMessagesImpl.getString("SuggestAnalysisActionProvider.suggestAnalysis")); // TODO externalize //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
