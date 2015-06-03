@@ -14,9 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -63,8 +61,8 @@ public class SemanticDiscoveryAction extends Action {
                 IRepositoryNode node = RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.ANALYSIS);
                 CorePlugin.getDefault().refreshDQView(node);
             } else {
-                MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error",
-                        "Failed to recommend analysis. See the log for more details.");
+                // MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error",
+                // "Failed to recommend analysis. See the log for more details.");
             }
         }
 
