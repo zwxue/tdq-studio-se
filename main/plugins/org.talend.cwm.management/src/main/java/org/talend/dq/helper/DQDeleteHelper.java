@@ -19,13 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
-import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -39,37 +35,6 @@ public final class DQDeleteHelper {
     private static Logger log = Logger.getLogger(DQDeleteHelper.class);
 
     private DQDeleteHelper() {
-    }
-
-    /**
-     * physical delete related.
-     * 
-     * @param item
-     */
-    public static ReturnCode deleteRelations(Item item) {
-        ReturnCode rc = new ReturnCode(Boolean.TRUE);
-        if (item == null || item.getProperty() == null || item instanceof FolderItem) {
-            rc.setOk(Boolean.FALSE);
-            return rc;
-        }
-
-        IFile itemFile = PropertyHelper.getItemFile(item.getProperty());
-        // if file is null or this file is not physical deleted,do nothing.
-        if (itemFile == null || itemFile.exists()) {
-            rc.setOk(Boolean.FALSE);
-            return rc;
-        }
-        if (item instanceof TDQReportItem) {
-            try {
-                rc = ReportFileHelper.deleteRepOutputFolder(itemFile);
-            } catch (Exception e) {
-                log.error(e);
-                rc.setMessage(e.getMessage());
-                rc.setOk(false);
-            }
-            return rc;
-        }
-        return rc;
     }
 
     /**

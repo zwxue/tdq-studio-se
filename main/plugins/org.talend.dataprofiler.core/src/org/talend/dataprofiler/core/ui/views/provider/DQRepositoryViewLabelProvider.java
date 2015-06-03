@@ -86,6 +86,7 @@ import org.talend.dq.nodes.hadoopcluster.HadoopClusterConnectionRepNode;
 import org.talend.dq.nodes.hadoopcluster.HiveOfHCConnectionNode;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.ProjectManager;
+import org.talend.repository.hadoopcluster.node.model.HadoopClusterRepositoryNodeType;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
@@ -375,6 +376,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else if (type == ERepositoryObjectType.TDQ_JRAXML_ELEMENT) {
             return ImageLib.getImage(ImageLib.JRXML_ICON);
+        } else if (type == HadoopClusterRepositoryNodeType.HADOOPCLUSTER) {
+            return ImageLib.getImage(ImageLib.HADOOP_CLUSTER);
         }
         return null;
 

@@ -66,8 +66,8 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportFileHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
@@ -638,13 +638,6 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
 
-        // is TDQReportItem or not
-        boolean isReport = item != null && item instanceof TDQReportItem;
-        List<IFile> repDocLinkFiles = new ArrayList<IFile>();
-        if (isReport) {
-            repDocLinkFiles = ReportFileHelper.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(repoNode));
-        }
-
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
         super.setAvoidUnloadResources(true);
         super.run();
@@ -659,16 +652,29 @@ public class DQDeleteAction extends DeleteAction {
                             ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", PluginConstant.SPACE_STRING)))) {//$NON-NLS-1$
                 parent.getChildren(true).remove(repoNode);
             }
-            // delete related output folder after physical delete a report.
-            DQDeleteHelper.deleteRelations(item);
-            // delete the link files which links to the Report Generated Doc File
-            if (isReport && !repDocLinkFiles.isEmpty()) {
-                ReportFileHelper.removeRepDocLinkFiles(repDocLinkFiles);
+            // is TDQReportItem or not
+            if (item != null && item instanceof TDQReportItem) {
+                deleteRelatedFolder(repoNode, item);
             }
         }
 
         // refresh parent node
         refreshParentNode(parent);
+    }
+
+    private void deleteRelatedFolder(IRepositoryNode repoNode, Item item) {
+        List<IFile> repDocLinkFiles = ReportFileHelper.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(repoNode));
+        // delete related output folder after physical delete a report.
+        IFile itemFile = PropertyHelper.getItemFile(item.getProperty());
+        try {
+            ReportFileHelper.deleteRepOutputFolder(itemFile);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        // delete the link files which links to the Report Generated Doc File
+        if (!repDocLinkFiles.isEmpty()) {
+            ReportFileHelper.removeRepDocLinkFiles(repDocLinkFiles);
+        }
     }
 
     /**

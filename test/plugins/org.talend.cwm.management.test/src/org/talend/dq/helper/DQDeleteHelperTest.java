@@ -37,7 +37,6 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -82,8 +81,6 @@ public class DQDeleteHelperTest {
         ProxyRepositoryFactory mockProxyRepositoryFactory = PowerMockito.mock(ProxyRepositoryFactory.class);
         when(ProxyRepositoryFactory.getInstance()).thenReturn(mockProxyRepositoryFactory);
         stub(method(ProxyRepositoryFactory.class, "executeRepositoryWorkUnit", RepositoryWorkUnit.class)); //$NON-NLS-1$
-        ReturnCode rc = DQDeleteHelper.deleteRelations(item);
-        assertTrue(rc.isOk());
     }
 
     @Test
