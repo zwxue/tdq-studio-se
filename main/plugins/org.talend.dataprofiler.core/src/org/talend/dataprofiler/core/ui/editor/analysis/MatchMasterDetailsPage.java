@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -62,6 +63,7 @@ import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.SQLExecutor;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -755,6 +757,19 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
         });
         // TDQ-8428~
+
+        setSampleDataShowWayStatus();
+    }
+
+    /**
+     * DOC msjian Comment method "setSampleDataShowWayStatus".
+     */
+    private void setSampleDataShowWayStatus() {
+        DataManager connection = analysisHandler.getConnection();
+        boolean isNotSupportRandom = connection != null
+                && (connection instanceof DelimitedFileConnection || ConnectionHelper.isInformix((Connection) connection) || ConnectionHelper
+                        .isSybase((Connection) connection));
+        sampleDataShowWayCombo.setEnabled(!isNotSupportRandom);
     }
 
     /**
@@ -903,6 +918,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     matchAndSurvivorKeySection.clearChart();
                 }
                 blockingKeySection.clearChart();
+                setSampleDataShowWayStatus();
             }
         }
     }

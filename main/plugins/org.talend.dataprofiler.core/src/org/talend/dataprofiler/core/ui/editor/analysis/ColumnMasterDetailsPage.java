@@ -61,11 +61,13 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -109,6 +111,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -355,6 +358,18 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             }
         });
         // TDQ-8428~
+        setSampleDataShowWayStatus();
+    }
+
+    /**
+     * DOC msjian Comment method "setSampleDataShowWayStatus".
+     */
+    private void setSampleDataShowWayStatus() {
+        DataManager connection = this.getAnalysis().getContext().getConnection();
+        boolean isNotSupportRandom = connection != null
+                && (connection instanceof DelimitedFileConnection || ConnectionHelper.isInformix((Connection) connection) || ConnectionHelper
+                        .isSybase((Connection) connection));
+        sampleDataShowWayCombo.setEnabled(!isNotSupportRandom);
     }
 
     /**
