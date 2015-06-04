@@ -41,6 +41,13 @@ public class CreateNewRepositoryNodeFolder extends AbstractCommonActionProvider 
         if (!isShowMenu()) {
             return;
         }
+
+        // ADD msjian TDQ-10444: fix get error when click on the exchange node
+        if (isExchangeNode()) {
+            return;
+        }
+        // TDQ-10444~
+
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
         RepositoryNode parent = node.getParent();

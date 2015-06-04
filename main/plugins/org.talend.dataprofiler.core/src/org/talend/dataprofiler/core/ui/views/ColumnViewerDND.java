@@ -38,6 +38,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -171,7 +172,6 @@ public class ColumnViewerDND {
              * 
              * @see org.eclipse.swt.dnd.DropTargetAdapter#drop(org.eclipse.swt.dnd .DropTargetEvent)
              */
-            @SuppressWarnings("unchecked")
             @Override
             public void drop(DropTargetEvent event) {
                 int index = targetControl.getItemCount();
@@ -224,6 +224,13 @@ public class ColumnViewerDND {
 
             boolean is = true;
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
+            // ADD msjian TDQ-10444: can not drag the ones in ref project
+            IRepositoryViewObject obj = ((IRepositoryNode) firstElement).getObject();
+            if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(obj)) {
+                event.detail = DND.DROP_NONE;
+                return;
+            }
+            // TDQ-4919~
 
             if (firstElement instanceof PatternRepNode) {
                 IFile fe = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((PatternRepNode) firstElement));
@@ -343,7 +350,6 @@ public class ColumnViewerDND {
             AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
             // IRepositoryViewObject repViewObj = firstElement.getObject();
             // object instanceof DBColumnRepNode || object instanceof DBTableRepNode
-            int i = 0;
 
             if (firstElement instanceof DBTableRepNode) {
 
@@ -377,7 +383,6 @@ public class ColumnViewerDND {
             // }
         }
 
-        @SuppressWarnings("unchecked")
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();
@@ -416,7 +421,7 @@ public class ColumnViewerDND {
                                     .openError(
                                             control.getShell(),
                                             DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString( //$NON-NLS-1$
-                                                            "ColumnMasterDetailsPage.noSameTableWarning",
+                                                            "ColumnMasterDetailsPage.noSameTableWarning", //$NON-NLS-1$
                                                             PluginConstant.SPACE_STRING));
                             return;
                         }
@@ -503,13 +508,11 @@ public class ColumnViewerDND {
      * @return
      */
     static boolean isSameType(Object model1, Object model2) {
-        if ((model1 instanceof TdTable || model1 instanceof TdColumn)
-                && (model2 instanceof TdTable || model2 instanceof TdColumn)) {
-            if (model1 instanceof TdTable && model2 instanceof TdTable) {
-                return true;
-            } else if (model1 instanceof TdColumn && model2 instanceof TdColumn) {
-                return true;
-            }
+        if (model1 instanceof TdTable && model2 instanceof TdTable) {
+            return true;
+        }
+        if (model1 instanceof TdColumn && model2 instanceof TdColumn) {
+            return true;
         }
         return false;
     }
@@ -523,11 +526,8 @@ public class ColumnViewerDND {
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
 
             event.detail = DND.DROP_NONE;
-            RepositoryNode firstElement = (RepositoryNode) ((StructuredSelection) LocalSelectionTransfer.getTransfer()
-                    .getSelection()).getFirstElement();
         }
 
-        @SuppressWarnings("unchecked")
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();
@@ -611,7 +611,6 @@ public class ColumnViewerDND {
         }
 
         // @Override
-        @SuppressWarnings("unchecked")
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             // MOD klliu 2010-06-17 UDI drag&drop several items
             StructuredSelection ts = (StructuredSelection) commonViewer.getSelection();
@@ -705,7 +704,6 @@ public class ColumnViewerDND {
                 receiver.doDropValidation(event, commonViewer);
             }
 
-            @SuppressWarnings("unchecked")
             @Override
             public void drop(DropTargetEvent event) {
                 if (receiver == null) {

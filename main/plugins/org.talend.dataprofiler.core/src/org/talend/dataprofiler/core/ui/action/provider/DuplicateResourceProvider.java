@@ -39,6 +39,13 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
         if (!isShowMenuWhenIsReadonlyUser()) {
             return;
         }
+
+        // ADD msjian TDQ-10444: fix get error when click on the exchange node
+        if (isExchangeNode()) {
+            return;
+        }
+        // TDQ-10444~
+
         TreeSelection selection = (TreeSelection) this.getContext().getSelection();
         Object[] objs = selection.toArray();
         if (shouldShowMenu(objs)) {
