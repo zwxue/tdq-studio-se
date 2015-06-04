@@ -81,6 +81,14 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
+     * if the current select is Exchange related node.
+     */
+    public boolean isExchangeNode() {
+        IRepositoryNode firstContextNode = getFistContextNode();
+        return firstContextNode instanceof ExchangeComponentRepNode || firstContextNode instanceof ExchangeCategoryRepNode;
+    }
+
+    /**
      * DOC msjian Comment method "isShowMenuForRefNode".
      */
     public boolean isShowMenuForRefNode() {

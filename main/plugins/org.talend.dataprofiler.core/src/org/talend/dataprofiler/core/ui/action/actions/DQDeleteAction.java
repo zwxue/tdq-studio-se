@@ -294,9 +294,7 @@ public class DQDeleteAction extends DeleteAction {
      */
     protected void refreshWorkspaceAndRecycleBinNodes() {
         CorePlugin.getDefault().refreshWorkSpace();
-
-        // we need to refresh all recycle bin nodes including the recycle bin node under referenced projects.
-        CorePlugin.getDefault().refreshDQView();
+        CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
 
         if (this.needRefreshHadoopCluster) {
             WorkbenchUtils.refreshMetadataNode();

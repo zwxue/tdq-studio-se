@@ -292,10 +292,13 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             }
         }
 
-        // add RecycleBinRepNode
-        RecycleBinRepNode recycleBin = new RecycleBinRepNode(
-                DefaultMessagesImpl.getString("RecycleBin.resBinName"), inWhichProject); //$NON-NLS-1$
-        folders.add(recycleBin);
+        // add msjian TDQ-10386: Recycle Bin should remove form Referenced project
+        if (inWhichProject.isMainProject()) {
+            // add RecycleBinRepNode
+            RecycleBinRepNode recycleBin = new RecycleBinRepNode(
+                    DefaultMessagesImpl.getString("RecycleBin.resBinName"), inWhichProject); //$NON-NLS-1$
+            folders.add(recycleBin);
+        }
 
         // Reference Projects
         if (org.talend.core.PluginChecker.isRefProjectLoaded() && inWhichProject.getEmfProject() != null
