@@ -118,6 +118,10 @@ public class MatchRuleDataChart extends Composite {
         DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
 
         // sort dataset
+        // ADD msjian : fix a NPE when the user didn't click the chart button
+        if (groupSize2GroupFrequency == null) {
+            return defaultcategorydataset;
+        }
         String[] array = groupSize2GroupFrequency.keySet().toArray(new String[0]);
         List<String> groups = Arrays.asList(array);
         Collections.sort(groups, new Comparator<String>() {
