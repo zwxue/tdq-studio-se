@@ -174,7 +174,8 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         analyzer.analyze("another str");
         DataType dataType = analyzer.getResult().get(0);
         // Actual type
-        assertEquals(Type.STRING, dataType.getActualType());
+        dataType.setUserDefinedType(Type.STRING);
+        assertEquals(Type.STRING, dataType.getUserDefinedType());
         // Suggested type
         assertEquals(Type.INTEGER, dataType.getSuggestedType());
         // Valid and invalid
@@ -194,25 +195,56 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         analyzer.analyze("3", "2.0");
         analyzer.analyze("str", "0.1");
         analyzer.analyze("another str", "");
-        //--- Assert column 0
+        // --- Assert column 0
         DataType dataType = analyzer.getResult().get(0);
         // Actual type
-        assertEquals(Type.STRING, dataType.getActualType());
+        assertEquals(Type.INTEGER, dataType.getUserDefinedType());
+        // Suggested type
+        assertEquals(Type.INTEGER, dataType.getSuggestedType());
+        // Valid and invalid
+        assertEquals(2, dataType.getInvalidCount());
+        assertEquals(3, dataType.getValidCount());
+        // Invalid values
+        List<String> invalidValues = dataType.getInvalidValues();
+        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "str", "another str" }, invalidValuesArray);
+
+        // ---Assert when user set string type
+        // Actual type
+        dataType.setUserDefinedType(Type.STRING);
+        assertEquals(Type.STRING, dataType.getUserDefinedType());
         // Suggested type
         assertEquals(Type.INTEGER, dataType.getSuggestedType());
         // Valid and invalid
         assertEquals(3, dataType.getInvalidCount());
         assertEquals(2, dataType.getValidCount());
         // Invalid values
-        List<String> invalidValues = dataType.getInvalidValues();
-        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues = dataType.getInvalidValues();
+        invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
         assertArrayEquals(new String[] { "1", "2", "3" }, invalidValuesArray);
-        
+
         // ---Assert column 1
         dataType = analyzer.getResult().get(1);
         // Actual type
-        assertEquals(Type.STRING, dataType.getActualType());
+        assertEquals(Type.DOUBLE, dataType.getUserDefinedType());
+        // Suggested type
+        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
+        // Valid , Empty, and invalid
+        assertEquals(1, dataType.getInvalidCount());
+        assertEquals(2, dataType.getValidCount());
+        assertEquals(2, dataType.getEmptyCount());
+        // Invalid values
+        invalidValues = dataType.getInvalidValues();
+        invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "a" }, invalidValuesArray);
+        
+        //--- test when user set actual type to string
+        // Actual type
+        dataType.setUserDefinedType(Type.STRING);
+        assertEquals(Type.STRING, dataType.getUserDefinedType());
         // Suggested type
         assertEquals(Type.DOUBLE, dataType.getSuggestedType());
         // Valid , Empty, and invalid
@@ -223,7 +255,8 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         invalidValues = dataType.getInvalidValues();
         invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] {"a" , "2.0","0.1"}, invalidValuesArray);
+        assertArrayEquals(new String[] { "a", "2.0", "0.1" }, invalidValuesArray);
+        
     }
 
     @Test
@@ -233,8 +266,8 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         analyzer.analyze("3");
         analyzer.analyze("5538297118");
         DataType dataType = analyzer.getResult().get(0);
-        // Actual type
-        assertEquals(Type.INTEGER, dataType.getActualType());
+        // Actual type will be the suggested type in first pass when it's not defined.
+        assertEquals(Type.INTEGER, dataType.getUserDefinedType());
         // Suggested type
         assertEquals(Type.INTEGER, dataType.getSuggestedType());
         // Valid and invalid
@@ -254,21 +287,98 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         analyzer.analyze("2.88888888888888888888888");
         analyzer.analyze("3");
         analyzer.analyze("5538297118");
+        analyzer.analyze("str");
         DataType dataType = analyzer.getResult().get(0);
         // Actual type
-        assertEquals(Type.STRING, dataType.getActualType());
+        assertEquals(Type.DOUBLE, dataType.getUserDefinedType());
+        // Suggested type
+        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
+        // Test double count equals to 3
+        assertEquals(3, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        // Valid and invalid
+        assertEquals(3, dataType.getInvalidCount());
+        assertEquals(3, dataType.getValidCount());
+        // Invalid values
+        List<String> invalidValues = dataType.getInvalidValues();
+        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "3", "5538297118", "str" }, invalidValuesArray);
+
+        // ---- second pass when user set the user defined type as tring---
+        // Actual type
+        dataType.setUserDefinedType(Type.STRING);
+        assertEquals(Type.STRING, dataType.getUserDefinedType());
         // Suggested type
         assertEquals(Type.DOUBLE, dataType.getSuggestedType());
         // Test double count equals to 3
         assertEquals(3, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
         // Valid and invalid
         assertEquals(5, dataType.getInvalidCount());
-        assertEquals(0, dataType.getValidCount());
+        assertEquals(1, dataType.getValidCount());
+        // Invalid values
+        invalidValues = dataType.getInvalidValues();
+        invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "3", "5538297118", "1.0", "0.02", "2.88888888888888888888888" }, invalidValuesArray);
+
+        // ---- third pass when user set the user defined type as Iteger---
+        // Actual type
+        dataType.setUserDefinedType(Type.INTEGER);
+        assertEquals(Type.INTEGER, dataType.getUserDefinedType());
+        // Suggested type
+        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
+        // Test double count equals to 3
+        assertEquals(3, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        // Valid and invalid
+        assertEquals(4, dataType.getInvalidCount());
+        assertEquals(2, dataType.getValidCount());
+        // Invalid values
+        invalidValues = dataType.getInvalidValues();
+        invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "1.0", "0.02", "2.88888888888888888888888", "str" }, invalidValuesArray);
+
+    }
+
+    @Test
+    public void testNumbers() {
+        analyzer.analyze("1.0");
+        analyzer.analyze("0.02");
+        analyzer.analyze("2.88888888888888888888888");
+        analyzer.analyze("3.0");
+        analyzer.analyze("5538297118");
+        DataType dataType = analyzer.getResult().get(0);
+        // Actual type
+        assertEquals(Type.DOUBLE, dataType.getUserDefinedType());
+        // Suggested type
+        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
+        // Test double count equals to 3
+        assertEquals(4, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        // Valid and invalid
+        assertEquals(1, dataType.getInvalidCount());
+        assertEquals(4, dataType.getValidCount());
         // Invalid values
         List<String> invalidValues = dataType.getInvalidValues();
         String[] invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "3", "5538297118", "1.0", "0.02", "2.88888888888888888888888" }, invalidValuesArray);
+        assertArrayEquals(new String[] { "5538297118" }, invalidValuesArray);
+
+        // ---- send pass when user set the user defined type ---
+        // Actual type
+        dataType.setUserDefinedType(Type.STRING);
+        assertEquals(Type.STRING, dataType.getUserDefinedType());
+        // Suggested type
+        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
+        // Test double count equals to 3
+        assertEquals(4, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        // Valid and invalid
+        assertEquals(5, dataType.getInvalidCount());
+        assertEquals(0, dataType.getValidCount());
+        // Invalid values
+        invalidValues = dataType.getInvalidValues();
+        invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "5538297118", "1.0", "0.02", "2.88888888888888888888888", "3.0" }, invalidValuesArray);
     }
 
     @Test
@@ -281,7 +391,7 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         analyzer.analyze("a str");
         DataType dataType = analyzer.getResult().get(0);
         // Actual type
-        assertEquals(Type.STRING, dataType.getActualType());
+        assertEquals(Type.STRING, dataType.getUserDefinedType());
         // Suggested type
         assertEquals(Type.STRING, dataType.getSuggestedType());
         // Valid and invalid
@@ -305,7 +415,7 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         analyzer.analyze("  ");
         DataType dataType = analyzer.getResult().get(0);
         // Actual type
-        assertEquals(Type.STRING, dataType.getActualType());
+        assertEquals(Type.STRING, dataType.getUserDefinedType());
         // Suggested type
         assertEquals(Type.STRING, dataType.getSuggestedType());
         // Valid and invalid

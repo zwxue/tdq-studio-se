@@ -24,7 +24,7 @@ public class DataType {
 
     private Map<Type, List<String>> type2Values = new EnumMap<Type, List<String>>(Type.class);
 
-    private Type actualDataType = null;
+    private Type userDefinedType = null;
 
     private List<String> invalidValues = Collections.synchronizedList(new LinkedList<String>());
 
@@ -32,24 +32,32 @@ public class DataType {
         return typeFrequencies;
     }
 
+    public void setUserDefinedType(Type actualDataType) {
+        this.userDefinedType = actualDataType;
+    }
+
     /**
      * Get actual data type.
      * 
      * @return
      */
-    public Type getActualType() {
-        if (Type.EMPTY == actualDataType) {
+    public Type getUserDefinedType() {
+        if (Type.EMPTY == userDefinedType) {
             return Type.STRING;
         }
-        return actualDataType;
+        if(userDefinedType==null){
+            userDefinedType = getSuggestedType();
+        }
+        return userDefinedType;
     }
 
     public long getValidCount() {
-        if (Type.EMPTY == actualDataType) {
-            actualDataType = Type.STRING;
+        userDefinedType = getUserDefinedType();
+        if (Type.EMPTY == userDefinedType) {
+            userDefinedType = Type.STRING;
         }
-        if (typeFrequencies.containsKey(actualDataType)) {
-            return typeFrequencies.get(actualDataType);
+        if (typeFrequencies.containsKey(userDefinedType)) {
+            return typeFrequencies.get(userDefinedType);
         }
         return 0;
     }
@@ -70,8 +78,10 @@ public class DataType {
     }
 
     public List<String> getInvalidValues() {
+        invalidValues.clear();
+        userDefinedType = getUserDefinedType();
         for (Map.Entry<Type, List<String>> entry : type2Values.entrySet()) {
-            if (entry.getKey() != actualDataType && Type.EMPTY != entry.getKey()) {
+            if (entry.getKey() != userDefinedType && Type.EMPTY != entry.getKey()) {
                 // Add them to invalid values
                 invalidValues.addAll(entry.getValue());
             }
@@ -91,6 +101,9 @@ public class DataType {
         if (Type.EMPTY == electedType) {
             return Type.STRING;
         }
+        if (userDefinedType == null) {
+            userDefinedType = electedType;
+        }
         return electedType;
     }
 
@@ -99,13 +112,6 @@ public class DataType {
             typeFrequencies.put(type, 1l);
         } else {
             typeFrequencies.put(type, typeFrequencies.get(type) + 1);
-        }
-        // Update actual data type
-        if (actualDataType == null) {
-            actualDataType = type;
-        } else if (actualDataType != type) {
-            actualDataType = Type.STRING; // When multiple type occurs, actual
-                                          // type should be a string.
         }
     }
 
