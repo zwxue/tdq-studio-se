@@ -54,8 +54,6 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
     private List<RunModifyTimerTask> taskList = new ArrayList<RunModifyTimerTask>();
 
-    private Timer timer = new Timer();
-
     protected MatchRuleDataChart matchRuleChartComp = null;
 
     /**
@@ -111,7 +109,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
                 // run current after 500ms
                 RunModifyTimerTask runModifyTimerTask = new RunModifyTimerTask(currentRunTime, lessSpin.getText().trim());
-                timer.schedule(runModifyTimerTask, DELAY_RUN_GROUP_LESS_THEN);
+                new Timer().schedule(runModifyTimerTask, DELAY_RUN_GROUP_LESS_THEN);
                 taskList.add(runModifyTimerTask);
             }
         });
