@@ -32,7 +32,10 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
     private final ResizableList<DataType> dataTypes = new ResizableList<DataType>(DataType.class);
 
     private static DataType.Type execute(String value) {
-        if (TypeInferenceUtils.isBoolean(value)) {
+        if (TypeInferenceUtils.isEmpty(value)) {
+            // 1. detect empty
+            return DataType.Type.EMPTY;
+        } else if (TypeInferenceUtils.isBoolean(value)) {
             // 1. detect boolean
             return DataType.Type.BOOLEAN;
         } else if (TypeInferenceUtils.isChar(value)) {
@@ -72,7 +75,7 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
         dataTypes.resize(record.length);
         for (int i = 0; i < record.length; i++) {
             final DataType dataType = dataTypes.get(i);
-            dataType.increment(execute(record[i]));
+            dataType.increment(execute(record[i]), record[i]);
         }
         return true;
     }

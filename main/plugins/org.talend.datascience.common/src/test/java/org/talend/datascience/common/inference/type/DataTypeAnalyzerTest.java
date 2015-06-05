@@ -1,5 +1,6 @@
 package org.talend.datascience.common.inference.type;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.datascience.common.inference.AnalyzerTest;
+import org.talend.datascience.common.inference.type.DataType.Type;
 
 public class DataTypeAnalyzerTest extends AnalyzerTest {
 
@@ -87,12 +89,12 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         analyzer.analyze("M");
         assertEquals(1, analyzer.getResult().size());
         assertEquals(DataType.Type.CHAR, analyzer.getResult().get(0).getSuggestedType());
-        // The new value should invalidate previous assumptions about CHAR value (no longer a CHAR).
+        // The new value should invalidate previous assumptions about CHAR value
+        // (no longer a CHAR).
         analyzer.analyze("Mme");
         assertEquals(1, analyzer.getResult().size());
         assertEquals(DataType.Type.STRING, analyzer.getResult().get(0).getSuggestedType());
     }
-
 
     // TODO All other data types
 
@@ -161,6 +163,121 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         }
         final List<DataType> result = analyzer.getResult();
         assertEquals(DataType.Type.INTEGER, result.get(7).getSuggestedType());
+    }
+
+    @Test
+    public void testInvalidValues() {
+        analyzer.analyze("1");
+        analyzer.analyze("2");
+        analyzer.analyze("3");
+        analyzer.analyze("str");
+        analyzer.analyze("another str");
+        DataType dataType = analyzer.getResult().get(0);
+        // Actual type
+        assertEquals(Type.STRING, dataType.getActualType());
+        // Suggested type
+        assertEquals(Type.INTEGER, dataType.getSuggestedType());
+        // Valid and invalid
+        assertEquals(3, dataType.getInvalidCount());
+        assertEquals(2, dataType.getValidCount());
+        // Invalid values
+        List<String> invalidValues = dataType.getInvalidValues();
+        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "1", "2", "3" }, invalidValuesArray);
+    }
+
+    @Test
+    public void testValidIntegers() {
+        analyzer.analyze("1");
+        analyzer.analyze("2");
+        analyzer.analyze("3");
+        analyzer.analyze("5538297118");
+        DataType dataType = analyzer.getResult().get(0);
+        // Actual type
+        assertEquals(Type.INTEGER, dataType.getActualType());
+        // Suggested type
+        assertEquals(Type.INTEGER, dataType.getSuggestedType());
+        // Valid and invalid
+        assertEquals(0, dataType.getInvalidCount());
+        assertEquals(4, dataType.getValidCount());
+        // Invalid values
+        List<String> invalidValues = dataType.getInvalidValues();
+        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] {}, invalidValuesArray);
+    }
+
+    @Test
+    public void testNoneStrings() {
+        analyzer.analyze("1.0");
+        analyzer.analyze("0.02");
+        analyzer.analyze("2.88888888888888888888888");
+        analyzer.analyze("3");
+        analyzer.analyze("5538297118");
+        DataType dataType = analyzer.getResult().get(0);
+        // Actual type
+        assertEquals(Type.STRING, dataType.getActualType());
+        // Suggested type
+        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
+        // Test double count equals to 3
+        assertEquals(3, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        // Valid and invalid
+        assertEquals(5, dataType.getInvalidCount());
+        assertEquals(0, dataType.getValidCount());
+        // Invalid values
+        List<String> invalidValues = dataType.getInvalidValues();
+        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "3", "5538297118", "1.0", "0.02", "2.88888888888888888888888" }, invalidValuesArray);
+    }
+
+    @Test
+    public void testEmptyOver() {
+        analyzer.analyze("");
+        analyzer.analyze("");
+        analyzer.analyze("");
+        analyzer.analyze("");
+        analyzer.analyze("1");
+        analyzer.analyze("a str");
+        DataType dataType = analyzer.getResult().get(0);
+        // Actual type
+        assertEquals(Type.STRING, dataType.getActualType());
+        // Suggested type
+        assertEquals(Type.STRING, dataType.getSuggestedType());
+        // Valid and invalid
+        assertEquals(1, dataType.getInvalidCount());
+        assertEquals(1, dataType.getValidCount());
+        assertEquals(4, dataType.getEmptyCount());
+        // Invalid values
+        List<String> invalidValues = dataType.getInvalidValues();
+        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "1" }, invalidValuesArray);
+    }
+
+    @Test
+    public void testEmptyAll() {
+        analyzer.analyze("");
+        analyzer.analyze("");
+        analyzer.analyze(null);
+        analyzer.analyze("");
+        analyzer.analyze(" ");
+        analyzer.analyze("  ");
+        DataType dataType = analyzer.getResult().get(0);
+        // Actual type
+        assertEquals(Type.STRING, dataType.getActualType());
+        // Suggested type
+        assertEquals(Type.STRING, dataType.getSuggestedType());
+        // Valid and invalid
+        assertEquals(0, dataType.getInvalidCount());
+        assertEquals(0, dataType.getValidCount());
+        assertEquals(5, dataType.getEmptyCount());
+        // Invalid values
+        List<String> invalidValues = dataType.getInvalidValues();
+        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] {}, invalidValuesArray);
     }
 
 }

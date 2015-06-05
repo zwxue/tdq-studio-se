@@ -12,15 +12,71 @@
 // ============================================================================
 package org.talend.datascience.common.inference.type;
 
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class DataType {
 
     private Map<Type, Long> typeFrequencies = new EnumMap<Type, Long>(Type.class);
 
+    private Map<Type, List<String>> type2Values = new EnumMap<Type, List<String>>(Type.class);
+
+    private Type actualDataType = null;
+
+    private List<String> invalidValues = Collections.synchronizedList(new LinkedList<String>());
+
     public Map<Type, Long> getTypeFrequencies() {
         return typeFrequencies;
+    }
+
+    /**
+     * Get actual data type.
+     * 
+     * @return
+     */
+    public Type getActualType() {
+        if (Type.EMPTY == actualDataType) {
+            return Type.STRING;
+        }
+        return actualDataType;
+    }
+
+    public long getValidCount() {
+        if (Type.EMPTY == actualDataType) {
+            actualDataType = Type.STRING;
+        }
+        if (typeFrequencies.containsKey(actualDataType)) {
+            return typeFrequencies.get(actualDataType);
+        }
+        return 0;
+    }
+
+    public long getEmptyCount() {
+        if (typeFrequencies.containsKey(Type.EMPTY)) {
+            return typeFrequencies.get(Type.EMPTY);
+        }
+        return 0;
+    }
+
+    public long getInvalidCount() {
+        long count = 0;
+        for (long freq : typeFrequencies.values()) {
+            count += freq;
+        }
+        return count - getValidCount() - getEmptyCount();
+    }
+
+    public List<String> getInvalidValues() {
+        for (Map.Entry<Type, List<String>> entry : type2Values.entrySet()) {
+            if (entry.getKey() != actualDataType && Type.EMPTY != entry.getKey()) {
+                // Add them to invalid values
+                invalidValues.addAll(entry.getValue());
+            }
+        }
+        return invalidValues;
     }
 
     public Type getSuggestedType() {
@@ -32,6 +88,9 @@ public class DataType {
                 electedType = entry.getKey();
             }
         }
+        if (Type.EMPTY == electedType) {
+            return Type.STRING;
+        }
         return electedType;
     }
 
@@ -41,6 +100,29 @@ public class DataType {
         } else {
             typeFrequencies.put(type, typeFrequencies.get(type) + 1);
         }
+        // Update actual data type
+        if (actualDataType == null) {
+            actualDataType = type;
+        } else if (actualDataType != type) {
+            actualDataType = Type.STRING; // When multiple type occurs, actual
+                                          // type should be a string.
+        }
+    }
+
+    public void increment(Type type, String value) {
+        increment(type);
+        // update type to values map
+        if (!type2Values.containsKey(type)) {
+            List<String> values = type2Values.get(type);
+            if (values == null) {
+                values = Collections.synchronizedList(new LinkedList<String>());
+            }
+            values.add(value);
+            type2Values.put(type, values);
+        } else {
+            List<String> values = type2Values.get(type);
+            values.add(value);
+        }
     }
 
     public enum Type {
@@ -49,6 +131,7 @@ public class DataType {
         INTEGER,
         DOUBLE,
         STRING,
-        DATE
+        DATE,
+        EMPTY
     }
 }
