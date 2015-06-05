@@ -188,6 +188,45 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
     }
 
     @Test
+    public void testTwoColumnsInvalid() {
+        analyzer.analyze("1", "");
+        analyzer.analyze("2", "a");
+        analyzer.analyze("3", "2.0");
+        analyzer.analyze("str", "0.1");
+        analyzer.analyze("another str", "");
+        //--- Assert column 0
+        DataType dataType = analyzer.getResult().get(0);
+        // Actual type
+        assertEquals(Type.STRING, dataType.getActualType());
+        // Suggested type
+        assertEquals(Type.INTEGER, dataType.getSuggestedType());
+        // Valid and invalid
+        assertEquals(3, dataType.getInvalidCount());
+        assertEquals(2, dataType.getValidCount());
+        // Invalid values
+        List<String> invalidValues = dataType.getInvalidValues();
+        String[] invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] { "1", "2", "3" }, invalidValuesArray);
+        
+        // ---Assert column 1
+        dataType = analyzer.getResult().get(1);
+        // Actual type
+        assertEquals(Type.STRING, dataType.getActualType());
+        // Suggested type
+        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
+        // Valid , Empty, and invalid
+        assertEquals(3, dataType.getInvalidCount());
+        assertEquals(0, dataType.getValidCount());
+        assertEquals(2, dataType.getEmptyCount());
+        // Invalid values
+        invalidValues = dataType.getInvalidValues();
+        invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] {"a" , "2.0","0.1"}, invalidValuesArray);
+    }
+
+    @Test
     public void testValidIntegers() {
         analyzer.analyze("1");
         analyzer.analyze("2");
