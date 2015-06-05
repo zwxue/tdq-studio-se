@@ -91,18 +91,23 @@ public class MatchRuleDataChart extends Composite {
         String s = DefaultMessagesImpl.getString("DataChart.4"); //$NON-NLS-1$
 
         // sort dataset
-        String[] array = groupSize2GroupFrequency.keySet().toArray(new String[0]);
-        List<String> groups = Arrays.asList(array);
-        Collections.sort(groups, new Comparator<String>() {
+        // ADD msjian : fix a NPE when the user didn't click the chart button
+        if (groupSize2GroupFrequency != null) {
+            String[] array = groupSize2GroupFrequency.keySet().toArray(new String[0]);
+            List<String> groups = Arrays.asList(array);
+            Collections.sort(groups, new Comparator<String>() {
 
-            @Override
-            public int compare(String o1, String o2) {
-                // return groupCounts.get(o2).compareTo(groupCounts.get(o1));
-                return Integer.parseInt(o1) - Integer.parseInt(o2);
-            }
-        });
+                @Override
+                public int compare(String o1, String o2) {
+                    // return groupCounts.get(o2).compareTo(groupCounts.get(o1));
+                    return Integer.parseInt(o1) - Integer.parseInt(o2);
+                }
+            });
 
-        return TOPChartUtil.getInstance().createDatasetForMatchRule(groupSize2GroupFrequency, groups, times, s);
+            return TOPChartUtil.getInstance().createDatasetForMatchRule(groupSize2GroupFrequency, groups, times, s);
+        } else {
+            return TOPChartUtil.getInstance().createDatasetForMatchRule(groupSize2GroupFrequency, null, times, s);
+        }
     }
 
     public Object getChartComp() {
