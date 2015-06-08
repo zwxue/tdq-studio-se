@@ -32,6 +32,7 @@ public class FieldModifier {
         REMOVE_DIGIT,
         EXCHANGE_CHAR,
         SOUNDEX_REPLACE,
+        // find this function at SynonymReplaceAction class of org.talend.dataquality.standardization
         SYNONYM_REPLACE,
         SET_TO_BLANK,
         SET_TO_NULL,
@@ -77,13 +78,6 @@ public class FieldModifier {
         }
         return inverseSoundexMap;
     }
-
-    // private Map<String, SynonymIndexSearcher> getSynonymSearcherMap() {
-    // if (synonymSearcherMap == null) {
-    // synonymSearcherMap = new HashMap<String, SynonymIndexSearcher>();
-    // }
-    // return synonymSearcherMap;
-    // }
 
     public Date generateDuplicate(Date date, Function function, int modifCount, String extraParameter) {
         Date newDate = (date == null) ? null : new Date(date.getTime());
@@ -205,42 +199,6 @@ public class FieldModifier {
                 }
             }
             break;
-        case SYNONYM_REPLACE:
-            // if (str.length() > 0) {
-            // SynonymIndexSearcher searcher = getSynonymSearcherMap().get(extraParameter);
-            // if (searcher == null) {
-            // searcher = new SynonymIndexSearcher(extraParameter);
-            // synonymSearcherMap.put(extraParameter, searcher);
-            // }
-            // try {
-            // TopDocs docs = searcher.searchDocumentBySynonym(str);
-            // if (docs.totalHits > 0) {
-            // Document doc = searcher.getDocument(docs.scoreDocs[0].doc);
-            // List<String> replaceList = new ArrayList<String>();
-            // String word = doc.getValues(SynonymIndexSearcher.F_WORD)[0];
-            // if (!word.equalsIgnoreCase(str)) {
-            // replaceList.add(word);
-            // }
-            // String[] synonyms = doc.getValues(SynonymIndexSearcher.F_SYN);
-            // for (String syn : synonyms) {
-            // if (!syn.equalsIgnoreCase(str)) {
-            // replaceList.add(syn);
-            // }
-            // }
-            // if (replaceList.isEmpty()) {
-            // return str;
-            // } else {
-            // return replaceList.get(random.nextInt(replaceList.size()));
-            // }
-            // }
-            // } catch (ParseException e) {
-            // e.printStackTrace();
-            // } catch (IOException e) {
-            // e.printStackTrace();
-            // }
-            // }
-            // break;
-            return str;
         default:
             return str;
         }
@@ -270,11 +228,15 @@ public class FieldModifier {
 
     @Override
     public void finalize() {
-        // if (synonymSearcherMap != null) {
-        // for (SynonymIndexSearcher searcher : synonymSearcherMap.values()) {
-        // searcher.close();
-        // }
-        // }
+    }
+
+    /**
+     * Getter for random.
+     * 
+     * @return the random
+     */
+    public Random getRandom() {
+        return this.random;
     }
 
 }
