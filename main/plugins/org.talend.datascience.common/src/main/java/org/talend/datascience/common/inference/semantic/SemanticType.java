@@ -15,20 +15,30 @@ package org.talend.datascience.common.inference.semantic;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.talend.dataquality.semantic.recognizer.Category;
+
 public class SemanticType {
 
-    private Map<String, Long> semanticNameToCount = new HashMap<String, Long>();
+    private Map<Category, Long> categoryToCount = new HashMap<Category, Long>();
 
-    public void putSemanticNameToCount(String semanticName, Long count) {
-        semanticNameToCount.put(semanticName, count);
+    public String getSuggestedCategory() {
+        long max = 0;
+        String electedCategory = "UNKNOWN"; // Unknown by default
+        for (Map.Entry<Category, Long> entry : categoryToCount.entrySet()) {
+            if (entry.getValue() > max) {
+                max = entry.getValue();
+                electedCategory = entry.getKey().getCategoryName();
+            }
+        }
+        return electedCategory;
     }
 
-    public Map<String, Long> getSemanticNameToCountMap() {
-        return semanticNameToCount;
-    }
-
-    public Long getSemanticTypeCount(String semanticCategoryName) {
-        return semanticNameToCount.get(semanticCategoryName);
+    public void increment(Category category, long count) {
+        if (!categoryToCount.containsKey(category)) {
+            categoryToCount.put(category, count);
+        } else {
+            categoryToCount.put(category, categoryToCount.get(category) + count);
+        }
     }
 
 }

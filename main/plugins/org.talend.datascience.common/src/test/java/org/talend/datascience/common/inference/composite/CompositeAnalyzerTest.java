@@ -3,11 +3,13 @@ package org.talend.datascience.common.inference.composite;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.net.URI;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder;
 import org.talend.datascience.common.inference.Analyzer;
 import org.talend.datascience.common.inference.AnalyzerTest;
 import org.talend.datascience.common.inference.Analyzers;
@@ -22,7 +24,13 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
 
     @Before
     public void setUp() throws Exception {
-        analyzer = Analyzers.with(new DataTypeAnalyzer(), new SemanticAnalyzer());
+        final URI ddPath = this.getClass().getResource("/luceneIdx/dictionary").toURI();
+        final URI kwPath = this.getClass().getResource("/luceneIdx/keyword").toURI();
+        final CategoryRecognizerBuilder builder = CategoryRecognizerBuilder.newBuilder() //
+                .ddPath(ddPath) //
+                .kwPath(kwPath) //
+                .setMode(CategoryRecognizerBuilder.Mode.LUCENE);
+        analyzer = Analyzers.with(new DataTypeAnalyzer(), new SemanticAnalyzer(builder));
     }
 
     @After
@@ -62,7 +70,28 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
         assertEquals(DataType.Type.CHAR, result.get(15).get(DataType.class).getSuggestedType());
         assertEquals(DataType.Type.CHAR, result.get(16).get(DataType.class).getSuggestedType());
         assertEquals(DataType.Type.STRING, result.get(17).get(DataType.class).getSuggestedType());
-        // TODO Asserts on semantic types
-
+        // Semantic types assertions
+        String[] expectedCategories = new String[] { "", //
+                "", //
+                "FIRSTNAME", //
+                "FIRSTNAME", //
+                "", //
+                "", //
+                "", //
+                "", //
+                "", //
+                "DATE",  //
+                "DATE",  //
+                "", //
+                "", //
+                "", //
+                "", //
+                "", //
+                "GENDER", //
+                "" //
+        };
+        for (int i = 0; i < expectedCategories.length; i++) {
+            assertEquals(expectedCategories[i], result.get(i).get(SemanticType.class).getSuggestedCategory());
+        }
     }
 }

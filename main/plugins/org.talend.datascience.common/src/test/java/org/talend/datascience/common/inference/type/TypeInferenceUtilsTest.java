@@ -183,7 +183,7 @@ public class TypeInferenceUtilsTest {
 		String timeEnd = getCurrentTimeStamp();
 		LOGGER.debug("Detect date end at: " + timeEnd);
 		// Assert count of matches.
-		Assert.assertEquals(6001, countOfDates);
+		Assert.assertEquals(1002, countOfDates);
 		double difference = getTimeDifference(timeStart, timeEnd);
 
 		LOGGER.debug("Detect date time diff: " + difference + " s.");
