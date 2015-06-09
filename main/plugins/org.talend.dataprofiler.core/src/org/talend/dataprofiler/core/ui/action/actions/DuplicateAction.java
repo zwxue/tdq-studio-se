@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
@@ -33,6 +34,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -48,6 +50,7 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -219,6 +222,7 @@ public class DuplicateAction extends Action {
                 CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.findNearestSystemFolderNode(recursiveFind));
             } else {
                 CorePlugin.getDefault().refreshDQView(recursiveFind.getParent());
+                refreshHiveConnectionParent(recursiveFind);
             }
             // MOD qiongli TDQ-5391 Avoid 'recursiveFind' to casue NPE .
             if (activePart instanceof ISetSelectionTarget) {
@@ -227,6 +231,27 @@ public class DuplicateAction extends Action {
             }
         }
 
+    }
+
+    /**
+     * if the duplicate hive connection has its related hadoop cluster, need to refresh it.
+     * 
+     * @param recursiveFind
+     */
+    private void refreshHiveConnectionParent(RepositoryNode recursiveFind) {
+        if (recursiveFind instanceof DBConnectionRepNode) {
+            String hcId = ConnectionUtils.getHadoopClusterIDOfHive(recursiveFind.getObject());
+            if (!StringUtils.isBlank(hcId)) {
+                IRepositoryNode HClusterFolderNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.HADOOP_CLUSTER);
+                List<IRepositoryNode> children = HClusterFolderNode.getChildren();
+                for (IRepositoryNode hcluster : children) {
+                    if (StringUtils.equals(hcId, hcluster.getId())) {
+                        CorePlugin.getDefault().refreshDQView(hcluster);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private RepositoryNode getSelctionNode(String newLabel, Property property) throws BusinessException {
