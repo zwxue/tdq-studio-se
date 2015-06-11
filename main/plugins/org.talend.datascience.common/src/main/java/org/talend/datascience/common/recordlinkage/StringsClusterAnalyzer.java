@@ -14,11 +14,9 @@ package org.talend.datascience.common.recordlinkage;
 
 import java.util.*;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
-import org.talend.dataquality.matchmerge.Attribute;
-import org.talend.dataquality.matchmerge.MatchMergeAlgorithm;
-import org.talend.dataquality.matchmerge.Record;
-import org.talend.dataquality.matchmerge.SubString;
+import org.talend.dataquality.matchmerge.*;
 import org.talend.dataquality.matchmerge.mfb.MFB;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
@@ -87,22 +85,24 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
             final List<Record> mergeResult = matchMergeAlgorithm.execute(new RecordIterator(iterator));
             Map<String, String[]> masterToValues = new HashMap<String, String[]>();
             for (Record record : mergeResult) {
-                if (!record.getRelatedIds().isEmpty()) { // Merged record
-                    String[] originalValues = new String[record.getRelatedIds().size()];
-                    int i = 0;
-                    for (String relatedId : record.getRelatedIds()) {
-                        originalValues[i++] = blockValues.get(Integer.parseInt(relatedId))[0];
+                if (record.getRelatedIds().size() > 1) { // Merged record (and not a single record)
+                    final Attribute attribute = record.getAttributes().get(0);
+                    final AttributeValues<String> values = attribute.getValues();
+                    final String[] originalValues = (String[]) IteratorUtils.toArray(values.iterator(), String.class);
+                    if (values.hasMultipleValues() && originalValues.length > 1) {
+                        masterToValues.put(attribute.getValue(), originalValues);
                     }
-                    masterToValues.put(record.getAttributes().get(0).getValue(), originalValues);
                 }
             }
             // Build values
-            final StringClusters.StringCluster cluster = new StringClusters.StringCluster();
-            for (Map.Entry<String, String[]> current : masterToValues.entrySet()) {
-                cluster.survivedValue = current.getKey();
-                cluster.originalValues = current.getValue();
+            if (!masterToValues.isEmpty()) {
+                final StringClusters.StringCluster cluster = new StringClusters.StringCluster();
+                for (Map.Entry<String, String[]> current : masterToValues.entrySet()) {
+                    cluster.survivedValue = current.getKey();
+                    cluster.originalValues = current.getValue();
+                }
+                stringClusters.addCluster(cluster);
             }
-            stringClusters.addCluster(cluster);
         }
     }
 
