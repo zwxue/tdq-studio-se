@@ -12,11 +12,7 @@
 // ============================================================================
 package org.talend.datascience.common.recordlinkage;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * String clustering bean.
@@ -25,82 +21,83 @@ import java.util.TreeMap;
  *
  */
 public class StringsCluster {
-	//Note that the key order is reorgnized from comparator, so the map.get(key) will return null, use getSurvior(key) instead .
-	private Map<CountKey, String> groupsize2Survivor = null;
-	private Map<CountKey, List<String>> groupsize2All = null;
 
-	public StringsCluster() {
-		groupsize2Survivor = new TreeMap<CountKey, String>(
-				new StringsClusterComparator());
-		groupsize2All = new TreeMap<CountKey, List<String>>(
-				new StringsClusterComparator());
-	}
+    // Note that the key order is recognized from comparator, so the map.get(key) will return null, use getSurvivor(key)
+    // instead .
+    private Map<CountKey, String> groupsize2Survivor = null;
 
-	public void put(Integer count, String survivor) {
-		groupsize2Survivor.put(new CountKey(count), survivor);
-	}
+    private Map<CountKey, List<String>> groupsize2All = null;
 
-	public void put(Integer count, List<String> all) {
-		groupsize2All.put(new CountKey(count), all);
-	}
+    public StringsCluster() {
+        groupsize2Survivor = new TreeMap<CountKey, String>(new StringsClusterComparator());
+        groupsize2All = new TreeMap<CountKey, List<String>>(new StringsClusterComparator());
+    }
 
-	public String getSurvior(CountKey key) {
-		Set<Map.Entry<CountKey, String>> entrySet = groupsize2Survivor
-				.entrySet();
-		for (Map.Entry<CountKey, String> entry : entrySet) {
-			if (entry.getKey() == key) {
-				return entry.getValue();
-			}
-		}
-		return null;
-	}
-	public List<String> getClusterOfStrings(CountKey key) {
-		Set<Map.Entry<CountKey, List<String>>> entrySet = groupsize2All
-				.entrySet();
-		for (Map.Entry<CountKey, List<String>> entry : entrySet) {
-			if (entry.getKey() == key) {
-				return entry.getValue();
-			}
-		}
-		return null;
-	}
-	
-	public Set<CountKey> getCountKeySet(){
-		return groupsize2Survivor.keySet();
-	}
+    public void put(Integer count, String survivor) {
+        groupsize2Survivor.put(new CountKey(count), survivor);
+    }
 
-	class StringsClusterComparator implements Comparator<CountKey> {
-		@Override
-		public int compare(CountKey o1, CountKey o2) {
-			int diff = o2.getCount() - o1.getCount();
-			if (diff == 0) {
-				// Otherwise the previous identical item will be removed.
-				diff = -1;
-			}
-			return diff;
-		}
-	}
+    public void put(Integer count, List<String> all) {
+        groupsize2All.put(new CountKey(count), all);
+    }
 
-	/**
-	 * The count key class to avoid same count (integer) key issue in a map.
-	 * 
-	 * @author zhao
-	 *
-	 */
-	class CountKey {
-		private int count = 0;
+    public String getSurvivor(CountKey key) {
+        Set<Map.Entry<CountKey, String>> entrySet = groupsize2Survivor.entrySet();
+        for (Map.Entry<CountKey, String> entry : entrySet) {
+            if (entry.getKey() == key) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
 
-		public CountKey(int count) {
-			this.count = count;
-		}
+    public List<String> getClusterOfStrings(CountKey key) {
+        Set<Map.Entry<CountKey, List<String>>> entrySet = groupsize2All.entrySet();
+        for (Map.Entry<CountKey, List<String>> entry : entrySet) {
+            if (entry.getKey() == key) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
 
-		public int getCount() {
-			return count;
-		}
+    public Set<CountKey> getCountKeySet() {
+        return groupsize2Survivor.keySet();
+    }
 
-		public void setCount(int count) {
-			this.count = count;
-		}
+    class StringsClusterComparator implements Comparator<CountKey> {
 
-	}
+        public int compare(CountKey o1, CountKey o2) {
+            int diff = o2.getCount() - o1.getCount();
+            if (diff == 0) {
+                // Otherwise the previous identical item will be removed.
+                diff = -1;
+            }
+            return diff;
+        }
+    }
+
+    /**
+     * The count key class to avoid same count (integer) key issue in a map.
+     * 
+     * @author zhao
+     *
+     */
+    class CountKey {
+
+        private int count = 0;
+
+        public CountKey(int count) {
+            this.count = count;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+    }
 }
