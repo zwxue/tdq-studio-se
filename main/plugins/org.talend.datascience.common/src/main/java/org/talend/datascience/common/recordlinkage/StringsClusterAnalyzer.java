@@ -70,6 +70,8 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         blockKeyHandler.run();
         // Match & merge block values
         Map<String, List<String[]>> resultData = blockKeyHandler.getResultDatas();
+        List<Record> records = new ArrayList<Record>();
+        int currentBlockIndex = 0;
         for (List<String[]> blockValues : resultData.values()) {
             MatchMergeAlgorithm matchMergeAlgorithm = MFB.build(new AttributeMatcherType[] { AttributeMatcherType.DUMMY }, //
                     new String[] { StringUtils.EMPTY }, //
@@ -82,28 +84,52 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
                     new SubString[] { SubString.NO_SUBSTRING }, //
                     StringUtils.EMPTY);
             final Iterator<String[]> iterator = blockValues.iterator();
-            final List<Record> mergeResult = matchMergeAlgorithm.execute(new RecordIterator(iterator));
-            Map<String, String[]> masterToValues = new HashMap<String, String[]>();
-            for (Record record : mergeResult) {
-                if (record.getRelatedIds().size() > 1) { // Merged record (and not a single record)
-                    final Attribute attribute = record.getAttributes().get(0);
-                    final AttributeValues<String> values = attribute.getValues();
-                    final String[] originalValues = (String[]) IteratorUtils.toArray(values.iterator(), String.class);
-                    if (values.hasMultipleValues() && originalValues.length > 1) {
-                        masterToValues.put(attribute.getValue(), originalValues);
-                    }
+            final List<Record> blockResults = matchMergeAlgorithm.execute(new RecordIterator(currentBlockIndex, iterator));
+            records.addAll(blockResults);
+            currentBlockIndex++;
+        }
+        // Match & merge block values together (with higher thresholds)
+        PostMerge[] matchAlgorithms = new PostMerge[] {
+                new PostMerge(AttributeMatcherType.LEVENSHTEIN, 0.95f), //
+                new PostMerge(AttributeMatcherType.SOUNDEX, 0.95f)
+        };
+        for (PostMerge postMerge : matchAlgorithms) {
+            records = postMerge(records, postMerge.matcher, postMerge.threshold);
+        }
+        // Build string cluster based on successive match & merges
+        Map<String, String[]> masterToValues = new HashMap<String, String[]>();
+        for (Record record : records) {
+            if (record.getRelatedIds().size() > 1) { // Merged record (and not a single record)
+                final Attribute attribute = record.getAttributes().get(0);
+                final AttributeValues<String> values = attribute.getValues();
+                final String[] originalValues = (String[]) IteratorUtils.toArray(values.iterator(), String.class);
+                if (values.hasMultipleValues() && originalValues.length > 1) {
+                    masterToValues.put(attribute.getValue(), originalValues);
                 }
-            }
-            // Build values
-            if (!masterToValues.isEmpty()) {
-                final StringClusters.StringCluster cluster = new StringClusters.StringCluster();
-                for (Map.Entry<String, String[]> current : masterToValues.entrySet()) {
-                    cluster.survivedValue = current.getKey();
-                    cluster.originalValues = current.getValue();
-                }
-                stringClusters.addCluster(cluster);
             }
         }
+        for (Map.Entry<String, String[]> current : masterToValues.entrySet()) {
+            final StringClusters.StringCluster cluster = new StringClusters.StringCluster();
+            cluster.survivedValue = current.getKey();
+            cluster.originalValues = current.getValue();
+            stringClusters.addCluster(cluster);
+        }
+    }
+
+    private List<Record> postMerge(List<Record> records, AttributeMatcherType matchAlgorithm, float threshold) {
+        List<Record> mergeResult;
+        MatchMergeAlgorithm crossBlockMatch = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, //
+                new String[] { StringUtils.EMPTY }, //
+                new float[] { threshold }, //
+                0.95d, //
+                new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.MOST_COMMON }, //
+                new String[] { StringUtils.EMPTY }, //
+                new double[] { 1.0 }, //
+                new IAttributeMatcher.NullOption[] { IAttributeMatcher.NullOption.nullMatchNull }, //
+                new SubString[] { SubString.NO_SUBSTRING }, //
+                StringUtils.EMPTY);
+        mergeResult = crossBlockMatch.execute(records.iterator());
+        return mergeResult;
     }
 
     public List<StringClusters> getResult() {
@@ -112,13 +138,26 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         return cluster;
     }
 
+    private static class PostMerge {
+        AttributeMatcherType matcher;
+        float threshold;
+
+        public PostMerge(AttributeMatcherType matcher, float threshold) {
+            this.matcher = matcher;
+            this.threshold = threshold;
+        }
+    }
+    
     private static class RecordIterator implements Iterator<Record> {
 
         private int index;
 
+        private final int currentBlockIndex;
+
         private final Iterator<String[]> iterator;
 
-        public RecordIterator(Iterator<String[]> iterator) {
+        public RecordIterator(int currentBlockIndex, Iterator<String[]> iterator) {
+            this.currentBlockIndex = currentBlockIndex;
             this.iterator = iterator;
         }
 
@@ -130,7 +169,7 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
             final String[] values = iterator.next();
             final Attribute value = new Attribute("col0");
             value.setValue(values[0]);
-            return new Record(Collections.singletonList(value), String.valueOf(index++), 0, "");
+            return new Record(Collections.singletonList(value), currentBlockIndex + "-" + String.valueOf(index++), 0, "");
         }
     }
 }
