@@ -33,11 +33,8 @@ public class StringsClusterAnalyzerTest {
             analyser.analyze(fields[1]);
         }
         analyser.end();
-        int size = 0;
-        for (StringClusters.StringCluster cluster : analyser.getResult().get(0)) {
-            size++;
-        }
-        Assert.assertEquals(3, size);
+        List<StringClusters> results = analyser.getResult();
+        Assert.assertEquals(3, results.size());
         // TODO Do asserts on cluster content (see testTShirtsLogic)
     }
 
