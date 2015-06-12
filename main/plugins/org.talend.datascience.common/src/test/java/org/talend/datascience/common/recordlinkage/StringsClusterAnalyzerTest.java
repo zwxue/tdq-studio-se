@@ -16,6 +16,20 @@ public class StringsClusterAnalyzerTest {
 
     StringsClusterAnalyzer analyser = null;
 
+    private static void assertTShirtsResult(StringClusters clusters) {
+        Map<String, List<String>> expectedClusters = new HashMap<>();
+        expectedClusters
+                .put("Black T-shirt", Arrays.asList("Blck T-shirt", "Black T-shirt", "Black Tshirt", "Black T-shirt",
+                        "Black T-Shirt", "Black T-shirT"));
+        expectedClusters.put("White T-shirt", Collections.singletonList("White T-shirt"));
+        for (StringClusters.StringCluster cluster : clusters) {
+            Assert.assertTrue(expectedClusters.containsKey(cluster.survivedValue));
+            for (String originalValue : cluster.originalValues) {
+                Assert.assertTrue(expectedClusters.get(cluster.survivedValue).contains(originalValue));
+            }
+        }
+    }
+
     @Before
     public void setUp() throws Exception {
         analyser = new StringsClusterAnalyzer();
@@ -34,7 +48,7 @@ public class StringsClusterAnalyzerTest {
         }
         analyser.end();
         List<StringClusters> results = analyser.getResult();
-        Assert.assertEquals(3, results.size());
+        Assert.assertEquals(1, results.size());
         // TODO Do asserts on cluster content (see testTShirtsLogic)
     }
 
@@ -54,7 +68,7 @@ public class StringsClusterAnalyzerTest {
         for (StringClusters.StringCluster cluster : analyser.getResult().get(0)) {
             size++;
         }
-        Assert.assertEquals(3, size);
+        Assert.assertEquals(1, size);
         // TODO Do asserts on cluster content (see testTShirtsLogic)
     }
 
@@ -69,20 +83,26 @@ public class StringsClusterAnalyzerTest {
             String[] fields = StringUtils.splitPreserveAllTokens(line, columnDelimiter);
             analyser.analyze(fields[0]);
         }
-
         analyser.end();
 
-        StringClusters strCluster = analyser.getResult().get(0);
-        Map<String, List<String>> expectedClusters = new HashMap<String, List<String>>();
-        expectedClusters.put("Black T-shirt",
-                Arrays.asList("Black T-shirt", "Black Tshirt", "Black T-shirt", "Black T-Shirt", "Black T-shirT"));
-        expectedClusters.put("Blck T-shirt", Collections.singletonList("Blck T-shirt"));
-        expectedClusters.put("White T-shirt", Collections.singletonList("White T-shirt"));
-        for (StringClusters.StringCluster cluster : strCluster) {
-            Assert.assertTrue(expectedClusters.containsKey(cluster.survivedValue));
-            for (String originalValue : cluster.originalValues) {
-                Assert.assertTrue(expectedClusters.get(cluster.survivedValue).contains(originalValue));
-            }
-        }
+        assertTShirtsResult(analyser.getResult().get(0));
     }
+
+    @Test
+    public void testTShirtsLogicWithThreshold() throws IOException {
+        analyser.init();
+        analyser.setBlockSizeThreshold(2); // Holds at most 2 records in memory for each block
+        String columnDelimiter = "|";
+        InputStream in = this.getClass().getResourceAsStream("tshirts.txt"); //$NON-NLS-1$
+        BufferedReader bfr = new BufferedReader(new InputStreamReader(in));
+        List<String> listOfLines = IOUtils.readLines(bfr);
+        for (String line : listOfLines) {
+            String[] fields = StringUtils.splitPreserveAllTokens(line, columnDelimiter);
+            analyser.analyze(fields[0]);
+        }
+
+        analyser.end();
+        assertTShirtsResult(analyser.getResult().get(0));
+    }
+
 }
