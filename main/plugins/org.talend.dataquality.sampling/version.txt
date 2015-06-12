@@ -1,2 +1,4 @@
+V1.1.0 Julien GONZALEZ 2015-06-12
+    Adding new functions + Code cleansing
 V1.0.1 Julien GONZALEZ 2015-04-03
 - API for DataMasker
