@@ -12,20 +12,11 @@
 // ============================================================================
 package org.talend.datascience.common.recordlinkage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
-import org.talend.dataquality.matchmerge.Attribute;
-import org.talend.dataquality.matchmerge.AttributeValues;
-import org.talend.dataquality.matchmerge.MatchMergeAlgorithm;
-import org.talend.dataquality.matchmerge.Record;
-import org.talend.dataquality.matchmerge.SubString;
+import org.talend.dataquality.matchmerge.*;
 import org.talend.dataquality.matchmerge.mfb.MFB;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
@@ -43,41 +34,69 @@ import org.talend.datascience.common.inference.Analyzer;
  */
 public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
 
+    private static final BlockingKeyAlgorithmEnum blockKeyAlgorithm = BlockingKeyAlgorithmEnum.FINGERPRINTKEY;
+
     private final StringClusters stringClusters = new StringClusters();
+
+    private List<Record> records = new ArrayList<>();
 
     private BlockingKeyHandler blockKeyHandler = null;
 
     private int blockSizeThreshold = 1000;
 
-    List<Record> records = new ArrayList<Record>();
+    private PostMerge[] postMerges = new PostMerge[0];
 
-    private AttributeMatcherType matchAlgo = AttributeMatcherType.DUMMY;
+    private static List<Record> postMerge(List<Record> records, AttributeMatcherType matchAlgorithm, float threshold) {
+        List<Record> mergeResult;
+        MatchMergeAlgorithm crossBlockMatch = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, //
+                new String[] { StringUtils.EMPTY }, //
+                new float[] { threshold }, //
+                0.95d, //
+                new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.MOST_COMMON }, //
+                new String[] { StringUtils.EMPTY }, //
+                new double[] { 1.0 }, //
+                new IAttributeMatcher.NullOption[] { IAttributeMatcher.NullOption.nullMatchNull }, //
+                new SubString[] { SubString.NO_SUBSTRING }, //
+                StringUtils.EMPTY);
+        mergeResult = crossBlockMatch.execute(records.iterator());
+        return mergeResult;
+    }
 
-    private BlockingKeyAlgorithmEnum blockkeyAlgo = BlockingKeyAlgorithmEnum.FINGERPRINTKEY;
-
+    /**
+     * Sets the maximum allowed size for a block. When block exceeds this threshold, analyzer match & merge block values
+     * to limit memory usage.
+     * 
+     * @param blockSizeThreshold A positive value higher than 1.
+     */
     public void setBlockSizeThreshold(int blockSizeThreshold) {
+        if (blockSizeThreshold < 1) {
+            throw new IllegalArgumentException("Threshold must be greater than 1.");
+        }
         this.blockSizeThreshold = blockSizeThreshold;
     }
 
-    public void setMatchAlgo(AttributeMatcherType matchAlgo) {
-        this.matchAlgo = matchAlgo;
-    }
-
-    public void setBlockkeyAlgo(BlockingKeyAlgorithmEnum blockkeyAlgo) {
-        this.blockkeyAlgo = blockkeyAlgo;
+    /**
+     * Configures merges to execute once all blocks are matched & merged.
+     *
+     * @param postMerges Any number of
+     * {@link PostMerge merges} to be performed
+     * between blocks.
+     */
+    public void withPostMerges(PostMerge... postMerges) {
+        this.postMerges = postMerges;
     }
 
     public void init() {
         // Blocking the data given fingerprint key
         String columnName = "NAME";
-        List<Map<String, String>> blockKeySchema = new ArrayList<Map<String, String>>();
-        Map<String, String> blockKeyDefMap = new HashMap<String, String>();
+        List<Map<String, String>> blockKeySchema = new ArrayList<>();
+        Map<String, String> blockKeyDefMap = new HashMap<>();
 
         blockKeyDefMap.put(MatchAnalysisConstant.PRECOLUMN, columnName);
-        blockKeyDefMap.put(MatchAnalysisConstant.KEY_ALGO, blockkeyAlgo.getValue());
+        blockKeyDefMap.put(MatchAnalysisConstant.KEY_ALGO, blockKeyAlgorithm.getValue());
         blockKeySchema.add(blockKeyDefMap);
 
-        Map<String, String> colName2IndexMap = new HashMap<String, String>();
+        Map<String, String> colName2IndexMap = new HashMap<>();
         colName2IndexMap.put(columnName, String.valueOf(0));
         blockKeyHandler = new BlockingKeyHandler(blockKeySchema, colName2IndexMap);
 
@@ -88,14 +107,14 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         if (record == null || record.length != 1) {
             return false;
         }
-        String genkey = blockKeyHandler.process(record);
-        int blockSize = blockKeyHandler.getBlockSize(genkey);
+        String block = blockKeyHandler.process(record);
+        int blockSize = blockKeyHandler.getBlockSize(block);
         if (blockSize > blockSizeThreshold) {
             // Run the match and merge
             Map<String, List<String[]>> resultOfBlock = blockKeyHandler.getResultDatas();
-            doMatchMerge(0, resultOfBlock.get(genkey));
-            // Emptify the data of this key.
-            resultOfBlock.get(genkey).clear();
+            doMatchMerge(0, resultOfBlock.get(block));
+            // Empty the data of this key.
+            resultOfBlock.get(block).clear();
         }
         return true;
     }
@@ -110,13 +129,11 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
             currentBlockIndex++;
         }
         // Match & merge block values together (with higher thresholds)
-        PostMerge[] matchAlgorithms = new PostMerge[] { new PostMerge(AttributeMatcherType.LEVENSHTEIN, 0.95f), //
-                new PostMerge(AttributeMatcherType.SOUNDEX, 0.95f) };
-        for (PostMerge postMerge : matchAlgorithms) {
+        for (PostMerge postMerge : postMerges) {
             records = postMerge(records, postMerge.matcher, postMerge.threshold);
         }
         // Build string cluster based on successive match & merges
-        Map<String, String[]> masterToValues = new HashMap<String, String[]>();
+        Map<String, String[]> masterToValues = new HashMap<>();
         for (Record record : records) {
             if (record.getRelatedIds().size() > 1) { // Merged record (and not a single record)
                 final Attribute attribute = record.getAttributes().get(0);
@@ -136,7 +153,7 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
     }
 
     private void doMatchMerge(int currentBlockIndex, List<String[]> blockValues) {
-        MatchMergeAlgorithm matchMergeAlgorithm = MFB.build(new AttributeMatcherType[] { matchAlgo }, //
+        MatchMergeAlgorithm matchMergeAlgorithm = MFB.build(new AttributeMatcherType[] { AttributeMatcherType.DUMMY }, //
                 new String[] { StringUtils.EMPTY }, //
                 new float[] { 0.8f }, //
                 0.8d, //
@@ -151,47 +168,19 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         records.addAll(blockResults);
     }
 
-    private List<Record> postMerge(List<Record> records, AttributeMatcherType matchAlgorithm, float threshold) {
-        List<Record> mergeResult;
-        MatchMergeAlgorithm crossBlockMatch = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, //
-                new String[] { StringUtils.EMPTY }, //
-                new float[] { threshold }, //
-                0.95d, //
-                new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.MOST_COMMON }, //
-                new String[] { StringUtils.EMPTY }, //
-                new double[] { 1.0 }, //
-                new IAttributeMatcher.NullOption[] { IAttributeMatcher.NullOption.nullMatchNull }, //
-                new SubString[] { SubString.NO_SUBSTRING }, //
-                StringUtils.EMPTY);
-        mergeResult = crossBlockMatch.execute(records.iterator());
-        return mergeResult;
-    }
-
     public List<StringClusters> getResult() {
-        List<StringClusters> cluster = new ArrayList<StringClusters>();
+        List<StringClusters> cluster = new ArrayList<>();
         cluster.add(stringClusters);
         return cluster;
     }
 
-    private static class PostMerge {
-
-        AttributeMatcherType matcher;
-
-        float threshold;
-
-        public PostMerge(AttributeMatcherType matcher, float threshold) {
-            this.matcher = matcher;
-            this.threshold = threshold;
-        }
-    }
-
     private static class RecordIterator implements Iterator<Record> {
-
-        private int index;
 
         private final int currentBlockIndex;
 
         private final Iterator<String[]> iterator;
+
+        private int index;
 
         public RecordIterator(int currentBlockIndex, Iterator<String[]> iterator) {
             this.currentBlockIndex = currentBlockIndex;
