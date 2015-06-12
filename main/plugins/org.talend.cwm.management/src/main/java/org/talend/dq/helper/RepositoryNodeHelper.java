@@ -3810,14 +3810,18 @@ public final class RepositoryNodeHelper {
                 return (String) node.getProperties(EProperties.LABEL);
             }
 
-            if (node.getObject() != null) {
-                String label = node.getObject().getLabel();
-                if (label != null) {
-                    if (label.equals(EResourceConstant.DATA_PROFILING.getName())
-                            || label.equals(EResourceConstant.LIBRARIES.getName())) {
-                        return label.substring(4, label.length());
-                    } else if (label.equals(EResourceConstant.METADATA.getName())) {
-                        return label.substring(0, 1).toUpperCase() + label.substring(1);
+            // change the TDQ'side system folder nodes display label only
+            ENodeType type = node.getType();
+            if (type != null && type == ENodeType.SYSTEM_FOLDER) {
+                if (node.getObject() != null) {
+                    String label = node.getObject().getLabel();
+                    if (label != null) {
+                        if (label.equals(EResourceConstant.DATA_PROFILING.getName())
+                                || label.equals(EResourceConstant.LIBRARIES.getName())) {
+                            return label.substring(4, label.length());
+                        } else if (label.equals(EResourceConstant.METADATA.getName())) {
+                            return label.substring(0, 1).toUpperCase() + label.substring(1);
+                        }
                     }
                 }
             }
