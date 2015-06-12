@@ -709,7 +709,6 @@ public class ItemRecord {
                     String lastSeg = filePath.lastSegment();
                     if (constant == EResourceConstant.METADATA) {
                         return lastSeg.equals(constant.getName()) || pathStr.contains(EResourceConstant.DB_CONNECTIONS.getPath())
-                                || pathStr.contains(EResourceConstant.MDM_CONNECTIONS.getPath())
                                 || pathStr.contains(EResourceConstant.FILEDELIMITED.getPath());
                     }
 

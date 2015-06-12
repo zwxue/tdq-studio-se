@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.database;
 
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.repository.hdfs.ui.HDFSFileSelectorForm;
 import org.talend.repository.hdfs.ui.HDFSFileSelectorWizardPage;
 import org.talend.repository.model.hdfs.HDFSConnection;
@@ -71,7 +72,7 @@ public class CreateHiveTableStep1Page extends HDFSFileSelectorWizardPage {
             setErrorMessage(null);
         } else {
             super.setPageComplete(false);
-            this.setErrorMessage("Please select at lease one files under one same folder."); //$NON-NLS-1$
+            this.setErrorMessage(DefaultMessagesImpl.getString("CreateHiveTableStep1Page.error")); //$NON-NLS-1$
         }
 
     }
