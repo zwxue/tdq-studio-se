@@ -30,15 +30,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -53,8 +50,6 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
-import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
@@ -81,7 +76,6 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -393,64 +387,6 @@ public final class PatternUtilities {
     }
 
     /**
-     * DOC xqliu Comment method "createPatternCheckedTreeSelectionDialog".
-     * 
-     * @param libProject
-     * @return
-     * @deprecated
-     */
-    @Deprecated
-    public static CheckedTreeSelectionDialog createPatternCheckedTreeSelectionDialog(IFolder libProject) {
-        CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
-                new WorkbenchContentProvider());
-        dialog.setInput(libProject);
-        dialog.setValidator(new ISelectionStatusValidator() {
-
-            public IStatus validate(Object[] selection) {
-                IStatus status = Status.OK_STATUS;
-                for (Object patte : selection) {
-                    if (patte instanceof IFile) {
-                        IFile file = (IFile) patte;
-                        if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
-                            Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                            boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
-                            if (!validStatus) {
-                                status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
-                                        .getString("AnalysisColumnTreeViewer.chooseValidPatterns")); //$NON-NLS-1$
-                            }
-                        }
-                    }
-                }
-                return status;
-            }
-
-        });
-        dialog.addFilter(new DQFolderFliter(true));
-        dialog.addFilter(new RecycleBinFilter());
-        dialog.addFilter(new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFile) {
-                    IFile file = (IFile) element;
-                    if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
-                        return true;
-                    }
-                } else if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    return ResourceService.isSubFolder(ResourceManager.getPatternFolder(), folder);
-                }
-                return false;
-            }
-        });
-        dialog.setContainerMode(true);
-        dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patternSelector")); //$NON-NLS-1$
-        dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patterns")); //$NON-NLS-1$
-        dialog.setSize(80, 30);
-        return dialog;
-    }
-
-    /**
      * create CheckedTreeSelectionDialog for patterns.
      * 
      * @param node Pattern root RepositoryNode.
@@ -463,19 +399,19 @@ public final class PatternUtilities {
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
-                IStatus status = Status.OK_STATUS;
                 for (Object patte : selection) {
                     if (patte instanceof PatternRepNode) {
                         PatternRepNode patternNode = (PatternRepNode) patte;
                         Pattern findPattern = patternNode.getPattern();
                         boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
                         if (!validStatus) {
-                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
                                     .getString("AnalysisColumnTreeViewer.chooseValidPatterns")); //$NON-NLS-1$
                         }
                     }
                 }
-                return status;
+                return new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, "", //$NON-NLS-1$
+                        null);
             }
 
         });

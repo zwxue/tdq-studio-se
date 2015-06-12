@@ -363,7 +363,6 @@ public final class UDIUtils {
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
-                IStatus status = Status.OK_STATUS;
                 for (Object udi : selection) {
                     if (udi instanceof IFile) {
                         IFile file = (IFile) udi;
@@ -371,13 +370,14 @@ public final class UDIUtils {
                             IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
                             boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
                             if (!validStatus) {
-                                status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
                                         .getString("AnalysisColumnTreeViewer.chooseValidUdis")); //$NON-NLS-1$
                             }
                         }
                     }
                 }
-                return status;
+                return new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, "", //$NON-NLS-1$
+                        null);
             }
 
         });
