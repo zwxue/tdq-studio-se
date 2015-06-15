@@ -15,8 +15,11 @@ package org.talend.dq.nodes.hadoopcluster;
 import java.util.List;
 
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.nodes.DQFolderRepNode;
@@ -81,6 +84,19 @@ public class HadoopClusterFolderRepNode extends DQFolderRepNode {
         RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
 
         // sub folders
+        for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+            Folder folder = new Folder((Property) container.getProperty(), HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
+            if (!withDeleted && folder.isDeleted()) {
+                continue;
+            }
+            HadoopClusterSubFolderRepNode childNodeFolder = new HadoopClusterSubFolderRepNode(folder, this,
+                    ENodeType.SIMPLE_FOLDER, project);
+            childNodeFolder.setProperties(EProperties.LABEL, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
+            folder.setRepositoryNode(childNodeFolder);
+            super.getChildren().add(childNodeFolder);
+        }
+        // clusters
         for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
             if (!withDeleted && viewObject.isDeleted()) {
                 continue;
