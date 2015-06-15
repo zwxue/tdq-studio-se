@@ -30,6 +30,7 @@ public class AbstractGenerateKey {
     public static String TGENKEY_ALL_COLUMN_NAMES = "tgenkey_all_column_names";//$NON-NLS-1$
 
     public static final String ALGO_KEY_PREFIX = "algo";//$NON-NLS-1$
+    
 
     private Map<String, List<String[]>> genKeyToBlockResult = new HashMap<String, List<String[]>>();
 
@@ -46,6 +47,16 @@ public class AbstractGenerateKey {
      */
     public void generateKey(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> dataMap, String[] inputString) {
         String genKey = getGenKey(BlockKeyDefinitions, dataMap);
+        appendGenKeyResult(inputString, genKey);
+
+    }
+
+    /**
+     * Append the input to the list of given generation key.
+     * @param inputString
+     * @param genKey
+     */
+    public void appendGenKeyResult(String[] inputString, String genKey) {
         String[] resultArray = new String[inputString.length + 1];
         for (int index = 0; index < inputString.length; index++) {
             resultArray[index] = inputString[index];
@@ -60,7 +71,6 @@ public class AbstractGenerateKey {
             resultInNewBlock.add(resultArray);
             genKeyToBlockResult.put(genKey, resultInNewBlock);
         }
-
     }
 
     /**

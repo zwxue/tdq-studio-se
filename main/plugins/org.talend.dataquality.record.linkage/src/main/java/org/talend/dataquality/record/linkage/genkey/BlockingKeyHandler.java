@@ -58,17 +58,36 @@ public class BlockingKeyHandler {
      */
     public void run() {
         for (Object[] inputObject : this.inputData) {
-            String[] inputString = new String[inputObject.length];
-            int index = 0;
-            for (Object obj : inputObject) {
-                inputString[index++] = obj == null ? null : obj.toString();
-            }
-            Map<String, String> ColumnValueMap = new HashMap<String, String>();
-            for (String columnName : columnIndexMap.keySet()) {
-                ColumnValueMap.put(columnName, inputString[Integer.parseInt(columnIndexMap.get(columnName))]);
-            }
-            generateKeyAPI.generateKey(blockKeyDefinitions, ColumnValueMap, inputString);
+            process(inputObject);
         }
+    }
+    /**
+     * 
+     * @param inputObject
+     * @return generation key of this input
+     */
+    public String process(Object[] inputObject){
+        String[] inputString = new String[inputObject.length];
+        int index = 0;
+        for (Object obj : inputObject) {
+            inputString[index++] = obj == null ? null : obj.toString();
+        }
+        Map<String, String> ColumnValueMap = new HashMap<String, String>();
+        for (String columnName : columnIndexMap.keySet()) {
+            ColumnValueMap.put(columnName, inputString[Integer.parseInt(columnIndexMap.get(columnName))]);
+        }
+        String genKey = generateKeyAPI.getGenKey(blockKeyDefinitions, ColumnValueMap);
+        generateKeyAPI.appendGenKeyResult(inputString, genKey);
+        return genKey ;
+    }
+
+    /**
+     * Get blocking size given blocking key.
+     * @param blockingKey
+     * @return size of the block.
+     */
+    public int getBlockSize(String blockingKey){
+        return generateKeyAPI.getResultList().get(blockingKey).size();
     }
 
     /**

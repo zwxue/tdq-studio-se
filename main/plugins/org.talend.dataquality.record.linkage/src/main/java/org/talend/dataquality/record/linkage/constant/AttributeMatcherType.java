@@ -31,6 +31,7 @@ public enum AttributeMatcherType {
     METAPHONE("Metaphone"), //$NON-NLS-1$
     DOUBLE_METAPHONE("Double Metaphone"), //$NON-NLS-1$
     JARO("Jaro"), //$NON-NLS-1$
+    FINGERPRINTKEY("Fingerprintkey"), //$NON-NLS-1$
     JARO_WINKLER("Jaro-Winkler"), //$NON-NLS-1$
     Q_GRAMS("q-grams"), //$NON-NLS-1$
     // Dummy should be last one because of we filter it by the code else we can not use ordinal to location custom type

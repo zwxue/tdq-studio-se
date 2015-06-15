@@ -126,6 +126,8 @@ public final class AttributeMatcherFactory {
                 return new SoundexFRMatcher();
             case Q_GRAMS:
                 return new QGramsMatcher();
+            case FINGERPRINTKEY:
+                return new FingerprintkeyMatcher();
             default:
                 break;
             }
