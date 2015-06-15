@@ -52,8 +52,8 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
         int columnIndex = 0;
         String[] expectedCategories = new String[] { "", //
                 "", //
-                "FIRSTNAME", //
-                "FIRSTNAME", //
+                "", //
+                "", //
                 "", //
                 "", //
                 "", //

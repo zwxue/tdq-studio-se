@@ -73,8 +73,8 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
         // Semantic types assertions
         String[] expectedCategories = new String[] { "", //
                 "", //
-                "FIRSTNAME", //
-                "FIRSTNAME", //
+                "", //
+                "", //
                 "", //
                 "", //
                 "", //
