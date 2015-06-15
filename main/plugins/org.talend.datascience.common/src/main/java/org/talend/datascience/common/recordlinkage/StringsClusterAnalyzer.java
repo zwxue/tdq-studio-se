@@ -14,7 +14,6 @@ package org.talend.datascience.common.recordlinkage;
 
 import java.util.*;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.matchmerge.*;
 import org.talend.dataquality.matchmerge.mfb.MFB;
@@ -138,9 +137,14 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
             if (record.getRelatedIds().size() > 1) { // Merged record (and not a single record)
                 final Attribute attribute = record.getAttributes().get(0);
                 final AttributeValues<String> values = attribute.getValues();
-                final String[] originalValues = (String[]) IteratorUtils.toArray(values.iterator(), String.class);
-                if (values.hasMultipleValues() && originalValues.length > 1) {
-                    masterToValues.put(attribute.getValue(), originalValues);
+                // AttributeValues' iterator may return twice same value (see TDQ-10512).
+                final Set<String> originalValues = new HashSet<>();
+                for (String value : values) {
+                    originalValues.add(value);
+                }
+                final int size = originalValues.size();
+                if (values.hasMultipleValues() && size > 1) {
+                    masterToValues.put(attribute.getValue(), originalValues.toArray(new String[size]));
                 }
             }
         }
