@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.record;
 
+import java.math.BigDecimal;
+
 import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.matchmerge.mfb.MatchResult;
@@ -52,6 +54,11 @@ public class SimpleVSRRecordMatcher extends AbstractRecordMatcher {
             int usedIdx = usedIndicesNotblocked[j];
             double pa = computeMatchingWeight(usedIdx, record1, record2);
             result += pa * attributeWeights[usedIdx];
+        }
+
+        if (result > 1.0) {
+            final BigDecimal l = new BigDecimal(Double.toString(result));
+            result = l.setScale(1, BigDecimal.ROUND_DOWN).doubleValue();
         }
 
         return result;

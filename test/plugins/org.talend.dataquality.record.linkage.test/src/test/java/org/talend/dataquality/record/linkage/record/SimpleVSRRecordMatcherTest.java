@@ -233,11 +233,11 @@ public class SimpleVSRRecordMatcherTest {
         // ////////////// INITIALIZATION (MUST BE DONE ONCE ONLY) /////////////////////
 
         // initialize matcher
-        int nbRecords = 21; // this value is the number of columns used in the JOIN_KEY parameter
+        int nbRecords = 19; // this value is the number of columns used in the JOIN_KEY parameter
         recordMatcher.setRecordSize(nbRecords);
 
         // create attribute matchers for each of the join key
-        int nbJoinKey = 21;
+        int nbJoinKey = 19;
         IAttributeMatcher[] attributeMatchers = new IAttributeMatcher[nbJoinKey];
         for (int i = 0; i < attributeMatchers.length; i++) {
             attributeMatchers[i] = AttributeMatcherFactory.createMatcher("Exact");
@@ -245,7 +245,7 @@ public class SimpleVSRRecordMatcherTest {
         recordMatcher.setAttributeMatchers(attributeMatchers);
 
         double[] attributeWeight = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-                1.0, 10, 1.0 };
+                1.0 };
         // set the weights chosen by the user
         Assert.assertTrue(recordMatcher.setAttributeWeights(attributeWeight));
 
@@ -408,8 +408,8 @@ public class SimpleVSRRecordMatcherTest {
             { 0.36874999701976774, 0.7402777731418609, 0.36874999701976774, 0.11527777314186097, 1.0, 0.10500000119209289,
                     0.10500000119209289, 1.0 },
             { 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0 },
-            { 0.8846153662754941, 0.7863247577960676, 0.8846153662754941, 0.7094016808729906, 1.0000000000000002,
-                    0.6461538534898025, 0.6461538534898025, 1.0000000000000002 },
+            { 0.8846153662754941, 0.7863247577960676, 0.8846153662754941, 0.7094016808729906, 1.0, 0.6461538534898025,
+                    0.6461538534898025, 1.0 },
             { 0.48333332538604745, 0.8074073950449625, 0.48333332538604745, 0.30740739504496256, 1.0, 0.2800000031789144,
                     0.2800000031789144, 1.0 },
             { 0.48333332538604745, 0.8074073950449625, 0.48333332538604745, 0.30740739504496256, 1.0, 0.2800000031789144,
