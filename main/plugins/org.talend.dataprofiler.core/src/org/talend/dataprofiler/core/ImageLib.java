@@ -168,8 +168,6 @@ public final class ImageLib {
 
     public static final String ADD_DQ = "add_dqrule.png";//$NON-NLS-1$
 
-    public static final String ADD_MATCH_RULE = "add_match_rule.png";//$NON-NLS-1$
-
     public static final String ADD_PATTERN = "add_pattern.png"; //$NON-NLS-1$
 
     public static final String SAVE = "save.gif"; //$NON-NLS-1$

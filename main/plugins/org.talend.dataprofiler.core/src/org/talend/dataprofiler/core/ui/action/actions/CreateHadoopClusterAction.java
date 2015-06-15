@@ -58,7 +58,7 @@ public class CreateHadoopClusterAction extends AbstractMetadataCreationAction {
      */
     @Override
     protected ImageDescriptor getActionImage() {
-        return ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION);
+        return ImageLib.getImageDescriptor(ImageLib.HADOOP_CLUSTER);
     }
 
 }

@@ -49,7 +49,7 @@ public class CreateMatcherRuleAction extends Action implements ICheatSheetAction
 
     public CreateMatcherRuleAction(IFolder folder, RecordMatcherType defaultAlgorithmType) {
         setText(DefaultMessagesImpl.getString("CreateMatcherRuleAction.newMatchRule")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_MATCH_RULE));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.MATCH_RULE_ICON));
         this.folder = folder;
         this.defaultAlgorithmType = defaultAlgorithmType;
     }
