@@ -39,7 +39,6 @@ public class TypeInferenceUtils {
 
     private static final Pattern patternNoneDigit = Pattern.compile("\\D");
 
-    private static final Pattern patternNoneDate = Pattern.compile("\\d\\d?\\D+\\d\\d?");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TypeInferenceUtils.class);
 
@@ -127,11 +126,7 @@ public class TypeInferenceUtils {
             if (value.trim().length() > 30) {
                 return false;
             }
-            // 2. Any kind of date should match
-            if (!patternNoneDate.matcher(value).matches()) {
-                return false;
-            }
-            // 3. Check it by list of patterns
+            // 2. Check it by list of patterns
             for (Pattern dateTimePattern : dateTimePatterns) {
                 if (dateTimePattern.matcher(value).matches()) {
                     return true;
