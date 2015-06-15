@@ -4,13 +4,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 public class StringsClusterAnalyzerTest {
 
@@ -23,6 +28,17 @@ public class StringsClusterAnalyzerTest {
                         "Black T-Shirt", "Black T-shirT"));
         expectedClusters.put("Blck T-shirt", Collections.singletonList("Blck T-shirt"));
         expectedClusters.put("White T-shirt", Collections.singletonList("White T-shirt"));
+        for (StringClusters.StringCluster cluster : clusters) {
+            Assert.assertTrue(expectedClusters.containsKey(cluster.survivedValue));
+            for (String originalValue : cluster.originalValues) {
+                Assert.assertTrue(expectedClusters.get(cluster.survivedValue).contains(originalValue));
+            }
+        }
+    }
+
+    private static void assertElementResult(StringClusters clusters) {
+        Map<String, List<String>> expectedClusters = new HashMap<>();
+        expectedClusters.put("élément", Arrays.asList("élément", "element"));
         for (StringClusters.StringCluster cluster : clusters) {
             Assert.assertTrue(expectedClusters.containsKey(cluster.survivedValue));
             for (String originalValue : cluster.originalValues) {
@@ -49,8 +65,7 @@ public class StringsClusterAnalyzerTest {
         }
         analyser.end();
         List<StringClusters> results = analyser.getResult();
-        Assert.assertEquals(1, results.size());
-        // TODO Do asserts on cluster content (see testTShirtsLogic)
+        assertElementResult(results.get(0));
     }
 
     @Test
@@ -65,12 +80,24 @@ public class StringsClusterAnalyzerTest {
             analyser.analyze(fields[0]);
         }
         analyser.end();
-        int size = 0;
-        for (StringClusters.StringCluster cluster : analyser.getResult().get(0)) {
-            size++;
+        List<StringClusters> results = analyser.getResult();
+        assertElementResult(results.get(0));
+    }
+    @Test
+    public void testCluster10000WithThreshold() throws IOException {
+        analyser.init();
+        analyser.setBlockSizeThreshold(10);
+        String columnDelimiter = "|";
+        InputStream in = this.getClass().getResourceAsStream("cluster10000.txt"); //$NON-NLS-1$
+        BufferedReader bfr = new BufferedReader(new InputStreamReader(in));
+        List<String> listOfLines = IOUtils.readLines(bfr);
+        for (String line : listOfLines) {
+            String[] fields = StringUtils.splitPreserveAllTokens(line, columnDelimiter);
+            analyser.analyze(fields[0]);
         }
-        Assert.assertEquals(1, size);
-        // TODO Do asserts on cluster content (see testTShirtsLogic)
+        analyser.end();
+        List<StringClusters> results = analyser.getResult();
+        assertElementResult(results.get(0));
     }
 
     @Test
@@ -93,6 +120,7 @@ public class StringsClusterAnalyzerTest {
     public void testTShirtsLogicWithThreshold() throws IOException {
         analyser.init();
         analyser.setBlockSizeThreshold(2); // Holds at most 2 records in memory for each block
+        analyser.withPostMerges(new PostMerge(AttributeMatcherType.SOUNDEX, 0.8f));
         String columnDelimiter = "|";
         InputStream in = this.getClass().getResourceAsStream("tshirts.txt"); //$NON-NLS-1$
         BufferedReader bfr = new BufferedReader(new InputStreamReader(in));

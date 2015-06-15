@@ -44,6 +44,8 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
 
     private int blockSizeThreshold = 1000;
 
+    private int currentBlockIndex = 0;
+
     private PostMerge[] postMerges = new PostMerge[0];
 
     private static List<Record> postMerge(List<Record> records, AttributeMatcherType matchAlgorithm, float threshold) {
@@ -78,9 +80,7 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
     /**
      * Configures merges to execute once all blocks are matched & merged.
      *
-     * @param postMerges Any number of
-     * {@link PostMerge merges} to be performed
-     * between blocks.
+     * @param postMerges Any number of {@link PostMerge merges} to be performed between blocks.
      */
     public void withPostMerges(PostMerge... postMerges) {
         this.postMerges = postMerges;
@@ -101,6 +101,7 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         blockKeyHandler = new BlockingKeyHandler(blockKeySchema, colName2IndexMap);
 
         records.clear();
+        currentBlockIndex = 0;
     }
 
     public boolean analyze(String... record) {
@@ -112,7 +113,7 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         if (blockSize > blockSizeThreshold) {
             // Run the match and merge
             Map<String, List<String[]>> resultOfBlock = blockKeyHandler.getResultDatas();
-            doMatchMerge(0, resultOfBlock.get(block));
+            doMatchMerge(currentBlockIndex++, resultOfBlock.get(block));
             // Empty the data of this key.
             resultOfBlock.get(block).clear();
         }
@@ -123,7 +124,6 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         // Match & merge block values
         Map<String, List<String[]>> resultData = blockKeyHandler.getResultDatas();
 
-        int currentBlockIndex = 0;
         for (List<String[]> blockValues : resultData.values()) {
             doMatchMerge(currentBlockIndex, blockValues);
             currentBlockIndex++;
