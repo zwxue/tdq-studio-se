@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.datascience.common.inference.AnalyzerTest;
+import org.talend.datascience.common.inference.quality.ValueQuality;
+import org.talend.datascience.common.inference.quality.ValueQualityAnalyzer;
 import org.talend.datascience.common.inference.type.DataType.Type;
 
 public class DataTypeAnalyzerTest extends AnalyzerTest {
@@ -167,114 +169,97 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
 
     @Test
     public void testInvalidValues() {
-        analyzer.analyze("1");
-        analyzer.analyze("2");
-        analyzer.analyze("3");
-        analyzer.analyze("str");
-        analyzer.analyze("another str");
-        DataType dataType = analyzer.getResult().get(0);
-        // Actual type
-        dataType.setUserDefinedType(Type.STRING);
-        assertEquals(Type.STRING, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.INTEGER, dataType.getSuggestedType());
+        ValueQualityAnalyzer qualityAnalyzer = new ValueQualityAnalyzer(Type.STRING);
+        qualityAnalyzer.analyze("1");
+        qualityAnalyzer.analyze("2");
+        qualityAnalyzer.analyze("3");
+        qualityAnalyzer.analyze("str");
+        qualityAnalyzer.analyze("another str");
         // Valid and invalid
-        assertEquals(3, dataType.getInvalidCount());
-        assertEquals(2, dataType.getValidCount());
+        assertEquals(0, qualityAnalyzer.getResult().get(0).getInvalidCount());
+        assertEquals(5, qualityAnalyzer.getResult().get(0).getValidCount());
         // Invalid values
-        List<String> invalidValues = dataType.getInvalidValues();
+        List<String> invalidValues = qualityAnalyzer.getResult().get(0).getInvalidValues();
         String[] invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "1", "2", "3" }, invalidValuesArray);
+        assertArrayEquals(new String[] {}, invalidValuesArray);
     }
 
     @Test
     public void testTwoColumnsInvalid() {
-        analyzer.analyze("1", "");
-        analyzer.analyze("2", "a");
-        analyzer.analyze("3", "2.0");
-        analyzer.analyze("str", "0.1");
-        analyzer.analyze("another str", "");
+        ValueQualityAnalyzer qualityAnalyzer = new ValueQualityAnalyzer(Type.INTEGER, Type.DOUBLE);
+        populateAnalyzeData(qualityAnalyzer);
         // --- Assert column 0
-        DataType dataType = analyzer.getResult().get(0);
-        // Actual type
-        assertEquals(Type.INTEGER, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.INTEGER, dataType.getSuggestedType());
+        ValueQuality valueQuality = qualityAnalyzer.getResult().get(0);
         // Valid and invalid
-        assertEquals(2, dataType.getInvalidCount());
-        assertEquals(3, dataType.getValidCount());
+        assertEquals(2, valueQuality.getInvalidCount());
+        assertEquals(3, valueQuality.getValidCount());
         // Invalid values
-        List<String> invalidValues = dataType.getInvalidValues();
+        List<String> invalidValues = valueQuality.getInvalidValues();
         String[] invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
         assertArrayEquals(new String[] { "str", "another str" }, invalidValuesArray);
-
-        // ---Assert when user set string type
-        // Actual type
-        dataType.setUserDefinedType(Type.STRING);
-        assertEquals(Type.STRING, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.INTEGER, dataType.getSuggestedType());
-        // Valid and invalid
-        assertEquals(3, dataType.getInvalidCount());
-        assertEquals(2, dataType.getValidCount());
-        // Invalid values
-        invalidValues = dataType.getInvalidValues();
-        invalidValuesArray = new String[invalidValues.size()];
-        invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "1", "2", "3" }, invalidValuesArray);
-
         // ---Assert column 1
-        dataType = analyzer.getResult().get(1);
-        // Actual type
-        assertEquals(Type.DOUBLE, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
+        valueQuality = qualityAnalyzer.getResult().get(1);
         // Valid , Empty, and invalid
-        assertEquals(1, dataType.getInvalidCount());
-        assertEquals(2, dataType.getValidCount());
-        assertEquals(2, dataType.getEmptyCount());
+        assertEquals(1, valueQuality.getInvalidCount());
+        assertEquals(2, valueQuality.getValidCount());
+        assertEquals(2, valueQuality.getEmptyCount());
         // Invalid values
-        invalidValues = dataType.getInvalidValues();
+        invalidValues = valueQuality.getInvalidValues();
         invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
         assertArrayEquals(new String[] { "a" }, invalidValuesArray);
-        
-        //--- test when user set actual type to string
-        // Actual type
-        dataType.setUserDefinedType(Type.STRING);
-        assertEquals(Type.STRING, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
-        // Valid , Empty, and invalid
-        assertEquals(3, dataType.getInvalidCount());
-        assertEquals(0, dataType.getValidCount());
-        assertEquals(2, dataType.getEmptyCount());
+
+        // ---Assert when user set string type
+        qualityAnalyzer = new ValueQualityAnalyzer(Type.STRING, Type.STRING);
+        populateAnalyzeData(qualityAnalyzer);
+        valueQuality = qualityAnalyzer.getResult().get(0);
+        // Valid and invalid
+        assertEquals(0, valueQuality.getInvalidCount());
+        assertEquals(5, valueQuality.getValidCount());
         // Invalid values
-        invalidValues = dataType.getInvalidValues();
+        invalidValues = valueQuality.getInvalidValues();
         invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "a", "2.0", "0.1" }, invalidValuesArray);
-        
+        assertArrayEquals(new String[] {}, invalidValuesArray);
+
+        // --- test when user set actual type to string
+        valueQuality = qualityAnalyzer.getResult().get(1);
+        // Valid , Empty, and invalid
+        assertEquals(0, valueQuality.getInvalidCount());
+        assertEquals(3, valueQuality.getValidCount());
+        assertEquals(2, valueQuality.getEmptyCount());
+        // Invalid values
+        invalidValues = valueQuality.getInvalidValues();
+        invalidValuesArray = new String[invalidValues.size()];
+        invalidValues.toArray(invalidValuesArray);
+        assertArrayEquals(new String[] {}, invalidValuesArray);
+
+    }
+
+    private void populateAnalyzeData(ValueQualityAnalyzer qualityAnalyzer) {
+        qualityAnalyzer.analyze("1", "");
+        qualityAnalyzer.analyze("2", "a");
+        qualityAnalyzer.analyze("3", "2.0");
+        qualityAnalyzer.analyze("str", "0.1");
+        qualityAnalyzer.analyze("another str", "");
     }
 
     @Test
     public void testValidIntegers() {
-        analyzer.analyze("1");
-        analyzer.analyze("2");
-        analyzer.analyze("3");
-        analyzer.analyze("5538297118");
-        DataType dataType = analyzer.getResult().get(0);
-        // Actual type will be the suggested type in first pass when it's not defined.
-        assertEquals(Type.INTEGER, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.INTEGER, dataType.getSuggestedType());
+        ValueQualityAnalyzer qualityAnalyzer = new ValueQualityAnalyzer(Type.INTEGER);
+        qualityAnalyzer.analyze("1");
+        qualityAnalyzer.analyze("2");
+        qualityAnalyzer.analyze("3");
+        qualityAnalyzer.analyze("5538297118");
+
         // Valid and invalid
-        assertEquals(0, dataType.getInvalidCount());
-        assertEquals(4, dataType.getValidCount());
+        ValueQuality valueQuality =  qualityAnalyzer.getResult().get(0);
+        assertEquals(0, valueQuality.getInvalidCount());
+        assertEquals(4, valueQuality.getValidCount());
         // Invalid values
-        List<String> invalidValues = dataType.getInvalidValues();
+        List<String> invalidValues = valueQuality.getInvalidValues();
         String[] invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
         assertArrayEquals(new String[] {}, invalidValuesArray);
@@ -282,148 +267,131 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
 
     @Test
     public void testNoneStrings() {
-        analyzer.analyze("1.0");
-        analyzer.analyze("0.02");
-        analyzer.analyze("2.88888888888888888888888");
-        analyzer.analyze("3");
-        analyzer.analyze("5538297118");
-        analyzer.analyze("str");
-        DataType dataType = analyzer.getResult().get(0);
-        // Actual type
-        assertEquals(Type.DOUBLE, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
-        // Test double count equals to 3
-        assertEquals(3, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        ValueQualityAnalyzer qualityAnalyzer = new ValueQualityAnalyzer(Type.DOUBLE);
+        populateAnalyzerNoneString(qualityAnalyzer);
+        ValueQuality valueQuality = qualityAnalyzer.getResult().get(0);
         // Valid and invalid
-        assertEquals(3, dataType.getInvalidCount());
-        assertEquals(3, dataType.getValidCount());
+        assertEquals(1, valueQuality.getInvalidCount());
+        assertEquals(5, valueQuality.getValidCount());
         // Invalid values
-        List<String> invalidValues = dataType.getInvalidValues();
+        List<String> invalidValues = valueQuality.getInvalidValues();
         String[] invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "3", "5538297118", "str" }, invalidValuesArray);
+        assertArrayEquals(new String[] {  "str" }, invalidValuesArray);
 
         // ---- second pass when user set the user defined type as tring---
         // Actual type
-        dataType.setUserDefinedType(Type.STRING);
-        assertEquals(Type.STRING, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
-        // Test double count equals to 3
-        assertEquals(3, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        qualityAnalyzer = new ValueQualityAnalyzer(Type.STRING);
+        populateAnalyzerNoneString(qualityAnalyzer);
+        valueQuality = qualityAnalyzer.getResult().get(0);
         // Valid and invalid
-        assertEquals(5, dataType.getInvalidCount());
-        assertEquals(1, dataType.getValidCount());
+        assertEquals(0, valueQuality.getInvalidCount());
+        assertEquals(6, valueQuality.getValidCount());
         // Invalid values
-        invalidValues = dataType.getInvalidValues();
+        invalidValues = valueQuality.getInvalidValues();
         invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "3", "5538297118", "1.0", "0.02", "2.88888888888888888888888" }, invalidValuesArray);
+        assertArrayEquals(new String[] {}, invalidValuesArray);
 
         // ---- third pass when user set the user defined type as Iteger---
         // Actual type
-        dataType.setUserDefinedType(Type.INTEGER);
-        assertEquals(Type.INTEGER, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
-        // Test double count equals to 3
-        assertEquals(3, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        qualityAnalyzer = new ValueQualityAnalyzer(Type.INTEGER);
+        populateAnalyzerNoneString(qualityAnalyzer);
+        valueQuality = qualityAnalyzer.getResult().get(0);
         // Valid and invalid
-        assertEquals(4, dataType.getInvalidCount());
-        assertEquals(2, dataType.getValidCount());
+        assertEquals(4, valueQuality.getInvalidCount());
+        assertEquals(2, valueQuality.getValidCount());
         // Invalid values
-        invalidValues = dataType.getInvalidValues();
+        invalidValues = valueQuality.getInvalidValues();
         invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
         assertArrayEquals(new String[] { "1.0", "0.02", "2.88888888888888888888888", "str" }, invalidValuesArray);
 
     }
 
+    private void populateAnalyzerNoneString(ValueQualityAnalyzer qualityAnalyzer) {
+        qualityAnalyzer.analyze("1.0");
+        qualityAnalyzer.analyze("0.02");
+        qualityAnalyzer.analyze("2.88888888888888888888888");
+        qualityAnalyzer.analyze("3");
+        qualityAnalyzer.analyze("5538297118");
+        qualityAnalyzer.analyze("str");
+    }
+
     @Test
     public void testNumbers() {
-        analyzer.analyze("1.0");
-        analyzer.analyze("0.02");
-        analyzer.analyze("2.88888888888888888888888");
-        analyzer.analyze("3.0");
-        analyzer.analyze("5538297118");
-        DataType dataType = analyzer.getResult().get(0);
-        // Actual type
-        assertEquals(Type.DOUBLE, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
-        // Test double count equals to 3
-        assertEquals(4, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        ValueQualityAnalyzer qualityAnalyzer = new ValueQualityAnalyzer(Type.DOUBLE);
+        populateAnalyzerWithNumers(qualityAnalyzer);
+        ValueQuality valueQuality = qualityAnalyzer.getResult().get(0);
         // Valid and invalid
-        assertEquals(1, dataType.getInvalidCount());
-        assertEquals(4, dataType.getValidCount());
+        assertEquals(0, valueQuality.getInvalidCount());
+        assertEquals(5, valueQuality.getValidCount());
         // Invalid values
-        List<String> invalidValues = dataType.getInvalidValues();
+        List<String> invalidValues = valueQuality.getInvalidValues();
         String[] invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "5538297118" }, invalidValuesArray);
+        assertArrayEquals(new String[] {}, invalidValuesArray);
 
         // ---- send pass when user set the user defined type ---
         // Actual type
-        dataType.setUserDefinedType(Type.STRING);
-        assertEquals(Type.STRING, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.DOUBLE, dataType.getSuggestedType());
-        // Test double count equals to 3
-        assertEquals(4, dataType.getTypeFrequencies().get(Type.DOUBLE).longValue());
+        qualityAnalyzer = new ValueQualityAnalyzer(Type.STRING);
+        populateAnalyzerWithNumers(qualityAnalyzer);
+        valueQuality = qualityAnalyzer.getResult().get(0);
         // Valid and invalid
-        assertEquals(5, dataType.getInvalidCount());
-        assertEquals(0, dataType.getValidCount());
+        assertEquals(0, valueQuality.getInvalidCount());
+        assertEquals(5, valueQuality.getValidCount());
         // Invalid values
-        invalidValues = dataType.getInvalidValues();
+        invalidValues = valueQuality.getInvalidValues();
         invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "5538297118", "1.0", "0.02", "2.88888888888888888888888", "3.0" }, invalidValuesArray);
+        assertArrayEquals(new String[] {}, invalidValuesArray);
+    }
+
+    private void populateAnalyzerWithNumers(ValueQualityAnalyzer qualityAnalyzer) {
+        qualityAnalyzer.analyze("1.0");
+        qualityAnalyzer.analyze("0.02");
+        qualityAnalyzer.analyze("2.88888888888888888888888");
+        qualityAnalyzer.analyze("3.0");
+        qualityAnalyzer.analyze("5538297118");
     }
 
     @Test
     public void testEmptyOver() {
-        analyzer.analyze("");
-        analyzer.analyze("");
-        analyzer.analyze("");
-        analyzer.analyze("");
-        analyzer.analyze("1");
-        analyzer.analyze("a str");
-        DataType dataType = analyzer.getResult().get(0);
-        // Actual type
-        assertEquals(Type.STRING, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.STRING, dataType.getSuggestedType());
+        ValueQualityAnalyzer qualityAnalyzer = new ValueQualityAnalyzer(Type.STRING);
+        qualityAnalyzer.analyze("");
+        qualityAnalyzer.analyze("");
+        qualityAnalyzer.analyze("");
+        qualityAnalyzer.analyze("");
+        qualityAnalyzer.analyze("1");
+        qualityAnalyzer.analyze("a str");
+        ValueQuality valueQuality = qualityAnalyzer.getResult().get(0);
         // Valid and invalid
-        assertEquals(1, dataType.getInvalidCount());
-        assertEquals(1, dataType.getValidCount());
-        assertEquals(4, dataType.getEmptyCount());
+        assertEquals(0, valueQuality.getInvalidCount());
+        assertEquals(2, valueQuality.getValidCount());
+        assertEquals(4, valueQuality.getEmptyCount());
         // Invalid values
-        List<String> invalidValues = dataType.getInvalidValues();
+        List<String> invalidValues = valueQuality.getInvalidValues();
         String[] invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
-        assertArrayEquals(new String[] { "1" }, invalidValuesArray);
+        assertArrayEquals(new String[] {  }, invalidValuesArray);
     }
 
     @Test
     public void testEmptyAll() {
-        analyzer.analyze("");
-        analyzer.analyze("");
-        analyzer.analyze(null);
-        analyzer.analyze("");
-        analyzer.analyze(" ");
-        analyzer.analyze("  ");
-        DataType dataType = analyzer.getResult().get(0);
-        // Actual type
-        assertEquals(Type.STRING, dataType.getUserDefinedType());
-        // Suggested type
-        assertEquals(Type.STRING, dataType.getSuggestedType());
+        ValueQualityAnalyzer qualityAnalyzer = new ValueQualityAnalyzer(Type.STRING);
+        qualityAnalyzer.analyze("");
+        qualityAnalyzer.analyze("");
+        qualityAnalyzer.analyze(null);
+        qualityAnalyzer.analyze("");
+        qualityAnalyzer.analyze(" ");
+        qualityAnalyzer.analyze("  ");
+        ValueQuality valueQuality = qualityAnalyzer.getResult().get(0);
         // Valid and invalid
-        assertEquals(0, dataType.getInvalidCount());
-        assertEquals(0, dataType.getValidCount());
-        assertEquals(5, dataType.getEmptyCount());
+        assertEquals(0, valueQuality.getInvalidCount());
+        assertEquals(0, valueQuality.getValidCount());
+        assertEquals(6, valueQuality.getEmptyCount());
         // Invalid values
-        List<String> invalidValues = dataType.getInvalidValues();
+        List<String> invalidValues = valueQuality.getInvalidValues();
         String[] invalidValuesArray = new String[invalidValues.size()];
         invalidValues.toArray(invalidValuesArray);
         assertArrayEquals(new String[] {}, invalidValuesArray);

@@ -87,6 +87,7 @@ public class StringsClusterAnalyzerTest {
     public void testCluster10000WithThreshold() throws IOException {
         analyser.init();
         analyser.setBlockSizeThreshold(10);
+        analyser.withPostMerges(new PostMerge(AttributeMatcherType.JARO_WINKLER, 0.8f));
         String columnDelimiter = "|";
         InputStream in = this.getClass().getResourceAsStream("cluster10000.txt"); //$NON-NLS-1$
         BufferedReader bfr = new BufferedReader(new InputStreamReader(in));

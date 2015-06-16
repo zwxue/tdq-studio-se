@@ -24,69 +24,8 @@ public class DataType {
 
     private Map<Type, List<String>> type2Values = new EnumMap<Type, List<String>>(Type.class);
 
-    private Type userDefinedType = null;
-
-    private List<String> invalidValues = Collections.synchronizedList(new LinkedList<String>());
-
     public Map<Type, Long> getTypeFrequencies() {
         return typeFrequencies;
-    }
-
-    public void setUserDefinedType(Type actualDataType) {
-        this.userDefinedType = actualDataType;
-    }
-
-    /**
-     * Get actual data type.
-     * 
-     * @return
-     */
-    public Type getUserDefinedType() {
-        if (Type.EMPTY == userDefinedType) {
-            return Type.STRING;
-        }
-        if(userDefinedType==null){
-            userDefinedType = getSuggestedType();
-        }
-        return userDefinedType;
-    }
-
-    public long getValidCount() {
-        userDefinedType = getUserDefinedType();
-        if (Type.EMPTY == userDefinedType) {
-            userDefinedType = Type.STRING;
-        }
-        if (typeFrequencies.containsKey(userDefinedType)) {
-            return typeFrequencies.get(userDefinedType);
-        }
-        return 0;
-    }
-
-    public long getEmptyCount() {
-        if (typeFrequencies.containsKey(Type.EMPTY)) {
-            return typeFrequencies.get(Type.EMPTY);
-        }
-        return 0;
-    }
-
-    public long getInvalidCount() {
-        long count = 0;
-        for (long freq : typeFrequencies.values()) {
-            count += freq;
-        }
-        return count - getValidCount() - getEmptyCount();
-    }
-
-    public List<String> getInvalidValues() {
-        invalidValues.clear();
-        userDefinedType = getUserDefinedType();
-        for (Map.Entry<Type, List<String>> entry : type2Values.entrySet()) {
-            if (entry.getKey() != userDefinedType && Type.EMPTY != entry.getKey()) {
-                // Add them to invalid values
-                invalidValues.addAll(entry.getValue());
-            }
-        }
-        return invalidValues;
     }
 
     public Type getSuggestedType() {
@@ -100,9 +39,6 @@ public class DataType {
         }
         if (Type.EMPTY == electedType) {
             return Type.STRING;
-        }
-        if (userDefinedType == null) {
-            userDefinedType = electedType;
         }
         return electedType;
     }

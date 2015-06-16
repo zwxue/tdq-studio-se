@@ -2,6 +2,7 @@ package org.talend.datascience.common.inference.quality;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.datascience.common.inference.Analyzer;
 import org.talend.datascience.common.inference.ResizableList;
 import org.talend.datascience.common.inference.type.DataType;
@@ -13,6 +14,8 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
 
     private final ResizableList<ValueQuality> results = new ResizableList<ValueQuality>(ValueQuality.class);
 
+    private boolean isStoreInvalidValues = true;
+
     public ValueQualityAnalyzer(DataType.Type... types) {
         this.types = types;
     }
@@ -21,7 +24,14 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
         // Nothing to do.
     }
 
+    public void setStoreInvalidValues(boolean isStoreInvalidValues) {
+        this.isStoreInvalidValues = isStoreInvalidValues;
+    }
+
     public boolean analyze(String... record) {
+        if (record == null) {
+            record = new String[] { StringUtils.EMPTY };
+        }
         results.resize(record.length);
         for (int i = 0; i < record.length; i++) {
             final String value = record[i];
@@ -35,6 +45,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
+                        storeInvalidValue(valueQuality, value);
                     }
                     break;
                 case CHAR:
@@ -42,6 +53,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
+                        storeInvalidValue(valueQuality, value);
                     }
                     break;
                 case INTEGER:
@@ -49,6 +61,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
+                        storeInvalidValue(valueQuality, value);
                     }
                     break;
                 case DOUBLE:
@@ -56,6 +69,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
+                        storeInvalidValue(valueQuality, value);
                     }
                     break;
                 case STRING:
@@ -67,12 +81,19 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
+                        storeInvalidValue(valueQuality, value);
                     }
                     break;
                 }
             }
         }
         return true;
+    }
+
+    private void storeInvalidValue(ValueQuality valueQuality, String value) {
+        if (isStoreInvalidValues) {
+            valueQuality.appendInvalidValue(value);
+        }
     }
 
     public void end() {

@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.datascience.common.inference.quality;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ValueQuality {
 
     private long validCount;
@@ -19,6 +22,12 @@ public class ValueQuality {
     private long emptyCount;
 
     private int invalidCount;
+    
+    private List<String> invalidValues =  new ArrayList<>();
+    
+    public List<String> getInvalidValues() {
+        return invalidValues;
+    }
 
     public long getValidCount() {
         return validCount;
@@ -46,5 +55,8 @@ public class ValueQuality {
 
     public void incrementInvalid() {
         invalidCount++;
+    }
+    public void appendInvalidValue(String value) {
+        invalidValues.add(value);
     }
 }
