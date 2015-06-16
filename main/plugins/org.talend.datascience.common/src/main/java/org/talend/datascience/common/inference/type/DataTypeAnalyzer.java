@@ -29,7 +29,7 @@ import org.talend.datascience.common.inference.ResizableList;
  */
 public class DataTypeAnalyzer implements Analyzer<DataType> {
 
-    private final ResizableList<DataType> dataTypes = new ResizableList<DataType>(DataType.class);
+    private final ResizableList<DataType> dataTypes = new ResizableList<>(DataType.class);
 
     private static DataType.Type execute(String value) {
         if (TypeInferenceUtils.isEmpty(value)) {
@@ -75,7 +75,7 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
         dataTypes.resize(record.length);
         for (int i = 0; i < record.length; i++) {
             final DataType dataType = dataTypes.get(i);
-            dataType.increment(execute(record[i]), record[i]);
+            dataType.increment(execute(record[i]));
         }
         return true;
     }

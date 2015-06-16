@@ -12,17 +12,12 @@
 // ============================================================================
 package org.talend.datascience.common.inference.type;
 
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class DataType {
 
-    private Map<Type, Long> typeFrequencies = new EnumMap<Type, Long>(Type.class);
-
-    private Map<Type, List<String>> type2Values = new EnumMap<Type, List<String>>(Type.class);
+    private Map<Type, Long> typeFrequencies = new EnumMap<>(Type.class);
 
     public Map<Type, Long> getTypeFrequencies() {
         return typeFrequencies;
@@ -48,22 +43,6 @@ public class DataType {
             typeFrequencies.put(type, 1l);
         } else {
             typeFrequencies.put(type, typeFrequencies.get(type) + 1);
-        }
-    }
-
-    public void increment(Type type, String value) {
-        increment(type);
-        // update type to values map
-        if (!type2Values.containsKey(type)) {
-            List<String> values = type2Values.get(type);
-            if (values == null) {
-                values = Collections.synchronizedList(new LinkedList<String>());
-            }
-            values.add(value);
-            type2Values.put(type, values);
-        } else {
-            List<String> values = type2Values.get(type);
-            values.add(value);
         }
     }
 

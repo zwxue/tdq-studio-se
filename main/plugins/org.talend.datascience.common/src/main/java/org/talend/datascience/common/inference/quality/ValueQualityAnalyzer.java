@@ -12,7 +12,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
 
     private final DataType.Type[] types;
 
-    private final ResizableList<ValueQuality> results = new ResizableList<ValueQuality>(ValueQuality.class);
+    private final ResizableList<ValueQuality> results = new ResizableList<>(ValueQuality.class);
 
     private boolean isStoreInvalidValues = true;
 
@@ -45,7 +45,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
-                        storeInvalidValue(valueQuality, value);
+                        processInvalidValue(valueQuality, value);
                     }
                     break;
                 case CHAR:
@@ -53,7 +53,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
-                        storeInvalidValue(valueQuality, value);
+                        processInvalidValue(valueQuality, value);
                     }
                     break;
                 case INTEGER:
@@ -61,7 +61,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
-                        storeInvalidValue(valueQuality, value);
+                        processInvalidValue(valueQuality, value);
                     }
                     break;
                 case DOUBLE:
@@ -69,7 +69,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
-                        storeInvalidValue(valueQuality, value);
+                        processInvalidValue(valueQuality, value);
                     }
                     break;
                 case STRING:
@@ -81,7 +81,7 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         valueQuality.incrementValid();
                     } else {
                         valueQuality.incrementInvalid();
-                        storeInvalidValue(valueQuality, value);
+                        processInvalidValue(valueQuality, value);
                     }
                     break;
                 }
@@ -90,9 +90,9 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
         return true;
     }
 
-    private void storeInvalidValue(ValueQuality valueQuality, String value) {
+    private void processInvalidValue(ValueQuality valueQuality, String invalidValue) {
         if (isStoreInvalidValues) {
-            valueQuality.appendInvalidValue(value);
+            valueQuality.appendInvalidValue(invalidValue);
         }
     }
 
