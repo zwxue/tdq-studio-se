@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
  */
 public class Messages {
 
-    private static final String BUNDLE_NAME = "org.talend.dataprofiler.chart.i18n.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.talend.dataprofiler.chart.i18n.Messages"; //$NON-NLS-1$
 
     private static final String PLUGIN_ID = "org.talend.dataprofiler.chart"; //$NON-NLS-1$
 

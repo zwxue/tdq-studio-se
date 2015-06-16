@@ -17,15 +17,14 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * DOC sgandon  class global comment. Detailled comment
- * <br/>
+ * DOC sgandon class global comment. Detailled comment <br/>
  *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  *
  */
 public final class Messages {
 
-    private static final String BUNDLE_NAME = "org.talend.dataprofiler.core.ui.imex.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.talend.dataprofiler.core.ui.imex.Messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
@@ -36,7 +35,7 @@ public final class Messages {
         try {
             return RESOURCE_BUNDLE.getString(key);
         } catch (MissingResourceException e) {
-            return '!' + key + '!';//$NON-NLS-1$ //$NON-NLS-2$ 
+            return '!' + key + '!';
         }
     }
 }
