@@ -60,4 +60,9 @@ public class ValueQuality {
     public void appendInvalidValue(String value) {
         invalidValues.add(value);
     }
+
+    @Override
+    public String toString() {
+        return "ValueQuality{" + "valid=" + validCount + ", empty=" + emptyCount + ", invalid=" + invalidCount + '}';
+    }
 }
