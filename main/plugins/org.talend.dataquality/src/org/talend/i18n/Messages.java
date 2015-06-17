@@ -22,7 +22,7 @@ import org.talend.cwm.i18n.MessagesCore;
  */
 public class Messages extends MessagesCore {
 
-    private static final String BUNDLE_NAME = "org.talend.i18n.Messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.talend.i18n.messages"; //$NON-NLS-1$
 
     private static final String PLUGIN_ID = "org.talend.dataquality"; //$NON-NLS-1$
 
