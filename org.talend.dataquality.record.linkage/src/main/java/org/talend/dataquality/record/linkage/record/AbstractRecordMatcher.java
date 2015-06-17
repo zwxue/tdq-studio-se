@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.record;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -178,7 +179,8 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
         for (int i = 0; i < recordSize; i++) {
             final double w = weights[i];
             // total = 0 already handled before
-            normalized[i] = w / total;
+            final BigDecimal l = new BigDecimal(Double.toString(w / total));
+            normalized[i] = l.setScale(16, BigDecimal.ROUND_UP).doubleValue();
         }
         return normalized;
     }
