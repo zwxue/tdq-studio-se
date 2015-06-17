@@ -67,37 +67,33 @@ public class FunctionApplier {
         GENERATE_SEQUENCE
     };
 
-    private DateChanger   dateChanger  = new DateChanger();
+    private DateChanger dateChanger = new DateChanger();
 
-    private String        EMPTY_STRING = "";                          //$NON-NLS-1$
+    private String EMPTY_STRING = ""; //$NON-NLS-1$
 
-    private String        UPPER        = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //$NON-NLS-1$
+    private String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //$NON-NLS-1$
 
-    private String        LOWER        = "abcdefghijklmnopqrstuvwxyz"; //$NON-NLS-1$
+    private String LOWER = "abcdefghijklmnopqrstuvwxyz"; //$NON-NLS-1$
 
-    private String[]      keys         = new String[109];
+    private String[] keys = new String[109];
 
-    private List<String>  StringTokens = new ArrayList<>();
+    private List<String> StringTokens = new ArrayList<>();
 
-    private List<Integer> IntTokens    = new ArrayList<>();
+    private RandomWrapper rnd = new RandomWrapper();
 
-    private List<Long>    LongTokens   = new ArrayList<>();
+    private int seq = 0;
 
-    private RandomWrapper rnd          = new RandomWrapper();
+    private Integer integerParam = 0;
 
-    private int           seq          = 0;
+    private String[] parameters = new String[1];
 
-    private Integer       integerParam = 0;
+    private boolean first = true;
 
-    private String[]      parameters   = new String[1];
+    private boolean keepNull = false;
 
-    private boolean       first        = true;
+    private Scanner in = null;
 
-    private boolean       keepNull     = false;
-
-    private Scanner       in           = null;
-
-    private Calendar      c            = null;
+    private Calendar c = null;
 
     /**
      * DOC jgonzalez Comment method "setSeq". This function is used for the GENERATE_SEQUENCE function.
@@ -155,14 +151,18 @@ public class FunctionApplier {
             try {
                 parameters = extraParameter.split(","); //$NON-NLS-1$
                 integerParam = parameters.length == 1 ? Integer.parseInt(parameters[0]) : 0;
-                // parameters[0] = extraParameter;
             } catch (NumberFormatException e) {
                 // We do nothing here because parameters[] is already set.
             }
         }
 
+        StringTokens.clear();
         try {
             in = new Scanner(new FileReader(extraParameter));
+            while (in.hasNext()) {
+                StringTokens.add(in.next());
+            }
+            in.close();
         } catch (FileNotFoundException e) {
             // We do nothing here because in is already set.
         }
@@ -224,13 +224,14 @@ public class FunctionApplier {
      * @return A new string, modified by the function.
      */
     public String generateMaskedRow(String str, Function function) {
-        if (function == Function.SET_TO_NULL || str == null && keepNull && function != Function.GENERATE_SEQUENCE) {
+        if (function == Function.SET_TO_NULL || (str == null || EMPTY_STRING.equals(str)) && keepNull
+                && function != Function.GENERATE_SEQUENCE) {
             return null;
         }
         StringBuilder sb = new StringBuilder(EMPTY_STRING);
         switch (function) {
         case MASK_EMAIL:
-            if (str != null) {
+            if (str != null && !EMPTY_STRING.equals(str)) {
                 int count = str.lastIndexOf('@');
                 if (count == -1) {
                     count = str.length();
@@ -242,7 +243,7 @@ public class FunctionApplier {
             }
             break;
         case MASK_ADDRESS:
-            if (str != null) {
+            if (str != null && !EMPTY_STRING.equals(str)) {
                 String[] address = str.split(",| "); //$NON-NLS-1$
                 for (String tmp : address) {
                     if (Arrays.asList(keys).contains(tmp)) {
@@ -269,7 +270,7 @@ public class FunctionApplier {
             boolean keep_format = ("true").equals(parameters[0]); //$NON-NLS-1$ 
             CreditCardGenerator ccgf = new CreditCardGenerator(rnd);
             CreditCardType cct_format = null;
-            if (str == null) {
+            if (str == null || EMPTY_STRING.equals(str)) {
                 cct_format = ccgf.chooseCreditCardType();
                 sb = new StringBuilder(ccgf.generateCreditCard(cct_format).toString());
             } else {
@@ -298,7 +299,7 @@ public class FunctionApplier {
             boolean keepFormat = ("true").equals(parameters[0]); //$NON-NLS-1$
             AccountNumberGenerator angf = new AccountNumberGenerator(rnd);
             String accountNumberFormat = EMPTY_STRING;
-            if (str != null && str.length() > 9) {
+            if (str != null && str.length() > 9 && !EMPTY_STRING.equals(str)) {
                 try {
                     accountNumberFormat = angf.generateIban(str, keepFormat);
                 } catch (NumberFormatException e) {
@@ -315,12 +316,12 @@ public class FunctionApplier {
             sb = new StringBuilder(phoneNumber);
             break;
         case REPLACE_ALL:
-            if (str != null && parameters[0].matches("[0-9]|[a-zA-Z]")) { //$NON-NLS-1$
+            if (str != null && !EMPTY_STRING.equals(str) && parameters[0].matches("[0-9]|[a-zA-Z]")) { //$NON-NLS-1$
                 sb = new StringBuilder(str.replaceAll(".", parameters[0])); //$NON-NLS-1$
             }
             break;
         case REPLACE_NUMERIC:
-            if (str != null && parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
+            if (str != null && !EMPTY_STRING.equals(str) && parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
                 if ((" ").equals(parameters[0])) { //$NON-NLS-1$
                     sb = new StringBuilder(str.replaceAll("\\d", parameters[0]).replace(" ", EMPTY_STRING)); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
@@ -329,7 +330,7 @@ public class FunctionApplier {
             }
             break;
         case REPLACE_CHARACTERS:
-            if (str != null && parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
+            if (str != null && !EMPTY_STRING.equals(str) && parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
                 if ((" ").equals(parameters[0])) { //$NON-NLS-1$
                     sb = new StringBuilder(str.replaceAll("[a-zA-Z]", parameters[0]).replace(" ", EMPTY_STRING)); //$NON-NLS-1$ //$NON-NLS-2$   
                 } else {
@@ -338,7 +339,7 @@ public class FunctionApplier {
             }
             break;
         case REPLACE_SSN:
-            if (str != null && parameters[0].matches("[0-9]|[a-zA-Z]")) { //$NON-NLS-1$
+            if (str != null && !EMPTY_STRING.equals(str) && parameters[0].matches("[0-9]|[a-zA-Z]")) { //$NON-NLS-1$
                 int digits_to_keep = 0;
                 String str_nospaces = str.replaceAll("\\s+", EMPTY_STRING); //$NON-NLS-1$
                 if (str_nospaces.replaceAll("\\D", EMPTY_STRING).length() == 9) {//$NON-NLS-1$
@@ -377,10 +378,6 @@ public class FunctionApplier {
             break;
         case GENERATE_FROM_FILE:
             if (in != null) {
-                while (in.hasNext()) {
-                    StringTokens.add(in.next());
-                }
-                in.close();
                 if (StringTokens.size() > 0) {
                     sb = new StringBuilder(StringTokens.get(rnd.nextInt(StringTokens.size())));
                 }
@@ -401,10 +398,6 @@ public class FunctionApplier {
             break;
         case HASH_GENERATE_FILE:
             if (in != null) {
-                while (in.hasNext()) {
-                    StringTokens.add(in.next());
-                }
-                in.close();
                 if (StringTokens.size() > 0) {
                     if (str == null) {
                         sb = new StringBuilder(StringTokens.get(rnd.nextInt(StringTokens.size())));
@@ -415,7 +408,7 @@ public class FunctionApplier {
             }
             break;
         case KEEP_BETWEEN_INDEXES:
-            if (str != null && parameters.length == 2) {
+            if (str != null && !EMPTY_STRING.equals(str) && parameters.length == 2) {
                 int a = 0, b = 0;
                 try {
                     a = Integer.valueOf(parameters[0].trim());
@@ -435,7 +428,7 @@ public class FunctionApplier {
             }
             break;
         case REMOVE_BETWEEN_INDEXES:
-            if (str != null && parameters.length == 2) {
+            if (str != null && !EMPTY_STRING.equals(str) && parameters.length == 2) {
                 int a = 0, b = 0;
                 try {
                     a = Integer.valueOf(parameters[0].trim());
@@ -456,7 +449,7 @@ public class FunctionApplier {
             }
             break;
         case REPLACE_BETWEEN_INDEXES:
-            if (str != null && (parameters.length == 2 || parameters.length == 3)) {
+            if (str != null && !EMPTY_STRING.equals(str) && (parameters.length == 2 || parameters.length == 3)) {
                 int a = 0, b = 0;
                 String s = null;
                 boolean isThird = true;
@@ -507,7 +500,7 @@ public class FunctionApplier {
             }
             break;
         case REMOVE_FIRST_CHARS:
-            if (str != null && integerParam > 0) {
+            if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 if (integerParam > str.length()) {
                     integerParam = str.length();
                 }
@@ -515,7 +508,7 @@ public class FunctionApplier {
             }
             break;
         case REMOVE_LAST_CHARS:
-            if (str != null && integerParam > 0) {
+            if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 if (integerParam > str.length()) {
                     integerParam = str.length();
                 }
@@ -523,7 +516,7 @@ public class FunctionApplier {
             }
             break;
         case REPLACE_FIRST_CHARS:
-            if (str != null && integerParam > 0) {
+            if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 if (integerParam > str.length()) {
                     integerParam = str.length();
                 }
@@ -544,7 +537,7 @@ public class FunctionApplier {
             }
             break;
         case REPLACE_LAST_CHARS:
-            if (str != null && integerParam > 0) {
+            if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 if (integerParam > str.length()) {
                     integerParam = str.length();
                 }
@@ -565,7 +558,7 @@ public class FunctionApplier {
             }
             break;
         case KEEP_FIRST_AND_GENERATE:
-            if (str != null && integerParam > 0) {
+            if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 String s = str.trim();
                 if (integerParam < s.length()) {
                     for (int i = 0; i < integerParam; ++i) {
@@ -585,7 +578,7 @@ public class FunctionApplier {
             }
             break;
         case KEEP_LAST_AND_GENERATE:
-            if (str != null && integerParam > 0) {
+            if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 String s = str.trim();
                 if (integerParam < s.length()) {
                     StringBuilder end = new StringBuilder(EMPTY_STRING);
@@ -811,16 +804,12 @@ public class FunctionApplier {
             break;
         case GENERATE_FROM_FILE:
             if (in != null) {
-                while (in.hasNext()) {
+                if (StringTokens.size() > 0) {
                     try {
-                        LongTokens.add(Long.parseLong(in.next()));
+                        finalValue = Long.parseLong(StringTokens.get(rnd.nextInt(StringTokens.size())));
                     } catch (NumberFormatException e) {
-                        break;
+                        // Do nothing here.
                     }
-                }
-                in.close();
-                if (LongTokens.size() > 0) {
-                    finalValue = LongTokens.get(rnd.nextInt(LongTokens.size()));
                 }
             }
             break;
@@ -844,19 +833,11 @@ public class FunctionApplier {
             break;
         case HASH_GENERATE_FILE:
             if (in != null) {
-                while (in.hasNext()) {
-                    try {
-                        LongTokens.add(Long.parseLong(in.next()));
-                    } catch (NumberFormatException e) {
-                        break;
-                    }
-                }
-                in.close();
-                if (LongTokens.size() > 0) {
+                if (StringTokens.size() > 0) {
                     if (valueIn == null) {
-                        finalValue = LongTokens.get(rnd.nextInt(LongTokens.size()));
+                        finalValue = Long.parseLong(StringTokens.get(rnd.nextInt(StringTokens.size())));
                     } else {
-                        finalValue = LongTokens.get(Math.abs(valueIn.hashCode()) % LongTokens.size());
+                        finalValue = Long.parseLong(StringTokens.get(Math.abs(valueIn.hashCode()) % StringTokens.size()));
                     }
                 }
             }
@@ -1005,16 +986,12 @@ public class FunctionApplier {
             break;
         case GENERATE_FROM_FILE:
             if (in != null) {
-                while (in.hasNext()) {
+                if (StringTokens.size() > 0) {
                     try {
-                        IntTokens.add(Integer.parseInt(in.next()));
+                        finalValue = Integer.parseInt(StringTokens.get(rnd.nextInt(StringTokens.size())));
                     } catch (NumberFormatException e) {
-                        continue;
+                        // Do nothing here.
                     }
-                }
-                in.close();
-                if (IntTokens.size() > 0) {
-                    finalValue = IntTokens.get(rnd.nextInt(IntTokens.size()));
                 }
             }
             break;
@@ -1038,19 +1015,11 @@ public class FunctionApplier {
             break;
         case HASH_GENERATE_FILE:
             if (in != null) {
-                while (in.hasNext()) {
-                    try {
-                        IntTokens.add(Integer.parseInt(in.next()));
-                    } catch (NumberFormatException e) {
-                        continue;
-                    }
-                }
-                in.close();
-                if (IntTokens.size() > 0) {
+                if (StringTokens.size() > 0) {
                     if (valueIn == null) {
-                        finalValue = IntTokens.get(rnd.nextInt(IntTokens.size()));
+                        finalValue = Integer.parseInt(StringTokens.get(rnd.nextInt(StringTokens.size())));
                     } else {
-                        finalValue = IntTokens.get(Math.abs(valueIn.hashCode()) % IntTokens.size());
+                        finalValue = Integer.parseInt(StringTokens.get(Math.abs(valueIn.hashCode()) % StringTokens.size()));
                     }
                 }
             }
