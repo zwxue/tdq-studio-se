@@ -3811,9 +3811,10 @@ public final class RepositoryNodeHelper {
             }
 
             // change the TDQ'side system folder nodes display label only
-            ENodeType type = node.getType();
-            if (type != null && type == ENodeType.SYSTEM_FOLDER) {
-                if (node.getObject() != null) {
+            // fix TDQ-10466: for exchange node get object is null
+            if (node.getObject() != null) {
+                ENodeType type = node.getType();
+                if (type != null && type == ENodeType.SYSTEM_FOLDER) {
                     String label = node.getObject().getLabel();
                     if (label != null) {
                         if (label.equals(EResourceConstant.DATA_PROFILING.getName())
