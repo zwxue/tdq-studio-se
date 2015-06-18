@@ -36,5 +36,5 @@ trait SemanticField extends Field[Any] {
    * @since 1.0
    */
   var suggestedType: (DataType[Any], Map[DataType[Any], Long])
-
+  
 }

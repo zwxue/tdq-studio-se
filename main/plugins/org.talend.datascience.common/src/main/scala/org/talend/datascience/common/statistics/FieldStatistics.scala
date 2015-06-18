@@ -20,7 +20,7 @@ import org.talend.datascience.common.schema.DataType
  * @author mzhao
  */
 abstract class FieldStatistics extends Serializable{
-   var count, distincts,uniques, duplicates: Long = 0l
+   var count, distincts,uniques, duplicates,empty: Long = 0l
    var frequencyTable:Seq[(String, Long)]=Seq()
    var patternFrequencyTable:Seq[(String, Long)]=Seq()
    var typeToFrequencyTable:Map[String , Map[String, Long]]=Map()
