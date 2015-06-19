@@ -39,6 +39,8 @@ public class DataSamplingBridge {
 
     private SamplingDataSource<?> dataSource;
 
+    private long randomSeed = System.currentTimeMillis();
+
     // The cursor of reservoir sampling records.
     private int recordCursor = 0;
 
@@ -81,7 +83,7 @@ public class DataSamplingBridge {
      * @return true if success, false otherwise.
      * @throws Exception When unexpected exception occurs
      */
-    public boolean prepareData(long randomSeed) throws Exception {
+    public boolean prepareData(long randomSeed1) throws Exception {
         // Reset record cursor
         reservoirSamplingData = new ArrayList<Object[]>();
         switch (samplingOption) {
@@ -91,7 +93,7 @@ public class DataSamplingBridge {
             break;
         case Reservoir:
             recordCursor = 0;
-            reservoirSampler = new ReservoirSampler<Object[]>(sampleSize, randomSeed);
+            reservoirSampler = new ReservoirSampler<Object[]>(sampleSize, randomSeed1);
             reservoirSampler.clear();
             while (dataSource.hasNext()) {
                 reservoirSampler.onNext(dataSource.getRecord());
@@ -106,7 +108,16 @@ public class DataSamplingBridge {
     }
 
     public void prepareData() throws Exception {
-        prepareData(System.currentTimeMillis());
+        prepareData(randomSeed);
+    }
+
+    /**
+     * Sets the randomSeed.
+     * 
+     * @param randomSeed the randomSeed to set
+     */
+    public void setRandomSeed(long randomSeed) {
+        this.randomSeed = randomSeed;
     }
 
     /**
