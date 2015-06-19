@@ -17,10 +17,18 @@ import java.util.Map;
 
 import org.talend.dataquality.semantic.recognizer.Category;
 
+/**
+ * Semantic type bean which hold semantic type to its count information in a map.
+ *
+ */
 public class SemanticType {
 
     private Map<Category, Long> categoryToCount = new HashMap<Category, Long>();
 
+    /**
+     * Get suggested suggsted category.
+     * @return
+     */
     public String getSuggestedCategory() {
         long max = 0;
         String electedCategory = "UNKNOWN"; // Unknown by default
@@ -33,6 +41,11 @@ public class SemanticType {
         return electedCategory;
     }
 
+    /**
+     * Increment the category with count of one category.
+     * @param category
+     * @param count
+     */
     public void increment(Category category, long count) {
         if (!categoryToCount.containsKey(category)) {
             categoryToCount.put(category, count);

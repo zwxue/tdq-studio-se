@@ -56,6 +56,7 @@ trait ElasticData[+ComputeModel] extends Serializable {
    */
   def first(): Any
   
+  def isEmpty():Boolean
   
   /**
    * Take the column of data given field index.

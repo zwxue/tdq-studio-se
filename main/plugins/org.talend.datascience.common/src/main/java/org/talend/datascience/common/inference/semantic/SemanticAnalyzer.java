@@ -61,6 +61,9 @@ public class SemanticAnalyzer implements Analyzer<SemanticType> {
         results.clear();
     }
 
+    /**
+     * Analyze the record by guessing the data semantic type.
+     */
     public boolean analyze(String... record) {
         results.resize(record.length);
         resizeCategoryRecognizer(record);
@@ -90,6 +93,9 @@ public class SemanticAnalyzer implements Analyzer<SemanticType> {
         }
     }
 
+    /**
+     * Get a list of guessed semantic type with type {{@link SemanticType}}
+     */
     public List<SemanticType> getResult() {
         for (Integer colIdx : columnIdxToCategoryRecognizer.keySet()) {
             Collection<Category> result = columnIdxToCategoryRecognizer.get(colIdx).getResult();
