@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.datascience.common.inference.semantic;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +29,9 @@ import org.talend.datascience.common.inference.ResizableList;
  */
 public class SemanticAnalyzer implements Analyzer<SemanticType> {
 
-    private final ResizableList<SemanticType> results = new ResizableList<SemanticType>(SemanticType.class);
+    private final ResizableList<SemanticType> results = new ResizableList<>(SemanticType.class);
 
-    private final Map<Integer, CategoryRecognizer> columnIdxToCategoryRecognizer = new HashMap<Integer, CategoryRecognizer>();
+    private final Map<Integer, CategoryRecognizer> columnIdxToCategoryRecognizer = new HashMap<>();
 
     private final CategoryRecognizerBuilder builder;
 
@@ -82,8 +83,12 @@ public class SemanticAnalyzer implements Analyzer<SemanticType> {
             return;
         }
         for (int idx = 0; idx < record.length; idx++) {
-            CategoryRecognizer recognizer = builder.build();
-            columnIdxToCategoryRecognizer.put(idx, recognizer);
+            try {
+                CategoryRecognizer recognizer = builder.build();
+                columnIdxToCategoryRecognizer.put(idx, recognizer);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Unable to configure category recognizer with builder.", e);
+            }
         }
     }
 
