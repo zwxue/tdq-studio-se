@@ -378,7 +378,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
-                IStatus status = Status.OK_STATUS;
                 for (Object whereRule : selection) {
                     if (whereRule instanceof IFile) {
                         IFile file = (IFile) whereRule;
@@ -386,13 +385,14 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                             WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
                             boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
                             if (!validStatus) {
-                                status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
                                         .getString("AnalysisTableTreeViewer.chooseValidDQRules")); //$NON-NLS-1$
                             }
                         }
                     }
                 }
-                return status;
+
+                return new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
             }
 
         });
