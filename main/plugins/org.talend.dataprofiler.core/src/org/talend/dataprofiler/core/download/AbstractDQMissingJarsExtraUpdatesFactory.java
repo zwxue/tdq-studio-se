@@ -29,13 +29,14 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.embedder.IMaven;
 import org.osgi.framework.Bundle;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.general.ModuleNeeded;
 import org.talend.core.model.general.ModuleToInstall;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dq.CWMPlugin;
 import org.talend.librariesmanager.utils.RemoteModulesHelper;
 import org.talend.updates.runtime.engine.factory.AbstractExtraUpdatesFactory;
 import org.talend.updates.runtime.model.ExtraFeature;
@@ -55,6 +56,12 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
      */
     protected abstract List<String> getJarFileNames();
 
+    /**
+     * the jar file name must be in pairs and in order, jar file and jar nl file.<br/>
+     * {"sqlexplorer-6.0.0.jar", "sqlexplorer.nl-6.0.0.jar"}
+     */
+    protected abstract List<String> getJarFileWithVersionNames();
+
     protected abstract String getPluginName();
 
     @Override
@@ -63,7 +70,7 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
         Bundle bundle = Platform.getBundle(getPluginName());
         if (bundle == null) {// if the bundle is not installed then propose to download it.
             String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-            File jarfile = new File(pathToStore, getJarFileNames().get(0));
+            File jarfile = new File(pathToStore, getJarFileWithVersionNames().get(0));
             if (jarfile.exists()) {
                 return;
             } else {
@@ -126,8 +133,9 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                             private void moveJars() throws MalformedURLException, IOException {
                                 List<File> jarFiles = new ArrayList<File>();
 
-                                String librariesPath = CWMPlugin.getDefault().getLibrariesPath();
-                                for (String jarFileName : getJarFileNames()) {
+                                IMaven maven = MavenPlugin.getMaven();
+                                String librariesPath = maven.getLocalRepositoryPath();
+                                for (String jarFileName : getJarFileWithVersionNames()) {
                                     jarFiles.addAll(FilesUtils.getJarFilesFromFolder(new File(librariesPath), jarFileName));
                                 }
 
