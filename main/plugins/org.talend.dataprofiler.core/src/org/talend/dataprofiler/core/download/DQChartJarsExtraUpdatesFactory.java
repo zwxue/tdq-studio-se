@@ -31,6 +31,19 @@ public class DQChartJarsExtraUpdatesFactory extends AbstractDQMissingJarsExtraUp
         return jarFiles;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.download.AbstractDQMissingJarsExtraUpdatesFactory#getJarFileWithVersionNames()
+     */
+    @Override
+    protected List<String> getJarFileWithVersionNames() {
+        List<String> jarFiles = new ArrayList<String>();
+        jarFiles.add(ITOPChartService.JAR_FILE_NAME_WITH_VERSION);
+        jarFiles.add(ITOPChartService.JAR_NL_FILE_NAME_WITH_VERSION);
+        return jarFiles;
+    }
+
     @Override
     protected String getPluginName() {
         return ITOPChartService.PLUGIN_NAME;

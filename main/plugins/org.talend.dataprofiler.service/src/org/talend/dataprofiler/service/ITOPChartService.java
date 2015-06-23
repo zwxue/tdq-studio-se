@@ -26,9 +26,16 @@ public interface ITOPChartService {
 
     static final String SERVICE_VERSION = "_6.0.0"; //$NON-NLS-1$
 
+    static final String SERVICE_MAVEN_VERSION = "-6.0.0"; //$NON-NLS-1$
+
     public static final String JAR_FILE_NAME = PLUGIN_NAME + SERVICE_VERSION + ".jar"; //$NON-NLS-1$ 
 
+    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + SERVICE_VERSION + SERVICE_MAVEN_VERSION + ".jar"; //$NON-NLS-1$ 
+
     public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + SERVICE_VERSION + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+
+    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME
+            + ".nl" + SERVICE_VERSION + SERVICE_MAVEN_VERSION + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
 
     Object getDatasetFromChart(Object chart, int datasetIndex);
 
