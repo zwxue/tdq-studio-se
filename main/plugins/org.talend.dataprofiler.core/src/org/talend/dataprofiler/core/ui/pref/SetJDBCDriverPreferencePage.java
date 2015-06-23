@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.talend.commons.exception.ExceptionHandler;
@@ -312,7 +313,6 @@ public class SetJDBCDriverPreferencePage extends PreferencePage implements IWork
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
-                IStatus status = Status.OK_STATUS;
                 for (Object object : selection) {
                     if (object instanceof DBConnectionRepNode) {
                         IRepositoryViewObject nodeObject = ((DBConnectionRepNode) object).getObject();
@@ -326,12 +326,13 @@ public class SetJDBCDriverPreferencePage extends PreferencePage implements IWork
 
                             String displayName = nodeObject.getProperty().getDisplayName();
                             String version = nodeObject.getProperty().getVersion();
-                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl.getString(
+                            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl.getString(
                                     "SetJDBCDriverPreferencePage.isLocked", displayName + " " + version)); //$NON-NLS-1$ //$NON-NLS-2$
                         }
                     }
                 }
-                return status;
+                return new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, "", //$NON-NLS-1$
+                        null);
             }
 
         });
