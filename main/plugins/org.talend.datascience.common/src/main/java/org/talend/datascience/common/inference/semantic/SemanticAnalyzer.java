@@ -70,7 +70,7 @@ public class SemanticAnalyzer implements Analyzer<SemanticType> {
         resizeCategoryRecognizer(record);
         if (currentCount <= limit) {
             for (int i = 0; i < record.length; i++) {
-                columnIdxToCategoryRecognizer.get(i).process(record[i]);
+                columnIdxToCategoryRecognizer.get(i).processCategories(record[i]);
             }
             currentCount++;
         }

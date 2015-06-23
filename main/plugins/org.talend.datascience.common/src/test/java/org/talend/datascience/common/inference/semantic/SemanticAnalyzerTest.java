@@ -51,12 +51,12 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
         List<SemanticType> result = semanticAnalyzer.getResult();
         int columnIndex = 0;
         String[] expectedCategories = new String[] { "", //
+                "FULL_NAME", //
                 "", //
                 "", //
                 "", //
                 "", //
-                "", //
-                "", //
+                "FULL_NAME", //
                 "", //
                 "", //
                 "DATE",  //
@@ -64,10 +64,41 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
                 "", //
                 "", //
                 "", //
-                "", //
+                "FULL_NAME", //
                 "", //
                 "GENDER",  //
-                "" //
+                "FULL_NAME" //
+        };
+        for (SemanticType columnSemanticType : result) {
+            assertEquals(expectedCategories[columnIndex++], columnSemanticType.getSuggestedCategory());
+        }
+    }
+    @Test
+    public void testValidMailHandle() {
+        final List<String[]> records = getRecords(AnalyzerTest.class.getResourceAsStream("employee_valid_email.csv"));
+        for (String[] record : records) {
+            semanticAnalyzer.analyze(record);
+        }
+        List<SemanticType> result = semanticAnalyzer.getResult();
+        int columnIndex = 0;
+        String[] expectedCategories = new String[] { "", //
+                "FULL_NAME", //
+                "", //
+                "", //
+                "EMAIL", //
+                "", //
+                "", //
+                "", //
+                "", //
+                "DATE",  //
+                "DATE",  //
+                "", //
+                "", //
+                "", //
+                "FULL_NAME", //
+                "GENDER", //
+                "GENDER",  //
+                "FULL_NAME" //
         };
         for (SemanticType columnSemanticType : result) {
             assertEquals(expectedCategories[columnIndex++], columnSemanticType.getSuggestedCategory());
