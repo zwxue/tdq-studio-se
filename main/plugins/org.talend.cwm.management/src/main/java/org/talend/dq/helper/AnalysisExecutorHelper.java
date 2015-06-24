@@ -14,6 +14,7 @@ package org.talend.dq.helper;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
@@ -35,6 +36,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sugars.ReturnCode;
@@ -182,6 +184,51 @@ public final class AnalysisExecutorHelper {
             return rc;
         }
 
+        // --- check the the dependeny files are exists ADDED mzhao TDQ-10428---
+        rc = checkDependentFiles(analysis);
+
+        return rc;
+    }
+
+    /**
+     * 
+     * Check the dependent file's existance. <br>
+     * 1. If exist, do "hot" content copy from dependent file to built-in. <br>
+     * 2. If not exist 1) built-in content is not empty, do nothing, 2) built-in content is empty, ReturnCode = false
+     * and return. <br>
+     * 3. Load indicator from built-in content.
+     * 
+     * @param analysis
+     * @return
+     */
+    private static ReturnCode checkDependentFiles(Analysis analysis) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        List<Indicator> indicators = analysis.getResults().getIndicators();
+        if (indicators.size() == 0) {
+            rc.setOk(false);
+            rc.setMessage(Messages.getString("AnalysisExecutor.AnalysisNoIndicators", analysis.getName())); //$NON-NLS-1$
+            return rc;
+        }
+        // Loop indicators , check the dependeny file's existence.
+        for (Indicator indicator : indicators) {
+            // check pattern matching indicator
+            rc = checkPatternMatchingIndicator(indicator);
+            if (!rc.isOk()) {
+                break;
+            }
+        }
+        return rc;
+    }
+
+    /**
+     * Check pattern matching indicator
+     * 
+     * @param indicator
+     * @return
+     */
+    private static ReturnCode checkPatternMatchingIndicator(Indicator indicator) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        // TODO check pattern matching indicator files' existence.
         return rc;
     }
 
