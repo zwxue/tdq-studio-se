@@ -61,13 +61,11 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -106,12 +104,13 @@ import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -358,18 +357,37 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             }
         });
         // TDQ-8428~
-        setSampleDataShowWayStatus();
     }
 
-    /**
-     * DOC msjian Comment method "setSampleDataShowWayStatus".
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#setSampleDataShowWayStatus()
      */
-    private void setSampleDataShowWayStatus() {
-        DataManager connection = this.getAnalysis().getContext().getConnection();
-        boolean isNotSupportRandom = connection != null
-                && (connection instanceof DelimitedFileConnection || ConnectionHelper.isInformix((Connection) connection) || ConnectionHelper
-                        .isSybase((Connection) connection));
-        sampleDataShowWayCombo.setEnabled(!isNotSupportRandom);
+    @Override
+    protected void setSampleDataShowWayStatus() {
+        if (sampleDataShowWayCombo != null) {
+            sampleDataShowWayCombo.setEnabled(true);
+
+            Object data = connCombo.getData(connCombo.getSelectionIndex() + PluginConstant.EMPTY_STRING);
+            if (data != null) {
+                if (data instanceof DBConnectionRepNode) {
+                    DBConnectionRepNode dbConnRepNode = (DBConnectionRepNode) data;
+                    String databaseType = dbConnRepNode.getDatabaseConnection().getDatabaseType() == null ? "" : dbConnRepNode.getDatabaseConnection().getDatabaseType(); //$NON-NLS-1$
+                    if (databaseType.toLowerCase().contains("informix") || databaseType.toLowerCase().contains("sybase")) { //$NON-NLS-1$ //$NON-NLS-2$
+                        sampleDataShowWayCombo.select(0);
+                        sampleDataShowWayCombo.setEnabled(false);
+                    }
+
+                } else if (data instanceof DFConnectionRepNode) {
+                    sampleDataShowWayCombo.select(0);
+                    sampleDataShowWayCombo.setEnabled(false);
+                }
+            } else {
+                sampleDataShowWayCombo.select(0);
+                sampleDataShowWayCombo.setEnabled(false);
+            }
+        }
     }
 
     /**

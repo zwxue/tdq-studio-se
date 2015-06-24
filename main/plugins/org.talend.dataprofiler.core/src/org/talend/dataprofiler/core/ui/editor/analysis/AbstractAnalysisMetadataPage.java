@@ -303,6 +303,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             public void widgetSelected(SelectionEvent e) {
                 updateAnalysisConnectionVersionInfo();
+                setSampleDataShowWayStatus();
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -467,6 +468,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
         }
 
+        setSampleDataShowWayStatus();
+    }
+
+    /**
+     * DOC msjian Comment method "setSampleDataShowWayStatus".
+     */
+    protected void setSampleDataShowWayStatus() {
+        // do nothing here
     }
 
     /**

@@ -761,10 +761,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         setSampleDataShowWayStatus();
     }
 
-    /**
-     * DOC msjian Comment method "setSampleDataShowWayStatus".
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#setSampleDataShowWayStatus()
      */
-    private void setSampleDataShowWayStatus() {
+    @Override
+    protected void setSampleDataShowWayStatus() {
         DataManager connection = analysisHandler.getConnection();
         boolean isNotSupportRandom = connection != null
                 && (connection instanceof DelimitedFileConnection || ConnectionHelper.isInformix((Connection) connection) || ConnectionHelper
