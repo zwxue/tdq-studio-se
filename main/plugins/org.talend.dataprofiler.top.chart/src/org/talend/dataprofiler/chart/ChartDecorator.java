@@ -48,6 +48,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.ui.TextAnchor;
+import org.talend.dataprofiler.chart.util.PluginConstant;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -140,6 +141,31 @@ public final class ChartDecorator {
 
     /**
      * 
+     * decorate concept chart on semantic Analysis wizard.
+     * 
+     * @param chart
+     * @param orientation
+     */
+    public static void decorateConceptChart(JFreeChart chart, PlotOrientation orientation) {
+        if (chart == null) {
+            return;
+        }
+        Plot plot = chart.getPlot();
+        if (plot instanceof CategoryPlot) {
+            decorateCategoryPlot(chart, orientation);
+
+            int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
+
+            for (int i = 0; i < rowCount; i++) {
+                ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, PluginConstant.PRIMARY_BLUE_AWT);
+            }
+
+        }
+
+    }
+
+    /**
+     * 
      * generate a Random Color.
      * 
      * @return a object of color which don't contain in list
@@ -179,6 +205,7 @@ public final class ChartDecorator {
         domainAxis.setCategoryMargin(0.1);
         domainAxis.setUpperMargin(0.05);
         domainAxis.setLowerMargin(0.05);
+        domainAxis.setCategoryLabelPositionOffset(10);
         // TDQ-5111~
 
         ValueAxis valueAxis = plot.getRangeAxis();
