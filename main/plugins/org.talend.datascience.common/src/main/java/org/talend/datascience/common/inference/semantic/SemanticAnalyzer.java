@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.talend.dataquality.semantic.recognizer.Category;
+import org.talend.dataquality.semantic.recognizer.CategoryFrequency;
 import org.talend.dataquality.semantic.recognizer.CategoryRecognizer;
 import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder;
 import org.talend.datascience.common.inference.Analyzer;
@@ -62,9 +62,6 @@ public class SemanticAnalyzer implements Analyzer<SemanticType> {
         results.clear();
     }
 
-    /**
-     * Analyze the record by guessing the data semantic type.
-     */
     public boolean analyze(String... record) {
         results.resize(record.length);
         resizeCategoryRecognizer(record);
@@ -98,13 +95,10 @@ public class SemanticAnalyzer implements Analyzer<SemanticType> {
         }
     }
 
-    /**
-     * Get a list of guessed semantic type with type {{@link SemanticType}}
-     */
     public List<SemanticType> getResult() {
         for (Integer colIdx : columnIdxToCategoryRecognizer.keySet()) {
-            Collection<Category> result = columnIdxToCategoryRecognizer.get(colIdx).getResult();
-            for (Category semCategory : result) {
+            Collection<CategoryFrequency> result = columnIdxToCategoryRecognizer.get(colIdx).getResult();
+            for (CategoryFrequency semCategory : result) {
                 results.get(colIdx).increment(semCategory, semCategory.getCount());
             }
         }
