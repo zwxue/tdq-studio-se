@@ -297,13 +297,22 @@ public interface DomainPackage extends EPackage {
     int DOMAIN__JAVA_UDI_INDICATOR_PARAMETER = CorePackage.NAMESPACE_FEATURE_COUNT + 4;
 
     /**
+     * The feature id for the '<em><b>Built In Patterns</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOMAIN__BUILT_IN_PATTERNS = CorePackage.NAMESPACE_FEATURE_COUNT + 5;
+
+    /**
      * The number of structural features of the '<em>Domain</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOMAIN_FEATURE_COUNT = CorePackage.NAMESPACE_FEATURE_COUNT + 5;
+    int DOMAIN_FEATURE_COUNT = CorePackage.NAMESPACE_FEATURE_COUNT + 6;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.domain.impl.EnumerationRuleImpl <em>Enumeration Rule</em>}' class.
@@ -932,6 +941,17 @@ public interface DomainPackage extends EPackage {
     EReference getDomain_JavaUDIIndicatorParameter();
 
     /**
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.domain.Domain#getBuiltInPatterns <em>Built In Patterns</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Built In Patterns</em>'.
+     * @see org.talend.dataquality.domain.Domain#getBuiltInPatterns()
+     * @see #getDomain()
+     * @generated
+     */
+    EReference getDomain_BuiltInPatterns();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.domain.EnumerationRule <em>Enumeration Rule</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1256,6 +1276,14 @@ public interface DomainPackage extends EPackage {
          * @generated
          */
         EReference DOMAIN__JAVA_UDI_INDICATOR_PARAMETER = eINSTANCE.getDomain_JavaUDIIndicatorParameter();
+
+        /**
+         * The meta object literal for the '<em><b>Built In Patterns</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference DOMAIN__BUILT_IN_PATTERNS = eINSTANCE.getDomain_BuiltInPatterns();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.domain.impl.EnumerationRuleImpl <em>Enumeration Rule</em>}' class.

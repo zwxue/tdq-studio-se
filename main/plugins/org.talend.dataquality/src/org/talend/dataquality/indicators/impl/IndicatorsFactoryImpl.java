@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.indicators.*;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
@@ -110,7 +111,7 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      */
     public static IndicatorsFactory init() {
         try {
-            IndicatorsFactory theIndicatorsFactory = (IndicatorsFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators"); 
+            IndicatorsFactory theIndicatorsFactory = (IndicatorsFactory)EPackage.Registry.INSTANCE.getEFactory(IndicatorsPackage.eNS_URI);
             if (theIndicatorsFactory != null) {
                 return theIndicatorsFactory;
             }
@@ -1082,8 +1083,8 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      * @generated
      */
     @SuppressWarnings("unchecked")
-    public Set createJavaSetFromString(EDataType eDataType, String initialValue) {
-        return (Set)super.createFromString(initialValue);
+    public Set<Object> createJavaSetFromString(EDataType eDataType, String initialValue) {
+        return (Set<Object>)super.createFromString(initialValue);
     }
 
     /**
@@ -1101,8 +1102,8 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      * @generated
      */
     @SuppressWarnings("unchecked")
-    public HashMap createJavaHashMapFromString(EDataType eDataType, String initialValue) {
-        return (HashMap)super.createFromString(initialValue);
+    public HashMap<Object, Long> createJavaHashMapFromString(EDataType eDataType, String initialValue) {
+        return (HashMap<Object, Long>)super.createFromString(initialValue);
     }
 
     /**
@@ -1120,8 +1121,8 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      * @generated
      */
     @SuppressWarnings("unchecked")
-    public TreeMap createJavaTreeMapFromString(EDataType eDataType, String initialValue) {
-        return (TreeMap)super.createFromString(initialValue);
+    public TreeMap<Object, Long> createJavaTreeMapFromString(EDataType eDataType, String initialValue) {
+        return (TreeMap<Object, Long>)super.createFromString(initialValue);
     }
 
     /**
@@ -1139,8 +1140,8 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      * @generated
      */
     @SuppressWarnings("unchecked")
-    public List createObjectArrayFromString(EDataType eDataType, String initialValue) {
-        return (List)super.createFromString(initialValue);
+    public List<Object[]> createObjectArrayFromString(EDataType eDataType, String initialValue) {
+        return (List<Object[]>)super.createFromString(initialValue);
     }
 
     /**

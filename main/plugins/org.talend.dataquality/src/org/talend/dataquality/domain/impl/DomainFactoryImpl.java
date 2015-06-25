@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.domain.*;
 import org.talend.dataquality.domain.DateValue;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
@@ -40,7 +41,7 @@ public class DomainFactoryImpl extends EFactoryImpl implements DomainFactory {
      */
     public static DomainFactory init() {
         try {
-            DomainFactory theDomainFactory = (DomainFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.domain"); 
+            DomainFactory theDomainFactory = (DomainFactory)EPackage.Registry.INSTANCE.getEFactory(DomainPackage.eNS_URI);
             if (theDomainFactory != null) {
                 return theDomainFactory;
             }

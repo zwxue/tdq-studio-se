@@ -354,6 +354,8 @@
       </eStructuralFeatures>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
           defaultValueLiteral="false"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="builtInIndicatorDefinition"
+          eType="#//indicators/definition/IndicatorDefinition" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="RowCountIndicator" eSuperTypes="#//indicators/Indicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MeanIndicator" eSuperTypes="#//indicators/SumIndicator">
@@ -1158,6 +1160,8 @@
           eType="#//domain/pattern/Pattern"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="javaUDIIndicatorParameter"
           upperBound="-1" eType="#//domain/JavaUDIIndicatorParameter" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="builtInPatterns" upperBound="-1"
+          eType="#//domain/pattern/Pattern" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="EnumerationRule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

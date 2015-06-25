@@ -24,6 +24,7 @@ import orgomg.cwm.objectmodel.core.Namespace;
  *   <li>{@link org.talend.dataquality.domain.Domain#getRanges <em>Ranges</em>}</li>
  *   <li>{@link org.talend.dataquality.domain.Domain#getPatterns <em>Patterns</em>}</li>
  *   <li>{@link org.talend.dataquality.domain.Domain#getJavaUDIIndicatorParameter <em>Java UDI Indicator Parameter</em>}</li>
+ *   <li>{@link org.talend.dataquality.domain.Domain#getBuiltInPatterns <em>Built In Patterns</em>}</li>
  * </ul>
  * </p>
  *
@@ -121,5 +122,21 @@ public interface Domain extends Namespace {
      * @generated
      */
     EList<JavaUDIIndicatorParameter> getJavaUDIIndicatorParameter();
+
+    /**
+     * Returns the value of the '<em><b>Built In Patterns</b></em>' containment reference list.
+     * The list contents are of type {@link org.talend.dataquality.domain.pattern.Pattern}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Built In Patterns</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Built In Patterns</em>' containment reference list.
+     * @see org.talend.dataquality.domain.DomainPackage#getDomain_BuiltInPatterns()
+     * @model containment="true"
+     * @generated
+     */
+    EList<Pattern> getBuiltInPatterns();
 
 } // Domain

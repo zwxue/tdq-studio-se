@@ -14,25 +14,25 @@ package org.talend.dq.helper;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.EmfFileResourceUtil;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisContext;
-import org.talend.dataquality.analysis.AnalysisPackage;
-import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
-import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
@@ -189,37 +189,174 @@ public class AnalysisExecutorHelperTest {
 
     @Test
     public void testCheckPatternDependencyFiles() {
-        Analysis ana = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysis();
+        // Load analysis item/property model from test file.
+        String anaPropertyFile = "builtin/pattern_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
+        Analysis ana = null;
+        Property anaProperty = null;
+        while (anaPropertyResource.getAllContents().hasNext()) {
+            EObject eobj = anaPropertyResource.getAllContents().next();
+            if (eobj instanceof Property) {
+                anaProperty = (Property) eobj;
+                ana = ((TDQAnalysisItem) anaProperty.getItem()).getAnalysis();
+                break;
+            }
+        }
+        assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getBuiltInPatterns().size() == 0);
+
+        ReturnCode rc = AnalysisExecutorHelper.check(ana);
+        assertTrue(rc.isOk());
+        assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getBuiltInPatterns().size() > 0);
+        ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getBuiltInPatterns().clear();
+        EMFUtil.saveResource(ana.eResource());
+    }
+
+    @Test
+    public void testCheckPatternWithOutDependencyFiles() {
+        // Load analysis item/property model from test file.
+        String anaPropertyFile = "builtin/pattern_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
+        Analysis ana = null;
+        Property anaProperty = null;
+        while (anaPropertyResource.getAllContents().hasNext()) {
+            EObject eobj = anaPropertyResource.getAllContents().next();
+            if (eobj instanceof Property) {
+                anaProperty = (Property) eobj;
+                ana = ((TDQAnalysisItem) anaProperty.getItem()).getAnalysis();
+                break;
+            }
+        }
+        assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getPatterns().get(0).getName() == null);
+
+        ReturnCode rc = AnalysisExecutorHelper.check(ana);
+        assertTrue(rc.isOk());
+        assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getPatterns().get(0).getName() != null);
+    }
+
+    @Test
+    public void testCheckPatternWithOutDependencyFilesAndBuiltIn() {
+        // Load analysis item/property model from test file.
+        String anaPropertyFile = "builtin/pattern_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
+        Analysis ana = null;
+        Property anaProperty = null;
+        while (anaPropertyResource.getAllContents().hasNext()) {
+            EObject eobj = anaPropertyResource.getAllContents().next();
+            if (eobj instanceof Property) {
+                anaProperty = (Property) eobj;
+                ana = ((TDQAnalysisItem) anaProperty.getItem()).getAnalysis();
+                break;
+            }
+        }
+        assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getPatterns().get(0).getName() == null);
+
         ReturnCode rc = AnalysisExecutorHelper.check(ana);
         assertFalse(rc.isOk());
+        assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getPatterns().get(0).getName() == null);
+    }
 
-        // Set analysis context.
-        AnalysisContext context = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysisContext();
-        ana.setContext(context);
-        rc = AnalysisExecutorHelper.check(ana);
-        assertFalse(rc.isOk());
+    @Test
+    public void testCheckIndicatorWithDependencyFiles() {
+        // Load analysis item/property model from test file.
+        String anaPropertyFile = "builtin/indicator_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
+        Analysis ana = null;
+        Property anaProperty = null;
+        while (anaPropertyResource.getAllContents().hasNext()) {
+            EObject eobj = anaPropertyResource.getAllContents().next();
+            if (eobj instanceof Property) {
+                anaProperty = (Property) eobj;
+                ana = ((TDQAnalysisItem) anaProperty.getItem()).getAnalysis();
+                break;
+            }
+        }
 
-        // Set analyzed elements
-        List<ModelElement> analyzedElements = context.getAnalysedElements();
-        TdColumn tdColumn = RelationalFactory.eINSTANCE.createTdColumn();
-        TdTable tdTable = RelationalFactory.eINSTANCE.createTdTable();
-        tdTable.setName("tableWithOneColumn"); //$NON-NLS-1$
-        tdColumn.setOwner(tdTable);
-        tdColumn.setName("strTypeColumn"); //$NON-NLS-1$
-        analyzedElements.add(tdColumn);
-        rc = AnalysisExecutorHelper.check(ana);
-        assertFalse(rc.isOk());
+        for (Indicator indicator : ana.getResults().getIndicators()) {
+            if (!(indicator instanceof PatternMatchingIndicator)) {
+                // Check system indicator and UDI
+                assertTrue(indicator.getIndicatorDefinition() != null);
+                assertTrue(indicator.getBuiltInIndicatorDefinition() == null);
+            }
+        }
+        ReturnCode rc = AnalysisExecutorHelper.check(ana);
+        assertTrue(rc.isOk());
 
-        // Set connection
-        DataProvider dp = SoftwaredeploymentPackage.eINSTANCE.getSoftwaredeploymentFactory().createDataProvider();
-        context.setConnection(dp);
-        rc = AnalysisExecutorHelper.check(ana);
-        assertFalse(rc.isOk());
+        for (Indicator indicator : ana.getResults().getIndicators()) {
+            if (!(indicator instanceof PatternMatchingIndicator)) {
+                assertTrue(indicator.getBuiltInIndicatorDefinition() != null);
+                indicator.setBuiltInIndicatorDefinition(null);
+            } else {
+                indicator.getParameters().getDataValidDomain().getBuiltInPatterns().clear();
+            }
+        }
+        EMFUtil.saveResource(ana.eResource());
+    }
 
-        // Set pattern matching indicators
-        AnalysisResult results = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysisResult();
-        ana.setResults(results);
-        rc = AnalysisExecutorHelper.check(ana);
+    @Test
+    public void testCheckIndicatorWithOutDependencyFilesAndBuiltIn() {
+        // Load analysis item/property model from test file.
+        String anaPropertyFile = "builtin/indicator_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
+        Analysis ana = null;
+        Property anaProperty = null;
+        while (anaPropertyResource.getAllContents().hasNext()) {
+            EObject eobj = anaPropertyResource.getAllContents().next();
+            if (eobj instanceof Property) {
+                anaProperty = (Property) eobj;
+                ana = ((TDQAnalysisItem) anaProperty.getItem()).getAnalysis();
+                break;
+            }
+        }
+        for (Indicator indicator : ana.getResults().getIndicators()) {
+            if (!(indicator instanceof PatternMatchingIndicator)) {
+                // Check system indicator and UDI
+                assertTrue(indicator.getIndicatorDefinition().getName() == null);
+                assertTrue(indicator.getBuiltInIndicatorDefinition() == null);
+            }
+        }
+        ReturnCode rc = AnalysisExecutorHelper.check(ana);
         assertFalse(rc.isOk());
+    }
+
+    @Test
+    public void testCheckIndicatorWithOutDependencyFiles() {
+        // Load analysis item/property model from test file.
+        String anaPropertyFile = "builtin/indicator_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
+        Analysis ana = null;
+        Property anaProperty = null;
+        while (anaPropertyResource.getAllContents().hasNext()) {
+            EObject eobj = anaPropertyResource.getAllContents().next();
+            if (eobj instanceof Property) {
+                anaProperty = (Property) eobj;
+                ana = ((TDQAnalysisItem) anaProperty.getItem()).getAnalysis();
+                break;
+            }
+        }
+        for (Indicator indicator : ana.getResults().getIndicators()) {
+            if (!(indicator instanceof PatternMatchingIndicator)) {
+                // Check system indicator and UDI
+                assertTrue(indicator.getIndicatorDefinition().getName() != null);
+                assertTrue(indicator.getBuiltInIndicatorDefinition() != null);
+                assertTrue(indicator.getBuiltInIndicatorDefinition() == indicator.getIndicatorDefinition());
+            }
+        }
+        ReturnCode rc = AnalysisExecutorHelper.check(ana);
+        assertTrue(rc.isOk());
+        for (Indicator indicator : ana.getResults().getIndicators()) {
+            if (!(indicator instanceof PatternMatchingIndicator)) {
+                // Check system indicator and UDI
+                assertTrue(indicator.getIndicatorDefinition().getName() != null);
+                assertTrue(indicator.getBuiltInIndicatorDefinition() != null);
+                assertTrue(indicator.getBuiltInIndicatorDefinition() == indicator.getIndicatorDefinition());
+            }
+        }
+
     }
 }
