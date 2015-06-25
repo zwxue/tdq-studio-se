@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.chart;
 
-import java.awt.Color;
-import java.awt.GradientPaint;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,12 +43,12 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.annotations.CategoryTextAnnotation;
 import org.jfree.chart.axis.CategoryAnchor;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.labels.CategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
@@ -291,12 +289,23 @@ public class TOPChartService implements ITOPChartService {
                 ChartEntity chartEntity = event.getEntity();
                 if (chartEntity != null && chartEntity instanceof CategoryItemEntity) {
                     CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
+                    // highlight current selected bar
+                    Plot plot = event.getChart().getPlot();
+                    if (plot != null) {
+                        // ((CategoryPlot) plot).getRenderer().setSeriesPaint(cateEntity.getSeries(), Green);
+                        CustomConceptRenderer render = new CustomConceptRenderer(cateEntity.getCategoryIndex());
+                        render.setShadowVisible(false);
+                        render.setDrawBarOutline(false);
+                        ((CategoryPlot) plot).setRenderer(render);
+                        // ChartDecorator.decorateConceptChart(event.getChart(), PlotOrientation.HORIZONTAL);
 
+                    }
                     Object action = getCurrentAction(cateEntity);
                     Class<? extends Object> actionClass = action.getClass();
                     try {
                         Method actionRunMethod = actionClass.getDeclaredMethod("run"); //$NON-NLS-1$
                         actionRunMethod.invoke(action);
+
                     } catch (NoSuchMethodException e) {
                         log.error(e, e);
                     } catch (SecurityException e) {
@@ -535,6 +544,7 @@ public class TOPChartService implements ITOPChartService {
     public Object createConceptsChart(String title, Object dataset) {
         // TODO some parameter should be get out
         // create the chart...
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         JFreeChart chart = ChartFactory.createBarChart(title, // chart title
                 PluginConstant.EMPTY_STRING, // domain axis label
                 PluginConstant.EMPTY_STRING, // range axis label
@@ -547,28 +557,12 @@ public class TOPChartService implements ITOPChartService {
 
         // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
 
-        // set the background color for the chart...
-        chart.setBackgroundPaint(Color.white);
-        // get a reference to the plot for further customisation...
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        plot.setBackgroundPaint(Color.lightGray);
-        plot.setDomainGridlinePaint(Color.white);
-        plot.setDomainGridlinesVisible(true);
-        plot.setRangeGridlinePaint(Color.white);
-
-        plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(0.9f);
-        // set the range axis to display integers only...
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-
         // disable bar outlines...
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
-        renderer.setDrawBarOutline(false);
         renderer.setShadowVisible(false);
-        // set up gradient paints for series...
-        GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f, 0.0f, Color.blue);
-        renderer.setSeriesPaint(0, gp0);
-
+        renderer.setDrawBarOutline(false);
+        ChartDecorator.decorateConceptChart(chart, PlotOrientation.HORIZONTAL);
         return chart;
     }
 
