@@ -10,13 +10,15 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.datamasking;
+package org.talend.dataquality.datamasking.Functions;
 
-import org.talend.dataquality.duplicating.RandomWrapper;
+import org.talend.dataquality.datamasking.Function;
 
-public class CreditCardGenerator {
-
-    private RandomWrapper rnd = null;
+/**
+ * created by jgonzalez on 24 juin 2015 . This class holds all the function required to generate a credit card number.
+ *
+ */
+public abstract class GenerateCreditCard<T2> extends Function<T2> {
 
     private static final String DIGITS = "0123456789"; //$NON-NLS-1$
 
@@ -29,10 +31,6 @@ public class CreditCardGenerator {
         MASTER_CARD,
         VISA
     };
-
-    public CreditCardGenerator(RandomWrapper rnd) {
-        this.rnd = rnd;
-    }
 
     /**
      * This function tests a credit card number if valid.
@@ -81,7 +79,7 @@ public class CreditCardGenerator {
 
         for (int i = 0; i < 10; ++i) {
             res.setCharAt(res.length() - 1, DIGITS.charAt(i));
-            if (luhnTest(res) == true) {
+            if (luhnTest(res)) {
                 break;
             }
         }
@@ -106,7 +104,7 @@ public class CreditCardGenerator {
 
         for (int i = 0; i < 10; ++i) {
             res.setCharAt(res.length() - 1, DIGITS.charAt(i));
-            if (luhnTest(res) == true) {
+            if (luhnTest(res)) {
                 break;
             }
         }
@@ -157,7 +155,7 @@ public class CreditCardGenerator {
 
         for (int i = 0; i < 10; ++i) {
             res.setCharAt(res.length() - 1, DIGITS.charAt(i));
-            if (luhnTest(res) == true) {
+            if (luhnTest(res)) {
                 break;
             }
         }
@@ -174,7 +172,7 @@ public class CreditCardGenerator {
     public CreditCardType getCreditCardType(Long ccn) {
         StringBuilder number = new StringBuilder(ccn.toString());
         if (number.length() == 15) {
-            if (number.substring(0, 2).equals("34") || number.substring(0, 2).equals("37")) { //$NON-NLS-1$ //$NON-NLS-2$
+            if ("34".equals(number.substring(0, 2)) || ("37").equals(number.substring(0, 2))) { //$NON-NLS-1$ //$NON-NLS-2$
                 return CreditCardType.AMERICAN_EXPRESS;
             }
         } else if (number.length() == 16 || number.length() == 13) {

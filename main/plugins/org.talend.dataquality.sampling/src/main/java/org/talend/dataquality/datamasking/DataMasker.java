@@ -16,24 +16,26 @@ package org.talend.dataquality.datamasking;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.talend.dataquality.duplicating.RandomWrapper;
-
+/**
+ * created by jgonzalez on 25 juin 2015 This class is the main class used in the masking process.
+ *
+ * @param <TIn> The input schema
+ * @param <TOut> The output schema
+ */
 public abstract class DataMasker<TIn, TOut> {
-
-    private static RandomWrapper rnd = null;
-
-    public DataMasker() {
-        setRnd(new RandomWrapper());
-    }
-
-    public DataMasker(long seed) {
-        setRnd(new RandomWrapper(seed));
-    }
 
     protected abstract TOut generateOutput(TIn v, boolean isOriginal);
 
+    /**
+     * DOC jgonzalez Comment method "process". This method is called to generate the masked output.
+     * 
+     * @param v A row from the input schema
+     * @param keepOriginal A boolean, if true, the masker will return two rows : the original one and the masked one, if
+     * not, only the masked row wiil be generated.
+     * @return A masekd row from the ouput schema.
+     */
     public List<TOut> process(TIn v, boolean keepOriginal) {
-        List<TOut> reslutList = new ArrayList<TOut>();
+        List<TOut> reslutList = new ArrayList<>();
 
         if (keepOriginal) {
             reslutList.add(generateOutput(v, true));
@@ -43,11 +45,4 @@ public abstract class DataMasker<TIn, TOut> {
         return reslutList;
     }
 
-    public static RandomWrapper getRnd() {
-        return rnd;
-    }
-
-    public static void setRnd(RandomWrapper rnd) {
-        DataMasker.rnd = rnd;
-    }
 }

@@ -10,21 +10,20 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.datamasking;
+package org.talend.dataquality.datamasking.Functions;
 
 import java.math.BigInteger;
 
-import org.talend.dataquality.duplicating.RandomWrapper;
+import org.talend.dataquality.datamasking.Function;
 
-public class AccountNumberGenerator {
+/**
+ * created by jgonzalez on 24 juin 2015. This class holds all the functions required by GenerateAccountNumberFormat and
+ * GenerateAccountNumberFormat.
+ *
+ */
+public abstract class GenerateAccountNumber extends Function<String> {
 
     private static final BigInteger MOD97 = new BigInteger("97"); //$NON-NLS-1$
-
-    private static RandomWrapper rnd = null;
-
-    public AccountNumberGenerator(RandomWrapper rnd) {
-        AccountNumberGenerator.rnd = rnd;
-    }
 
     /**
      * This functions checks if the account number (ie, FR043568953359583693) is correct according to its size and
@@ -87,14 +86,14 @@ public class AccountNumberGenerator {
      * @return An american account number, the nine first digits belonging to the original input and the others randomly
      * generated.
      */
-    private static String generateAmericanAccountNumber(String accountNumber, boolean keep) {
-        StringBuilder sb = new StringBuilder(accountNumber.replaceAll("\\s+", "").substring(0, 9)); //$NON-NLS-1$ //$NON-NLS-2$
+    private String generateAmericanAccountNumber(String accountNumber, boolean keep) {
+        sb = new StringBuilder(accountNumber.replaceAll("\\s+", "").substring(0, 9)); //$NON-NLS-1$ //$NON-NLS-2$
         for (int i = 0; i < 10; ++i) {
             sb.append(String.valueOf(rnd.nextInt(10)));
         }
         if (keep) {
             for (int i = 0; i < accountNumber.length(); ++i) {
-                if (String.valueOf(accountNumber.charAt(i)).equals(" ")) { //$NON-NLS-1$
+                if (String.valueOf(" ").equals(accountNumber.charAt(i))) { //$NON-NLS-1$
                     sb.insert(i, ' ');
                 }
             }
@@ -138,7 +137,7 @@ public class AccountNumberGenerator {
      * @param number The account number given in input.
      * @return A correct account number.
      */
-    String generateIban(String number, boolean keep) {
+    public String generateIban(String number, boolean keep) {
         if (Character.isDigit(number.charAt(0))) {
             if (isAmericanAccount(number)) {
                 return generateAmericanAccountNumber(number, keep).toString();
@@ -150,7 +149,7 @@ public class AccountNumberGenerator {
             return generateIban();
         }
 
-        StringBuilder sb = new StringBuilder(accountNumber.substring(0, 2));
+        sb = new StringBuilder(accountNumber.substring(0, 2));
         sb.append("00"); //$NON-NLS-1$
         for (int i = 0; i < accountNumber.length() - 4; ++i) {
             sb.append(String.valueOf(rnd.nextInt(10)));
@@ -172,7 +171,7 @@ public class AccountNumberGenerator {
 
         if (keep) {
             for (int i = 0; i < number.length(); ++i) {
-                if (String.valueOf(number.charAt(i)).equals(" ")) { //$NON-NLS-1$
+                if (String.valueOf(" ").equals(number.charAt(i))) { //$NON-NLS-1$
                     sb.insert(i, ' ');
                 }
             }
@@ -217,8 +216,8 @@ public class AccountNumberGenerator {
      * 
      * @return A string holding a correct French Iban number.
      */
-    String generateIban() {
-        StringBuilder sb = new StringBuilder("FR00"); //$NON-NLS-1$                                                                                                             
+    public String generateIban() {
+        sb = new StringBuilder("FR00"); //$NON-NLS-1$                                                                                                             
         for (int i = 0; i < 10; ++i) {
             sb.append(String.valueOf(rnd.nextInt(10)));
         }
@@ -254,33 +253,6 @@ public class AccountNumberGenerator {
         }
 
         return sb.toString();
-    }
-
-    /**
-     * This function checks if the accountNumber given as input is a correct iban number.
-     * 
-     * @param accountNumber The account number to be tested.
-     * @return A boolean holding the restult of the test.
-     */
-    @SuppressWarnings("unused")
-    private static boolean ibanTest(String accountNumber) {
-        String newAccountNumber = accountNumber.trim().replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
-
-        if (!sizeOk(newAccountNumber)) {
-            return false;
-        }
-        newAccountNumber = newAccountNumber.substring(4) + newAccountNumber.substring(0, 4);
-
-        StringBuilder numericAccountNumber = new StringBuilder();
-        for (int i = 0; i < newAccountNumber.length(); i++) {
-            if (newAccountNumber.charAt(i) != ' ') {
-                numericAccountNumber.append(Character.getNumericValue(newAccountNumber.charAt(i)));
-            }
-        }
-
-        BigInteger ibanNumber = new BigInteger(numericAccountNumber.toString());
-
-        return (ibanNumber.mod(MOD97).intValue() == 1);
     }
 
 }
