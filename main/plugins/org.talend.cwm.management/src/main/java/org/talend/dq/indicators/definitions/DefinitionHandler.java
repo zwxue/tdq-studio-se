@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.EmfFileResourceUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdExpression;
@@ -100,6 +101,8 @@ public final class DefinitionHandler {
     private static Map<String, IndicatorCategory> userDefinedIndicatorCategoryMap;
 
     private List<IndicatorDefinition> indicatorDefinitions = new ArrayList<IndicatorDefinition>();
+
+    private Map<String, String> definitionToIdMap = new HashMap<String, String>();
 
     private EList<IndicatorCategory> indicatorCategories;
 
@@ -551,6 +554,15 @@ public final class DefinitionHandler {
             }
         }
         return null;
+    }
+
+    public String getIdByDefinition(IndicatorDefinition definition) {
+        String id = definitionToIdMap.get(definition.getName());
+        if (id == null) {
+            id = ResourceHelper.getUUID(definition);
+            definitionToIdMap.put(definition.getName(), id);
+        }
+        return id;
     }
 
     public IndicatorCategory getUserDefinedCountIndicatorCategory() {

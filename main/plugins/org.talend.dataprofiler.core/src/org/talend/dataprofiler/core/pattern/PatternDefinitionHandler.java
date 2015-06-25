@@ -2,7 +2,9 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
@@ -11,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EmfFileResourceUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternPackage;
@@ -29,6 +32,8 @@ public class PatternDefinitionHandler {
 
     private List<Pattern> patternDefinitions = new ArrayList<Pattern>();
 
+    private Map<String, String> patternToIdMap = new HashMap<String, String>();
+
     public static PatternDefinitionHandler getInstance() {
         if (instance == null) {
             instance = new PatternDefinitionHandler();
@@ -39,14 +44,23 @@ public class PatternDefinitionHandler {
     }
 
     public Pattern getPatternById(String definitionId) {
-        for (Pattern indDef : this.getPatternDefinitions()) {
-            CwmResource resource = (CwmResource) indDef.eResource();
+        for (Pattern patDef : this.getPatternDefinitions()) {
+            CwmResource resource = (CwmResource) patDef.eResource();
             EObject object = resource.getEObject(definitionId);
             if (object != null && PatternPackage.eINSTANCE.getPattern().equals(object.eClass())) {
                 return (Pattern) object;
             }
         }
         return null;
+    }
+
+    public String getIdByPattern(Pattern pattern) {
+        String id = patternToIdMap.get(pattern.getName());
+        if (id == null) {
+            id = ResourceHelper.getUUID(pattern);
+            patternToIdMap.put(pattern.getName(), id);
+        }
+        return id;
     }
 
     public List<Pattern> getPatternDefinitions() {

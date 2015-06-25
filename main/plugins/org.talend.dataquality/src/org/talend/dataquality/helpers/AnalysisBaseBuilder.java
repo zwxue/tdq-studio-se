@@ -15,6 +15,7 @@ package org.talend.dataquality.helpers;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -147,12 +148,23 @@ public class AnalysisBaseBuilder {
 
         // add the element to the context
         analysis.getContext().getAnalysedElements().add(element);
-
+        EList<Indicator> indicatorList = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            // attach element to indicators
-            indicator.setAnalyzedElement(element);
-            // store indicators in results
-            analysis.getResults().getIndicators().add(indicator);
+            boolean exists = false;
+            for (Indicator existingIndicator : indicatorList) {
+                if (existingIndicator.getAnalyzedElement().equals(element)
+                        && indicator.getName().equals(existingIndicator.getName())) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                // attach element to indicators
+                indicator.setAnalyzedElement(element);
+                // store indicators in results
+                indicatorList.add(indicator);
+            }
         }
 
         return true;
