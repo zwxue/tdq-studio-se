@@ -5,7 +5,7 @@ import org.talend.dataquality.analysis.Analysis;
 
 public interface ISemanticStudioService {
 
-    void addAnalysisToRef(Analysis analysis);
+    void enrichOntRepoWithAnalysisResult(Analysis analysis);
 
     int openSemanticDiscoveryWizard(MetadataTable metadataTable);
 
