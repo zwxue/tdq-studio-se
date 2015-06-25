@@ -320,7 +320,12 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             sqlConn = createConnection.getObject();
         }
 
-        createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        if (MetadataConnectionUtils.isSQLite(metadataBean)) {
+            // sqlite only supports TYPE_FORWARD_ONLY currors
+            createStatement = sqlConn.createStatement();
+        } else {
+            createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        }
         return createStatement;
     }
 

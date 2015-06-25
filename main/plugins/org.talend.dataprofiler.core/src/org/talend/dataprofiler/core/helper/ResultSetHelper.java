@@ -25,6 +25,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -82,22 +83,13 @@ public class ResultSetHelper {
             return null;
         }
         sqlConn = createConnection.getObject();
+        if (MetadataConnectionUtils.isSQLite(metadataBean)) {
+            // sqlite only supports TYPE_FORWARD_ONLY currors
+            createStatement = sqlConn.createStatement();
+        } else {
+            createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        }
 
-        createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        return createStatement;
-    }
-
-    /**
-     * DOC talend Comment method "getStatement".
-     * 
-     * @param metadataBean
-     * @return
-     * @throws SQLException
-     */
-    private static Statement initStatement(java.sql.Connection sqlConn) throws SQLException {
-        Statement createStatement = null;
-
-        createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         return createStatement;
     }
 
@@ -110,10 +102,15 @@ public class ResultSetHelper {
      */
     public static ResultSet getResultSet(MetadataTable metadataTable, java.sql.Connection sqlConn, String whereExpression)
             throws SQLException {
+        Statement createStatement = null;
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(sqlConn);
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
-
-        Statement createStatement = initStatement(sqlConn);
+        if (dbmsLanguage instanceof SQLiteDbmsLanguage) {
+            // sqlite only supports TYPE_FORWARD_ONLY currors
+            createStatement = sqlConn.createStatement();
+        } else {
+            createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        }
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
 }
