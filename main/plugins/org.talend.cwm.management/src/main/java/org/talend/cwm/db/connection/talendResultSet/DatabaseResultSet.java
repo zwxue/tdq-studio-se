@@ -23,10 +23,28 @@ public class DatabaseResultSet extends TalendResultSet {
 
     private ResultSet rs = null;
 
+    /**
+     * Getter for rs.
+     * 
+     * @return the rs
+     */
+    public ResultSet getRs() {
+        return this.rs;
+    }
+
+    /**
+     * Sets the rs.
+     * 
+     * @param rs the rs to set
+     */
+    public void setRs(ResultSet rs) {
+        this.rs = rs;
+    }
+
     private static final String NULLDATE = "0000-00-00 00:00:00"; //$NON-NLS-1$
 
     public DatabaseResultSet(ResultSet resultSet) {
-        this.rs = resultSet;
+        setRs(resultSet);
     }
 
     /*

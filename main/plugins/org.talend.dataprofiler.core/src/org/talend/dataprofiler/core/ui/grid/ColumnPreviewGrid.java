@@ -13,9 +13,9 @@
 package org.talend.dataprofiler.core.ui.grid;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -53,8 +52,6 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
-import org.talend.metadata.managment.utils.MetadataConnectionUtils;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.talend.csv.CSVReader;
@@ -65,10 +62,6 @@ import com.talend.csv.CSVReader;
  */
 public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TDQObserver<ObserverEvent>,
         Observerable<ObserverEvent> {
-
-    private Statement createStatement = null;
-
-    private java.sql.Connection sqlConn = null;
 
     private final String COLUMN_RESULT_KEY = "columnResult"; //$NON-NLS-1$
 
@@ -106,14 +99,6 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             PreviewItem.setExpanded(true);
         } catch (SQLException e) {
 
-        } finally {
-            try {
-                if (sqlConn != null) {
-                    sqlConn.close();
-                }
-            } catch (SQLException e) {
-
-            }
         }
     }
 
@@ -164,20 +149,28 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
      * @throws SQLException
      */
     private String getColumnValue(GridColumn column, GridItem currentItem) throws SQLException {
-        ITalendResultSet rs = (ITalendResultSet) this.getData(COLUMN_RESULT_KEY);
+        DatabaseResultSet rs = (DatabaseResultSet) this.getData(COLUMN_RESULT_KEY);
         ModelElementIndicator modelElementIndicator = (ModelElementIndicator) column.getData();
 
-        String columnName = modelElementIndicator.getElementName();
-        if (rs == null) {
-
-            rs = getResultSet(modelElementIndicator);
-            this.setData(COLUMN_RESULT_KEY, rs);
-        }
-        // row index
-        int indexOfRow = this.indexOf(currentItem);
-        if (rs.absolute(indexOfRow)) {
-            Object columnValue = rs.getObject(columnName);
-            return columnValue == null ? PluginConstant.NULL_STRING : columnValue.toString();
+        try {
+            if (rs == null) {
+                rs = (DatabaseResultSet) getResultSet(modelElementIndicator);
+                this.setData(COLUMN_RESULT_KEY, rs);
+            }
+            // row index
+            int indexOfRow = this.indexOf(currentItem);
+            if (rs.absolute(indexOfRow)) {
+                String columnName = modelElementIndicator.getElementName();
+                Object columnValue = rs.getObject(columnName);
+                return columnValue == null ? PluginConstant.NULL_STRING : columnValue.toString();
+            }
+        } finally {
+            if (rs != null) {
+                Connection connection = rs.getRs().getStatement().getConnection();
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                }
+            }
         }
         return null;
     }
@@ -212,26 +205,8 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
      * @throws SQLException
      */
     private ITalendResultSet getResultSet(ColumnIndicator columnIndicator) throws SQLException {
-        ResultSet rs = null;
-        // // connection
-        // Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(columnIndicator);
-        // TdColumn tdColumn = columnIndicator.getTdColumn();
-        // DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-        // Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn,
-        // _dialog.getWhereExpression());
-        // IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
-
-        // createStatement = initStatement(metadataBean);
-        // rs = createStatement.executeQuery(columnQueryExpression.getBody());
-        if (createStatement == null) {
-            rs = ResultSetHelper.getResultSet(columnIndicator, _dialog.getWhereExpression());
-            createStatement = rs.getStatement();
-            sqlConn = createStatement.getConnection();
-            return new DatabaseResultSet(rs);
-        } else {
-            rs = ResultSetHelper.getResultSet(columnIndicator, _dialog.getWhereExpression(), createStatement);
-            return new DatabaseResultSet(rs);
-        }
+        ResultSet rs = ResultSetHelper.getResultSet(columnIndicator, _dialog.getWhereExpression());
+        return new DatabaseResultSet(rs);
     }
 
     /**
@@ -282,51 +257,6 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
         }
 
         return null;
-    }
-
-    /**
-     * DOC talend Comment method "getColumnValue".
-     * 
-     * @return
-     * @throws SQLException
-     */
-    protected String getColumnValue(int rowIndex, String sqlQuery, String columnName, IMetadataConnection metadataBean)
-            throws SQLException {
-
-        createStatement = initStatement(metadataBean);
-        ResultSet rs = createStatement.executeQuery(sqlQuery);
-        while (rs.absolute(rowIndex + 1)) {
-            return rs.getObject(columnName).toString();
-        }
-        return null;
-    }
-
-    /**
-     * DOC talend Comment method "getStatement".
-     * 
-     * @param metadataBean
-     * @return
-     * @throws SQLException
-     */
-    protected Statement initStatement(IMetadataConnection metadataBean) throws SQLException {
-        if (createStatement != null && !createStatement.isClosed()) {
-            return createStatement;
-        }
-        if (sqlConn == null || sqlConn.isClosed()) {
-            TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
-            if (!createConnection.isOk()) {
-                return null;
-            }
-            sqlConn = createConnection.getObject();
-        }
-
-        if (MetadataConnectionUtils.isSQLite(metadataBean)) {
-            // sqlite only supports TYPE_FORWARD_ONLY currors
-            createStatement = sqlConn.createStatement();
-        } else {
-            createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        }
-        return createStatement;
     }
 
     /*
@@ -555,19 +485,25 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
         GridColumn column = getColumn(2);
         ModelElementIndicator modelElementIndicator = (ModelElementIndicator) column.getData();
+        DatabaseResultSet resultSet = null;
         try {
-            getResultSet(modelElementIndicator);
+            resultSet = (DatabaseResultSet) getResultSet(modelElementIndicator);
         } catch (SQLException e) {
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("ColumnPreviewGrid.InValidWhereClause"), //$NON-NLS-1$
                     e.getMessage());
-            try {
-                if (sqlConn != null) {
-                    sqlConn.close();
-                }
-            } catch (SQLException e1) {
-                // no need to implement
-            }
             return false;
+        } finally {
+            try {
+                if (resultSet != null) {
+                    Connection connection = resultSet.getRs().getStatement().getConnection();
+                    if (connection != null && !connection.isClosed()) {
+                        connection.close();
+                    }
+                }
+            } catch (SQLException e) {
+                log.error(e, e);
+                return false;
+            }
         }
         return true;
     }
