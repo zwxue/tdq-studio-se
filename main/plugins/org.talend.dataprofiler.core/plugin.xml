@@ -1864,7 +1864,7 @@
        <view
              category="org.talend.dataprofiler.view.category"
              class="org.talend.dataprofiler.core.ui.views.context.TdqContextView"
-             icon="platform:/plugin/org.talend.common.ui.runtime/icons1/context_conf_icon.gif"
+             icon="platform:/plugin/org.talend.common.ui.runtime/icons1/context_icon.png"
              id="org.talend.dataprofiler.core.ui.views.context.TdqContextView"
              name="%view.name.TdqContextView">
        </view>
