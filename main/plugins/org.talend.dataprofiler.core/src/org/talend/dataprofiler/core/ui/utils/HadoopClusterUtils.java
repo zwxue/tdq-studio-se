@@ -76,7 +76,7 @@ public class HadoopClusterUtils extends AbstractOSGIServiceUtils {
 
     public String getHadoopClusterID(Object object) {
         if (getHadoopClusterService() != null) {
-            getHadoopClusterService().getHadoopClusterID(object);
+            return getHadoopClusterService().getHadoopClusterID(object);
         }
         return StringUtils.EMPTY;
     }

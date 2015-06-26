@@ -24,7 +24,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -50,6 +55,7 @@ import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -68,6 +74,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ui.action.actions.CreateHiveOfHCAction;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
@@ -78,6 +85,7 @@ import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.events.SoftwareSystemUpdateEventReceiver;
+import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
@@ -669,6 +677,54 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      */
     public void changePerspectiveAction(String perspectiveId) {
         new org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction(perspectiveId).run();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#createHive(org.talend.repository.model.RepositoryNode)
+     */
+    public boolean createHive(RepositoryNode currentNode) {
+        // to open the wizard: create hive
+        CreateHiveOfHCAction createHive = new CreateHiveOfHCAction(currentNode.getParent().getParent());
+        createHive.run();
+        if (createHive.getConnectionItem() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.core.ITDQRepositoryService#reloadTableList(org.talend.core.model.properties.DatabaseConnectionItem)
+     */
+    public void reloadTableList(final DatabaseConnectionItem hiveConnectionItem2) {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
+        IWorkspaceRunnable operation = new IWorkspaceRunnable() {
+
+            public void run(IProgressMonitor monitor) throws CoreException {
+
+                RepositoryNode tableFolder = TableUtils.getTableFolder(hiveConnectionItem2);
+                if (tableFolder != null) {
+                    IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(tableFolder);
+                    try {
+                        creatComparisonLevel.reloadCurrentLevelElement();
+                    } catch (ReloadCompareException e) {
+                        log.error(e, e);
+                    }
+                    CorePlugin.getDefault().refreshDQView(tableFolder);
+                }
+            }
+
+        };
+        try {
+            workspace.run(operation, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
     }
 
 }
