@@ -42,6 +42,8 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.utils.sugars.ReturnCode;
@@ -83,20 +85,25 @@ public class AnalysisWriter extends AElementPersistance {
                 }
                 InternalEObject iudi = (InternalEObject) udi;
                 if (!iudi.eIsProxy()) {
-                    TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
-                            udi);
-                    if (dependencyReturn.isOk()) {
-                        Property property = PropertyHelper.getProperty(udi);
-                        if (property != null) {
-                            TDQItem udiItem = (TDQItem) property.getItem();
-                            if (udiItem instanceof TDQIndicatorDefinitionItem) {
-                                ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
-                            } else if (udiItem instanceof TDQBusinessRuleItem) {
-                                ((TDQBusinessRuleItem) udiItem).setDqrule((DQRule) udi);
+                    DQRepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(udi);
+                    // only do save when the dependency is not reference project node
+                    if (recursiveFind != null && recursiveFind.getProject().isMainProject()) {
+
+                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+                                analysis, udi);
+                        if (dependencyReturn.isOk()) {
+                            Property property = PropertyHelper.getProperty(udi);
+                            if (property != null) {
+                                TDQItem udiItem = (TDQItem) property.getItem();
+                                if (udiItem instanceof TDQIndicatorDefinitionItem) {
+                                    ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
+                                } else if (udiItem instanceof TDQBusinessRuleItem) {
+                                    ((TDQBusinessRuleItem) udiItem).setDqrule((DQRule) udi);
+                                }
                             }
+                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                    .saveResource(udi.eResource());
                         }
-                        ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                .saveResource(udi.eResource());
                     }
                 }
             }
@@ -105,18 +112,22 @@ public class AnalysisWriter extends AElementPersistance {
             for (Pattern pattern : patterns) {
                 InternalEObject iptn = (InternalEObject) pattern;
                 if (!iptn.eIsProxy()) {
-                    TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
-                            pattern);
-                    if (dependencyReturn.isOk()) {
-                        Property property = PropertyHelper.getProperty(pattern);
-                        if (property != null && property.getItem() instanceof TDQPatternItem) {
-                            TDQPatternItem patternItem = (TDQPatternItem) property.getItem();
-                            patternItem.setPattern(pattern);
-                        }
-                        ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                .saveResource(pattern.eResource());
+                    DQRepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(pattern);
+                    // only do save when the dependency is not reference project node
+                    if (recursiveFind != null && recursiveFind.getProject().isMainProject()) {
+                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+                                analysis, pattern);
+                        if (dependencyReturn.isOk()) {
+                            Property property = PropertyHelper.getProperty(pattern);
+                            if (property != null && property.getItem() instanceof TDQPatternItem) {
+                                TDQPatternItem patternItem = (TDQPatternItem) property.getItem();
+                                patternItem.setPattern(pattern);
+                            }
+                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                    .saveResource(pattern.eResource());
 
-                        // EMFUtil.saveSingleResource(pattern.eResource());
+                            // EMFUtil.saveSingleResource(pattern.eResource());
+                        }
                     }
                 }
             }
@@ -270,11 +281,12 @@ public class AnalysisWriter extends AElementPersistance {
     private List<ModelElement> getClientDepListByResult(Analysis analysis) {
         List<ModelElement> clientDependencyList = new ArrayList<ModelElement>();
         DataManager connection = analysis.getContext().getConnection();
-        //when connection is null mean that no any result can be keep so don't need check result again return empty list
+        // when connection is null mean that no any result can be keep so don't need check result again return empty
+        // list
         if (connection != null) {
             // DQRule or UDI case
             clientDependencyList.addAll(AnalysisHelper.getUserDefinedIndicators(analysis));
-            //pattern case
+            // pattern case
             clientDependencyList.addAll(AnalysisHelper.getPatterns(analysis));
             clientDependencyList.add(connection);
         }

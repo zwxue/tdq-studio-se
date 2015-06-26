@@ -2171,12 +2171,6 @@ public final class RepositoryNodeHelper {
         // MOD qiongli 2011-2-23,bug 17588 ,add param withDeleted.
         List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
 
-        // ADD msjian TDQ-4914: let the user can not use the reference project node(e.g.: connection node)
-        if (!((DQRepositoryNode) folderNode).getProject().isMainProject()) {
-            return repositoryNodeList;
-        }
-        // TDQ-4914~
-
         if (isFolderNode(folderNode.getType())) {
             for (IRepositoryNode thefolderNode : folderNode.getChildren(withDelted)) {
                 repositoryNodeList.addAll(getModelElementFromFolder(thefolderNode, withDelted));
@@ -2621,41 +2615,6 @@ public final class RepositoryNodeHelper {
         }
 
         return false;
-    }
-
-    /**
-     * find the RepositoryNode according to the ModelElement.
-     * 
-     * @param modelElement
-     * @return a RepositoryNode or null
-     * @deprecated use recursiveFind(ModelElement) instead
-     */
-    @Deprecated
-    public static RepositoryNode recursiveFind2(ModelElement modelElement) {
-        return recursiveFind(modelElement);
-        // String uuid = ResourceHelper.getUUID(modelElement);
-        // List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-        //
-        // if (modelElement instanceof Analysis) {
-        // nodes.add(getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
-        // } else if (modelElement instanceof TdReport) {
-        // nodes.add(getDataProfilingFolderNode(EResourceConstant.REPORTS));
-        // } else if (modelElement instanceof Connection || modelElement instanceof Catalog || modelElement instanceof
-        // Schema
-        // || modelElement instanceof MetadataColumn || modelElement instanceof MetadataTable
-        // || modelElement instanceof TdTable || modelElement instanceof TdView || modelElement instanceof TdColumn
-        // || modelElement instanceof TdXmlElementType || modelElement instanceof TdXmlSchema) {
-        // nodes.add(getMetadataFolderNode(EResourceConstant.METADATA));
-        // } else if (modelElement instanceof Pattern) {
-        // nodes.add(getLibrariesFolderNode(EResourceConstant.PATTERNS));
-        // } else if (modelElement instanceof IndicatorDefinition) {
-        // if (modelElement instanceof WhereRule) {
-        // nodes.add(getLibrariesFolderNode(EResourceConstant.RULES));
-        // } else {
-        // nodes.add(getLibrariesFolderNode(EResourceConstant.INDICATORS));
-        // }
-        // }
-        // return recursiveFindByUuid(uuid, nodes);
     }
 
     /**

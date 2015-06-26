@@ -21,7 +21,6 @@ import org.eclipse.swt.dnd.DropTargetEffect;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.widgets.Control;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -101,12 +100,12 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
                     ret = true;
                 }
             } else if (object instanceof IRepositoryNode) {
-                // ADD msjian TDQ-4919: can not drag the ref project analysis to report
+                // // ADD msjian TDQ-4919: can not drag the ref project analysis to report
                 IRepositoryViewObject obj = ((IRepositoryNode) object).getObject();
-                if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(obj)) {
-                    return false;
-                }
-                // TDQ-4919~
+                // if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(obj)) {
+                // return false;
+                // }
+                // // TDQ-4919~
 
                 IPath itemPath = PropertyHelper.getItemPath(obj.getProperty());
                 if (itemPath == null) {

@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,7 +39,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -75,6 +75,7 @@ import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -224,16 +225,12 @@ public class ColumnViewerDND {
 
             boolean is = true;
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
-            // ADD msjian TDQ-10444: can not drag the ones in ref project
-            IRepositoryViewObject obj = ((IRepositoryNode) firstElement).getObject();
-            if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(obj)) {
-                event.detail = DND.DROP_NONE;
-                return;
-            }
-            // TDQ-4919~
 
             if (firstElement instanceof PatternRepNode) {
-                IFile fe = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((PatternRepNode) firstElement));
+                PatternRepNode firstElement2 = (PatternRepNode) firstElement;
+                IPath itemPath = WorkbenchUtils.getFilePath(firstElement2);
+                IFile fe = ResourceManager.getRoot().getProject(firstElement2.getProject().getTechnicalLabel()).getFile(itemPath);
+
                 if (NewSourcePatternActionProvider.EXTENSION_PATTERN.equals(fe.getFileExtension())) {
                     Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe);
                     if (pattern != null && TaggedValueHelper.getValidStatus(pattern)) {
@@ -289,7 +286,9 @@ public class ColumnViewerDND {
                 if (ts.iterator() != null) {
                     Iterator<IRepositoryNode> iter = ts.iterator();
                     while (iter.hasNext()) {
-                        IFile fe = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath(iter.next()));
+                        DQRepositoryNode next = (DQRepositoryNode) iter.next();
+                        IFile fe = ResourceManager.getRoot().getProject(next.getProject().getTechnicalLabel())
+                                .getFile(WorkbenchUtils.getFilePath(next));
                         al.add(fe);
                     }
                     for (IFile fe : al) {
@@ -575,8 +574,9 @@ public class ColumnViewerDND {
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
 
             if (firstElement instanceof SysIndicatorDefinitionRepNode) {
-                IFile fe = ResourceManager.getRootProject().getFile(
-                        WorkbenchUtils.getFilePath((SysIndicatorDefinitionRepNode) firstElement));
+                SysIndicatorDefinitionRepNode firstElement2 = (SysIndicatorDefinitionRepNode) firstElement;
+                IFile fe = ResourceManager.getRoot().getProject(firstElement2.getProject().getTechnicalLabel())
+                        .getFile(WorkbenchUtils.getFilePath(firstElement2));
 
                 // if (firstElement instanceof IFile) {
                 // IFile fe = (IFile) firstElement;
@@ -623,8 +623,9 @@ public class ColumnViewerDND {
                 // while (iter.hasNext()) {
                 for (Object obj : list) {
                     if (obj instanceof SysIndicatorDefinitionRepNode) {
-                        IFile file = ResourceManager.getRootProject().getFile(
-                                WorkbenchUtils.getFilePath((SysIndicatorDefinitionRepNode) obj));
+                        SysIndicatorDefinitionRepNode node2 = (SysIndicatorDefinitionRepNode) obj;
+                        IFile file = ResourceManager.getRoot().getProject(node2.getProject().getTechnicalLabel())
+                                .getFile(WorkbenchUtils.getFilePath(node2));
 
                         al.add(file);
                     }

@@ -33,6 +33,8 @@ import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.utils.sugars.ReturnCode;
@@ -69,21 +71,25 @@ public class ReportWriter extends AElementPersistance {
         for (Analysis ana : analyses) {
             // TDQ-7999,filter the proxy.
             if (!ana.eIsProxy()) {
-                TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
-                if (dependencyReturn.isOk()) {
-                    try {
-                        Property property = PropertyHelper.getProperty(ana);
-                        if (property != null) {
-                            Item item = property.getItem();
-                            if (item instanceof TDQAnalysisItem) {
-                                TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
-                                anaItem.setAnalysis(ana);
+                AnalysisRepNode recursiveFindAnalysis = RepositoryNodeHelper.recursiveFindAnalysis(ana);
+                // only do save when the dependency is not reference project node
+                if (recursiveFindAnalysis != null && recursiveFindAnalysis.getProject().isMainProject()) {
+                    TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
+                    if (dependencyReturn.isOk()) {
+                        try {
+                            Property property = PropertyHelper.getProperty(ana);
+                            if (property != null) {
+                                Item item = property.getItem();
+                                if (item instanceof TDQAnalysisItem) {
+                                    TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
+                                    anaItem.setAnalysis(ana);
+                                }
                             }
+                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                    .saveResource(ana.eResource());
+                        } catch (PersistenceException e) {
+                            log.error(e, e);
                         }
-                        ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                .saveResource(ana.eResource());
-                    } catch (PersistenceException e) {
-                        log.error(e, e);
                     }
                 }
             }
