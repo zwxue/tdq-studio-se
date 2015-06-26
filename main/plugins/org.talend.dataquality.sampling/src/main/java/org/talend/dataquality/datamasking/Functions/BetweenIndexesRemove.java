@@ -27,7 +27,7 @@ public class BetweenIndexesRemove extends BetweenIndexes<String> {
             return str.substring(0, begin - 1) + str.substring(end, str.length());
         } else {
             if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-                return null;
+                return str;
             } else {
                 return EMPTY_STRING;
             }

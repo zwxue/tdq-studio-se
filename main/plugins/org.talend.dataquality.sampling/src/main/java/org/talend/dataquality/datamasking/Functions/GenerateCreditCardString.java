@@ -21,7 +21,7 @@ public class GenerateCreditCardString extends GenerateCreditCardSimple<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             super.generateCreditCard();
             return String.valueOf(number);

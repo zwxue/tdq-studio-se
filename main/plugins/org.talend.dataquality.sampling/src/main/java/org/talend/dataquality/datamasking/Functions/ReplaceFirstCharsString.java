@@ -21,13 +21,13 @@ public class ReplaceFirstCharsString extends ReplaceFirstChars<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 if (integerParam > str.length()) {
                     integerParam = str.length();
                 }
-                sb = new StringBuilder(str);
+                StringBuilder sb = new StringBuilder(str);
                 StringBuilder repl = new StringBuilder(EMPTY_STRING);
                 for (int i = 0; i < integerParam; ++i) {
                     if (Character.isDigit(str.charAt(i))) {

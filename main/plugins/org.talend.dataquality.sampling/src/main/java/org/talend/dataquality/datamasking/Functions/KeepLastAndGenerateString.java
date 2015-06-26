@@ -21,10 +21,11 @@ public class KeepLastAndGenerateString extends KeepLastAndGenerate<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null) || EMPTY_STRING.equals(str) && keepNull) {
-            return null;
+            return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 String s = str.trim();
+                StringBuilder sb = new StringBuilder(EMPTY_STRING);
                 if (integerParam > s.length()) {
                     return str;
                 }

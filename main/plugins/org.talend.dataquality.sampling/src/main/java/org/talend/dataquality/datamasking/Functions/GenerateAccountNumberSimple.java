@@ -21,10 +21,10 @@ public class GenerateAccountNumberSimple extends GenerateAccountNumber {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             String accountNumber = super.generateIban();
-            sb = new StringBuilder(accountNumber);
+            StringBuilder sb = new StringBuilder(accountNumber);
             return sb.toString();
         }
     }

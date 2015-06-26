@@ -23,7 +23,7 @@ public class BetweenIndexesReplace extends BetweenIndexes<String> {
 
     private String replace(String str, boolean isThird) {
         char ch = ' ';
-        sb = new StringBuilder(str);
+        StringBuilder sb = new StringBuilder(str);
         if (!isThird) {
             for (int i = begin - 1; i < end; ++i) {
                 if (Character.isDigit(str.charAt(i))) {
@@ -61,7 +61,7 @@ public class BetweenIndexesReplace extends BetweenIndexes<String> {
             s = replace(str, isThird);
         } else {
             if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-                return null;
+                return str;
             } else {
                 return EMPTY_STRING;
             }

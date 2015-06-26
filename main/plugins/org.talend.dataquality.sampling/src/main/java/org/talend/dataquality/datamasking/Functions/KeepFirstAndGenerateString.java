@@ -21,8 +21,9 @@ public class KeepFirstAndGenerateString extends KeepFirstAndGenerate<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null) || EMPTY_STRING.equals(str) && keepNull) {
-            return null;
+            return str;
         } else {
+            StringBuilder sb = new StringBuilder(EMPTY_STRING);
             if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 String s = str.trim();
                 if (integerParam > s.length()) {

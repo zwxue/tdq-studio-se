@@ -21,7 +21,7 @@ public class RemoveLastCharsString extends RemoveLastChars<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 if (integerParam > str.length()) {

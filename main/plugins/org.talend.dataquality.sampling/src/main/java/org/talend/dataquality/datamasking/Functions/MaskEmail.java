@@ -24,9 +24,10 @@ public class MaskEmail extends Function<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null) || EMPTY_STRING.equals(str) && keepNull) {
-            return null;
+            return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str)) {
+                StringBuilder sb = new StringBuilder(EMPTY_STRING);
                 int count = str.lastIndexOf('@');
                 if (count == -1) {
                     count = str.length();

@@ -87,7 +87,7 @@ public abstract class GenerateAccountNumber extends Function<String> {
      * generated.
      */
     private String generateAmericanAccountNumber(String accountNumber, boolean keep) {
-        sb = new StringBuilder(accountNumber.replaceAll("\\s+", "").substring(0, 9)); //$NON-NLS-1$ //$NON-NLS-2$
+        StringBuilder sb = new StringBuilder(accountNumber.replaceAll("\\s+", "").substring(0, 9)); //$NON-NLS-1$ //$NON-NLS-2$
         for (int i = 0; i < 10; ++i) {
             sb.append(String.valueOf(rnd.nextInt(10)));
         }
@@ -149,7 +149,7 @@ public abstract class GenerateAccountNumber extends Function<String> {
             return generateIban();
         }
 
-        sb = new StringBuilder(accountNumber.substring(0, 2));
+        StringBuilder sb = new StringBuilder(accountNumber.substring(0, 2));
         sb.append("00"); //$NON-NLS-1$
         for (int i = 0; i < accountNumber.length() - 4; ++i) {
             sb.append(String.valueOf(rnd.nextInt(10)));
@@ -217,7 +217,7 @@ public abstract class GenerateAccountNumber extends Function<String> {
      * @return A string holding a correct French Iban number.
      */
     public String generateIban() {
-        sb = new StringBuilder("FR00"); //$NON-NLS-1$                                                                                                             
+        StringBuilder sb = new StringBuilder("FR00"); //$NON-NLS-1$                                                                                                             
         for (int i = 0; i < 10; ++i) {
             sb.append(String.valueOf(rnd.nextInt(10)));
         }

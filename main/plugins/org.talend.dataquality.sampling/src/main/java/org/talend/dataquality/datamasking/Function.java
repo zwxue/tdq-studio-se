@@ -23,8 +23,6 @@ public abstract class Function<T> {
 
     protected String EMPTY_STRING = ""; //$NON-NLS-1$
 
-    protected StringBuilder sb = new StringBuilder(EMPTY_STRING);
-
     protected String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //$NON-NLS-1$
 
     protected String LOWER = "abcdefghijklmnopqrstuvwxyz"; //$NON-NLS-1$
@@ -37,8 +35,6 @@ public abstract class Function<T> {
 
     protected String[] parameters = new String[1];
 
-    protected boolean first = true;
-
     protected boolean keepNull = false;
 
     /**
@@ -47,16 +43,13 @@ public abstract class Function<T> {
      * @param i The element that starts the sequence.
      */
     public void setSeq(String s) {
-        if (first) {
-            int i = 0;
-            try {
-                i = Integer.parseInt(s.trim());
-            } catch (NumberFormatException e) {
-                // Do nothing
-            }
-            seq = i;
-            first = false;
+        int i = 0;
+        try {
+            i = Integer.parseInt(s.trim());
+        } catch (NumberFormatException e) {
+            // Do nothing
         }
+        seq = i;
     }
 
     /**

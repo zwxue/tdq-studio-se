@@ -21,7 +21,7 @@ public class ReplaceSsnString extends ReplaceSsn<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str)) {
                 super.init();

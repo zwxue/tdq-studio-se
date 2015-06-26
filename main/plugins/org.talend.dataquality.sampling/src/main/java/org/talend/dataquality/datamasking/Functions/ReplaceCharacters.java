@@ -23,7 +23,7 @@ public class ReplaceCharacters extends Function<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str) && parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
                 if ((" ").equals(parameters[0])) { //$NON-NLS-1$

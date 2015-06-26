@@ -23,7 +23,7 @@ public class GenerateCreditCardFormatString extends GenerateCreditCardFormat<Str
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             CreditCardType cct_format = null;
             if (str == null || EMPTY_STRING.equals(str)) {

@@ -25,7 +25,7 @@ public class GenerateUuid extends Function<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             return UUID.randomUUID().toString();
         }

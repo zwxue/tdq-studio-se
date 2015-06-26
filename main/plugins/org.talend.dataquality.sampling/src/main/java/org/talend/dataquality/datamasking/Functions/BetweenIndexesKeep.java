@@ -26,7 +26,7 @@ public class BetweenIndexesKeep extends BetweenIndexes<String> {
             return str.substring(begin - 1, end);
         } else {
             if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-                return null;
+                return str;
             } else {
                 return EMPTY_STRING;
             }

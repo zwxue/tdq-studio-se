@@ -22,7 +22,7 @@ public class GenerateAccountNumberFormat extends GenerateAccountNumber {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             boolean keepFormat = ("true").equals(parameters[0]); //$NON-NLS-1$
             String accountNumberFormat = EMPTY_STRING;

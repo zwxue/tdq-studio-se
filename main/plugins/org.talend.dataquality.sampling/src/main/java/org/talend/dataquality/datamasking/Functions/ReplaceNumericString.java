@@ -21,7 +21,7 @@ public class ReplaceNumericString extends ReplaceNumeric<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             super.init();
             if (str != null && !EMPTY_STRING.equals(str)) {

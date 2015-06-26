@@ -21,7 +21,7 @@ public class GenerateBetweenString extends GenerateBetween<String> {
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
-            return null;
+            return str;
         } else {
             super.setBounds();
             return String.valueOf(rnd.nextInt((max - min) + 1) + min);
