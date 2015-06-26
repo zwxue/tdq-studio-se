@@ -53,21 +53,21 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
         int columnIndex = 0;
         String[] expectedCategories = new String[] { "", //
                 "FULL_NAME", //
+                "FIRSTNAME", //
+                "FIRSTNAME", //
                 "", //
+                "", //
+                "FULL_NAME", //
+                "", //
+                "", //
+                "DATE", //
+                "DATE", //
                 "", //
                 "", //
                 "", //
                 "FULL_NAME", //
                 "", //
-                "", //
-                "DATE",  //
-                "DATE",  //
-                "", //
-                "", //
-                "", //
-                "FULL_NAME", //
-                "", //
-                "GENDER",  //
+                "GENDER", //
                 "FULL_NAME" //
         };
         for (SemanticType columnSemanticType : result) {
@@ -93,14 +93,14 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
                 "", //
                 "", //
                 "", //
-                "DATE",  //
-                "DATE",  //
+                "DATE", //
+                "DATE", //
                 "", //
                 "", //
                 "", //
                 "FULL_NAME", //
                 "GENDER", //
-                "GENDER",  //
+                "GENDER", //
                 "FULL_NAME" //
         };
         for (SemanticType columnSemanticType : result) {
