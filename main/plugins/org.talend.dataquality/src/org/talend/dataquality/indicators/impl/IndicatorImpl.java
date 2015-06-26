@@ -64,9 +64,11 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isValidRow <em>Valid Row</em>}</li>
  * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isInValidRow <em>In Valid Row</em>}</li>
  * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isStoreData <em>Store Data</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getBuiltInIndicatorDefinition <em>Built In Indicator
+ * Definition</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class IndicatorImpl extends ModelElementImpl implements Indicator {
@@ -322,6 +324,16 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected boolean storeData = STORE_DATA_EDEFAULT;
 
     /**
+     * The cached value of the '{@link #getBuiltInIndicatorDefinition() <em>Built In Indicator Definition</em>}'
+     * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @see #getBuiltInIndicatorDefinition()
+     * @generated
+     * @ordered
+     */
+    protected IndicatorDefinition builtInIndicatorDefinition;
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
@@ -540,7 +552,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
-     * @generated
+     * @generated NOT
      */
     @Override
     public IndicatorDefinition getIndicatorDefinition() {
@@ -553,6 +565,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                             oldIndicatorDefinition, indicatorDefinition));
                 }
             }
+        }
+        if ((indicatorDefinition == null || indicatorDefinition.eIsProxy()) && builtInIndicatorDefinition != null) {
+            return builtInIndicatorDefinition;
         }
         return indicatorDefinition;
     }
@@ -729,6 +744,65 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__STORE_DATA, oldStoreData,
                     storeData));
+        }
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public IndicatorDefinition getBuiltInIndicatorDefinition() {
+        return builtInIndicatorDefinition;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    public NotificationChain basicSetBuiltInIndicatorDefinition(IndicatorDefinition newBuiltInIndicatorDefinition,
+            NotificationChain msgs) {
+        IndicatorDefinition oldBuiltInIndicatorDefinition = builtInIndicatorDefinition;
+        builtInIndicatorDefinition = newBuiltInIndicatorDefinition;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                    IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION, oldBuiltInIndicatorDefinition,
+                    newBuiltInIndicatorDefinition);
+            if (msgs == null) {
+                msgs = notification;
+            } else {
+                msgs.add(notification);
+            }
+        }
+        return msgs;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public void setBuiltInIndicatorDefinition(IndicatorDefinition newBuiltInIndicatorDefinition) {
+        if (newBuiltInIndicatorDefinition != builtInIndicatorDefinition) {
+            NotificationChain msgs = null;
+            if (builtInIndicatorDefinition != null) {
+                msgs = ((InternalEObject) builtInIndicatorDefinition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+                        - IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION, null, msgs);
+            }
+            if (newBuiltInIndicatorDefinition != null) {
+                msgs = ((InternalEObject) newBuiltInIndicatorDefinition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+                        - IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION, null, msgs);
+            }
+            msgs = basicSetBuiltInIndicatorDefinition(newBuiltInIndicatorDefinition, msgs);
+            if (msgs != null) {
+                msgs.dispatch();
+            }
+        } else if (eNotificationRequired()) {
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION,
+                    newBuiltInIndicatorDefinition, newBuiltInIndicatorDefinition));
         }
     }
 
@@ -1066,6 +1140,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             return ((InternalEList<?>) getInstantiatedExpressions()).basicRemove(otherEnd, msgs);
         case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
             return ((InternalEList<?>) getJoinConditions()).basicRemove(otherEnd, msgs);
+        case IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION:
+            return basicSetBuiltInIndicatorDefinition(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -1110,6 +1186,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             return isInValidRow();
         case IndicatorsPackage.INDICATOR__STORE_DATA:
             return isStoreData();
+        case IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION:
+            return getBuiltInIndicatorDefinition();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -1164,6 +1242,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         case IndicatorsPackage.INDICATOR__STORE_DATA:
             setStoreData((Boolean) newValue);
             return;
+        case IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION:
+            setBuiltInIndicatorDefinition((IndicatorDefinition) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
@@ -1215,6 +1296,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         case IndicatorsPackage.INDICATOR__STORE_DATA:
             setStoreData(STORE_DATA_EDEFAULT);
             return;
+        case IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION:
+            setBuiltInIndicatorDefinition((IndicatorDefinition) null);
+            return;
         }
         super.eUnset(featureID);
     }
@@ -1253,6 +1337,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             return inValidRow != IN_VALID_ROW_EDEFAULT;
         case IndicatorsPackage.INDICATOR__STORE_DATA:
             return storeData != STORE_DATA_EDEFAULT;
+        case IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION:
+            return builtInIndicatorDefinition != null;
         }
         return super.eIsSet(featureID);
     }

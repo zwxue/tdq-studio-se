@@ -68,11 +68,13 @@ import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.model.bridge.ReponsitoryContextBridge;
+import org.talend.repository.ProjectManager;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -559,16 +561,25 @@ public abstract class AElementPersistance {
         addResourceContent(element.eResource(), element);
 
         Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(element.eResource());
-        Set<Resource> needSaves = new HashSet<Resource>();
+        Set<EObject> needSaves = new HashSet<EObject>();
         for (EObject object : find.keySet()) {
             Resource re = object.eResource();
             if (re == null) {
                 continue;
             }
+            // only do save when the dependency is not reference project node, and do not do resolve
+            DQRepositoryNode node = RepositoryNodeHelper.recursiveFind((ModelElement) object);
+            if (node != null && !node.getProject().isMainProject()) {
+                continue;
+            }
+            if (!re.getURI().segment(1).equals(ProjectManager.getInstance().getCurrentProject().getTechnicalLabel())) {
+                continue;
+            }
+
             // MOD sizhaoliu TDQ-6296 the resource should be resolved before saving the item to make sure the references
             // are updated.
             EcoreUtil.resolveAll(re);
-            needSaves.add(re);
+            needSaves.add(object);
         }
 
         // Set the TDQ item file name.
@@ -580,8 +591,18 @@ public abstract class AElementPersistance {
         AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
                 AbstractResourceChangesService.class);
         if (resChangeService != null) {
-            for (Resource toSave : needSaves) {
-                resChangeService.saveResourceByEMFShared(toSave);
+            for (EObject toSave : needSaves) {
+                // only do save when the dependency is not reference project node
+                DQRepositoryNode node = RepositoryNodeHelper.recursiveFind((ModelElement) toSave);
+                if (node != null && !node.getProject().isMainProject()) {
+                    continue;
+                }
+                if (!toSave.eResource().getURI().segment(1)
+                        .equals(ProjectManager.getInstance().getCurrentProject().getTechnicalLabel())) {
+                    continue;
+                }
+
+                resChangeService.saveResourceByEMFShared(toSave.eResource());
             }
         }
 

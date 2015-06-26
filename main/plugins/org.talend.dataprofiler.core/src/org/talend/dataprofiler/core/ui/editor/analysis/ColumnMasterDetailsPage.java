@@ -950,7 +950,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         analysisHandler.clearAnalysis();
         ModelElementIndicator[] modelElementIndicators = this.getCurrentModelElementIndicators();
         // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
-        Connection tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
 
         // ADD gdbu 2011-3-3 bug 19179
@@ -982,7 +981,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         // ~12919
 
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            tdProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]);
+            Connection tdProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]);
             if (tdProvider.eIsProxy()) {
                 // Resolve the connection again
                 tdProvider = (Connection) EObjectHelper.resolveObject(tdProvider);

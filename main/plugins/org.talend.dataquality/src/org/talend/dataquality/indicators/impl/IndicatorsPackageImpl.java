@@ -888,6 +888,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getIndicator_BuiltInIndicatorDefinition() {
+        return (EReference)indicatorEClass.getEStructuralFeatures().get(13);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -2332,6 +2341,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(indicatorEClass, INDICATOR__VALID_ROW);
         createEAttribute(indicatorEClass, INDICATOR__IN_VALID_ROW);
         createEAttribute(indicatorEClass, INDICATOR__STORE_DATA);
+        createEReference(indicatorEClass, INDICATOR__BUILT_IN_INDICATOR_DEFINITION);
 
         rowCountIndicatorEClass = createEClass(ROW_COUNT_INDICATOR);
 
@@ -2700,6 +2710,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getIndicator_ValidRow(), ecorePackage.getEBoolean(), "validRow", "false", 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getIndicator_InValidRow(), ecorePackage.getEBoolean(), "inValidRow", "false", 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getIndicator_StoreData(), ecorePackage.getEBoolean(), "storeData", "false", 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getIndicator_BuiltInIndicatorDefinition(), theDefinitionPackage.getIndicatorDefinition(), null, "builtInIndicatorDefinition", null, 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(indicatorEClass, ecorePackage.getEBoolean(), "handle", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEJavaObject(), "data", 0, 1, IS_UNIQUE, IS_ORDERED);

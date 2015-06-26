@@ -14,9 +14,13 @@ package org.talend.dq.helper;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
@@ -35,6 +39,11 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sugars.ReturnCode;
@@ -182,7 +191,144 @@ public final class AnalysisExecutorHelper {
             return rc;
         }
 
+        // --- check the the dependeny files are exists ADDED mzhao TDQ-10428---
+        rc = checkDependentFiles(analysis);
+
         return rc;
+    }
+
+    /**
+     * 
+     * Check the dependent file's existance. <br>
+     * 1. If exist, do "hot" content copy from dependent file to built-in. <br>
+     * 2. If not exist 1) built-in content is not empty, do nothing, 2) built-in content is empty, ReturnCode = false
+     * and return. <br>
+     * 3. Load indicator from built-in content.
+     * 
+     * @param analysis
+     * @return
+     */
+    private static ReturnCode checkDependentFiles(Analysis analysis) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        List<Indicator> indicators = analysis.getResults().getIndicators();
+        if (indicators.size() == 0) {
+            rc.setOk(false);
+            rc.setMessage(Messages.getString("AnalysisExecutor.AnalysisNoIndicators", analysis.getName())); //$NON-NLS-1$
+            return rc;
+        }
+        // Loop indicators , check the dependeny file's existence.
+        for (Indicator indicator : indicators) {
+            // check pattern matching indicator
+            rc = checkPatternMatchingIndicator(indicator);
+            if (!rc.isOk()) {
+                break;
+            }
+            // Check Indicators
+            rc = checkIndicator(indicator);
+            if (!rc.isOk()) {
+                break;
+            }
+
+        }
+        return rc;
+    }
+
+    /**
+     * DOC zhao Comment method "checkUserDefineIndicator".
+     * 
+     * @param indicator
+     * @return
+     */
+    private static ReturnCode checkIndicator(Indicator indicator) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        if (indicator instanceof PatternMatchingIndicator || indicator instanceof CompositeIndicator) {
+            return rc; // Won't check if the indicator is pattern matching indicator and composite indicator. The rest
+                       // (including UDI ) can be
+                       // checked in this method.
+        }
+        // Get indicator definition from dependent file
+        IndicatorDefinition dependentDefinition = indicator.getIndicatorDefinition();
+        if (isDependentFileExist(dependentDefinition)) {
+            IndicatorDefinition deepCopiedDefinition = EObjectHelper.deepCopy(dependentDefinition);
+            // Hot copy to built-in definition.
+            deepCopiedDefinition.getSupplierDependency().clear();
+            indicator.setBuiltInIndicatorDefinition(deepCopiedDefinition);
+            EMFUtil.saveResource(indicator.eResource());
+        } else {
+            IndicatorDefinition builtInDefinition = indicator.getBuiltInIndicatorDefinition();
+            if (builtInDefinition == null) {
+                rc.setMessage(Messages.getString("AnalysisExecutor.BuiltInNoIndicators")); //$NON-NLS-1$
+                rc.setOk(false);
+                return rc;
+            } else {
+                indicator.setIndicatorDefinition(null);
+            }
+        }
+        return rc;
+    }
+
+    /**
+     * Check pattern matching indicator
+     * 
+     * @param indicator
+     * @return
+     */
+    private static ReturnCode checkPatternMatchingIndicator(Indicator indicator) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        if (!(indicator instanceof PatternMatchingIndicator)) {
+            return rc; // Won't check if the indicator is not pattern matching indicator.
+        }
+        List<Pattern> patterns = indicator.getParameters().getDataValidDomain().getPatterns();
+        // check pattern matching indicator files' existence.
+        if (!patterns.isEmpty() && isDependentFileExist(patterns.toArray(new Pattern[patterns.size()]))) {
+            // Hot copy the pattern from separate file into built in.
+            hotCopyPatterns(indicator, patterns);
+        } else {
+            List<Pattern> builtInPatterns = indicator.getParameters().getDataValidDomain().getBuiltInPatterns();
+            if (builtInPatterns.isEmpty()) {
+                rc.setMessage(Messages.getString("AnalysisExecutor.BuiltInNoPatterns")); //$NON-NLS-1$
+                rc.setOk(false);
+                return rc;
+            } else {
+                // Use built-in pattern instead.
+                patterns.clear();
+
+            }
+        }
+        return rc;
+    }
+
+    /**
+     * See if the dependent file existed or not.
+     * 
+     * @param modelElements
+     * @return
+     */
+    private static boolean isDependentFileExist(ModelElement... modelElements) {
+        for (ModelElement me : modelElements) {
+            if (me == null || me.eIsProxy() || me.getName() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * DOC zhao Comment method "hotCopyPatterns".
+     * 
+     * @param indicator
+     * @param patterns
+     */
+    private static void hotCopyPatterns(Indicator indicator, List<Pattern> patterns) {
+        Set<Pattern> deepCopiedPatterns = new HashSet<Pattern>();
+        for (Pattern pattern : patterns) {
+            Pattern deepCopiedPattern = EObjectHelper.deepCopy(pattern);
+            deepCopiedPattern.getSupplierDependency().clear();
+            deepCopiedPatterns.add(deepCopiedPattern);
+        }
+        indicator.getParameters().getDataValidDomain().getBuiltInPatterns().clear();
+        indicator.getParameters().getDataValidDomain().getBuiltInPatterns().addAll(deepCopiedPatterns);
+        EMFUtil.saveResource(indicator.eResource());
     }
 
     public static long setExecutionDateInAnalysisResult(Analysis analysis) {

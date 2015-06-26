@@ -40,6 +40,8 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
+import org.talend.dataquality.indicators.definition.userdefine.impl.UserdefinePackageImpl;
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
@@ -194,6 +196,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
         SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
+        UserdefinePackageImpl theUserdefinePackage = (UserdefinePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) instanceof UserdefinePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) : UserdefinePackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
         ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
         ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
@@ -210,6 +213,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         theIndicatorsPackage.createPackageContents();
         theSchemaPackage.createPackageContents();
         theDefinitionPackage.createPackageContents();
+        theUserdefinePackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
         theColumnsetPackage.createPackageContents();
         theExpressionsPackage.createPackageContents();
@@ -226,6 +230,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         theIndicatorsPackage.initializePackageContents();
         theSchemaPackage.initializePackageContents();
         theDefinitionPackage.initializePackageContents();
+        theUserdefinePackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
         theColumnsetPackage.initializePackageContents();
         theExpressionsPackage.initializePackageContents();
@@ -295,6 +300,15 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
      */
     public EReference getDomain_JavaUDIIndicatorParameter() {
         return (EReference)domainEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getDomain_BuiltInPatterns() {
+        return (EReference)domainEClass.getEStructuralFeatures().get(5);
     }
 
     /**
@@ -547,6 +561,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         createEReference(domainEClass, DOMAIN__RANGES);
         createEReference(domainEClass, DOMAIN__PATTERNS);
         createEReference(domainEClass, DOMAIN__JAVA_UDI_INDICATOR_PARAMETER);
+        createEReference(domainEClass, DOMAIN__BUILT_IN_PATTERNS);
 
         enumerationRuleEClass = createEClass(ENUMERATION_RULE);
         createEReference(enumerationRuleEClass, ENUMERATION_RULE__DOMAIN);
@@ -639,6 +654,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         initEReference(getDomain_Ranges(), this.getRangeRestriction(), null, "ranges", null, 0, -1, Domain.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDomain_Patterns(), thePatternPackage.getPattern(), null, "patterns", null, 0, -1, Domain.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDomain_JavaUDIIndicatorParameter(), this.getJavaUDIIndicatorParameter(), null, "javaUDIIndicatorParameter", null, 0, -1, Domain.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDomain_BuiltInPatterns(), thePatternPackage.getPattern(), null, "builtInPatterns", null, 0, -1, Domain.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(enumerationRuleEClass, EnumerationRule.class, "EnumerationRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getEnumerationRule_Domain(), this.getDomain(), null, "domain", null, 0, -1, EnumerationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

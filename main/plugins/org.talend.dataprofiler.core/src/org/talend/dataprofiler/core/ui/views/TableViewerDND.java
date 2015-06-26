@@ -163,7 +163,10 @@ public abstract class TableViewerDND {
             boolean is = true;
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
             if (firstElement instanceof RuleRepNode) {
-                IFile file = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((RuleRepNode) firstElement));
+                RuleRepNode firstElement2 = (RuleRepNode) firstElement;
+                IFile file = ResourceManager.getRoot().getProject(firstElement2.getProject().getTechnicalLabel())
+                        .getFile(WorkbenchUtils.getFilePath(firstElement2));
+
                 if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
                     WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
                     if (whereRule != null && TaggedValueHelper.getValidStatus(whereRule)) {
@@ -191,7 +194,9 @@ public abstract class TableViewerDND {
             List<IFile> files = new ArrayList<IFile>();
             for (Object obj : list) {
                 if (obj instanceof RuleRepNode) {
-                    IFile file = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((RuleRepNode) obj));
+                    RuleRepNode node2 = (RuleRepNode) obj;
+                    IFile file = ResourceManager.getRoot().getProject(node2.getProject().getTechnicalLabel())
+                            .getFile(WorkbenchUtils.getFilePath(node2));
                     files.add(file);
                 }
             }
