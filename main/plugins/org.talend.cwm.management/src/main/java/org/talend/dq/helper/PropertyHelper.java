@@ -165,11 +165,14 @@ public final class PropertyHelper {
      * @return Null if can't find.
      */
     public static Property getProperty(IFile file) {
+        return getProperty(file, false);
+    }
+    
+    public static Property getProperty(IFile file, boolean reload) {
         if (file != null && (file.exists() || file.getLocation() != null && file.getLocation().toFile().exists())) {
-
             if (StringUtils.equalsIgnoreCase(file.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)) {
                 URI propURI = URI.createPlatformResourceURI(file.getFullPath().toOSString(), false);
-                Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
+                Resource resource = reload ? EMFSharedResources.getInstance().reloadResource(propURI) : EMFSharedResources.getInstance().getResource(propURI, true);
                 if (resource != null) {
                     EList<EObject> contents = resource.getContents();
                     if (contents != null) {
