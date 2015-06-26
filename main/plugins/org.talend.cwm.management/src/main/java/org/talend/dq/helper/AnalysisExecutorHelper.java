@@ -40,6 +40,7 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -240,8 +241,9 @@ public final class AnalysisExecutorHelper {
      */
     private static ReturnCode checkIndicator(Indicator indicator) {
         ReturnCode rc = new ReturnCode(Boolean.TRUE);
-        if (indicator instanceof PatternMatchingIndicator) {
-            return rc; // Won't check if the indicator is pattern matching indicator. The rest (including UDI ) can be
+        if (indicator instanceof PatternMatchingIndicator || indicator instanceof CompositeIndicator) {
+            return rc; // Won't check if the indicator is pattern matching indicator and composite indicator. The rest
+                       // (including UDI ) can be
                        // checked in this method.
         }
         // Get indicator definition from dependent file
