@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreePath;
@@ -21,6 +23,7 @@ import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -75,12 +78,10 @@ public class CreateAnalysisOnHDFSAction extends Action {
      */
     private DBTableRepNode openCreateHiveTable() {
         // to open the wizard: create hive
-        CreateHiveTableAction createTable = new CreateHiveTableAction(hdfsNode);
-        createTable.run();
-        // selectedHive = new one
-        DatabaseConnectionItem hiveConnectionItem = createTable.getHiveConnectionItem();
-
-        return findCreatedTable(hiveConnectionItem, createTable.getCreateTableName());
+        Map<Object, Object> tableMap = HadoopClusterUtils.getDefault().createHiveTable(hdfsNode);
+        Iterator<Object> iterator = tableMap.keySet().iterator();
+        String tableName = (String) iterator.next();
+        return findCreatedTable((DatabaseConnectionItem) tableMap.get(tableName), tableName);
     }
 
     /**

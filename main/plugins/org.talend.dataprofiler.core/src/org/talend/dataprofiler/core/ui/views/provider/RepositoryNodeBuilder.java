@@ -35,6 +35,7 @@ import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
@@ -216,11 +217,13 @@ public final class RepositoryNodeBuilder {
             parentNode.getChildren().add(dfmFolder);
             return dfmFolder;
         case HADOOP_CLUSTER:
-            HadoopClusterFolderRepNode hcFolder = new HadoopClusterFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
-                    inWhichProject);
-            folder.setRepositoryNode(hcFolder);
-            parentNode.getChildren().add(hcFolder);
-            return hcFolder;
+            if (HadoopClusterUtils.getDefault().isServiceInstalled()) {
+                HadoopClusterFolderRepNode hcFolder = new HadoopClusterFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
+                        inWhichProject);
+                folder.setRepositoryNode(hcFolder);
+                parentNode.getChildren().add(hcFolder);
+                return hcFolder;
+            }
         case EXCHANGE:
             ExchangeFolderRepNode exchangeFolder = new ExchangeFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER,
                     inWhichProject);

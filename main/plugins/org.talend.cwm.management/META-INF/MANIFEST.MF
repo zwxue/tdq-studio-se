@@ -26,8 +26,6 @@ Require-Bundle: org.eclipse.ui,
  org.talend.libraries.mapdb,
  org.talend.dataprofiler.service,
  org.talend.libraries.csv,
- org.talend.repository.hadoopcluster,
- org.talend.repository.hdfs,
  org.talend.dataquality.sampling
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,

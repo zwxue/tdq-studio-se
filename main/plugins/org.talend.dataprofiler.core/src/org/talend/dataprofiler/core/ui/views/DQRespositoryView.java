@@ -112,6 +112,7 @@ import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
@@ -385,10 +386,12 @@ public class DQRespositoryView extends CommonNavigator {
                             new OpenItemEditorAction((IRepositoryNode) obj).run();
                         } else if (obj instanceof DFConnectionRepNode) {
                             new EditFileDelimitedAction((IRepositoryNode) obj).run();
-                        } else if (obj instanceof HadoopClusterConnectionRepNode) {
-                            new EditHadoopClusterAction((IRepositoryNode) obj).run();
-                        } else if (obj instanceof HDFSOfHCConnectionNode) {
-                            new EditHDFSConnectionAction((IRepositoryNode) obj).run();
+                        } else if (HadoopClusterUtils.getDefault().isServiceInstalled()) {
+                            if (obj instanceof HadoopClusterConnectionRepNode) {
+                                new EditHadoopClusterAction((IRepositoryNode) obj).run();
+                            } else if (obj instanceof HDFSOfHCConnectionNode) {
+                                new EditHDFSConnectionAction((IRepositoryNode) obj).run();
+                            }
                         } else if (obj instanceof DFTableRepNode) {
                             new EditDFTableAction((IRepositoryNode) obj).run();
                         } else {

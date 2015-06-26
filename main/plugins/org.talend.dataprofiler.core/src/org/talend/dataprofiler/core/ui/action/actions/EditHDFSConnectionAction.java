@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.repository.hdfs.ui.HDFSWizard;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -46,7 +46,8 @@ public class EditHDFSConnectionAction extends Action {
     @Override
     public void run() {
         if (node != null) {
-            Wizard wizard = new HDFSWizard(PlatformUI.getWorkbench(), false, (RepositoryNode) node, null);
+            Wizard wizard = (Wizard) HadoopClusterUtils.getDefault().createHDFSWizard(PlatformUI.getWorkbench(), false,
+                    (RepositoryNode) node, null);
             WizardDialog dialog = new WizardDialog(null, wizard);
             if (Window.OK == dialog.open()) {
                 CorePlugin.getDefault().refreshDQView(node.getParent());

@@ -22,8 +22,8 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dq.helper.HadoopClusterUtils;
 import org.talend.dq.nodes.DQFolderRepNode;
-import org.talend.repository.hadoopcluster.node.model.HadoopClusterRepositoryNodeType;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -85,14 +85,14 @@ public class HadoopClusterFolderRepNode extends DQFolderRepNode {
 
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-            Folder folder = new Folder((Property) container.getProperty(), HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
+            Folder folder = new Folder((Property) container.getProperty(), HadoopClusterUtils.getDefault().getHadoopClusterType());
             if (!withDeleted && folder.isDeleted()) {
                 continue;
             }
             HadoopClusterSubFolderRepNode childNodeFolder = new HadoopClusterSubFolderRepNode(folder, this,
                     ENodeType.SIMPLE_FOLDER, project);
-            childNodeFolder.setProperties(EProperties.LABEL, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
-            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
+            childNodeFolder.setProperties(EProperties.LABEL, HadoopClusterUtils.getDefault().getHadoopClusterType());
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, HadoopClusterUtils.getDefault().getHadoopClusterType());
             folder.setRepositoryNode(childNodeFolder);
             super.getChildren().add(childNodeFolder);
         }
@@ -104,8 +104,8 @@ public class HadoopClusterFolderRepNode extends DQFolderRepNode {
 
             HadoopClusterConnectionRepNode repNode = new HadoopClusterConnectionRepNode(viewObject, this,
                     ENodeType.REPOSITORY_ELEMENT, project);
-            repNode.setProperties(EProperties.LABEL, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
-            repNode.setProperties(EProperties.CONTENT_TYPE, HadoopClusterRepositoryNodeType.HADOOPCLUSTER);
+            repNode.setProperties(EProperties.LABEL, HadoopClusterUtils.getDefault().getHadoopClusterType());
+            repNode.setProperties(EProperties.CONTENT_TYPE, HadoopClusterUtils.getDefault().getHadoopClusterType());
             viewObject.setRepositoryNode(repNode);
             super.getChildren().add(repNode);
         }

@@ -24,13 +24,11 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dq.helper.HadoopClusterUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQFolderRepNode;
-import org.talend.repository.hdfs.node.model.HDFSRepositoryNodeType;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.model.hdfs.HDFSConnection;
-import org.talend.repository.model.hdfs.HDFSConnectionItem;
 
 /**
  * created by yyin on 2015年4月24日 Detailled comment
@@ -73,7 +71,7 @@ public class HDFSOfHCFolderRepNode extends DQFolderRepNode {
         String clusterId = clusterConnectionItem.getProperty().getId();
 
         RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
-                .getTdqRepositoryViewObjects(project, HDFSRepositoryNodeType.HDFS, path.toString());
+                .getTdqRepositoryViewObjects(project, HadoopClusterUtils.getDefault().getHDFSType(), path.toString());
         for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
             if (!withDeleted && viewObject.isDeleted()) {
                 continue;
@@ -81,9 +79,7 @@ public class HDFSOfHCFolderRepNode extends DQFolderRepNode {
             HDFSOfHCConnectionNode repNode = null;
             // check if this hdfs's relativeHadoopClusterId = this hadoop cluster's id
             if (viewObject != null && viewObject.getProperty() != null) {
-                HDFSConnectionItem dbItem = (HDFSConnectionItem) viewObject.getProperty().getItem();
-                HDFSConnection dbConnection = (HDFSConnection) dbItem.getConnection();
-                String hcId = dbConnection.getRelativeHadoopClusterId();
+                String hcId = HadoopClusterUtils.getDefault().getHadoopClusterID(viewObject);
                 if (!StringUtils.equals(clusterId, hcId)) {
                     continue;
                 }

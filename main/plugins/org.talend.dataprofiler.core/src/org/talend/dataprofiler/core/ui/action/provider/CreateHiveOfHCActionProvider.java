@@ -14,17 +14,13 @@ package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
-import org.talend.core.hadoop.version.EHadoopDistributions;
-import org.talend.core.hadoop.version.EHadoopVersion4Drivers;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.ui.action.actions.CreateHiveOfHCAction;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dq.nodes.hadoopcluster.HadoopClusterConnectionRepNode;
 import org.talend.dq.nodes.hadoopcluster.HiveOfHCFolderRepNode;
-import org.talend.repository.hadoopcluster.util.HCRepositoryUtil;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.model.hadoopcluster.HadoopClusterConnection;
-import org.talend.repository.model.hadoopcluster.HadoopClusterConnectionItem;
 
 /**
  * created by yyin on 2015年4月23日 Detailled comment
@@ -49,7 +45,7 @@ public class CreateHiveOfHCActionProvider extends AbstractCommonActionProvider {
         RepositoryNode node = (RepositoryNode) getFistContextNode();
 
         if (node != null) {
-            if (hideAction(node)) {
+            if (HadoopClusterUtils.getDefault().hideAction(node)) {
                 return;
             }
 
@@ -61,24 +57,6 @@ public class CreateHiveOfHCActionProvider extends AbstractCommonActionProvider {
             }
 
         }
-    }
-
-    private boolean hideAction(RepositoryNode node) {
-        HadoopClusterConnectionItem hcConnectionItem = HCRepositoryUtil.getHCConnectionItemFromRepositoryNode(node);
-        if (hcConnectionItem != null) {
-            HadoopClusterConnection hcConnection = (HadoopClusterConnection) hcConnectionItem.getConnection();
-            EHadoopDistributions distribution = EHadoopDistributions.getDistributionByName(hcConnection.getDistribution(), false);
-            EHadoopVersion4Drivers version4Drivers = EHadoopVersion4Drivers.indexOfByVersion(hcConnection.getDfVersion());
-            if (EHadoopVersion4Drivers.APACHE_0_20_204.equals(version4Drivers)
-                    || EHadoopVersion4Drivers.APACHE_0_20_2.equals(version4Drivers)) {
-                return true;
-            }
-            if (distribution == EHadoopDistributions.MICROSOFT_HD_INSIGHT) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }

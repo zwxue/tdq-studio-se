@@ -13,7 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
-import org.talend.dataprofiler.core.ui.action.actions.RetrieveSchemaOfHDFSAction;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -41,7 +41,7 @@ public class RetrieveHDFSActionProvider extends AbstractCommonActionProvider {
 
         if (node != null) {
             if (node instanceof HDFSOfHCConnectionNode) {
-                menu.add(new RetrieveSchemaOfHDFSAction((RepositoryNode) node));
+                menu.add(HadoopClusterUtils.getDefault().createActionOfRetrieveHDFS((RepositoryNode) node));
             }
         }
     }

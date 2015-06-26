@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction;
-import org.talend.repository.hadoopcluster.ui.HadoopClusterWizard;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -38,7 +38,8 @@ public class CreateHadoopClusterAction extends AbstractMetadataCreationAction {
      */
     @Override
     protected IWizard createWizard() {
-        return new HadoopClusterWizard(PlatformUI.getWorkbench(), true, node, getExistingNames());
+        return HadoopClusterUtils.getDefault().createHadoopClusterWizard(PlatformUI.getWorkbench(), true, node,
+                getExistingNames());
     }
 
     /*

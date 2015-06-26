@@ -17,7 +17,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction;
-import org.talend.repository.hdfs.ui.HDFSWizard;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -37,7 +37,7 @@ public class CreateHDFSAction extends AbstractMetadataCreationAction {
      */
     @Override
     protected IWizard createWizard() {
-        return new HDFSWizard(PlatformUI.getWorkbench(), true, node, getExistingNames());
+        return HadoopClusterUtils.getDefault().createHDFSWizard(PlatformUI.getWorkbench(), true, node, getExistingNames());
     }
 
     /*

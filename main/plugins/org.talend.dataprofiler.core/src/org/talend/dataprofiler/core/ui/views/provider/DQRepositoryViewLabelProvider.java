@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
@@ -86,7 +87,6 @@ import org.talend.dq.nodes.hadoopcluster.HadoopClusterConnectionRepNode;
 import org.talend.dq.nodes.hadoopcluster.HiveOfHCConnectionNode;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.ProjectManager;
-import org.talend.repository.hadoopcluster.node.model.HadoopClusterRepositoryNodeType;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
@@ -381,7 +381,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else if (type == ERepositoryObjectType.TDQ_JRAXML_ELEMENT) {
             return ImageLib.getImage(ImageLib.JRXML_ICON);
-        } else if (type == HadoopClusterRepositoryNodeType.HADOOPCLUSTER) {
+        } else if (type == HadoopClusterUtils.getDefault().getHadoopClusterType()) {
             return ImageLib.getImage(ImageLib.HADOOP_CLUSTER);
         }
         return null;

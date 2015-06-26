@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.repository.hadoopcluster.ui.HadoopClusterWizard;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -46,7 +46,8 @@ public class EditHadoopClusterAction extends Action {
     @Override
     public void run() {
         if (node != null) {
-            Wizard wizard = new HadoopClusterWizard(PlatformUI.getWorkbench(), false, (RepositoryNode) node, null);
+            Wizard wizard = (Wizard) HadoopClusterUtils.getDefault().createHadoopClusterWizard(PlatformUI.getWorkbench(), false,
+                    (RepositoryNode) node, null);
             WizardDialog dialog = new WizardDialog(null, wizard);
             if (Window.OK == dialog.open()) {
                 CorePlugin.getDefault().refreshDQView(node);

@@ -13,8 +13,8 @@
 package org.talend.dq.nodes.hadoopcluster;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dq.helper.HadoopClusterUtils;
 import org.talend.dq.nodes.ConnectionRepNode;
-import org.talend.repository.hdfs.node.model.HDFSRepositoryNodeType;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -34,7 +34,7 @@ public class HDFSOfHCConnectionNode extends ConnectionRepNode {
     public HDFSOfHCConnectionNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
-        this.setProperties(EProperties.CONTENT_TYPE, HDFSRepositoryNodeType.HDFS);
+        this.setProperties(EProperties.CONTENT_TYPE, HadoopClusterUtils.getDefault().getHDFSType());
     }
 
 }

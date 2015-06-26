@@ -16,7 +16,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
-import org.talend.dataprofiler.core.ui.action.actions.CreateHiveTableAction;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -41,7 +41,7 @@ public class CreateHiveTableActionProvider extends AbstractCommonActionProvider 
         if (node != null) {
             IAction action = null;
             if (node instanceof HDFSOfHCConnectionNode) {
-                action = new CreateHiveTableAction(node);
+                action = HadoopClusterUtils.getDefault().createActionOfHiveTable(node);
                 menu.add(action);
             }
 
