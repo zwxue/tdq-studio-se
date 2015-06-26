@@ -153,6 +153,7 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -3836,7 +3837,14 @@ public final class RepositoryNodeHelper {
         ERepositoryObjectType objectType = repNode.getObjectType();
 
         if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
-            ConnectionItem connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
+            ConnectionItem connectionItem = null;
+            try {
+                connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
+            } catch (Exception e) {
+                log.warn(e);
+                // TODO this means the node's id has been changed, so we just return true, we will resolve it later
+                return true;
+            }
             if (connectionItem.getConnection() instanceof DatabaseConnection) {
                 String databaseType = ((DatabaseConnection) connectionItem.getConnection()).getDatabaseType();
                 List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
