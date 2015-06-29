@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -30,10 +29,6 @@ import org.talend.resource.EResourceConstant;
  */
 public class SemanticDiscoveryAction extends Action {
 
-    private static Logger log = Logger.getLogger(SemanticDiscoveryAction.class);
-
-    private ISemanticStudioService service;
-
     private MetadataTable metadataTable;
 
     public SemanticDiscoveryAction(MetadataTable set) {
@@ -42,7 +37,7 @@ public class SemanticDiscoveryAction extends Action {
     }
 
     public SemanticDiscoveryAction() {
-        super(DefaultMessagesImpl.getString("SuggestAnalysisActionProvider.suggestAnalysis")); // TODO externalize //$NON-NLS-1$
+        super(DefaultMessagesImpl.getString("SuggestAnalysisActionProvider.suggestAnalysis")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
 
