@@ -46,6 +46,11 @@ import org.talend.repository.model.hdfs.HDFSConnectionItem;
  */
 public class HadoopClusterService implements IHadoopClusterService {
 
+    @Override
+    public boolean isBigData() {
+        return HadoopClusterRepositoryNodeType.HADOOPCLUSTER != null;
+    }
+
     /**
      * getHadoopClusterID.
      * 

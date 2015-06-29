@@ -60,6 +60,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
 import org.talend.dataquality.PluginConstant;
@@ -97,7 +98,6 @@ public final class DQStructureManager {
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
     public static final String SYSTEM_INDICATOR_PATH = "/indicators";//$NON-NLS-1$
-
 
     private static DQStructureManager manager;
 
@@ -188,7 +188,8 @@ public final class DQStructureManager {
                             EResourceConstant.REPORTS.getName());
                 }
                 // Added 20150421 TDQ-9605
-                if (!project.getFolder(EResourceConstant.HADOOP_CLUSTER.getPath()).exists()) {
+                if (!project.getFolder(EResourceConstant.HADOOP_CLUSTER.getPath()).exists()
+                        && HadoopClusterUtils.getDefault().isServiceInstalled()) {
                     ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
                             EResourceConstant.HADOOP_CLUSTER.getName());
                 }

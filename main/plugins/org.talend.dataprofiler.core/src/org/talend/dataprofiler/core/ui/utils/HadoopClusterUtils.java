@@ -54,8 +54,7 @@ public class HadoopClusterUtils extends AbstractOSGIServiceUtils {
      */
     @Override
     public boolean isServiceInstalled() {
-        initService(false);
-        return this.hcService != null;
+        return getHadoopClusterService() != null && hcService.isBigData();
     }
 
     IHadoopClusterService getHadoopClusterService() {

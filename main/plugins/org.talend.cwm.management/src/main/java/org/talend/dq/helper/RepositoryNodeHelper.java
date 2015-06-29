@@ -152,7 +152,6 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -528,7 +527,8 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.METADATA_CONNECTIONS;
         } else if (EResourceConstant.FILEDELIMITED.getPath().equals(path)) {
             return ERepositoryObjectType.METADATA_FILE_DELIMITED;
-        } else if (EResourceConstant.HADOOP_CLUSTER.getPath().equals(path)) {
+        } else if (EResourceConstant.HADOOP_CLUSTER.getPath().equals(path)
+                && HadoopClusterUtils.getDefault().isServiceInstalled()) {
             return HadoopClusterUtils.getDefault().getHadoopClusterType();
         } else if (EResourceConstant.SYSTEM_INDICATORS_FRAUDDETECTION.getPath().equals(path)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION;

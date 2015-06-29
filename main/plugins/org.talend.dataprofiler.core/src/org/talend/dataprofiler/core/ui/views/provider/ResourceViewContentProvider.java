@@ -55,6 +55,7 @@ import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -229,7 +230,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 } else if (EResourceConstant.METADATA.getName().equals(label)) {
                     resContants.add(EResourceConstant.DB_CONNECTIONS);
                     resContants.add(EResourceConstant.FILEDELIMITED);
-                    if (PluginChecker.isTDQLoaded()) {
+                    if (PluginChecker.isTDQLoaded() && HadoopClusterUtils.getDefault().isServiceInstalled()) {
                         resContants.add(EResourceConstant.HADOOP_CLUSTER);
                     }
                 }

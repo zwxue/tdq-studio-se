@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public interface IHadoopClusterService {
 
+    boolean isBigData();
+
     String getHadoopClusterID(Object object);
 
     Object getHDFSType();
