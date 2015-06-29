@@ -386,12 +386,11 @@ public class DQRespositoryView extends CommonNavigator {
                             new OpenItemEditorAction((IRepositoryNode) obj).run();
                         } else if (obj instanceof DFConnectionRepNode) {
                             new EditFileDelimitedAction((IRepositoryNode) obj).run();
-                        } else if (HadoopClusterUtils.getDefault().isServiceInstalled()) {
-                            if (obj instanceof HadoopClusterConnectionRepNode) {
-                                new EditHadoopClusterAction((IRepositoryNode) obj).run();
-                            } else if (obj instanceof HDFSOfHCConnectionNode) {
-                                new EditHDFSConnectionAction((IRepositoryNode) obj).run();
-                            }
+                        } else if (obj instanceof HadoopClusterConnectionRepNode
+                                && HadoopClusterUtils.getDefault().isServiceInstalled()) {
+                            new EditHadoopClusterAction((IRepositoryNode) obj).run();
+                        } else if (obj instanceof HDFSOfHCConnectionNode && HadoopClusterUtils.getDefault().isServiceInstalled()) {
+                            new EditHDFSConnectionAction((IRepositoryNode) obj).run();
                         } else if (obj instanceof DFTableRepNode) {
                             new EditDFTableAction((IRepositoryNode) obj).run();
                         } else {
