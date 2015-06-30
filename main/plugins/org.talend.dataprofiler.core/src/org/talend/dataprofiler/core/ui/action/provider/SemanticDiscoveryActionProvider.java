@@ -12,12 +12,25 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.relational.RelationalFactory;
+import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.model.MetadataTableWithFilter;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.SemanticDiscoveryAction;
-import org.talend.dq.nodes.ColumnSetRepNode;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 
 public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvider {
@@ -43,38 +56,62 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
      * 
      * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.action.IMenuManager)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void fillContextMenu(IMenuManager menu) {
         // MOD mzhao user readonly role on svn repository mode.
         if (!isShowMenu()) {
             return;
         }
-
-        if (CorePlugin.getDefault().getSemanticStudioService() == null) {
-            return;
-        }
-
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
         Object firstElement = currentSelection.getFirstElement();
+        // when the selection is valid, only two possible status: only one columnset is select.
         if (firstElement instanceof DBTableRepNode) {
             DBTableRepNode node = (DBTableRepNode) firstElement;
             semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
+            // otherwise is some columns in the same columnset are selected.
         } else {
-            return;
-        }
-
-        // suggestAnalysisAction.setColumnSelection(currentSelection);
-
-        // when the selection is valid, only two possible status: only one columnset is select, otherwise is some
-        // columns in the same columnset are selected; so only check the fist node in the selection is enough.
-        if (currentSelection.toList().get(0) instanceof ColumnSetRepNode) {
-            semanticDiscoveryAction.setText("Semantic Discovery");
-        } else {
-            semanticDiscoveryAction.setText("Semantic Discovery");
+            Set<String> currentTableSet = new HashSet<String>();
+            TdTable createTdTable = RelationalFactory.eINSTANCE.createTdTable();
+            List<String> filterNames = new ArrayList<String>();
+            Iterator<Object> columnIterator = currentSelection.iterator();
+            TdTable columnOwnerAsTdTable = null;
+            while (columnIterator.hasNext()) {
+                Object columnNode = columnIterator.next();
+                if (DBColumnRepNode.class.isInstance(columnNode)) {
+                    TdColumn tdColumn = ((DBColumnRepNode) columnNode).getTdColumn();
+                    columnOwnerAsTdTable = ColumnHelper.getColumnOwnerAsTdTable(tdColumn);
+                    currentTableSet.add(ResourceHelper.getUUID(columnOwnerAsTdTable));
+                    // all of columns should come from same table
+                    if (currentTableSet.size() > 1) {
+                        return;
+                    } else if (currentTableSet.size() == 1) {
+                        createTdTable = columnOwnerAsTdTable;
+                    }
+                    filterNames.add(tdColumn.getName());
+                } else {
+                    // If not all of elements which be selected is columns
+                    return;
+                }
+            }
+            MetadataTable metadataTableWithFilter = new MetadataTableWithFilter(filterNames, createTdTable);
+            semanticDiscoveryAction = new SemanticDiscoveryAction(metadataTableWithFilter);
         }
         menu.add(semanticDiscoveryAction);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider#isShowMenu()
+     */
+    @Override
+    public boolean isShowMenu() {
+        boolean showMenu = super.isShowMenu();
+        if (showMenu && CorePlugin.getDefault().getSemanticStudioService() == null) {
+            return false;
+        }
+        return showMenu;
     }
 
 }

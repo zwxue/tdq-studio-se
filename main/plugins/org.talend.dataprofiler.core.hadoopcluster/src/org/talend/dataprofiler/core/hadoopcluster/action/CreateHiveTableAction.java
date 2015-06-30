@@ -45,7 +45,8 @@ public class CreateHiveTableAction extends CreateHDFSSchemaAction {
 
     public CreateHiveTableAction(RepositoryNode node) {
         super();
-        String label = DefaultMessagesImpl.getString("CreateHiveTableAction.create"); //$NON-NLS-1$        setText(label);
+        String label = DefaultMessagesImpl.getString("CreateHiveTableAction.create"); //$NON-NLS-1$ 
+        setText(label);
         setToolTipText(label);
         setImageDescriptor(ImageProvider.getImageDesc(ECoreImage.METADATA_TABLE_ICON));
         repositoryNode = node;

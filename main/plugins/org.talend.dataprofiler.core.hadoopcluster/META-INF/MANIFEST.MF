@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Hadoopcluster
+Bundle-Name: TDQ Hadoopcluster Plugin
 Bundle-SymbolicName: org.talend.dataprofiler.core.hadoopcluster
 Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.core.hadoopcluster.Activator
@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.metadata.managment.ui,
  org.talend.commons.ui,
  org.talend.core.repository
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.talend.dataprofiler.core.service
 Service-Component: OSGI-INF/HadoopClusterDQ.xml
+Bundle-Vendor: .Talend SA.
