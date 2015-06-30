@@ -48,6 +48,7 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -170,8 +171,11 @@ public class AnalysisEditor extends SupportContextEditor {
                 initContext();
                 // Added 20130930 TDQ-8117, yyin
                 // init the run analysis action, to give it the analysis item and listener
-                TDQAnalysisItem item = (TDQAnalysisItem) getMasterPage().getAnalysisRepNode().getObject().getProperty().getItem();
-                this.runAction.setAnalysisItem(item);
+                AnalysisRepNode analysisRepNode = getMasterPage().getAnalysisRepNode();
+                if (analysisRepNode != null) {
+                    TDQAnalysisItem item = (TDQAnalysisItem) analysisRepNode.getObject().getProperty().getItem();
+                    this.runAction.setAnalysisItem(item);
+                }
             }
 
             if (resultPage != null) {
