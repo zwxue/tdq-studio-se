@@ -33,6 +33,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.talendResultSet.DatabaseResultSet;
 import org.talend.cwm.db.connection.talendResultSet.FileCSVResultSet;
 import org.talend.cwm.db.connection.talendResultSet.FileDelimitedResultSet;
@@ -113,20 +114,26 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
         if (!checkSameTable()) {
             return;
         }
-        for (int j = 0; j < limitNumber; j++) {
-            TalendGridItem currentItem = new TalendGridItem(parentItem, SWT.NONE);
-            currentItem.setCheckable(0, false);
-            currentItem.setCheckable(1, false);
-            for (int i = 2; i < this.getColumnCount(); i++) {
-                GridColumn column = getColumn(i);
-                currentItem.setCheckable(i, false);
-                String columnValue = getColumnValue(column, currentItem);
-                if (columnValue == null) {
-                    this.remove(this.indexOf(currentItem));
-                    return;
+        try {
+            for (int j = 0; j < limitNumber; j++) {
+                TalendGridItem currentItem = new TalendGridItem(parentItem, SWT.NONE);
+                currentItem.setCheckable(0, false);
+                currentItem.setCheckable(1, false);
+                for (int i = 2; i < this.getColumnCount(); i++) {
+                    GridColumn column = getColumn(i);
+                    currentItem.setCheckable(i, false);
+                    String columnValue = getColumnValue(column, currentItem);
+                    if (columnValue == null) {
+                        this.remove(this.indexOf(currentItem));
+                        return;
+                    }
+                    currentItem.setText(i, columnValue);
                 }
-                currentItem.setText(i, columnValue);
             }
+        } finally {
+            ITalendResultSet rs = (ITalendResultSet) this.getData(COLUMN_RESULT_KEY);
+            ModelElementIndicator modelElementIndicator = (ModelElementIndicator) getColumn(2).getData();
+            closeConnection(rs, modelElementIndicator);
         }
     }
 
@@ -149,30 +156,45 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
      * @throws SQLException
      */
     private String getColumnValue(GridColumn column, GridItem currentItem) throws SQLException {
-        DatabaseResultSet rs = (DatabaseResultSet) this.getData(COLUMN_RESULT_KEY);
+        ITalendResultSet rs = (ITalendResultSet) this.getData(COLUMN_RESULT_KEY);
         ModelElementIndicator modelElementIndicator = (ModelElementIndicator) column.getData();
 
-        try {
-            if (rs == null) {
-                rs = (DatabaseResultSet) getResultSet(modelElementIndicator);
-                this.setData(COLUMN_RESULT_KEY, rs);
-            }
-            // row index
-            int indexOfRow = this.indexOf(currentItem);
-            if (rs.absolute(indexOfRow)) {
-                String columnName = modelElementIndicator.getElementName();
-                Object columnValue = rs.getObject(columnName);
-                return columnValue == null ? PluginConstant.NULL_STRING : columnValue.toString();
-            }
-        } finally {
-            if (rs != null) {
-                Connection connection = rs.getRs().getStatement().getConnection();
-                if (connection != null && !connection.isClosed()) {
-                    connection.close();
+        if (rs == null) {
+            rs = getResultSet(modelElementIndicator);
+            this.setData(COLUMN_RESULT_KEY, rs);
+        }
+        // row index
+        int indexOfRow = this.indexOf(currentItem);
+        if (rs.absolute(indexOfRow)) {
+            String columnName = modelElementIndicator.getElementName();
+            Object columnValue = rs.getObject(columnName);
+            return columnValue == null ? PluginConstant.NULL_STRING : columnValue.toString();
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC msjian Comment method "closeConnection".
+     * 
+     * @param rs
+     * @param modelElementIndicator
+     * @throws SQLException
+     */
+    private void closeConnection(ITalendResultSet rs, ModelElementIndicator modelElementIndicator) throws SQLException {
+        if (rs != null) {
+            if (rs instanceof DatabaseResultSet) {
+                ColumnIndicator columnIndicator = ModelElementIndicatorHelper.switchColumnIndicator(modelElementIndicator);
+                org.talend.core.model.metadata.builder.connection.Connection tdDataProvider = ModelElementIndicatorHelper
+                        .getTdDataProvider(columnIndicator);
+                if (ConnectionUtils.isSqlite(tdDataProvider)) {
+                    Connection connection = ((DatabaseResultSet) rs).getRs().getStatement().getConnection();
+                    if (connection != null && !connection.isClosed()) {
+                        connection.close();
+                    }
                 }
             }
         }
-        return null;
     }
 
     /**
@@ -485,21 +507,16 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
         GridColumn column = getColumn(2);
         ModelElementIndicator modelElementIndicator = (ModelElementIndicator) column.getData();
-        DatabaseResultSet resultSet = null;
+        ITalendResultSet rs = null;
         try {
-            resultSet = (DatabaseResultSet) getResultSet(modelElementIndicator);
+            rs = getResultSet(modelElementIndicator);
         } catch (SQLException e) {
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("ColumnPreviewGrid.InValidWhereClause"), //$NON-NLS-1$
                     e.getMessage());
             return false;
         } finally {
             try {
-                if (resultSet != null) {
-                    Connection connection = resultSet.getRs().getStatement().getConnection();
-                    if (connection != null && !connection.isClosed()) {
-                        connection.close();
-                    }
-                }
+                closeConnection(rs, modelElementIndicator);
             } catch (SQLException e) {
                 log.error(e, e);
                 return false;
