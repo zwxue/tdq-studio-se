@@ -13,8 +13,8 @@
 package org.talend.dataprofiler.core.hadoopcluster.wizard;
 
 import org.eclipse.swt.widgets.Composite;
-import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.dataprofiler.core.hadoopcluster.i18n.DefaultMessagesImpl;
 import org.talend.repository.hdfs.ui.HDFSFileSelectorForm;
 import org.talend.repository.hdfs.ui.HDFSFileSelectorWizardPage;
 import org.talend.repository.model.hdfs.HDFSConnection;

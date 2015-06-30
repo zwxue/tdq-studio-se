@@ -102,9 +102,7 @@ public class CreateHiveTableWizard extends HDFSSchemaWizard {
         }
 
         if (selectedHive == null && tdqRepService != null) {
-            if (!tdqRepService.createHive(currentNode.getParent().getParent())) {
-                return false;
-            }
+            hiveConnectionItem =(DatabaseConnectionItem) tdqRepService.createHive(currentNode);
         } else {
             hiveConnectionItem = (DatabaseConnectionItem) selectedHive.getObject().getProperty().getItem();
         }

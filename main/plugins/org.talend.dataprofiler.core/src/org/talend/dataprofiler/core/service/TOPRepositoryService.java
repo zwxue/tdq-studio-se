@@ -684,14 +684,11 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * 
      * @see org.talend.core.ITDQRepositoryService#createHive(org.talend.repository.model.RepositoryNode)
      */
-    public boolean createHive(RepositoryNode currentNode) {
+    public ConnectionItem createHive(RepositoryNode currentNode) {
         // to open the wizard: create hive
         CreateHiveOfHCAction createHive = new CreateHiveOfHCAction(currentNode.getParent().getParent());
         createHive.run();
-        if (createHive.getConnectionItem() == null) {
-            return false;
-        }
-        return true;
+        return createHive.getConnectionItem();
     }
 
     /*

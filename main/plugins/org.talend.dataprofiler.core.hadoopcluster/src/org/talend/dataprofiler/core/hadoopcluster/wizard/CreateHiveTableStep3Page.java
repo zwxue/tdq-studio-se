@@ -152,7 +152,7 @@ public class CreateHiveTableStep3Page extends WizardPage {
         List<String> allHives = new ArrayList<String>();
         for (IRepositoryNode child : children) {
             if (StringUtils.equals(child.getDisplayText(),
-                    DefaultMessagesImpl.getString("HiveOfHCFolderRepNode.displayText=Hive"))) {
+                    DefaultMessagesImpl.getString("HiveOfHCFolderRepNode.displayText"))) {
                 hiveNodes = child.getChildren();
                 for (IRepositoryNode hive : hiveNodes) {
                     allHives.add(hive.getLabel());
