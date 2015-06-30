@@ -29,7 +29,7 @@ import org.talend.commons.i18n.MessagesCore;
  */
 public class DefaultMessagesImpl extends MessagesCore {
 
-    private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.talend.dataprofiler.core.hadoopcluster.i18n.messages"; //$NON-NLS-1$
 
     private static final String PLUGIN_ID = "org.talend.dataprofiler.core.hadoopcluster"; //$NON-NLS-1$
 
