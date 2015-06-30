@@ -43,6 +43,8 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.fileprocess.FileInputDelimited;
@@ -241,11 +243,33 @@ public final class AnalysisExecutorHelper {
      */
     private static ReturnCode checkIndicator(Indicator indicator) {
         ReturnCode rc = new ReturnCode(Boolean.TRUE);
-        if (indicator instanceof PatternMatchingIndicator || indicator instanceof CompositeIndicator) {
-            return rc; // Won't check if the indicator is pattern matching indicator and composite indicator. The rest
+        if (indicator instanceof PatternMatchingIndicator) {
+            return rc; // Won't check if the indicator is pattern matching indicator. The rest
                        // (including UDI ) can be
                        // checked in this method.
         }
+        if (indicator instanceof CompositeIndicator) {
+            List<Indicator> allChildIndicators = ((CompositeIndicator) indicator).getAllChildIndicators();
+            for (Indicator ind : allChildIndicators) {
+                rc = checkIndicatorWithChild(ind); // Check indicators with children.
+                if (!rc.isOk()) {
+                    return rc;
+                }
+            }
+        } else {
+            rc = checkIndicatorWithChild(indicator);
+        }
+        return rc;
+    }
+
+    /**
+     * DOC zhao Comment method "checkIndicatorWithChild".
+     * 
+     * @param indicator
+     * @return
+     */
+    private static ReturnCode checkIndicatorWithChild(Indicator indicator) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
         // Get indicator definition from dependent file
         IndicatorDefinition dependentDefinition = indicator.getIndicatorDefinition();
         if (isDependentFileExist(dependentDefinition)) {
@@ -278,6 +302,30 @@ public final class AnalysisExecutorHelper {
         if (!(indicator instanceof PatternMatchingIndicator)) {
             return rc; // Won't check if the indicator is not pattern matching indicator.
         }
+        if (indicator instanceof AllMatchIndicator) {
+            List<RegexpMatchingIndicator> compositeIndicators = ((AllMatchIndicator) indicator)
+                    .getCompositeRegexMatchingIndicators();
+            for (Indicator ind : compositeIndicators) {
+                rc = checkMatchingIndicator(ind); // Pattern matching & all match indicator from column set analysis.
+                if (!rc.isOk()) {
+                    return rc;
+                }
+            }
+        } else {
+            rc = checkMatchingIndicator(indicator);
+        }
+
+        return rc;
+    }
+
+    /**
+     * DOC zhao Comment method "checkMatchingIndicator".
+     * 
+     * @param indicator
+     * @return
+     */
+    private static ReturnCode checkMatchingIndicator(Indicator indicator) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
         List<Pattern> patterns = indicator.getParameters().getDataValidDomain().getPatterns();
         // check pattern matching indicator files' existence.
         if (!patterns.isEmpty() && isDependentFileExist(patterns.toArray(new Pattern[patterns.size()]))) {
