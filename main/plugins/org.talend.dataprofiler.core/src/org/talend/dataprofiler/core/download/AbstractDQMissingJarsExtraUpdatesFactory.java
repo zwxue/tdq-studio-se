@@ -52,13 +52,15 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
 
     /**
      * the jar file name must be in pairs and in order, jar file and jar nl file.<br/>
-     * {"sqlexplorer.jar", "sqlexplorer.nl.jar"}
+     * this file is on the nexus server name.<br/>
+     * {"sqlexplorer_6.0.0.jar", "sqlexplorer.nl_6.0.0.jar"}
      */
     protected abstract List<String> getJarFileNames();
 
     /**
      * the jar file name must be in pairs and in order, jar file and jar nl file.<br/>
-     * {"sqlexplorer-6.0.0.jar", "sqlexplorer.nl-6.0.0.jar"}
+     * this file is on the local maven folder which is downloaded from the nexus server(with artifact-verion)<br/>
+     * {"sqlexplorer_6.0.0-{artifact-verion}.jar", "sqlexplorer.nl_6.0.0-{artifact-verion}.jar"}
      */
     protected abstract List<String> getJarFileWithVersionNames();
 
@@ -114,7 +116,7 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                                 // move the jar to plugins folder
                                 if (installStatus.isOK()) {
                                     try {
-                                        moveJars();
+                                        copyJars2PluginsFolder();
                                     } catch (MalformedURLException e) {
                                         MultiStatus multiStatus = new MultiStatus(CorePlugin.PLUGIN_ID, IStatus.ERROR, e
                                                 .getMessage(), e);
@@ -130,7 +132,7 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                                 return installStatus;
                             }
 
-                            private void moveJars() throws MalformedURLException, IOException {
+                            private void copyJars2PluginsFolder() throws MalformedURLException, IOException {
                                 List<File> jarFiles = new ArrayList<File>();
 
                                 IMaven maven = MavenPlugin.getMaven();
