@@ -25,7 +25,7 @@ public class KeepFirstAndGenerateLong extends KeepFirstAndGenerate<Long> {
         } else {
             if (l != null && integerParam > 0) {
                 if ((int) Math.log10(l) + 1 < integerParam) {
-                    integerParam = (int) Math.log10(l) + 1;
+                    return l;
                 }
                 StringBuilder val = new StringBuilder(l.toString().substring(0, integerParam));
                 for (int i = integerParam; i < l.toString().length(); ++i) {

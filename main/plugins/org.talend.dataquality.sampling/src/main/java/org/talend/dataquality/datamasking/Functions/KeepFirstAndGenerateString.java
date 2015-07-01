@@ -27,7 +27,7 @@ public class KeepFirstAndGenerateString extends KeepFirstAndGenerate<String> {
             if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
                 String s = str.trim();
                 if (integerParam > s.length()) {
-                    integerParam = s.length() - 2;
+                    return str;
                 }
                 for (int i = 0; i < integerParam; ++i) {
                     sb.append(s.charAt(i));

@@ -25,7 +25,7 @@ public class KeepLastAndGenerateInteger extends KeepLastAndGenerate<Integer> {
         } else {
             if (i != null && integerParam > 0) {
                 if ((int) Math.log10(i) + 1 < integerParam) {
-                    integerParam = (int) Math.log10(i) + 1;
+                    return i;
                 }
                 StringBuilder sb = new StringBuilder(EMPTY_STRING);
                 for (int j = 0; j < i.toString().length() - integerParam; ++j) {

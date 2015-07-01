@@ -59,7 +59,7 @@ public class MaskAddress extends Function<String> {
                         sb.append(" "); //$NON-NLS-1$
                     }
                 }
-                return sb.toString();
+                return sb.deleteCharAt(sb.length() - 1).toString();
             } else {
                 return EMPTY_STRING;
             }
