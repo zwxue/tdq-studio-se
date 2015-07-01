@@ -517,7 +517,7 @@ public class TOPChartService implements ITOPChartService {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (String[] dataArray : inputData) {
-            dataset.addValue(Integer.valueOf(dataArray[0]), dataArray[1], dataArray[2]);
+            dataset.addValue(Double.valueOf(dataArray[0]), dataArray[1], dataArray[2]);
         }
         // dataset.addValue(23192, "S1", "GNU General Public Licence");
         // dataset.addValue(3157, "S1", "GNU Lesser General Public Licence");
