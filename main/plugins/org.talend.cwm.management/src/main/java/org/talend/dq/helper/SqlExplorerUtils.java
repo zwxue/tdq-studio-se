@@ -60,7 +60,7 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
 
     private static final String SQL_EXPLORER_VERSION = "_6.0.0"; //$NON-NLS-1$
 
-    private static final String SQL_EXPLORER_MAVEN_VERSION = "-6.0.0"; //$NON-NLS-1$
+    private static final String SQL_EXPLORER_MAVEN_VERSION = "-6.0.0-SNAPSHOT"; //$NON-NLS-1$ 
 
     public static final String JAR_FILE_NAME = PLUGIN_NAME + SQL_EXPLORER_VERSION + ".jar"; //$NON-NLS-1$ 
 
@@ -313,11 +313,6 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
     @Override
     public String getPluginName() {
         return PLUGIN_NAME;
-    }
-
-    @Override
-    public String getJarFileName() {
-        return JAR_FILE_NAME;
     }
 
     @Override

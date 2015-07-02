@@ -12,12 +12,9 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import java.io.File;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IServiceLocator;
@@ -46,13 +43,6 @@ public abstract class AbstractOSGIServiceUtils {
     public abstract String getPluginName();
 
     /**
-     * get the related jar file name
-     * 
-     * @return
-     */
-    public abstract String getJarFileName();
-
-    /**
      * get the related service interface name
      * 
      * @return
@@ -76,12 +66,7 @@ public abstract class AbstractOSGIServiceUtils {
         if (serviceReference != null) {
             setService(context, serviceReference);
         } else if (isNeedDownload) {
-            // check the jar file has been donwloaded or not
-            String pathToStore = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-            File movedfile = new File(pathToStore, getJarFileName());
-            if (movedfile.exists()) {
-                log.warn(Messages.getString(getRestartMessageName()));
-            } else if (!hasShowDownloadWizard) {
+            if (!hasShowDownloadWizard) {
                 // show download jar dialog
                 IServiceLocator serviceLocator = PlatformUI.getWorkbench();
                 ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);

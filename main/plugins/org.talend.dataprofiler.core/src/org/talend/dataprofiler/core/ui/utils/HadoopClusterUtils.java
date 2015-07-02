@@ -148,11 +148,6 @@ public class HadoopClusterUtils extends AbstractOSGIServiceUtils {
     }
 
     @Override
-    public String getJarFileName() {
-        return null;
-    }
-
-    @Override
     protected String getMissingMessageName() {
         return null;
     }
