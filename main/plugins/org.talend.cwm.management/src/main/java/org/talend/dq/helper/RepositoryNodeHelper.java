@@ -3800,8 +3800,7 @@ public final class RepositoryNodeHelper {
                 connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
             } catch (Exception e) {
                 log.warn(e);
-                // TODO this means the node's id has been changed, so we just return true, we will resolve it later
-                return true;
+                return false;
             }
             if (connectionItem.getConnection() instanceof DatabaseConnection) {
                 String databaseType = ((DatabaseConnection) connectionItem.getConnection()).getDatabaseType();

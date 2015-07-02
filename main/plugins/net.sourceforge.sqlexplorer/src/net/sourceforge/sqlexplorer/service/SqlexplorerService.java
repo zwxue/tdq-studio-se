@@ -89,7 +89,6 @@ import org.talend.cwm.indicator.DataValidation;
 import org.talend.dataprofiler.service.ISqlexplorerService;
 import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
-
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -232,7 +231,6 @@ public class SqlexplorerService implements ISqlexplorerService {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
                 // MOD bug mzhao filter the other connections except database connection.
                 if (connection != null && connection instanceof DatabaseConnection) {
-
                     // TDQ-8379 do nothing if the database type isn't supproted on DQ side.
                     DatabaseConnection dbConn = ((DatabaseConnection) connection);
                     String databaseType = dbConn.getDatabaseType();
@@ -241,8 +239,15 @@ public class SqlexplorerService implements ISqlexplorerService {
                     }
                     // only new Alias when it is not in aliasManager
                     Alias alias = aliasManager.getAlias(dataProvider.getName());
-                    if (alias == null) {
-                        alias = new Alias(dataProvider.getName());
+                    String url = JavaSqlFactory.getURL(connection);
+                    // if the alias is not null and the url is same with the connection, this means the alias is already
+                    // exist; if the alias is not null but hte url is not same with the connection, this means the
+                    // connection has been overwrite , need to rebuild the alias
+                    boolean aliasExist = alias != null && StringUtils.equals(url, alias.getUrl());
+                    if (!aliasExist) {
+                        if (alias == null) {
+                            alias = new Alias(dataProvider.getName());
+                        }
 
                         String user = JavaSqlFactory.getUsername(connection);
                         // MOD gdbu 2011-3-17 bug 19539
@@ -258,8 +263,6 @@ public class SqlexplorerService implements ISqlexplorerService {
                         // is serialized correctly.
                         assert user != null;
                         assert password != null;
-
-                        String url = JavaSqlFactory.getURL(connection);
 
                         User previousUser = new User(user, password);
                         previousUser.setDatabaseConnection(dbConn);
@@ -281,6 +284,7 @@ public class SqlexplorerService implements ISqlexplorerService {
                             alias.setDriver(manDr);
                         }
                     }
+
                     if (!aliasManager.contains(alias) && alias.getName() != null) {
                         aliasManager.addAlias(alias);
                     }

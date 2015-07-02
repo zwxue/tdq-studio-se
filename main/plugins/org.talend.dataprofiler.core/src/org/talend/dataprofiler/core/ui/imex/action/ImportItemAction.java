@@ -63,9 +63,10 @@ public class ImportItemAction extends AContextualAction implements IWorkbenchWin
      */
     public void run(IAction action) {
         IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        // close all editors before import items.
         boolean isSaved = activePage.closeAllEditors(true);
         if(!isSaved){
-            MessageUI.openWarning("Please close all editors before importing items!");
+            MessageUI.openWarning(DefaultMessagesImpl.getString("ImportItemAction.closeEditors"));
             return;
         }
         ImportWizard wizard = new ImportWizard();
