@@ -25,12 +25,6 @@ import org.talend.dq.helper.AbstractOSGIServiceUtils;
  */
 public class TOPChartUtil extends AbstractOSGIServiceUtils {
 
-    public static final String PLUGIN_NAME = "org.talend.dataprofiler.top.chart"; //$NON-NLS-1$
-
-    private static final String CHART_VERSION = "_6.0.0"; //$NON-NLS-1$
-
-    public static final String JAR_FILE_NAME = PLUGIN_NAME + CHART_VERSION + ".jar"; //$NON-NLS-1$ 
-
     private static TOPChartUtil instance;
 
     private ITOPChartService chartService;
@@ -51,11 +45,6 @@ public class TOPChartUtil extends AbstractOSGIServiceUtils {
     @Override
     public String getPluginName() {
         return ITOPChartService.PLUGIN_NAME;
-    }
-
-    @Override
-    public String getJarFileName() {
-        return ITOPChartService.JAR_FILE_NAME_WITH_VERSION;
     }
 
     @Override

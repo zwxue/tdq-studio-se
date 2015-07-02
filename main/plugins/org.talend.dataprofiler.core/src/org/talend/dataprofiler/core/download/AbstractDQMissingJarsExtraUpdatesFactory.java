@@ -33,8 +33,11 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.osgi.framework.Bundle;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ILibraryManagerService;
 import org.talend.core.model.general.ModuleNeeded;
 import org.talend.core.model.general.ModuleToInstall;
+import org.talend.core.runtime.maven.MavenUrlHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.librariesmanager.utils.RemoteModulesHelper;
@@ -95,7 +98,7 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                     return;
                 }// else keep going.
 
-                ArrayList<ModuleToInstall> modulesForAutomaticInstall = TalendWebServiceUpdateExtraFeature
+                final ArrayList<ModuleToInstall> modulesForAutomaticInstall = TalendWebServiceUpdateExtraFeature
                         .filterAllAutomaticInstallableModules(modulesRequiredToBeInstalled);
                 if (modulesForAutomaticInstall.isEmpty()) {// if could not find anything to download log and error and
                                                            // return nothing
@@ -116,7 +119,7 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                                 // move the jar to plugins folder
                                 if (installStatus.isOK()) {
                                     try {
-                                        copyJars2PluginsFolder();
+                                        copyJars2PluginsFolder(modulesForAutomaticInstall);
                                     } catch (MalformedURLException e) {
                                         MultiStatus multiStatus = new MultiStatus(CorePlugin.PLUGIN_ID, IStatus.ERROR, e
                                                 .getMessage(), e);
@@ -132,13 +135,26 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                                 return installStatus;
                             }
 
-                            private void copyJars2PluginsFolder() throws MalformedURLException, IOException {
+                            private void copyJars2PluginsFolder(ArrayList<ModuleToInstall> modules) throws MalformedURLException,
+                                    IOException {
                                 List<File> jarFiles = new ArrayList<File>();
-
-                                IMaven maven = MavenPlugin.getMaven();
-                                String librariesPath = maven.getLocalRepositoryPath();
-                                for (String jarFileName : getJarFileWithVersionNames()) {
-                                    jarFiles.addAll(FilesUtils.getJarFilesFromFolder(new File(librariesPath), jarFileName));
+                                ILibraryManagerService librariesService = (ILibraryManagerService) GlobalServiceRegister
+                                        .getDefault().getService(ILibraryManagerService.class);
+                                if (librariesService != null) {
+                                    for (ModuleToInstall module : modules) {
+                                        String snapshotUri = MavenUrlHelper.generateSnapshotMavenUri(module.getMavenUri());
+                                        String jarPathFromMaven = librariesService.getJarPathFromMaven(snapshotUri);
+                                        if (jarPathFromMaven == null) {
+                                            continue;
+                                        }
+                                        jarFiles.add(new File(jarPathFromMaven));
+                                    }
+                                } else {
+                                    IMaven maven = MavenPlugin.getMaven();
+                                    String librariesPath = maven.getLocalRepositoryPath();
+                                    for (String jarFileName : getJarFileWithVersionNames()) {
+                                        jarFiles.addAll(FilesUtils.getJarFilesFromFolder(new File(librariesPath), jarFileName));
+                                    }
                                 }
 
                                 for (File jarFile : jarFiles) {

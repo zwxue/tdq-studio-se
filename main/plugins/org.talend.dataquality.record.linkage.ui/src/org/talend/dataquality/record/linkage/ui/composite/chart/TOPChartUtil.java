@@ -125,11 +125,6 @@ public class TOPChartUtil extends AbstractOSGIServiceUtils {
     }
 
     @Override
-    public String getJarFileName() {
-        return ITOPChartService.JAR_FILE_NAME_WITH_VERSION;
-    }
-
-    @Override
     public String getServiceName() {
         return ITOPChartService.class.getName();
     }

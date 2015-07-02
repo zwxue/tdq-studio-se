@@ -16,8 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.talend.commons.utils.VersionUtils;
-
 /**
  * created by yyin on 2014-11-28 Detailled comment
  * 
@@ -28,7 +26,7 @@ public interface ITOPChartService {
 
     static final String SERVICE_VERSION = "_6.0.0"; //$NON-NLS-1$
 
-    static final String SERVICE_MAVEN_VERSION = "-" + VersionUtils.getDisplayVersion(); //$NON-NLS-1$
+    static final String SERVICE_MAVEN_VERSION = "-6.0.0-SNAPSHOT"; //$NON-NLS-1$ 
 
     public static final String JAR_FILE_NAME = PLUGIN_NAME + SERVICE_VERSION + ".jar"; //$NON-NLS-1$ 
 
