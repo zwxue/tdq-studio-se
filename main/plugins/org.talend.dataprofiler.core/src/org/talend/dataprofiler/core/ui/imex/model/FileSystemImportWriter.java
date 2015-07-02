@@ -140,14 +140,18 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private final List<IPath> allDeletedItems = new ArrayList<IPath>();
 
+    private List<File> updateFiles = new ArrayList<File>();
+
+    private List<File> updateFilesCoverd = new ArrayList<File>();
+
     /*
      * check the dependency and conflict; when the record is a indicator(system or user): if overwrite should not add
      * error in record(only check conflict, but not check dependency)
      * 
-     * @see
-     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#populate(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
-     * [], boolean)
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#populate(org.talend.dataprofiler.core.ui.imex.model.
+     * ItemRecord [], boolean)
      */
+
     public ItemRecord[] populate(ItemRecord[] elements, boolean checkExisted) {
         List<ItemRecord> inValidRecords = new ArrayList<ItemRecord>();
 
@@ -407,7 +411,11 @@ public class FileSystemImportWriter implements IImportWriter {
 
         FileUtils.copyFile(resFile, desFile);
 
-        update(desFile, isCovered);
+        if (isCovered) {
+            updateFilesCoverd.add(desFile);
+        } else {
+            updateFiles.add(desFile);
+        }
     }
 
     /**
@@ -439,7 +447,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
             if (fileExt.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                 needReloadResource = true;
-                Property property = PropertyHelper.getProperty(desIFile);
+                Property property = PropertyHelper.getProperty(desIFile, true);
 
                 if (property != null) {
                     User user = ReponsitoryContextBridge.getUser();
@@ -548,6 +556,9 @@ public class FileSystemImportWriter implements IImportWriter {
                             }
 
                             if (isDelete) {
+                                updateFiles.clear();
+                                updateFilesCoverd.clear();
+
                                 for (IPath resPath : toImportMap.keySet()) {
                                     IPath desPath = toImportMap.get(resPath);
                                     ResourceSet resourceSet = ProxyRepositoryFactory.getInstance()
@@ -557,6 +568,13 @@ public class FileSystemImportWriter implements IImportWriter {
                                         allCopiedFiles.add(desPath.toFile());
                                     }
                                     allDeletedItems.add(desPath);
+                                }
+
+                                for (File file : updateFiles) {
+                                    update(file, false);
+                                }
+                                for (File file : updateFilesCoverd) {
+                                    update(file, true);
                                 }
                             }
 
@@ -780,7 +798,11 @@ public class FileSystemImportWriter implements IImportWriter {
         // siDef.setName(record.getElement().getName());
 
         if (isModified) {
-            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(siDefItem, false);
+            try {
+                ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(siDefItem, false);
+            } catch (Exception e) {
+                log.error(e);
+            }
         }
     }
 
