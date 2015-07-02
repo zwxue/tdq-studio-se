@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -95,7 +96,8 @@ public class CreateAnalysisOnHDFSAction extends Action {
         if (hiveConnectionItem == null) {
             return null;
         }
-        IRepositoryNode tableNode = TableUtils.findTableInConnection(hiveConnectionItem, createTableName);
+        // TDQ-10462 the table from the hive connection, only use lowercase.
+        IRepositoryNode tableNode = TableUtils.findTableInConnection(hiveConnectionItem, StringUtils.lowerCase(createTableName));
         if (tableNode != null && tableNode instanceof DBTableRepNode) {
             return (DBTableRepNode) tableNode;
         }
