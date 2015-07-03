@@ -143,6 +143,7 @@ import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
+import org.talend.dq.nodes.hadoopcluster.HiveOfHCConnectionNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.ProjectManager;
@@ -2431,7 +2432,7 @@ public final class RepositoryNodeHelper {
         return node instanceof AnalysisRepNode || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                 || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode || node instanceof RuleRepNode
                 || node instanceof DBConnectionRepNode || node instanceof ReportRepNode || node instanceof ReportFileRepNode
-                || node instanceof ReportAnalysisRepNode;
+                || node instanceof ReportAnalysisRepNode || node instanceof HiveOfHCConnectionNode;
     }
 
     public static List<IRepositoryNode> getNmaedColumnSetNodes(IRepositoryNode node) {

@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.DBTableFolderRepNode;
@@ -151,6 +152,7 @@ public final class TableUtils {
      */
     public static RepositoryNode getTableFolder(final DatabaseConnectionItem hiveConnectionItem) {
         RepositoryNode hiveNode = RepositoryNodeHelper.recursiveFind(hiveConnectionItem.getProperty());
+        CorePlugin.getDefault().refreshDQView(hiveNode);
         List<IRepositoryNode> children = hiveNode.getChildren();
         RepositoryNode tableFolder = null;
         for (IRepositoryNode child : children) {

@@ -18,15 +18,23 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.core.database.conn.ConnParameterKeys;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.CWMPlugin;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -46,6 +54,33 @@ public class ConnectionEditor extends CommonFormEditor {
             setPartName(masterPage.getIntactElemenetName());
         } catch (PartInitException e) {
             ExceptionHandler.process(e);
+        }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        refreshHadoopCluster();
+    }
+
+    @Override
+    public void setFocus() {
+        super.setFocus();
+        refreshHadoopCluster();
+    }
+
+    // if the node is a hive connection, need to check its related link in hadoop cluster: added TDQ-10600
+    private void refreshHadoopCluster() {
+        Item item = ((AbstractItemEditorInput) getEditorInput()).getItem();
+        if (item instanceof DatabaseConnectionItem) {
+            String hadoopClusterId = ((DatabaseConnection) ((DatabaseConnectionItem) item).getConnection()).getParameters().get(
+                    ConnParameterKeys.CONN_PARA_KEY_HADOOP_CLUSTER_ID);
+            if (hadoopClusterId != null) {
+                IRepositoryNode rootNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.HADOOP_CLUSTER);
+                if (rootNode != null) {
+                    CorePlugin.getDefault().refreshDQView(rootNode);
+                }
+            }
         }
     }
 
