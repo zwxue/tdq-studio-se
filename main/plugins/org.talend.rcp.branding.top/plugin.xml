@@ -56,6 +56,10 @@
                name="cssTheme"
                value="org.talend.themes.css.talend.default">
          </property>
+          <property
+                name="lifeCycleURI"
+                value="bundleclass://org.talend.core.ui/org.talend.core.ui.TalendStudioLifeCycleManager">
+          </property>
       </product>
    </extension>
    <extension
