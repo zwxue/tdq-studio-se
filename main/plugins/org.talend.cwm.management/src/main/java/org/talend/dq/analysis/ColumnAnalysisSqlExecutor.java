@@ -517,6 +517,16 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } else {
             indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
         }
+
+        // TDQ-10559: when the indicator is in reference project, the above can get NOTHING
+        if (indicatorDefinition == null) {
+            indicatorDefinition = indicator.getIndicatorDefinition();
+            if (indicatorDefinition.eIsProxy()) {
+                indicatorDefinition = (IndicatorDefinition) EObjectHelper.resolveObject(indicatorDefinition);
+            }
+        }
+        // TDQ-10559~
+
         if (indicatorDefinition == null) {
             traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
             rt.setOk(false);
