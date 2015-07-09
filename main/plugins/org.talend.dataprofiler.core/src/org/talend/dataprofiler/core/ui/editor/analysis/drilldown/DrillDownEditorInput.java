@@ -397,6 +397,11 @@ public class DrillDownEditorInput implements IEditorInput {
         // get columnValue
         List<Object[]> newColumnElementList = new ArrayList<Object[]>();
         AnalyzedDataSet analysisDataSet = this.getAnalysis().getResults().getIndicToRowMap().get(currIndicator);
+        // TDQ-10545 : when restart studio and without run analysis, analysisDataSet is null
+        if (analysisDataSet == null) {
+            return newColumnElementList;
+        }
+        // TDQ-10545~
         if (analysisDataSet.getData() != null && analysisDataSet.getData().size() > 0) {
             List<Object[]> dataList = analysisDataSet.getData();
             newColumnElementList.addAll(getDesignatedData(dataList));
