@@ -25,7 +25,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -35,6 +34,8 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class ResultSetHelper {
 
+    private static final int DEFAULT_FETCH_SIZE = 1000;
+
     public static ResultSet getResultSet(ColumnIndicator columnIndicator, String whereExpression) throws SQLException {
         // connection
         Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(columnIndicator);
@@ -43,18 +44,41 @@ public class ResultSetHelper {
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn, whereExpression);
         IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
 
-        Statement createStatement = initStatement(metadataBean);
+        Statement createStatement = initStatement(metadataBean, null);
+        if (createStatement == null) {
+            return null;
+        }
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
 
-    public static ResultSet getResultSet(MetadataTable metadataTable, String whereExpression) throws SQLException {
-        // connection
+    public static ResultSet getResultSet(MetadataTable metadataTable, String whereExpression, int maxRows) throws SQLException {
+        return getResultSet(metadataTable, null, whereExpression, maxRows);
+    }
+
+    public static ResultSet getResultSet(MetadataTable metadataTable, java.sql.Connection sqlConn, String whereExpression,
+            int maxRows) throws SQLException {
+
         Connection tdDataProvider = TableHelper.getFirstConnection(metadataTable);
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-        Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
         IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
 
-        Statement createStatement = initStatement(metadataBean);
+        if (sqlConn == null) {
+            TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
+            if (!createConnection.isOk()) {
+                return null;
+            }
+            sqlConn = createConnection.getObject();
+        }
+
+        Statement createStatement = initStatement(metadataBean, sqlConn);
+        if (createStatement == null) {
+            return null;
+        }
+
+        createStatement.setFetchSize(DEFAULT_FETCH_SIZE);
+        createStatement.setMaxRows(maxRows);
+
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(sqlConn);
+        Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
 
@@ -67,22 +91,9 @@ public class ResultSetHelper {
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
 
-    /**
-     * DOC talend Comment method "getStatement".
-     * 
-     * @param metadataBean
-     * @return
-     * @throws SQLException
-     */
-    private static Statement initStatement(IMetadataConnection metadataBean) throws SQLException {
-        Statement createStatement = null;
-        java.sql.Connection sqlConn = null;
+    private static Statement initStatement(IMetadataConnection metadataBean, java.sql.Connection sqlConn) throws SQLException {
 
-        TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
-        if (!createConnection.isOk()) {
-            return null;
-        }
-        sqlConn = createConnection.getObject();
+        Statement createStatement = null;
         if (MetadataConnectionUtils.isSQLite(metadataBean)) {
             // sqlite only supports TYPE_FORWARD_ONLY currors
             createStatement = sqlConn.createStatement();
@@ -93,24 +104,4 @@ public class ResultSetHelper {
         return createStatement;
     }
 
-    /**
-     * DOC talend Comment method "getResultSet".
-     * 
-     * @param metadataTable
-     * @param connection
-     * @return
-     */
-    public static ResultSet getResultSet(MetadataTable metadataTable, java.sql.Connection sqlConn, String whereExpression)
-            throws SQLException {
-        Statement createStatement = null;
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(sqlConn);
-        Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
-        if (dbmsLanguage instanceof SQLiteDbmsLanguage) {
-            // sqlite only supports TYPE_FORWARD_ONLY currors
-            createStatement = sqlConn.createStatement();
-        } else {
-            createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        }
-        return createStatement.executeQuery(columnQueryExpression.getBody());
-    }
 }
