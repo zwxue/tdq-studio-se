@@ -14,7 +14,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.InvalidRegCodeCountIndicator;
 
+import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Invalid Reg Code Count Indicator</b></em>'.
@@ -188,26 +190,38 @@ public class InvalidRegCodeCountIndicatorImpl extends IndicatorImpl implements I
     public boolean handle(Object data) {
         super.handle(data);
         if (data == null) {
+            this.invalidRegCount++;
+            setMustStoreRow();
             return false;
         }
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        // IndicatorParameters indParameters = this.getParameters();
-        // TextParameters textParameters = indParameters == null ? null : indParameters.getTextParameter();
-        // String country = Locale.getDefault().getCountry();
-        // if (textParameters != null) {
-        // country = textParameters.getCountryCode();
-        // }
-        // PhoneNumber phhoneNum = phoneUtil.parseAndKeepRawInput(data.toString(), country);
-        // String regionCodeForNumber = phoneUtil.getRegionCodeForNumber(phhoneNum);
-        Set<String> supportedCountries = phoneUtil.getSupportedCountries();
-        if (data == null || (data != null && !supportedCountries.contains(data.toString().toUpperCase()))) {
-            this.invalidRegCount++;
-            if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
-                this.mustStoreRow = true;
-            }
+        boolean parseSuccess = true;
+        String regionCodeForNumber = null;
+        try {
+            // the parameter defualtRegion is null at here, it will get an region code when the data is guaranteed to
+            // start with a '+' followed by the country calling code. e.g. "+86 13521588311", "+8613521588311",
+            // "+86 1352 1588 311". or else, it will throw Exception as an invalid Region Code.
+            PhoneNumber phhoneNum = phoneUtil.parse(data.toString(), null);
+            regionCodeForNumber = phoneUtil.getRegionCodeForNumber(phhoneNum);
+        } catch (NumberParseException e) {
+            parseSuccess = false;
         }
+        Set<String> supportedCountries = phoneUtil.getSupportedRegions();
 
+        if (!parseSuccess || (!supportedCountries.contains(regionCodeForNumber))) {
+            this.invalidRegCount++;
+            setMustStoreRow();
+        }
         return true;
+    }
+
+    /**
+     * DOC qiongli Comment method "setMustStoreRow".
+     */
+    private void setMustStoreRow() {
+        if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
+            this.mustStoreRow = true;
+        }
     }
 
     @Override
