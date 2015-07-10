@@ -214,6 +214,8 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
             TextParameters textParameters = indParameters == null ? null : indParameters.getTextParameter();
             String country = IndicatorHelper.getCountryCodeByParameter(textParameters);
             PhoneNumber phoneNumeber = phoneUtil.parse(data.toString(), country);
+            // It only checks the length of phone numbers. In particular, it doesn't check starting digits of the
+            // number.
             if (phoneUtil.isPossibleNumber(phoneNumeber)) {
                 this.possiblePhoneCount++;
                 if (checkMustStoreCurrentRow() || this.checkMustStoreCurrentRow(drillDownValueCount)) {

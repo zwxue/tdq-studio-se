@@ -14,7 +14,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.ValidRegCodeCountIndicator;
 
+import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Valid Reg Code Count Indicator</b></em>'. <!--
@@ -195,19 +197,21 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
             return false;
         }
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        /*
-         * IndicatorParameters indParameters = this.getParameters(); TextParameters textParameters = indParameters ==
-         * null ? null : indParameters.getTextParameter(); String country = Locale.getDefault().getCountry(); if
-         * (textParameters != null) { country = textParameters.getCountryCode(); } PhoneNumber phhoneNum =
-         * phoneUtil.parse(data.toString(), country); if (phoneUtil.isValidNumber(phhoneNum)) { String
-         * regionCodeForNumber = phoneUtil.getRegionCodeForNumber(phhoneNum); Set<String> supportedCountries =
-         * phoneUtil.getSupportedCountries(); if (regionCodeForNumber != null &&
-         * supportedCountries.contains(regionCodeForNumber.toUpperCase())) { super.handle(data); }
-         * 
-         * }
-         */
-        Set<String> supportedCountries = phoneUtil.getSupportedCountries();
-        if (data != null && supportedCountries.contains(data.toString().toUpperCase())) {
+        // }
+
+        // the parameter defualtRegion is null at here, it will get an region code when the data is guaranteed to
+        // start with a '+' followed by the country calling code. e.g. "+86 13521588311", "+8613521588311",
+        // "+86 1352 1588 311". or else, it will throw Exception and as a invalid Region Code.
+        boolean parseSuccess = true;
+        String regionCodeForNumber = null;
+        try {
+            PhoneNumber phhoneNum = phoneUtil.parse(data.toString(), null);
+            regionCodeForNumber = phoneUtil.getRegionCodeForNumber(phhoneNum);
+        } catch (NumberParseException e) {
+            parseSuccess = false;
+        }
+        Set<String> supportedCountries = phoneUtil.getSupportedRegions();
+        if (parseSuccess && supportedCountries.contains(regionCodeForNumber)) {
             this.validRegCount++;
             if (checkMustStoreCurrentRow() || checkMustStoreCurrentRow(drillDownValueCount)) {
                 this.mustStoreRow = true;
