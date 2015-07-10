@@ -152,7 +152,7 @@ public final class ReportFileHelper {
             @Override
             protected void run() throws LoginException, PersistenceException {
                 try {
-                    CSVWriter out = FileUtils.createCSVWriter(reportListFile, FileUtils.TEXT_QUAL, FileUtils.BACKSLASH);
+                    CSVWriter out = FileUtils.createCSVWriter(reportListFile, FileUtils.TEXT_QUAL, FileUtils.ESCAPE_CHAR);
 
                     ReportListEnum[] values = ReportListEnum.values();
                     String[] temp = new String[values.length];
@@ -632,7 +632,8 @@ public final class ReportFileHelper {
 
         if (reportListFile != null && reportListFile.exists()) {
             try {
-                CSVReader reader = FileUtils.createCSVReader(reportListFile, FileUtils.TEXT_QUAL, FileUtils.BACKSLASH);
+                CSVReader reader = FileUtils.createCSVReader(reportListFile, FileUtils.TEXT_QUAL, FileUtils.ESCAPE_CHAR);
+                reader.setSkipEmptyRecords(true);
                 reader.readHeaders();
                 while (reader.readNext()) {
                     repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()),

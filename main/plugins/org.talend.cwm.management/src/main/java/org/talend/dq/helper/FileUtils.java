@@ -56,8 +56,6 @@ public final class FileUtils {
 
     public static final String CSV = "csv"; //$NON-NLS-1$
 
-    public static final char BACKSLASH = '/';
-
     public static final char TEXT_QUAL = '\"';
 
     public static final char ESCAPE_CHAR = '\\';
