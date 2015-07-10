@@ -44,7 +44,12 @@ public class ResultSetHelper {
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn, whereExpression);
         IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
 
-        Statement createStatement = initStatement(metadataBean, null);
+        TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
+        if (!createConnection.isOk()) {
+            return null;
+        }
+        java.sql.Connection sqlConn = createConnection.getObject();
+        Statement createStatement = initStatement(metadataBean, sqlConn);
         if (createStatement == null) {
             return null;
         }
