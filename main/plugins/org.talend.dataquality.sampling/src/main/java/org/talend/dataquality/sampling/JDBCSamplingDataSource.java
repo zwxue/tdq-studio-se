@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.sampling;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -104,7 +106,12 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
      */
     @Override
     public boolean finalizeDataSampling() throws Exception {
-        // Noting to do.
+        Statement statement = jdbcResultSet.getStatement();
+        Connection connection = statement.getConnection();
+
+        jdbcResultSet.close();
+        statement.close();
+        connection.close();
         return true;
     }
 }
