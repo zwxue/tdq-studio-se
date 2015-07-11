@@ -56,6 +56,10 @@ public class ResultSetHelper {
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
 
+    public static ResultSet getResultSet(MetadataTable metadataTable, String whereExpression) throws SQLException {
+        return getResultSet(metadataTable, whereExpression, 0);
+    }
+
     public static ResultSet getResultSet(MetadataTable metadataTable, String whereExpression, int maxRows) throws SQLException {
         return getResultSet(metadataTable, null, whereExpression, maxRows);
     }
@@ -79,7 +83,8 @@ public class ResultSetHelper {
             return null;
         }
 
-        createStatement.setFetchSize(DEFAULT_FETCH_SIZE);
+        createStatement.setFetchSize(Integer.MIN_VALUE);
+        // createStatement.setFetchSize(DEFAULT_FETCH_SIZE);
         createStatement.setMaxRows(maxRows);
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(sqlConn);
@@ -100,13 +105,47 @@ public class ResultSetHelper {
 
         Statement createStatement = null;
         if (MetadataConnectionUtils.isSQLite(metadataBean)) {
-            // sqlite only supports TYPE_FORWARD_ONLY currors
+            // sqlite only supports TYPE_FORWARD_ONLY cursors
             createStatement = sqlConn.createStatement();
         } else {
-            createStatement = sqlConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            createStatement = sqlConn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         }
 
         return createStatement;
     }
 
+    public static long getResultSize(MetadataTable metadataTable) {
+        Statement createStatement = null;
+        ResultSet sizeResult = null;
+        try {
+            Connection tdDataProvider = TableHelper.getFirstConnection(metadataTable);
+            IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
+
+            TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
+            if (!createConnection.isOk()) {
+                return 0;
+            }
+            java.sql.Connection sqlConn = createConnection.getObject();
+
+            createStatement = initStatement(metadataBean, sqlConn);
+            DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
+            Expression columnQueryExpression = dbmsLanguage.getTableCountQueryExpression(metadataTable, null);
+            sizeResult = createStatement.executeQuery(columnQueryExpression.getBody());
+            if (sizeResult.next()) {
+                return sizeResult.getLong(1);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            try {
+                sizeResult.close();
+                createStatement.close();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
 }

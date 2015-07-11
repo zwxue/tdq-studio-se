@@ -32,14 +32,16 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
 
     private int columnSize = 0;
 
+    private long recordSize;
+
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.datascience.SamplingDataSource#setDataSource(java.lang.Object)
      */
     @Override
-    public void setDataSource(ResultSet ds) {
-        jdbcResultSet = ds;
+    public void setDataSource(ResultSet rs) {
+        jdbcResultSet = rs;
     }
 
     /*
@@ -79,7 +81,6 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
             // --- for each column
             for (int i = 0; i < columnSize; i++) {
                 // --- get content of column
-                Object object = null;
                 try {
                     oneRow[i] = jdbcResultSet.getObject(i + 1);
                 } catch (SQLException e) {
@@ -113,5 +114,14 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
         statement.close();
         connection.close();
         return true;
+    }
+
+    public void setRecordSize(long recordSize) {
+        this.recordSize = recordSize;
+    }
+
+    @Override
+    public long getRecordSize() {
+        return recordSize;
     }
 }
