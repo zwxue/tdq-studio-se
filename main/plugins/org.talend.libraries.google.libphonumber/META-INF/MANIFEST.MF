@@ -6,7 +6,7 @@ Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
  lib/libphonenumber-7.0.7.jar
-Export-Package: com.google.i18n.phonenumbers;uses:="com.google.i18n.phonenumbers.internal,new com.google.i18n.phonenumbers",
+Export-Package: com.google.i18n.phonenumbers,
  com.google.i18n.phonenumbers.internal
 Require-Bundle: org.junit;bundle-version="3.8.2";resolution:=optional
 Bundle-ActivationPolicy: lazy

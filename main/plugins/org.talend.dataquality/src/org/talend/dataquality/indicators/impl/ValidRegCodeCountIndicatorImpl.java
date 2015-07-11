@@ -197,6 +197,8 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
             return false;
         }
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        // }
+
         // the parameter defualtRegion is null at here, it will get an region code when the data is guaranteed to
         // start with a '+' followed by the country calling code. e.g. "+86 13521588311", "+8613521588311",
         // "+86 1352 1588 311". or else, it will throw Exception and as a invalid Region Code.
