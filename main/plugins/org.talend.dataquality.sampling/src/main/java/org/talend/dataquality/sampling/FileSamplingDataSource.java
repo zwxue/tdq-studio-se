@@ -170,4 +170,10 @@ public class FileSamplingDataSource implements SamplingDataSource<File> {
         return true;
     }
 
+    @Override
+    public long getRecordSize() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

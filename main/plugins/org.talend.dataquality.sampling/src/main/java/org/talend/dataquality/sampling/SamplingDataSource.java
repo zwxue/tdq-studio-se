@@ -52,4 +52,6 @@ public interface SamplingDataSource<DataSource> {
      */
     public boolean finalizeDataSampling() throws Exception;
 
+    public long getRecordSize();
+
 }

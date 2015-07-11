@@ -130,6 +130,8 @@ public class DbmsLanguage {
 
     private static final String ASTERISK = "*"; //$NON-NLS-1$
 
+    private static final String COUNT_ASTERISK = "COUNT(*)"; //$NON-NLS-1$
+
     /**
      * End of Statement: ";".
      */
@@ -781,6 +783,31 @@ public class DbmsLanguage {
         String qualifiedName = this.toQualifiedName(catalogName, schemaName, metadataTable.getName());
         Expression queryExpression = CoreFactory.eINSTANCE.createExpression();
         String expressionBody = getQuerySql(ASTERISK, qualifiedName, where);
+        queryExpression.setBody(expressionBody);
+        queryExpression.setLanguage(this.getDbmsName());
+        return queryExpression;
+
+    }
+
+    /**
+     * 
+     * Get the query Expression for one table of column
+     * 
+     * @param column
+     * @param where
+     * @return
+     */
+    public Expression getTableCountQueryExpression(MetadataTable metadataTable, String where) {
+        Schema parentSchema = SchemaHelper.getParentSchema(metadataTable);
+        Catalog parentCatalog = CatalogHelper.getParentCatalog(metadataTable);
+        if (parentSchema != null) {
+            parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+        }
+        String schemaName = parentSchema == null ? null : parentSchema.getName();
+        String catalogName = parentCatalog == null ? null : parentCatalog.getName();
+        String qualifiedName = this.toQualifiedName(catalogName, schemaName, metadataTable.getName());
+        Expression queryExpression = CoreFactory.eINSTANCE.createExpression();
+        String expressionBody = getQuerySql(COUNT_ASTERISK, qualifiedName, where);
         queryExpression.setBody(expressionBody);
         queryExpression.setLanguage(this.getDbmsName());
         return queryExpression;

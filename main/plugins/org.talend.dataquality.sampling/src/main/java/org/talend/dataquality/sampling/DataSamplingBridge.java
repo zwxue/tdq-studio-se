@@ -39,10 +39,14 @@ public class DataSamplingBridge {
 
     private SamplingDataSource<?> dataSource;
 
-    private long randomSeed = System.currentTimeMillis();
+    private long currentRandomSeed = System.currentTimeMillis();
 
     // The cursor of reservoir sampling records.
     private int recordCursor = 0;
+
+    private long dataSourceCursor = 0;
+
+    private boolean stopRequested = false;
 
     public DataSamplingBridge(SamplingDataSource<?> ds) {
         this.dataSource = ds;
@@ -56,6 +60,10 @@ public class DataSamplingBridge {
         samplingOption = option;
     }
 
+    public SamplingOption getSamplingOption() {
+        return samplingOption;
+    }
+
     /**
      * 
      * DOC zhao see if there exist next record or not.
@@ -65,7 +73,7 @@ public class DataSamplingBridge {
      */
     public boolean hasNext() throws Exception {
         if (recordCursor >= sampleSize) {
-            // Stop getting sample from data soruce.
+            // Stop getting sample from data source.
             return false;
         }
         if (SamplingOption.Reservoir == samplingOption) {
@@ -83,20 +91,21 @@ public class DataSamplingBridge {
      * @return true if success, false otherwise.
      * @throws Exception When unexpected exception occurs
      */
-    public boolean prepareData(long randomSeed1) throws Exception {
+    public boolean prepareData(long randomSeed) throws Exception {
         // Reset record cursor
-        reservoirSamplingData = new ArrayList<Object[]>();
         switch (samplingOption) {
         case TopN:
             break;
         case Percentage:
             break;
         case Reservoir:
-            recordCursor = 0;
-            reservoirSampler = new ReservoirSampler<Object[]>(sampleSize, randomSeed1);
+            dataSourceCursor = 0;
+            reservoirSamplingData = new ArrayList<Object[]>();
+            reservoirSampler = new ReservoirSampler<Object[]>(sampleSize, randomSeed);
             reservoirSampler.clear();
-            while (dataSource.hasNext()) {
+            while (!stopRequested && dataSource.hasNext()) {
                 reservoirSampler.onNext(dataSource.getRecord());
+                dataSourceCursor++;
             }
             reservoirSampler.onCompleted(true);
             reservoirSamplingData = reservoirSampler.sample();
@@ -108,7 +117,7 @@ public class DataSamplingBridge {
     }
 
     public void prepareData() throws Exception {
-        prepareData(randomSeed);
+        prepareData(currentRandomSeed);
     }
 
     /**
@@ -117,7 +126,7 @@ public class DataSamplingBridge {
      * @param randomSeed the randomSeed to set
      */
     public void setRandomSeed(long randomSeed) {
-        this.randomSeed = randomSeed;
+        this.currentRandomSeed = randomSeed;
     }
 
     /**
@@ -160,11 +169,26 @@ public class DataSamplingBridge {
      */
     public boolean finalizeDataSampling() throws Exception {
         reservoirSamplingData = null;
-        recordCursor = 0;
         dataSource.finalizeDataSampling();
         return false;
     }
 
     public static final long RANDOM_SEED = 12345678;
+
+    public boolean isStopRequested() {
+        return stopRequested;
+    }
+
+    public void setStopRequested(boolean stopRequested) {
+        this.stopRequested = stopRequested;
+    }
+
+    public long getDataSourceCursor() {
+        return dataSourceCursor;
+    }
+
+    public long getRecordSize() {
+        return dataSource.getRecordSize();
+    }
 
 }

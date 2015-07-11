@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.sampling;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -30,14 +32,16 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
 
     private int columnSize = 0;
 
+    private long recordSize;
+
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.datascience.SamplingDataSource#setDataSource(java.lang.Object)
      */
     @Override
-    public void setDataSource(ResultSet ds) {
-        jdbcResultSet = ds;
+    public void setDataSource(ResultSet rs) {
+        jdbcResultSet = rs;
     }
 
     /*
@@ -77,7 +81,6 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
             // --- for each column
             for (int i = 0; i < columnSize; i++) {
                 // --- get content of column
-                Object object = null;
                 try {
                     oneRow[i] = jdbcResultSet.getObject(i + 1);
                 } catch (SQLException e) {
@@ -104,7 +107,21 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
      */
     @Override
     public boolean finalizeDataSampling() throws Exception {
-        // Noting to do.
+        Statement statement = jdbcResultSet.getStatement();
+        Connection connection = statement.getConnection();
+
+        jdbcResultSet.close();
+        statement.close();
+        connection.close();
         return true;
+    }
+
+    public void setRecordSize(long recordSize) {
+        this.recordSize = recordSize;
+    }
+
+    @Override
+    public long getRecordSize() {
+        return recordSize;
     }
 }
