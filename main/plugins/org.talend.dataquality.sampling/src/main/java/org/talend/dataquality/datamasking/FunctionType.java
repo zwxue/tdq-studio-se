@@ -47,7 +47,7 @@ import org.talend.dataquality.datamasking.Functions.GenerateFromListHashString;
 import org.talend.dataquality.datamasking.Functions.GenerateFromListInteger;
 import org.talend.dataquality.datamasking.Functions.GenerateFromListLong;
 import org.talend.dataquality.datamasking.Functions.GenerateFromListString;
-import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumber;
+import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberFrench;
 import org.talend.dataquality.datamasking.Functions.GenerateSequenceDouble;
 import org.talend.dataquality.datamasking.Functions.GenerateSequenceFloat;
 import org.talend.dataquality.datamasking.Functions.GenerateSequenceInteger;
@@ -140,7 +140,7 @@ public enum FunctionType {
     GENERATE_FROM_LIST_HASH_INT(GenerateFromListHashInteger.class),
     GENERATE_FROM_LIST_HASH_LONG(GenerateFromListHashLong.class),
     GENERATE_FROM_LIST_HASH_STRING(GenerateFromListHashString.class),
-    GENERATE_PHONE_NUMBER(GeneratePhoneNumber.class),
+    GENERATE_PHONE_NUMBER(GeneratePhoneNumberFrench.class),
     GENERATE_SEQUENCE(null),
     GENERATE_SEQUENCE_DOUBLE(GenerateSequenceDouble.class),
     GENERATE_SEQUENCE_FLOAT(GenerateSequenceFloat.class),

@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumber;
+import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberFrench;
 import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
@@ -27,7 +27,7 @@ public class GeneratePhoneNumberTest {
 
     private String output;
 
-    private GeneratePhoneNumber gpn = new GeneratePhoneNumber();
+    private GeneratePhoneNumberFrench gpn = new GeneratePhoneNumberFrench();
 
     @Before
     public void setUp() throws Exception {

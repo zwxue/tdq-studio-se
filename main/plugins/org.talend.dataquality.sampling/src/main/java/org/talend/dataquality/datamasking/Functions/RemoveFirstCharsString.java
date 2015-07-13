@@ -23,10 +23,7 @@ public class RemoveFirstCharsString extends RemoveFirstChars<String> {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
             return str;
         } else {
-            if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
-                if (integerParam > str.length()) {
-                    integerParam = str.length();
-                }
+            if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0 && integerParam < str.length()) {
                 return str.substring(integerParam);
             } else {
                 return EMPTY_STRING;

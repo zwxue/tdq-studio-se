@@ -18,18 +18,18 @@ package org.talend.dataquality.datamasking.Functions;
  */
 public class ReplaceFirstCharsString extends ReplaceFirstChars<String> {
 
+    private int parameter = 0;
+
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
             return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str) && integerParam > 0) {
-                if (integerParam > str.length()) {
-                    integerParam = str.length();
-                }
+                parameter = integerParam > str.length() ? str.length() : integerParam;
                 StringBuilder sb = new StringBuilder(str);
                 StringBuilder repl = new StringBuilder(EMPTY_STRING);
-                for (int i = 0; i < integerParam; ++i) {
+                for (int i = 0; i < parameter; ++i) {
                     if (Character.isDigit(str.charAt(i))) {
                         repl.append(rnd.nextInt(9));
                     } else if (Character.isUpperCase(str.charAt(i))) {
@@ -40,7 +40,7 @@ public class ReplaceFirstCharsString extends ReplaceFirstChars<String> {
                         repl.append(str.charAt(i));
                     }
                 }
-                sb.replace(0, integerParam, repl.toString());
+                sb.replace(0, parameter, repl.toString());
                 return sb.toString();
             } else {
                 return EMPTY_STRING;
