@@ -18,21 +18,21 @@ package org.talend.dataquality.datamasking.Functions;
  */
 public class ReplaceLastCharsLong extends ReplaceLastChars<Long> {
 
+    private int parameter = 0;
+
     @Override
     public Long generateMaskedRow(Long l) {
         if (l == null && keepNull) {
             return null;
         } else {
             if (l != null && integerParam > 0) {
-                if ((int) Math.log10(l) + 1 < integerParam) {
-                    integerParam = (int) Math.log10(l) + 1;
-                }
+                parameter = (int) Math.log10(l) + 1 <= integerParam ? (int) Math.log10(l) + 1 : integerParam;
                 StringBuilder sbui = new StringBuilder(l.toString());
                 StringBuilder rempl = new StringBuilder(EMPTY_STRING);
-                for (int i = 0; i < integerParam; ++i) {
+                for (int i = 0; i < parameter; ++i) {
                     rempl.append(rnd.nextInt(9));
                 }
-                sbui.replace(sbui.length() - integerParam, sbui.length(), rempl.toString());
+                sbui.replace(sbui.length() - parameter, sbui.length(), rempl.toString());
                 return Long.parseLong(sbui.toString());
             } else {
                 return 0L;

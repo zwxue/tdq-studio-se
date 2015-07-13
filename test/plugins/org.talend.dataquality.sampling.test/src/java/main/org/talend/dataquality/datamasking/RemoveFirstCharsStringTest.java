@@ -43,4 +43,10 @@ public class RemoveFirstCharsStringTest {
         assertEquals(output, ""); //$NON-NLS-1$
     }
 
+    @Test
+    public void testParameterToLong() {
+        rfcs.integerParam = 10000;
+        output = rfcs.generateMaskedRow(input);
+        assertEquals(output, rfcs.EMPTY_STRING);
+    }
 }
