@@ -13,11 +13,10 @@
 package org.talend.datascience.common.inference
 
 import java.math.BigInteger
-
 import scala.annotation.migration
 import scala.util.parsing.combinator.RegexParsers
-
 import org.pojava.datetime.DateTime
+import org.talend.datascience.common.inference.`type`.DatePatternUtils
 
 /**
  * Type inference engine to guess if a value belongs to a type according to predefined rules. <br> the infer engine can be extended.
@@ -114,7 +113,7 @@ class TypeInferenceEngine extends RegexParsers with Serializable {
         case Success(result, _) => true
         case failure: NoSuccess => false
       }
-  }
+  } 
 
   /**
    * Whether or not the string value is date type.
@@ -124,31 +123,7 @@ class TypeInferenceEngine extends RegexParsers with Serializable {
    * @return true if it's a date type or false otherwise.
    */
   def isDate(value: String): Boolean = {
-    var isMatch = false
-    try {
-      isMatch = parseAll(date, value) match {
-        case Success(result, _) => true
-        case failure: NoSuccess => false
-      }
-      if (!isMatch) {
-        isMatch = parseAll(datetime, value) match {
-          case Success(result, _) => return true
-          case failure: NoSuccess => {
-            try {
-              //Use this tricky way to see if a string value is a date or not.
-              val dateTime = new DateTime(value)
-            } catch {
-              case e: Exception => return false
-            }
-            true
-          }
-        }
-      }
-    } catch {
-      case _: Throwable => isMatch = false
-    }
-
-    isMatch
+    DatePatternUtils.getInstance.isDate(value)
   }
 
 }

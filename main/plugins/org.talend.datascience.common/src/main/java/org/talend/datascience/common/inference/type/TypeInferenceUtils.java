@@ -12,16 +12,7 @@
 // ============================================================================
 package org.talend.datascience.common.inference.type;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utility class refering data types given single value
@@ -38,23 +29,6 @@ public class TypeInferenceUtils {
     private static final Pattern patternInteger = Pattern.compile("^(\\+|-)?\\d+$");
 
     private static final Pattern patternNoneDigit = Pattern.compile("\\D");
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TypeInferenceUtils.class);
-
-    private static final Collection<Pattern> dateTimePatterns = new LinkedList<Pattern>();
-
-    static {
-        try {
-            final InputStream stream = TypeInferenceUtils.class.getResourceAsStream("dateTimePatterns.txt");
-            final List<String> lines = IOUtils.readLines(stream);
-            for (String line : lines) {
-                dateTimePatterns.add(Pattern.compile(line));
-            }
-        } catch (IOException e) {
-            LOGGER.error("Unable to get date time patterns.", e);
-        }
-    }
 
     /**
      * Detect if the given value is a string type.
@@ -127,12 +101,7 @@ public class TypeInferenceUtils {
                 return false;
             }
             // 2. Check it by list of patterns
-            for (Pattern dateTimePattern : dateTimePatterns) {
-                if (dateTimePattern.matcher(value).matches()) {
-                    return true;
-                }
-            }
-            return false;
+            return DatePatternUtils.getInstance().isDate(value);
         } else {
             return false;
         }

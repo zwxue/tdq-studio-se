@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * 
- *Data type bean hold type to frequency and type to value maps.
+ * Data type bean hold type to frequency and type to value maps.
  */
 public class DataType {
 
@@ -34,6 +34,7 @@ public class DataType {
 
     /**
      * Get suggested type
+     * 
      * @return type suggested by system automatically given frequencies.
      */
     public Type getSuggestedType() {
