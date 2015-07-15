@@ -22,7 +22,7 @@
             context="HSQL wizard"
             language="java"
             message="wizard for TOP"
-            name="hsqldb.jar"
+            name="hsqldb.jar" mvn_uri="mvn:org.talend.libraries/hsqldb/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.hsql/lib/hsqldb.jar">
       </libraryNeeded>
@@ -30,7 +30,7 @@
             context="Sqlite wizard"
             language="java"
             message="Wizard use for TOP"
-            name="sqlitejdbc-v056.jar"
+            name="sqlitejdbc-v056.jar" mvn_uri="mvn:org.talend.libraries/sqlitejdbc-v056/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.sqlite3/lib/sqlitejdbc-v056.jar">
       </libraryNeeded>
@@ -38,7 +38,7 @@
             context="Postgresql wizard"
             language="java"
             message="Wizard use for TOP"
-            name="postgresql-8.3-603.jdbc3.jar"
+            name="postgresql-8.3-603.jdbc3.jar" mvn_uri="mvn:org.talend.libraries/postgresql-8.3-603.jdbc3/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.postgresql/lib/postgresql-8.3-603.jdbc3.jar">
       </libraryNeeded>
@@ -46,7 +46,7 @@
             context="Jtds wizard"
             language="java"
             message="Wizard use for TOP"
-            name="jtds-1.2.5.jar"
+            name="jtds-1.2.5.jar" mvn_uri="mvn:org.talend.libraries/jtds-1.2.5/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.jtds/lib/jtds-1.2.5.jar">
       </libraryNeeded>
@@ -54,7 +54,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="log4j-1.2.16.jar"
+            name="log4j-1.2.16.jar" mvn_uri="mvn:org.talend.libraries/log4j-1.2.16/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache/lib/log4j-1.2.16.jar">
       </libraryNeeded>
@@ -62,7 +62,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-logging-1.0.4.jar"
+            name="commons-logging-1.0.4.jar" mvn_uri="mvn:org.talend.libraries/commons-logging-1.0.4/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-logging-api-1.0.4.jar">
       </libraryNeeded>
@@ -70,7 +70,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-configuration-1.6.jar"
+            name="commons-configuration-1.6.jar" mvn_uri="mvn:org.talend.libraries/commons-configuration-1.6/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-configuration-1.6.jar">
       </libraryNeeded>
@@ -78,7 +78,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-lang-2.4.jar"
+            name="commons-lang-2.4.jar" mvn_uri="mvn:org.talend.libraries/commons-lang-2.4/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-lang-2.5.jar">
       </libraryNeeded>
@@ -86,7 +86,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-0.20.2-core.jar"
+            name="hadoop-0.20.2-core.jar" mvn_uri="mvn:org.talend.libraries/hadoop-0.20.2-core/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.2/lib/hadoop-0.20.2-core.jar">
       </libraryNeeded>
@@ -94,7 +94,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-core-0.20.204.0.jar"
+            name="hadoop-core-0.20.204.0.jar" mvn_uri="mvn:org.talend.libraries/hadoop-core-0.20.204.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.204/lib/hadoop-core-0.20.204.0.jar">
       </libraryNeeded>
@@ -102,7 +102,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-core-1.0.0.jar"
+            name="hadoop-core-1.0.0.jar" mvn_uri="mvn:org.talend.libraries/hadoop-core-1.0.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hadoop-core-1.0.0.jar">
       </libraryNeeded>
@@ -110,7 +110,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-builtins-0.4.0.jar"
+            name="hive-builtins-0.4.0.jar" mvn_uri="mvn:org.talend.libraries/hive-builtins-0.4.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-builtins-0.4.0.jar">
       </libraryNeeded>
@@ -118,7 +118,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-exec-0.8.1.jar"
+            name="hive-exec-0.8.1.jar" mvn_uri="mvn:org.talend.libraries/hive-exec-0.8.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-exec-0.8.1.jar">
       </libraryNeeded>
@@ -126,7 +126,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-jdbc-0.8.1.jar"
+            name="hive-jdbc-0.8.1.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.8.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-jdbc-0.8.1.jar">
       </libraryNeeded>
@@ -134,7 +134,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-metastore-0.8.1.jar"
+            name="hive-metastore-0.8.1.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.8.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-metastore-0.8.1.jar">
       </libraryNeeded>
@@ -142,7 +142,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-service-0.8.1.jar"
+            name="hive-service-0.8.1.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.8.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-service-0.8.1.jar">
       </libraryNeeded>
@@ -150,7 +150,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-0.20.2-cdh3u1-core.jar"
+            name="hadoop-0.20.2-cdh3u1-core.jar" mvn_uri="mvn:org.talend.libraries/hadoop-0.20.2-cdh3u1-core/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.0.20.cdh3/lib/hadoop-0.20.2-cdh3u1-core.jar">
       </libraryNeeded>
@@ -158,7 +158,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hbase-0.90.1-cdh3u0.jar"
+            name="hbase-0.90.1-cdh3u0.jar" mvn_uri="mvn:org.talend.libraries/hbase-0.90.1-cdh3u0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.0.20.cdh3/lib/hbase-0.90.1-cdh3u0.jar">
       </libraryNeeded>
@@ -166,7 +166,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-hbase-handler-0.7.1-cdh3u3.jar"
+            name="hive-hbase-handler-0.7.1-cdh3u3.jar" mvn_uri="mvn:org.talend.libraries/hive-hbase-handler-0.7.1-cdh3u3/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.0.20.cdh3/lib/hive-hbase-handler-0.7.1-cdh3u3.jar">
       </libraryNeeded>
@@ -174,7 +174,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-auth-2.0.0-cdh4.0.1.jar"
+            name="hadoop-auth-2.0.0-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hadoop-auth-2.0.0-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hadoop-auth-2.0.0-cdh4.0.1.jar">
       </libraryNeeded>
@@ -182,7 +182,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-common-2.0.0-cdh4.0.1.jar"
+            name="hadoop-common-2.0.0-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hadoop-common-2.0.0-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hadoop-common-2.0.0-cdh4.0.1.jar">
       </libraryNeeded>
@@ -190,7 +190,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-core-2.0.0-mr1-cdh4.0.1.jar"
+            name="hadoop-core-2.0.0-mr1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hadoop-core-2.0.0-mr1-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hadoop-core-2.0.0-mr1-cdh4.0.1.jar">
       </libraryNeeded>
@@ -198,7 +198,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-hdfs-2.0.0-cdh4.0.1.jar"
+            name="hadoop-hdfs-2.0.0-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hadoop-hdfs-2.0.0-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hadoop-hdfs-2.0.0-cdh4.0.1.jar">
       </libraryNeeded>
@@ -206,7 +206,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hbase-0.92.1-cdh4.0.1-security.jar"
+            name="hbase-0.92.1-cdh4.0.1-security.jar" mvn_uri="mvn:org.talend.libraries/hbase-0.92.1-cdh4.0.1-security/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hbase-0.92.1-cdh4.0.1-security.jar">
       </libraryNeeded>
@@ -214,7 +214,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-builtins-0.8.1-cdh4.0.1.jar"
+            name="hive-builtins-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-builtins-0.8.1-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-builtins-0.8.1-cdh4.0.1.jar">
       </libraryNeeded>
@@ -222,7 +222,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-exec-0.8.1-cdh4.0.1.jar"
+            name="hive-exec-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-exec-0.8.1-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-exec-0.8.1-cdh4.0.1.jar">
       </libraryNeeded>
@@ -230,7 +230,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-hbase-handler-0.8.1-cdh4.0.0.jar"
+            name="hive-hbase-handler-0.8.1-cdh4.0.0.jar" mvn_uri="mvn:org.talend.libraries/hive-hbase-handler-0.8.1-cdh4.0.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-hbase-handler-0.8.1-cdh4.0.0.jar">
       </libraryNeeded>
@@ -238,7 +238,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-jdbc-0.8.1-cdh4.0.1.jar"
+            name="hive-jdbc-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.8.1-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-jdbc-0.8.1-cdh4.0.1.jar">
       </libraryNeeded>
@@ -246,7 +246,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-metastore-0.8.1-cdh4.0.1.jar"
+            name="hive-metastore-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.8.1-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-metastore-0.8.1-cdh4.0.1.jar">
       </libraryNeeded>
@@ -254,7 +254,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-service-0.8.1-cdh4.0.1.jar"
+            name="hive-service-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.8.1-cdh4.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-service-0.8.1-cdh4.0.1.jar">
       </libraryNeeded>
@@ -262,7 +262,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="protobuf-java-2.4.0a.jar"
+            name="protobuf-java-2.4.0a.jar" mvn_uri="mvn:org.talend.libraries/protobuf-java-2.4.0a/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/protobuf-java-2.4.0a.jar">
       </libraryNeeded>
@@ -270,7 +270,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="datanucleus-api-jdo-3.0.7.jar"
+            name="datanucleus-api-jdo-3.0.7.jar" mvn_uri="mvn:org.talend.libraries/datanucleus-api-jdo-3.0.7/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/datanucleus-api-jdo-3.0.7.jar">
       </libraryNeeded>
@@ -278,7 +278,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="datanucleus-core-3.0.9.jar"
+            name="datanucleus-core-3.0.9.jar" mvn_uri="mvn:org.talend.libraries/datanucleus-core-3.0.9/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/datanucleus-core-3.0.9.jar">
       </libraryNeeded>
@@ -286,7 +286,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="datanucleus-rdbms-3.0.8.jar"
+            name="datanucleus-rdbms-3.0.8.jar" mvn_uri="mvn:org.talend.libraries/datanucleus-rdbms-3.0.8/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/datanucleus-rdbms-3.0.8.jar">
       </libraryNeeded>
@@ -294,7 +294,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-core-1.0.3.jar"
+            name="hadoop-core-1.0.3.jar" mvn_uri="mvn:org.talend.libraries/hadoop-core-1.0.3/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hadoop-core-1.0.3.jar">
       </libraryNeeded>
@@ -302,7 +302,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-builtins-0.9.0.jar"
+            name="hive-builtins-0.9.0.jar" mvn_uri="mvn:org.talend.libraries/hive-builtins-0.9.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-builtins-0.9.0.jar">
       </libraryNeeded>
@@ -310,7 +310,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-exec-0.9.0_hdp.jar"
+            name="hive-exec-0.9.0_hdp.jar" mvn_uri="mvn:org.talend.libraries/hive-exec-0.9.0_hdp/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-exec-0.9.0_hdp.jar">
       </libraryNeeded>
@@ -318,7 +318,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-jdbc-0.9.0_hdp.jar"
+            name="hive-jdbc-0.9.0_hdp.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.9.0_hdp/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-jdbc-0.9.0_hdp.jar">
       </libraryNeeded>
@@ -326,7 +326,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-metastore-0.9.0_hdp.jar"
+            name="hive-metastore-0.9.0_hdp.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.9.0_hdp/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-metastore-0.9.0_hdp.jar">
       </libraryNeeded>
@@ -334,7 +334,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-service-0.9.0_hdp.jar"
+            name="hive-service-0.9.0_hdp.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.9.0_hdp/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-service-0.9.0_hdp.jar">
       </libraryNeeded>
@@ -342,7 +342,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="libfb303-0.7.0.jar"
+            name="libfb303-0.7.0.jar" mvn_uri="mvn:org.talend.libraries/libfb303-0.7.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/libfb303-0.7.0.jar">
       </libraryNeeded>
@@ -350,7 +350,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="libthrift-0.7.0.jar"
+            name="libthrift-0.7.0.jar" mvn_uri="mvn:org.talend.libraries/libthrift-0.7.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/libthrift-0.7.0.jar">
       </libraryNeeded>
@@ -358,7 +358,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-core-1.1.2.21.jar"
+            name="hadoop-core-1.1.2.21.jar" mvn_uri="mvn:org.talend.libraries/hadoop-core-1.1.2.21/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hadoop-core-1.1.2.21.jar">
       </libraryNeeded>
@@ -366,7 +366,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hbase-0.94.2.21.jar"
+            name="hbase-0.94.2.21.jar" mvn_uri="mvn:org.talend.libraries/hbase-0.94.2.21/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hbase-0.94.2.21.jar">
       </libraryNeeded>
@@ -374,7 +374,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-builtins-0.10.0.21.jar"
+            name="hive-builtins-0.10.0.21.jar" mvn_uri="mvn:org.talend.libraries/hive-builtins-0.10.0.21/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-builtins-0.10.0.21.jar">
       </libraryNeeded>
@@ -382,7 +382,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-exec-0.10.0.21.jar"
+            name="hive-exec-0.10.0.21.jar" mvn_uri="mvn:org.talend.libraries/hive-exec-0.10.0.21/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-exec-0.10.0.21.jar">
       </libraryNeeded>
@@ -390,7 +390,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-hbase-handler-0.10.0.21.jar"
+            name="hive-hbase-handler-0.10.0.21.jar" mvn_uri="mvn:org.talend.libraries/hive-hbase-handler-0.10.0.21/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-hbase-handler-0.10.0.21.jar">
       </libraryNeeded>
@@ -398,7 +398,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-jdbc-0.10.0.21.jar"
+            name="hive-jdbc-0.10.0.21.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.10.0.21/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-jdbc-0.10.0.21.jar">
       </libraryNeeded>
@@ -406,7 +406,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-metastore-0.10.0.21.jar"
+            name="hive-metastore-0.10.0.21.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.10.0.21/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-metastore-0.10.0.21.jar">
       </libraryNeeded>
@@ -414,7 +414,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-service-0.10.0.21.jar"
+            name="hive-service-0.10.0.21.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.10.0.21/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-service-0.10.0.21.jar">
       </libraryNeeded>
@@ -422,7 +422,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="libfb303-0.9.0.jar"
+            name="libfb303-0.9.0.jar" mvn_uri="mvn:org.talend.libraries/libfb303-0.9.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/libfb303-0.9.0.jar">
       </libraryNeeded>
@@ -430,7 +430,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="libthrift-0.9.0.jar"
+            name="libthrift-0.9.0.jar" mvn_uri="mvn:org.talend.libraries/libthrift-0.9.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/libthrift-0.9.0.jar">
       </libraryNeeded>
@@ -438,7 +438,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-0.20.2-dev-core.jar"
+            name="hadoop-0.20.2-dev-core.jar" mvn_uri="mvn:org.talend.libraries/hadoop-0.20.2-dev-core/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr/lib/hadoop-0.20.2-dev-core.jar">
       </libraryNeeded>
@@ -446,7 +446,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="maprfs-0.1.jar"
+            name="maprfs-0.1.jar" mvn_uri="mvn:org.talend.libraries/maprfs-0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr/lib/maprfs-0.1.jar">
       </libraryNeeded>
@@ -455,7 +455,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="datanucleus-connectionpool-2.0.3.jar"
+            name="datanucleus-connectionpool-2.0.3.jar" mvn_uri="mvn:org.talend.libraries/datanucleus-connectionpool-2.0.3/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/datanucleus-connectionpool-2.0.3.jar">
       </libraryNeeded>
@@ -463,7 +463,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="datanucleus-core-2.0.3.jar"
+            name="datanucleus-core-2.0.3.jar" mvn_uri="mvn:org.talend.libraries/datanucleus-core-2.0.3/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/datanucleus-core-2.0.3.jar">
       </libraryNeeded>
@@ -471,7 +471,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="datanucleus-enhancer-2.0.3.jar"
+            name="datanucleus-enhancer-2.0.3.jar" mvn_uri="mvn:org.talend.libraries/datanucleus-enhancer-2.0.3/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/datanucleus-enhancer-2.0.3.jar">
       </libraryNeeded>
@@ -479,7 +479,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="datanucleus-rdbms-2.0.3.jar"
+            name="datanucleus-rdbms-2.0.3.jar" mvn_uri="mvn:org.talend.libraries/datanucleus-rdbms-2.0.3/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/datanucleus-rdbms-2.0.3.jar">
       </libraryNeeded>
@@ -487,7 +487,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-0.20.2-dev-core-mapr2.jar"
+            name="hadoop-0.20.2-dev-core-mapr2.jar" mvn_uri="mvn:org.talend.libraries/hadoop-0.20.2-dev-core-mapr2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hadoop-0.20.2-dev-core-mapr2.jar">
       </libraryNeeded>
@@ -495,7 +495,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-conf-kerberos.jar"
+            name="hadoop-conf-kerberos.jar" mvn_uri="mvn:org.talend.libraries/hadoop-conf-kerberos/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hadoop-conf-kerberos.jar">
       </libraryNeeded>
@@ -503,7 +503,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hbase-0.92.0.jar"
+            name="hbase-0.92.0.jar" mvn_uri="mvn:org.talend.libraries/hbase-0.92.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hbase-0.92.0.jar">
       </libraryNeeded>
@@ -511,7 +511,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hbase-0.92.1.jar"
+            name="hbase-0.92.1.jar" mvn_uri="mvn:org.talend.libraries/hbase-0.92.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hbase-0.92.1.jar">
       </libraryNeeded>
@@ -519,7 +519,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-builtins-0.9.0-mapr2.jar"
+            name="hive-builtins-0.9.0-mapr2.jar" mvn_uri="mvn:org.talend.libraries/hive-builtins-0.9.0-mapr2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-builtins-0.9.0-mapr2.jar">
       </libraryNeeded>
@@ -527,7 +527,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-exec-0.9.0-mapr2.jar"
+            name="hive-exec-0.9.0-mapr2.jar" mvn_uri="mvn:org.talend.libraries/hive-exec-0.9.0-mapr2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-exec-0.9.0-mapr2.jar">
       </libraryNeeded>
@@ -535,7 +535,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-hbase-handler-0.9.0.jar"
+            name="hive-hbase-handler-0.9.0.jar" mvn_uri="mvn:org.talend.libraries/hive-hbase-handler-0.9.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-hbase-handler-0.9.0.jar">
       </libraryNeeded>
@@ -543,7 +543,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-jdbc-0.9.0-mapr2.jar"
+            name="hive-jdbc-0.9.0-mapr2.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.9.0-mapr2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-jdbc-0.9.0-mapr2.jar">
       </libraryNeeded>
@@ -551,7 +551,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-metastore-0.9.0-mapr2.jar"
+            name="hive-metastore-0.9.0-mapr2.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.9.0-mapr2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-metastore-0.9.0-mapr2.jar">
       </libraryNeeded>
@@ -559,7 +559,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-service-0.9.0-mapr2.jar"
+            name="hive-service-0.9.0-mapr2.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.9.0-mapr2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-service-0.9.0-mapr2.jar">
       </libraryNeeded>
@@ -567,7 +567,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="jdo2-api-2.3-ec.jar"
+            name="jdo2-api-2.3-ec.jar" mvn_uri="mvn:org.talend.libraries/jdo2-api-2.3-ec/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/jdo2-api-2.3-ec.jar">
       </libraryNeeded>
@@ -575,7 +575,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="libfb303_new.jar"
+            name="libfb303_new.jar" mvn_uri="mvn:org.talend.libraries/libfb303_new/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/libfb303_new.jar">
       </libraryNeeded>
@@ -583,7 +583,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="libthrift.jar"
+            name="libthrift.jar" mvn_uri="mvn:org.talend.libraries/libthrift/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/libthrift.jar">
       </libraryNeeded>
@@ -591,7 +591,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="jackson-mapper-asl-1.8.8.jar"
+            name="jackson-mapper-asl-1.8.8.jar" mvn_uri="mvn:org.talend.libraries/jackson-mapper-asl-1.8.8/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jackson/lib/jackson-mapper-asl-1.8.8.jar">
       </libraryNeeded>
@@ -599,7 +599,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="jackson-core-asl-1.8.8.jar"
+            name="jackson-core-asl-1.8.8.jar" mvn_uri="mvn:org.talend.libraries/jackson-core-asl-1.8.8/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jackson/lib/jackson-core-asl-1.8.8.jar">
       </libraryNeeded>
@@ -607,7 +607,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="derby-10.4.2.0.jar"
+            name="derby-10.4.2.0.jar" mvn_uri="mvn:org.talend.libraries/derby-10.4.2.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.derby/lib/derby-10.4.2.0.jar">
       </libraryNeeded>
@@ -615,7 +615,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="derby.jar"
+            name="derby.jar" mvn_uri="mvn:org.talend.libraries/derby/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.derby/lib/derby.jar">
       </libraryNeeded>
@@ -623,7 +623,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="derbyclient.jar"
+            name="derbyclient.jar" mvn_uri="mvn:org.talend.libraries/derbyclient/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.derby/lib/derbyclient.jar">
       </libraryNeeded>
@@ -631,7 +631,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="derbynet.jar"
+            name="derbynet.jar" mvn_uri="mvn:org.talend.libraries/derbynet/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.derby/lib/derbynet.jar">
       </libraryNeeded>
@@ -639,7 +639,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="antlr-runtime-3.0.1.jar"
+            name="antlr-runtime-3.0.1.jar" mvn_uri="mvn:org.talend.libraries/antlr-runtime-3.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.axis2/lib/antlr-runtime-3.0.1.jar">
       </libraryNeeded>
@@ -647,7 +647,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-dbcp-1.4.jar"
+            name="commons-dbcp-1.4.jar" mvn_uri="mvn:org.talend.libraries/commons-dbcp-1.4/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-dbcp-1.4.jar">
       </libraryNeeded>
@@ -655,7 +655,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-pool-1.5.4.jar"
+            name="commons-pool-1.5.4.jar" mvn_uri="mvn:org.talend.libraries/commons-pool-1.5.4/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-pool-1.5.4.jar">
       </libraryNeeded>
@@ -663,7 +663,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-logging-1.1.1.jar"
+            name="commons-logging-1.1.1.jar" mvn_uri="mvn:org.talend.libraries/commons-logging-1.1.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-logging-1.1.jar">
       </libraryNeeded>
@@ -671,7 +671,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-core-0.20.203.0.jar"
+            name="hadoop-core-0.20.203.0.jar" mvn_uri="mvn:org.talend.libraries/hadoop-core-0.20.203.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hadoop-core-0.20.203.0.jar">
       </libraryNeeded>
@@ -679,7 +679,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-exec-0.7.1.jar"
+            name="hive-exec-0.7.1.jar" mvn_uri="mvn:org.talend.libraries/hive-exec-0.7.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hive-exec-0.7.1.jar">
       </libraryNeeded>
@@ -687,7 +687,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-jdbc-0.7.1.jar"
+            name="hive-jdbc-0.7.1.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.7.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hive-jdbc-0.7.1.jar">
       </libraryNeeded>
@@ -695,7 +695,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-metastore-0.7.1.jar"
+            name="hive-metastore-0.7.1.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.7.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hive-metastore-0.7.1.jar">
       </libraryNeeded>
@@ -703,7 +703,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-service-0.7.1.jar"
+            name="hive-service-0.7.1.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.7.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hive-service-0.7.1.jar">
       </libraryNeeded>
@@ -711,7 +711,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="libfb303.jar"
+            name="libfb303.jar" mvn_uri="mvn:org.talend.libraries/libfb303/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/libfb303.jar">
       </libraryNeeded>
@@ -719,7 +719,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="slf4j-api-1.6.1.jar"
+            name="slf4j-api-1.6.1.jar" mvn_uri="mvn:org.talend.libraries/slf4j-api-1.6.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.slf4j/lib/slf4j-api-1.6.1.jar">
       </libraryNeeded>
@@ -727,7 +727,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="slf4j-log4j12-1.6.1.jar"
+            name="slf4j-log4j12-1.6.1.jar" mvn_uri="mvn:org.talend.libraries/slf4j-log4j12-1.6.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.slf4j/lib/slf4j-log4j12-1.6.1.jar">
       </libraryNeeded>
@@ -735,7 +735,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="guava-11.0.2.jar"
+            name="guava-11.0.2.jar" mvn_uri="mvn:org.talend.libraries/guava-11.0.2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.guava/lib/guava-11.0.2.jar">
       </libraryNeeded>
@@ -743,7 +743,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-builtins-0.9.0-cdh4.1.2.jar"
+            name="hive-builtins-0.9.0-cdh4.1.2.jar" mvn_uri="mvn:org.talend.libraries/hive-builtins-0.9.0-cdh4.1.2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-builtins-0.9.0-cdh4.1.2.jar">
       </libraryNeeded>
@@ -751,7 +751,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-exec-0.9.0-cdh4.1.2.jar"
+            name="hive-exec-0.9.0-cdh4.1.2.jar" mvn_uri="mvn:org.talend.libraries/hive-exec-0.9.0-cdh4.1.2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-exec-0.9.0-cdh4.1.2.jar">
       </libraryNeeded>
@@ -759,7 +759,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-jdbc-0.9.0-cdh4.1.2.jar"
+            name="hive-jdbc-0.9.0-cdh4.1.2.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.9.0-cdh4.1.2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-jdbc-0.9.0-cdh4.1.2.jar">
       </libraryNeeded>
@@ -767,7 +767,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-metastore-0.9.0-cdh4.1.2.jar"
+            name="hive-metastore-0.9.0-cdh4.1.2.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.9.0-cdh4.1.2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-metastore-0.9.0-cdh4.1.2.jar">
       </libraryNeeded>
@@ -775,7 +775,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-service-0.9.0-cdh4.1.2.jar"
+            name="hive-service-0.9.0-cdh4.1.2.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.9.0-cdh4.1.2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-service-0.9.0-cdh4.1.2.jar">
       </libraryNeeded>
@@ -783,7 +783,7 @@
             context="Postgresql wizard"
             language="java"
             message="Wizard use for TOP"
-            name="postgresql-9.4-1201.jdbc41.jar"
+            name="postgresql-9.4-1201.jdbc41.jar" mvn_uri="mvn:org.talend.libraries/postgresql-9.4-1201.jdbc41/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.jdbc.postgresql/lib/postgresql-9.4-1201.jdbc41.jar">
       </libraryNeeded>
@@ -791,7 +791,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-lang-2.6.jar"
+            name="commons-lang-2.6.jar" mvn_uri="mvn:org.talend.libraries/commons-lang-2.6/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-lang-2.6.jar">
       </libraryNeeded>
@@ -799,7 +799,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-cli-1.2.jar"
+            name="commons-cli-1.2.jar" mvn_uri="mvn:org.talend.libraries/commons-cli-1.2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-cli-1.2.jar">
       </libraryNeeded>
@@ -807,7 +807,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-codec-1.4.jar"
+            name="commons-codec-1.4.jar" mvn_uri="mvn:org.talend.libraries/commons-codec-1.4/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-codec-1.4.jar">
       </libraryNeeded>
@@ -816,7 +816,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-collections-3.2.1.jar"
+            name="commons-collections-3.2.1.jar" mvn_uri="mvn:org.talend.libraries/commons-collections-3.2.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-collections-3.2.1.jar">
       </libraryNeeded>
@@ -824,7 +824,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="commons-logging-1.1.3.jar"
+            name="commons-logging-1.1.3.jar" mvn_uri="mvn:org.talend.libraries/commons-logging-1.1.3/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-logging-1.1.jar">
       </libraryNeeded>
@@ -833,7 +833,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="guava-12.0.1.jar"
+            name="guava-12.0.1.jar" mvn_uri="mvn:org.talend.libraries/guava-12.0.1/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.guava/lib/guava-12.0.1.jar">
       </libraryNeeded>
@@ -842,7 +842,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="httpcore-4.1.2.jar"
+            name="httpcore-4.1.2.jar" mvn_uri="mvn:org.talend.libraries/httpcore-4.1.2/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.http/lib/httpcore-4.1.2.jar">
       </libraryNeeded>
@@ -850,7 +850,7 @@
             context="Impala wizard"
             language="java"
             message="Wizard use for TOP"
-            name="httpclient-4.2.5.jar"
+            name="httpclient-4.2.5.jar" mvn_uri="mvn:org.talend.libraries/httpclient-4.2.5/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.http/lib/httpclient-4.2.5.jar">
       </libraryNeeded>
@@ -858,7 +858,7 @@
             context="Impala wizard"
             language="java"
             message="Wizard use for TOP"
-            name="httpcore-4.2.5.jar"
+            name="httpcore-4.2.5.jar" mvn_uri="mvn:org.talend.libraries/httpcore-4.2.5/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache.http/lib/httpcore-4.2.5.jar">
       </libraryNeeded>
@@ -866,7 +866,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="log4j-1.2.17.jar"
+            name="log4j-1.2.17.jar" mvn_uri="mvn:org.talend.libraries/log4j-1.2.17/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.apache/lib/log4j-1.2.17.jar">
       </libraryNeeded>      
@@ -874,7 +874,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="slf4j-api-1.7.5.jar"
+            name="slf4j-api-1.7.5.jar" mvn_uri="mvn:org.talend.libraries/slf4j-api-1.7.5/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.slf4j/lib/slf4j-api-1.7.5.jar">
       </libraryNeeded>      
@@ -882,7 +882,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="slf4j-log4j12-1.7.5.jar"
+            name="slf4j-log4j12-1.7.5.jar" mvn_uri="mvn:org.talend.libraries/slf4j-log4j12-1.7.5/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.slf4j/lib/slf4j-log4j12-1.7.5.jar">
       </libraryNeeded>      
@@ -890,7 +890,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="slf4j-log4j12-1.7.5.jar"
+            name="slf4j-log4j12-1.7.5.jar" mvn_uri="mvn:org.talend.libraries/slf4j-log4j12-1.7.5/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.slf4j/lib/slf4j-log4j12-1.7.5.jar">
       </libraryNeeded>      
@@ -899,7 +899,7 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="zookeeper-3.4.5.2.1.1.0-385.jar"
+            name="zookeeper-3.4.5.2.1.1.0-385.jar" mvn_uri="mvn:org.talend.libraries/zookeeper-3.4.5.2.1.1.0-385/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.zookeeper/lib/zookeeper-3.4.5.2.1.1.0-385.jar">
       </libraryNeeded>      
