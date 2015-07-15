@@ -26,14 +26,18 @@ public class ReplaceFirstCharsInteger extends ReplaceFirstChars<Integer> {
             return null;
         } else {
             if (i != null && integerParam > 0) {
-                parameter = (int) Math.log10(i) + 1 <= integerParam ? (int) Math.log10(i) + 1 : integerParam;
-                StringBuilder sbu = new StringBuilder(i.toString());
-                StringBuilder remp = new StringBuilder(EMPTY_STRING);
-                for (int j = 0; j < parameter; ++j) {
-                    remp.append(rnd.nextInt(9));
+                if (i == 0) {
+                    return rnd.nextInt(9);
+                } else {
+                    parameter = (int) Math.log10(i) + 1 <= integerParam ? (int) Math.log10(i) + 1 : integerParam;
+                    StringBuilder sbu = new StringBuilder(i.toString());
+                    StringBuilder remp = new StringBuilder(EMPTY_STRING);
+                    for (int j = 0; j < parameter; ++j) {
+                        remp.append(rnd.nextInt(9));
+                    }
+                    sbu.replace(0, parameter, remp.toString());
+                    return Integer.parseInt(sbu.toString());
                 }
-                sbu.replace(0, parameter, remp.toString());
-                return Integer.parseInt(sbu.toString());
             } else {
                 return 0;
             }

@@ -26,14 +26,18 @@ public class ReplaceLastCharsLong extends ReplaceLastChars<Long> {
             return null;
         } else {
             if (l != null && integerParam > 0) {
-                parameter = (int) Math.log10(l) + 1 <= integerParam ? (int) Math.log10(l) + 1 : integerParam;
-                StringBuilder sbui = new StringBuilder(l.toString());
-                StringBuilder rempl = new StringBuilder(EMPTY_STRING);
-                for (int i = 0; i < parameter; ++i) {
-                    rempl.append(rnd.nextInt(9));
+                if (l == 0L) {
+                    return (long) rnd.nextInt(9);
+                } else {
+                    parameter = (int) Math.log10(l) + 1 <= integerParam ? (int) Math.log10(l) + 1 : integerParam;
+                    StringBuilder sbui = new StringBuilder(l.toString());
+                    StringBuilder rempl = new StringBuilder(EMPTY_STRING);
+                    for (int i = 0; i < parameter; ++i) {
+                        rempl.append(rnd.nextInt(9));
+                    }
+                    sbui.replace(sbui.length() - parameter, sbui.length(), rempl.toString());
+                    return Long.parseLong(sbui.toString());
                 }
-                sbui.replace(sbui.length() - parameter, sbui.length(), rempl.toString());
-                return Long.parseLong(sbui.toString());
             } else {
                 return 0L;
             }
