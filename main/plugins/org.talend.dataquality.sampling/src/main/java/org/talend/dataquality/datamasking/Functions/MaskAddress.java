@@ -37,13 +37,11 @@ public class MaskAddress extends Function<String> {
 
     @Override
     public String generateMaskedRow(String str) {
-
         StringBuilder sb = new StringBuilder(EMPTY_STRING);
-
         if ((str == null) || EMPTY_STRING.equals(str) && keepNull) {
             return str;
         } else {
-            if (str != null && !EMPTY_STRING.equals(str)) {
+            if (str != null && !EMPTY_STRING.equals(str) && !(" ").equals(str)) { //$NON-NLS-1$
                 String[] address = str.split(",| "); //$NON-NLS-1$
                 for (String tmp : address) {
                     if (Arrays.asList(keys).contains(tmp)) {
