@@ -32,10 +32,7 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
     private final ResizableList<DataType> dataTypes = new ResizableList<>(DataType.class);
 
     private static DataType.Type execute(String value) {
-        if (TypeInferenceUtils.isEmpty(value)) {
-            // 1. detect empty
-            return DataType.Type.EMPTY;
-        } else if (TypeInferenceUtils.isBoolean(value)) {
+        if (TypeInferenceUtils.isBoolean(value)) {
             // 1. detect boolean
             return DataType.Type.BOOLEAN;
         } else if (TypeInferenceUtils.isChar(value)) {
