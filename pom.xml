@@ -49,7 +49,6 @@
 		<module>i18n/plugins/org.talend.dataquality.record.linkage.ui.nl</module>
 		<module>i18n/plugins/org.talend.dataquality.standardization.nl</module>
 		<module>i18n/plugins/org.talend.rcp.branding.top.nl</module>
-		<module>i18n/plugins/org.talend.dataprofiler.core.hadoopcluster.nl</module>
 		<!--<module>main/features/org.talend.dataquality.test.feature</module>-->
 		<module>main/features/org.talend.rcp.branding.top.feature</module>
 		<module>main/features/org.talend.top.feature</module>
@@ -80,7 +79,6 @@
 		<module>main/plugins/org.talend.libraries.jung</module>
 		<module>main/plugins/org.talend.libraries.mapdb</module>
 		<module>main/plugins/org.talend.rcp.branding.top</module>
-		<module>main/plugins/org.talend.dataprofiler.core.hadoopcluster</module>
 		<module>sample/test.myudi</module>
 		<module>test/plugins/org.talend.cwm.compare.test</module>
 		<module>test/plugins/org.talend.cwm.management.test</module>
