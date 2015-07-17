@@ -51,7 +51,6 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.category.CategoryDataset;
@@ -558,8 +557,11 @@ public class TOPChartService implements ITOPChartService {
         // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
 
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        // BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        // default highlight the first bar
+        CustomConceptRenderer renderer = new CustomConceptRenderer(0);
+        plot.setRenderer(renderer);
         // disable bar outlines...
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
         renderer.setShadowVisible(false);
         renderer.setDrawBarOutline(false);
         ChartDecorator.decorateConceptChart(chart, PlotOrientation.HORIZONTAL);
