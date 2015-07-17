@@ -32,23 +32,26 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
     private final ResizableList<DataType> dataTypes = new ResizableList<>(DataType.class);
 
     private static DataType.Type execute(String value) {
-        if (TypeInferenceUtils.isBoolean(value)) {
-            // 1. detect boolean
+        if (TypeInferenceUtils.isEmpty(value)) {
+            // 1. detect empty
+            return DataType.Type.EMPTY;
+        } else if (TypeInferenceUtils.isBoolean(value)) {
+            // 2. detect boolean
             return DataType.Type.BOOLEAN;
         } else if (TypeInferenceUtils.isChar(value)) {
-            // 2. detect char
+            // 3. detect char
             return DataType.Type.CHAR;
         } else if (TypeInferenceUtils.isInteger(value)) {
-            // 3. detect integer
+            // 4. detect integer
             return DataType.Type.INTEGER;
         } else if (TypeInferenceUtils.isDouble(value)) {
-            // 4. detect double
+            // 5. detect double
             return DataType.Type.DOUBLE;
         } else if (TypeInferenceUtils.isAlphString(value)) {
-            // 5. detect alph string
+            // 6. detect alph string
             return DataType.Type.STRING;
         } else if (TypeInferenceUtils.isDate(value)) {
-            // 6. detect date
+            // 7. detect date
             return DataType.Type.DATE;
         }
         // will return string when no matching

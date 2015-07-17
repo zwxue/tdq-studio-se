@@ -46,6 +46,9 @@ public class DataType {
                 electedType = entry.getKey();
             }
         }
+        if (Type.EMPTY == electedType) {
+            return Type.STRING;
+        }
         return electedType;
     }
 
@@ -88,6 +91,7 @@ public class DataType {
         INTEGER,
         DOUBLE,
         STRING,
-        DATE
+        DATE,
+        EMPTY
     }
 }
