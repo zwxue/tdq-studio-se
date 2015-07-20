@@ -73,7 +73,9 @@ import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -125,6 +127,12 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      * @return
      */
     private boolean allowDND(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
+        // TDQ-10579: fix The NPE when drag something to reference project item.
+        if (EResourceConstant.REFERENCED_PROJECT.getName().equals(targetNode.getProperties(EProperties.LABEL))) {
+            return false;
+        }
+        // TDQ-10579~
+
         // MOD klliu Bug TDQ-4330 if targetCount's length is 1,that means targetNode is the root and system node.
         // so there is not any operations on it,then the operation of DND is not allowed.
         IPath sourcePath = RepositoryNodeHelper.getPath(sourceNode);
