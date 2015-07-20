@@ -82,11 +82,11 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         // One character
         analyzer.analyze("M");
         assertEquals(1, analyzer.getResult().size());
-        assertEquals(DataType.Type.CHAR, analyzer.getResult().get(0).getSuggestedType());
+        assertEquals(DataType.Type.STRING, analyzer.getResult().get(0).getSuggestedType());
         // Two characters
         analyzer.analyze("M");
         assertEquals(1, analyzer.getResult().size());
-        assertEquals(DataType.Type.CHAR, analyzer.getResult().get(0).getSuggestedType());
+        assertEquals(DataType.Type.STRING, analyzer.getResult().get(0).getSuggestedType());
         // The new value should invalidate previous assumptions about CHAR value
         // (no longer a CHAR).
         analyzer.analyze("Mme");
@@ -144,8 +144,8 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         assertEquals(DataType.Type.DOUBLE, result.get(12).getSuggestedType());
         assertEquals(DataType.Type.INTEGER, result.get(13).getSuggestedType());
         assertEquals(DataType.Type.STRING, result.get(14).getSuggestedType());
-        assertEquals(DataType.Type.CHAR, result.get(15).getSuggestedType());
-        assertEquals(DataType.Type.CHAR, result.get(16).getSuggestedType());
+        assertEquals(DataType.Type.STRING, result.get(15).getSuggestedType());
+        assertEquals(DataType.Type.STRING, result.get(16).getSuggestedType());
         assertEquals(DataType.Type.STRING, result.get(17).getSuggestedType());
     }
 

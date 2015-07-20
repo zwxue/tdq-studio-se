@@ -67,8 +67,8 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
         assertEquals(DataType.Type.DOUBLE, result.get(12).get(DataType.class).getSuggestedType());
         assertEquals(DataType.Type.INTEGER, result.get(13).get(DataType.class).getSuggestedType());
         assertEquals(DataType.Type.STRING, result.get(14).get(DataType.class).getSuggestedType());
-        assertEquals(DataType.Type.CHAR, result.get(15).get(DataType.class).getSuggestedType());
-        assertEquals(DataType.Type.CHAR, result.get(16).get(DataType.class).getSuggestedType());
+        assertEquals(DataType.Type.STRING, result.get(15).get(DataType.class).getSuggestedType());
+        assertEquals(DataType.Type.STRING, result.get(16).get(DataType.class).getSuggestedType());
         assertEquals(DataType.Type.STRING, result.get(17).get(DataType.class).getSuggestedType());
         // Semantic types assertions
         String[] expectedCategories = new String[] { "", //

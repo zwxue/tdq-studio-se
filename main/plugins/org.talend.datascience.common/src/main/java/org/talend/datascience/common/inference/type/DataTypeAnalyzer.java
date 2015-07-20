@@ -38,9 +38,6 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
         } else if (TypeInferenceUtils.isBoolean(value)) {
             // 2. detect boolean
             return DataType.Type.BOOLEAN;
-        } else if (TypeInferenceUtils.isChar(value)) {
-            // 3. detect char
-            return DataType.Type.CHAR;
         } else if (TypeInferenceUtils.isInteger(value)) {
             // 4. detect integer
             return DataType.Type.INTEGER;

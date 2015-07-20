@@ -87,7 +87,6 @@ public class DataType {
 
     public enum Type {
         BOOLEAN,
-        CHAR,
         INTEGER,
         DOUBLE,
         STRING,

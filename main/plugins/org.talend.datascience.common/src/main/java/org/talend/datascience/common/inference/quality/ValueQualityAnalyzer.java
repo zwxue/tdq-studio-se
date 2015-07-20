@@ -48,14 +48,6 @@ public class ValueQualityAnalyzer implements Analyzer<ValueQuality> {
                         processInvalidValue(valueQuality, value);
                     }
                     break;
-                case CHAR:
-                    if (TypeInferenceUtils.isChar(value)) {
-                        valueQuality.incrementValid();
-                    } else {
-                        valueQuality.incrementInvalid();
-                        processInvalidValue(valueQuality, value);
-                    }
-                    break;
                 case INTEGER:
                     if (TypeInferenceUtils.isInteger(value)) {
                         valueQuality.incrementValid();
