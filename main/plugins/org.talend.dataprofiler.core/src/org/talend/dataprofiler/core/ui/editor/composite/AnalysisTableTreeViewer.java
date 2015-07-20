@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -47,8 +45,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -79,7 +75,8 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.TableViewerDND;
-import org.talend.dataprofiler.core.ui.wizard.analysis.table.DQRuleLabelProvider;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TableIndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.analysis.Analysis;
@@ -101,14 +98,14 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
-import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
+import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -372,22 +369,19 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      */
     private void showAddDQRuleDialog(final TreeItem treeItem, final TableIndicator tableIndicator) {
         // MOD xqliu 2009-04-30 bug 6808
-        IndicatorCheckedTreeSelectionDialog dialog = new IndicatorCheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
-                new WorkbenchContentProvider());
-        dialog.setInput(ResourceManager.getLibrariesFolder());
+        IndicatorCheckedTreeSelectionDialog dialog = new IndicatorCheckedTreeSelectionDialog(null,
+                new DQRepositoryViewLabelProvider(), new ResourceViewContentProvider());
+        dialog.setInput(AnalysisUtils.getSelectDialogInputData(EResourceConstant.RULES_SQL));
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
-                for (Object whereRule : selection) {
-                    if (whereRule instanceof IFile) {
-                        IFile file = (IFile) whereRule;
-                        if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                            WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-                            boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
-                            if (!validStatus) {
-                                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
-                                        .getString("AnalysisTableTreeViewer.chooseValidDQRules")); //$NON-NLS-1$
-                            }
+                for (Object ruleNode : selection) {
+                    if (ruleNode instanceof RuleRepNode) {
+                        IndicatorDefinition findWhereRule = ((RuleRepNode) ruleNode).getRule();
+                        boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
+                        if (!validStatus) {
+                            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                    .getString("AnalysisTableTreeViewer.chooseValidDQRules")); //$NON-NLS-1$
                         }
                     }
                 }
@@ -396,29 +390,29 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             }
 
         });
-        dialog.addFilter(AnalysisUtils.createRuleFilter());
+
         dialog.setContainerMode(true);
         dialog.setTitle(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqruleSelector")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqrules")); //$NON-NLS-1$
         dialog.setSize(80, 30);
         dialog.create();
         // MOD xqliu 2009-04-30 bug 6808
-        IFolder whereRuleFolder = ResourceManager.getRulesFolder();
-        Object[] ownedWhereRuleFiles = getOwnedWhereRuleFiles(tableIndicator, whereRuleFolder);
-        dialog.setCheckedElements(ownedWhereRuleFiles);
+        Object[] ownedWhereRuleNodes = getOwnedWhereRuleNodes(tableIndicator);
+        dialog.setCheckedElements(ownedWhereRuleNodes);
         if (dialog.open() == Window.OK) {
-            removeUncheckedWhereRuleIndicator(ownedWhereRuleFiles, dialog.getResult(), tableIndicator, whereRuleFolder);
-            Object[] results = clearAddedResult(ownedWhereRuleFiles, dialog.getResult());
+            Object[] result = dialog.getResult();
+            removeUncheckedWhereRuleIndicator(ownedWhereRuleNodes, result, tableIndicator);
+            Object[] results = clearAddedResult(ownedWhereRuleNodes, result);
             for (Object obj : results) {
-                if (obj instanceof IFile) {
-                    IFile file = (IFile) obj;
+                if (obj instanceof RuleRepNode) {
+                    RuleRepNode node = (RuleRepNode) obj;
                     TableIndicatorUnit addIndicatorUnit = DQRuleUtilities
-                            .createIndicatorUnit(file, tableIndicator, getAnalysis());
+                            .createIndicatorUnit(node, tableIndicator, getAnalysis());
                     if (addIndicatorUnit != null) {
                         createOneUnit(treeItem, addIndicatorUnit);
                         setDirty(true);
                     } else {
-                        WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+                        IndicatorDefinition whereRule = node.getRule();
                         MessageUI.openError(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.ErrorWhenAddWhereRule",//$NON-NLS-1$
                                 whereRule.getName()));
                     }
@@ -431,24 +425,22 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     /**
      * DOC xqliu Comment method "removeUncheckedWhereRuleIndicator". ADD xqliu 2009-04-30 bug 6808
      * 
-     * @param ownedWhereRuleFiles
+     * @param ownedWhereRuleNodes
      * @param results
      * @param tableIndicator
-     * @param whereRuleFolder
      */
-    private void removeUncheckedWhereRuleIndicator(Object[] ownedWhereRuleFiles, Object[] results, TableIndicator tableIndicator,
-            IFolder whereRuleFolder) {
-        ArrayList removeList = new ArrayList();
-        for (Object file : ownedWhereRuleFiles) {
+    private void removeUncheckedWhereRuleIndicator(Object[] ownedWhereRuleNodes, Object[] results, TableIndicator tableIndicator) {
+        ArrayList<Object> removeList = new ArrayList<Object>();
+        for (Object node : ownedWhereRuleNodes) {
             boolean remove = true;
             for (Object result : results) {
-                if (file.equals(result)) {
+                if (node.equals(result)) {
                     remove = false;
                     break;
                 }
             }
             if (remove) {
-                removeList.add(file);
+                removeList.add(node);
             }
         }
         TableIndicatorUnit[] indicatorUnits = tableIndicator.getIndicatorUnits();
@@ -456,10 +448,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             IndicatorDefinition indicatorDefinition = unit.getIndicator().getIndicatorDefinition();
             if (indicatorDefinition instanceof WhereRule) {
                 WhereRule wr = (WhereRule) indicatorDefinition;
-                IFile whereRuleFile = ResourceFileMap.findCorrespondingFile(wr);
+                RuleRepNode recursiveFindNode = RepositoryNodeHelper.recursiveFindRuleSql(wr);
                 for (Object obj : removeList) {
-                    IFile file = (IFile) obj;
-                    if (whereRuleFile.equals(file)) {
+                    RuleRepNode node = (RuleRepNode) obj;
+                    if (recursiveFindNode.equals(node)) {
                         // the order can not be changed
                         removeItemBranch(this.indicatorTreeItemMap.get(unit));
                         deleteIndicatorItems(tableIndicator, unit);
@@ -479,7 +471,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      * @return
      */
     private Object[] clearAddedResult(Object[] addedResults, Object[] results) {
-        ArrayList ret = new ArrayList();
+        ArrayList<Object> ret = new ArrayList<Object>();
         for (Object result : results) {
             boolean add = true;
             for (Object addedResult : addedResults) {
@@ -502,15 +494,18 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      * @param whereRuleFolder
      * @return
      */
-    private Object[] getOwnedWhereRuleFiles(TableIndicator tableIndicator, IFolder whereRuleFolder) {
-        ArrayList<IFile> ret = new ArrayList<IFile>();
+    private Object[] getOwnedWhereRuleNodes(TableIndicator tableIndicator) {
+        ArrayList<RuleRepNode> ret = new ArrayList<RuleRepNode>();
         Indicator[] indicators = tableIndicator.getIndicators();
         for (Indicator indicator : indicators) {
             if (IndicatorHelper.isWhereRuleIndicator(indicator)) {
                 Object obj = indicator.getIndicatorDefinition();
                 if (obj != null && obj instanceof WhereRule) {
                     WhereRule wr = (WhereRule) obj;
-                    ret.add(ResourceFileMap.findCorrespondingFile(wr));
+                    RuleRepNode recursiveFindRuleSql = RepositoryNodeHelper.recursiveFindRuleSql(wr);
+                    if (recursiveFindRuleSql != null) {
+                        ret.add(recursiveFindRuleSql);
+                    }
                 }
             }
         }
@@ -532,10 +527,20 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
         String label = indicatorUnit.getIndicatorName();
+        label = label != null ? label : "Unknown indicator";//$NON-NLS-1$
+
+        SysIndicatorDefinitionRepNode recursiveFindIndicatorDefinition = RepositoryNodeHelper
+                .recursiveFindIndicatorDefinition(indicatorUnit.getIndicator().getIndicatorDefinition());
+        if (recursiveFindIndicatorDefinition != null && !recursiveFindIndicatorDefinition.getProject().isMainProject()) {
+            label = label + recursiveFindIndicatorDefinition.getDisplayProjectName();
+        }
+
         if (IndicatorEnum.WhereRuleIndicatorEnum.compareTo(type) == 0) {
             indicatorItem.setImage(0, ImageLib.getImage(ImageLib.DQ_RULE));
+        } else if (IndicatorEnum.RowCountIndicatorEnum.compareTo(type) == 0) {
+            indicatorItem.setImage(0, ImageLib.getImage(ImageLib.IND_DEFINITION));
         }
-        indicatorItem.setText(0, label != null ? label : "Unknown indicator");//$NON-NLS-1$
+        indicatorItem.setText(0, label);
 
         TreeEditor optionEditor = new TreeEditor(tree);
         Label optionLabel = new Label(tree, SWT.NONE);
@@ -920,11 +925,11 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     @Override
-    public void dropWhereRules(Object data, List<IFile> files, int index) {
-        this.dropWhereRules(data, files, index, null);
+    public void dropWhereRules(Object data, List<RuleRepNode> nodes, int index) {
+        this.dropWhereRules(data, nodes, index, null);
     }
 
-    public void dropWhereRules(Object data, List<IFile> files, int index, TreeItem item) {
+    public void dropWhereRules(Object data, List<RuleRepNode> nodes, int index, TreeItem item) {
         TreeItem treeItem = null;
         if (item == null) {
             if (getTree().getItemCount() > 0) {
@@ -933,10 +938,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         } else {
             treeItem = item;
         }
-        if (data != null && treeItem != null && files.size() > 0) {
+        if (data != null && treeItem != null && nodes.size() > 0) {
             Analysis analysis = getAnalysis();
-            for (IFile file : files) {
-                TableIndicatorUnit addIndicatorUnit = DQRuleUtilities.createIndicatorUnit(file, (TableIndicator) data, analysis);
+            for (RuleRepNode node : nodes) {
+                TableIndicatorUnit addIndicatorUnit = DQRuleUtilities.createIndicatorUnit(node, (TableIndicator) data, analysis);
                 if (addIndicatorUnit != null) {
                     createOneUnit(treeItem, addIndicatorUnit);
                     setDirty(true);
@@ -964,30 +969,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public boolean canDrop(Object data, List<IFile> files) {
-        if (data != null && files.size() > 0 && data instanceof TableIndicator) {
-            TableIndicator ti = (TableIndicator) data;
-            TableIndicatorUnit[] tius = ti.getIndicatorUnits();
-            if (tius != null) {
-                int i = 0, j = 0;
-                for (TableIndicatorUnit tiu : tius) {
-                    i++;
-                    j = 0;
-                    String name = tiu.getIndicator().getIndicatorDefinition().getName();
-                    for (IFile file : files) {
-                        j++;
-                        if (DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName().equals(name)) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
     }
 
     private void deleteIndicatorItems(TableIndicator tableIndicator, TableIndicatorUnit inidicatorUnit) {

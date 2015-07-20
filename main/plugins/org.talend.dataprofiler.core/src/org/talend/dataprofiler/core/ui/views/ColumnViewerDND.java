@@ -616,7 +616,7 @@ public class ColumnViewerDND {
             StructuredSelection ts = (StructuredSelection) commonViewer.getSelection();
             AnalysisColumnTreeViewer viewer = null;
             Analysis analysis = null;
-            ArrayList<IFile> al = new ArrayList<IFile>();
+            ArrayList<IndicatorDefinition> al = new ArrayList<IndicatorDefinition>();
             if (ts.toList() != null) {
                 // Iterator<IFile> iter = (Iterator<IFile>) ts.iterator();
                 List list = ts.toList();
@@ -624,13 +624,10 @@ public class ColumnViewerDND {
                 for (Object obj : list) {
                     if (obj instanceof SysIndicatorDefinitionRepNode) {
                         SysIndicatorDefinitionRepNode node2 = (SysIndicatorDefinitionRepNode) obj;
-                        IFile file = ResourceManager.getRoot().getProject(node2.getProject().getTechnicalLabel())
-                                .getFile(WorkbenchUtils.getFilePath(node2));
-
-                        al.add(file);
+                        al.add(node2.getIndicatorDefinition());
                     }
                 }
-                for (IFile fe : al) {
+                for (IndicatorDefinition udid : al) {
                     TreeItem item = (TreeItem) event.item;
                     // MOD 20130606 TDQ-5852 should include using delimitedfile indicator type,
                     ModelElementIndicator data = (ModelElementIndicator) item
@@ -640,7 +637,7 @@ public class ColumnViewerDND {
                     analysis = viewer.getAnalysis();
                     IndicatorUnit[] addIndicatorUnits = null;
                     try {
-                        addIndicatorUnits = UDIUtils.createIndicatorUnit(fe, data, analysis);
+                        addIndicatorUnits = UDIUtils.createIndicatorUnit(udid, data, analysis);
                     } catch (Throwable e) {
                         log.error(e, e);
                         MessageDialog.openError(commonViewer.getTree().getShell(),

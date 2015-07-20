@@ -14,8 +14,8 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dq.nodes.RuleRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -28,11 +28,9 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
 
     public abstract void dropTables(List<NamedColumnSet> sets, int index);
 
-    public abstract void dropWhereRules(Object data, List<IFile> files, int index);
+    public abstract void dropWhereRules(Object data, List<RuleRepNode> nodes, int index);
 
     public abstract boolean canDrop(NamedColumnSet set);
-
-    public abstract boolean canDrop(Object data, List<IFile> files);
 
     /*
      * (non-Javadoc)

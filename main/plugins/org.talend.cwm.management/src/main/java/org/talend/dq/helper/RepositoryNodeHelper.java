@@ -1286,7 +1286,7 @@ public final class RepositoryNodeHelper {
                 modelElement = (ModelElement) EObjectHelper.resolveObject(modelElement);
             }
             String projectName = modelElement.eResource().getURI().segment(1);
-            List<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+            java.util.Set<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
             for (Project project : allProjects) {
                 if (project.getTechnicalLabel().equals(projectName)) {
                     return project;
@@ -1986,16 +1986,38 @@ public final class RepositoryNodeHelper {
     // }
 
     /**
-     * ADD mzhao 15750 , build dq metadata tree, get connection root node.
+     * ADD mzhao 15750 , build dq metadata tree, get connection root node. (note: include the metadata connection nodes
+     * from the reference projects).
+     * 
+     * @param withDeleted
+     * @return
      */
     public static List<IRepositoryNode> getConnectionRepositoryNodes(boolean withDeleted) {
-        RepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
         List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
-        if (node != null) {
-            List<IRepositoryNode> childrens = node.getChildren();
-            for (IRepositoryNode subNode : childrens) {
-                if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
-                    connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
+
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            RepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
+
+            if (node != null) {
+                List<IRepositoryNode> childrens = node.getChildren(withDeleted);
+                for (IRepositoryNode subNode : childrens) {
+                    if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
+                        connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
+                    }
+                }
+            }
+        } else {
+            // get all the metadata types from the all the projects including the reference project.
+            java.util.Set<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+            for (Project project : allProjects) {
+                DQRepositoryNode node = (DQRepositoryNode) getRootNode(ERepositoryObjectType.METADATA, true, project);
+                if (node != null) {
+                    List<IRepositoryNode> childrens = node.getChildren(withDeleted);
+                    for (IRepositoryNode subNode : childrens) {
+                        if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
+                            connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
+                        }
+                    }
                 }
             }
         }
@@ -2086,7 +2108,7 @@ public final class RepositoryNodeHelper {
         IRepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true, project);
         if (node != null) {
             for (int i = 1; folderPathArray.length > i; i++) {
-                for (IRepositoryNode childNode : node.getChildren()) {
+                for (IRepositoryNode childNode : node.getChildren(false)) {
                     if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
                         node = childNode;
                         break;
@@ -2254,9 +2276,7 @@ public final class RepositoryNodeHelper {
             for (TreeItem item : items) {
                 node = (DQRepositoryNode) item.getData();
                 DQRepositoryNode matchNode = getMatchNode(project, node, folderItem);
-                if (matchNode == null) {
-                    continue;
-                } else {
+                if (matchNode != null) {
                     return matchNode;
                 }
             }
@@ -2279,9 +2299,7 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode node1 : node.getChildren()) {
                 for (IRepositoryNode node2 : node1.getChildren()) {
                     DQRepositoryNode matchNode = getMatchNode(project, (DQRepositoryNode) node2, folderItem);
-                    if (matchNode == null) {
-                        continue;
-                    } else {
+                    if (matchNode != null) {
                         return matchNode;
                     }
                 }
@@ -2295,11 +2313,12 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     * DOC msjian Comment method "isFindTheMatchNode".
+     * DOC msjian Comment method "isNodeMatch".
      * 
      * @param project
      * @param node
      * @param folderItem
+     * @return boolean
      */
     private static boolean isNodeMatch(org.talend.core.model.general.Project project, DQRepositoryNode node, FolderItem folderItem) {
         // MOD qiongli 2011-2-16,bug 18642.filter recycle bin node.

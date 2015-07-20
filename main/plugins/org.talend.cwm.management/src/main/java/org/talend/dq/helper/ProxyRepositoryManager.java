@@ -12,8 +12,9 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.LoginException;
@@ -190,8 +191,9 @@ public class ProxyRepositoryManager {
         return false;
     }
 
-    public List<org.talend.core.model.general.Project> getAllProjects() {
-        List<Project> result = new ArrayList<Project>();
+    public Set<org.talend.core.model.general.Project> getAllProjects() {
+        // make sure there is no duplicated projects
+        Set<Project> result = new HashSet<Project>();
         Project currentProject = ProjectManager.getInstance().getCurrentProject();
         List<Project> referencedProjects = ProjectManager.getInstance().getAllReferencedProjects();
         for (Project pro : referencedProjects) {
