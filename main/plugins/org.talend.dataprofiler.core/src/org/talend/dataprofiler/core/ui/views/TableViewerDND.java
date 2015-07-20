@@ -191,13 +191,11 @@ public abstract class TableViewerDND {
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             List list = ((StructuredSelection) commonViewer.getSelection()).toList();
-            List<IFile> files = new ArrayList<IFile>();
+            List<RuleRepNode> ruleNodes = new ArrayList<RuleRepNode>();
             for (Object obj : list) {
                 if (obj instanceof RuleRepNode) {
                     RuleRepNode node2 = (RuleRepNode) obj;
-                    IFile file = ResourceManager.getRoot().getProject(node2.getProject().getTechnicalLabel())
-                            .getFile(WorkbenchUtils.getFilePath(node2));
-                    files.add(file);
+                    ruleNodes.add(node2);
                 }
             }
 
@@ -209,7 +207,7 @@ public abstract class TableViewerDND {
                     AnalysisTableTreeViewer viewer = (AnalysisTableTreeViewer) item.getParent().getData(
                             AnalysisTableTreeViewer.VIEWER_KEY);
 
-                    viewer.dropWhereRules(data, files, index, item);
+                    viewer.dropWhereRules(data, ruleNodes, index, item);
                 }
             }
         }
@@ -241,7 +239,6 @@ public abstract class TableViewerDND {
             }
         }
 
-        @SuppressWarnings("unchecked")
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();

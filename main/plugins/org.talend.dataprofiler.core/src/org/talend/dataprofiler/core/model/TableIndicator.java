@@ -27,9 +27,9 @@ import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
-import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -244,14 +244,15 @@ public class TableIndicator {
         return tableIndicator;
     }
 
-    private TableIndicatorUnit createSpecialIndicatorUnit(IFile fe, IndicatorEnum indicatorEnum, Indicator indicator) {
+    private TableIndicatorUnit createSpecialIndicatorUnit(IndicatorDefinition whereRule, IndicatorEnum indicatorEnum,
+            Indicator indicator) {
         Indicator indicatorNew = indicator;
         if (indicatorNew == null) {
             IndicatorSqlFactory factory = IndicatorSqlFactory.eINSTANCE;
             indicatorNew = (Indicator) factory.create(indicatorEnum.getIndicatorType());
-            if (fe != null && indicatorNew instanceof WhereRuleIndicator) {
+            if (whereRule != null && indicatorNew instanceof WhereRuleIndicator) {
                 indicatorNew.setAnalyzedElement(getColumnSet());
-                indicatorNew.setIndicatorDefinition(DQRuleResourceFileHelper.getInstance().findWhereRule(fe));
+                indicatorNew.setIndicatorDefinition(whereRule);
             }
         }
         if (!indicatorEnumList.contains(indicatorEnum)) {
@@ -288,8 +289,8 @@ public class TableIndicator {
         return addSpecialIndicator(null, indicatorEnum, indicator);
     }
 
-    public TableIndicatorUnit addSpecialIndicator(IFile fe, IndicatorEnum indicatorEnum, Indicator indicator) {
-        return createSpecialIndicatorUnit(fe, indicatorEnum, indicator);
+    public TableIndicatorUnit addSpecialIndicator(IndicatorDefinition whereRule, IndicatorEnum indicatorEnum, Indicator indicator) {
+        return createSpecialIndicatorUnit(whereRule, indicatorEnum, indicator);
     }
 
     /**

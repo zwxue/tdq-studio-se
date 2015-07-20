@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
@@ -93,10 +91,9 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -623,19 +620,17 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                     masterPage.doSave(null);
                 }
 
-                IFolder udiProject = ResourceManager.getUDIFolder();
-
-                CheckedTreeSelectionDialog dialog = UDIUtils.createUdiCheckedTreeSelectionDialog(udiProject, meIndicator);
+                CheckedTreeSelectionDialog dialog = UDIUtils.createUdiCheckedTreeSelectionDialog(meIndicator);
 
                 if (dialog.open() == Window.OK) {
                     // MOD qiongli 2012-10-24 TDQ-6308,just remove some deselected indicatorUnit then set dirty to
                     // true,just create new indicatorUnit for some new added UDI then set dirty to true.
-                    List<IFile> allSelectedFiles = new ArrayList<IFile>();
+                    List<IndicatorDefinition> allSelectedIndicatorDefinitions = new ArrayList<IndicatorDefinition>();
                     Set<String> allSelectedIndNames = new HashSet<String>();
                     for (Object obj : dialog.getResult()) {
-                        if (obj instanceof IFile) {
-                            allSelectedFiles.add((IFile) obj);
-                            IndicatorDefinition udid = IndicatorResourceFileHelper.getInstance().findIndDefinition((IFile) obj);
+                        if (obj instanceof SysIndicatorDefinitionRepNode) {
+                            IndicatorDefinition udid = ((SysIndicatorDefinitionRepNode) obj).getIndicatorDefinition();
+                            allSelectedIndicatorDefinitions.add(udid);
                             if (udid != null) {
                                 allSelectedIndNames.add(udid.getName());
                             }
@@ -660,14 +655,13 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                     }
                     treeItem.removeAll();
 
-                    for (IFile file : allSelectedFiles) {
-                        IndicatorDefinition udid = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
+                    for (IndicatorDefinition udid : allSelectedIndicatorDefinitions) {
                         if (udid != null && oldSelectedIndNames.contains(udid.getName())) {
                             continue;
                         }
                         IndicatorUnit[] addIndicatorUnits = null;
                         try {
-                            addIndicatorUnits = UDIUtils.createIndicatorUnit(file, meIndicator, getAnalysis());
+                            addIndicatorUnits = UDIUtils.createIndicatorUnit(udid, meIndicator, getAnalysis());
                         } catch (Throwable e1) {
                             log.warn(e1, e1);
                         }

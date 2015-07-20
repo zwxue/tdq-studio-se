@@ -52,21 +52,21 @@ public class DQRuleItemLabelGenerator extends StandardCategoryItemLabelGenerator
         result[0] = dataset.getRowKey(row).toString();
         result[1] = dataset.getColumnKey(column).toString();
         Number value = dataset.getValue(row, column);
-        if (value != null) {
+        if (value != null && !value.equals(Double.NaN)) {
             if (super.getNumberFormat() != null) {
                 result[2] = super.getNumberFormat().format(value);
             } else if (super.getDateFormat() != null) {
                 result[2] = super.getDateFormat().format(value);
             }
-        } else {
-            result[2] = "-";
-        }
-        if (value != null) {
+
             double total = DataUtilities.calculateColumnTotal(dataset, column);
             double percent = value.doubleValue() / total;
             // MOD qiongli bug 21589,override for just changeing this line.avoid 99.99% to show 100%
             // result[3] = this.percentFormat.format(percent);
             result[3] = stringformat(percent, 0).toString();
+        } else {
+            result[2] = "-"; //$NON-NLS-1$
+            result[3] = "-"; //$NON-NLS-1$
         }
 
         return result;

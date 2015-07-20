@@ -21,8 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -35,9 +33,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -51,9 +46,9 @@ import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.dialog.JavaUdiJarSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
-import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
@@ -76,12 +71,14 @@ import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.CustomAttributeMatcherHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -267,11 +264,9 @@ public final class UDIUtils {
         return null;
     }
 
-    public static IndicatorUnit[] createIndicatorUnit(IFile pfile, ModelElementIndicator meIndicator, Analysis analysis)
-            throws Throwable {
+    public static IndicatorUnit[] createIndicatorUnit(IndicatorDefinition udid, ModelElementIndicator meIndicator,
+            Analysis analysis) throws Throwable {
         List<IndicatorUnit> addIndicatorUnits = new ArrayList<IndicatorUnit>();
-
-        IndicatorDefinition udid = IndicatorResourceFileHelper.getInstance().findIndDefinition(pfile);
 
         // can't add the same user defined indicator
         for (Indicator indicator : meIndicator.getIndicators()) {
@@ -349,30 +344,28 @@ public final class UDIUtils {
     /**
      * DOC xqliu Comment method "createUdiCheckedTreeSelectionDialog".
      * 
-     * @param udiProject
      * @param meIndicator
      * @return
      */
-    public static CheckedTreeSelectionDialog createUdiCheckedTreeSelectionDialog(IFolder udiProject,
-            ModelElementIndicator meIndicator) {
-        CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new UdiLabelProvider(),
-                new WorkbenchContentProvider());
-        dialog.addFilter(new RecycleBinFilter());
+    public static CheckedTreeSelectionDialog createUdiCheckedTreeSelectionDialog(ModelElementIndicator meIndicator) {
+        CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRepositoryViewLabelProvider(),
+                new ResourceViewContentProvider());
         dialog.addFilter(new FolderObjFilter());
-        dialog.setInput(udiProject);
+
+        DQRepositoryNode udiDialogInputData = AnalysisUtils.getSelectDialogInputData(EResourceConstant.USER_DEFINED_INDICATORS);
+        dialog.setInput(udiDialogInputData);
+
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
-                for (Object udi : selection) {
-                    if (udi instanceof IFile) {
-                        IFile file = (IFile) udi;
-                        if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
-                            IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
-                            boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
-                            if (!validStatus) {
-                                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
-                                        .getString("AnalysisColumnTreeViewer.chooseValidUdis")); //$NON-NLS-1$
-                            }
+                for (Object patte : selection) {
+                    if (patte instanceof SysIndicatorDefinitionRepNode) {
+                        SysIndicatorDefinitionRepNode udiNode = (SysIndicatorDefinitionRepNode) patte;
+                        IndicatorDefinition indicatorDefinition = udiNode.getIndicatorDefinition();
+                        boolean validStatus = TaggedValueHelper.getValidStatus(indicatorDefinition);
+                        if (!validStatus) {
+                            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                    .getString("AnalysisColumnTreeViewer.chooseValidUdis")); //$NON-NLS-1$
                         }
                     }
                 }
@@ -381,55 +374,13 @@ public final class UDIUtils {
             }
 
         });
-        dialog.addFilter(new DQFolderFliter(true));
-        dialog.addFilter(new ViewerFilter() {
 
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFile) {
-                    IFile file = (IFile) element;
-                    if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
-                        return true;
-                    }
-                } else if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    return ResourceService.isSubFolder(ResourceManager.getUDIFolder(), folder);
-                }
-                return false;
-            }
-        });
         dialog.setContainerMode(true);
-        dialog.setInitialSelections(getUDIFilesByIndicator(meIndicator));
+        dialog.setInitialSelections(getUDIFilesByIndicator(udiDialogInputData, meIndicator));
         dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udiSelector")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udis")); //$NON-NLS-1$
         dialog.setSize(80, 30);
         return dialog;
-    }
-
-    /**
-     * get all udi resources in specified folder
-     * 
-     * @param udiFiles container for udi IFile list
-     * @param pfolder folder to search
-     * @return
-     */
-    public static List<IFile> getAllUdiFiles(List<IFile> udiFiles, IFolder pfolder) {
-        IResource[] members = null;
-        try {
-            members = pfolder.members();
-        } catch (CoreException e) {
-            ExceptionHandler.process(e);
-        }
-        for (IResource resource : members) {
-            if (resource instanceof IFile) {
-                if (FactoriesUtil.isUDIFile(resource.getFileExtension())) {
-                    udiFiles.add((IFile) resource);
-                }
-            } else if (resource instanceof IFolder) {
-                udiFiles = getAllUdiFiles(udiFiles, (IFolder) resource);
-            }
-        }
-        return udiFiles;
     }
 
     /**
@@ -438,18 +389,36 @@ public final class UDIUtils {
      * @param meIndicator
      * @return
      */
-    private static Object[] getUDIFilesByIndicator(ModelElementIndicator meIndicator) {
-        List<IFile> udiFiles = getAllUdiFiles(new ArrayList<IFile>(), ResourceManager.getUDIFolder());
+    private static Object[] getUDIFilesByIndicator(DQRepositoryNode udiDialogInputData, ModelElementIndicator meIndicator) {
         ArrayList<Object> ret = new ArrayList<Object>();
         for (Indicator indicator : meIndicator.getIndicators()) {
             if (indicator instanceof UserDefIndicator) {
                 UserDefIndicator selectedIndicator = (UserDefIndicator) indicator;
-                for (IFile udiFile : udiFiles) {
-                    IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(udiFile);
-                    if (selectedIndicator.getName().equals(findUdi.getName())) {
-                        ret.add(udiFile);
+
+                for (IRepositoryNode udiFolderNode : udiDialogInputData.getChildren()) {
+
+                    for (IRepositoryNode udiNode : udiFolderNode.getChildren()) {
+                        if (udiNode instanceof SysIndicatorDefinitionRepNode) {
+
+                            if (selectedIndicator.getName().equals(
+                                    ((SysIndicatorDefinitionRepNode) udiNode).getIndicatorDefinition().getName())) {
+                                ret.add(udiNode);
+                            }
+                        } else if (udiNode instanceof UserDefIndicatorSubFolderRepNode) {
+                            for (IRepositoryNode udiNode2 : udiNode.getChildren()) {
+                                if (udiNode2 instanceof SysIndicatorDefinitionRepNode) {
+
+                                    if (selectedIndicator.getName().equals(
+                                            ((SysIndicatorDefinitionRepNode) udiNode2).getIndicatorDefinition().getName())) {
+                                        ret.add(udiNode2);
+                                    }
+                                }
+                            }
+
+                        }
                     }
                 }
+
             }
         }
         return ret.toArray();

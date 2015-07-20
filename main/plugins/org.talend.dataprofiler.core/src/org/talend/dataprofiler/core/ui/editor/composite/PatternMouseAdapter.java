@@ -34,13 +34,13 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -82,26 +82,9 @@ public class PatternMouseAdapter extends MouseAdapter {
         }
 
         // MOD gdbu 2011-8-26 bug : TDQ-2169
-        IRepositoryNode patternFolderNode = null;
-
-        // MOD qiongli 2011-6-16 bug 21768,pattern in columnset just support java engine.
-        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        // MOD yyin 20131204 TDQ-8413, use the current selected value to judge, no need to save the analysis
-        String executionLanguage = masterPage.getCurrentExecuteLanguage();
-        if (AnalysisType.COLUMN_SET.equals(analysisType)) {
-            if (ExecutionLanguage.SQL.getLiteral().equals(executionLanguage)) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("PatternMouseAdapter.noSupportForSqlEngine")); //$NON-NLS-1$
-                return;
-            } else if (ExecutionLanguage.JAVA.getLiteral().equals(executionLanguage)) {
-                patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);
-            }
-        } else if (AnalysisType.MULTIPLE_COLUMN.equals(analysisType)) {
-            if (ExecutionLanguage.JAVA.getLiteral().equals(executionLanguage)) {
-                patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);
-            }
-        }
-        if (null == patternFolderNode) {
-            patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERNS);
+        IRepositoryNode patternFolderNode = getPatternSelectDialogInputData();
+        if (patternFolderNode == null) {
+            return;
         }
 
         CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(patternFolderNode);
@@ -185,6 +168,37 @@ public class PatternMouseAdapter extends MouseAdapter {
                 page.refreshTheTree(page.getCurrentModelElementIndicators());
             }
         }
+    }
+
+    /**
+     * DOC msjian Comment method "getPatternSelectDialogInputData".
+     * 
+     * @return
+     */
+    private IRepositoryNode getPatternSelectDialogInputData() {
+        IRepositoryNode patternFolderNode = null;
+
+        // MOD qiongli 2011-6-16 bug 21768,pattern in columnset just support java engine.
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        // MOD yyin 20131204 TDQ-8413, use the current selected value to judge, no need to save the analysis
+        String executionLanguage = masterPage.getCurrentExecuteLanguage();
+        if (AnalysisType.COLUMN_SET.equals(analysisType)) {
+            if (ExecutionLanguage.SQL.getLiteral().equals(executionLanguage)) {
+                MessageUI.openWarning(DefaultMessagesImpl.getString("PatternMouseAdapter.noSupportForSqlEngine")); //$NON-NLS-1$
+                return patternFolderNode;
+            } else if (ExecutionLanguage.JAVA.getLiteral().equals(executionLanguage)) {
+
+                patternFolderNode = AnalysisUtils.getSelectDialogInputData(EResourceConstant.PATTERN_REGEX);
+            }
+        } else if (AnalysisType.MULTIPLE_COLUMN.equals(analysisType)) {
+            if (ExecutionLanguage.JAVA.getLiteral().equals(executionLanguage)) {
+                patternFolderNode = AnalysisUtils.getSelectDialogInputData(EResourceConstant.PATTERN_REGEX);
+            }
+        }
+        if (null == patternFolderNode) {
+            patternFolderNode = AnalysisUtils.getSelectDialogInputData(EResourceConstant.PATTERNS);
+        }
+        return patternFolderNode;
     }
 
     private void createOneUnit(IndicatorUnit newPattern) {

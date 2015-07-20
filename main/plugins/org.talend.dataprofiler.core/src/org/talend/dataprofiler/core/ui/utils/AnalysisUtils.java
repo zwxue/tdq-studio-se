@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.general.Project;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultBAWDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
@@ -31,8 +32,14 @@ import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.events.FrequencyDynamicChartEventReceiver;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -206,6 +213,52 @@ public class AnalysisUtils {
         dyModel.setIndicatorList(indicators);
         dyModel.setChartType(chartType);
         return dyModel;
+    }
+
+    /**
+     * DOC msjian Comment method "getAnalysisSelectDialogInputData".
+     * 
+     * @param eResourceConstant
+     * @return
+     */
+    public static DQRepositoryNode getAnalysisSelectDialogInputData(EResourceConstant eResourceConstant) {
+        DQRepositoryNode node = new DQRepositoryNode(null, null, ENodeType.SYSTEM_FOLDER, ProjectManager.getInstance()
+                .getCurrentProject());
+        node.getChildren().clear();
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            IRepositoryNode librariesFolderNode = RepositoryNodeHelper.getDataProfilingFolderNode(eResourceConstant);
+            node.getChildren().add(librariesFolderNode);
+        } else {
+            java.util.Set<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+            for (Project project : allProjects) {
+                IRepositoryNode librariesFolderNode = RepositoryNodeHelper.getDataProfilingFolderNode(eResourceConstant, project);
+                node.getChildren().add(librariesFolderNode);
+            }
+        }
+        return node;
+    }
+
+    /**
+     * get Select Dialog Input Data.
+     * 
+     * @param eResourceConstant: for select UDI dialog is EResourceConstant.USER_DEFINED_INDICATORS
+     * @return DQRepositoryNode
+     */
+    public static DQRepositoryNode getSelectDialogInputData(EResourceConstant eResourceConstant) {
+        DQRepositoryNode node = new DQRepositoryNode(null, null, ENodeType.SYSTEM_FOLDER, ProjectManager.getInstance()
+                .getCurrentProject());
+        node.getChildren().clear();
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            IRepositoryNode librariesFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(eResourceConstant);
+            node.getChildren().add(librariesFolderNode);
+        } else {
+            java.util.Set<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+            for (Project project : allProjects) {
+                IRepositoryNode librariesFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(eResourceConstant, project);
+                node.getChildren().add(librariesFolderNode);
+            }
+        }
+        return node;
     }
 
 }

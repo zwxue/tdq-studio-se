@@ -163,7 +163,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      * @throws CoreException
      */
     private Object[] getRepositoryNodeChildren(Object element) throws PersistenceException, CoreException {
-        RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         final DQRepositoryNode node = (DQRepositoryNode) element;
         // MOD gdbu 2011-7-20 bug : 23220
         DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
@@ -203,40 +202,47 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
         if (children.size() <= 0) {
             // ~23220
+            List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
+            IRepositoryViewObject viewObject = node.getObject();
+            String label = viewObject == null ? null : viewObject.getLabel();
+            if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
+                resContants.add(EResourceConstant.ANALYSIS);
+                if (PluginChecker.isTDQLoaded()) {
+                    resContants.add(EResourceConstant.REPORTS);
+                }
+            } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
+                resContants.add(EResourceConstant.EXCHANGE);
+                resContants.add(EResourceConstant.INDICATORS);
+                if (PluginChecker.isTDQLoaded()) {
+                    resContants.add(EResourceConstant.JRXML_TEMPLATE);
+                }
+                resContants.add(EResourceConstant.PATTERNS);
+                resContants.add(EResourceConstant.RULES);
+                resContants.add(EResourceConstant.SOURCE_FILES);
+            } else if (EResourceConstant.METADATA.getName().equals(label)) {
+                resContants.add(EResourceConstant.DB_CONNECTIONS);
+                resContants.add(EResourceConstant.FILEDELIMITED);
+                if (PluginChecker.isTDQLoaded() && HadoopClusterUtils.getDefault().isServiceInstalled()) {
+                    resContants.add(EResourceConstant.HADOOP_CLUSTER);
+                }
+            }
+            if (resContants.size() > 0) {
+                RepositoryNodeBuilder.getInstance().createRepositoryNodeSystemFolders(node, resContants, node.getProject());
+            }
+        } else {
+            // create the reference project nodes(metadata/library/dataprofiling), make them the same with main project,
+            // to avoid can not get reference project nodes when open the select udi/pattern/rule dialog
             if (EResourceConstant.REFERENCED_PROJECT.getName().equals(node.getProperties(EProperties.LABEL))) {
                 if (!ProxyRepositoryManager.getInstance().isMergeRefProject()) {
-                    // create children for referenced project node
-                    handleReferenced(node);
-                }
-
-            } else {
-                List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                IRepositoryViewObject viewObject = node.getObject();
-                String label = viewObject == null ? null : viewObject.getLabel();
-                if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
-                    resContants.add(EResourceConstant.ANALYSIS);
-                    if (PluginChecker.isTDQLoaded()) {
-                        resContants.add(EResourceConstant.REPORTS);
-                    }
-                } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
-                    resContants.add(EResourceConstant.EXCHANGE);
-                    resContants.add(EResourceConstant.INDICATORS);
-                    if (PluginChecker.isTDQLoaded()) {
-                        resContants.add(EResourceConstant.JRXML_TEMPLATE);
-                    }
-                    resContants.add(EResourceConstant.PATTERNS);
-                    resContants.add(EResourceConstant.RULES);
-                    resContants.add(EResourceConstant.SOURCE_FILES);
-                } else if (EResourceConstant.METADATA.getName().equals(label)) {
-                    resContants.add(EResourceConstant.DB_CONNECTIONS);
-                    resContants.add(EResourceConstant.FILEDELIMITED);
-                    if (PluginChecker.isTDQLoaded() && HadoopClusterUtils.getDefault().isServiceInstalled()) {
-                        resContants.add(EResourceConstant.HADOOP_CLUSTER);
+                    for (IRepositoryNode refProjectNode : node.getChildren()) {
+                        for (IRepositoryNode refProjectItemNode : refProjectNode.getChildren()) {
+                            getRepositoryNodeChildren(refProjectItemNode);
+                        }
                     }
                 }
-                instance.createRepositoryNodeSystemFolders(node, resContants, node.getProject());
             }
         }
+
         return sortRepositoryNode(children.toArray());
     }
 
@@ -310,6 +316,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 refProjectNode.setProperties(EProperties.LABEL, ERepositoryObjectType.REFERENCED_PROJECTS.getLabel());
                 refProjectNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.REFERENCED_PROJECTS);
                 folders.add(refProjectNode);
+
+                // create children for referenced project node
+                handleReferenced(refProjectNode);
             }
         }
 
@@ -412,18 +421,16 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 IRepositoryViewObject viewObject = node.getObject();
                 if (viewObject instanceof MetadataColumnRepositoryObject) {
                     return false;
-                } else if (node instanceof ExchangeFolderRepNode) {
+                } else if (node instanceof ExchangeFolderRepNode || node instanceof ExchangeCategoryRepNode
+                        || node instanceof SysIndicatorFolderRepNode || element instanceof DBTableRepNode
+                        || element instanceof DBViewRepNode || element instanceof DBCatalogRepNode
+                        || element instanceof DBSchemaRepNode) {
                     // ExchangeFolderRepNode always have children
-                    return true;
-                } else if (node instanceof ExchangeCategoryRepNode) {
                     // ExchangeCategoryRepNode always have children
                     return true;
                 } else if (node instanceof ExchangeComponentRepNode) {
                     // ExchangeComponentRepNode always don't have children
                     return false;
-                } else if (node instanceof SysIndicatorFolderRepNode) {
-                    return true;
-
                 } else if (element instanceof DBTableFolderRepNode) {
                     // MOD gdbu 2011-9-1 TDQ-3457
                     if (DQRepositoryNode.isOnFilterring()) {
@@ -431,14 +438,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     }
                     DBTableFolderRepNode dbTableFolder = (DBTableFolderRepNode) element;
                     return dbTableFolder.hasChildren();
-                } else if (element instanceof DBTableRepNode) {
-                    return true;
-                } else if (element instanceof DBViewRepNode) {
-                    return true;
-                } else if (element instanceof DBCatalogRepNode) {
-                    return true;
-                } else if (element instanceof DBSchemaRepNode) {
-                    return true;
                 } else if (element instanceof DBViewFolderRepNode) {
                     if (DQRepositoryNode.isOnFilterring()) {
                         return true;
@@ -447,8 +446,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     return dbViewFolder.hasChildren();
                     // ~TDQ-3457
                 }
-            }
-            if (element instanceof IEcosCategory) {
+            } else if (element instanceof IEcosCategory) {
                 return true;
             }
             // // MOD qiongli feature 9486

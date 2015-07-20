@@ -12,16 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.dqrule;
 
-import org.eclipse.core.resources.IFile;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
-import org.talend.dataquality.rules.WhereRule;
-import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -41,9 +40,8 @@ public final class DQRuleUtilities {
      * @param analysis
      * @return
      */
-    public static TableIndicatorUnit createIndicatorUnit(IFile fe, TableIndicator tableIndicator, Analysis analysis) {
-        WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
-
+    public static TableIndicatorUnit createIndicatorUnit(RuleRepNode ruleRepNode, TableIndicator tableIndicator, Analysis analysis) {
+        IndicatorDefinition whereRule = ruleRepNode.getRule();
         for (Indicator indicator : tableIndicator.getIndicators()) {
             if (whereRule.getName().equals(indicator.getName())) {
                 return null;
@@ -53,7 +51,7 @@ public final class DQRuleUtilities {
         WhereRuleIndicator[] compositeWhereRuleIndicator = createCompositeWhereRuleIndicator(tableIndicator.getColumnSet(),
                 whereRule);
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(compositeWhereRuleIndicator[0].eClass());
-        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, compositeWhereRuleIndicator[0]);
+        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(whereRule, type, compositeWhereRuleIndicator[0]);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, whereRule);
 
         return addIndicatorUnit;
@@ -62,7 +60,7 @@ public final class DQRuleUtilities {
     /**
      * @return 0 based index is WhereRuleIndicator
      */
-    public static WhereRuleIndicator[] createCompositeWhereRuleIndicator(ModelElement anaElement, WhereRule whereRuleDef) {
+    public static WhereRuleIndicator[] createCompositeWhereRuleIndicator(ModelElement anaElement, IndicatorDefinition whereRuleDef) {
         WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
         wrIndicator.setAnalyzedElement(anaElement);
         wrIndicator.setIndicatorDefinition(whereRuleDef);

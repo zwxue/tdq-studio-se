@@ -56,7 +56,7 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
             super.getChildren().clear();
 
             if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
-                List<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+                java.util.Set<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
                 for (Project project : allProjects) {
                     getChildrenForProject(withDeleted, project);
                 }

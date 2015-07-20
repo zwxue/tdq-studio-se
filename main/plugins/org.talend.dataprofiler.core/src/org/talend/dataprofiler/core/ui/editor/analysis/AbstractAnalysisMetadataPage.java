@@ -90,6 +90,7 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -507,6 +508,13 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
         TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
         String displayName = repNode.getObject().getProperty().getDisplayName();
+
+        // TDQ-10655: make the format of display is: label+(@reference project name)
+        DQRepositoryNode dqRepositoryNode = (DQRepositoryNode) repNode;
+        if (!dqRepositoryNode.getProject().isMainProject()) {
+            displayName += dqRepositoryNode.getDisplayProjectName();
+        }
+
         ti.setText(new String[] { displayName, connectionType });
 
         connCombo.setData(displayName + connectionType, index);
