@@ -90,26 +90,22 @@ public abstract class IndicatorUnit {
      * @return the indicatorName
      */
     public String getIndicatorName() {
+        // TDQ-10710 msjian: for udi, we must use this way to avoid the ref project udi(buildin mode) get a wrong
+        // indicator name.
+        if (indicator instanceof UserDefIndicator) {
+            return this.indicator.getName();
+        }
+
+        // this is for system indicators.
         if (indicator.getIndicatorDefinition() != null) {
             Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
             if (property != null) {
-                return getDisplayName(property);
+                // only internationalization SystemIndicator
+                return InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
             }
         }
-        return this.indicator.getName();
-    }
 
-    /**
-     * only internationalization name of indicator
-     * 
-     * @return
-     */
-    private String getDisplayName(Property property) {
-        // only internationalization SystemIndicator
-        if (indicator instanceof UserDefIndicator) {
-            return property.getDisplayName();
-        }
-        return InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
+        return this.indicator.getName();
     }
 
     /**
