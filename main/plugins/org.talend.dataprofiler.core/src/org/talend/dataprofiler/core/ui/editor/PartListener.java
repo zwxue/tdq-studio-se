@@ -23,15 +23,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
-import org.eclipse.ui.internal.intro.IIntroConstants;
 import org.talend.commons.ui.utils.CheatSheetUtils;
-import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.ui.branding.IBrandingConfiguration;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ContextViewHelper;
 import org.talend.dq.helper.PropertyHelper;
 
@@ -45,8 +43,9 @@ public class PartListener implements IPartListener {
 
     private IFile propertyFile = null;
 
-    public PartListener() {
+    protected boolean     maxCheatSheetHasSHow = false;
 
+    public PartListener() {
     }
 
     protected IFile getPropertyFile(IEditorPart editor) {
@@ -84,30 +83,28 @@ public class PartListener implements IPartListener {
         ContextViewHelper.resetContextView();
 
         if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart) {
-            if (PluginChecker.isOnlyTopLoaded()) {
+            // The cheat sheet view has been open and max display then don't do it again
+            if (CheatSheetUtils.getInstance().isFirstTime()&&!PlatformUI.getWorkbench().isClosing()) {
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 if (activePage != null) {
                     if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
-
                         // only the first time Open CheatSheet view
-                        if (CheatSheetUtils.getInstance().isFirstTime()) {
+                        try {
                             OpenCheatSheetAction action = new OpenCheatSheetAction(
-                                    "org.talend.dataprofiler.core.talenddataprofiler"); //$NON-NLS-1$
+                                    PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID); //$NON-NLS-1$
                             action.run();
+                        } catch (Exception e) {
+                            // There will have a NullPointerException when show cheat sheet view
+                            // but it is not effect current function so that notice it by warning style only
+                            log.warn(e, e);
                         }
-
-                        // hide the welcome view
-                        IViewPart findView = activePage.findView(IIntroConstants.INTRO_VIEW_ID);
-                        if (findView != null) {
-                            activePage.hideView(findView);
-                        }
-
-                        // show CheatSheet view if needed
                         CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
+                        maxCheatSheetHasSHow = true;
                     }
                 }
             }
         }
+
     }
 
     public void partOpened(IWorkbenchPart part) {
