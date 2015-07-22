@@ -25,6 +25,8 @@ public final class PluginConstant {
     public static final String SE_ID = "net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"; //$NON-NLS-1$
 
     public static final String CHEAT_SHEET_VIEW = "org.eclipse.ui.cheatsheets.views.CheatSheetView"; //$NON-NLS-1$
+    
+    public static final String GETTING_STARTED_CHEAT_SHEET_ID = "org.talend.dataprofiler.core.talenddataprofiler"; //$NON-NLS-1$
 
     public static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
 
