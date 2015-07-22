@@ -15,12 +15,24 @@ package org.talend.datascience.common.inference.semantic;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.talend.dataquality.semantic.recognizer.CategoryFrequency;
-
+/**
+ * Semantic type bean which hold semantic type to its count information in a map.
+ *
+ */
 public class SemanticType {
 
     private Map<CategoryFrequency, Long> categoryToCount = new HashMap<CategoryFrequency, Long>();
 
+    /**
+     * Get categoryToCount.
+     */
+    public Map<CategoryFrequency, Long> getCategoryToCount() {
+        return categoryToCount;
+    }
+
+    /**
+     * Get suggested suggsted category.
+     */
     public String getSuggestedCategory() {
         long max = 0;
         String electedCategory = "UNKNOWN"; // Unknown by default
@@ -33,6 +45,12 @@ public class SemanticType {
         return electedCategory;
     }
 
+    /**
+     * Increment the category with count of one category.
+     * 
+     * @param category
+     * @param count
+     */
     public void increment(CategoryFrequency category, long count) {
         if (!categoryToCount.containsKey(category)) {
             categoryToCount.put(category, count);
