@@ -139,8 +139,12 @@ public class ResultSetHelper {
             e.printStackTrace();
         } finally {
             try {
-                sizeResult.close();
-                createStatement.close();
+                if (sizeResult != null) {
+                    sizeResult.close();
+                }
+                if (createStatement != null) {
+                    createStatement.close();
+                }
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
