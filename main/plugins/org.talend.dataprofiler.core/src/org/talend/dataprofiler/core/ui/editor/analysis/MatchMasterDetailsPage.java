@@ -195,18 +195,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        this.form = managedForm.getForm();
-        Composite body = form.getBody();
+        setFormTitle(DefaultMessagesImpl.getString("MatchMasterDetailsPage.tableAna")); //$NON-NLS-1$
+        super.createFormContent(managedForm);
 
-        body.setLayout(new GridLayout());
-        sForm = new SashForm(body, SWT.NULL);
-        sForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        topComp = toolkit.createComposite(sForm);
-        topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        topComp.setLayout(new GridLayout());
-        metadataSection = creatMetadataSection(form, topComp);
-        form.setText(DefaultMessagesImpl.getString("MatchMasterDetailsPage.tableAna")); //$NON-NLS-1$
         metadataSection.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
@@ -230,6 +221,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
         selectAlgorithmSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        registerSection(selectAlgorithmSection.getSection());
     }
 
     private void createMatchAndSurvivorKeySection() {
@@ -241,6 +233,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         matchAndSurvivorKeySection.setAddColumn(!selectAlgorithmSection.isVSRMode());
         matchAndSurvivorKeySection.setColumnNameInput(getAllColumnsToKeyMap());
         matchAndSurvivorKeySection.createContent();
+        registerSection(matchAndSurvivorKeySection.getSection());
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
         matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
         matchAndSurvivorKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
@@ -260,6 +253,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 .getRecordMatchIndicatorFromAna((Analysis) getCurrentModelElement(getEditor()));
         defaultSurvivorshipDefinitionSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         defaultSurvivorshipDefinitionSection.createContent();
+        registerSection(defaultSurvivorshipDefinitionSection.getSection());
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
         defaultSurvivorshipDefinitionSection.getSection().setExpanded(foldingState == null ? false : foldingState);
