@@ -172,9 +172,8 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     @Override
     protected void createFormContent(IManagedForm managedForm) {
+        setFormTitle(DefaultMessagesImpl.getString("DQRuleEditor.matchRuleSettings")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-        form = managedForm.getForm();
-        form.setText(DefaultMessagesImpl.getString("DQRuleEditor.matchRuleSettings")); //$NON-NLS-1$
 
         metadataSection.setText(DefaultMessagesImpl.getString("DQRuleEditor.matchRuleMetadata")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("MatchRuleMasterDetailsPage.setProperties")); //$NON-NLS-1$
@@ -211,7 +210,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
         matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
         matchAndSurvivorKeySection.getSection().setExpanded(true);
-
+        registerSection(matchAndSurvivorKeySection.getSection());
     }
 
     /**
@@ -227,6 +226,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         matchingKeyDefinitionSection.addPropertyChangeListener(this);
         matchingKeyDefinitionSection.changeSectionDisStatus(selectAlgorithmSection.isVSRMode());
         matchingKeyDefinitionSection.getSection().setExpanded(true);
+        registerSection(matchingKeyDefinitionSection.getSection());
     }
 
     /**
@@ -249,6 +249,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
         defaultSurvivorshipDefinitionSection.getSection().setExpanded(true);
+        registerSection(defaultSurvivorshipDefinitionSection.getSection());
     }
 
     /**
@@ -263,6 +264,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         blockingKeyDefinitionSection.addPropertyChangeListener(this);
         blockingKeyDefinitionSection.changeSectionDisStatus(selectAlgorithmSection.isVSRMode());
         blockingKeyDefinitionSection.getSection().setExpanded(true);
+        registerSection(blockingKeyDefinitionSection.getSection());
     }
 
     /**
@@ -276,6 +278,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
         selectAlgorithmSection.getSection().setExpanded(true);
+        registerSection(selectAlgorithmSection.getSection());
     }
 
     /*
