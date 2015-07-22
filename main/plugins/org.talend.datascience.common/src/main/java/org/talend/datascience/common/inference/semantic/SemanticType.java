@@ -15,6 +15,8 @@ package org.talend.datascience.common.inference.semantic;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.talend.dataquality.semantic.recognizer.CategoryFrequency;
+
 /**
  * Semantic type bean which hold semantic type to its count information in a map.
  *
