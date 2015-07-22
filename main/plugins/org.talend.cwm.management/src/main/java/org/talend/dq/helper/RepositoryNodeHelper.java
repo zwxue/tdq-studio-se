@@ -1636,14 +1636,19 @@ public final class RepositoryNodeHelper {
             return null;
         }
         if (metadataTable.getNamespace() instanceof RecordFile) {
-            IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(metadataTable));
-            List<IRepositoryNode> children = connNode.getChildren();
-            if (children.size() > 0) {
-                for (IRepositoryNode childNode : children) {
-                    if (childNode != null && childNode instanceof DFTableRepNode) {
-                        DFTableRepNode dfTableRepNode = (DFTableRepNode) childNode;
-                        if (uuidMetadataTable.equals(getUUID(dfTableRepNode.getMetadataTable()))) {
-                            return dfTableRepNode;
+            Connection tdDataProvider = ConnectionHelper.getTdDataProvider(metadataTable);
+            if (tdDataProvider != null) {
+                IRepositoryNode connNode = recursiveFind(tdDataProvider);
+                if (connNode != null) {
+                    List<IRepositoryNode> children = connNode.getChildren();
+                    if (children.size() > 0) {
+                        for (IRepositoryNode childNode : children) {
+                            if (childNode != null && childNode instanceof DFTableRepNode) {
+                                DFTableRepNode dfTableRepNode = (DFTableRepNode) childNode;
+                                if (uuidMetadataTable.equals(getUUID(dfTableRepNode.getMetadataTable()))) {
+                                    return dfTableRepNode;
+                                }
+                            }
                         }
                     }
                 }
