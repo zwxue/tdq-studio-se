@@ -50,10 +50,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
-    private static final String ID = "MatchRuleEditor.masterPage"; //$NON-NLS-1$
-
-    private static final String TITLE = DefaultMessagesImpl.getString("DQRuleEditor.matchRuleSettings"); //$NON-NLS-1$
-
     private SelectAlgorithmSection selectAlgorithmSection = null;
 
     private BlockingKeyDefinitionSection blockingKeyDefinitionSection = null;
@@ -70,7 +66,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      * @param editor
      */
     public MatchRuleMasterDetailsPage(FormEditor editor) {
-        super(editor, ID, TITLE);
+        super(editor, "MatchRuleEditor.masterPage", DefaultMessagesImpl.getString("DQRuleEditor.matchRuleSettings")); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
