@@ -20,18 +20,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.ui.utils.CheatSheetUtils;
-import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -85,22 +83,13 @@ public class CommonEditorPartListener extends PartListener {
     @SuppressWarnings("restriction")
     @Override
     public void partClosed(IWorkbenchPart part) {
-        // ADD msjian TDQ-7888 2013-10-12: if the default perspective is DQ, then make the cheat sheet view full screen
-        // the first time
-        // this is only for tdq, for top, see ShowCheatSheetsAction
-        if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart) {
-            if (!PluginChecker.isOnlyTopLoaded()) {
-                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                if (activePage != null) {
-                    if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
-
-                        // if the cheat sheet view can be find, then do maximum display
-                        CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
-                    }
-                }
+        if (maxCheatSheetHasSHow && part instanceof org.eclipse.ui.internal.cheatsheets.views.CheatSheetView) {
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            for (IViewReference ref : activePage.getViewReferences()) {
+                activePage.setPartState(ref, IWorkbenchPage.STATE_RESTORED);
             }
+            maxCheatSheetHasSHow = false;
         }
-        // TDQ-7888~
 
         // Added TDQ-7531 20130718 add unlock support for sql source file/jrxml file
         if (part.getClass().getName().equals(SqlExplorerUtils.SQLEDITOR_ID)) {
