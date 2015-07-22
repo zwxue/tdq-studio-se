@@ -52,6 +52,9 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
     @Override
     public boolean hasNext() throws Exception {
         try {
+            if (jdbcResultSet == null) {
+                return false;
+            }
             return jdbcResultSet.next();
         } catch (SQLException e) {
             throw new Exception(e);
@@ -107,12 +110,14 @@ public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
      */
     @Override
     public boolean finalizeDataSampling() throws Exception {
-        Statement statement = jdbcResultSet.getStatement();
-        Connection connection = statement.getConnection();
+        if (jdbcResultSet != null) {
+            Statement statement = jdbcResultSet.getStatement();
+            Connection connection = statement.getConnection();
 
-        jdbcResultSet.close();
-        statement.close();
-        connection.close();
+            jdbcResultSet.close();
+            statement.close();
+            connection.close();
+        }
         return true;
     }
 
