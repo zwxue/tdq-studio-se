@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -66,9 +67,51 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
+
         // MOD gdbu 2011-6-29 bug : 22204
         return filterResultsIfAny(super.getChildren());
         // ~!22204
+    }
+
+    /**
+     * if the reference project folder node has the same name ignore the case.
+     * 
+     * @param project
+     * @param viewObject
+     */
+    public boolean isSameNameNodeExist(Project project, Folder folder) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            if (!project.isMainProject()) {
+                for (IRepositoryNode node : super.getChildren()) {
+                    // we think the node name ignore the case
+                    if (node.getLabel().equalsIgnoreCase(folder.getLabel())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * check whether the Folder will be ignored.(means not show in the dq view)
+     * 
+     * @param withDeleted
+     * @param project
+     * @param folder
+     * @return boolean true: will ignore(not show)
+     */
+    public boolean isIgnoreFolder(boolean withDeleted, Project project, Folder folder) {
+        if (!withDeleted && folder.isDeleted()) {
+            return true;
+        }
+
+        // we will only show the main node here
+        if (isSameNameNodeExist(project, folder)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

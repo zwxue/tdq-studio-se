@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -192,8 +192,8 @@ public class ProxyRepositoryManager {
     }
 
     public Set<org.talend.core.model.general.Project> getAllProjects() {
-        // make sure there is no duplicated projects
-        Set<Project> result = new HashSet<Project>();
+        // make sure there is no duplicate projects, and the main project is the first one.
+        Set<Project> result = new LinkedHashSet<Project>();
         Project currentProject = ProjectManager.getInstance().getCurrentProject();
         List<Project> referencedProjects = ProjectManager.getInstance().getAllReferencedProjects();
         for (Project pro : referencedProjects) {

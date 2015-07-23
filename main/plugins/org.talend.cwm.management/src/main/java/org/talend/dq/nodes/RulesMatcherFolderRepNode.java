@@ -64,9 +64,11 @@ public class RulesMatcherFolderRepNode extends DQFolderRepNode {
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_MATCHER);
-            if (!withDeleted && folder.isDeleted()) {
+
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
+
             RulesMatcherSubFolderRepNode childNodeFolder = new RulesMatcherSubFolderRepNode(folder, this,
                     ENodeType.SIMPLE_FOLDER, project);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_MATCHER);

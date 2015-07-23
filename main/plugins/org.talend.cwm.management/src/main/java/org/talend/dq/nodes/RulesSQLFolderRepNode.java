@@ -66,9 +66,11 @@ public class RulesSQLFolderRepNode extends DQFolderRepNode {
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
-            if (!withDeleted && folder.isDeleted()) {
+
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
+
             RulesSQLSubFolderRepNode childNodeFolder = new RulesSQLSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER,
                     project);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);

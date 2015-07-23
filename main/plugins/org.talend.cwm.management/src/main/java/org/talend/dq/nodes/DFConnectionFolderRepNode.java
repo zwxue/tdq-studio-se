@@ -88,7 +88,7 @@ public class DFConnectionFolderRepNode extends DQFolderRepNode {
         // MOD qiongli 2011-1-18.setProperties for every node
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.METADATA_FILE_DELIMITED);
-            if (!withDeleted && folder.isDeleted()) {
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
             DFConnectionSubFolderRepNode childNodeFolder = new DFConnectionSubFolderRepNode(folder, this,

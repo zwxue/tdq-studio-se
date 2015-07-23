@@ -88,7 +88,7 @@ public class RulesFolderRepNode extends DQFolderRepNode {
             boolean isMatcher = container.getLabel().equals("Match"); //$NON-NLS-1$
             if (isSql) {
                 folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
-                if (!withDeleted && folder.isDeleted()) {
+                if (isIgnoreFolder(withDeleted, project, folder)) {
                     continue;
                 }
                 RulesSQLFolderRepNode systemIndicatorFolderNode = new RulesSQLFolderRepNode(folder, this,
@@ -100,7 +100,7 @@ public class RulesFolderRepNode extends DQFolderRepNode {
 
             } else if (isMatcher) {
                 folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_MATCHER);
-                if (!withDeleted && folder.isDeleted()) {
+                if (isIgnoreFolder(withDeleted, project, folder)) {
                     continue;
                 }
                 RulesMatcherFolderRepNode ruleMatcherFolder = new RulesMatcherFolderRepNode(folder, this,
@@ -112,7 +112,7 @@ public class RulesFolderRepNode extends DQFolderRepNode {
 
             } else if (isParser && PluginChecker.isTDQLoaded()) {
                 folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_PARSER);
-                if (!withDeleted && folder.isDeleted()) {
+                if (isIgnoreFolder(withDeleted, project, folder)) {
                     continue;
                 }
                 RulesParserFolderRepNode systemIndicatorFolderNode = new RulesParserFolderRepNode(folder, this,

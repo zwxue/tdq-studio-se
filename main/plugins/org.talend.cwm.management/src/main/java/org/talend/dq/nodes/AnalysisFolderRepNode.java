@@ -69,8 +69,7 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-            // MOD qiongli 2011-1-20.
-            if (!withDeleted && folder.isDeleted()) {
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
             AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER,
@@ -114,7 +113,7 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
      * @param withDelete include deleted ones
      * @return
      */
-    public List<IRepositoryNode> getChildrenAll(boolean withDelete) {
+    public List<IRepositoryNode> getChildrenAll(boolean withDeleted) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         try {
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(getProject(), this);
@@ -122,7 +121,7 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                if (!withDelete && folder.isDeleted()) {
+                if (isIgnoreFolder(withDeleted, getProject(), folder)) {
                     continue;
                 }
                 AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER,
@@ -130,12 +129,12 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
                 folder.setRepositoryNode(childNodeFolder);
-                nodes.addAll(childNodeFolder.getChildrenAll(withDelete));
+                nodes.addAll(childNodeFolder.getChildrenAll(withDeleted));
             }
 
             // ana files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDelete && viewObject.isDeleted()) {
+                if (!withDeleted && viewObject.isDeleted()) {
                     continue;
                 }
                 AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, getProject());

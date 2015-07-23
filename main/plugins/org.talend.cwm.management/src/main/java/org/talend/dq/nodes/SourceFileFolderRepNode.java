@@ -66,10 +66,11 @@ public class SourceFileFolderRepNode extends DQFolderRepNode {
         // sub folders
         for (Container<String, IRepositoryViewObject> container : sourceFiles.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
-            // MOD qiongli 2011-1-20.
-            if (!withDeleted && folder.isDeleted()) {
+
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
+
             SourceFileSubFolderNode childNodeFolder = new SourceFileSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER, project);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
             childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);

@@ -78,17 +78,10 @@ public class PatternRegexFolderRepNode extends DQFolderRepNode {
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            if (!withDeleted && folder.isDeleted()) {
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
 
-            if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
-                if (!project.isMainProject()) {
-                    if (RepositoryNodeHelper.isSystemRegexPatternFolder(folder.getLabel())) {
-                        continue;
-                    }
-                }
-            }
             PatternRegexSubFolderRepNode childNodeFolder = new PatternRegexSubFolderRepNode(folder, this,
                     ENodeType.SIMPLE_FOLDER, project);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
@@ -121,5 +114,23 @@ public class PatternRegexFolderRepNode extends DQFolderRepNode {
             // TDQ-4914~
             super.getChildren().add(repNode);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#isIgnoreFolder(boolean, org.talend.core.model.general.Project,
+     * org.talend.core.model.repository.Folder)
+     */
+    @Override
+    public boolean isIgnoreFolder(boolean withDeleted, Project project, Folder folder) {
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            if (!project.isMainProject()) {
+                if (RepositoryNodeHelper.isSystemRegexPatternFolder(folder.getLabel())) {
+                    return true;
+                }
+            }
+        }
+        return super.isIgnoreFolder(withDeleted, project, folder);
     }
 }

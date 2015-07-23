@@ -89,7 +89,7 @@ public class PatternFolderRepNode extends DQFolderRepNode {
                     : ERepositoryObjectType.TDQ_PATTERN_SQL;
 
             Folder folder = new Folder((Property) container.getProperty(), eRepositoryObjectType);
-            if (!withDeleted && folder.isDeleted()) {
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
 

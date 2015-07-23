@@ -76,7 +76,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
      * @param withDelete include deleted ones
      * @return
      */
-    public List<IRepositoryNode> getChildrenAll(boolean withDelete) {
+    public List<IRepositoryNode> getChildrenAll(boolean withDeleted) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         try {
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(getProject(), this);
@@ -84,7 +84,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_REPORT_ELEMENT);
-                if (!withDelete && folder.isDeleted()) {
+                if (isIgnoreFolder(withDeleted, getProject(), folder)) {
                     continue;
                 }
                 ReportSubFolderRepNode childNodeFolder = new ReportSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER,
@@ -92,12 +92,12 @@ public class ReportFolderRepNode extends DQFolderRepNode {
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
                 folder.setRepositoryNode(childNodeFolder);
-                nodes.addAll(childNodeFolder.getChildrenAll(withDelete));
+                nodes.addAll(childNodeFolder.getChildrenAll(withDeleted));
             }
 
             // rep files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDelete && viewObject.isDeleted()) {
+                if (!withDeleted && viewObject.isDeleted()) {
                     continue;
                 }
                 ReportRepNode repNode = new ReportRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT, getProject());
@@ -138,14 +138,10 @@ public class ReportFolderRepNode extends DQFolderRepNode {
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_REPORT_ELEMENT);
-            // MOD qiongli 2011-1-20.
-            if (!withDeleted && folder.isDeleted()) {
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
-            // filter the generate report folders
-            if (folder.getLabel().startsWith(".")) { //$NON-NLS-1$
-                continue;
-            }
+
             ReportSubFolderRepNode childNodeFolder = new ReportSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER, project);
             childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
@@ -164,5 +160,20 @@ public class ReportFolderRepNode extends DQFolderRepNode {
             super.getChildren().add(repNode);
         }
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#isIgnoreFolder(boolean, org.talend.core.model.general.Project,
+     * org.talend.core.model.repository.Folder)
+     */
+    @Override
+    public boolean isIgnoreFolder(boolean withDeleted, Project project, Folder folder) {
+        // filter the generate report folders
+        if (folder.getLabel().startsWith(".")) { //$NON-NLS-1$
+            return true;
+        }
+        return super.isIgnoreFolder(withDeleted, project, folder);
     }
 }
