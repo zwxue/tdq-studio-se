@@ -86,7 +86,7 @@ public class HadoopClusterFolderRepNode extends DQFolderRepNode {
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), HadoopClusterUtils.getDefault().getHadoopClusterType());
-            if (!withDeleted && folder.isDeleted()) {
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
             HadoopClusterSubFolderRepNode childNodeFolder = new HadoopClusterSubFolderRepNode(folder, this,

@@ -89,7 +89,7 @@ public class IndicatorFolderRepNode extends DQFolderRepNode {
                     : ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
 
             Folder folder = new Folder((Property) container.getProperty(), eRepositoryObjectType);
-            if (!withDeleted && folder.isDeleted()) {
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
 

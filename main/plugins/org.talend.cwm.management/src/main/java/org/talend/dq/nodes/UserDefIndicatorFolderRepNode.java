@@ -63,20 +63,24 @@ public class UserDefIndicatorFolderRepNode extends DQFolderRepNode {
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-            if (!withDeleted && folder.isDeleted()) {
+
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
+
             UserDefIndicatorSubFolderRepNode childNodeFolder = new UserDefIndicatorSubFolderRepNode(folder, this,
                     ENodeType.SIMPLE_FOLDER, project);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
             childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
             super.getChildren().add(childNodeFolder);
         }
+
         // rule files
         for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
             if (!withDeleted && viewObject.isDeleted()) {
                 continue;
             }
+
             SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
                     ENodeType.REPOSITORY_ELEMENT, project);
             repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
@@ -86,4 +90,5 @@ public class UserDefIndicatorFolderRepNode extends DQFolderRepNode {
         }
 
     }
+
 }
