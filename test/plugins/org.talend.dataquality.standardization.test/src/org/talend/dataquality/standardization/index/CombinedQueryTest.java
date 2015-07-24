@@ -20,7 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.TopDocs;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -105,7 +104,7 @@ public class CombinedQueryTest {
     }
 
     @Test
-    public void testSearchDocumentBySynonym() throws IOException, ParseException {
+    public void testSearchDocumentBySynonym() throws IOException {
         SynonymIndexSearcher searcher = getSearcher();
         searcher.setTopDocLimit(10);
         // searcher.setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));

@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.junit.Before;
@@ -304,7 +303,7 @@ public class SynonymIndexBuilderTest {
     }
 
     @Test
-    public void testAddSynonymToWord() throws IOException, ParseException {
+    public void testAddSynonymToWord() throws IOException {
 
         System.out.println("\n---------------Test addSynonymToWord-------------");
         SynonymIndexBuilder builder = createNewIndexBuilder(path);

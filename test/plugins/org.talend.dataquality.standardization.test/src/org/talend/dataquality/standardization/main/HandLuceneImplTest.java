@@ -19,7 +19,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.apache.lucene.queryParser.ParseException;
 import org.junit.Test;
 import org.talend.core.ui.utils.PluginUtil;
 
@@ -76,8 +75,6 @@ public class HandLuceneImplTest extends TestCase {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
     }
 
@@ -101,8 +98,6 @@ public class HandLuceneImplTest extends TestCase {
 
             // }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
             e.printStackTrace();
         }
 

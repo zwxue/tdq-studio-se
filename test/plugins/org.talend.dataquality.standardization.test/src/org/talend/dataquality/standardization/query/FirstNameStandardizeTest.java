@@ -12,14 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.standardization.query;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.SimpleAnalyzer;
-import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -74,7 +75,8 @@ public class FirstNameStandardizeTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         Directory dir = FSDirectory.open(new File(indexfolder));
-        searcher = new IndexSearcher(dir);
+        IndexReader reader = DirectoryReader.open(dir);
+        searcher = new IndexSearcher(reader);
         searchAnalyzer = new SimpleAnalyzer();
         fnameStandardize = new FirstNameStandardize(searcher, searchAnalyzer, 10);
     }
@@ -82,7 +84,7 @@ public class FirstNameStandardizeTest {
     @AfterClass
     public static void tearDown() throws Exception {
         if (searcher != null) {
-            searcher.close();
+            searcher.getIndexReader().close();
         }
     }
 
@@ -98,8 +100,6 @@ public class FirstNameStandardizeTest {
             assertEquals("MICHEL", res); //$NON-NLS-1$
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
             e.printStackTrace();
         }
     }
@@ -137,8 +137,6 @@ public class FirstNameStandardizeTest {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,8 +165,6 @@ public class FirstNameStandardizeTest {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

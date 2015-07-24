@@ -23,9 +23,11 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.TermVector;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -59,7 +61,8 @@ public class MyTest extends TestCase {
             // Analyzer analyzer = new StandardAnalyzer();
             // the boolean arg in the IndexWriter ctor means to
             // create a new index, overwriting any existing index
-            IndexWriter w = new IndexWriter(index, analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
+            IndexWriterConfig writerConfig = new IndexWriterConfig(Version.LATEST, analyzer);
+            IndexWriter w = new IndexWriter(index, writerConfig);
             // read the data (this will be the input data of a component called
             // tFirstNameStandardize)
 
@@ -71,7 +74,8 @@ public class MyTest extends TestCase {
             w.close();
 
             // now search
-            IndexSearcher is = new IndexSearcher(index);
+            DirectoryReader indexReader = DirectoryReader.open(index);
+            IndexSearcher is = new IndexSearcher(indexReader);
             Set<String> set = new HashSet<String>(Arrays.asList(input));
 
             for (String data : set) {

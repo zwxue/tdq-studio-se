@@ -25,7 +25,6 @@ import junit.framework.Assert;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 import org.junit.After;
@@ -125,7 +124,7 @@ public class SynonymIndexSearcherTest {
     }
 
     @Test
-    public void testSearchDocumentBySynonym() throws IOException, ParseException {
+    public void testSearchDocumentBySynonym() throws IOException {
         printLineToConsole("\n-----------Test searchDocumentBySynonym----------");
         SynonymIndexSearcher searcher = getSearcher();
         searcher.setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
@@ -176,7 +175,7 @@ public class SynonymIndexSearcherTest {
     }
 
     @Test
-    public void testSearchInSeveralIndexes() throws IOException, ParseException {
+    public void testSearchInSeveralIndexes() throws IOException {
         printLineToConsole("\n-----------Test SearchInSeveralIndexes----------");
 
         // assume we have two fields to search
@@ -350,7 +349,7 @@ public class SynonymIndexSearcherTest {
     }
 
     @Test
-    public void testSearchDocumentBySynonymWithNewOptions() throws IOException, ParseException {
+    public void testSearchDocumentBySynonymWithNewOptions() throws IOException {
         final String path = "data/quick_brown_dog_index";
         synIdxBuilderTest.setUp();
         SynonymIndexBuilder synonymIdxBuilder = new SynonymIndexBuilder();
@@ -361,7 +360,7 @@ public class SynonymIndexSearcherTest {
 
         SynonymIndexSearcher searcher = new SynonymIndexSearcher();
         searcher.setTopDocLimit(30);
-        searcher.setMinimumSimilarity(0.6f);
+        searcher.setMaxEdits(1);
         try {
             searcher.openIndexInFS(path);
         } catch (IOException e) {

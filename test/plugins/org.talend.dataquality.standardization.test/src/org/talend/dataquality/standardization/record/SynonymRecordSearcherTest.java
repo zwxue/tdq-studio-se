@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.standardization.record;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.TopDocs;
 import org.junit.Test;
 import org.talend.core.ui.utils.PluginUtil;
@@ -197,9 +196,6 @@ public class SynonymRecordSearcherTest {
             for (int i = 0; i < record.length; i++) {
                 recSearcher.getSearcher(i).close();
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-            fail("should not get an exception here");
         } catch (IOException e) {
             e.printStackTrace();
             fail("should not get an exception here");

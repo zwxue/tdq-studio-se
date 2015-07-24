@@ -14,9 +14,10 @@ package org.talend.dataquality.standardization.index;
 
 import java.io.File;
 
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Explanation;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -57,7 +58,8 @@ public class Explainer {
         QueryParser parser = new QueryParser(Version.LUCENE_30, "contents", new SimpleAnalyzer());
         Query query = parser.parse(queryExpression);
         System.out.println("Query: " + queryExpression);
-        IndexSearcher searcher = new IndexSearcher(directory);
+        DirectoryReader indexReader = DirectoryReader.open(directory);
+        IndexSearcher searcher = new IndexSearcher(indexReader);
         TopDocs topDocs = searcher.search(query, 10);
         for (ScoreDoc match : topDocs.scoreDocs) {
             Explanation explanation = searcher.explain(query, match.doc);
@@ -66,7 +68,7 @@ public class Explainer {
             System.out.println(doc.get("title"));
             System.out.println(explanation.toString());
         }
-        searcher.close();
+        searcher.getIndexReader().close();
         directory.close();
     }
 
