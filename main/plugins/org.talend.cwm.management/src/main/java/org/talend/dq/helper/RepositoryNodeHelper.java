@@ -1281,7 +1281,7 @@ public final class RepositoryNodeHelper {
      * @return
      */
     private static org.talend.core.model.general.Project getInWhichProject(ModelElement modelElement) {
-        if (modelElement instanceof DatabaseConnection) {
+        if (modelElement instanceof DatabaseConnection || modelElement instanceof DelimitedFileConnection) {
             if (modelElement.eIsProxy()) {
                 modelElement = (ModelElement) EObjectHelper.resolveObject(modelElement);
             }
