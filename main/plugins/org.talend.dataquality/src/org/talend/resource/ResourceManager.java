@@ -203,10 +203,6 @@ public final class ResourceManager {
         return getOneFolder(EResourceConstant.LIBRARIES);
     }
 
-    public static IFolder getLibrariesFolder(String projectName) {
-        return getOneFolder(projectName, EResourceConstant.LIBRARIES);
-    }
-
     /**
      * DOC bZhou Comment method "getMetadataFolder".
      * 
@@ -598,12 +594,6 @@ public final class ResourceManager {
         assert constant != null;
 
         return getRootProject().getFolder(new Path(constant.getPath()));
-    }
-
-    public static IFolder getOneFolder(String projectName, EResourceConstant constant) {
-        assert constant != null;
-
-        return getProject(projectName).getFolder(new Path(constant.getPath()));
     }
 
     /**

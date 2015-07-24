@@ -21,6 +21,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.resource.EResourceConstant;
 
 /**
@@ -133,7 +134,7 @@ public class FileTreeLabelProvider extends LabelProvider {
     public String getText(Object element) {
         if (element instanceof ItemRecord) {
             ItemRecord recored = (ItemRecord) element;
-            return recored.getName();
+            return RepositoryNodeHelper.getFirstLevelDisplayName(recored.getName());
         }
         return super.getText(element);
     }

@@ -359,6 +359,14 @@ public class ExportWizardPage extends WizardPage {
                 String fileName = element != null && !isJrxmlDepFile ? PropertyHelper.getProperty(element).getDisplayName()
                         : depFile.getName();
                 // TDQ-5909~
+
+                // ADD msjian TDQ-10669: for the reference project file which is depended on by the main items, we
+                // ignore it(means not export it).
+                if (!depFile.getAbsolutePath().startsWith(ResourceManager.getRootProject().getLocation().toOSString())) {
+                    continue;
+                }
+                // TDQ-10669~
+
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
                     // if the element is IndicatorDefinition and it exist in the current project and don't include any
