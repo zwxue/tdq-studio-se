@@ -225,6 +225,7 @@ public abstract class AbstractPagePart {
                     private Connection dataProvider = (Connection) fianlDataManager;
 
                     public void widgetDefaultSelected(SelectionEvent e) {
+                        widgetSelected(e);
                     }
 
                     public void widgetSelected(SelectionEvent e) {
@@ -272,9 +273,7 @@ public abstract class AbstractPagePart {
                      */
                     private ReturnCode selectedObjectAvailable() {
                         ReturnCode rc = new ReturnCode("", Boolean.FALSE); //$NON-NLS-1$
-                        Object connectionObj = masterPage.getConnCombo().getData(
-                                masterPage.getConnCombo().getSelectionIndex() + PluginConstant.EMPTY_STRING);
-                        RepositoryNode repoNode = (RepositoryNode) connectionObj;
+                        RepositoryNode repoNode = masterPage.getConnComboSelectNode();
                         rc.setMessage(repoNode.getLabel());
                         Connection connection = getConnectionFromRepositoryNode(repoNode);
                         if (connection != null && !connection.eIsProxy()) {

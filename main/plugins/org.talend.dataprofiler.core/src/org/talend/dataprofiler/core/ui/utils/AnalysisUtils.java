@@ -216,7 +216,7 @@ public class AnalysisUtils {
     }
 
     /**
-     * DOC msjian Comment method "getAnalysisSelectDialogInputData".
+     * get Analysis Select Dialog Input Data.
      * 
      * @param eResourceConstant
      * @return
@@ -255,6 +255,29 @@ public class AnalysisUtils {
             java.util.Set<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
             for (Project project : allProjects) {
                 IRepositoryNode librariesFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(eResourceConstant, project);
+                node.getChildren().add(librariesFolderNode);
+            }
+        }
+        return node;
+    }
+
+    /**
+     * get Metadata Select Dialog Input Data.
+     * 
+     * @param eResourceConstant
+     * @return DQRepositoryNode
+     */
+    public static DQRepositoryNode getMetadataSelectDialogInputData(EResourceConstant eResourceConstant) {
+        DQRepositoryNode node = new DQRepositoryNode(null, null, ENodeType.SYSTEM_FOLDER, ProjectManager.getInstance()
+                .getCurrentProject());
+        node.getChildren().clear();
+        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
+            IRepositoryNode librariesFolderNode = RepositoryNodeHelper.getMetadataFolderNode(eResourceConstant);
+            node.getChildren().add(librariesFolderNode);
+        } else {
+            java.util.Set<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
+            for (Project project : allProjects) {
+                IRepositoryNode librariesFolderNode = RepositoryNodeHelper.getMetadataFolderNode(eResourceConstant, project);
                 node.getChildren().add(librariesFolderNode);
             }
         }

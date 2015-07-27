@@ -369,7 +369,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         if (sampleDataShowWayCombo != null) {
             sampleDataShowWayCombo.setEnabled(true);
 
-            Object data = connCombo.getData(connCombo.getSelectionIndex() + PluginConstant.EMPTY_STRING);
+            Object data = getConnComboSelectNode();
             if (data != null) {
                 if (data instanceof DBConnectionRepNode) {
                     DBConnectionRepNode dbConnRepNode = (DBConnectionRepNode) data;
@@ -788,7 +788,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      */
     public void openColumnsSelectionDialog() {
         reloadDataproviderAndFillConnCombo();
-        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
+        RepositoryNode connNode = getConnComboSelectNode();
         ModelElementIndicator[] modelElementIndicators = this.getCurrentModelElementIndicators();
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
@@ -811,7 +811,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     public void openColumnsSelectionDialog(Connection conn) {
         reloadDataproviderAndFillConnCombo();
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
-        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
+        RepositoryNode connNode = getConnComboSelectNode();
         int connIndex = getConnCombo().getSelectionIndex();
         String connName = conn.getName();
         for (int index = 0; index < getConnCombo().getItemCount(); index++) {

@@ -336,7 +336,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         if (columnList == null) {
             columnList = new ArrayList<RepositoryNode>();
         }
-        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
+        RepositoryNode connNode = getConnComboSelectNode();
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
                 this,
                 /* getEditor().getActiveEditor().getSite().getShell() */null,

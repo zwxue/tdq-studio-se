@@ -302,9 +302,11 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
             }
             setList.add(recursiveFind);
         }
+
+        RepositoryNode connComboSelectNode = getConnComboSelectNode();
         TablesSelectionDialog dialog = new TablesSelectionDialog(this, null,
                 DefaultMessagesImpl.getString("TableMasterDetailsPage.tableSelection"), setList, DefaultMessagesImpl //$NON-NLS-1$
-                        .getString("TableMasterDetailsPage.tableSelections")); //$NON-NLS-1$
+                        .getString("TableMasterDetailsPage.tableSelections"), connComboSelectNode); //$NON-NLS-1$
         dialog.setTableType(TableSelectionType.ALL);
         if (dialog.open() == Window.OK) {
             Object[] tables = dialog.getResult();

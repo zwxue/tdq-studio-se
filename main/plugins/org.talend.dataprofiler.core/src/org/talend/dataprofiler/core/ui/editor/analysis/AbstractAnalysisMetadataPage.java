@@ -194,6 +194,21 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         return connCombo;
     }
 
+    /**
+     * get Connection Combo Selected Node.
+     * 
+     * @return RepositoryNode
+     */
+    public RepositoryNode getConnComboSelectNode() {
+        Object data = getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
+        if (data != null) {
+            if (data instanceof RepositoryNode) {
+                return (RepositoryNode) data;
+            }
+        }
+        return null;
+    }
+
     public Analysis getAnalysis() {
         return analysisItem.getAnalysis();
     }
@@ -395,7 +410,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     private String getConnectionVersionDefault() {
         String version = "Unknown"; //$NON-NLS-1$
-        Object data = connCombo.getData(connCombo.getSelectionIndex() + PluginConstant.EMPTY_STRING);
+        Object data = getConnComboSelectNode();
         if (data != null) {
             if (data instanceof DBConnectionRepNode) {
                 DBConnectionRepNode dbConnRepNode = (DBConnectionRepNode) data;
@@ -452,7 +467,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
         DataManager connection = this.analysisItem.getAnalysis().getContext().getConnection();
         if (connection == null) {
-            connCombo.select(0);
+            // when the connection, and when there is no connection selected, select 0
+            if (StringUtils.isBlank(connCombo.getText())) {
+                connCombo.select(0);
+            }
         } else {
             // Find the conn index first
             int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connection);
