@@ -450,7 +450,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                     Property property = (node.getObject()).getProperty();
                     ModelElement modelelement = PropertyHelper.getModelElement(property);
                     String dataKey = property.getDisplayName() + RepositoryNodeHelper.getConnectionType(node);
-                    Object value = metadataFormPage.getConnCombo().getData(modelelement == null ? "" : dataKey);
+                    Object value = metadataFormPage.getConnCombo().getData(modelelement == null ? "" : dataKey); //$NON-NLS-1$
                     if (value != null && value instanceof Integer) {
                         connectionIndex = (Integer) value;
                     }

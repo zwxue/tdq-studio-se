@@ -430,8 +430,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * invoking this method from cheat sheets.
      */
     public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<RepositoryNode> columnsOfSectionPart) {
-        RepositoryNode connNode = (RepositoryNode) masterPage.getConnCombo().getData(
-                String.valueOf(masterPage.getConnCombo().getSelectionIndex()));
+        RepositoryNode connNode = masterPage.getConnComboSelectNode();
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(masterPage, null,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, connNode,//$NON-NLS-1$
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$

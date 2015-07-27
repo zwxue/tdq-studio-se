@@ -18,11 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -31,7 +26,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -39,15 +33,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
-import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
-import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
-import org.talend.dataprofiler.core.ui.filters.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableContentProvider;
@@ -59,21 +48,15 @@ import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
-import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
-    private static Logger log = Logger.getLogger(TablesSelectionDialog.class);
-
     private Map<RepositoryNodeKey, List<IRepositoryNode>> packageCheckedMap;
-
-    private RepositoryNode metadataFolder = RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA);
 
     private TableSelectionType tableType;
 
@@ -86,11 +69,11 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     public TablesSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
-            List<IRepositoryNode> columnSetList, String message) {
+            List<IRepositoryNode> columnSetList, String message, RepositoryNode connComboSelectNode) {
         super(metadataFormPage, parent, message);
         this.setDialogType(DIALOG_TYPE_TABLE);
-        addFirstPartFilters();
-        this.setInput(metadataFolder);
+        this.setInput(connComboSelectNode == null ? RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA)
+                : connComboSelectNode);
         packageCheckedMap = new HashMap<RepositoryNodeKey, List<IRepositoryNode>>();
         initCheckedColumnSet(columnSetList);
         this.setTitle(title);
@@ -233,33 +216,6 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         fContentProvider = new DBTreeViewContentProvider();
         sLabelProvider = new TableLabelProvider();
         sContentProvider = new TableContentProvider();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addFirstPartFilters() {
-        final Class[] acceptedClasses = new Class[] { IResource.class, IFolderNode.class, EObject.class,
-                IRepositoryViewObject.class, IRepositoryNode.class };
-        IProject rootProject = ResourceManager.getRootProject();
-        IResource[] allResource = null;
-        try {
-            allResource = rootProject.members();
-        } catch (CoreException e) {
-            log.error(e, e);
-        }
-        ArrayList rejectedElements = new ArrayList(allResource.length);
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        for (int i = 0; i < allResource.length; i++) {
-            if (!allResource[i].equals(ResourceManager.getMetadataFolder())) {
-                rejectedElements.add(allResource[i]);
-            }
-        }
-        rejectedElements.add(ResourceManager.getMetadataFolder().getFile(".project")); //$NON-NLS-1$
-        ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
-        this.addFilter(filter);
-        this.addFilter(new EMFObjFilter());
-        // MOD qiongli 2010-6-17 bug 13727
-        addFilter(new DQFolderFliter(true));
-        addFilter(new TDQEEConnectionFolderFilter());
     }
 
     @Override

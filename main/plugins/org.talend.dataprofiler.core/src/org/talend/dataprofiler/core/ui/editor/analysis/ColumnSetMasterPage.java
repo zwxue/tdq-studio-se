@@ -371,7 +371,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (columnList == null) {
             columnList = new ArrayList<IRepositoryNode>();
         }
-        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
+        RepositoryNode connNode = getConnComboSelectNode();
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
                 this,
                 null,
