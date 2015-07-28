@@ -12,18 +12,20 @@
 // ============================================================================
 package org.talend.datascience.common.recordlinkage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.talend.dataquality.matchmerge.*;
-import org.talend.dataquality.matchmerge.mfb.MFB;
-import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
-import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
-import org.talend.dataquality.record.linkage.genkey.BlockingKeyHandler;
-import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
-import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
-import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.datascience.common.inference.Analyzer;
+
+import sun.font.AttributeValues;
+import sun.org.mozilla.javascript.internal.regexp.SubString;
 
 /**
  * Sting clustering analyzer.
@@ -178,6 +180,10 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         return cluster;
     }
 
+    /**
+     * created by talend on 2015-07-28 Detailled comment.
+     *
+     */
     private static class RecordIterator implements Iterator<Record> {
 
         private final int currentBlockIndex;

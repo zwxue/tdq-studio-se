@@ -31,6 +31,10 @@ public class StringClusters implements Iterable<StringClusters.StringCluster> {
         return allClusters.iterator();
     }
 
+    /**
+     * created by talend on 2015-07-28 Detailled comment.
+     *
+     */
     public static class StringCluster {
 
         public String survivedValue;
