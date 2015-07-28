@@ -32,6 +32,10 @@ import org.talend.cwm.helper.SwitchHelpers;
 
 import com.google.common.collect.Iterators;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class ModelElementMatchEngine extends DefaultMatchEngine {
 
     /**

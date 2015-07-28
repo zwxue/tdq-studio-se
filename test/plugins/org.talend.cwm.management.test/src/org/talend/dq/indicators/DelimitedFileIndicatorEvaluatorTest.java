@@ -47,6 +47,10 @@ import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 @PrepareForTest({ ColumnHelper.class, LanguageManager.class, JavaSqlFactory.class })
 public class DelimitedFileIndicatorEvaluatorTest {
 

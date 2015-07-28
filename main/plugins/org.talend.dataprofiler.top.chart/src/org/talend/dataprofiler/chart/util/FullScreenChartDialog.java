@@ -1,4 +1,5 @@
 // ============================================================================
+//
 // Copyright (C) 2006-2015 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at

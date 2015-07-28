@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,10 @@ import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.dq.helper.ReportFileHelper.ReportListParameters;
 import org.talend.repository.model.RepositoryConstants;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class ReportFileHelperTest {
 
     @Before
