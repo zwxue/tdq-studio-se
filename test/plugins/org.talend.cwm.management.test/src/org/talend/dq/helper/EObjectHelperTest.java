@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -36,6 +39,10 @@ import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 // @RunWith(PowerMockRunner.class)
 @PrepareForTest({ EObjectHelper.class, ModelElementHelper.class, RepositoryNodeHelper.class })
 public class EObjectHelperTest {

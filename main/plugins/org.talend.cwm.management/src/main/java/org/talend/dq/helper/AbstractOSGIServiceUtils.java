@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2014 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,7 +24,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.CWMPlugin;
 
 /**
- * created by yyin on 2015年1月12日 Detailled comment
+ * created by yyin on 2015年1月12日 Detailled comment.
  *
  */
 public abstract class AbstractOSGIServiceUtils {

@@ -27,6 +27,10 @@ import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class PropertyHelperTest {
 
     ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();

@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.cwm.compare;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.net.URI;
@@ -54,6 +54,10 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 @PrepareForTest({ MetadataFillFactory.class, ExtractMetaDataUtils.class, ConnectionHelper.class, CoreRuntimePlugin.class,
         WorkspaceUtils.class, URI.class })
 public class DQStructureComparerTest {

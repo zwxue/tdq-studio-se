@@ -12,10 +12,12 @@
 // ============================================================================
 package org.talend.cwm.dependencies;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.List;
 
@@ -226,6 +228,10 @@ public class DependenciesHandlerTest {
 
     }
 
+    /**
+     * created by talend on 2015-07-28 Detailled comment.
+     *
+     */
     class ModelElementMatcher extends ArgumentMatcher<ModelElement> {
 
         @Override

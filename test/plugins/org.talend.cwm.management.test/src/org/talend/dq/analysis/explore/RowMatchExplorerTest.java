@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,6 +33,10 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class RowMatchExplorerTest {
 
     private static final String COMMENTS = "-- Analysis:  ;\n" + "-- Type of Analysis:  ;\n" + "-- Purpose: Purpose ;\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

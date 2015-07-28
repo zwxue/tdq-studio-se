@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2014 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import com.talend.csv.CSVReader;
 
 /**
- * created by talend on Jan 15, 2015 Detailled comment
+ * created by talend on Jan 15, 2015 Detailled comment.
  *
  */
 public class FileCSVResultSet extends TalendResultSet {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2014 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,6 +24,10 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.talend.cwm.compare.ModelElementMatchEngine;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class DQMatchEngineFactory implements IMatchEngine.Factory {
 
     /** The match engine created by this factory. */

@@ -26,6 +26,10 @@ import org.talend.repository.items.importexport.handlers.imports.ImportRepTypeHa
 import org.talend.repository.items.importexport.handlers.model.ImportItem;
 import org.talend.repository.items.importexport.manager.ResourcesManager;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class TOPImportHandler extends ImportRepTypeHandler {
 
     public TOPImportHandler() {

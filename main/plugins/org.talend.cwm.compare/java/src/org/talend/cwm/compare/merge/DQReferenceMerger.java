@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.cwm.compare.merge;
 
-import static org.eclipse.emf.compare.utils.ReferenceUtil.*;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeESet;
 
 import java.util.List;
 
@@ -31,6 +32,10 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class DQReferenceMerger extends ReferenceChangeMerger {
 
     public DQReferenceMerger() {

@@ -34,6 +34,10 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 @PrepareForTest({ DbmsLanguageFactory.class, IndicatorEnum.class, Messages.class })
 public class SQLPatternExplorerTest {
 
