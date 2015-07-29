@@ -85,6 +85,10 @@ public class TypeInferenceUtils {
         }
         return false;
     }
+    
+    public static boolean isNumber(String value){
+        return isInteger(value)||isDouble(value);
+    }
 
     /**
      * Detect if the given value is a date type. <br>
