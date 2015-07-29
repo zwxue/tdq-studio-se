@@ -189,6 +189,12 @@ public class TypeInferenceUtilsTest {
         LOGGER.debug("Detect date time diff: " + difference + " s.");
         Assert.assertTrue(difference < 0.43);
     }
+    
+    @Test
+    public void testIsDateddMMMyyyy(){
+        String dateStr = "15-Sep-2014";
+        Assert.assertTrue(TypeInferenceUtils.isDate(dateStr));
+    }
 
     private List<String> loadData(String path) throws IOException {
         List<String> values = IOUtils.readLines(this.getClass().getClassLoader().getResourceAsStream(path));
