@@ -16,9 +16,14 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 
+import org.apache.log4j.Logger;
 import org.mapdb.SerializerBase;
+import org.talend.dataquality.indicators.mapdb.helper.IObjectConvertArray;
 
 /**
  * created by talend on Aug 6, 2014 Detailled comment
@@ -32,6 +37,8 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
     private static final long serialVersionUID = 8375426567087046212L;
 
     static final int TALEND_NULL = 181;
+    
+    private static Logger log=Logger.getLogger(TalendSerializerBase.class);
 
     /*
      * (non-Javadoc)
@@ -49,6 +56,13 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
         if (Timestamp.class.isInstance(obj)) {
             newObj = obj.toString();
         }
+        
+        if(obj instanceof IObjectConvertArray){
+            newObj=((IObjectConvertArray) obj).getArrays();
+            out.write(Header.POJO);
+            this.serializeClass(out, obj.getClass());
+        }
+        
         super.serialize(out, newObj);
     }
 
@@ -82,7 +96,7 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
         Object newObj = obj.toString();
         super.serialize(out, newObj, objectStack);
     }
-
+  
     /*
      * (non-Javadoc)
      * 
@@ -93,6 +107,26 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
     protected Object deserializeUnknownHeader(DataInput is, int head, FastArrayList<Object> objectStack) throws IOException {
         if (TALEND_NULL == head) {
             return new TupleEmpty();
+        }
+        
+        if(Header.POJO==head){
+            Class<?> deserializeClass = this.deserializeClass(is);
+            Object deserialize = this.deserialize(is, -1);
+            try {
+                Object newInstance = deserializeClass.newInstance();
+                if(IObjectConvertArray.class.isInstance(newInstance)){
+                    ((IObjectConvertArray)newInstance).restoreObjectByArrays((Object[])deserialize);
+                    return newInstance;
+                }
+            } catch (SecurityException e) {
+                log.error(e, e);
+            } catch (InstantiationException e) {
+                log.error(e, e);
+            } catch (IllegalAccessException e) {
+                log.error(e, e);
+            } catch (IllegalArgumentException e) {
+                log.error(e, e);
+            }
         }
         return super.deserializeUnknownHeader(is, head, objectStack);
     }
