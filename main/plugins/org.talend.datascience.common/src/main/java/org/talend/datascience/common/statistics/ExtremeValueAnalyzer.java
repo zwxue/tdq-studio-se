@@ -24,10 +24,11 @@ import org.talend.datascience.common.inference.type.TypeInferenceUtils;
  */
 public abstract class ExtremeValueAnalyzer implements Analyzer<SummaryStatistics> {
 
-    private final ResizableList<SummaryStatistics> extremetatistics = new ResizableList<>(SummaryStatistics.class);
+    private final ResizableList<SummaryStatistics> extremeStatistics = new ResizableList<>(SummaryStatistics.class);
 
     @Override
     public void init() {
+        extremeStatistics.clear();
     }
 
     @Override
@@ -35,9 +36,9 @@ public abstract class ExtremeValueAnalyzer implements Analyzer<SummaryStatistics
         if (record == null) {
             return true;
         }
-        extremetatistics.resize(record.length);
+        extremeStatistics.resize(record.length);
         for (int i = 0; i < record.length; i++) {
-            final SummaryStatistics minStats = extremetatistics.get(i);
+            final SummaryStatistics minStats = extremeStatistics.get(i);
             if (!TypeInferenceUtils.isNumber(record[i])) {
                 // Filter out the non-number value
                 continue;
@@ -53,7 +54,7 @@ public abstract class ExtremeValueAnalyzer implements Analyzer<SummaryStatistics
 
     @Override
     public List<SummaryStatistics> getResult() {
-        return extremetatistics;
+        return extremeStatistics;
     }
 
 }

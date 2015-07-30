@@ -22,9 +22,9 @@ import java.util.Map;
  */
 public class SummaryStatistics {
 
-    private double min = Double.NaN, max = Double.NaN, mean = Double.NaN, variance = Double.NaN;
+    private double min = Double.NaN, max = Double.NaN, mean = Double.NaN, sum = Double.NaN, variance = Double.NaN;
 
-    private long duplicateCount, distinctCount;
+    private long duplicateCount, distinctCount,countOfNumber=0;
 
     private Map<String, Long> frequencyTable;
 
@@ -88,6 +88,24 @@ public class SummaryStatistics {
         this.distinctCount = distinctCount;
     }
     
+    public double getSum() {
+        return sum;
+    }
     
+    public void setSum(double sum) {
+        this.sum = sum;
+    }
 
+    public long getCountOfNumber() {
+        return countOfNumber;
+    }
+
+
+    
+    public void setCountOfNumber(long count) {
+        this.countOfNumber = count;
+    }
+
+    
+    
 }
