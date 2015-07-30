@@ -53,11 +53,6 @@ public class DBMapCompartor implements Comparator<Object>, Serializable {
             return -1;
         }
 
-        // make sure the o1 and o2 have the same type, sometimes for example: o1 is Date, but o2 is String and vice
-        // versa.
-        if (Date.class.isInstance(o1) || String.class.isInstance(o1)) {
-            return o1.toString().compareTo(o2.toString());
-        }
 
         if (Comparable.class.isInstance(o1)) {
             return ((Comparable) o1).compareTo(o2);
@@ -65,6 +60,16 @@ public class DBMapCompartor implements Comparator<Object>, Serializable {
 
         if (List.class.isInstance(o1)) {
             return listCompare(((List) o1).toArray(), ((List) o2).toArray());
+        }
+        
+        // make sure the o1 and o2 have the same type, sometimes for example: o1 is Date, but o2 is String and vice
+        // versa.
+        if (Date.class.isInstance(o1) || String.class.isInstance(o1)) {
+            return o1.toString().compareTo(o2.toString());
+        }
+        
+        if(o1.getClass().isArray()&&o2.getClass().isArray()){
+            return listCompare((Object[])o1,  (Object[])o2);
         }
         return -1;
     }
