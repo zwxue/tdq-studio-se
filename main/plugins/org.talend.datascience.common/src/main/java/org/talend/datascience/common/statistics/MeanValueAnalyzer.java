@@ -45,7 +45,7 @@ public class MeanValueAnalyzer implements Analyzer<SummaryStatistics> {
                 meanStats.setCountOfNumber(1);
             }else{
                 meanStats.setSum(currentValue+meanStats.getSum());
-                meanStats.setCountOfNumber(meanStats.getCountOfNumber()+1);
+                meanStats.incrementCountOfNumber();
             }
         }
         return true;

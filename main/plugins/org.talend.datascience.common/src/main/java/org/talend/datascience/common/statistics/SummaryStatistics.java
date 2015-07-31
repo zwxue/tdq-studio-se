@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.datascience.common.statistics;
 
-import java.util.Map;
-
 /**
  * Summary statistics bean
  * 
@@ -24,74 +22,44 @@ public class SummaryStatistics {
 
     private double min = Double.NaN, max = Double.NaN, mean = Double.NaN, sum = Double.NaN, variance = Double.NaN;
 
-    private long duplicateCount, distinctCount,countOfNumber=0;
+    private long countOfNumber = 0;
 
-    private Map<String, Long> frequencyTable;
-
-    
     public double getMin() {
         return min;
     }
 
-    
     public void setMin(double min) {
         this.min = min;
     }
 
-    
     public double getMax() {
         return max;
     }
 
-    
     public void setMax(double max) {
         this.max = max;
     }
 
-    
     public double getMean() {
         return mean;
     }
 
-    
     public void setMean(double mean) {
         this.mean = mean;
     }
 
-    
     public double getVariance() {
         return variance;
     }
 
-    
     public void setVariance(double variance) {
         this.variance = variance;
     }
 
-    
-    public long getDuplicateCount() {
-        return duplicateCount;
-    }
-
-    
-    public void setDuplicateCount(long duplicateCount) {
-        this.duplicateCount = duplicateCount;
-    }
-
-    
-    public long getDistinctCount() {
-        return distinctCount;
-    }
-
-    
-    public void setDistinctCount(long distinctCount) {
-        this.distinctCount = distinctCount;
-    }
-    
     public double getSum() {
         return sum;
     }
-    
+
     public void setSum(double sum) {
         this.sum = sum;
     }
@@ -100,12 +68,12 @@ public class SummaryStatistics {
         return countOfNumber;
     }
 
-
-    
-    public void setCountOfNumber(long count) {
-        this.countOfNumber = count;
+    public void incrementCountOfNumber() {
+        countOfNumber += 1;
     }
 
-    
-    
+    public void setCountOfNumber(int i) {
+        countOfNumber = 1;
+    }
+
 }
