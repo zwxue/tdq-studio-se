@@ -19,12 +19,14 @@ import org.talend.datascience.common.inference.composite.CompositeAnalyzerTest;
 import org.talend.datascience.common.inference.semantic.SemanticAnalyzerTest;
 import org.talend.datascience.common.inference.type.DataTypeAnalyzerTest;
 import org.talend.datascience.common.inference.type.TypeInferenceUtilsTest;
+import org.talend.datascience.common.recordlinkage.StringsClusterAnalyzerTest;
 
 /**
  * created by talend on 2015-07-28 Detailled comment.
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ CompositeAnalyzerTest.class, SemanticAnalyzerTest.class, DataTypeAnalyzerTest.class, TypeInferenceUtilsTest.class })
+@SuiteClasses({ CompositeAnalyzerTest.class, SemanticAnalyzerTest.class, DataTypeAnalyzerTest.class,
+        TypeInferenceUtilsTest.class, StringsClusterAnalyzerTest.class })
 public class Tests {
 }
