@@ -1,7 +1,6 @@
 package org.talend.datascience.common.inference;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Implements analysis on array of Strings ("row" of values). Implementations are expected to be:
@@ -28,7 +27,6 @@ public interface Analyzer<T> {
      */
     boolean analyze(String... record);
     
-
     /**
      * Ends the analysis (implementations may perform result optimizations after the repeated call to
      * {@link #analyze(String[])}).
