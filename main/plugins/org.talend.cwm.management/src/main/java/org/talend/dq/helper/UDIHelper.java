@@ -215,8 +215,16 @@ public final class UDIHelper {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
     }
 
+    public static boolean isCount(IndicatorDefinition indicatorDefinition) {
+        return isCategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
+    }
+
     public static boolean isRealValue(Indicator indicator) {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedRealValueIndicatorCategory());
+    }
+
+    public static boolean isRealValue(IndicatorDefinition indicatorDefinition) {
+        return isCategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedRealValueIndicatorCategory());
     }
 
     public static boolean isFrequency(Indicator indicator) {
@@ -229,6 +237,10 @@ public final class UDIHelper {
 
     public static boolean isMatching(Indicator indicator) {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory());
+    }
+
+    public static boolean isMatching(IndicatorDefinition indicatorDefinition) {
+        return isCategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory());
     }
 
     public static boolean isCategory(Indicator indicator, IndicatorCategory indicatorCategory) {
