@@ -44,9 +44,6 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
         } else if (TypeInferenceUtils.isDouble(value)) {
             // 5. detect double
             return DataType.Type.DOUBLE;
-        } else if (TypeInferenceUtils.isAlphString(value)) {
-            // 6. detect alph string
-            return DataType.Type.STRING;
         } else if (TypeInferenceUtils.isDate(value)) {
             // 7. detect date
             return DataType.Type.DATE;

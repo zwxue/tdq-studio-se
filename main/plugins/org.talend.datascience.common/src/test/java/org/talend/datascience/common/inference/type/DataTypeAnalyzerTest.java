@@ -149,6 +149,14 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
         assertEquals(DataType.Type.STRING, result.get(17).getSuggestedType());
     }
 
+    @Test
+    public void testDateColumn() throws Exception {
+        analyzer.analyze("10-Oct-2015");
+        analyzer.analyze("11-Oct-2015");
+        assertEquals(1, analyzer.getResult().size());
+        assertEquals(DataType.Type.DATE, analyzer.getResult().get(0).getSuggestedType());
+    }
+
     /**
      * Test the order of column index to see whether it is same after the inferring type done comparing the before or
      * not.
