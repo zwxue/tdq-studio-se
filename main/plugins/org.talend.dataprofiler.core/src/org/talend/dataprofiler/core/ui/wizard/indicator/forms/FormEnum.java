@@ -140,25 +140,19 @@ public enum FormEnum {
         boolean isSqlEngine = ExecutionLanguage.SQL.getLiteral().equals(executionLanguage);
         FormEnum[] forms = null;
         switch (indicatorType) {
-
         case RowCountIndicatorEnum:
         case NullCountIndicatorEnum:
         case BlankCountIndicatorEnum:
         case DefValueCountIndicatorEnum:
-
             forms = new FormEnum[] { IndicatorThresholdsForm };
-
             break;
         case DistinctCountIndicatorEnum:
         case UniqueIndicatorEnum:
         case DuplicateCountIndicatorEnum:
-
             forms = new FormEnum[] { IndicatorThresholdsForm };
-
             if (Java2SqlType.isTextInSQL(sqlType)) {
                 forms = new FormEnum[] { TextParametersForm, IndicatorThresholdsForm };
             }
-
             break;
         case MinLengthIndicatorEnum:
         case MaxLengthIndicatorEnum:
@@ -178,64 +172,25 @@ public enum FormEnum {
         case AverageLengthWithNullIndicatorEnum:
             // MOD yyi 2010-12-23 17740:enable thresholds
             forms = new FormEnum[] { IndicatorThresholdsForm };
-
             break;
         case FrequencyIndicatorEnum:
         case LowFrequencyIndicatorEnum:
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
         case DatePatternFreqIndicatorEnum:
-            if (dataminingType == DataminingType.INTERVAL) {
-                if (Java2SqlType.isNumbericInSQL(sqlType)) {
-
-                    forms = new FormEnum[] { FreqBinsDesignerForm };
-                }
-
-                if (Java2SqlType.isDateInSQL(sqlType)) {
-
-                    // MOD qiongli 2011-11-8,TDQ-3864,remove TimeSlice from UI
-                    forms = new FormEnum[] { NumbericNominalForm };
-                }
-            } else if (Java2SqlType.isTextInSQL(sqlType)) {
-                // MOD qiongli 2012-2-7 TDQ-4627 javaOptionForm just for Java engine and Pattern Frequency.
-                IEditorPart activeEditor = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                        .getActiveEditor();
-                ExecutionLanguage exeLanguage = null;
-                if (activeEditor != null && (activeEditor instanceof AnalysisEditor)) {
-                    exeLanguage = ((AnalysisEditor) activeEditor).getUIExecuteEngin();
-                }
-                if (exeLanguage != null
-                        && ExecutionLanguage.JAVA.equals(exeLanguage)
-                        && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {
-                    forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
-                } else {
-                    forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm };
-                }
-            } else if (dataminingType == DataminingType.NOMINAL) {
-
-                if (Java2SqlType.isNumbericInSQL(sqlType)) {
-
-                    forms = new FormEnum[] { NumbericNominalForm };
-                }
-            }
-
+            forms = getFormsForFreqencyIndicators(sqlType, dataminingType, indicatorType);
             break;
         case ModeIndicatorEnum:
             if (dataminingType == DataminingType.INTERVAL && Java2SqlType.isNumbericInSQL(sqlType)) {
-
                 forms = new FormEnum[] { BinsDesignerForm, ExpectedValueForm };
-
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
-
                 forms = new FormEnum[] { TextParametersForm, ExpectedValueForm };
             }
-
             break;
         case BoxIIndicatorEnum:
         case RangeIndicatorEnum:
         case IQRIndicatorEnum:
             forms = new FormEnum[] { DataThresholdsForm };
-
             break;
         case MeanIndicatorEnum:
         case MedianIndicatorEnum:
@@ -244,13 +199,11 @@ public enum FormEnum {
         case MinValueIndicatorEnum:
         case MaxValueIndicatorEnum:
             forms = new FormEnum[] { IndicatorThresholdsForm };
-
             break;
         case RegexpMatchingIndicatorEnum:
         case SqlPatternMatchingIndicatorEnum:
         case AllMatchIndicatorEnum:
             forms = new FormEnum[] { IndicatorThresholdsForm };
-
             break;
         case SoundexIndicatorEnum:
         case SoundexLowIndicatorEnum:
@@ -265,21 +218,20 @@ public enum FormEnum {
         case WeekFrequencyIndicatorEnum:
         case WeekLowFrequencyIndicatorEnum:
             forms = new FormEnum[] { NumbericNominalForm };
-
             break;
-
         case UserDefinedIndicatorEnum:
             if (indicatorDefinition != null && UDIHelper.isJUDIValid(indicatorDefinition) && isJavaEngine) {
                 forms = new FormEnum[] { JavaUDIParametersForm };
             } else if (UDIHelper.isFrequency((indicatorDefinition)) && isSqlEngine) {
-                forms = new FormEnum[] { NumbericNominalForm };
+                forms = getFormsForFreqencyIndicators(sqlType, dataminingType, indicatorType);
+            } else if (UDIHelper.isCount(indicatorDefinition) || UDIHelper.isMatching(indicatorDefinition)
+                    || UDIHelper.isRealValue(indicatorDefinition)) {
+                forms = new FormEnum[] { IndicatorThresholdsForm };
             }
-
             break;
         case BinFrequencyIndicatorEnum:
         case BinLowFrequencyIndicatorEnum:
             if (Java2SqlType.isNumbericInSQL(sqlType)) {
-
                 forms = new FormEnum[] { FreqBinsDesignerForm };
             }
             break;
@@ -295,6 +247,48 @@ public enum FormEnum {
             forms = new FormEnum[] { PhoneNumberForm };
             break;
         default:
+        }
+        return forms;
+    }
+
+    /**
+     * DOC msjian Comment method "getFormsForFreqencyIndicatos".
+     * 
+     * @param sqlType
+     * @param dataminingType
+     * @param indicatorType
+     * @return
+     */
+    private static FormEnum[] getFormsForFreqencyIndicators(int sqlType, DataminingType dataminingType,
+            IndicatorEnum indicatorType) {
+        FormEnum[] forms = null;
+        if (dataminingType == DataminingType.INTERVAL) {
+            if (Java2SqlType.isNumbericInSQL(sqlType)) {
+                forms = new FormEnum[] { FreqBinsDesignerForm };
+            }
+            if (Java2SqlType.isDateInSQL(sqlType)) {
+                // MOD qiongli 2011-11-8,TDQ-3864,remove TimeSlice from UI
+                forms = new FormEnum[] { NumbericNominalForm };
+            }
+        } else if (Java2SqlType.isTextInSQL(sqlType)) {
+            // MOD qiongli 2012-2-7 TDQ-4627 javaOptionForm just for Java engine and Pattern Frequency.
+            IEditorPart activeEditor = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
+            ExecutionLanguage exeLanguage = null;
+            if (activeEditor != null && (activeEditor instanceof AnalysisEditor)) {
+                exeLanguage = ((AnalysisEditor) activeEditor).getUIExecuteEngin();
+            }
+            if (exeLanguage != null
+                    && ExecutionLanguage.JAVA.equals(exeLanguage)
+                    && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {
+                forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
+            } else {
+                forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm };
+            }
+        } else if (dataminingType == DataminingType.NOMINAL) {
+            if (Java2SqlType.isNumbericInSQL(sqlType)) {
+                forms = new FormEnum[] { NumbericNominalForm };
+            }
         }
         return forms;
     }

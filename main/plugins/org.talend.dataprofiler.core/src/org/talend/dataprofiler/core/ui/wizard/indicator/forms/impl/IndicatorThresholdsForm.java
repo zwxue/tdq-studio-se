@@ -54,6 +54,7 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
@@ -123,7 +124,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             }
         }
 
-        isOptionForRowCount = currentIndicatorType == IndicatorEnum.RowCountIndicatorEnum;
+        isOptionForRowCount = (currentIndicatorType == IndicatorEnum.RowCountIndicatorEnum)
+                || UDIHelper.isCount(currentIndicator);
 
         setupForm();
     }
