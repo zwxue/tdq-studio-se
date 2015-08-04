@@ -31,21 +31,6 @@ public class TypeInferenceUtils {
     private static final Pattern patternNoneDigit = Pattern.compile("\\D");
 
     /**
-     * Detect if the given value is a string type.
-     * 
-     * @param value the value to be detected.
-     * @return true if the value is a string type, false otherwise.
-     */
-    public static boolean isAlphString(String value) {
-        if (value != null) {
-            if (patternAlphString.matcher(value).find()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Detect if the given value is a double type. Note that 3,4 is not valid double with the rule of this method.
      * 
      * @param value the value to be detected.
@@ -85,9 +70,9 @@ public class TypeInferenceUtils {
         }
         return false;
     }
-    
-    public static boolean isNumber(String value){
-        return isInteger(value)||isDouble(value);
+
+    public static boolean isNumber(String value) {
+        return isInteger(value) || isDouble(value);
     }
 
     /**

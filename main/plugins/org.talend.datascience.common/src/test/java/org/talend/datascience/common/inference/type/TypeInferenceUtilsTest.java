@@ -144,30 +144,6 @@ public class TypeInferenceUtilsTest {
     }
 
     @Test
-    public void testIsString() throws Exception {
-        List<String> values = loadData("org/talend/datascience/common/inference/testString.csv");
-        int countOfStrings = 0;
-        String timeStart = getCurrentTimeStamp();
-        LOGGER.debug("Detect string start at: " + timeStart);
-        // Assert total count.
-        Assert.assertEquals(10000, values.size());
-        for (String value : values) {
-            if (TypeInferenceUtils.isAlphString(value)) {
-                countOfStrings++;
-            }
-        }
-        String timeEnd = getCurrentTimeStamp();
-        LOGGER.debug("Detect string end at: " + timeEnd);
-        // Assert count of matches.
-        Assert.assertEquals(2000, countOfStrings);
-        // Assert time span.
-        double difference = getTimeDifference(timeStart, timeEnd);
-
-        LOGGER.debug("Detect string time diff: " + difference + " s.");
-        Assert.assertTrue(difference < 0.11);
-    }
-
-    @Test
     public void testIsDate() throws Exception {
         List<String> values = loadData("org/talend/datascience/common/inference/testDate.csv");
         int countOfDates = 0;
@@ -189,9 +165,9 @@ public class TypeInferenceUtilsTest {
         LOGGER.debug("Detect date time diff: " + difference + " s.");
         Assert.assertTrue(difference < 0.43);
     }
-    
+
     @Test
-    public void testIsDateddMMMyyyy(){
+    public void testIsDateddMMMyyyy() {
         String dateStr = "15-Sep-2014";
         Assert.assertTrue(TypeInferenceUtils.isDate(dateStr));
     }
