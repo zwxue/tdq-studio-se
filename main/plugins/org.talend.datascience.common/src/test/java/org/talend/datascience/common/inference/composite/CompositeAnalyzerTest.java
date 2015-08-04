@@ -87,12 +87,12 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
         assertEquals(DataType.Type.STRING, result.get(17).get(DataType.class).getSuggestedType());
         // Semantic types assertions
         String[] expectedCategories = new String[] { "", //
-                "FULL_NAME", //
+                "", //
                 "FIRSTNAME", //
                 "FIRSTNAME", //
                 "", //
                 "", //
-                "FULL_NAME", //
+                "", //
                 "", //
                 "", //
                 "DATE", //
@@ -100,10 +100,10 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
                 "", //
                 "", //
                 "", //
-                "FULL_NAME", //
+                "", //
                 "", //
                 "GENDER", //
-                "FULL_NAME" //
+                "" //
         };
         for (int i = 0; i < expectedCategories.length; i++) {
             assertEquals(expectedCategories[i], result.get(i).get(SemanticType.class).getSuggestedCategory());
