@@ -467,13 +467,17 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
         DataManager connection = this.analysisItem.getAnalysis().getContext().getConnection();
         if (connection == null) {
-            // when the connection, and when there is no connection selected, select 0
+            // MOD TDQ-10654 msjian : when there is no connection selected, select 0,else still use the current one
             if (StringUtils.isBlank(connCombo.getText())) {
                 connCombo.select(0);
+            } else {
+                int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connCombo.getText());
+                connCombo.select(connIdx);
             }
+            // TDQ-10654~
         } else {
             // Find the conn index first
-            int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connection);
+            int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connection.getName());
             if (connIdx == -1) {
                 IRepositoryNode currentConnectionNode = getCurrentRepNodeOnUI();
                 // The current connection is logical deleted!
@@ -498,16 +502,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * findthe Position Of Current Connection.
+     * find the Position by the connection name.
      * 
      * @param connsWithoutDeletion
      * @param connection
      * @return
      */
-    private int findPositionOfCurrentConnection(List<IRepositoryNode> connsWithoutDeletion, DataManager connection) {
+    private int findPositionOfCurrentConnection(List<IRepositoryNode> connsWithoutDeletion, String curName) {
         int index = 0;
         for (IRepositoryNode repNode : connsWithoutDeletion) {
-            if (StringUtils.equals(repNode.getObject().getLabel(), connection.getName())) {
+            if (StringUtils.equals(repNode.getObject().getLabel(), curName)) {
                 return index;
             }
             index++;
