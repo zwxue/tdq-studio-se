@@ -111,12 +111,18 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
  */
 public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implements PropertyChangeListener {
+
+    /**
+     * the temp value used to store the old connection value, when the user didn't save this page, use to revert
+     */
+    private DataManager oldConn = null;
 
     private Composite tree;
 
@@ -828,6 +834,9 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
                         .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             getConnCombo().select(connIndex);
+            // save the old first, need to use this to revert
+            oldConn = this.analysisItem.getAnalysis().getContext().getConnection();
+
             this.analysisItem.getAnalysis().getContext().setConnection(conn);
             Object[] modelElements = dialog.getResult();
             setTreeViewInput(modelElements);
@@ -936,32 +945,17 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      */
     @Override
     public void saveAnalysis() throws DataprofilerCoreException {
-        if (this.isValidateRowCount()) {
-            analysisHandler.changeDefaultRowLoaded(rowLoadedText.getText());
-        } else {
-            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-            return;
-        }
+        analysisHandler.changeDefaultRowLoaded(rowLoadedText.getText());
 
         analysisHandler.changeSampleDataShowWay(sampleDataShowWayCombo.getText());
 
-        IRepositoryViewObject reposObject = null;
         analysisHandler.clearAnalysis();
-        ModelElementIndicator[] modelElementIndicators = this.getCurrentModelElementIndicators();
-        // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
+
         Analysis analysis = analysisHandler.getAnalysis();
-
-        // ADD gdbu 2011-3-3 bug 19179
-
-        // remove the space from analysis name
-        //        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
 
         for (Domain domain : this.analysisItem.getAnalysis().getParameters().getDataFilter()) {
             domain.setName(this.analysisItem.getAnalysis().getName());
         }
-
-        // ~
 
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
 
@@ -980,6 +974,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         analysis.getParameters().setStoreData(drillDownCheck.getSelection());
         // ~12919
 
+        ModelElementIndicator[] modelElementIndicators = this.getCurrentModelElementIndicators();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
             Connection tdProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]);
             if (tdProvider.eIsProxy()) {
@@ -989,7 +984,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             analysis.getContext().setConnection(tdProvider);
 
             for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-                reposObject = modelElementIndicator.getModelElementRepositoryNode().getObject();
+                IRepositoryViewObject reposObject = modelElementIndicator.getModelElementRepositoryNode().getObject();
                 ModelElement modelEle = null;
                 if (reposObject instanceof MetadataColumnRepositoryObject) {
                     modelEle = ((MetadataColumnRepositoryObject) reposObject).getTdColumn();
@@ -1004,13 +999,14 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         } else {
             analysis.getContext().setConnection(null);
         }
+
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
         // 2011.1.12 MOD by zshen to unify anlysis and connection id when saving.
 
-        ReturnCode saved = new ReturnCode(false);
         this.nameText.setText(analysisHandler.getName());
         // TDQ-5581,if has removed emlements(patten/udi),should remove dependency each other before saving.
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        ReturnCode saved = new ReturnCode(false);
         saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -1106,6 +1102,11 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         EventManager.getInstance().unRegister(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
                 afterCreateConnectionReceiver);
         MapDBManager.getInstance().closeDB(getAnalysis());
+
+        // when the user didn't save, revert the connection combo value
+        if (oldConn != null && isDirty()) {
+            this.analysisItem.getAnalysis().getContext().setConnection(oldConn);
+        }
     }
 
     /*
@@ -1201,15 +1202,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         }
         // ~19179
 
-        // MOD klliu 2011-04-18 code cleaning.
-        ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
-        if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysisItem.getAnalysis().getContext()
-                    .setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
-        }
-        // ~
         List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
-
         for (ModelElementIndicator modelElementIndicator : treeViewer.getModelElementIndicator()) {
             IRepositoryViewObject modelElementRepositoryObj = modelElementIndicator.getModelElementRepositoryNode().getObject();
             if (modelElementRepositoryObj instanceof MetadataColumnRepositoryObject) {
@@ -1221,6 +1214,9 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             if (!ModelElementHelper.isFromSameTable(analyzedElement) && !"".equals(dataFilterComp.getDataFilterString())) { //$NON-NLS-1$
                 return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotCreatAnalysis"), false); //$NON-NLS-1$
             }
+        }
+        if (!this.isValidateRowCount()) {
+            return new ReturnCode(DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError"), false); //$NON-NLS-1$
         }
 
         return new ReturnCode(true);

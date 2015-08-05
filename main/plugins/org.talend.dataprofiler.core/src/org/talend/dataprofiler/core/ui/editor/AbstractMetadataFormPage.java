@@ -155,13 +155,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected void createFormContent(IManagedForm managedForm) {
         form = managedForm.getForm();
         form.setText(getFormTitle());
-        Composite body = form.getBody();
 
+        Composite body = form.getBody();
         body.setLayout(new GridLayout());
 
         topComp = toolkit.createComposite(body);
         GridData anasisData = new GridData(GridData.FILL_BOTH);
-
         topComp.setLayoutData(anasisData);
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
@@ -175,9 +174,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      */
     public String getIntactElemenetName() {
         if (currentModelElement == null) {
-
             currentModelElement = getCurrentModelElement(getEditor());
-
         }
         return DqRepositoryViewService.buildElementName(getProperty());
     }

@@ -249,7 +249,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         }
         if (analysedElements.size() > 0) {
             tdDataProvider = ConnectionHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
-            analysisItem.getAnalysis().getContext().setConnection(tdDataProvider);
             // MOD qiongli bug 14437:Add dependency
             analysisItem.getAnalysis().getContext().setConnection(tdDataProvider);
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysisItem.getAnalysis(),
