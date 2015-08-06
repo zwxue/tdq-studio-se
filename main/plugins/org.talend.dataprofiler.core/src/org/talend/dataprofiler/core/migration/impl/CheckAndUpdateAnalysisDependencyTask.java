@@ -14,10 +14,23 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -35,6 +48,12 @@ import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.EResourceConstant;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -110,7 +129,8 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
         ArrayList<File> fileList = new ArrayList<File>();
         FilesUtils.getAllFilesFromFolder(sysIndsFolder, fileList, getFilenameFilter("ana"));
         for (File file : fileList) {
-            Analysis indDef = getAnalysisFromFile(file);
+            File cleanFile = removeNotUsedModels(file);
+            Analysis indDef = getAnalysisFromFile(cleanFile);
             if (indDef != null) {
                 analyses.add(indDef);
             }
@@ -119,11 +139,60 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
         return analyses;
     }
 
+    private File removeNotUsedModels(File file) {
+        // remove not used any more: where aide rule
+        DocumentBuilder db;
+        try {
+            boolean needSave = false;
+            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = db.parse(file);
+            Element root = document.getDocumentElement();
+            NodeList list = root.getElementsByTagName("indicators"); //$NON-NLS-1$
+            for (int i = 0; i < list.getLength(); i++) {
+                Node item = list.item(i);
+                NamedNodeMap attributes = item.getAttributes();
+                Node typeItem = attributes.getNamedItem("xsi:type"); //$NON-NLS-1$
+                if (StringUtils.equals("dataquality.indicators.sql:WhereRuleAideIndicator", typeItem.getNodeValue())) { //$NON-NLS-1$
+                    item.getParentNode().removeChild(item);
+                    needSave = true;
+                }
+            }
+            if (needSave) {
+                saveFile(file, document);
+            }
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            return null;
+        } catch (SAXException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return file;
+    }
+
+    private void saveFile(File needSaveFile, Document doc) {// 将Document输出到文件
+        TransformerFactory transFactory = TransformerFactory.newInstance();
+        try {
+            Transformer transformer = transFactory.newTransformer();
+            Source xmlSource = new DOMSource(doc);
+            Result result = new StreamResult(needSaveFile);
+            transformer.transform(xmlSource, result);
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+    }
+
     private FilenameFilter getFilenameFilter(final String ends) {
         return new FilenameFilter() {
 
             public boolean accept(File dir, String name) {
-                if (name.endsWith(ends)) {//$NON-NLS-1$
+                if (name.endsWith(ends)) {
                     return true;
                 }
                 return false;
