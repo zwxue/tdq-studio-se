@@ -54,6 +54,10 @@ public class DatabaseResultSet extends TalendResultSet {
      */
     @Override
     public boolean absolute(int rowIndex) {
+        // when create connection failed, rs is null
+        if (rs == null) {
+            return false;
+        }
         try {
             return rs.absolute(rowIndex);
         } catch (SQLException e) {
@@ -68,6 +72,11 @@ public class DatabaseResultSet extends TalendResultSet {
      */
     @Override
     public Object getObject(String columnName) throws SQLException {
+        // when create connection failed, rs is null
+        if (rs == null) {
+            return null;
+        }
+
         Object object = null;
         try {
             object = rs.getObject(columnName);
