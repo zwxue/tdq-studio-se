@@ -65,7 +65,7 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
             return ImageLib.getImage(ImageLib.PROJECT_ACTIVE);
         } else if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
-            if (ResourceManager.isTDQConnectionFolder(folder)) {
+            if (ResourceManager.isDBConnectionFolder(folder)) {
                 return ImageLib.getImage(ImageLib.CONNECTION);
             }
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);

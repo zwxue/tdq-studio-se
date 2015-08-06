@@ -12,15 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.filters;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.talend.resource.ResourceManager;
+import org.talend.dq.nodes.hadoopcluster.HadoopClusterFolderRepNode;
 
 /**
- * DOC zshen class global comment. Detailled comment
+ * used to hide the hadoop cluster folder node.
  */
-public class TDQEEConnectionFolderFilter extends ViewerFilter {
+public class HadoopCLusterFolderNodeFilter extends ViewerFilter {
 
     /*
      * (non-Javadoc)
@@ -30,11 +29,9 @@ public class TDQEEConnectionFolderFilter extends ViewerFilter {
      */
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        if (element instanceof IFolder) {
-            IFolder folder = (IFolder) element;
-            return ResourceManager.isDBConnectionFolder(folder);
+        if (element instanceof HadoopClusterFolderRepNode) {
+            return false;
         }
         return true;
     }
-
 }
