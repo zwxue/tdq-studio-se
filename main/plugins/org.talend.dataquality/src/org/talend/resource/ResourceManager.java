@@ -534,17 +534,7 @@ public final class ResourceManager {
      * @param resource
      * @return
      */
-    public static boolean isConnectionFolder(IResource resource) {
-        return isOneFolder(resource, EResourceConstant.DB_CONNECTIONS);
-    }
-
-    /**
-     * DOC zshen Comment method "isConnectionFolder".
-     * 
-     * @param resource
-     * @return
-     */
-    public static boolean isTDQConnectionFolder(IResource resource) {
+    public static boolean isDBConnectionFolder(IResource resource) {
         return isOneFolder(resource, EResourceConstant.DB_CONNECTIONS);
     }
 
