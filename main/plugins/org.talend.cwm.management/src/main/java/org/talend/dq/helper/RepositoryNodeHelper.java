@@ -3801,7 +3801,12 @@ public final class RepositoryNodeHelper {
                 if (type != null && type == ENodeType.SYSTEM_FOLDER) {
                     String label = node.getObject().getLabel();
                     if (label != null) {
-                        return getFirstLevelDisplayName(label);
+                        if (label.equals(EResourceConstant.DATA_PROFILING.getName())
+                                || label.equals(EResourceConstant.LIBRARIES.getName())) {
+                            return label.substring(4, label.length());
+                        } else if (label.equals(EResourceConstant.METADATA.getName())) {
+                            return label.substring(0, 1).toUpperCase() + label.substring(1);
+                        }
                     }
                 }
             }
@@ -3809,20 +3814,6 @@ public final class RepositoryNodeHelper {
         }
 
         return ""; //$NON-NLS-1$
-    }
-
-    /**
-     * DOC msjian Comment method "getFirstLevelName".
-     * 
-     * @param label
-     */
-    public static String getFirstLevelDisplayName(String label) {
-        if (label.equals(EResourceConstant.DATA_PROFILING.getName()) || label.equals(EResourceConstant.LIBRARIES.getName())) {
-            return label.substring(4, label.length());
-        } else if (label.equals(EResourceConstant.METADATA.getName())) {
-            return label.substring(0, 1).toUpperCase() + label.substring(1);
-        }
-        return label;
     }
 
     public static boolean isSupportedConnection(IRepositoryNode repNode) {
