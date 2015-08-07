@@ -258,8 +258,7 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
         if (objects.size() == 1) {
             String str = String.valueOf(objects.get(0)[0]);
             if (str == null || StringUtils.equalsIgnoreCase("null", str)) {
-                log.error("Value is null of " + this.getName() + " !!");
-                return false;
+                log.warn("Value is null of " + this.getName() + " !!");
             }
             str = getCorrectStringValue(objects.get(0)[0], str);
             this.setValue(str);
