@@ -132,9 +132,13 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
     @Override
     public boolean finalizeComputation() {
         if (!isComputed()) {
-            long total = this.getCount().longValue() - this.getNullCount().longValue();
-            final double quantile = AlgoUtils.getQuantile(total, frequenceTable, 3, 4);
-            this.setValue(String.valueOf(quantile));
+            if (this.getCount() == null || this.getCount() == 0) {
+                this.setValue(String.valueOf(Double.NaN));
+            } else {
+                long total = this.getCount().longValue() - this.getNullCount().longValue();
+                final double quantile = AlgoUtils.getQuantile(total, frequenceTable, 3, 4);
+                this.setValue(String.valueOf(quantile));
+            }
             // get the correct type of result from the analyzed element
             int javaType = this.getColumnType();
             this.setDatatype(javaType);
