@@ -34,25 +34,19 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class ResultSetHelper {
 
-    private static final int DEFAULT_FETCH_SIZE = 1000;
-
     public static ResultSet getResultSet(ColumnIndicator columnIndicator, String whereExpression) throws SQLException {
-        // connection
         Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(columnIndicator);
         TdColumn tdColumn = columnIndicator.getTdColumn();
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-        Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn, whereExpression);
         IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
-
         TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
         if (!createConnection.isOk()) {
             return null;
         }
         java.sql.Connection sqlConn = createConnection.getObject();
-        Statement createStatement = initStatement(metadataBean, sqlConn);
-        if (createStatement == null) {
-            return null;
-        }
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
+        Statement createStatement = dbmsLanguage.createStatement(sqlConn);
+
+        Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn, whereExpression);
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
 
@@ -66,11 +60,9 @@ public class ResultSetHelper {
 
     public static ResultSet getResultSet(MetadataTable metadataTable, java.sql.Connection sqlConn, String whereExpression,
             int maxRows) throws SQLException {
-
         Connection tdDataProvider = TableHelper.getFirstConnection(metadataTable);
-        IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
-
         if (sqlConn == null) {
+            IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
             TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
             if (!createConnection.isOk()) {
                 return null;
@@ -78,75 +70,44 @@ public class ResultSetHelper {
             sqlConn = createConnection.getObject();
         }
 
-        Statement createStatement = initStatement(metadataBean, sqlConn);
-        if (createStatement == null) {
-            return null;
-        }
-
-        createStatement.setFetchSize(Integer.MIN_VALUE);
-        // createStatement.setFetchSize(DEFAULT_FETCH_SIZE);
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
+        Statement createStatement = dbmsLanguage.createStatement(sqlConn, Integer.MIN_VALUE);
         createStatement.setMaxRows(maxRows);
 
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(sqlConn);
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
 
-    public static ResultSet getResultSet(ColumnIndicator columnIndicator, String whereExpression, Statement createStatement)
-            throws SQLException {
-        Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(columnIndicator);
-        TdColumn tdColumn = columnIndicator.getTdColumn();
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-        Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn, whereExpression);
-        return createStatement.executeQuery(columnQueryExpression.getBody());
-    }
-
-    private static Statement initStatement(IMetadataConnection metadataBean, java.sql.Connection sqlConn) throws SQLException {
-
-        Statement createStatement = null;
-        if (MetadataConnectionUtils.isSQLite(metadataBean)) {
-            // sqlite only supports TYPE_FORWARD_ONLY cursors
-            createStatement = sqlConn.createStatement();
-        } else {
-            createStatement = sqlConn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        }
-
-        return createStatement;
-    }
-
     public static long getResultSize(MetadataTable metadataTable) {
         Statement createStatement = null;
-        ResultSet sizeResult = null;
+        ResultSet resultSet = null;
         try {
             Connection tdDataProvider = TableHelper.getFirstConnection(metadataTable);
             IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
-
             TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
             if (!createConnection.isOk()) {
                 return 0;
             }
             java.sql.Connection sqlConn = createConnection.getObject();
-
-            createStatement = initStatement(metadataBean, sqlConn);
             DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
+            createStatement = dbmsLanguage.createStatement(sqlConn);
+
             Expression columnQueryExpression = dbmsLanguage.getTableCountQueryExpression(metadataTable, null);
-            sizeResult = createStatement.executeQuery(columnQueryExpression.getBody());
-            if (sizeResult.next()) {
-                return sizeResult.getLong(1);
+            resultSet = createStatement.executeQuery(columnQueryExpression.getBody());
+            if (resultSet.next()) {
+                return resultSet.getLong(1);
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             try {
-                if (sizeResult != null) {
-                    sizeResult.close();
+                if (resultSet != null) {
+                    resultSet.close();
                 }
                 if (createStatement != null) {
                     createStatement.close();
                 }
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

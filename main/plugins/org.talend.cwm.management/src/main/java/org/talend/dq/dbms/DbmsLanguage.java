@@ -1755,9 +1755,20 @@ public class DbmsLanguage {
      * @throws SQLException
      */
     public Statement createStatement(java.sql.Connection connection, int fetchSize) throws SQLException {
-        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        Statement statement = createStatement(connection);
         statement.setFetchSize(fetchSize);
         return statement;
+    }
+
+    /**
+     * DOC msjian Comment method "createStatement".
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public Statement createStatement(java.sql.Connection connection) throws SQLException {
+        return connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     }
 
     /**
