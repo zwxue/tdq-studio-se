@@ -174,7 +174,19 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         ((AnalysisLabelParameter) correlationColumnParam).setCategoryLabel(node.getName());
                         correlationColumnParam.setFolderProvider(folderProvider);
                         parameter = correlationColumnParam;
-                        href = relatedTopics[6].getHref();
+                        //TDQ-10498 split column correlation page to three pages.
+                        //Added those final string is to judge different analysis type.
+                        //We are not have those analysisType on the EMF model, And this issue is about display only.
+                        //So that don't choose modify EMF model
+                        if("Numerical Correlation Analysis".equals(node.getLiteral())){//$NON-NLS-1$
+                            href = relatedTopics[10].getHref();
+                        }else if("Time Correlation Analysis".equals(node.getLiteral())){//$NON-NLS-1$
+                            href = relatedTopics[11].getHref();
+                        }else if("Nominal Correlation Analysis".equals(node.getLiteral())){//$NON-NLS-1$
+                            href = relatedTopics[12].getHref();
+                        }else{
+                            href = relatedTopics[6].getHref();
+                        }
                         break;
                     case MULTIPLE_COLUMN:
                         AnalysisParameter correlationParam = new AnalysisParameter();

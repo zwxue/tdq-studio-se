@@ -10,6 +10,9 @@
         <topic label="Column Functional Dependency" href="$nl$/html/wizard/analysis/columnDependencyAnalysis.html"/>
         <topic label="Column Set Analysis" href="$nl$/html/wizard/analysis/columnSetAnalysis.html"/>
         <topic label="Match Analysis" href="$nl$/html/wizard/analysis/matchRuleAnalysis.html"/>
+        <topic label="Numerical Correlation Analysis" href="$nl$/html/wizard/analysis/numericalCorrelationAnalysis.html"/>
+        <topic label="Time Correlation Analysis" href="$nl$/html/wizard/analysis/timeCorrelationAnalysis.html"/>
+        <topic label="Nominal Correlation Analysis" href="$nl$/html/wizard/analysis/nominalCorrelationAnalysis.html"/>
     </entry>
     
     <entry keyword="Indicators Parameters">
