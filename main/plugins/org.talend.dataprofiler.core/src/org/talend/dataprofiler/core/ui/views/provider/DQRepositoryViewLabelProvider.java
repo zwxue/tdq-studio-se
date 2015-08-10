@@ -309,11 +309,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 }
                 for (AnalysisMap anaMap : report.getAnalysisMap()) {
                     Analysis analysis = anaMap.getAnalysis();
-                    if (analysis != null) {
-                        DataManager connection = analysis.getContext().getConnection();
-                        if (connection instanceof MDMConnection) {
-                            return ImageLib.createInvalidIcon(originalImageName).createImage();
-                        }
+                    if (analysis == null || analysis.getContext() == null) {
+                        continue;
+                    }
+                    DataManager connection = analysis.getContext().getConnection();
+                    if (connection instanceof MDMConnection) {
+                        return ImageLib.createInvalidIcon(originalImageName).createImage();
                     }
                 }
             }
