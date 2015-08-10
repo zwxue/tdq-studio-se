@@ -145,16 +145,20 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
     class ElementListener implements IElementStateListener {
 
         public void elementContentAboutToBeReplaced(Object element) {
+            // do nothing until now
         }
 
         public void elementContentReplaced(Object element) {
+            // do nothing until now
         }
 
         public void elementDeleted(Object element) {
-            close(true);
+            // MOD msjian TDQ-10651: fix for remote items, when rename it in editor should not close editor
+            // close(true);
         }
 
         public void elementDirtyStateChanged(Object element, boolean isDirty) {
+            // do nothing until now
         }
 
         public void elementMoved(Object originalElement, Object movedElement) {
@@ -198,6 +202,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
     }
 
     protected void translateInput(IEditorInput input) {
+        // do nothing until now
     }
 
     /**
@@ -334,6 +339,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         toolBar.addResizeListener(new ControlListener() {
 
             public void controlMoved(ControlEvent e) {
+                // do nothing until now
             }
 
             public void controlResized(ControlEvent e) {
