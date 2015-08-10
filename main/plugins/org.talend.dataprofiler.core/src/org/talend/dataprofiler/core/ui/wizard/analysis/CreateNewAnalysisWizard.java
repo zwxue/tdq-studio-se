@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
@@ -32,9 +31,6 @@ public class CreateNewAnalysisWizard extends Wizard {
     private WizardPage[] otherPages;
 
     private FolderProvider currentFolderProvider;
-
-    // FIXME remove it.
-    private IPath path;
 
     private RepositoryNode node;
 
@@ -56,9 +52,8 @@ public class CreateNewAnalysisWizard extends Wizard {
      * @param path
      * @param node
      */
-    public CreateNewAnalysisWizard(IPath path, RepositoryNode node) {
+    public CreateNewAnalysisWizard(RepositoryNode node) {
         setWindowTitle(DefaultMessagesImpl.getString("CreateNewAnalysisWizard.createNewAnalysis")); //$NON-NLS-1$
-        this.path = path;
         this.node = node;
     }
 
