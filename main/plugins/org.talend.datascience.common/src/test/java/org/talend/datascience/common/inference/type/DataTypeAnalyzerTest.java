@@ -168,7 +168,15 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
             analyzer.analyze(record);
         }
         final List<DataType> result = analyzer.getResult();
+        assertEquals(DataType.Type.INTEGER, result.get(0).getSuggestedType());
+        assertEquals(DataType.Type.STRING, result.get(1).getSuggestedType());
+        assertEquals(DataType.Type.STRING, result.get(2).getSuggestedType());
+        assertEquals(DataType.Type.STRING, result.get(3).getSuggestedType());
+        assertEquals(DataType.Type.DATE, result.get(4).getSuggestedType());
+        assertEquals(DataType.Type.STRING, result.get(5).getSuggestedType());
+        assertEquals(DataType.Type.DATE, result.get(6).getSuggestedType());
         assertEquals(DataType.Type.INTEGER, result.get(7).getSuggestedType());
+        assertEquals(DataType.Type.DOUBLE, result.get(8).getSuggestedType());
     }
 
 }

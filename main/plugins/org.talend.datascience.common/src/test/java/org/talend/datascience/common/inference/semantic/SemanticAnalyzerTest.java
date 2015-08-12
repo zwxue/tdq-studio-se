@@ -52,6 +52,29 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
         assertNotNull(semanticAnalyzer);
         semanticAnalyzer.end();
     }
+    @Test
+    public void testHandleCustomer100() {
+        final List<String[]> records = getRecords(AnalyzerTest.class.getResourceAsStream("customers_100_bug_TDQ10380.csv"));
+        for (String[] record : records) {
+            semanticAnalyzer.analyze(record);
+        }
+        List<SemanticType> result = semanticAnalyzer.getResult();
+        int columnIndex = 0;
+        String[] expectedCategories = new String[] { //
+                "", //
+                "FIRSTNAME", //
+                "CITY", //
+                "STATE_CODE_US", //
+                "DATE", //
+                "CITY", //
+                "DATE", //
+                "", //
+                "" //
+        };
+        for (SemanticType columnSemanticType : result) {
+            assertEquals(expectedCategories[columnIndex++], columnSemanticType.getSuggestedCategory());
+        }
+    }
 
     @Test
     public void testHandle() {
