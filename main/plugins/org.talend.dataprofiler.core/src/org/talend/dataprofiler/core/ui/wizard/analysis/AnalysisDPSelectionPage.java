@@ -28,6 +28,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
+import org.talend.dataprofiler.core.ui.filters.HadoopCLusterFolderNodeFilter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
@@ -63,8 +64,8 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
     }
 
     private void init(String title, String message, ResourceViewContentProvider contentProvider, String labText) {
-        setTitle(title); //$NON-NLS-1$
-        setMessage(message); //$NON-NLS-1$
+        setTitle(title);
+        setMessage(message);
         setPageComplete(false);
         nameLabTxt = labText;
         fLabelProvider = new DBTablesViewLabelProvider();
@@ -77,11 +78,12 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         container.setLayout(layout);
 
         Label nameLabel = new Label(container, SWT.NONE);
-        nameLabel.setText(nameLabTxt); //$NON-NLS-1$
+        nameLabel.setText(nameLabTxt);
 
         createMetaDataTree(container);
         setControl(container);
-        addFilters(new EMFObjFilter(), new DQFolderFliter(true), new TDQEEConnectionFolderFilter(), new RecycleBinFilter());
+        addFilters(new EMFObjFilter(), new DQFolderFliter(true), new TDQEEConnectionFolderFilter(), new RecycleBinFilter(),
+                new HadoopCLusterFolderNodeFilter());
         addListeners();
     }
 

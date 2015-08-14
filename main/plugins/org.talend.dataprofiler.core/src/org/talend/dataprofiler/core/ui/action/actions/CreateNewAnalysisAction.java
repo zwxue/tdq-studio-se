@@ -81,8 +81,7 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
      */
     @Override
     public void run() {
-        // DOC MOD klliu define the path and node
-        CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard(path, node);
+        CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard(node);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new OpeningHelpWizardDialog(null, wizard, null);
         wizard.setContainer(dialog);
@@ -192,8 +191,8 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
 
         IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
         if (factory.isUserReadOnlyOnCurrentProject()) {
-            MessageDialog
-                    .openWarning(null, "User Authority", "Can't create Analysis! Current user is read-only on this project!");
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("CreateNewAnalysisAction.readOnlyErrorTitle"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("CreateNewAnalysisAction.readOnlyErrorMessage")); //$NON-NLS-1$
         } else {
             PlatformUI.getWorkbench().getIntroManager().closeIntro(PlatformUI.getWorkbench().getIntroManager().getIntro());
             IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();

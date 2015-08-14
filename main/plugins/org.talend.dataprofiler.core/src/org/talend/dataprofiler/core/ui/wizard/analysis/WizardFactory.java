@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.pattern.CreatePatternWizard;
@@ -151,12 +150,11 @@ public final class WizardFactory {
     /**
      * DOC klliu Comment method "createNewAnalysisWizard".
      *
-     * @param path
      * @param node
      * @return
      */
-    public static CreateNewAnalysisWizard createNewAnalysisWizard(IPath path, RepositoryNode node) {
-        return new CreateNewAnalysisWizard(path, node);
+    public static CreateNewAnalysisWizard createNewAnalysisWizard(RepositoryNode node) {
+        return new CreateNewAnalysisWizard(node);
     }
 
     /**
@@ -177,6 +175,7 @@ public final class WizardFactory {
     public static NewMatchRuleWizard createNewMatchRuleWizard(DQMatchRuleParameter parameter) {
         return new NewMatchRuleWizard(parameter);
     }
+
     public static NewUDIndicatorWizard createNewUDIWizard(UDIndicatorParameter parameter) {
         return new NewUDIndicatorWizard(parameter);
     }
