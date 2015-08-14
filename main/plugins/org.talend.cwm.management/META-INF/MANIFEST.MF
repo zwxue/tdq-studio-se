@@ -29,7 +29,6 @@ Require-Bundle: org.eclipse.ui,
  org.talend.dataquality.sampling
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
- lib/advancedPersistentLookupLib-1.0.jar,
  dist/org.talend.cwm.management.jar
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist,org.talend.testutils
 Bundle-ActivationPolicy: lazy
@@ -49,6 +48,7 @@ Export-Package: org.talend.commons.emf,
  org.talend.dq.analysis.match,
  org.talend.dq.analysis.memory,
  org.talend.dq.analysis.parameters,
+ org.talend.dq.analysis.persistent,
  org.talend.dq.dbms,
  org.talend.dq.dqrule,
  org.talend.dq.factory,

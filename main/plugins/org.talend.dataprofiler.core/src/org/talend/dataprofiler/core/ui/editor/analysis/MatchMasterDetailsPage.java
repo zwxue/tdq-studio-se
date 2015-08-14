@@ -52,6 +52,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -268,12 +269,15 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * DOC zshen Comment method "createMatchParameterSection".
      */
     private void createMatchParameterSection() {
-        MatchParameterSection matchParameterSection = new MatchParameterSection(form, topComp, Section.TWISTIE
-                | Section.TITLE_BAR | Section.EXPANDED, toolkit, analysisItem.getAnalysis());
-        matchParameterSection.addPropertyChangeListener(this);
-        matchParameterSection.createParameterCom();
-        registerSection(matchParameterSection.getSection());
-        matchParameterSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        // Added TDQ-10655 hide the store on disk on TOP.
+        if (PluginChecker.isTDQLoaded()) {
+            MatchParameterSection matchParameterSection = new MatchParameterSection(form, topComp, Section.TWISTIE
+                    | Section.TITLE_BAR | Section.EXPANDED, toolkit, analysisItem.getAnalysis());
+            matchParameterSection.addPropertyChangeListener(this);
+            matchParameterSection.createParameterCom();
+            registerSection(matchParameterSection.getSection());
+            matchParameterSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        }
     }
 
     /**

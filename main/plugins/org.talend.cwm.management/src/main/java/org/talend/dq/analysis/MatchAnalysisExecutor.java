@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.exception.BusinessException;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
@@ -41,12 +42,10 @@ import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
-import org.talend.designer.components.lookup.persistent.IPersistentLookupManager;
 import org.talend.dq.analysis.match.BlockAndMatchManager;
-import org.talend.dq.analysis.match.ExecuteMatchRuleHandler;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
-import org.talend.dq.analysis.persistent.BlockKey;
 import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.dq.helper.StoreOnDiskUtils;
 import org.talend.dq.indicators.Evaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -132,7 +131,6 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
 
         // Set schema for match key.
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>();
-        ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
         MetadataColumn[] completeColumnSchema = AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap);
         String[] colSchemaString = new String[completeColumnSchema.length];
         int idx = 0;
@@ -154,12 +152,11 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 return rc;
             }
 
-            Map<BlockKey, String> blockKeys = sqlExecutor.getStoreOnDiskHandler().getBlockKeys();
-            @SuppressWarnings("rawtypes")
-            IPersistentLookupManager persistentLookupManager = (sqlExecutor.getStoreOnDiskHandler()).getPersistentLookupManager();
             try {
-                returnCode = execHandler.executeWithStoreOnDisk(columnMap, recordMatchingIndicator, blockKeyIndicator,
-                        persistentLookupManager, blockKeys, matchResultConsumer);
+                TypedReturnCode<Object> result = StoreOnDiskUtils.getDefault().executeWithStoreOnDisk(columnMap,
+                        recordMatchingIndicator, blockKeyIndicator, sqlExecutor.getStoreOnDiskHandler(), matchResultConsumer);
+                returnCode.setObject((MatchGroupResultConsumer) result.getObject());
+                returnCode.setOk(result.isOk());
             } catch (Exception e) {
                 log.error(e, e);
                 returnCode.setMessage(e.getMessage());
@@ -277,7 +274,8 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             sqlExecutor = new DelimitedFileSQLExecutor();
         }
         // Tune on store on disk option when needed.
-        Boolean isStoreOnDisk = TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY, analysis);
+        Boolean isStoreOnDisk = PluginChecker.isTDQLoaded() ? TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY,
+                analysis) : Boolean.FALSE;
         if (sqlExecutor != null && isStoreOnDisk) {
             sqlExecutor.setStoreOnDisk(Boolean.TRUE);
             sqlExecutor.initStoreOnDiskHandler(analysis, recordMatchingIndicator, columnMap);

@@ -23,14 +23,10 @@ import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.genkey.BlockingKeyHandler;
 import org.talend.dataquality.record.linkage.grouping.AnalysisMatchRecordGrouping;
 import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
-import org.talend.designer.components.lookup.persistent.IPersistentLookupManager;
 import org.talend.dq.analysis.AnalysisRecordGroupingUtils;
-import org.talend.dq.analysis.persistent.BlockKey;
-import org.talend.dq.analysis.persistent.MatchRow;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -58,84 +54,6 @@ public class ExecuteMatchRuleHandler {
                 matchResultConsumer, matchRows);
         returnCode.setOk(computeMatchGroupReturnCode.isOk());
         returnCode.setMessage(computeMatchGroupReturnCode.getMessage());
-        return returnCode;
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public TypedReturnCode<MatchGroupResultConsumer> executeWithStoreOnDisk(Map<MetadataColumn, String> columnMap,
-            RecordMatchingIndicator recordMatchingIndicator, BlockKeyIndicator blockKeyIndicator,
-            IPersistentLookupManager persistentLookupManager, Map<BlockKey, String> blockKeys,
-            MatchGroupResultConsumer matchResultConsumer) throws Exception {
-
-        TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>(false);
-        // The parameter of "isKeepDataInMemory" should be false in
-        // "store on disk" option.
-        returnCode.setObject(matchResultConsumer);
-
-        // By default for analysis, the applied blocking key will be the key
-        // from key generation definition. This
-        // will be refined when there is a need to define the applied blocking
-        // key manually by user later.
-        AnalysisRecordGroupingUtils.createAppliedBlockKeyByGenKey(recordMatchingIndicator);
-
-        persistentLookupManager.initGet();
-        TreeMap<Object, Long> blockSize2Freq = new TreeMap<Object, Long>();
-
-        MatchRow matchRow = null;
-        boolean isBlockKeyEmpty = blockKeys.isEmpty();
-        Iterator<BlockKey> blockKeyIterator = blockKeys.keySet().iterator();
-        while (blockKeyIterator.hasNext() || isBlockKeyEmpty) {
-            if (isBlockKeyEmpty) {
-                // If the block key is empty, only handle the data in one loop.
-                // Treat it in one and only one block.
-                isBlockKeyEmpty = Boolean.FALSE;
-                matchRow = new MatchRow(columnMap.size(), 0);
-            } else {
-                // Lookup rows given blocking key
-                BlockKey blockKey = blockKeyIterator.next();
-                if (matchRow == null) {
-                    matchRow = new MatchRow(columnMap.size(), blockKey.getBlockKey().size());
-                }
-                matchRow.setKey(blockKey.getBlockKey());
-                matchRow.hashCodeDirty = true;
-            }
-            AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
-            // Set rule matcher for record grouping API.
-            AnalysisRecordGroupingUtils.setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
-
-            if (recordMatchingIndicator.getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm()
-                    .equals(RecordMatcherType.simpleVSRMatcher.name())) {
-                analysisMatchRecordGrouping.setRecordLinkAlgorithm(RecordMatcherType.simpleVSRMatcher);
-                analysisMatchRecordGrouping.initialize();
-                persistentLookupManager.lookup(matchRow);
-            } else {
-                analysisMatchRecordGrouping.setRecordLinkAlgorithm(RecordMatcherType.T_SwooshAlgorithm);
-                analysisMatchRecordGrouping.initialize();
-                persistentLookupManager.lookup(matchRow);
-                analysisMatchRecordGrouping.setSurvivorShipAlgorithmParams(AnalysisRecordGroupingUtils
-                        .createSurvivorShipAlgorithmParams(analysisMatchRecordGrouping, recordMatchingIndicator, columnMap));
-            }
-            Integer blockSize = 0;
-            while (persistentLookupManager.hasNext()) {
-                // Match within one block
-                MatchRow row = (MatchRow) persistentLookupManager.next();
-                List<String> rowWithBlockKey = row.getRowWithBlockKey();
-                analysisMatchRecordGrouping.doGroup(rowWithBlockKey.toArray(new String[rowWithBlockKey.size()]));
-                blockSize++;
-            }
-            analysisMatchRecordGrouping.end();
-
-            // Store indicator
-            Long freq = blockSize2Freq.get(Long.valueOf(blockSize));
-            if (freq == null) {
-                freq = 0l;
-            }
-            blockSize2Freq.put(Long.valueOf(blockSize), freq + 1);
-        }
-        persistentLookupManager.endGet();
-        blockKeyIndicator.setBlockSize2frequency(blockSize2Freq);
-
-        returnCode.setOk(true);
         return returnCode;
     }
 
