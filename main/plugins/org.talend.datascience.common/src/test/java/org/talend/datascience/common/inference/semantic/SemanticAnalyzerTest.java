@@ -1,15 +1,3 @@
-// ============================================================================
-//
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
-//
-// This source code is available under agreement available at
-// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
-//
-// You should have received a copy of the agreement
-// along with this program; if not, write to Talend SA
-// 9 rue Pages 92150 Suresnes, France
-//
-// ============================================================================
 package org.talend.datascience.common.inference.semantic;
 
 import static org.junit.Assert.assertEquals;
@@ -22,6 +10,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.talend.dataquality.semantic.classifier.SemanticCategoryEnum;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder.Mode;
 import org.talend.datascience.common.inference.AnalyzerTest;
 
 /**
@@ -62,12 +53,12 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
         int columnIndex = 0;
         String[] expectedCategories = new String[] { //
                 "", //
-                "FIRSTNAME", //
-                "CITY", //
-                "STATE_CODE_US", //
-                "DATE", //
-                "CITY", //
-                "DATE", //
+                SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
+                SemanticCategoryEnum.CITY.getDisplayName(), //
+                SemanticCategoryEnum.US_STATE_CODE.getId(), //
+                SemanticCategoryEnum.DATE.getId(), //
+                SemanticCategoryEnum.CITY.getDisplayName(), //
+                SemanticCategoryEnum.DATE.getId(), //
                 "", //
                 "" //
         };
@@ -86,21 +77,21 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
         int columnIndex = 0;
         String[] expectedCategories = new String[] { "", //
                 "", //
-                "FIRSTNAME", //
-                "FIRSTNAME", //
+                SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
+                SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
                 "", //
                 "", //
                 "", //
                 "", //
                 "", //
-                "DATE", //
-                "DATE", //
+                SemanticCategoryEnum.DATE.getId(), //
+                SemanticCategoryEnum.DATE.getId(), //
                 "", //
                 "", //
                 "", //
                 "", //
                 "", //
-                "GENDER", //
+                SemanticCategoryEnum.GENDER.getDisplayName(), //
                 "" //
         };
         for (SemanticType columnSemanticType : result) {
