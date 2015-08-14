@@ -46,7 +46,7 @@ public class CreateAnalysisOnHDFSAction extends Action {
      * @param node
      */
     public CreateAnalysisOnHDFSAction(RepositoryNode node) {
-        super(DefaultMessagesImpl.getString("CreateAnalysisOnHDFSAction.create"));
+        super(DefaultMessagesImpl.getString("CreateAnalysisOnHDFSAction.create")); //$NON-NLS-1$
         hdfsNode = node;
     }
 
