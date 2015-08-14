@@ -49,7 +49,7 @@ public interface ISQLExecutor {
     public void initStoreOnDiskHandler(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
             Map<MetadataColumn, String> columnMap);
 
-    public StoreOnDiskHandler getStoreOnDiskHandler();
+    public Object getStoreOnDiskHandler();
 
     public Iterator<Record> getResultSetIterator(DataManager connection, List<ModelElement> analysedElements) throws SQLException;
 }

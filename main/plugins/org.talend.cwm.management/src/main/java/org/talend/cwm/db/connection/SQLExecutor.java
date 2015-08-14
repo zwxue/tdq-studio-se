@@ -22,6 +22,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dq.helper.StoreOnDiskUtils;
 
 /**
  * created by zhao on Oct 20, 2013 Detailled comment
@@ -33,7 +34,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     private Boolean isStoreOnDisk = Boolean.FALSE;
 
-    protected StoreOnDiskHandler storeOnDiskHandler = null;
+    protected Object storeOnDiskHandler = null;
 
     public static final String STORE_ON_DISK_KEY = "STORE_ON_DISK"; //$NON-NLS-1$
 
@@ -101,8 +102,8 @@ public abstract class SQLExecutor implements ISQLExecutor {
             try {
                 String tempDataPath = TaggedValueHelper.getValueString(TEMP_DATA_DIR, analysis);
                 int bufferSize = Integer.valueOf(TaggedValueHelper.getValueString(MAX_BUFFER_SIZE, analysis));
-                storeOnDiskHandler = new StoreOnDiskHandler(recordMatchingIndicator, columnMap, tempDataPath, bufferSize);
-
+                storeOnDiskHandler = StoreOnDiskUtils.getDefault().createStoreOnDiskHandler(tempDataPath, bufferSize,
+                        recordMatchingIndicator, columnMap);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
@@ -114,7 +115,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
      */
     protected void beginQuery() throws Exception {
         if (isStoreOnDisk()) {
-            storeOnDiskHandler.beginQuery();
+            StoreOnDiskUtils.getDefault().beginQuery(storeOnDiskHandler);
         }
     }
 
@@ -123,13 +124,13 @@ public abstract class SQLExecutor implements ISQLExecutor {
      */
     protected void endQuery() throws Exception {
         if (isStoreOnDisk()) {
-            storeOnDiskHandler.endQuery();
+            StoreOnDiskUtils.getDefault().endQuery(storeOnDiskHandler);
         }
     }
 
     protected void handleRow(Object[] oneRow) throws Exception {
         if (isStoreOnDisk()) {
-            storeOnDiskHandler.handleRow(oneRow);
+            StoreOnDiskUtils.getDefault().handleRow(oneRow, storeOnDiskHandler);
         } else {
             dataFromTable.add(oneRow);
         }
@@ -158,7 +159,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
      * 
      * @return the storeOnDiskHandler
      */
-    public StoreOnDiskHandler getStoreOnDiskHandler() {
+    public Object getStoreOnDiskHandler() {
         return this.storeOnDiskHandler;
     }
 }
