@@ -31,7 +31,6 @@ public class DQRuleItemLabelGenerator extends StandardCategoryItemLabelGenerator
 
     public DQRuleItemLabelGenerator(String labelFormat, NumberFormat formatter) {
         super(labelFormat, formatter);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -42,7 +41,6 @@ public class DQRuleItemLabelGenerator extends StandardCategoryItemLabelGenerator
      */
     public DQRuleItemLabelGenerator(String labelFormat, DateFormat formatter) {
         super(labelFormat, formatter);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -81,7 +79,11 @@ public class DQRuleItemLabelGenerator extends StandardCategoryItemLabelGenerator
      * @return
      */
     private Object stringformat(Object percent, int i) {
-        DecimalFormat format = null;
+        // ADD msjian TDQ-10793: when there is no data, the percent value is NaN
+        if (Double.isNaN((double) percent)) {
+            return String.valueOf(Double.NaN);
+        }
+        // TDQ-10793~
 
         BigDecimal zero = new BigDecimal(0);
         BigDecimal temp = new BigDecimal(percent.toString());
@@ -93,7 +95,7 @@ public class DQRuleItemLabelGenerator extends StandardCategoryItemLabelGenerator
         } else if (temp.compareTo(max) == 1 && temp.compareTo(new BigDecimal(1)) == -1) {
             percent = max.toString();
         }
-        format = (DecimalFormat) DecimalFormat.getPercentInstance(Locale.ENGLISH);
+        DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance(Locale.ENGLISH);
         format.applyPattern("0.00%"); //$NON-NLS-1$
 
         if (isUseScientific) {
