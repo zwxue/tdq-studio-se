@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.talend.cwm.db.connection.ConnectionUtilsTest;
-import org.talend.cwm.db.connection.StoreOnDiskHandlerTest;
 import org.talend.cwm.dependencies.DependenciesHandlerTest;
 import org.talend.cwm.management.api.SoftwareSystemManagerTest;
 import org.talend.cwm.management.i18n.MessagesTest;
@@ -90,7 +89,7 @@ import org.talend.dq.writer.AElementPersistanceTest;
         AbstractSchemaEvaluatorTest.class, NetezzaDbmsLanguageTest.class, ColumnSetIndicatorEvaluatorTest.class,
         DelimitedFileIndicatorEvaluatorTest.class, SqlIndicatorHandlerTest.class, ReportSubFolderRepNodeTest.class,
         AElementPersistanceRealTest.class, AElementPersistanceTest.class, CWMPluginTest.class, MessagesTest.class,
-        SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, StoreOnDiskHandlerTest.class, ConnectionUtilsTest.class,
+        SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, ConnectionUtilsTest.class,
         AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class, EObjectHelperTest.class,
         AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class, SQLPatternExplorerTest.class,
         TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class })
