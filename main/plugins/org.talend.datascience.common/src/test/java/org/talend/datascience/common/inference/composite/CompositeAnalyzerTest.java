@@ -81,8 +81,8 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
                 "", //
                 "", //
                 "", //
-                "DATE", //
-                "DATE", //
+                "", //
+                "", //
                 "", //
                 "", //
                 "", //

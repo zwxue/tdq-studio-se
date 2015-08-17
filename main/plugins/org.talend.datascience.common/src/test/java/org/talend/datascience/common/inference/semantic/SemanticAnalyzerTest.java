@@ -56,9 +56,9 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
                 SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
                 SemanticCategoryEnum.CITY.getDisplayName(), //
                 SemanticCategoryEnum.US_STATE_CODE.getId(), //
-                SemanticCategoryEnum.DATE.getId(), //
+                "", //
                 SemanticCategoryEnum.CITY.getDisplayName(), //
-                SemanticCategoryEnum.DATE.getId(), //
+                "", //
                 "", //
                 "" //
         };
@@ -84,8 +84,8 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
                 "", //
                 "", //
                 "", //
-                SemanticCategoryEnum.DATE.getId(), //
-                SemanticCategoryEnum.DATE.getId(), //
+                "", //
+                "", //
                 "", //
                 "", //
                 "", //
