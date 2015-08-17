@@ -78,6 +78,7 @@ import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
+import org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -373,6 +374,8 @@ public class DQDeleteAction extends DeleteAction {
                 if (!StringUtils.isBlank(hcId)) {
                     needRefreshHadoopCluster = true;
                 }
+            } else if (node instanceof HDFSOfHCConnectionNode) {
+                needRefreshHadoopCluster = true;
             }
         }
     }
