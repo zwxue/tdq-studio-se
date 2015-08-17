@@ -384,6 +384,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             return ImageLib.getImage(ImageLib.JRXML_ICON);
         } else if (type == HadoopClusterUtils.getDefault().getHadoopClusterType()) {
             return ImageLib.getImage(ImageLib.HADOOP_CLUSTER);
+        } else if (type == HadoopClusterUtils.getDefault().getHDFSType()) {
+            return ImageLib.getImage(ImageLib.HDFS);
         }
         return null;
 
