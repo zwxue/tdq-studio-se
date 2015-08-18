@@ -383,7 +383,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 int javaType = tdColumn.getSqlDataType().getJavaDataType();
                 // MOD qiongli 2011-10-31 add single quotation '' for mysql date type.
                 if (!Java2SqlType.isNumbericInSQL(javaType)
-                        && !isFunction(defValue, table)
+                        // MOD msjian TDQ-10783: varchar type but with number content, we should add single quotation ''
+                        && (!isFunction(defValue, table) || StringUtils.isNumeric(defValue.trim()))
                         || (Java2SqlType.isDateInSQL(javaType) && SupportDBUrlType.MYSQLDEFAULTURL.getLanguage().equals(language))) {
                     defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
