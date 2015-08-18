@@ -66,7 +66,7 @@ public class CreatePatternsMigratorTask extends AbstractWorksapceUpdateTask {
             }
         }
 
-        // SEDOL MAC Address
+        // SEDOL
         folder = ResourceManager.getPatternRegexFolder().getFolder(PATH_CUSTOMER);
         if (folder.exists()) {
             Pattern pattern = newPattern("SEDOL", SQLLanguage, "'^([B-Db-dF-Hf-hJ-Nj-nP-Tp-tV-Xv-xYyZz0-9]{6}[0-9])$'");
@@ -74,14 +74,9 @@ public class CreatePatternsMigratorTask extends AbstractWorksapceUpdateTask {
                 setTagValue(pattern, "B01HL06 | 4155586", "Stock Exchange Daily Official List ");
                 ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
             }
-            pattern = newPattern("MAC Address", SQLLanguage, "'^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$'");
-            if (pattern != null) {
-                setTagValue(pattern, "A4:4E:31:B9:C5:B4", "Match MAC Address");
-                ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
-            }
         }
 
-        // IPV6
+        // IPV6 MAC Address
         folder = ResourceManager.getPatternRegexFolder().getFolder(PATH_INTERNET);
         if (folder.exists()) {
             Pattern pattern = newPattern(
@@ -90,6 +85,11 @@ public class CreatePatternsMigratorTask extends AbstractWorksapceUpdateTask {
                     "'^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$'");
             if (pattern != null) {
                 setTagValue(pattern, "Check if it is a IPv6 address", "IPv6 address");
+                ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
+            }
+            pattern = newPattern("MAC Address", SQLLanguage, "'^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$'");
+            if (pattern != null) {
+                setTagValue(pattern, "A4:4E:31:B9:C5:B4", "Match MAC Address");
                 ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
             }
         }
