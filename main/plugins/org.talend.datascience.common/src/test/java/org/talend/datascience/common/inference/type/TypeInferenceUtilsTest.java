@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -73,29 +74,6 @@ public class TypeInferenceUtilsTest {
     }
 
     @Test
-    public void testIsChar() throws Exception {
-        List<String> values = loadData("org/talend/datascience/common/inference/testChar.csv");
-        int countOfChars = 0;
-        String timeStart = getCurrentTimeStamp();
-        LOGGER.debug("Detect char start at: " + timeStart);
-        // Assert total count.
-        Assert.assertEquals(10000, values.size());
-        for (String value : values) {
-            if (TypeInferenceUtils.isChar(value)) {
-                countOfChars++;
-            }
-        }
-        String timeEnd = getCurrentTimeStamp();
-        LOGGER.debug("Detect char end at: " + timeEnd);
-        // Assert count of matches.
-        Assert.assertEquals(5000, countOfChars);
-        double difference = getTimeDifference(timeStart, timeEnd);
-
-        LOGGER.debug("Detect char time diff: " + difference + " s.");
-        Assert.assertTrue(difference < 0.05);
-    }
-
-    @Test
     public void testIsInteger() throws Exception {
         List<String> values = loadData("org/talend/datascience/common/inference/testInteger.csv");
         int countOfIntegers = 0;
@@ -121,6 +99,36 @@ public class TypeInferenceUtilsTest {
 
     @Test
     public void testIsDouble() throws Exception {
+        String[] validEnDoubleValues = { "0.8", "1.2", "100", "100.0", "-2.0", "1.0e-04", "1.0e+4", "1E-4" };
+        String[] validFrDoubleValues = { "0,9", "1,0e-4" };
+        String[] invalidDoubleValues = { "NaN", "3.4d", "123L", "123l", " 0.8", "0.8 ", "0. 8", "1.0 e-4", "1. 0e-4", "1.0e -4" };
+
+        int valideCount = 0;
+        for (String value : (String[]) ArrayUtils.addAll(validEnDoubleValues, validFrDoubleValues)) {
+            if (TypeInferenceUtils.isDouble(value))
+                valideCount++;
+        }
+        Assert.assertEquals(valideCount, validEnDoubleValues.length);
+
+        int invalideCount = 0;
+        for (String value : invalidDoubleValues) {
+            if (!TypeInferenceUtils.isDouble(value))
+                invalideCount++;
+        }
+        Assert.assertEquals(invalideCount, invalidDoubleValues.length);
+
+        // TODO Currently, we support only English locale, but we may support other locale(eg. FR) later
+        // count = 0;
+        // for (String value : (String[]) ArrayUtils.addAll(enDoubleValues, frDoubleValues)) {
+        // if (TypeInferenceUtils.isDouble(value))
+        // count++;
+        // }
+        // Assert.assertEquals(count, frDoubleValues.length);
+    }
+
+    @Test
+    public void testPerformanceIsDouble() throws Exception {
+        // test the performance of TypeInferenceUtils.isDouble method
         List<String> values = loadData("org/talend/datascience/common/inference/testDouble.csv");
         int countOfDoubles = 0;
         String timeStart = getCurrentTimeStamp();
@@ -135,12 +143,13 @@ public class TypeInferenceUtilsTest {
         String timeEnd = getCurrentTimeStamp();
         LOGGER.debug("Detect double end at: " + timeEnd);
         // Assert count of matches.
-        Assert.assertEquals(6000, countOfDoubles);
+        Assert.assertEquals(5000, countOfDoubles);
         // Assert time span.
         double difference = getTimeDifference(timeStart, timeEnd);
 
         LOGGER.debug("Detect double time diff: " + difference + " s.");
         Assert.assertTrue(difference < 0.09);
+
     }
 
     @Test

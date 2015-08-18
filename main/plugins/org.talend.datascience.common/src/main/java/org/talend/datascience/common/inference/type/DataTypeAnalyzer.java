@@ -39,13 +39,13 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
             // 2. detect boolean
             return DataType.Type.BOOLEAN;
         } else if (TypeInferenceUtils.isInteger(value)) {
-            // 4. detect integer
+            // 3. detect integer
             return DataType.Type.INTEGER;
         } else if (TypeInferenceUtils.isDouble(value)) {
-            // 5. detect double
+            // 4. detect double
             return DataType.Type.DOUBLE;
         } else if (TypeInferenceUtils.isDate(value)) {
-            // 7. detect date
+            // 5. detect date
             return DataType.Type.DATE;
         }
         // will return string when no matching

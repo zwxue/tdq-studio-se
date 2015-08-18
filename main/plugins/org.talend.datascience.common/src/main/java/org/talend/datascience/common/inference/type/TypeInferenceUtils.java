@@ -22,31 +22,39 @@ import java.util.regex.Pattern;
  */
 public class TypeInferenceUtils {
 
-    private static final Pattern patternAlphString = Pattern.compile("[a-z|A-Z]+\\s*[a-z|A-Z]*");
-
-    private static final Pattern patternDouble = Pattern.compile("^[-+]?\\d*\\.\\d*$"); // \\d*(\\.?\\d+)
-
     private static final Pattern patternInteger = Pattern.compile("^(\\+|-)?\\d+$");
 
-    private static final Pattern patternNoneDigit = Pattern.compile("\\D");
+    private static final Pattern patternDouble = Pattern.compile("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
 
     /**
-     * Detect if the given value is a double type. Note that 3,4 is not valid double with the rule of this method.
+     * Detect if the given value is a double type.
+     * 
+     * <p>
+     * Note:<br>
+     * 1. This method support only English locale.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("3.4")} returns {@code true}.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("3,4")} returns {@code false}.<br>
+     * 2. Exponential notation can be detected as a valid double.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("1.0E+4")} returns {@code true}.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("1.0e-4")} returns {@code true}.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("1.0e-04")} returns {@code true}.<br>
+     * 3. Numbers marked with a type is invalid.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("3.4d")} returns {@code false}.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("123L")} returns {@code false}.<br>
+     * 4. White space is invalid.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble(" 3.4")} returns {@code false}.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("3.4 ")} returns {@code false}.<br>
+     * 5. "." is not obligatory.<br>
+     * e.g. {@code TypeInferenceUtils.isDouble("100")} returns {@code true}.
+     * <P>
      * 
      * @param value the value to be detected.
      * @return true if the value is a double type, false otherwise.
      */
     public static boolean isDouble(String value) {
-        if (value != null) {
-            try {
-                if (patternDouble.matcher(value).find()) {
-                    return true;
-                } else {
-                    Double.valueOf(value);
-                    return true;
-                }
-            } catch (Throwable e) {
-                return false;
+        if (!isEmpty(value)) {
+            if (patternDouble.matcher(value).matches()) {
+                return true;
             }
         }
         return false;
@@ -59,20 +67,31 @@ public class TypeInferenceUtils {
      * @return true if the value is a integer type, false otherwise.
      */
     public static boolean isInteger(String value) {
-        if (value != null) {
-            try {
-                if (patternInteger.matcher(value).find()) {
-                    return true;
-                }
-            } catch (Throwable e) {
-                return false;
+        if (!isEmpty(value)) {
+            if (patternInteger.matcher(value).matches()) {
+                return true;
             }
         }
         return false;
     }
 
     public static boolean isNumber(String value) {
-        return isInteger(value) || isDouble(value);
+        return isDouble(value) || isInteger(value);
+    }
+
+    /**
+     * Detect if the given value is a boolean type.
+     * 
+     * @param value the value to be detected.
+     * @return true if the value is a boolean type, false otherwise.
+     */
+    public static boolean isBoolean(String value) {
+        if (!isEmpty(value) && (value.trim().length() == 4 || value.trim().length() == 5)) {
+            if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -84,44 +103,13 @@ public class TypeInferenceUtils {
      * @return true if the value is a date type, false otherwise.
      */
     public static boolean isDate(String value) {
-        if (value != null) {
+        if (!isEmpty(value)) {
             // 1. The length of date characters should not exceed 30.
             if (value.trim().length() > 30) {
                 return false;
             }
             // 2. Check it by list of patterns
             return DatePatternUtils.getInstance().isDate(value);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Detect if the given value is a boolean type.
-     * 
-     * @param value the value to be detected.
-     * @return true if the value is a boolean type, false otherwise.
-     */
-    public static boolean isBoolean(String value) {
-        if (value != null && (value.length() == 4 || value.length() == 5)) {
-            if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Detect if the given value is a char type.
-     * 
-     * @param value the value to be detected.
-     * @return true if the value is a char type, false otherwise.
-     */
-    public static boolean isChar(String value) {
-        if (value != null && value.length() == 1) {
-            if (patternNoneDigit.matcher(value).find()) {
-                return true;
-            }
         }
         return false;
     }
@@ -133,13 +121,7 @@ public class TypeInferenceUtils {
      * @return true if the value is a empty type, false otherwise.
      */
     public static boolean isEmpty(String value) {
-        if (value == null || value.length() == 0) {
-            return true;
-        }
-        if (value.trim().length() == 0) {
-            return true;
-        }
-        return false;
+        return (value == null || value.trim().length() == 0);
     }
 
 }

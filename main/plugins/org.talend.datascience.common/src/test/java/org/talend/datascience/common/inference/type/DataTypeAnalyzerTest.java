@@ -113,6 +113,22 @@ public class DataTypeAnalyzerTest extends AnalyzerTest {
     }
 
     @Test
+    public void testMixedDoubleInteger() throws Exception {
+        String[] toTestMoreDouble = { "1.2", "3.4E-10", "1" };
+        for (String string : toTestMoreDouble) {
+            analyzer.analyze(string);
+        }
+        assertEquals(DataType.Type.DOUBLE, analyzer.getResult().get(0).getSuggestedType());
+
+        String[] toTestMoreInteger = { "1.2", "3.4E-10", "1", "3", "6", "80" };
+        for (String string : toTestMoreInteger) {
+            analyzer.analyze(string);
+        }
+        assertEquals(DataType.Type.INTEGER, analyzer.getResult().get(0).getSuggestedType());
+
+    }
+
+    @Test
     public void testMultipleColumns() throws Exception {
         analyzer.analyze("true", "aaaa");
         analyzer.analyze("true", "bbbb");
