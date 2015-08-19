@@ -20,10 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -36,8 +33,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,7 +49,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -71,11 +65,8 @@ import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
-import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -128,10 +119,6 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         super(parent, labelProvider, contentProvider);
         this.dialogType = componentType;
         init();
-        if (!Platform.isRunning()) {
-            // only for the component
-            addFilter();
-        }
         addValidator();
         setHelpAvailable(Boolean.FALSE);
     }
@@ -171,11 +158,6 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                         if (selectObject instanceof RuleRepNode) {
                             RuleRepNode node = (RuleRepNode) selectObject;
                             matchRuleDef = (MatchRuleDefinition) node.getRule();
-                        } else if (selectObject instanceof IFile) {
-                            IFile file = (IFile) selectObject;
-                            if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                                matchRuleDef = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
-                            }
                         }
                         if (matchRuleDef != null) {
                             if (isEmptyRule(matchRuleDef)) {
@@ -319,40 +301,10 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
      */
     private void init() {
         if (dialogType != SUGGEST_TYPE) {
-            if (Platform.isRunning()) {
-                setInput(AnalysisUtils.getSelectDialogInputData(EResourceConstant.RULES_MATCHER));
-            } else {
-                // for the component
-                setInput(ResourceManager.getRulesMatcherFolder());
-            }
+            setInput(AnalysisUtils.getSelectDialogInputData(EResourceConstant.RULES_MATCHER));
         }
         setTitle(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.title")); //$NON-NLS-1$
         setMessage(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.rule")); //$NON-NLS-1$
-    }
-
-    /**
-     * DOC yyin Comment method "addFilter".
-     */
-    private void addFilter() {
-        addFilter(new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFile) {
-                    IFile file = (IFile) element;
-                    if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                        return true;
-                    }
-                } else if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    if (folder.getName().startsWith(".")) { //$NON-NLS-1$
-                        return false;
-                    }
-                    return ResourceService.isSubFolder(ResourceManager.getRulesMatcherFolder(), folder);// getRulesMatcherFolder,getRulesFolder
-                }
-                return false;
-            }
-        });
     }
 
     @Override
@@ -372,17 +324,13 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                     if (array.length == 1) {
                         if (array[0] != null) {
                             MatchRuleDefinition matchRuleDefinition = null;
-                            // this is for component
-                            if (array[0] instanceof IFile) {
-                                matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule((IFile) array[0]);
-                            } else if (array[0] instanceof RuleRepNode) {
-                                // this is for match analysis
+                            if (array[0] instanceof RuleRepNode) {
                                 RuleRepNode node = (RuleRepNode) array[0];
                                 matchRuleDefinition = (MatchRuleDefinition) node.getRule();
                             }
                             if (matchRuleDefinition != null) {
                                 if (blockingKeysTable != null) {
-                                    blockingKeysTable.setInput(getBlockingKeysFromFiles(array, true));
+                                    blockingKeysTable.setInput(getBlockingKeysFromNodes(array, true));
                                 }
                                 if (matchingRulesTable != null) {
                                     matchRulesTableComposite.dispose();
@@ -392,7 +340,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                                     } else {
                                         createSelectMatchRulesTableVsr(form);
                                     }
-                                    matchingRulesTable.setInput(getMatchRulesFromFiles(array, true));
+                                    matchingRulesTable.setInput(getMatchRulesFromNodes(array, true));
                                     // refresh the dialog
                                     matchRulesTableComposite.getParent().layout();
                                     matchRulesTableComposite.getParent().redraw();
@@ -573,17 +521,14 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         return isOverwrite;
     }
 
-    public List<Map<String, String>> getBlockingKeysFromFiles(Object[] files) {
-        return getBlockingKeysFromFiles(files, false);
+    public List<Map<String, String>> getBlockingKeysFromNodes(Object[] nodes) {
+        return getBlockingKeysFromNodes(nodes, false);
     }
 
-    public List<Map<String, String>> getBlockingKeysFromFiles(Object[] files, boolean retrieveDisplayValue) {
+    public List<Map<String, String>> getBlockingKeysFromNodes(Object[] nodes, boolean retrieveDisplayValue) {
         List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
-        for (Object rule : files) {
-            if (rule instanceof IFile) {
-                MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule((IFile) rule);
-                ruleValues.addAll(getBlockingKeysFromRules(matchRuleDefinition, retrieveDisplayValue));
-            } else if (rule instanceof RuleRepNode) {
+        for (Object rule : nodes) {
+            if (rule instanceof RuleRepNode) {
                 RuleRepNode node = (RuleRepNode) rule;
                 MatchRuleDefinition matchRuleDefinition = (MatchRuleDefinition) node.getRule();
                 ruleValues.addAll(getBlockingKeysFromRules(matchRuleDefinition, retrieveDisplayValue));
@@ -592,25 +537,22 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         return ruleValues;
     }
 
-    public List<Map<String, String>> getMatchRulesFromFiles(Object[] files) {
-        return getMatchRulesFromFiles(files, false);
+    public List<Map<String, String>> getMatchRulesFromNodes(Object[] nodes) {
+        return getMatchRulesFromNodes(nodes, false);
     }
 
     /**
-     * DOC sizhaoliu Comment method "getMatchRulesFromFiles".
+     * DOC sizhaoliu Comment method "getMatchRulesFromNodes".
      * 
-     * @param files
+     * @param nodes
      * @param retrieveDisplayValue get the display value when this parameter is set to true, otherwise, get the
      * component value.
      * @return
      */
-    public List<Map<String, String>> getMatchRulesFromFiles(Object[] files, boolean retrieveDisplayValue) {
+    public List<Map<String, String>> getMatchRulesFromNodes(Object[] nodes, boolean retrieveDisplayValue) {
         List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
-        for (Object rule : files) {
-            if (rule instanceof IFile) {
-                MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule((IFile) rule);
-                ruleValues.addAll(getMatchRulesFromRules(matchRuleDefinition, retrieveDisplayValue));
-            } else if (rule instanceof RuleRepNode) {
+        for (Object rule : nodes) {
+            if (rule instanceof RuleRepNode) {
                 RuleRepNode node = (RuleRepNode) rule;
                 MatchRuleDefinition matchRuleDefinition = (MatchRuleDefinition) node.getRule();
                 ruleValues.addAll(getMatchRulesFromRules(matchRuleDefinition, retrieveDisplayValue));
