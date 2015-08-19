@@ -16,13 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
-import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.dialog.MatchRuleElementTreeSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -37,7 +34,6 @@ import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
-import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -59,10 +55,8 @@ public class ImportMatchRuleAction extends Action {
 
     @Override
     public void run() {
-        MatchRuleElementTreeSelectionDialog dialog = Platform.isRunning() ? new MatchRuleElementTreeSelectionDialog(null,
+        MatchRuleElementTreeSelectionDialog dialog = new MatchRuleElementTreeSelectionDialog(null,
                 new DQRepositoryViewLabelProvider(), new ResourceViewContentProvider(),
-                MatchRuleElementTreeSelectionDialog.MATCH_ANALYSIS_TYPE) : new MatchRuleElementTreeSelectionDialog(null,
-                new ImportMatchRuleLabelProvider(), new WorkbenchContentProvider(),
                 MatchRuleElementTreeSelectionDialog.MATCH_ANALYSIS_TYPE);
 
         List<String> inputColumnNames = new ArrayList<String>();
@@ -114,12 +108,6 @@ public class ImportMatchRuleAction extends Action {
                 if (obj instanceof RuleRepNode) {
                     RuleRepNode node = (RuleRepNode) obj;
                     MatchRuleDefinition matchRule = (MatchRuleDefinition) node.getRule();
-                    if (matchRule != null) {
-                        updateMatchRule(matchRule, dialog.isOverwrite());
-                    }
-                } else if (obj instanceof IFile) {
-                    IFile file = (IFile) obj;
-                    MatchRuleDefinition matchRule = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
                     if (matchRule != null) {
                         updateMatchRule(matchRule, dialog.isOverwrite());
                     }
