@@ -173,10 +173,10 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
                 // select dialog cares about if connect to DB or not.
                 if (tables.isEmpty()) {
                     if (isCallingFromColumnDialog()) {
-                        tables = DqRepositoryViewService.getTables(connection, catalog, null, isLoadDBFromDialog());
+                        tables = DqRepositoryViewService.getTables(connection, catalog, null, isLoadDBFromDialog(), true);
                     } else if (!isOnFilterring()) {
                         // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
-                        tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
+                        tables = DqRepositoryViewService.getTables(connection, catalog, null, true, true);
                     }
                     if (tables.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
@@ -203,10 +203,10 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
                 if (tables.isEmpty()) {
                     if (isCallingFromColumnDialog()) {
-                        tables = DqRepositoryViewService.getTables(connection, schema, null, isLoadDBFromDialog());
+                        tables = DqRepositoryViewService.getTables(connection, schema, null, isLoadDBFromDialog(), true);
                     } else if (!isOnFilterring()) {
                         // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
-                        tables = DqRepositoryViewService.getTables(connection, schema, null, true);
+                        tables = DqRepositoryViewService.getTables(connection, schema, null, true, true);
                     }
                     if (tables.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);

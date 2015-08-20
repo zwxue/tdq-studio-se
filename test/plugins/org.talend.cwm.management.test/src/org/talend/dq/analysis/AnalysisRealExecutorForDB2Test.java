@@ -98,7 +98,7 @@ public class AnalysisRealExecutorForDB2Test {
 
         IAnalysisExecutor exec = new ColumnAnalysisSqlExecutor();
         ReturnCode executed = exec.execute(analysis);
-        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ 
 
         // result of lower quantile
         EList<Indicator> indicators = analysis.getResults().getIndicators();
@@ -108,7 +108,7 @@ public class AnalysisRealExecutorForDB2Test {
 
         exec = new ColumnAnalysisExecutor();
         executed = exec.execute(analysis);
-        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ 
 
         // result of lower quantile
         indicators = analysis.getResults().getIndicators();
@@ -127,7 +127,7 @@ public class AnalysisRealExecutorForDB2Test {
         // run with sql mode
         IAnalysisExecutor exec = new ColumnAnalysisSqlExecutor();
         ReturnCode executed = exec.execute(analysis);
-        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ 
 
         // result of upper quantile
         EList<Indicator> indicators = analysis.getResults().getIndicators();
@@ -138,7 +138,7 @@ public class AnalysisRealExecutorForDB2Test {
         // run with java mode
         exec = new ColumnAnalysisExecutor();
         executed = exec.execute(analysis);
-        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ 
 
         // result of upper quantile
         indicators = analysis.getResults().getIndicators();
@@ -158,7 +158,7 @@ public class AnalysisRealExecutorForDB2Test {
 
         IAnalysisExecutor exec = new ColumnAnalysisSqlExecutor();
         ReturnCode executed = exec.execute(analysis);
-        Assert.assertTrue(executed.isOk()); //$NON-NLS-1$ 
+        Assert.assertTrue(executed.isOk());
 
         // result of lower quantile
         EList<Indicator> indicators = analysis.getResults().getIndicators();
@@ -168,7 +168,7 @@ public class AnalysisRealExecutorForDB2Test {
 
         exec = new ColumnAnalysisExecutor();
         executed = exec.execute(analysis);
-        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ 
 
         // result of lower quantile
         indicators = analysis.getResults().getIndicators();
@@ -189,7 +189,7 @@ public class AnalysisRealExecutorForDB2Test {
         // run with sql mode
         IAnalysisExecutor exec = new ColumnAnalysisSqlExecutor();
         ReturnCode executed = exec.execute(analysis);
-        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ 
 
         // result of upper quantile
         EList<Indicator> indicators = analysis.getResults().getIndicators();
@@ -200,7 +200,7 @@ public class AnalysisRealExecutorForDB2Test {
         // run with java mode
         exec = new ColumnAnalysisExecutor();
         executed = exec.execute(analysis);
-        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+        Assert.assertTrue("Executing analysis: analysis_db2_lower: " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ 
 
         // result of upper quantile
         indicators = analysis.getResults().getIndicators();
@@ -237,7 +237,7 @@ public class AnalysisRealExecutorForDB2Test {
         Assert.assertNotNull(schema);
         Assert.assertFalse(schemas.isEmpty());
 
-        List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, schema, TABLE, true);
+        List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, schema, TABLE, true, false);
         Assert.assertEquals(1, tables.size());
 
         TdTable tdTable = tables.get(0);
