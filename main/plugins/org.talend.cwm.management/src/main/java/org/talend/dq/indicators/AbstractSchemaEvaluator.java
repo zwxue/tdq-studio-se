@@ -46,7 +46,6 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.metadata.managment.model.MetadataFillFactory;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -465,7 +464,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 // MOD gdbu 2011-9-22 TDQ-3607
                 checkConnectionBeforeGetTableView();
                 List<? extends NamedColumnSet> tables = DqRepositoryViewService.getTables(getConnection(), getDataManager(),
-                        pacage, trimPat, true);
+                        pacage, trimPat, true, false);
                 // ~TDQ-3607
                 for (NamedColumnSet t : tables) {
                     if (this.getMonitor() != null) {
@@ -505,7 +504,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 // MOD gdbu 2011-9-22 TDQ-3607
                 checkConnectionBeforeGetTableView();
                 List<? extends NamedColumnSet> views = DqRepositoryViewService.getViews(getConnection(), getDataManager(),
-                        pacage, trimPat, true);
+                        pacage, trimPat, true, false);
                 // ~TDQ-3607
                 for (NamedColumnSet t : views) {
                     viewCount++;

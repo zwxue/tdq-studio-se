@@ -99,7 +99,7 @@ public class AnalyzedColumnSetsSynDialog extends AnalyzedElementSynDialog {
                 }
                 boolean loadFromDb = connPackage.getOwnedElement().size() == 0;
                 if (anaColumnSet instanceof TdTable) {
-                    connColumnSetList = DqRepositoryViewService.getTables(newDataProvider, connPackage, null, loadFromDb);
+                    connColumnSetList = DqRepositoryViewService.getTables(newDataProvider, connPackage, null, loadFromDb, false);
                     // connColumnSetList = PackageHelper.getTables(connPackage);
                     if (loadFromDb) {
                         for (MetadataTable table : connColumnSetList) {
@@ -107,7 +107,7 @@ public class AnalyzedColumnSetsSynDialog extends AnalyzedElementSynDialog {
                         }
                     }
                 } else {
-                    connColumnSetList = DqRepositoryViewService.getViews(newDataProvider, connPackage, null, loadFromDb);
+                    connColumnSetList = DqRepositoryViewService.getViews(newDataProvider, connPackage, null, loadFromDb, false);
                     // connColumnSetList = PackageHelper.getViews(connPackage);
                     if (loadFromDb) {
                         for (MetadataTable table : connColumnSetList) {

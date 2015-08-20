@@ -93,10 +93,10 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
                     provider.getName());
 
             if (catalog != null) {
-                ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, catalog, null, true));
+                ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, catalog, null, true, true));
             }
             if (schema != null) {
-                ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, schema, null, true));
+                ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, schema, null, true, true));
             }
             return ok;
         } catch (Exception e) {
@@ -105,6 +105,7 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
         }
     }
 
+    @Override
     public int getFolderNodeType() {
         return TABLEFOLDER_NODE_TYPE;
     }
