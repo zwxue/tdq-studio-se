@@ -278,11 +278,11 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
                 if (elementList != null && elementList.size() > 0) {
                     elementList.clear();
                 }
-                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, schemaObj, null, true);
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, schemaObj, null, true, true);
                 SchemaHelper.addTables(tables, schemaObj);
                 columnSetList.addAll(tables);
 
-                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, schemaObj, null, true);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, schemaObj, null, true, true);
                 SchemaHelper.addViews(views, schemaObj);
                 columnSetList.addAll(views);
 
@@ -291,11 +291,11 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
                 if (elementList != null && elementList.size() > 0) {
                     elementList.clear();
                 }
-                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true, true);
                 CatalogHelper.addTables(tables, catalogObj);
                 columnSetList.addAll(tables);
 
-                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true, true);
                 CatalogHelper.addViews(views, catalogObj);
                 columnSetList.addAll(views);
             }

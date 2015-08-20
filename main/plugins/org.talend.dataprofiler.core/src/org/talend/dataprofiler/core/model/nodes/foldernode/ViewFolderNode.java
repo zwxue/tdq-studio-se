@@ -100,10 +100,10 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
                     provider.getName());
 
             if (catalog != null) {
-                ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, catalog, null, true));
+                ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, catalog, null, true, true));
             }
             if (schema != null) {
-                ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, schema, null, true));
+                ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, schema, null, true, true));
             }
             return ok;
         } catch (Exception e) {
@@ -112,6 +112,7 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
         }
     }
 
+    @Override
     public int getFolderNodeType() {
         return VIEWFOLDER_NODE_TYPE;
     }

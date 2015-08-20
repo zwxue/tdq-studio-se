@@ -238,7 +238,7 @@ public class MultiColAnalysisCreationTest {
         Assert.assertFalse(tdCatalogs.isEmpty());
         System.out.println("analysed Catalog: " + catalog.getName()); //$NON-NLS-1$
 
-        List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, catalog, TABLE, true);
+        List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, catalog, TABLE, true, false);
 
         // store tables in catalog
         CatalogHelper.addTables(tables, catalog);

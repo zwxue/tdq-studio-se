@@ -387,7 +387,7 @@ public class AnalysisCreationTest {
         }
         Assert.assertNotNull(catalog);
         System.out.println("analysed Catalog: " + catalog.getName()); //$NON-NLS-1$
-        List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, catalog, EMPTY_STRING, true);
+        List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, catalog, EMPTY_STRING, true, false);
 
         // store tables in catalog
         CatalogHelper.addTables(tables, catalog);

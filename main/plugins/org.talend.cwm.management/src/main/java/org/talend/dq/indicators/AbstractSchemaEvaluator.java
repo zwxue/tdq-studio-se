@@ -464,7 +464,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 // MOD gdbu 2011-9-22 TDQ-3607
                 checkConnectionBeforeGetTableView();
                 List<? extends NamedColumnSet> tables = DqRepositoryViewService.getTables(getConnection(), getDataManager(),
-                        pacage, trimPat, true);
+                        pacage, trimPat, true, false);
                 // ~TDQ-3607
                 for (NamedColumnSet t : tables) {
                     if (this.getMonitor() != null) {
@@ -504,7 +504,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 // MOD gdbu 2011-9-22 TDQ-3607
                 checkConnectionBeforeGetTableView();
                 List<? extends NamedColumnSet> views = DqRepositoryViewService.getViews(getConnection(), getDataManager(),
-                        pacage, trimPat, true);
+                        pacage, trimPat, true, false);
                 // ~TDQ-3607
                 for (NamedColumnSet t : views) {
                     viewCount++;

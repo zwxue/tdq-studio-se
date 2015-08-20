@@ -173,10 +173,10 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
                 if (views.isEmpty()) {
                     connection = item.getConnection();
                     if (isCallingFromColumnDialog()) {
-                        views = DqRepositoryViewService.getViews(connection, catalog, null, isLoadDBFromDialog());
+                        views = DqRepositoryViewService.getViews(connection, catalog, null, isLoadDBFromDialog(), true);
                     } else if (!isOnFilterring()) {
                         // MOD gdbu 2011-7-21 bug 23220
-                        views = DqRepositoryViewService.getViews(connection, catalog, null, true);
+                        views = DqRepositoryViewService.getViews(connection, catalog, null, true, true);
                     }
                     if (views != null && views.size() > 0) {
                         ProxyRepositoryFactory.getInstance().save(item, false);
@@ -205,10 +205,10 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
                 if (views.isEmpty()) {
                     connection = item.getConnection();
                     if (isCallingFromColumnDialog()) {
-                        views = DqRepositoryViewService.getViews(connection, schema, null, isLoadDBFromDialog());
+                        views = DqRepositoryViewService.getViews(connection, schema, null, isLoadDBFromDialog(), true);
                     } else if (!isOnFilterring()) {
                         // MOD gdbu 2011-7-21 bug 23220
-                        views = DqRepositoryViewService.getViews(connection, schema, null, true);
+                        views = DqRepositoryViewService.getViews(connection, schema, null, true, true);
                     }
                     if (views != null && views.size() > 0) {
                         ProxyRepositoryFactory.getInstance().save(item, false);
