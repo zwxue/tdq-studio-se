@@ -214,8 +214,8 @@ public class DrillDownUtils {
         try {
             ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
             if (ExecutionLanguage.JAVA == currentEngine) {
-                int mapSize = DrillDownUtils.getMapDB(dataEntity, analysis, itemEntity).size();
-                return mapSize > 0;
+                AbstractDB<Object> mapDB = DrillDownUtils.getMapDB(dataEntity, analysis, itemEntity);
+                return mapDB == null ? false : mapDB.size() > 0;
             } else {
                 return true;
             }
