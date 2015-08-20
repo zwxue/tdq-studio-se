@@ -60,6 +60,7 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.metadata.managment.ui.i18n.Messages;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sql.Java2SqlType;
+
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -2024,11 +2025,33 @@ public class DbmsLanguage {
      * 
      * @param expression
      * @return the name of regular Expression Function or empty string when the expression is invalid
-     * @exception If current language is not implement this method will thorw UnsupportedOperationException
      * 
      */
     public String extractRegularExpressionFunction(Expression expression, String regexp) {
-        throw new UnsupportedOperationException();
+        String functionName = null;
+        try {
+            String tempString = splictExpression(expression);
+            functionName = tempString.split("\\(").length > 1 ? tempString.split("\\(")[0] : PluginConstant.EMPTY_STRING;//$NON-NLS-1$//$NON-NLS-2$
+            functionName = functionName.trim();
+        } catch (NullPointerException e) {
+            log.error(e, e);
+        }
+        return functionName;
+    }
+    
+    /**
+     * DOC talend Comment method "splictExpression".
+     * 
+     * @param expression
+     * @return
+     */
+    protected String splictExpression(Expression expression) {
+        if (expression == null || expression.getBody() == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        String body = expression.getBody().toUpperCase();
+        String tempString = body.split("WHEN").length > 1 ? body.split("WHEN")[1] : PluginConstant.EMPTY_STRING;//$NON-NLS-1$//$NON-NLS-2$
+        return tempString;
     }
 
     /**
@@ -2044,7 +2067,15 @@ public class DbmsLanguage {
      * 
      */
     public String extractRegularExpressionFunctionReturnValue(Expression expression, String regexp) {
-        return PluginConstant.EMPTY_STRING;
+        String tempString = splictExpression(expression);
+        if (regexp == null) {
+            return tempString;
+        }
+        String splitKey = regexp.toUpperCase() + ")"; //$NON-NLS-1$
+        int keyIndex = tempString.indexOf(splitKey) + splitKey.length();
+        tempString = tempString.indexOf(splitKey) > -1 ? tempString.substring(keyIndex) : PluginConstant.EMPTY_STRING;
+        tempString = tempString.split("THEN").length > 1 ? tempString.split("THEN")[0] : PluginConstant.EMPTY_STRING; //$NON-NLS-1$ //$NON-NLS-2$ 
+        return tempString.trim();
     }
 
     /**

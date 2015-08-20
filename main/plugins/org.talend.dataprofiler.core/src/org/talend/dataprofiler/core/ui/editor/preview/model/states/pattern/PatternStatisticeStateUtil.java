@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.PatternExplorer;
+import org.talend.dq.analysis.explore.RegexPatternExplorer;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 
@@ -65,6 +66,6 @@ public class PatternStatisticeStateUtil {
     }
 
     public static DataExplorer getDataExplorer() {
-        return new PatternExplorer();
+        return new RegexPatternExplorer();
     }
 }
