@@ -2512,9 +2512,8 @@ public class DbmsLanguageTest {
         try {
             netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression, "<%=__PATTERN_EXPR__%>"); //$NON-NLS-1$
         } catch (UnsupportedOperationException e) {
-            return;
+            Assert.fail("Default DbmsLanguage don't should call extractRegularExpressionFunction method should thorw UnsupportedOperationException."); //$NON-NLS-1$
         }
-        Assert.fail("Default DbmsLanguage call extractRegularExpressionFunction method should thorw UnsupportedOperationException."); //$NON-NLS-1$
     }
 
     /**
@@ -2532,9 +2531,8 @@ public class DbmsLanguageTest {
         try {
             netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression, "***"); //$NON-NLS-1$
         } catch (UnsupportedOperationException e) {
-            return;
+            Assert.fail("Default DbmsLanguage don't should call extractRegularExpressionFunction method should thorw UnsupportedOperationException."); //$NON-NLS-1$
         }
-        Assert.fail("Default DbmsLanguage call extractRegularExpressionFunction method should thorw UnsupportedOperationException."); //$NON-NLS-1$
     }
 
     /**
@@ -2647,7 +2645,7 @@ public class DbmsLanguageTest {
         createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
         dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
         String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
-        Assert.assertEquals(PluginConstant.EMPTY_STRING, regularfunctionReturnValue);
+        Assert.assertEquals("RETURNVALUE", regularfunctionReturnValue);
     }
 
     /**

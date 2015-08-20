@@ -92,7 +92,7 @@ public class PatternExplorerTest {
     public void setUp() throws Exception {
         DataExplorerTestHelper.initDataExplorer();
 
-        patternExplorer = new PatternExplorer();
+        patternExplorer = new RegexPatternExplorer();
 
         // mock setEntity
         PatternMatchingIndicator indicator = mock(PatternMatchingIndicator.class);
@@ -142,7 +142,7 @@ public class PatternExplorerTest {
     @Test
     public void testPatternExplorer() {
         try {
-            PatternExplorer pe = new PatternExplorer();
+            RegexPatternExplorer pe = new RegexPatternExplorer();
             Assert.assertNotNull(pe);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -249,7 +249,7 @@ public class PatternExplorerTest {
                         "SELECT <%=__COLUMN_NAMES__%> FROM <%=__TABLE_NAME__%> ", "CAL_DATE", "TDQ_CALENDAR")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 .thenReturn("SELECT CAL_DATE FROM TDQ_CALENDAR"); //$NON-NLS-1$
 
-        PatternExplorer freqExp = new PatternExplorer();
+        RegexPatternExplorer freqExp = new RegexPatternExplorer();
         Assert.assertTrue(freqExp.setAnalysis(analysis));
         freqExp.setEnitty(chartDataEntity);
 
@@ -321,7 +321,7 @@ public class PatternExplorerTest {
                         "SELECT <%=__COLUMN_NAMES__%> FROM <%=__TABLE_NAME__%> WHERE NOT (id>=1) ", "CAL_DATE", "TDQ_CALENDAR")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 .thenReturn("SELECT CAL_DATE FROM TDQ_CALENDAR WHERE NOT (id>=1)"); //$NON-NLS-1$
 
-        PatternExplorer freqExp = new PatternExplorer();
+        RegexPatternExplorer freqExp = new RegexPatternExplorer();
         Assert.assertTrue(freqExp.setAnalysis(analysis));
         freqExp.setEnitty(chartDataEntity);
 
@@ -393,7 +393,7 @@ public class PatternExplorerTest {
                         "SELECT * FROM <%=__TABLE_NAME__%> WHERE NOT (id>=1) ", "CAL_DATE", "TDQ_CALENDAR")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 .thenReturn("SELECT * FROM TDQ_CALENDAR WHERE NOT (id>=1)"); //$NON-NLS-1$
 
-        PatternExplorer freqExp = new PatternExplorer();
+        RegexPatternExplorer freqExp = new RegexPatternExplorer();
         Assert.assertTrue(freqExp.setAnalysis(analysis));
         freqExp.setEnitty(chartDataEntity);
 
@@ -464,7 +464,7 @@ public class PatternExplorerTest {
         when(dbmsLanguage.fillGenericQueryWithColumnsAndTable("SELECT * FROM <%=__TABLE_NAME__%> ", "CAL_DATE", "TDQ_CALENDAR")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 .thenReturn("SELECT * FROM TDQ_CALENDAR"); //$NON-NLS-1$
 
-        PatternExplorer freqExp = new PatternExplorer();
+        RegexPatternExplorer freqExp = new RegexPatternExplorer();
         Assert.assertTrue(freqExp.setAnalysis(analysis));
         freqExp.setEnitty(chartDataEntity);
 
