@@ -47,7 +47,15 @@ public class ResizableList<T> implements List<T> {
         this.itemClass = itemClass;
         this.innerList = new ArrayList<T>();
     }
-
+    /**
+     * Creates a list with a copy of list.
+     * 
+     * @param copyOfList list to be initialized.
+     */
+    public  ResizableList(List<T> copyOfList) {
+        this.innerList = copyOfList;
+    }
+    
     /**
      * Resize the list so it contains <code>size</code> instances of <i>T</i>. Method only scales up, never down.
      * 
