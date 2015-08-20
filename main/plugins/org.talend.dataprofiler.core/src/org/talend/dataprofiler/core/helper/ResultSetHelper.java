@@ -71,7 +71,7 @@ public class ResultSetHelper {
         }
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-        Statement createStatement = dbmsLanguage.createStatement(sqlConn, Integer.MIN_VALUE);
+        Statement createStatement = dbmsLanguage.createStatement(sqlConn);
         createStatement.setMaxRows(maxRows);
 
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
