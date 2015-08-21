@@ -136,6 +136,16 @@ public class HiveDbmsLanguage extends DbmsLanguage {
     @Override
     public Statement createStatement(java.sql.Connection connection, int fetchSize) throws SQLException {
         // hive don't need to set fetch size
+        return createStatement(connection);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
+     */
+    @Override
+    public Statement createStatement(java.sql.Connection connection) throws SQLException {
         return connection.createStatement();
     }
 
