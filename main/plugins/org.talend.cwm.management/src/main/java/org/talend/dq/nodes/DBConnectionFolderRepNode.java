@@ -19,6 +19,7 @@ import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -56,12 +57,10 @@ public class DBConnectionFolderRepNode extends DQFolderRepNode {
      * @param viewObject
      */
     private void updateSoftwareSystem(IRepositoryViewObject viewObject) {
-        DatabaseConnection connection = (DatabaseConnection) ((ConnectionItem) viewObject.getProperty().getItem())
-                .getConnection();
-        if (tdqRepService != null) {
-            tdqRepService.publishSoftwareSystemUpdateEvent(connection);
+        Connection connection = ((ConnectionItem) viewObject.getProperty().getItem()).getConnection();
+        if (tdqRepService != null && connection instanceof DatabaseConnection) {
+            tdqRepService.publishSoftwareSystemUpdateEvent((DatabaseConnection) connection);
         }
-
     }
 
     private void initDQRepositoryService() {
