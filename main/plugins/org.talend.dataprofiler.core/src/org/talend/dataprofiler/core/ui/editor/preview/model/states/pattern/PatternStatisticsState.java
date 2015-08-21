@@ -29,7 +29,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChart
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.PatternLabelProvider;
 import org.talend.dq.analysis.explore.DataExplorer;
-import org.talend.dq.analysis.explore.PatternExplorer;
+import org.talend.dq.analysis.explore.RegexPatternExplorer;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 
@@ -76,7 +76,7 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     }
 
     public DataExplorer getDataExplorer() {
-        return new PatternExplorer();
+        return new RegexPatternExplorer();
     }
 
     public JFreeChart getExampleChart() {

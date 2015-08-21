@@ -17,7 +17,7 @@ import org.talend.dq.analysis.explore.BenfordLawFrequencyExplorer;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
 import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
-import org.talend.dq.analysis.explore.PatternExplorer;
+import org.talend.dq.analysis.explore.RegexPatternExplorer;
 import org.talend.dq.analysis.explore.SQLPatternExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
 import org.talend.dq.analysis.explore.SoundexFrequencyExplorer;
@@ -43,7 +43,7 @@ public enum EIndicatorChartType {
     DATE_PATTERN_FREQUENCE_STATISTICS(
                                       Messages.getString("EIndicatorChartType.DatePatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
     SUMMARY_STATISTICS(Messages.getString("EIndicatorChartType.SummaryStatistics"), new SummaryStastictisExplorer()), //$NON-NLS-1$
-    PATTERN_MATCHING(Messages.getString("EIndicatorChartType.PatternMatching"), new PatternExplorer()), //$NON-NLS-1$
+    PATTERN_MATCHING(Messages.getString("EIndicatorChartType.PatternMatching"), new RegexPatternExplorer()), //$NON-NLS-1$
     SQL_PATTERN_MATCHING(Messages.getString("EIndicatorChartType.SQLPatternMatching"), new SQLPatternExplorer()), //$NON-NLS-1$
     MODE_INDICATOR(Messages.getString("EIndicatorChartType.ModeIndicator"), null), //$NON-NLS-1$
     WHERERULE_INDICATOR(Messages.getString("EIndicatorChartType.WhereRuleIndicator"), null), //$NON-NLS-1$
@@ -53,7 +53,7 @@ public enum EIndicatorChartType {
                                 Messages.getString("EIndicatorChartType.SoundexLowFrequencyTable"), new SoundexFrequencyExplorer()), //$NON-NLS-1$
     UDI_COUNT(Messages.getString("EIndicatorChartType.UserDefinedCount"), new SimpleStatisticsExplorer()), //$NON-NLS-1$
     UDI_FREQUENCY(Messages.getString("EIndicatorChartType.UserDefinedFrequency"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
-    UDI_MATCHING(Messages.getString("EIndicatorChartType.UserDefinedMatching"), new PatternExplorer()), //$NON-NLS-1$
+    UDI_MATCHING(Messages.getString("EIndicatorChartType.UserDefinedMatching"), new RegexPatternExplorer()), //$NON-NLS-1$
     UDI_REALVALUE(Messages.getString("EIndicatorChartType.UserDefinedRealValue"), new SimpleStatisticsExplorer()), //$NON-NLS-1$
 
     DATE_FREQUENCE_STATISTICS(
