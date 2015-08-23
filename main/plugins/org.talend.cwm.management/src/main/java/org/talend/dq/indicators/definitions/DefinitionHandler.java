@@ -445,6 +445,16 @@ public final class DefinitionHandler {
         return null;
     }
 
+    public IndicatorDefinition getIndicatorDefinitionBySemanticLabel(String label) {
+        for (IndicatorDefinition indicatorDefinition : this.getIndicatorsDefinitions()) {
+            if (indicatorDefinition != null && indicatorDefinition.getLabel() != null
+                    && indicatorDefinition.getLabel().replace(" ", "_").compareTo(label) == 0) {
+                return indicatorDefinition;
+            }
+        }
+        return null;
+    }
+
     /**
      * get UDI Indicator Definitions.
      * 
