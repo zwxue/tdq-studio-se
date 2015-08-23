@@ -75,6 +75,16 @@ public class PatternDefinitionHandler {
         return id;
     }
 
+    public Pattern getPatternDefinitionBySemanticLabel(String name) {
+        for (Pattern patternDefinition : this.getPatternDefinitions()) {
+            if (patternDefinition != null && patternDefinition.getName() != null
+                    && patternDefinition.getName().replace(" ", "_").compareTo(name) == 0) {
+                return patternDefinition;
+            }
+        }
+        return null;
+    }
+
     public List<Pattern> getPatternDefinitions() {
         if (patternDefinitions == null || patternDefinitions.isEmpty()) {
             initializePatternDefinitions();

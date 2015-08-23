@@ -151,20 +151,22 @@ public class AnalysisBaseBuilder {
         EList<Indicator> indicatorList = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
             boolean exists = false;
-            for (Indicator existingIndicator : indicatorList) {
-                if (existingIndicator.getAnalyzedElement().equals(element)
-                        && indicator.getName().equals(existingIndicator.getName())) {
+            Indicator existingIndicator = null;
+            for (Indicator i : indicatorList) {
+                if (i.getAnalyzedElement().equals(element) && indicator.getName().equals(i.getName())) {
+                    existingIndicator = i;
                     exists = true;
                     break;
                 }
             }
 
-            if (!exists) {
-                // attach element to indicators
-                indicator.setAnalyzedElement(element);
-                // store indicators in results
-                indicatorList.add(indicator);
+            if (exists) {
+                indicatorList.remove(existingIndicator);
             }
+            // attach element to indicators
+            indicator.setAnalyzedElement(element);
+            // store indicators in results
+            indicatorList.add(indicator);
         }
 
         return true;
