@@ -3851,4 +3851,20 @@ public final class RepositoryNodeHelper {
         node.setProperties(EProperties.CONTENT_TYPE, eRepositoryObjectType);
         node.setProperties(EProperties.LABEL, eRepositoryObjectType);
     }
+
+    /**
+     * get the connection node display name in the connection combo list of analysis editor.
+     * 
+     * @param conNode
+     * @return displayName
+     */
+    public static String getAnalysisConComboDisplayName(IRepositoryNode conNode) {
+        String displayName = conNode.getObject().getProperty().getDisplayName();
+        // TDQ-10655: make the format of display is: label+(@reference project name)
+        DQRepositoryNode dqRepositoryNode = (DQRepositoryNode) conNode;
+        if (!dqRepositoryNode.getProject().isMainProject()) {
+            displayName += dqRepositoryNode.getDisplayProjectName();
+        }
+        return displayName;
+    }
 }
