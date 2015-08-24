@@ -16,10 +16,8 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.mapdb.SerializerBase;
@@ -37,8 +35,10 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
     private static final long serialVersionUID = 8375426567087046212L;
 
     static final int TALEND_NULL = 181;
-    
-    private static Logger log=Logger.getLogger(TalendSerializerBase.class);
+
+    static final int TALEND_TIMESTAMP = 182;
+
+    private static Logger log = Logger.getLogger(TalendSerializerBase.class);
 
     /*
      * (non-Javadoc)
@@ -53,16 +53,13 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
             out.write(TALEND_NULL);
             return;
         }
-        if (Timestamp.class.isInstance(obj)) {
-            newObj = obj.toString();
-        }
-        
-        if(obj instanceof IObjectConvertArray){
-            newObj=((IObjectConvertArray) obj).getArrays();
+
+        if (obj instanceof IObjectConvertArray) {
+            newObj = ((IObjectConvertArray) obj).getArrays();
             out.write(Header.POJO);
             this.serializeClass(out, obj.getClass());
         }
-        
+
         super.serialize(out, newObj);
     }
 
@@ -79,9 +76,6 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
         if (TupleEmpty.class.isInstance(obj)) {
             newObj = null;
         }
-        if (Timestamp.class.isInstance(obj)) {
-            newObj = obj.toString();
-        }
         super.serialize(out, newObj, objectStack);
     }
 
@@ -93,10 +87,23 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
      */
     @Override
     protected void serializeUnknownObject(DataOutput out, Object obj, FastArrayList<Object> objectStack) throws IOException {
+        // TDQ-10833 super method only consider 'java.util.Date','java.sql.Date' and 'java.sql.Timestamp' are as
+        // UnkowObject. We need to serialize them at here.
+        if (Timestamp.class.isInstance(obj)) {
+            out.write(TALEND_TIMESTAMP);
+            out.writeLong(((Timestamp) obj).getTime());
+            return;
+        }
+
+        if (Date.class.isInstance(obj)) {
+            out.write(Header.DATE);
+            out.writeLong(((Date) obj).getTime());
+            return;
+        }
         Object newObj = obj.toString();
         super.serialize(out, newObj, objectStack);
     }
-  
+
     /*
      * (non-Javadoc)
      * 
@@ -108,14 +115,18 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
         if (TALEND_NULL == head) {
             return new TupleEmpty();
         }
-        
-        if(Header.POJO==head){
+        // TDQ-10833 'java.sql.Timestamp' is as UnkownHeader on super deserialize. deserialize it at here.
+        if (head == TALEND_TIMESTAMP) {
+            return new Timestamp(is.readLong());
+        }
+
+        if (Header.POJO == head) {
             Class<?> deserializeClass = this.deserializeClass(is);
             Object deserialize = this.deserialize(is, -1);
             try {
                 Object newInstance = deserializeClass.newInstance();
-                if(IObjectConvertArray.class.isInstance(newInstance)){
-                    ((IObjectConvertArray)newInstance).restoreObjectByArrays((Object[])deserialize);
+                if (IObjectConvertArray.class.isInstance(newInstance)) {
+                    ((IObjectConvertArray) newInstance).restoreObjectByArrays((Object[]) deserialize);
                     return newInstance;
                 }
             } catch (SecurityException e) {
