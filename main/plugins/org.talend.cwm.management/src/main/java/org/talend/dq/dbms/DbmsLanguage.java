@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.core.IRepositoryContextService;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.runtime.CoreRuntimePlugin;
@@ -783,11 +784,36 @@ public class DbmsLanguage {
         String catalogName = parentCatalog == null ? null : parentCatalog.getName();
         String qualifiedName = this.toQualifiedName(catalogName, schemaName, metadataTable.getName());
         Expression queryExpression = CoreFactory.eINSTANCE.createExpression();
-        String expressionBody = getQuerySql(ASTERISK, qualifiedName, where);
+        String expressionBody = getQuerySql(getSelectColumnsStr(metadataTable), qualifiedName, where);
         queryExpression.setBody(expressionBody);
         queryExpression.setLanguage(this.getDbmsName());
         return queryExpression;
 
+    }
+
+    /**
+     * 
+     * Get select column string
+     * @param metadataTable
+     * @return if columns size is zero will return * else return look like a,b,c 
+     */
+    protected String getSelectColumnsStr(MetadataTable metadataTable) {
+        StringBuffer strBuff=new StringBuffer();
+        EList<MetadataColumn> filterColumns = metadataTable.getColumns();
+        if(filterColumns.size()<=0){
+            return ASTERISK;
+        }
+        for(MetadataColumn column:filterColumns){
+            if(strBuff.length()>0){
+                strBuff.append(getSeparatedCharacter());   
+            }
+            strBuff.append(this.quote(column.getName()));
+        }
+        return strBuff.toString();
+    }
+
+    protected String getSeparatedCharacter() {
+        return PluginConstant.COMMA_STRING;
     }
 
     /**
@@ -1787,7 +1813,7 @@ public class DbmsLanguage {
         ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet(columns[0]);
         String tableName = getQueryColumnSetWithPrefix(columnSet);
         for (TdColumn column : columns) {
-            columnClause += tableName + DOT + quote(column.getName()) + PluginConstant.COMMA_STRING;
+            columnClause += tableName + DOT + quote(column.getName()) + getSeparatedCharacter();
         }
         columnClause = columnClause.substring(0, columnClause.length() - 1);
         return columnClause;
@@ -1864,7 +1890,7 @@ public class DbmsLanguage {
     protected String getQueryColumns(TdColumn[] columns) {
         String columnClause = PluginConstant.EMPTY_STRING;
         for (TdColumn column : columns) {
-            columnClause += quote(column.getName()) + PluginConstant.COMMA_STRING;
+            columnClause += quote(column.getName()) + getSeparatedCharacter();
         }
         columnClause = columnClause.substring(0, columnClause.length() - 1);
         return columnClause;
