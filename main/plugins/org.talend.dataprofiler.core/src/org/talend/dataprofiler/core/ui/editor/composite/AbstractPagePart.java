@@ -202,12 +202,8 @@ public abstract class AbstractPagePart {
             if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
                 // TDQ-10765: support ref project connection name, make the format of display is: label+(@reference
                 // project name)
-                String displayName = prop.getDisplayName();
-                DQRepositoryNode node = (DQRepositoryNode) RepositoryNodeHelper.recursiveFind(prop);
-                if (!node.getProject().isMainProject()) {
-                    displayName += node.getDisplayProjectName();
-                }
-
+                DQRepositoryNode repNode = (DQRepositoryNode) RepositoryNodeHelper.recursiveFind(prop);
+                String displayName = RepositoryNodeHelper.getAnalysisConComboDisplayName(repNode);
                 index = (Integer) masterPage.getConnCombo().getData(
                         displayName + RepositoryNodeHelper.getConnectionType(newDataManager));
             }

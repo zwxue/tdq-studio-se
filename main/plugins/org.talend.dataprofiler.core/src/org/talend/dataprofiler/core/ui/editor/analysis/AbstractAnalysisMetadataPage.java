@@ -90,7 +90,6 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
-import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -471,13 +470,13 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             if (StringUtils.isBlank(connCombo.getText())) {
                 connCombo.select(0);
             } else {
-                int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connCombo.getText());
+                int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connCombo);
                 connCombo.select(connIdx);
             }
             // TDQ-10654~
         } else {
             // Find the conn index first
-            int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connection.getName());
+            int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connection);
             if (connIdx == -1) {
                 IRepositoryNode currentConnectionNode = getCurrentRepNodeOnUI();
                 // The current connection is logical deleted!
@@ -502,16 +501,35 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * find the Position by the connection name.
+     * find the Position by the connection.
      * 
      * @param connsWithoutDeletion
      * @param connection
      * @return
      */
-    private int findPositionOfCurrentConnection(List<IRepositoryNode> connsWithoutDeletion, String curName) {
+    private int findPositionOfCurrentConnection(List<IRepositoryNode> connsWithoutDeletion, DataManager connection) {
         int index = 0;
         for (IRepositoryNode repNode : connsWithoutDeletion) {
-            if (StringUtils.equals(repNode.getObject().getLabel(), curName)) {
+            if (StringUtils.equals(repNode.getObject().getLabel(), connection.getName())) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    /**
+     * find the Position by the connCombo.
+     * 
+     * @param connsWithoutDeletion
+     * @param connCombo
+     * @return
+     */
+    private int findPositionOfCurrentConnection(List<IRepositoryNode> connsWithoutDeletion, TableCombo connCombo) {
+        int index = 0;
+        for (IRepositoryNode repNode : connsWithoutDeletion) {
+            String displayName = RepositoryNodeHelper.getAnalysisConComboDisplayName(repNode);
+            if (StringUtils.equals(displayName, connCombo.getText())) {
                 return index;
             }
             index++;
@@ -526,19 +544,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @param index
      */
     protected void addItemToCombo(IRepositoryNode repNode, int index) {
-        String connectionType = RepositoryNodeHelper.getConnectionType(repNode);
-
         TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
-        String displayName = repNode.getObject().getProperty().getDisplayName();
-
-        // TDQ-10655: make the format of display is: label+(@reference project name)
-        DQRepositoryNode dqRepositoryNode = (DQRepositoryNode) repNode;
-        if (!dqRepositoryNode.getProject().isMainProject()) {
-            displayName += dqRepositoryNode.getDisplayProjectName();
-        }
-
+        String displayName = RepositoryNodeHelper.getAnalysisConComboDisplayName(repNode);
+        String connectionType = RepositoryNodeHelper.getConnectionType(repNode);
         ti.setText(new String[] { displayName, connectionType });
-
         connCombo.setData(displayName + connectionType, index);
         connCombo.setData(index + PluginConstant.EMPTY_STRING, repNode);
     }
