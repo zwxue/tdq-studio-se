@@ -49,6 +49,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -198,10 +199,17 @@ public abstract class AbstractPagePart {
             // TDQ-6286.
 
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
-
             if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
+                // TDQ-10765: support ref project connection name, make the format of display is: label+(@reference
+                // project name)
+                String displayName = prop.getDisplayName();
+                DQRepositoryNode node = (DQRepositoryNode) RepositoryNodeHelper.recursiveFind(prop);
+                if (!node.getProject().isMainProject()) {
+                    displayName += node.getDisplayProjectName();
+                }
+
                 index = (Integer) masterPage.getConnCombo().getData(
-                        prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(newDataManager));
+                        displayName + RepositoryNodeHelper.getConnectionType(newDataManager));
             }
             if (index != null) {
                 masterPage.getConnCombo().select(index);
