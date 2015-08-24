@@ -24,6 +24,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -50,6 +52,7 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.dates.DateUtils;
+
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Catalog;
@@ -2885,4 +2888,77 @@ public class DbmsLanguageTest {
                 .getSqlExpression(indicatorDefinition, language, sqlGenericExpression, dbVersion);
         Assert.assertEquals(null, sqlExpression);
     }
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSelectColumnsStr(org.talend.core.model.metadata.builder.connection.MetadataTable)
+     * case1 mysql 4 columns
+     */
+    @Test
+    public void testGetSelectColumnsStrCase1() {
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        //create metadata table
+        MetadataTable createMetadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
+        //~create metadata table
+        
+        //create metadata column
+        String[] columnNames=new String[]{"id","name","number","date"};
+        createMetadataColumns(createMetadataTable,columnNames);
+        //~create metadata column
+        String selectColumnsStr = dbms.getSelectColumnsStr(createMetadataTable);
+        
+        Assert.assertEquals("`id`,`name`,`number`,`date`", selectColumnsStr);
+        
+    }
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSelectColumnsStr(org.talend.core.model.metadata.builder.connection.MetadataTable)
+     * case2 mysql 0 columns
+     */
+    @Test
+    public void testGetSelectColumnsStrCase2() {
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        //create metadata table
+        MetadataTable createMetadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
+        //~create metadata table
+        
+        //create metadata column
+        String[] columnNames=new String[]{};
+        createMetadataColumns(createMetadataTable,columnNames);
+        //~create metadata column
+        String selectColumnsStr = dbms.getSelectColumnsStr(createMetadataTable);
+        
+        Assert.assertEquals("*", selectColumnsStr);
+        
+    }
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSelectColumnsStr(org.talend.core.model.metadata.builder.connection.MetadataTable)
+     * case3 mysql 1 column
+     */
+    @Test
+    public void testGetSelectColumnsStrCase3() {
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        //create metadata table
+        MetadataTable createMetadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
+        //~create metadata table
+        
+        //create metadata column
+        String[] columnNames=new String[]{"id"};
+        createMetadataColumns(createMetadataTable,columnNames);
+        //~create metadata column
+        String selectColumnsStr = dbms.getSelectColumnsStr(createMetadataTable);
+        
+        Assert.assertEquals("`id`", selectColumnsStr);
+        
+    }
+
+    private void createMetadataColumns(MetadataTable parentTable,String[] columnNames) {
+        for(String name:columnNames){
+            MetadataColumn createMetadataColumn = ConnectionFactory.eINSTANCE.createMetadataColumn();
+            createMetadataColumn.setName(name);
+            parentTable.getColumns().add(createMetadataColumn);
+        }
+    }
+    
+    
 }
