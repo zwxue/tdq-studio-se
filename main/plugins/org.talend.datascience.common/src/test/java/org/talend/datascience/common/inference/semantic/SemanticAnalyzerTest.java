@@ -53,11 +53,11 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
         int columnIndex = 0;
         String[] expectedCategories = new String[] { //
                 "", //
-                SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
-                SemanticCategoryEnum.CITY.getDisplayName(), //
+                SemanticCategoryEnum.FIRST_NAME.getId(), //
+                SemanticCategoryEnum.CITY.getId(), //
                 SemanticCategoryEnum.US_STATE_CODE.getId(), //
                 "", //
-                SemanticCategoryEnum.CITY.getDisplayName(), //
+                SemanticCategoryEnum.CITY.getId(), //
                 "", //
                 "", //
                 "" //
@@ -77,8 +77,8 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
         int columnIndex = 0;
         String[] expectedCategories = new String[] { "", //
                 "", //
-                SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
-                SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
+                SemanticCategoryEnum.FIRST_NAME.getId(), //
+                SemanticCategoryEnum.FIRST_NAME.getId(), //
                 "", //
                 "", //
                 "", //
@@ -91,7 +91,7 @@ public class SemanticAnalyzerTest extends AnalyzerTest {
                 "", //
                 "", //
                 "", //
-                SemanticCategoryEnum.GENDER.getDisplayName(), //
+                SemanticCategoryEnum.GENDER.getId(), //
                 "" //
         };
         for (SemanticType columnSemanticType : result) {

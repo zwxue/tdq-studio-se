@@ -74,8 +74,8 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
         // Semantic types assertions
         String[] expectedCategories = new String[] { "", //
                 "", //
-                SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
-                SemanticCategoryEnum.FIRST_NAME.getDisplayName(), //
+                SemanticCategoryEnum.FIRST_NAME.getId(), //
+                SemanticCategoryEnum.FIRST_NAME.getId(), //
                 "", //
                 "", //
                 "", //
@@ -88,7 +88,7 @@ public class CompositeAnalyzerTest extends AnalyzerTest {
                 "", //
                 "", //
                 "", //
-                SemanticCategoryEnum.GENDER.getDisplayName(), //
+                SemanticCategoryEnum.GENDER.getId(), //
                 "" //
         };
         for (int i = 0; i < expectedCategories.length; i++) {
