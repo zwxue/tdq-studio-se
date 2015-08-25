@@ -26,6 +26,7 @@ import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.CatalogHelper;
@@ -46,6 +47,8 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.JoinElement;
+import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sugars.ReturnCode;
@@ -220,6 +223,10 @@ public final class AnalysisExecutorHelper {
         }
         // Loop indicators , check the dependeny file's existence.
         for (Indicator indicator : indicators) {
+            if (indicator.getBuiltInIndicatorDefinition() != null) {
+                // Built-in indicator already exist.
+                continue;
+            }
             // check pattern matching indicator
             rc = checkPatternMatchingIndicator(indicator);
             if (!rc.isOk()) {
@@ -277,6 +284,10 @@ public final class AnalysisExecutorHelper {
             // Hot copy to built-in definition.
             deepCopiedDefinition.getSupplierDependency().clear();
             indicator.setBuiltInIndicatorDefinition(deepCopiedDefinition);
+            if (deepCopiedDefinition instanceof WhereRule) {
+                // Copy where rule join elements
+                addJoinElementsToResource((WhereRule) deepCopiedDefinition);
+            }
             EMFUtil.saveResource(indicator.eResource());
         } else {
             IndicatorDefinition builtInDefinition = indicator.getBuiltInIndicatorDefinition();
@@ -289,6 +300,27 @@ public final class AnalysisExecutorHelper {
             }
         }
         return rc;
+    }
+
+    /**
+     * Add the join elements to analysis resource . TDQ-10738 Added (Because in EMF model, the JoinElement's property is
+     * "containment=false")
+     * 
+     * @param deepCopiedDefinition
+     */
+    private static void addJoinElementsToResource(WhereRule deepCopiedDefinition) {
+        for (JoinElement element : deepCopiedDefinition.getJoins()) {
+            ((MetadataColumn) element.getColA()).getUniqueKey().clear();
+            ((MetadataColumn) element.getColA()).getKeyRelationship().clear();
+            ((MetadataColumn) element.getColB()).getUniqueKey().clear();
+            ((MetadataColumn) element.getColB()).getKeyRelationship().clear();
+            if (element.getColA().eResource() == null) {
+                element.eResource().getContents().add(element.getColA());
+            }
+            if (element.getColB().eResource() == null) {
+                element.eResource().getContents().add(element.getColB());
+            }
+        }
     }
 
     /**
