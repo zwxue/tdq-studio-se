@@ -265,7 +265,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(buttonComposite);
         createConnectionButton(buttonComposite);
         createColumnSelectButton(buttonComposite);
-        createDataQueryButtonComp(buttonComposite);
+        createRefreshDataButtonComp(buttonComposite);
         createIndicatorSelectButton(buttonComposite);
         // create the data table
         createDataTableComposite(dataPreviewTableCom);
@@ -300,7 +300,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      * 
      * @param buttonComposite
      */
-    private void createDataQueryButtonComp(Composite parent) {
+    private void createRefreshDataButtonComp(Composite parent) {
         Composite dataQueryComp = toolkit.createComposite(parent, SWT.NONE);
         GridLayout dataQueryCompLayout = new GridLayout(4, Boolean.FALSE);
         dataQueryComp.setLayout(dataQueryCompLayout);

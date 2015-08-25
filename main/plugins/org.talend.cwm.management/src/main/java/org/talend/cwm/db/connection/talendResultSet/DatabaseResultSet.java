@@ -61,7 +61,25 @@ public class DatabaseResultSet extends TalendResultSet {
         try {
             return rs.absolute(rowIndex);
         } catch (SQLException e) {
-            // until now, for hive/vertica not support absolute will go here
+            // until now, for hive/Netezza/Vertica not support absolute will go here
+            try {
+                if (this.currentIndex == rowIndex) {
+                    boolean readNext = rs.next();
+                    currentIndex++;
+                    return readNext;
+                } else if (this.currentIndex - rowIndex == 1) {
+                    return true;
+                } else if (this.currentIndex < rowIndex) {
+                    while (rs.next()) {
+                        currentIndex++;
+                        if (this.currentIndex == rowIndex) {
+                            return true;
+                        }
+                    }
+                }
+            } catch (SQLException e1) {
+                return false;
+            }
             return false;
         }
     }
