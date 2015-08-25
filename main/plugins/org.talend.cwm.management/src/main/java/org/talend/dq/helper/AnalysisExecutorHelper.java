@@ -40,6 +40,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -277,6 +278,9 @@ public final class AnalysisExecutorHelper {
      */
     private static ReturnCode checkIndicatorWithChild(Indicator indicator) {
         ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        if (indicator.getBuiltInIndicatorDefinition() != null) {
+            return rc;
+        }
         // Get indicator definition from dependent file
         IndicatorDefinition dependentDefinition = indicator.getIndicatorDefinition();
         if (isDependentFileExist(dependentDefinition)) {
@@ -358,7 +362,11 @@ public final class AnalysisExecutorHelper {
      */
     private static ReturnCode checkMatchingIndicator(Indicator indicator) {
         ReturnCode rc = new ReturnCode(Boolean.TRUE);
-        List<Pattern> patterns = indicator.getParameters().getDataValidDomain().getPatterns();
+        Domain domain = indicator.getParameters().getDataValidDomain();
+        if (domain.getBuiltInPatterns() != null) {
+            return rc;
+        }
+        List<Pattern> patterns = domain.getPatterns();
         // check pattern matching indicator files' existence.
         if (!patterns.isEmpty() && isDependentFileExist(patterns.toArray(new Pattern[patterns.size()]))) {
             // Hot copy the pattern from separate file into built in.
