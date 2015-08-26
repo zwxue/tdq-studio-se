@@ -143,5 +143,31 @@ public class TypeInferenceUtils {
     public static boolean isEmpty(String value) {
         return (value == null || value.trim().length() == 0);
     }
+    
+    /**
+     * 
+     * @param type the expected type
+     * @param value the value to be detected
+     * @return true if the type of value is expected, false otherwise.
+     */
+	public static boolean isValid(DataType.Type type, String value) {
+		
+		switch (type) {
+		case BOOLEAN:
+			return isBoolean(value);
+		case INTEGER:
+            return isInteger(value);
+        case DOUBLE:
+            return isDouble(value);
+        case DATE:
+            return isDate(value);
+        case STRING:
+            // Everything can be a string
+            return true;
+		default:
+			// Unsupported type
+			return false;
+		}
+	}
 
 }
