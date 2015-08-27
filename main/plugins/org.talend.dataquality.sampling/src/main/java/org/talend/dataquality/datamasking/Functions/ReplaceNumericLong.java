@@ -23,11 +23,27 @@ public class ReplaceNumericLong extends ReplaceNumeric<Long> {
         if (l == null && keepNull) {
             return null;
         } else {
-            super.init();
             if (l != null) {
-                String str = l.toString();
-                String res = str.replaceAll("\\d", param); //$NON-NLS-1$
-                return Long.valueOf(res);
+                if (l > 0) {
+                    int len = (int) Math.log10(l) + 1;
+                    StringBuilder res = new StringBuilder(EMPTY_STRING);
+                    if (integerParam >= 0 && integerParam <= 9) {
+                        for (int j = 0; j < len; j++) {
+                            res.append(integerParam);
+                        }
+                    } else {
+                        for (int j = 0; j < len; j++) {
+                            res.append(rnd.nextInt(9));
+                        }
+                    }
+                    return Long.valueOf(res.toString());
+                } else {
+                    if (integerParam >= 0 && integerParam <= 9) {
+                        return Long.parseLong(integerParam.toString());
+                    } else {
+                        return (long) rnd.nextInt(9);
+                    }
+                }
             } else {
                 return 0L;
             }

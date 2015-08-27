@@ -25,11 +25,15 @@ public class ReplaceCharacters extends Function<String> {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
             return str;
         } else {
-            if (str != null && !EMPTY_STRING.equals(str) && parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
-                if ((" ").equals(parameters[0])) { //$NON-NLS-1$
-                    return str.replaceAll("[a-zA-Z]", parameters[0]).replace(" ", EMPTY_STRING); //$NON-NLS-1$ //$NON-NLS-2$   
+            if (str != null && !EMPTY_STRING.equals(str)) {
+                if (parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
+                    if ((" ").equals(parameters[0])) { //$NON-NLS-1$
+                        return str.replaceAll("[a-zA-Z]", parameters[0]).replace(" ", EMPTY_STRING); //$NON-NLS-1$ //$NON-NLS-2$   
+                    } else {
+                        return str.replaceAll("[a-zA-Z]", parameters[0]); //$NON-NLS-1$
+                    }
                 } else {
-                    return str.replaceAll("[a-zA-Z]", parameters[0]); //$NON-NLS-1$
+                    return str.replaceAll("[a-zA-Z]", String.valueOf(UPPER.charAt(rnd.nextInt(26)))); //$NON-NLS-1$
                 }
             } else {
                 return EMPTY_STRING;

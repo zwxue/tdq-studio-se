@@ -50,15 +50,6 @@ public class FunctionFactory {
             default:
                 return null;
             }
-        case REPLACE_SSN:
-            switch (javaType) {
-            case 1:
-                return getFunction(FunctionType.REPLACE_SSN_LONG.getClazz());
-            case 4:
-                return getFunction(FunctionType.REPLACE_SSN_STRING.getClazz());
-            default:
-                return null;
-            }
         default:
             return getFunction(type.getClazz());
         }

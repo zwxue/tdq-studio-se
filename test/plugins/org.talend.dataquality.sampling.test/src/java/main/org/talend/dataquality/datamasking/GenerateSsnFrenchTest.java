@@ -16,35 +16,34 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberFrench;
+import org.talend.dataquality.datamasking.Functions.GenerateSsnFr;
 import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
- * created by jgonzalez on 29 juin 2015 Detailled comment
+ * created by jgonzalez on 20 août 2015 Detailled comment
  *
  */
-public class GeneratePhoneNumberTest {
+public class GenerateSsnFrenchTest {
 
     private String output;
 
-    private GeneratePhoneNumberFrench gpn = new GeneratePhoneNumberFrench();
+    private GenerateSsnFr gnf = new GenerateSsnFr();
 
     @Before
     public void setUp() throws Exception {
-        gpn.setRandomWrapper(new RandomWrapper(42));
+        gnf.setRandomWrapper(new RandomWrapper(42));
     }
 
     @Test
     public void testGood() {
-        output = gpn.generateMaskedRow(null);
-        assertEquals(output, "+33 1308075272"); //$NON-NLS-1$
+        output = gnf.generateMaskedRow(null);
+        assertEquals(output, "2490145075272 83"); //$NON-NLS-1$
     }
 
     @Test
     public void testNull() {
-        gpn.setKeepNull(true);
-        output = gpn.generateMaskedRow(null);
+        gnf.keepNull = true;
+        output = gnf.generateMaskedRow(null);
         assertEquals(output, null);
     }
-
 }

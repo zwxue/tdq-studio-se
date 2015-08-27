@@ -16,10 +16,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-
 /**
- * created by jgonzalez on 1 juil. 2015
- * Detailled comment
+ * created by jgonzalez on 20 août 2015 Detailled comment
  *
  */
 @RunWith(Suite.class)
@@ -31,7 +29,10 @@ import org.junit.runners.Suite.SuiteClasses;
         GenerateFromFileHashLongTest.class, GenerateFromFileHashStringTest.class, GenerateFromFileIntegerTest.class,
         GenerateFromFileLongTest.class, GenerateFromFileStringTest.class, GenerateFromListHashIntegerTest.class,
         GenerateFromListHashLongTest.class, GenerateFromListHashStringTest.class, GenerateFromListIntegerTest.class,
-        GenerateFromListLongTest.class, GenerateFromListStringTest.class, GeneratePhoneNumberTest.class,
+        GenerateFromListLongTest.class, GenerateFromListStringTest.class, GenerateFromPatternTest.class,
+        GeneratePhoneNumberFrenchTest.class, GeneratePhoneNumberGermanyTest.class, GeneratePhoneNumberJapanTest.class,
+        GeneratePhoneNumberUkTest.class, GeneratePhoneNumberUsTest.class, GenerateSsnFrenchTest.class,
+        GenerateSsnGermanyTest.class, GenerateSsnJapanTest.class, GenerateSsnUkTest.class, GenerateSsnUsTest.class,
         KeepFirstAndGenerateIntegerTest.class, KeepFirstAndGenerateLongTest.class, KeepFirstAndGenerateStringTest.class,
         KeepLastAndGenerateIntegerTest.class, KeepLastAndGenerateLongTest.class, KeepLastAndGenerateStringTest.class,
         KeepYearTest.class, MaskAddressTest.class, MaskEmailTest.class, NumericVarianceIntegerTest.class,
@@ -40,8 +41,9 @@ import org.junit.runners.Suite.SuiteClasses;
         RemoveLastCharsStringTest.class, RepalceAllTest.class, ReplaceCharactersTest.class, ReplaceFirstCharsIntegerTest.class,
         ReplaceFirstCharsLongTest.class, ReplaceFirstCharsStringTest.class, ReplaceLastCharsIntegerTest.class,
         ReplaceLastCharsLongTest.class, ReplaceLastCharsStringTest.class, ReplaceNumericIntegerTest.class,
-        ReplaceNumericLongTest.class, ReplaceNumericStringTest.class, ReplaceSsnLongTest.class, ReplaceSsnStringTest.class,
-        SetToNullTest.class })
+        ReplaceNumericLongTest.class, ReplaceNumericStringTest.class, SetToNullTest.class })
 public class AllTests {
-
+    /*
+     * Bloc intentionnaly left empty
+     */
 }

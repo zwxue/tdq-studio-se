@@ -12,7 +12,12 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 import org.talend.dataquality.datamasking.Function;
 
@@ -23,17 +28,35 @@ import org.talend.dataquality.datamasking.Function;
  */
 public class MaskAddress extends Function<String> {
 
-    private String[] keys = {
-            "Rue", "rue", "r.", "strasse", "Strasse", "Street", "street", "St.", "St", "Straße", "Strada", "Rua", "Calle", "Ave.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$
-            "avenue", "Av.", "Allee", "allee", "allée", "Avenue", "Avenida", "Bvd.", "Bd.", "Boulevard", "boulevard", "Blv.", "Viale", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
-            "Avenida", "Bulevar", "Route", "route", "road", "Road", "Rd.", "Chemin", "Way", "Cour", "Court", "Ct.", "Place", "place", "Pl.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$
-            "Square", "Impasse", "Allée", "Driveway", "Auffahrt", "Viale", "Esplanade", "Esplanade", "Promenade", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
-            "Lungomare", "Esplanada", "Esplanada", "Faubourg", "faubourg", "Suburb", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-            "Vorort", "Periferia", "Subúrbio", "Suburbio", "Via", "Via", "industrial", "area", "zone", "industrielle", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
-            "Périphérique", "Peripheral", "Voie", "voie", "Track", "Gleis", "Carreggiata", "Caminho", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-            "Pista", "Forum", "STREET", "RUE", "ST.", "AVENUE", "BOULEVARD", "BLV.", "BD", "ROAD", "ROUTE", "RD.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
-            "RTE", "WAY", "CHEMIN", "COURT", "CT.", "SQUARE", "DRIVEWAY", "ALLEE", "DR.", "ESPLANADE", "SUBURB", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
-            "BANLIEUE", "VIA", "PERIPHERAL", "PERIPHERIQUE", "TRACK", "VOIE", "FORUM", "INDUSTRIAL", "AREA", "ZONE", "INDUSTRIELLE" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
+    private List<String> keys = new ArrayList<>(
+            Arrays.asList(
+                    "Rue", "rue", "r.", "strasse", "Strasse", "Street", "street", "St.", "St", "Straße", "Strada", "Rua", "Calle", "Ave.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$
+                    "avenue", "Av.", "Allee", "allee", "allée", "Avenue", "Avenida", "Bvd.", "Bd.", "Boulevard", "boulevard", "Blv.", "Viale", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
+                    "Avenida", "Bulevar", "Route", "route", "road", "Road", "Rd.", "Chemin", "Way", "Cour", "Court", "Ct.", "Place", "place", "Pl.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$
+                    "Square", "Impasse", "Allée", "Driveway", "Auffahrt", "Viale", "Esplanade", "Esplanade", "Promenade", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+                    "Lungomare", "Esplanada", "Esplanada", "Faubourg", "faubourg", "Suburb", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+                    "Vorort", "Periferia", "Subúrbio", "Suburbio", "Via", "Via", "industrial", "area", "zone", "industrielle", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
+                    "Périphérique", "Peripheral", "Voie", "voie", "Track", "Gleis", "Carreggiata", "Caminho", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+                    "Pista", "Forum", "STREET", "RUE", "ST.", "AVENUE", "BOULEVARD", "BLV.", "BD", "ROAD", "ROUTE", "RD.", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
+                    "RTE", "WAY", "CHEMIN", "COURT", "CT.", "SQUARE", "DRIVEWAY", "ALLEE", "DR.", "ESPLANADE", "SUBURB", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
+                    "BANLIEUE", "VIA", "PERIPHERAL", "PERIPHERIQUE", "TRACK", "VOIE", "FORUM", "INDUSTRIAL", "AREA", "ZONE", "INDUSTRIELLE")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
+
+    private void addKeys(String[] para) {
+        if (para.length > 0) {
+            Scanner in;
+            try {
+                in = new Scanner(new FileReader(para[0]));
+                while (in.hasNext()) {
+                    keys.add(in.next().trim());
+                }
+                in.close();
+            } catch (FileNotFoundException | NullPointerException e) {
+                for (String element : para) {
+                    keys.add(element);
+                }
+            }
+        }
+    }
 
     @Override
     public String generateMaskedRow(String str) {
@@ -44,7 +67,8 @@ public class MaskAddress extends Function<String> {
             if (str != null && !EMPTY_STRING.equals(str) && !(" ").equals(str)) { //$NON-NLS-1$
                 String[] address = str.split(",| "); //$NON-NLS-1$
                 for (String tmp : address) {
-                    if (Arrays.asList(keys).contains(tmp)) {
+                    addKeys(parameters);
+                    if (keys.contains(tmp)) {
                         sb.append(tmp + " "); //$NON-NLS-1$
                     } else {
                         for (int i = 0; i < tmp.length(); ++i) {

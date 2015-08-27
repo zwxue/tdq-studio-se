@@ -12,30 +12,25 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import org.talend.dataquality.datamasking.Function;
+
 /**
- * created by jgonzalez on 22 juin 2015. See ReplaceNumeric.
+ * created by jgonzalez on 22 juil. 2015 Detailled comment
  *
  */
-public class ReplaceNumericString extends ReplaceNumeric<String> {
+public class GenerateSsnJapan extends Function<String> {
 
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null || EMPTY_STRING.equals(str)) && keepNull) {
             return str;
         } else {
-            if (str != null && !EMPTY_STRING.equals(str)) {
-                if (parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
-                    if ((" ").equals(parameters[0])) { //$NON-NLS-1$
-                        return str.replaceAll("\\d", parameters[0]).replace(" ", EMPTY_STRING); //$NON-NLS-1$ //$NON-NLS-2$
-                    } else {
-                        return str.replaceAll("\\d", parameters[0]); //$NON-NLS-1$
-                    }
-                } else {
-                    return str.replaceAll("\\d", String.valueOf(rnd.nextInt(9))); //$NON-NLS-1$
-                }
-            } else {
-                return EMPTY_STRING;
+            StringBuilder result = new StringBuilder(EMPTY_STRING);
+            for (int i = 0; i < 12; ++i) {
+                result.append(rnd.nextInt(9));
             }
+            return result.toString();
         }
     }
+
 }

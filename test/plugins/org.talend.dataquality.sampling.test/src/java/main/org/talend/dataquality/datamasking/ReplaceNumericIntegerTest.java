@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.talend.dataquality.datamasking.Functions.ReplaceNumericInteger;
+import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
  * created by jgonzalez on 25 juin 2015 Detailled comment
@@ -41,8 +42,9 @@ public class ReplaceNumericIntegerTest {
     public void testBad() {
         rni.parameters = "10".split(","); //$NON-NLS-1$ //$NON-NLS-2$
         rni.integerParam = 10;
+        rni.rnd = new RandomWrapper(42);
         output = rni.generateMaskedRow(input);
-        assertEquals(output, 888);
+        assertEquals(output, 830);
     }
 
 }

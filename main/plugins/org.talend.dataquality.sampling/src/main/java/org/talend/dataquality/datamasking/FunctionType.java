@@ -47,12 +47,22 @@ import org.talend.dataquality.datamasking.Functions.GenerateFromListHashString;
 import org.talend.dataquality.datamasking.Functions.GenerateFromListInteger;
 import org.talend.dataquality.datamasking.Functions.GenerateFromListLong;
 import org.talend.dataquality.datamasking.Functions.GenerateFromListString;
+import org.talend.dataquality.datamasking.Functions.GenerateFromPattern;
 import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberFrench;
+import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberGermany;
+import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberJapan;
+import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberUK;
+import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberUS;
 import org.talend.dataquality.datamasking.Functions.GenerateSequenceDouble;
 import org.talend.dataquality.datamasking.Functions.GenerateSequenceFloat;
 import org.talend.dataquality.datamasking.Functions.GenerateSequenceInteger;
 import org.talend.dataquality.datamasking.Functions.GenerateSequenceLong;
 import org.talend.dataquality.datamasking.Functions.GenerateSequenceString;
+import org.talend.dataquality.datamasking.Functions.GenerateSsnFr;
+import org.talend.dataquality.datamasking.Functions.GenerateSsnGermany;
+import org.talend.dataquality.datamasking.Functions.GenerateSsnJapan;
+import org.talend.dataquality.datamasking.Functions.GenerateSsnUk;
+import org.talend.dataquality.datamasking.Functions.GenerateSsnUs;
 import org.talend.dataquality.datamasking.Functions.GenerateUuid;
 import org.talend.dataquality.datamasking.Functions.KeepFirstAndGenerate;
 import org.talend.dataquality.datamasking.Functions.KeepFirstAndGenerateInteger;
@@ -94,9 +104,6 @@ import org.talend.dataquality.datamasking.Functions.ReplaceNumericFloat;
 import org.talend.dataquality.datamasking.Functions.ReplaceNumericInteger;
 import org.talend.dataquality.datamasking.Functions.ReplaceNumericLong;
 import org.talend.dataquality.datamasking.Functions.ReplaceNumericString;
-import org.talend.dataquality.datamasking.Functions.ReplaceSsn;
-import org.talend.dataquality.datamasking.Functions.ReplaceSsnLong;
-import org.talend.dataquality.datamasking.Functions.ReplaceSsnString;
 import org.talend.dataquality.datamasking.Functions.SetToNull;
 
 /**
@@ -140,13 +147,23 @@ public enum FunctionType {
     GENERATE_FROM_LIST_HASH_INT(GenerateFromListHashInteger.class),
     GENERATE_FROM_LIST_HASH_LONG(GenerateFromListHashLong.class),
     GENERATE_FROM_LIST_HASH_STRING(GenerateFromListHashString.class),
-    GENERATE_PHONE_NUMBER(GeneratePhoneNumberFrench.class),
+    GENERATE_FROM_PATTERN(GenerateFromPattern.class),
+    GENERATE_PHONE_NUMBER_FRENCH(GeneratePhoneNumberFrench.class),
+    GENERATE_PHONE_NUMBER_GERMANY(GeneratePhoneNumberGermany.class),
+    GENERATE_PHONE_NUMBER_JAPAN(GeneratePhoneNumberJapan.class),
+    GENERATE_PHONE_NUMBER_UK(GeneratePhoneNumberUK.class),
+    GENERATE_PHONE_NUMBER_US(GeneratePhoneNumberUS.class),
     GENERATE_SEQUENCE(null),
     GENERATE_SEQUENCE_DOUBLE(GenerateSequenceDouble.class),
     GENERATE_SEQUENCE_FLOAT(GenerateSequenceFloat.class),
     GENERATE_SEQUENCE_INT(GenerateSequenceInteger.class),
     GENERATE_SEQUENCE_LONG(GenerateSequenceLong.class),
     GENERATE_SEQUENCE_STRING(GenerateSequenceString.class),
+    GENERATE_SSN_FRENCH(GenerateSsnFr.class),
+    GENERATE_SSN_GERMANY(GenerateSsnGermany.class),
+    GENERATE_SSN_JAPAN(GenerateSsnJapan.class),
+    GENERATE_SSN_UK(GenerateSsnUk.class),
+    GENERATE_SSN_US(GenerateSsnUs.class),
     GENERATE_UUID(GenerateUuid.class),
     KEEP_FIRST_AND_GENERATE(KeepFirstAndGenerate.class),
     KEEP_FIRST_AND_GENERATE_INT(KeepFirstAndGenerateInteger.class),
@@ -188,9 +205,6 @@ public enum FunctionType {
     REPLACE_NUMERIC_INT(ReplaceNumericInteger.class),
     REPLACE_NUMERIC_LONG(ReplaceNumericLong.class),
     REPLACE_NUMERIC_STRING(ReplaceNumericString.class),
-    REPLACE_SSN(ReplaceSsn.class),
-    REPLACE_SSN_LONG(ReplaceSsnLong.class),
-    REPLACE_SSN_STRING(ReplaceSsnString.class),
     SET_TO_NULL(SetToNull.class);
 
     private final Class<?> clazz;

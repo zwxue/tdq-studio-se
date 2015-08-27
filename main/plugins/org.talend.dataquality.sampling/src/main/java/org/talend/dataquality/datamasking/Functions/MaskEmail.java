@@ -12,6 +12,12 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 import org.talend.dataquality.datamasking.Function;
 
 /**
@@ -21,21 +27,45 @@ import org.talend.dataquality.datamasking.Function;
  */
 public class MaskEmail extends Function<String> {
 
+    List<String> keys = new ArrayList<>();
+
+    private void addKeys(String[] para) {
+        if (para.length > 0) {
+            Scanner in;
+            try {
+                in = new Scanner(new FileReader(para[0]));
+                while (in.hasNext()) {
+                    keys.add(in.next().trim());
+                }
+                in.close();
+            } catch (FileNotFoundException | NullPointerException e) {
+                for (String element : para) {
+                    keys.add(element);
+                }
+            }
+        }
+    }
+
     @Override
     public String generateMaskedRow(String str) {
         if ((str == null) || EMPTY_STRING.equals(str) && keepNull) {
             return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str)) {
-                StringBuilder sb = new StringBuilder(EMPTY_STRING);
+                addKeys(parameters);
+                StringBuilder sb = new StringBuilder(str);
                 int count = str.lastIndexOf('@');
                 if (count == -1) {
                     count = str.length();
                 }
-                for (int i = 0; i < count; ++i) {
-                    sb.append("X"); //$NON-NLS-1$
+                if (keys.size() == 1 && keys.get(0).equals(EMPTY_STRING) || keys.size() == 0) {
+                    for (int i = 0; i < count; ++i) {
+                        sb.setCharAt(i, 'X');
+                    }
+                } else {
+                    sb.replace(0, count, keys.get(rnd.nextInt(keys.size())));
                 }
-                return sb.append(str.substring(count, str.length())).toString();
+                return sb.toString();
             } else {
                 return EMPTY_STRING;
             }

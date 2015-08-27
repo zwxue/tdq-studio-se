@@ -23,10 +23,14 @@ public class ReplaceNumericFloat extends ReplaceNumeric<Float> {
         if (f == null && keepNull) {
             return null;
         } else {
-            super.init();
             if (f != null) {
                 String str = f.toString();
-                String res = str.replaceAll("\\d", param); //$NON-NLS-1$
+                String res = EMPTY_STRING;
+                if (integerParam >= 0 && integerParam <= 9) {
+                    res = str.replaceAll("\\d", String.valueOf(integerParam)); //$NON-NLS-1$
+                } else {
+                    res = str.replaceAll("\\d", String.valueOf(rnd.nextInt(9))); //$NON-NLS-1$
+                }
                 return Float.valueOf(res);
             } else {
                 return 0.0f;
