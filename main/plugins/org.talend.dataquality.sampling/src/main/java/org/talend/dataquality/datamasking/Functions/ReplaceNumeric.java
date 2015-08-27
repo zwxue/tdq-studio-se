@@ -20,21 +20,6 @@ import org.talend.dataquality.datamasking.Function;
  */
 public abstract class ReplaceNumeric<T2> extends Function<T2> {
 
-    protected String result = EMPTY_STRING;
-
-    protected String param = "8"; //$NON-NLS-1$
-
-    protected String param2 = "X"; //$NON-NLS-1$
-
-    protected void init() {
-        if (integerParam >= 0 && integerParam <= 9) {
-            param = integerParam.toString();
-        }
-        if (parameters[0].matches("[0-9]|[a-zA-Z]| ")) { //$NON-NLS-1$
-            param2 = parameters[0];
-        }
-    }
-
     @Override
     public abstract T2 generateMaskedRow(T2 t);
 }

@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.talend.dataquality.datamasking.Functions.MaskEmail;
+import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
  * created by jgonzalez on 25 juin 2015 Detailled comment
@@ -30,13 +31,16 @@ public class MaskEmailTest {
     @Test
     public void testGood() {
         String mail = "jugonzalez@talend.com"; //$NON-NLS-1$
+        me.parameters = "test".split(","); //$NON-NLS-1$ //$NON-NLS-2$
+        me.rnd = new RandomWrapper(42);
         output = me.generateMaskedRow(mail);
-        assertEquals(output, "XXXXXXXXXX@talend.com"); //$NON-NLS-1$
+        assertEquals(output, "test@talend.com"); //$NON-NLS-1$
     }
 
     @Test
     public void testBad() {
         String mail = "not an email"; //$NON-NLS-1$
+        me.parameters = me.EMPTY_STRING.split(","); //$NON-NLS-1$
         output = me.generateMaskedRow(mail);
         assertEquals(output, "XXXXXXXXXXXX"); //$NON-NLS-1$
     }

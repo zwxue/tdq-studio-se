@@ -23,15 +23,30 @@ public class ReplaceNumericInteger extends ReplaceNumeric<Integer> {
         if (i == null && keepNull) {
             return null;
         } else {
-            super.init();
             if (i != null) {
-                String str = i.toString();
-                String res = str.replaceAll("\\d", param); //$NON-NLS-1$
-                return Integer.valueOf(res);
+                if (i > 0) {
+                    int len = (int) Math.log10(i) + 1;
+                    StringBuilder res = new StringBuilder(EMPTY_STRING);
+                    if (integerParam >= 0 && integerParam <= 9) {
+                        for (int j = 0; j < len; j++) {
+                            res.append(integerParam);
+                        }
+                    } else {
+                        for (int j = 0; j < len; j++) {
+                            res.append(rnd.nextInt(9));
+                        }
+                    }
+                    return Integer.valueOf(res.toString());
+                } else {
+                    if (integerParam >= 0 && integerParam <= 9) {
+                        return integerParam;
+                    } else {
+                        return rnd.nextInt(9);
+                    }
+                }
             } else {
                 return 0;
             }
         }
     }
-
 }

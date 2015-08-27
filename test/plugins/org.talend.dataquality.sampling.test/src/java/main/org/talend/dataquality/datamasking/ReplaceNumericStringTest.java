@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.talend.dataquality.datamasking.Functions.ReplaceNumericString;
+import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
  * created by jgonzalez on 25 juin 2015 Detailled comment
@@ -39,7 +40,8 @@ public class ReplaceNumericStringTest {
     @Test
     public void testBad() {
         rns.parameters = "0X".split(","); //$NON-NLS-1$ //$NON-NLS-2$
+        rns.rnd = new RandomWrapper(42);
         output = rns.generateMaskedRow(input);
-        assertEquals(output, "abcXXXdef"); //$NON-NLS-1$
+        assertEquals(output, "abc888def"); //$NON-NLS-1$
     }
 }

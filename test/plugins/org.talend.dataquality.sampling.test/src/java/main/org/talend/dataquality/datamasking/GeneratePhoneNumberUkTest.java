@@ -16,38 +16,34 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.talend.dataquality.datamasking.Functions.ReplaceCharacters;
+import org.talend.dataquality.datamasking.Functions.GeneratePhoneNumberUK;
 import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
- * created by jgonzalez on 25 juin 2015 Detailled comment
+ * created by jgonzalez on 19 août 2015 Detailled comment
  *
  */
-public class ReplaceCharactersTest {
+public class GeneratePhoneNumberUkTest {
 
     private String output;
 
-    private String input = "input value"; //$NON-NLS-1$
-
-    private ReplaceCharacters rc = new ReplaceCharacters();
+    private GeneratePhoneNumberUK gpnuk = new GeneratePhoneNumberUK();
 
     @Before
     public void setUp() throws Exception {
-        rc.rnd = new RandomWrapper(42);
+        gpnuk.setRandomWrapper(new RandomWrapper(42));
     }
 
     @Test
     public void testGood() {
-        rc.parameters = "X".split(","); //$NON-NLS-1$ //$NON-NLS-2$
-        output = rc.generateMaskedRow(input);
-        assertEquals(output, "XXXXX XXXXX"); //$NON-NLS-1$
+        output = gpnuk.generateMaskedRow(null);
+        assertEquals(output, "020 3830 8075"); //$NON-NLS-1$
     }
 
     @Test
-    public void testBad() {
-        rc.parameters = rc.EMPTY_STRING.split(","); //$NON-NLS-1$ 
-        output = rc.generateMaskedRow(input);
-        assertEquals(output, "AAAAA AAAAA"); //$NON-NLS-1$
+    public void testNull() {
+        gpnuk.keepNull = true;
+        output = gpnuk.generateMaskedRow(null);
+        assertEquals(output, null);
     }
-
 }

@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.talend.dataquality.datamasking.Functions.ReplaceNumericLong;
+import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
  * created by jgonzalez on 25 juin 2015 Detailled comment
@@ -41,7 +42,8 @@ public class ReplaceNumericLongTest {
     public void testBad() {
         rnl.parameters = "10".split(","); //$NON-NLS-1$ //$NON-NLS-2$
         rnl.integerParam = 10;
+        rnl.rnd = new RandomWrapper(42);
         output = rnl.generateMaskedRow(input);
-        assertEquals(output, 888);
+        assertEquals(output, 830);
     }
 }
