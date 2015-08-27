@@ -22,5 +22,6 @@ public enum ObserverEventEnum {
     MoveColumn,
     HSrcollMove,
     ItemHeaderWidth,
-    VSrcollVisible;
+    VSrcollVisible,
+    ColumnHighlight;
 }

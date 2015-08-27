@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
+import org.talend.commons.ui.runtime.utils.TalendColorPalette;
 
 /**
  * The column header renderer.
@@ -127,7 +128,7 @@ public class TdColumnHeaderRenderer extends AbstractColumnHerderRenderer {
         gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 
         if (isSelected()) {
-            gc.setBackground(IndicatorSelectGrid.yellow);
+            gc.setBackground(TalendColorPalette.PRIMARY_GREEN);
             gc.fillRectangle((int) original[0], (int) original[1] + 2, (int) (getBounds().height / sinRotation)
                     + getBounds().width, (int) (getBounds().width * sinRotation));
         }

@@ -125,7 +125,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
         style |= SWT.BORDER;
         style |= SWT.SINGLE;
         gridPrview = new ColumnPreviewGrid(this, redrewComp, style, modelElementIndicators, this.limitNumber);
-        gridIndicator = new IndicatorSelectGrid(this, redrewComp, style, modelElementIndicators);
+        gridIndicator = new IndicatorSelectGrid(this, redrewComp, style, modelElementIndicators,gridPrview.getColumnsWidth());
         gridIndicator.setHeaderVisible(false);
         gridIndicator.addObserver(gridPrview);
         gridPrview.addObserver(gridIndicator);
