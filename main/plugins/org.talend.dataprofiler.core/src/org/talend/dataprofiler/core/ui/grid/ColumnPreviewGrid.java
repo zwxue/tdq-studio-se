@@ -26,6 +26,8 @@ import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.nebula.widgets.grid.TalendGridItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -53,6 +55,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.talend.csv.CSVReader;
@@ -81,6 +84,8 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
     public ColumnPreviewGrid(IndicatorSelectDialog dialog, Composite parent, int style,
             ModelElementIndicator[] modelElementIndicators, int limit) {
         super(dialog, parent, style, modelElementIndicators, limit);
+        initializeGrid();
+        addVscrollBarListener();
     }
 
     /*
@@ -127,6 +132,8 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
                         this.remove(this.indexOf(currentItem));
                         return;
                     }
+                    int minWith=columnValue.length()*7>100?100:columnValue.length()*7;
+                    column.setWidth(COLUMN_WIDTH<minWith?minWith:COLUMN_WIDTH);
                     currentItem.setText(i, columnValue);
                 }
             }
@@ -331,6 +338,10 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             }
 
             break;
+        case ColumnHighlight:
+            Object data = observer.getData(ObserverEvent.COLUMN_HIGH_LIGHT);
+            handleColumnHighlight(((Integer)data));
+            break;
         }
 
     }
@@ -493,6 +504,24 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             observer.update(observerEvent);
         }
     }
+    
+    
+
+    @Override
+    protected void notifyhandleColumnHighlight(MouseEvent e) {
+        if (observers == null) {
+            return;
+        }
+        for (TDQObserver<ObserverEvent> observer : observers) {
+            ObserverEvent observerEvent = new ObserverEvent(ObserverEventEnum.ColumnHighlight);
+            GridColumn currentColumn = this.getColumn(new Point(e.x, e.y));
+            observerEvent.putData(ObserverEvent.COLUMN_HIGH_LIGHT, this.indexOf(currentColumn));
+            observer.update(observerEvent);
+        }
+    }
+    
+    
+
 
     /**
      * Check whether the where clause is valid
@@ -523,6 +552,19 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             }
         }
         return true;
+    }
+    
+    public int[] getColumnsWidth(){
+       int[] result=new int[this.getColumnCount()] ;
+       for(int index=0;index<this.getColumnCount();index++){
+           result[index]=this.getColumn(index).getWidth();
+       }
+       return result;
+    }
+
+    @Override
+    protected int getPreferWidth(int index) {
+        return COLUMN_WIDTH;
     }
 
 }

@@ -28,6 +28,8 @@ public class ObserverEvent {
     public static final String COLUMN_HEADER_RESIZE = "columnHeaderResize"; //$NON-NLS-1$
 
     public static final String COLUMN_HEADER_MOVE = "columnHeaderMove"; //$NON-NLS-1$
+    
+    public static final String COLUMN_HIGH_LIGHT = "columnHighlight"; //$NON-NLS-1$
 
     public static final String VERTICAL_SRCOLL_VISABLE = "VSrcollVisable"; //$NON-NLS-1$
 
