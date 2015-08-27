@@ -1,5 +1,18 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 package org.talend.datascience.common.inference;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +24,7 @@ import java.util.List;
  * To combine several {@link Analyzer} together see {@link Analyzers}.
  * @param <T> The type of results built by the implementation.
  */
-public interface Analyzer<T> {
+public interface Analyzer<T> extends Serializable{
 
     /**
      * Prepare implementation for analysis. Implementations may perform various tasks like internal initialization or

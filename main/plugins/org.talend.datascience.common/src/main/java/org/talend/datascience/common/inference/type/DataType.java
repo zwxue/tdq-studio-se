@@ -12,21 +12,18 @@
 // ============================================================================
 package org.talend.datascience.common.inference.type;
 
-import java.util.Collections;
+import java.io.Serializable;
 import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
  * 
  * Data type bean hold type to frequency and type to value maps.
  */
-public class DataType {
+public class DataType implements Serializable{
 
-    private Map<Type, Long> typeFrequencies = new EnumMap<Type, Long>(Type.class);
-
-    private Map<Type, List<String>> type2Values = new EnumMap<Type, List<String>>(Type.class);
+    private static final long serialVersionUID = -736825123668340428L;
+    private Map<Type, Long> typeFrequencies = new EnumMap<>(Type.class);
 
     public Map<Type, Long> getTypeFrequencies() {
         return typeFrequencies;
@@ -51,7 +48,7 @@ public class DataType {
      * lower threshold means that a column with some double values will be considered as double type. E.g. for the input
      * column: "1.2","3.5","2","6","7", if threshold=0.5 return Type.INTEGER; if threshold=0.1 return Type.DOUBLE.
      * 
-     * @return enum Type : BOOLEAN, INTEGER, DOUBLE, STRING, DATE
+     * @return enum Type : BOOLEAN, INTEGER, DOUBLE, STRING, DATE,TIME
      * <p>
      * Note: there is no Type.EMPTY returned, even Type.EMPTY is the most frequent, the second most frequent will be
      * returned. E.g. for the input column: "","","","","1.2" return Type.DOUBLE. If a column is all empty, will return
@@ -79,10 +76,6 @@ public class DataType {
         return electedType;
     }
 
-    /**
-     * Increment by 1 from frequency table.
-     * @param type the type from which the frequencies incremnt.
-     */
     public void increment(Type type) {
         if (!typeFrequencies.containsKey(type)) {
             typeFrequencies.put(type, 1l);
@@ -92,32 +85,35 @@ public class DataType {
     }
 
     /**
-     * Increment the frequency of given type and value simultaneously .
-     * @param type the given type.
-     * @param value value to be appended to map given type
+     * created by talend on 2015-07-28 Detailled comment.
+     *
      */
-    public void increment(Type type, String value) {
-        increment(type);
-        // update type to values map
-        if (!type2Values.containsKey(type)) {
-            List<String> values = type2Values.get(type);
-            if (values == null) {
-                values = Collections.synchronizedList(new LinkedList<String>());
-            }
-            values.add(value);
-            type2Values.put(type, values);
-        } else {
-            List<String> values = type2Values.get(type);
-            values.add(value);
-        }
-    }
-
     public enum Type {
         BOOLEAN,
         INTEGER,
         DOUBLE,
         STRING,
         DATE,
-        EMPTY
+        TIME,
+        EMPTY;
+
+        public static Type get(String typeName) {
+            if (BOOLEAN.name().equalsIgnoreCase(typeName)) {
+                return BOOLEAN;
+            } else if (INTEGER.name().equalsIgnoreCase(typeName)) {
+                return INTEGER;
+            } else if (DOUBLE.name().equalsIgnoreCase(typeName)) {
+                return DOUBLE;
+            } else if (STRING.name().equalsIgnoreCase(typeName)) {
+                return STRING;
+            } else if (DATE.name().equalsIgnoreCase(typeName)) {
+                return DATE;
+            }else if (TIME.name().equalsIgnoreCase(typeName)) {
+                return TIME;
+            } else if (EMPTY.name().equalsIgnoreCase(typeName)) {
+                return EMPTY;
+            }
+            return STRING;
+        }
     }
 }

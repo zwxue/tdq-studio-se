@@ -12,12 +12,12 @@
 // ============================================================================
 package org.talend.datascience.common.inference;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.io.Serializable;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 /**
  * A {@link List} that can resize to a given maximum size and ensure that all index in list have an instance of
@@ -26,7 +26,9 @@ import java.util.ListIterator;
  * @param <T> A class with a zero-arg constructor.
  * @see #resize(int)
  */
-public class ResizableList<T> implements List<T> {
+public class ResizableList<T> implements List<T>,Serializable {
+
+    private static final long serialVersionUID = -4643753633617225999L;
 
     private Class<T> itemClass;
 

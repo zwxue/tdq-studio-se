@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.datascience.common.inference.type;
 
+import java.math.BigInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -98,6 +99,21 @@ public class TypeInferenceUtils {
             return Double.NaN;
         }
     }
+    
+    /**
+     * Get big integer from a string.
+     * @param value
+     * @return big integer instance , or null if numer format exception occurrs.
+     */
+    public static BigInteger getBigInteger(String value) {
+        BigInteger bint = null;
+        try {
+            bint = new BigInteger(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        return bint;
+    }
 
     /**
      * Detect if the given value is a boolean type.
@@ -129,7 +145,25 @@ public class TypeInferenceUtils {
                 return false;
             }
             // 2. Check it by list of patterns
-            return DatePatternUtils.getInstance().isDate(value);
+            return DatetimePatternUtils.getInstance().isDate(value);
+        }
+        return false;
+    }
+
+    /**
+     * Detect if the given value is a time type.
+     * 
+     * @param value
+     * @return
+     */
+    public static boolean isTime(String value) {
+        if (!isEmpty(value)) {
+            // 1. The length of date characters should not exceed 30.
+            if (value.trim().length() > 30) {
+                return false;
+            }
+            // 2. Check it by list of patterns
+            return DatetimePatternUtils.getInstance().isTime(value);
         }
         return false;
     }
@@ -150,12 +184,12 @@ public class TypeInferenceUtils {
      * @param value the value to be detected
      * @return true if the type of value is expected, false otherwise.
      */
-	public static boolean isValid(DataType.Type type, String value) {
-		
-		switch (type) {
-		case BOOLEAN:
-			return isBoolean(value);
-		case INTEGER:
+    public static boolean isValid(DataType.Type type, String value) {
+        
+        switch (type) {
+        case BOOLEAN:
+            return isBoolean(value);
+        case INTEGER:
             return isInteger(value);
         case DOUBLE:
             return isDouble(value);
@@ -164,10 +198,10 @@ public class TypeInferenceUtils {
         case STRING:
             // Everything can be a string
             return true;
-		default:
-			// Unsupported type
-			return false;
-		}
-	}
+        default:
+            // Unsupported type
+            return false;
+        }
+    }
 
 }

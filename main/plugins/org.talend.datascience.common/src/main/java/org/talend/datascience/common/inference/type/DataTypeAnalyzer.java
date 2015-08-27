@@ -12,10 +12,13 @@
 // ============================================================================
 package org.talend.datascience.common.inference.type;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.talend.datascience.common.inference.Analyzer;
 import org.talend.datascience.common.inference.ResizableList;
+import org.talend.datascience.common.inference.type.DataType.Type;
 
 /**
  * Type inference executor which provide several methods computing the types.<br>
@@ -28,7 +31,7 @@ import org.talend.datascience.common.inference.ResizableList;
  *
  */
 public class DataTypeAnalyzer implements Analyzer<DataType> {
-
+    private static final long serialVersionUID = 373694310453353502L;
     private final ResizableList<DataType> dataTypes = new ResizableList<>(DataType.class);
 
     private static DataType.Type execute(String value) {
@@ -47,6 +50,9 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
         } else if (TypeInferenceUtils.isDate(value)) {
             // 5. detect date
             return DataType.Type.DATE;
+        }else if (TypeInferenceUtils.isTime(value)) {
+            // 6. detect date
+            return DataType.Type.TIME;
         }
         // will return string when no matching
         return DataType.Type.STRING;
@@ -54,6 +60,17 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
 
     public void init() {
         // Nothing to do.
+    }
+
+    /**
+     * Analyze record of Array of string type, this method is used in scala library which not support parameterized
+     * array type.
+     * 
+     * @param record
+     * @return
+     */
+    public boolean analyzeArray(String[] record) {
+        return analyze(record);
     }
 
     /**
@@ -86,5 +103,30 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
      */
     public List<DataType> getResult() {
         return dataTypes;
+    }
+
+    public DataTypeAnalyzer merge(DataTypeAnalyzer another) {
+        int idx = 0;
+        DataTypeAnalyzer mergedAnalyzer = new DataTypeAnalyzer();
+        for (DataType dt : dataTypes) {
+            mergedAnalyzer.getResult().add(idx,dt);
+            if(!another.getResult().isEmpty()){
+                Map<DataType.Type, Long> typeFreqTable = dt.getTypeFrequencies();
+                Map<DataType.Type, Long> anotherTypeFreqTable = another.getResult().get(idx).getTypeFrequencies();
+                Iterator<Type> anotherDTIt = anotherTypeFreqTable.keySet().iterator();
+                while (anotherDTIt.hasNext()) {
+                    Type anotherDT = anotherDTIt.next();
+                    // Update the current map
+                    if (typeFreqTable.containsKey(anotherDT)) {
+                        mergedAnalyzer.getResult().get(idx).getTypeFrequencies().put(anotherDT, typeFreqTable.get(anotherDT) + anotherTypeFreqTable.get(anotherDT));
+                    } else {
+                        mergedAnalyzer.getResult().get(idx).getTypeFrequencies().put(anotherDT, anotherTypeFreqTable.get(anotherDT));
+                    }
+                }
+            }
+            idx++;
+        }
+        return mergedAnalyzer;
+
     }
 }
