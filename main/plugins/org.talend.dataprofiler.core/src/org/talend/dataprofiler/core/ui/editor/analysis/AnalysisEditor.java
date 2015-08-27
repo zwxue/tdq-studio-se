@@ -47,8 +47,10 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -296,7 +298,12 @@ public class AnalysisEditor extends SupportContextEditor {
 
     public void performGlobalAction(String id) {
         if (id.equals(RunAnalysisAction.ID)) {
-            runAction.run();
+            // TDQ-10748: make the ref project analysis can not run when press F6
+            DQRepositoryNode node = RepositoryNodeHelper.recursiveFind(this.getMasterPage().getAnalysis());
+            if (node.getProject().isMainProject()) {
+                runAction.run();
+            }
+            // TDQ-10748~
             return;
         }
         if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
