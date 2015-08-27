@@ -12,15 +12,13 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -175,10 +173,14 @@ public class ConnectionUtilsTest {
         when(JavaSqlFactory.getDriverClass(dbConnMock)).thenReturn(driverClass);
         when(JavaSqlFactory.getDriverJarPath(dbConnMock)).thenReturn(driverJarPath);
 
-        ReturnCode rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(dbConnMock);
+        try {
+            ReturnCode rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(dbConnMock);
 
-        assertFalse(rc.isOk());
-        assertEquals(msg, rc.getMessage());
+            assertFalse(rc.isOk());
+            assertEquals(msg, rc.getMessage());
+        } catch (MalformedURLException e) {
+            Assert.fail(e.getMessage());
+        }
     }
 
     /**
