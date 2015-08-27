@@ -98,8 +98,12 @@ public class StoreOnDiskUtils extends AbstractOSGIServiceUtils {
         if (getStoreOnDiskService() != null) {
             return getStoreOnDiskService().executeWithStoreOnDisk(columnMap, recordMatchingIndicator, blockKeyIndicator,
                     storeOnDiskHandler, matchResultConsumer);
+        } else {
+            TypedReturnCode<Object> returnCode = new TypedReturnCode<Object>(false);
+            returnCode.setMessage("The Store on Disk Service is null.");
+            returnCode.setOk(false);
+            return returnCode;
         }
-        return null;
     }
 
     @Override

@@ -155,8 +155,11 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             try {
                 TypedReturnCode<Object> result = StoreOnDiskUtils.getDefault().executeWithStoreOnDisk(columnMap,
                         recordMatchingIndicator, blockKeyIndicator, sqlExecutor.getStoreOnDiskHandler(), matchResultConsumer);
-                returnCode.setObject((MatchGroupResultConsumer) result.getObject());
-                returnCode.setOk(result.isOk());
+                if (result != null) {
+                    returnCode.setObject((MatchGroupResultConsumer) result.getObject());
+                    returnCode.setOk(result.isOk());
+                    returnCode.setMessage(result.getMessage());
+                }
             } catch (Exception e) {
                 log.error(e, e);
                 returnCode.setMessage(e.getMessage());
