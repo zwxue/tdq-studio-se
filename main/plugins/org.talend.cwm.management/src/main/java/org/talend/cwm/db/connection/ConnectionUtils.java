@@ -17,12 +17,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -36,6 +38,8 @@ import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ILibraryManagerService;
 import org.talend.core.IRepositoryContextService;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.ConnParameterKeys;
@@ -104,6 +108,15 @@ public final class ConnectionUtils {
     public static final int LOGIN_TIMEOUT_SECOND = 20;
 
     private static Boolean timeout = null;
+
+    private static ILibraryManagerService libManagerServic = null;
+
+    static {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ILibraryManagerService.class)) {
+            libManagerServic = (ILibraryManagerService) GlobalServiceRegister.getDefault().getService(
+                    ILibraryManagerService.class);
+        }
+    }
 
     // MOD mzhao 2009-06-05 Bug 7571
     // private static final Map<String, Driver> DRIVER_CACHE = new HashMap<String, Driver>();
@@ -231,9 +244,13 @@ public final class ConnectionUtils {
         props.put(TaggedValueHelper.USER, userName);
         props.put(TaggedValueHelper.PASSWORD, password);
         if (isGeneralJdbc(analysisDataProvider)) {
-            ReturnCode rcJdbc = checkGeneralJdbcJarFilePathDriverClassName((DatabaseConnection) analysisDataProvider);
-            if (!rcJdbc.isOk()) {
-                return rcJdbc;
+            try {
+                ReturnCode rcJdbc = checkGeneralJdbcJarFilePathDriverClassName((DatabaseConnection) analysisDataProvider);
+                if (!rcJdbc.isOk()) {
+                    return rcJdbc;
+                }
+            } catch (MalformedURLException e) {
+                return new ReturnCode(e.getMessage(), false);
             }
         } else if (analysisDataProvider instanceof DatabaseConnection) {
             // MOD qiongli 2014-5-14 in order to check and connect a dbConnection by a correct driver,replace
@@ -308,8 +325,9 @@ public final class ConnectionUtils {
      * 
      * @param dbConn a General JDBC database connection
      * @return
+     * @throws MalformedURLException
      */
-    public static ReturnCode checkGeneralJdbcJarFilePathDriverClassName(DatabaseConnection dbConn) {
+    public static ReturnCode checkGeneralJdbcJarFilePathDriverClassName(DatabaseConnection dbConn) throws MalformedURLException {
         ReturnCode returnCode = new ReturnCode();
         String driverClass = JavaSqlFactory.getDriverClass(dbConn);
         String driverJarPath = JavaSqlFactory.getDriverJarPath(dbConn);
@@ -321,15 +339,20 @@ public final class ConnectionUtils {
                 returnCode.setOk(false);
                 returnCode.setMessage(Messages.getString("ConnectionUtils.DriverJarFileEmpty")); //$NON-NLS-1$
             } else {
+                List<String> driverJarNameList = new ArrayList<String>();
                 String[] splits = driverJarPath.split(";"); //$NON-NLS-1$
                 for (String str : splits) {
-                    if (str != null && str.trim().length() > 0) {
-                        File jarFile = new File(str);
-                        if (!jarFile.exists() || jarFile.isDirectory()) {
-                            returnCode.setOk(false);
-                            returnCode.setMessage(Messages.getString("ConnectionUtils.DriverJarFileInvalid")); //$NON-NLS-1$
-                            break;
-                        }
+                    if (!StringUtils.isBlank(str)) {
+                        driverJarNameList.add(str);
+                    }
+                }
+                LinkedList<String> driverJarRealPaths = getDriverJarRealPaths(driverJarNameList);
+                for (String str : driverJarRealPaths) {
+                    File jarFile = new File(str);
+                    if (!jarFile.exists() || jarFile.isDirectory()) {
+                        returnCode.setOk(false);
+                        returnCode.setMessage(Messages.getString("ConnectionUtils.DriverJarFileInvalid")); //$NON-NLS-1$
+                        break;
                     }
                 }
             }
@@ -1268,4 +1291,42 @@ public final class ConnectionUtils {
         return dbConnection.getParameters().get(ConnParameterKeys.CONN_PARA_KEY_HADOOP_CLUSTER_ID);
     }
 
+    /**
+     * find driver jar path from 'temp\dbWizard',if nof found,find it from 'lib\java' and "librariesIndex.xml".
+     * 
+     * @return
+     * @throws MalformedURLException
+     */
+    public static LinkedList<String> getDriverJarRealPaths(List<String> driverJarNameList) throws MalformedURLException {
+        LinkedList<String> linkedList = new LinkedList<String>();
+        boolean jarNotFound = false;
+
+        for (String jarName : driverJarNameList) {
+            String tempLibPath = ExtractMetaDataUtils.getInstance().getJavaLibPath();
+            File tempFolder = new File(tempLibPath);
+            if (tempFolder.exists()) {
+                List<File> jarFiles = FilesUtils.getJarFilesFromFolder(tempFolder, jarName);
+                if (!jarFiles.isEmpty()) {
+                    linkedList.add(jarFiles.get(0).getPath());
+                    continue;
+                }
+            }
+            if (libManagerServic != null) {
+                String libPath = libManagerServic.getJarPath(jarName);
+                if (libPath == null) {
+                    jarNotFound = true;
+                    break;
+                }
+                linkedList.add(libPath);
+            } else {
+                jarNotFound = true;
+            }
+        }
+        // if has one jar file not be found,return a empty list
+        if (jarNotFound) {
+            linkedList.clear();
+        }
+
+        return linkedList;
+    }
 }
