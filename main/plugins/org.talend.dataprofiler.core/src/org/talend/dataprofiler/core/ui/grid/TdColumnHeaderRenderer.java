@@ -128,7 +128,7 @@ public class TdColumnHeaderRenderer extends AbstractColumnHerderRenderer {
         gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 
         if (isSelected()) {
-            gc.setBackground(TalendColorPalette.PRIMARY_GREEN);
+            gc.setBackground(IndicatorSelectGrid.yellow);
             gc.fillRectangle((int) original[0], (int) original[1] + 2, (int) (getBounds().height / sinRotation)
                     + getBounds().width, (int) (getBounds().width * sinRotation));
         }

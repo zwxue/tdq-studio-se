@@ -540,13 +540,13 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
                 int i = indexOf(item);
                 // set background for row headers
                 if (i == cell.y) {
-                    item.setBackground(0, TalendColorPalette.PRIMARY_GREEN);
-                    item.setBackground(1, TalendColorPalette.PRIMARY_GREEN);
+                    item.setBackground(0, yellow);
+                    item.setBackground(1, lightYellow);
                 } else {
                     item.setBackground(0, gray);
                     item.setBackground(1, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                     if (item.getCheckable(1)) {
-                        item.setBackground(TalendColorPalette.PRIMARY_GREEN);
+                        item.setBackground(yellow);
                     }
                 }
 
@@ -555,9 +555,9 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
                     int realIdx = columnList.indexOf(column) + 2; // real index in current visible range.
                     int j = indexOf(column); // the original index to be colored.
                     if (i == cell.y && realIdx == cell.x) {
-                        item.setBackground(j, TalendColorPalette.PRIMARY_GREEN);
+                        item.setBackground(j, yellow);
                     } else if (i == cell.y && realIdx < cell.x || realIdx == cell.x && i < cell.y) {
-                        item.setBackground(j, TalendColorPalette.PRIMARY_GREEN);
+                        item.setBackground(j, lightYellow);
                     } else {
                         item.setBackground(j, null);
                     }
@@ -581,8 +581,8 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
                     int i = indexOf(item);
                     if (item.getCheckable(0)) {
                         if (i == indexOf(currentItem)) {
-                            item.setBackground(0, TalendColorPalette.PRIMARY_GREEN);
-                            item.setBackground(1, TalendColorPalette.PRIMARY_GREEN);
+                            item.setBackground(0, yellow);
+                            item.setBackground(1, yellow);
                         } else {
                             item.setBackground(0, gray);
                             item.setBackground(1, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
@@ -592,7 +592,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
                     for (GridColumn column : range.getColumns()) {
                         int j = indexOf(column);
                         if (i == indexOf(currentItem)) {
-                            item.setBackground(j, TalendColorPalette.PRIMARY_GREEN);
+                            item.setBackground(j, lightYellow);
                         } else {
                             item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                         }
@@ -616,7 +616,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
                 for (GridColumn column : range.getColumns()) {
                     int j = indexOf(column);
                     if (j == currentColumnIndex) {
-                        item.setBackground(j, TalendColorPalette.PRIMARY_GREEN);
+                        item.setBackground(j, lightYellow);
                     } else {
                         item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                     }
@@ -641,7 +641,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
                 for (GridColumn column : range.getColumns()) {
                     int j = indexOf(column);
                     if (j == currentColumnIndex) {
-                        item.setBackground(j, TalendColorPalette.PRIMARY_GREEN);
+                        item.setBackground(j, lightYellow);
                     } else {
                         item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                     }
