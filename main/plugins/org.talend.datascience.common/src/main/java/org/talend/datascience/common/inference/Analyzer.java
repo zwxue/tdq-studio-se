@@ -18,13 +18,14 @@ import java.util.List;
 /**
  * Implements analysis on array of Strings ("row" of values). Implementations are expected to be:
  * <ul>
- *     <li>Stateful.</li>
- *     <li>Not thread safe (no need to enforce thread safety in implementations).</li>
+ * <li>Stateful.</li>
+ * <li>Not thread safe (no need to enforce thread safety in implementations).</li>
  * </ul>
  * To combine several {@link Analyzer} together see {@link Analyzers}.
+ * 
  * @param <T> The type of results built by the implementation.
  */
-public interface Analyzer<T> extends Serializable{
+public interface Analyzer<T> extends Serializable {
 
     /**
      * Prepare implementation for analysis. Implementations may perform various tasks like internal initialization or
@@ -39,7 +40,15 @@ public interface Analyzer<T> extends Serializable{
      * @return <code>true</code> if analyze was ok, <code>false</code> otherwise.
      */
     boolean analyze(String... record);
-    
+
+    /**
+     * Analyze a single record. this method is tend to be used by clients which DONT support array parameters of variant length.<br>
+     * The implementation is finally use {@link Analyzer#analyze(String...)} .
+     * @param record
+     * @return
+     */
+    boolean analyzeArray(String[] record);
+
     /**
      * Ends the analysis (implementations may perform result optimizations after the repeated call to
      * {@link #analyze(String[])}).
@@ -53,4 +62,10 @@ public interface Analyzer<T> extends Serializable{
      * column in record.
      */
     List<T> getResult();
+    
+    /**
+     * Merge this analyzer with another one.<br>
+     * @return new analyzer with this and another analyzer merged together.
+     */
+    Analyzer<T> merge(Analyzer<T> another);
 }

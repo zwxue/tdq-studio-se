@@ -31,7 +31,9 @@ import org.talend.datascience.common.inference.type.DataType.Type;
  *
  */
 public class DataTypeAnalyzer implements Analyzer<DataType> {
+
     private static final long serialVersionUID = 373694310453353502L;
+
     private final ResizableList<DataType> dataTypes = new ResizableList<>(DataType.class);
 
     private static DataType.Type execute(String value) {
@@ -50,7 +52,7 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
         } else if (TypeInferenceUtils.isDate(value)) {
             // 5. detect date
             return DataType.Type.DATE;
-        }else if (TypeInferenceUtils.isTime(value)) {
+        } else if (TypeInferenceUtils.isTime(value)) {
             // 6. detect date
             return DataType.Type.TIME;
         }
@@ -105,12 +107,13 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
         return dataTypes;
     }
 
-    public DataTypeAnalyzer merge(DataTypeAnalyzer another) {
+    @Override
+    public Analyzer<DataType> merge(Analyzer<DataType> another) {
         int idx = 0;
         DataTypeAnalyzer mergedAnalyzer = new DataTypeAnalyzer();
         for (DataType dt : dataTypes) {
-            mergedAnalyzer.getResult().add(idx,dt);
-            if(!another.getResult().isEmpty()){
+            mergedAnalyzer.getResult().add(idx, dt);
+            if (!another.getResult().isEmpty()) {
                 Map<DataType.Type, Long> typeFreqTable = dt.getTypeFrequencies();
                 Map<DataType.Type, Long> anotherTypeFreqTable = another.getResult().get(idx).getTypeFrequencies();
                 Iterator<Type> anotherDTIt = anotherTypeFreqTable.keySet().iterator();
@@ -118,9 +121,11 @@ public class DataTypeAnalyzer implements Analyzer<DataType> {
                     Type anotherDT = anotherDTIt.next();
                     // Update the current map
                     if (typeFreqTable.containsKey(anotherDT)) {
-                        mergedAnalyzer.getResult().get(idx).getTypeFrequencies().put(anotherDT, typeFreqTable.get(anotherDT) + anotherTypeFreqTable.get(anotherDT));
+                        mergedAnalyzer.getResult().get(idx).getTypeFrequencies()
+                                .put(anotherDT, typeFreqTable.get(anotherDT) + anotherTypeFreqTable.get(anotherDT));
                     } else {
-                        mergedAnalyzer.getResult().get(idx).getTypeFrequencies().put(anotherDT, anotherTypeFreqTable.get(anotherDT));
+                        mergedAnalyzer.getResult().get(idx).getTypeFrequencies()
+                                .put(anotherDT, anotherTypeFreqTable.get(anotherDT));
                     }
                 }
             }

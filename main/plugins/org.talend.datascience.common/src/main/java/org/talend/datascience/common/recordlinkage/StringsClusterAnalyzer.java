@@ -113,6 +113,11 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         records.clear();
         currentBlockIndex = 0;
     }
+    
+    @Override
+    public boolean analyzeArray(String[] record) {
+        return analyze(record);
+    }
 
     public boolean analyze(String... record) {
         if (record == null || record.length != 1) {
@@ -187,6 +192,11 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         List<StringClusters> cluster = new ArrayList<>();
         cluster.add(stringClusters);
         return cluster;
+    }
+    
+    @Override
+    public Analyzer<StringClusters> merge(Analyzer<StringClusters> another) {
+        return null;
     }
 
     /**

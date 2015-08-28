@@ -73,6 +73,11 @@ public class SemanticAnalyzer implements Analyzer<SemanticType> {
         }
         return true;
     }
+    
+    @Override
+    public boolean analyzeArray(String[] record) {
+        return analyze(record);
+    }
 
     private void resizeCategoryRecognizer(String[] record) {
         if (columnIdxToCategoryRecognizer.size() > 0) {
@@ -103,6 +108,11 @@ public class SemanticAnalyzer implements Analyzer<SemanticType> {
             }
         }
         return results;
+    }
+    
+    @Override
+    public Analyzer<SemanticType> merge(Analyzer<SemanticType> another) {
+        return null;
     }
 
 }

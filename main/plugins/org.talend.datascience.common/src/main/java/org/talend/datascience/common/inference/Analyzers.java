@@ -34,6 +34,7 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
 
     /**
      * Creates a single analyzer with provided {@link Analyzer analyzers}.
+     * 
      * @param analyzers The analyzers to be combined together.
      * @return A single analyzer that ensure all underlying analyzers get called.
      */
@@ -45,6 +46,11 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
         for (Analyzer analyzer : analyzers) {
             analyzer.init();
         }
+    }
+
+    @Override
+    public boolean analyzeArray(String[] record) {
+        return analyze(record);
     }
 
     public boolean analyze(String... record) {
@@ -88,5 +94,10 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
         public void add(Object result) {
             results.put(result.getClass(), result);
         }
+    }
+    
+    @Override
+    public Analyzer<Result> merge(Analyzer<Result> another) {
+        return null;
     }
 }
