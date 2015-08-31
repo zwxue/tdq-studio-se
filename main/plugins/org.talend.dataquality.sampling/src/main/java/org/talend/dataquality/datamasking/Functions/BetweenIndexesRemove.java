@@ -12,13 +12,17 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 22 juin 2015. This class is used when the requested function is BetweenIndexesKeep. It will
  * return a new String that will contain all the input elements but those which are between the bounds given as
  * parameter.
  *
  */
-public class BetweenIndexesRemove extends BetweenIndexes<String> {
+public class BetweenIndexesRemove extends BetweenIndexes<String> implements Serializable {
+
+    private static final long serialVersionUID = -198474878692287672L;
 
     @Override
     public String generateMaskedRow(String str) {

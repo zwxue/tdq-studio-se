@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 18 juin 2015. This function will return a string between the two given as parameters.
  *
  */
-public class GenerateBetweenString extends GenerateBetween<String> {
+public class GenerateBetweenString extends GenerateBetween<String> implements Serializable {
+
+    private static final long serialVersionUID = 5649899736691218870L;
 
     @Override
     public String generateMaskedRow(String str) {

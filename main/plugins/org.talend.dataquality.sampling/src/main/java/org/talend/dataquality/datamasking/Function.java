@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.datamasking;
 
+import java.io.Serializable;
+
 import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
@@ -19,7 +21,9 @@ import org.talend.dataquality.duplicating.RandomWrapper;
  * methods and fiels that all functions share are stored here.
  *
  */
-public abstract class Function<T> {
+public abstract class Function<T> implements Serializable {
+
+    private static final long serialVersionUID = 6333987486134315822L;
 
     protected String EMPTY_STRING = ""; //$NON-NLS-1$
 

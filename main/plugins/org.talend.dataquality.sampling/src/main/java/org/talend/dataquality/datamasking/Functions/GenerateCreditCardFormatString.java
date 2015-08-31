@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 19 juin 2015. See GenerateCreditCardFormat.
  *
  */
-public class GenerateCreditCardFormatString extends GenerateCreditCardFormat<String> {
+public class GenerateCreditCardFormatString extends GenerateCreditCardFormat<String> implements Serializable {
+
+    private static final long serialVersionUID = 3682663337119470753L;
 
     protected boolean keepFormat = ("true").equals(parameters[0]); //$NON-NLS-1$ 
 

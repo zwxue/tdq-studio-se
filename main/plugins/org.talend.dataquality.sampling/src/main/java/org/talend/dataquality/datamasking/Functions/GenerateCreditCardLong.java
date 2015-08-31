@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 19 juin 2015. See GenerateCreditCardSimple.
  *
  */
-public class GenerateCreditCardLong extends GenerateCreditCardSimple<Long> {
+public class GenerateCreditCardLong extends GenerateCreditCardSimple<Long> implements Serializable {
+
+    private static final long serialVersionUID = 7201691028765322530L;
 
     @Override
     public Long generateMaskedRow(Long l) {

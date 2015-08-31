@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 19 juin 2015. This functions generates a correct french iban number.
  *
  */
-public class GenerateAccountNumberSimple extends GenerateAccountNumber {
+public class GenerateAccountNumberSimple extends GenerateAccountNumber implements Serializable {
+
+    private static final long serialVersionUID = 5440282325373170840L;
 
     @Override
     public String generateMaskedRow(String str) {

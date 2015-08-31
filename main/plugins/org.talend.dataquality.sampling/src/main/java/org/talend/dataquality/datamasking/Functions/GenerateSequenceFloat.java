@@ -12,13 +12,17 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 import org.talend.dataquality.datamasking.Function;
 
 /**
  * created by jgonzalez on 24 juin 2015. This function will return the super.seq value and increment it.
  *
  */
-public class GenerateSequenceFloat extends Function<Float> {
+public class GenerateSequenceFloat extends Function<Float> implements Serializable {
+
+    private static final long serialVersionUID = 2726473380077869971L;
 
     @Override
     public Float generateMaskedRow(Float f) {

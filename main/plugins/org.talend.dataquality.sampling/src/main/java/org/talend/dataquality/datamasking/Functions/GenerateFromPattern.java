@@ -12,13 +12,17 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 import org.talend.dataquality.datamasking.Function;
 
 /**
  * created by jgonzalez on 17 juil. 2015 Detailled comment
  *
  */
-public class GenerateFromPattern extends Function<String> {
+public class GenerateFromPattern extends Function<String> implements Serializable {
+
+    private static final long serialVersionUID = 7920843158759995757L;
 
     @Override
     public String generateMaskedRow(String str) {
@@ -46,7 +50,9 @@ public class GenerateFromPattern extends Function<String> {
                         count++;
                         break;
                     default:
-                        result.append(parameters[0].charAt(count));
+                        if (!Character.isLetterOrDigit(parameters[0].charAt(count))) {
+                            result.append(parameters[0].charAt(count));
+                        }
                         break;
                     }
                 }

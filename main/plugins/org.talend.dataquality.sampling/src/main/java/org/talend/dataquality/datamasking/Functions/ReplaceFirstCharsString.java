@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 22 juin 2015. See ReplaceFirstChars.
  *
  */
-public class ReplaceFirstCharsString extends ReplaceFirstChars<String> {
+public class ReplaceFirstCharsString extends ReplaceFirstChars<String> implements Serializable {
+
+    private static final long serialVersionUID = 7856254797887338192L;
 
     private int parameter = 0;
 

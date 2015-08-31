@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,9 @@ import java.util.List;
  * created by jgonzalez on 24 juin 2015. See GgenerateFromFileHash.
  *
  */
-public class GenerateFromFileHashLong extends GenerateFromFileHash<Long> {
+public class GenerateFromFileHashLong extends GenerateFromFileHash<Long> implements Serializable {
+
+    private static final long serialVersionUID = 4065796998430769114L;
 
     private List<Long> LongTokens = new ArrayList<>();
 
