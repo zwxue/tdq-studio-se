@@ -14,6 +14,7 @@ package org.talend.dataquality.datamasking.Functions;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,7 +26,9 @@ import org.talend.dataquality.datamasking.Function;
  * leave the rest unchanged. If there is no ’@’ in the input, the generated data will be a serie of ’X’.
  *
  */
-public class MaskEmail extends Function<String> {
+public class MaskEmail extends Function<String> implements Serializable {
+
+    private static final long serialVersionUID = 3520390903566492525L;
 
     List<String> keys = new ArrayList<>();
 

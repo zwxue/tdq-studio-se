@@ -14,6 +14,7 @@ package org.talend.dataquality.datamasking.Functions;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +27,9 @@ import org.talend.dataquality.datamasking.Function;
  * Moreover, there is a list of key words that won’t be transformed.
  *
  */
-public class MaskAddress extends Function<String> {
+public class MaskAddress extends Function<String> implements Serializable {
+
+    private static final long serialVersionUID = -4661073390672757141L;
 
     private List<String> keys = new ArrayList<>(
             Arrays.asList(

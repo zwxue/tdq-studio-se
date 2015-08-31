@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 24 juin 2015. See GenerateFromListHash.
  *
  */
-public class GenerateFromListHashString extends GenerateFromListHash<String> {
+public class GenerateFromListHashString extends GenerateFromListHash<String> implements Serializable {
+
+    private static final long serialVersionUID = -6003768593059919308L;
 
     @Override
     public String generateMaskedRow(String str) {

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +23,9 @@ import org.talend.dataquality.datamasking.Function;
  * created by jgonzalez on 18 juin 2015. This function will return a date between the two given as parameters.
  *
  */
-public class GenerateBetweenDate extends Function<Date> {
+public class GenerateBetweenDate extends Function<Date> implements Serializable {
+
+    private static final long serialVersionUID = 7513182257849118816L;
 
     @Override
     public Date generateMaskedRow(Date date) {

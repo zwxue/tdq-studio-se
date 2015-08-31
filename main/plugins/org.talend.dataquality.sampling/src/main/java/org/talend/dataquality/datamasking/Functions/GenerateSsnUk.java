@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,9 @@ import org.talend.dataquality.datamasking.Function;
  * created by jgonzalez on 21 juil. 2015 Detailled comment
  *
  */
-public class GenerateSsnUk extends Function<String> {
+public class GenerateSsnUk extends Function<String> implements Serializable {
+
+    private static final long serialVersionUID = 4664211523958436354L;
 
     private static String first = "AZERTYOPSGHJKLMWXCBN"; //$NON-NLS-1$
 

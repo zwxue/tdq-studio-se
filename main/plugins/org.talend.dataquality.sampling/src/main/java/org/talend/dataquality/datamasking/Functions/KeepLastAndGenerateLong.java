@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 22 juin 2015. See KeepLastAndGenerate.
  *
  */
-public class KeepLastAndGenerateLong extends KeepLastAndGenerate<Long> {
+public class KeepLastAndGenerateLong extends KeepLastAndGenerate<Long> implements Serializable {
+
+    private static final long serialVersionUID = -4367992150535472987L;
 
     @Override
     public Long generateMaskedRow(Long l) {

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 import org.talend.dataquality.datamasking.Function;
@@ -20,7 +21,9 @@ import org.talend.dataquality.datamasking.Function;
  * created by jgonzalez on 21 juil. 2015 Detailled comment
  *
  */
-public class GenerateSsnFr extends Function<String> {
+public class GenerateSsnFr extends Function<String> implements Serializable {
+
+    private static final long serialVersionUID = 8845031997964609626L;
 
     private static final BigInteger MOD97 = new BigInteger("97"); //$NON-NLS-1$
 

@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 22 juin 2015. See RemoveFirstChars.
  *
  */
-public class RemoveFirstCharsString extends RemoveFirstChars<String> {
+public class RemoveFirstCharsString extends RemoveFirstChars<String> implements Serializable {
+
+    private static final long serialVersionUID = 9025405180061771063L;
 
     @Override
     public String generateMaskedRow(String str) {

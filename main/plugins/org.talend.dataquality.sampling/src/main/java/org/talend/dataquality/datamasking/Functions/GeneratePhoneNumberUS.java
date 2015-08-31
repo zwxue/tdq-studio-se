@@ -12,13 +12,17 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 import org.talend.dataquality.datamasking.Function;
 
 /**
  * created by jgonzalez on 16 juil. 2015 Detailled comment
  *
  */
-public class GeneratePhoneNumberUS extends Function<String> {
+public class GeneratePhoneNumberUS extends Function<String> implements Serializable {
+
+    private static final long serialVersionUID = 1160032103743243299L;
 
     @Override
     public String generateMaskedRow(String str) {

@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 import org.talend.dataquality.datamasking.Function;
 
 /**
@@ -20,7 +22,9 @@ import org.talend.dataquality.datamasking.Function;
  * @param <T>
  *
  */
-public class SetToNull<T> extends Function<T> {
+public class SetToNull<T> extends Function<T> implements Serializable {
+
+    private static final long serialVersionUID = -1747988334179919785L;
 
     @Override
     public T generateMaskedRow(T t) {

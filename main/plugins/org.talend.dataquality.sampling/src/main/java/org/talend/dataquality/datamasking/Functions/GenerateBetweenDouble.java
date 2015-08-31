@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 18 juin 2015. This function will return a double between the two given as parameters.
  *
  */
-public class GenerateBetweenDouble extends GenerateBetween<Double> {
+public class GenerateBetweenDouble extends GenerateBetween<Double> implements Serializable {
+
+    private static final long serialVersionUID = -6284416523120069721L;
 
     @Override
     public Double generateMaskedRow(Double d) {

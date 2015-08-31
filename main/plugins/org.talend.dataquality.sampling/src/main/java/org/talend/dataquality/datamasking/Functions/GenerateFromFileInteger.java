@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,9 @@ import java.util.List;
  * created by jgonzalez on 19 juin 2015. See GenerateFromFile.
  *
  */
-public class GenerateFromFileInteger extends GenerateFromFile<Integer> {
+public class GenerateFromFileInteger extends GenerateFromFile<Integer> implements Serializable {
+
+    private static final long serialVersionUID = 1896675901231975008L;
 
     private List<Integer> IntegerTokens = new ArrayList<>();
 

@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.Serializable;
+
 /**
  * created by jgonzalez on 18 juin 2015. See NumericVariance.
  *
  */
-public class NumericVarianceFloat extends NumericVariance<Float> {
+public class NumericVarianceFloat extends NumericVariance<Float> implements Serializable {
+
+    private static final long serialVersionUID = -8029563336814263376L;
 
     @Override
     public Float generateMaskedRow(Float f) {
