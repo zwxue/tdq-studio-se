@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.talend.dataquality.datamasking.Function;
+import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
  * created by jgonzalez on 19 juin 2015. This function will look for a ’@’ and replace all characters before by ’X’ and
@@ -43,10 +44,16 @@ public class MaskEmail extends Function<String> implements Serializable {
                 in.close();
             } catch (FileNotFoundException | NullPointerException e) {
                 for (String element : para) {
-                    keys.add(element);
+                    keys.add(element.trim());
                 }
             }
         }
+    }
+
+    @Override
+    public void parse(String extraParameter, boolean keepNullValues, RandomWrapper rand) {
+        super.parse(extraParameter, keepNullValues, rand);
+        addKeys(parameters);
     }
 
     @Override
@@ -55,7 +62,6 @@ public class MaskEmail extends Function<String> implements Serializable {
             return str;
         } else {
             if (str != null && !EMPTY_STRING.equals(str)) {
-                addKeys(parameters);
                 StringBuilder sb = new StringBuilder(str);
                 int count = str.lastIndexOf('@');
                 if (count == -1) {
