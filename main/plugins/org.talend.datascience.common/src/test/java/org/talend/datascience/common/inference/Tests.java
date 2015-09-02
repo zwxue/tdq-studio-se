@@ -17,14 +17,12 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.talend.datascience.common.inference.type.DataTypeAnalyzerTest;
 import org.talend.datascience.common.inference.type.TypeInferenceUtilsTest;
-import org.talend.datascience.common.recordlinkage.StringsClusterAnalyzerTest;
 
 /**
  * created by talend on 2015-07-28 Detailled comment.
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ DataTypeAnalyzerTest.class,
-        TypeInferenceUtilsTest.class, StringsClusterAnalyzerTest.class })
+@SuiteClasses({ DataTypeAnalyzerTest.class, TypeInferenceUtilsTest.class })
 public class Tests {
 }
