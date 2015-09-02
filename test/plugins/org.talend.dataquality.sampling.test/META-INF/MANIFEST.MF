@@ -7,4 +7,5 @@ Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.dataquality.sampling
 Bundle-ClassPath: .
 Require-Bundle: org.junit,
- org.apache.commons.lang;bundle-version="2.4.0"
+ org.apache.commons.lang;bundle-version="2.4.0",
+ org.talend.libraries.csv

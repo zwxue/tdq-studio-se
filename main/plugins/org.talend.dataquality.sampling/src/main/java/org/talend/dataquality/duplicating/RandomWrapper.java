@@ -23,9 +23,9 @@ public class RandomWrapper extends Random {
 
     private static final long serialVersionUID = 1L;
 
-    private Random            random;
+    private Random random;
 
-    private final AtomicLong  seed;
+    private final AtomicLong seed;
 
     public Random getRandom() {
         return random;
