@@ -15,8 +15,6 @@ package org.talend.datascience.common.inference;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.talend.datascience.common.inference.composite.CompositeAnalyzerTest;
-import org.talend.datascience.common.inference.semantic.SemanticAnalyzerTest;
 import org.talend.datascience.common.inference.type.DataTypeAnalyzerTest;
 import org.talend.datascience.common.inference.type.TypeInferenceUtilsTest;
 import org.talend.datascience.common.recordlinkage.StringsClusterAnalyzerTest;
@@ -26,7 +24,7 @@ import org.talend.datascience.common.recordlinkage.StringsClusterAnalyzerTest;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ CompositeAnalyzerTest.class, SemanticAnalyzerTest.class, DataTypeAnalyzerTest.class,
+@SuiteClasses({ DataTypeAnalyzerTest.class,
         TypeInferenceUtilsTest.class, StringsClusterAnalyzerTest.class })
 public class Tests {
 }
