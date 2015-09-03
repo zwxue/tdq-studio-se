@@ -11,9 +11,9 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <folder path="/org.talend.dataquality.sampling/META-INF"/>
         <file path="/org.talend.dataquality.sampling/version.txt"/>
         <folder path="/org.talend.dataquality.sampling/src"/>
+        <folder path="/org.talend.dataquality.sampling/META-INF"/>
         <javaElement handleIdentifier="=org.talend.dataquality.sampling/src\/main\/java"/>
     </selectedElements>
 </jardesc>

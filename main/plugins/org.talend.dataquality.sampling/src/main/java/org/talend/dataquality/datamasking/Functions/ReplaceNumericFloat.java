@@ -28,12 +28,11 @@ public class ReplaceNumericFloat extends ReplaceNumeric<Float> implements Serial
             return null;
         } else {
             if (f != null) {
-                String str = f.toString();
-                String res = EMPTY_STRING;
+                String res = f.toString();
                 if (integerParam >= 0 && integerParam <= 9) {
-                    res = str.replaceAll("\\d", String.valueOf(integerParam)); //$NON-NLS-1$
+                    res = res.replaceAll("\\d", String.valueOf(integerParam)); //$NON-NLS-1$
                 } else {
-                    res = str.replaceAll("\\d", String.valueOf(rnd.nextInt(9))); //$NON-NLS-1$
+                    throw new IllegalArgumentException("The parameter for \"replace all digits\" function must be a digit"); //$NON-NLS-1$
                 }
                 return Float.valueOf(res);
             } else {
