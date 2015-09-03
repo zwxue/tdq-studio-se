@@ -16,6 +16,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataquality.duplicating.RandomWrapper;
+
 /**
  * created by jgonzalez on 24 juin 2015. See GgenerateFromFileHash.
  *
@@ -27,11 +29,16 @@ public class GenerateFromFileHashInteger extends GenerateFromFileHash<Integer> i
     private List<Integer> IntegerTokens = new ArrayList<>();
 
     @Override
+    public void parse(String extraParameter, boolean keepNullValues, RandomWrapper rand) {
+        super.parse(extraParameter, keepNullValues, rand);
+        super.init();
+    }
+
+    @Override
     public Integer generateMaskedRow(Integer i) {
         if (i == null && keepNull) {
             return null;
         } else {
-            super.init();
             for (int j = 0; j < StringTokens.size(); ++j) {
                 int tmp = 0;
                 try {

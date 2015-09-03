@@ -16,6 +16,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataquality.duplicating.RandomWrapper;
+
 /**
  * created by jgonzalez on 19 juin 2015. See GenerateFromFile.
  *
@@ -27,11 +29,16 @@ public class GenerateFromFileLong extends GenerateFromFile<Long> implements Seri
     private List<Long> LongTokens = new ArrayList<>();
 
     @Override
+    public void parse(String extraParameter, boolean keepNullValues, RandomWrapper rand) {
+        super.parse(extraParameter, keepNullValues, rand);
+        super.init();
+    }
+
+    @Override
     public Long generateMaskedRow(Long l) {
         if (l == null && keepNull) {
             return null;
         } else {
-            super.init();
             for (int i = 0; i < StringTokens.size(); ++i) {
                 long tmp = 0L;
                 try {

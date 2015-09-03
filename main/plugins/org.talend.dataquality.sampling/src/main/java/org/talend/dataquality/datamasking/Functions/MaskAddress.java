@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.talend.dataquality.datamasking.Function;
+import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
  * created by jgonzalez on 19 juin 2015. This function will replace digits by other digits and everithing else by ”x”.
@@ -62,6 +63,12 @@ public class MaskAddress extends Function<String> implements Serializable {
     }
 
     @Override
+    public void parse(String extraParameter, boolean keepNullValues, RandomWrapper rand) {
+        super.parse(extraParameter, keepNullValues, rand);
+        addKeys(parameters);
+    }
+
+    @Override
     public String generateMaskedRow(String str) {
         StringBuilder sb = new StringBuilder(EMPTY_STRING);
         if ((str == null) || EMPTY_STRING.equals(str) && keepNull) {
@@ -70,7 +77,6 @@ public class MaskAddress extends Function<String> implements Serializable {
             if (str != null && !EMPTY_STRING.equals(str) && !(" ").equals(str)) { //$NON-NLS-1$
                 String[] address = str.split(",| "); //$NON-NLS-1$
                 for (String tmp : address) {
-                    addKeys(parameters);
                     if (keys.contains(tmp)) {
                         sb.append(tmp + " "); //$NON-NLS-1$
                     } else {
