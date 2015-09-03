@@ -6,11 +6,9 @@
         <groupId>org.talend.dataquality</groupId>
         <artifactId>tdq-shared-libs</artifactId>
         <version>6.1-SNAPSHOT</version>
-        <relativePath>../../../../tdq-studio-ee/main/tdq-shared-libs/pom.xml</relativePath>
+        <relativePath>../../../../tdq-studio-ee/main/libraries/pom.xml</relativePath>
     </parent>
-    <groupId>org.talend.dataquality</groupId>
     <artifactId>org.talend.dataquality.record.linkage</artifactId>
-    <version>6.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>org.talend.dataquality.record.linkage</name>
 
