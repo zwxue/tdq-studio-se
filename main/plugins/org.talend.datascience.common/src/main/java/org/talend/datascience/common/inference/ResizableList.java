@@ -62,16 +62,20 @@ public class ResizableList<T> implements List<T>,Serializable {
      * Resize the list so it contains <code>size</code> instances of <i>T</i>. Method only scales up, never down.
      * 
      * @param size The new size for the list. Must be a positive number.
+     * @return <code>true</code> if new elements were added to the list (i.e. list was resized), <code>false</code> if
+     * no new elements were added.
      */
-    public void resize(int size) {
+    public boolean resize(int size) {
         try {
             if (size < 0) {
                 throw new IllegalArgumentException("Size must be a positive number.");
             }
             final int missing = size - innerList.size();
+            boolean addedMissing = missing > 0;
             for (int i = 0; i < missing; i++) {
                 innerList.add(itemClass.newInstance());
             }
+            return addedMissing;
         } catch (Exception e) {
             throw new RuntimeException("Unable to resize list of items.", e);
         }
