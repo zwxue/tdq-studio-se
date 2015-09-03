@@ -28,26 +28,13 @@ public class ReplaceNumericLong extends ReplaceNumeric<Long> implements Serializ
             return null;
         } else {
             if (l != null) {
-                if (l > 0) {
-                    int len = (int) Math.log10(l) + 1;
-                    StringBuilder res = new StringBuilder(EMPTY_STRING);
-                    if (integerParam >= 0 && integerParam <= 9) {
-                        for (int j = 0; j < len; j++) {
-                            res.append(integerParam);
-                        }
-                    } else {
-                        for (int j = 0; j < len; j++) {
-                            res.append(rnd.nextInt(9));
-                        }
-                    }
-                    return Long.valueOf(res.toString());
+                String res = l.toString();
+                if (integerParam >= 0 && integerParam <= 9) {
+                    res = res.replaceAll("\\d", String.valueOf(integerParam)); //$NON-NLS-1$
                 } else {
-                    if (integerParam >= 0 && integerParam <= 9) {
-                        return Long.parseLong(integerParam.toString());
-                    } else {
-                        return (long) rnd.nextInt(9);
-                    }
+                    throw new IllegalArgumentException("The parameter for \"replace all digits\" function must be a digit"); //$NON-NLS-1$
                 }
+                return Long.valueOf(res);
             } else {
                 return 0L;
             }

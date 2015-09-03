@@ -28,26 +28,13 @@ public class ReplaceNumericInteger extends ReplaceNumeric<Integer> implements Se
             return null;
         } else {
             if (i != null) {
-                if (i > 0) {
-                    int len = (int) Math.log10(i) + 1;
-                    StringBuilder res = new StringBuilder(EMPTY_STRING);
-                    if (integerParam >= 0 && integerParam <= 9) {
-                        for (int j = 0; j < len; j++) {
-                            res.append(integerParam);
-                        }
-                    } else {
-                        for (int j = 0; j < len; j++) {
-                            res.append(rnd.nextInt(9));
-                        }
-                    }
-                    return Integer.valueOf(res.toString());
+                String res = i.toString();
+                if (integerParam >= 0 && integerParam <= 9) {
+                    res = res.replaceAll("\\d", String.valueOf(integerParam)); //$NON-NLS-1$
                 } else {
-                    if (integerParam >= 0 && integerParam <= 9) {
-                        return integerParam;
-                    } else {
-                        return rnd.nextInt(9);
-                    }
+                    throw new IllegalArgumentException("The parameter for \"replace all digits\" function must be a digit"); //$NON-NLS-1$
                 }
+                return Integer.valueOf(res);
             } else {
                 return 0;
             }

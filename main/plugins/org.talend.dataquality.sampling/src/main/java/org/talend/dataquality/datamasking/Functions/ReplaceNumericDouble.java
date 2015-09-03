@@ -28,12 +28,11 @@ public class ReplaceNumericDouble extends ReplaceNumeric<Double> implements Seri
             return null;
         } else {
             if (d != null) {
-                String str = d.toString();
-                String res = EMPTY_STRING;
+                String res = d.toString();
                 if (integerParam >= 0 && integerParam <= 9) {
-                    res = str.replaceAll("\\d", String.valueOf(integerParam)); //$NON-NLS-1$
+                    res = res.replaceAll("\\d", String.valueOf(integerParam)); //$NON-NLS-1$
                 } else {
-                    res = str.replaceAll("\\d", String.valueOf(rnd.nextInt(9))); //$NON-NLS-1$
+                    throw new IllegalArgumentException("The parameter for \"replace all digits\" function must be a digit"); //$NON-NLS-1$
                 }
                 return Double.valueOf(res);
             } else {

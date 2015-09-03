@@ -35,7 +35,8 @@ public class ReplaceNumericString extends ReplaceNumeric<String> implements Seri
                         return str.replaceAll("\\d", parameters[0]); //$NON-NLS-1$
                     }
                 } else {
-                    return str.replaceAll("\\d", String.valueOf(rnd.nextInt(9))); //$NON-NLS-1$
+                    throw new IllegalArgumentException(
+                            "The parameter for \"replace all digits\" function must be a digit or a letter"); //$NON-NLS-1$
                 }
             } else {
                 return EMPTY_STRING;
