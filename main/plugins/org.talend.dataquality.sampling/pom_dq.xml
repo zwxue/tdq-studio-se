@@ -4,9 +4,9 @@
 
     <parent>
         <groupId>org.talend.dataquality</groupId>
-        <artifactId>tdq-shared-libs</artifactId>
+        <artifactId>tdq-se-libs</artifactId>
         <version>6.1-SNAPSHOT</version>
-        <relativePath>../../../../tdq-studio-ee/main/libraries/pom.xml</relativePath>
+        <relativePath>../../libraries/pom.xml</relativePath>
     </parent>
     <artifactId>org.talend.dataquality.sampling</artifactId>
     <packaging>jar</packaging>
