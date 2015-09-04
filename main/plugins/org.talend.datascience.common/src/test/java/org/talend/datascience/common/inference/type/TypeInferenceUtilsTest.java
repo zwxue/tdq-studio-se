@@ -1,3 +1,15 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 package org.talend.datascience.common.inference.type;
 
 import java.io.IOException;
@@ -15,6 +27,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class TypeInferenceUtilsTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TypeInferenceUtilsTest.class);

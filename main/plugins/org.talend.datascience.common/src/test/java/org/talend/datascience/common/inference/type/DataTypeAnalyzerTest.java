@@ -1,3 +1,15 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 package org.talend.datascience.common.inference.type;
 
 import static org.junit.Assert.assertEquals;
@@ -10,6 +22,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.datascience.common.inference.AnalyzerTest;
 
+/**
+ * created by talend on 2015-07-28 Detailled comment.
+ *
+ */
 public class DataTypeAnalyzerTest extends AnalyzerTest {
 
     private DataTypeAnalyzer analyzer;

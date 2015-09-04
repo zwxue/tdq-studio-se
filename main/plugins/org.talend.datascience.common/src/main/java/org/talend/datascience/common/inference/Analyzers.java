@@ -80,6 +80,10 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
         return results;
     }
 
+    /**
+     * created by talend on 2015-07-28 Detailled comment.
+     *
+     */
     public static class Result {
 
         private final Map<Class<?>, Object> results = new HashMap<Class<?>, Object>();

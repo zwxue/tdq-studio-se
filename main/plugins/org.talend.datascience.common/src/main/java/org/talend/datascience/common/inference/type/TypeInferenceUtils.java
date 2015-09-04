@@ -184,12 +184,12 @@ public class TypeInferenceUtils {
      * @param value the value to be detected
      * @return true if the type of value is expected, false otherwise.
      */
-    public static boolean isValid(DataType.Type type, String value) {
-        
-        switch (type) {
-        case BOOLEAN:
-            return isBoolean(value);
-        case INTEGER:
+	public static boolean isValid(DataType.Type type, String value) {
+		
+		switch (type) {
+		case BOOLEAN:
+			return isBoolean(value);
+		case INTEGER:
             return isInteger(value);
         case DOUBLE:
             return isDouble(value);
@@ -198,10 +198,10 @@ public class TypeInferenceUtils {
         case STRING:
             // Everything can be a string
             return true;
-        default:
-            // Unsupported type
-            return false;
-        }
-    }
+		default:
+			// Unsupported type
+			return false;
+		}
+	}
 
 }

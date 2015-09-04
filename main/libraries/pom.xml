@@ -51,7 +51,7 @@
         </repository>
     </repositories>
     <modules>
-        <module>../../../tdq-studio-ee/main/plugins/org.talend.datascience.common</module>
+        <module>../plugins/org.talend.datascience.common</module>
         <module>../plugins/org.talend.dataquality.record.linkage/pom_dq.xml</module>
         <module>../plugins/org.talend.dataquality.sampling/pom_dq.xml</module>
 
