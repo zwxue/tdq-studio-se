@@ -52,9 +52,10 @@
     </repositories>
     <modules>
         <module>../plugins/org.talend.dataquality.common</module>
+        <!--
         <module>../plugins/org.talend.dataquality.record.linkage/pom_dq.xml</module>
         <module>../plugins/org.talend.dataquality.sampling/pom_dq.xml</module>
-
+        -->
     </modules>
     <dependencyManagement>
         <dependencies>
