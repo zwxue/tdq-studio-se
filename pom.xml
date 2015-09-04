@@ -70,6 +70,7 @@
 		<module>main/plugins/org.talend.dataquality.edit</module>
 		<module>main/plugins/org.talend.dataquality.editor</module>
 		<module>main/plugins/org.talend.dataquality.matching</module>
+		<module>main/plugins/org.talend.dataquality.common</module>
 		<module>main/plugins/org.talend.dataquality.record.linkage</module>
 		<module>main/plugins/org.talend.dataquality.record.linkage.ui</module>
 		<module>main/plugins/org.talend.dataquality.sampling</module>
