@@ -9,7 +9,7 @@
         <relativePath>../../libraries/pom.xml</relativePath>
     </parent>
     <artifactId>org.talend.dataquality.record.linkage</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>org.talend.dataquality.record.linkage</name>
 
     <properties>
