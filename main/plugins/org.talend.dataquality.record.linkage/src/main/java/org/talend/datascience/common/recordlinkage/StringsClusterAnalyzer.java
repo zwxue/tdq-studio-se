@@ -12,10 +12,21 @@
 // ============================================================================
 package org.talend.datascience.common.recordlinkage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.talend.dataquality.matchmerge.*;
+import org.talend.dataquality.matchmerge.Attribute;
+import org.talend.dataquality.matchmerge.AttributeValues;
+import org.talend.dataquality.matchmerge.MatchMergeAlgorithm;
+import org.talend.dataquality.matchmerge.Record;
+import org.talend.dataquality.matchmerge.SubString;
 import org.talend.dataquality.matchmerge.mfb.MFB;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
@@ -102,7 +113,7 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         records.clear();
         currentBlockIndex = 0;
     }
-    
+
     @Override
     public boolean analyzeArray(String[] record) {
         return analyze(record);
@@ -182,7 +193,7 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         cluster.add(stringClusters);
         return cluster;
     }
-    
+
     @Override
     public Analyzer<StringClusters> merge(Analyzer<StringClusters> another) {
         return null;
@@ -214,6 +225,11 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
             final Attribute value = new Attribute("col0");
             value.setValue(values[0]);
             return new Record(Collections.singletonList(value), currentBlockIndex + "-" + String.valueOf(index++), 0, "");
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("remove");
         }
     }
 }
