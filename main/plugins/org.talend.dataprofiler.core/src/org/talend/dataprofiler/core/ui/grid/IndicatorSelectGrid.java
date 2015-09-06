@@ -269,8 +269,10 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
         for (TDQObserver<ObserverEvent> observer : observers) {
             ObserverEvent observerEvent = new ObserverEvent(ObserverEventEnum.ColumnHighlight);
             GridColumn currentColumn = this.getColumn(new Point(e.x, e.y));
-            observerEvent.putData(ObserverEvent.COLUMN_HIGH_LIGHT, this.indexOf(currentColumn));
-            observer.update(observerEvent);
+            if(currentColumn!=null){
+                observerEvent.putData(ObserverEvent.COLUMN_HIGH_LIGHT, this.indexOf(currentColumn));
+                observer.update(observerEvent);
+            }
         }
     }
 
