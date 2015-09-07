@@ -439,7 +439,12 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
                     MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
                 } else {
-
+                    if (currentModelElementIndicators == null || currentModelElementIndicators.length == 0) {
+                        MessageDialog.openWarning(null,
+                                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), //$NON-NLS-1$
+                                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotOpenSelectIndicatorDialog")); //$NON-NLS-1$
+                        return;
+                    }
                     ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnMasterDetailsPage.this.getSite()
                             .getShell());
                     if (result != null) {
