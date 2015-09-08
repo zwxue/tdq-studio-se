@@ -41,6 +41,17 @@ public class GenerateSsnUsTest {
     }
 
     @Test
+    public void testCheck() {
+        gsus.setRandomWrapper(new RandomWrapper());
+        boolean res = true;
+        for (int i = 0; i < 10; ++i) {
+            String tmp = gsus.generateMaskedRow(null);
+            res = (tmp.charAt(0) != '9' && tmp.charAt(4) == '0' ? tmp.charAt(5) != '0' : tmp.charAt(5) != '9');
+            assertEquals("wrong number : " + tmp, res, true); //$NON-NLS-1$
+        }
+    }
+
+    @Test
     public void testNull() {
         gsus.keepNull = true;
         output = gsus.generateMaskedRow(null);

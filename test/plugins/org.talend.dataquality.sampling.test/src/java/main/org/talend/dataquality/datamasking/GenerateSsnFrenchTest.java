@@ -41,6 +41,17 @@ public class GenerateSsnFrenchTest {
     }
 
     @Test
+    public void testCheck() {
+        gnf.setRandomWrapper(new RandomWrapper());
+        boolean res = true;
+        for (int i = 0; i < 10; ++i) {
+            String tmp = gnf.generateMaskedRow(null);
+            res = (tmp.charAt(0) == '1' || tmp.charAt(0) == '2');
+            assertEquals("wrong number : " + tmp, res, true); //$NON-NLS-1$
+        }
+    }
+
+    @Test
     public void testNull() {
         gnf.keepNull = true;
         output = gnf.generateMaskedRow(null);

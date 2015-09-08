@@ -37,7 +37,19 @@ public class GenerateSsnUkTest {
     @Test
     public void testGood() {
         output = gsuk.generateMaskedRow(null);
-        assertEquals(output, "HH 080 752 722 B"); //$NON-NLS-1$
+        assertEquals(output, "HH 08 07 52 C"); //$NON-NLS-1$
+    }
+
+    @Test
+    public void testCheck() {
+        gsuk.setRandomWrapper(new RandomWrapper());
+        boolean res = true;
+        for (int i = 0; i < 10; ++i) {
+            String tmp = gsuk.generateMaskedRow(null);
+            res = gsuk.UPPER.substring(0, 4).indexOf(tmp.charAt(tmp.length() - 1)) != -1
+                    && !GenerateSsnUk.getForbid().contains(tmp.substring(0, 2));
+            assertEquals("wrong number : " + tmp, res, true); //$NON-NLS-1$
+        }
     }
 
     @Test

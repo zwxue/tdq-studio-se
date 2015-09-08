@@ -31,8 +31,7 @@ public class GenerateFromListHashLongTest {
 
     @Before
     public void setUp() throws Exception {
-        gflhl.setRandomWrapper(new RandomWrapper(42));
-        gflhl.parameters = "101, 11, 0".split(","); //$NON-NLS-1$ //$NON-NLS-2$
+        gflhl.parse("101, 11, 0", false, new RandomWrapper(42)); //$NON-NLS-1$
     }
 
     @Test

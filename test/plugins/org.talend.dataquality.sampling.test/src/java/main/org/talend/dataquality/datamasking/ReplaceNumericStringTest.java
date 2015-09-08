@@ -41,7 +41,11 @@ public class ReplaceNumericStringTest {
     public void testBad() {
         rns.parameters = "0X".split(","); //$NON-NLS-1$ //$NON-NLS-2$
         rns.rnd = new RandomWrapper(42);
-        output = rns.generateMaskedRow(input);
-        assertEquals(output, "abc888def"); //$NON-NLS-1$
+        try {
+            output = rns.generateMaskedRow(input);
+            fail("should get exception with input " + rns.integerParam); //$NON-NLS-1$
+        } catch (Exception e) {
+            assertTrue("expect illegal argument exception ", e instanceof IllegalArgumentException); //$NON-NLS-1$
+        }
     }
 }
