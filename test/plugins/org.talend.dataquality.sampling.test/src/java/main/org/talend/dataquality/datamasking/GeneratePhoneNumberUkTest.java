@@ -41,6 +41,17 @@ public class GeneratePhoneNumberUkTest {
     }
 
     @Test
+    public void testCheck() {
+        boolean res = true;
+        gpnuk.setRandomWrapper(new RandomWrapper());
+        for (int i = 0; i < 10; ++i) {
+            String tmp = gpnuk.generateMaskedRow(null);
+            res = (tmp.substring(0, 5).equals("020 3")); //$NON-NLS-1$
+            assertEquals("invalid pĥone number " + tmp, res, true); //$NON-NLS-1$
+        }
+    }
+
+    @Test
     public void testNull() {
         gpnuk.keepNull = true;
         output = gpnuk.generateMaskedRow(null);

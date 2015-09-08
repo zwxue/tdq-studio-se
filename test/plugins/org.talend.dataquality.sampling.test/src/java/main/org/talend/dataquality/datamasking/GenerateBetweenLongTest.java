@@ -36,9 +36,21 @@ public class GenerateBetweenLongTest {
 
     @Test
     public void testGood() {
-        gbl.parameters = "10,20".split(","); //$NON-NLS-1$ //$NON-NLS-2$
+        gbl.parse("10,20", false, new RandomWrapper(42)); //$NON-NLS-1$
         output = gbl.generateMaskedRow(0L).toString();
         assertEquals(output, "17"); //$NON-NLS-1$
+    }
+
+    @Test
+    public void testCheck() {
+        gbl.setRandomWrapper(new RandomWrapper());
+        gbl.parameters = "0,100".split(","); //$NON-NLS-1$ //$NON-NLS-2$
+        boolean res = true;
+        for (int i = 0; i < 10; ++i) {
+            long tmp = gbl.generateMaskedRow(null);
+            res = (tmp <= 100 && tmp >= 0);
+            assertEquals("Wrong number : " + tmp, res, true); //$NON-NLS-1$
+        }
     }
 
     @Test

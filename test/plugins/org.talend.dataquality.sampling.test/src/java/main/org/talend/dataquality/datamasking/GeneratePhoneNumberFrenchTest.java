@@ -41,6 +41,17 @@ public class GeneratePhoneNumberFrenchTest {
     }
 
     @Test
+    public void testCheck() {
+        boolean res = true;
+        gpn.setRandomWrapper(new RandomWrapper());
+        for (int i = 0; i < 10; ++i) {
+            String tmp = gpn.generateMaskedRow(null);
+            res = (tmp.charAt(4) == '1' || tmp.charAt(4) == '2' || tmp.charAt(4) == '3' || tmp.charAt(4) == '4' || tmp.charAt(4) == '5');
+            assertEquals("invalid pĥone number " + tmp, res, true); //$NON-NLS-1$
+        }
+    }
+
+    @Test
     public void testNull() {
         gpn.setKeepNull(true);
         output = gpn.generateMaskedRow(null);

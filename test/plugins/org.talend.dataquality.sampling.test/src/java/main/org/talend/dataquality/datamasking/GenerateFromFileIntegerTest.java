@@ -14,7 +14,6 @@ package org.talend.dataquality.datamasking;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.talend.dataquality.datamasking.Functions.GenerateFromFileInteger;
 import org.talend.dataquality.duplicating.RandomWrapper;
@@ -31,22 +30,16 @@ public class GenerateFromFileIntegerTest {
 
     private GenerateFromFileInteger gffi = new GenerateFromFileInteger();
 
-    @Before
-    public void setUp() throws Exception {
-        gffi.setRandomWrapper(new RandomWrapper(42));
-        gffi.parameters = path.split(","); //$NON-NLS-1$
-    }
-
     @Test
     public void testGood() {
+        gffi.parse(path, false, new RandomWrapper(42));
         output = gffi.generateMaskedRow(0).toString();
         assertEquals(output, "10"); //$NON-NLS-1$
     }
 
     @Test
     public void testNull() {
-        gffi.keepNull = true;
-        gffi.parameters = gffi.EMPTY_STRING.split(","); //$NON-NLS-1$
+        gffi.parse(gffi.EMPTY_STRING, false, new RandomWrapper(42));
         output = gffi.generateMaskedRow(0).toString();
         assertEquals(output, "0"); //$NON-NLS-1$
     }

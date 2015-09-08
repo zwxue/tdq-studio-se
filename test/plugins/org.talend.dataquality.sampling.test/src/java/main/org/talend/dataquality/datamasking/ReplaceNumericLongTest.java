@@ -40,10 +40,13 @@ public class ReplaceNumericLongTest {
 
     @Test
     public void testBad() {
-        rnl.parameters = "10".split(","); //$NON-NLS-1$ //$NON-NLS-2$
         rnl.integerParam = 10;
         rnl.rnd = new RandomWrapper(42);
-        output = rnl.generateMaskedRow(input);
-        assertEquals(output, 830);
+        try {
+            output = rnl.generateMaskedRow(input);
+            fail("should get exception with input " + rnl.integerParam); //$NON-NLS-1$
+        } catch (Exception e) {
+            assertTrue("expect illegal argument exception ", e instanceof IllegalArgumentException); //$NON-NLS-1$
+        }
     }
 }

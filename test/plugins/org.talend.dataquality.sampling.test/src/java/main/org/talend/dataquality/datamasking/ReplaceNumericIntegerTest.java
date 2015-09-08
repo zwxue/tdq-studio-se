@@ -40,11 +40,14 @@ public class ReplaceNumericIntegerTest {
 
     @Test
     public void testBad() {
-        rni.parameters = "10".split(","); //$NON-NLS-1$ //$NON-NLS-2$
         rni.integerParam = 10;
         rni.rnd = new RandomWrapper(42);
-        output = rni.generateMaskedRow(input);
-        assertEquals(output, 830);
+        try {
+            output = rni.generateMaskedRow(input);
+            fail("should get exception with input " + rni.integerParam); //$NON-NLS-1$
+        } catch (Exception e) {
+            assertTrue("expect illegal argument exception ", e instanceof IllegalArgumentException); //$NON-NLS-1$
+        }
     }
 
 }

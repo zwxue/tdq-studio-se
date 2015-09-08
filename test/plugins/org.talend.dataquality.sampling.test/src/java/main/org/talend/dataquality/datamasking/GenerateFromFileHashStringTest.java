@@ -33,8 +33,7 @@ public class GenerateFromFileHashStringTest {
 
     @Before
     public void setUp() throws Exception {
-        gffhs.setRandomWrapper(new RandomWrapper(42));
-        gffhs.parameters = path.split(","); //$NON-NLS-1$
+        gffhs.parse(path, false, new RandomWrapper(42));
     }
 
     @Test

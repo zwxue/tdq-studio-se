@@ -31,8 +31,7 @@ public class GenerateFromListStringTest {
 
     @Before
     public void setUp() throws Exception {
-        gfls.setRandomWrapper(new RandomWrapper(42));
-        gfls.parameters = "Toto, Titi, Tata".split(","); //$NON-NLS-1$ //$NON-NLS-2$
+        gfls.parse("Toto, Titi, Tata", false, new RandomWrapper(42)); //$NON-NLS-1$
     }
 
     @Test

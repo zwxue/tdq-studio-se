@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.dataquality.datamasking.Functions.GenerateCreditCard;
 import org.talend.dataquality.datamasking.Functions.GenerateCreditCardString;
 import org.talend.dataquality.duplicating.RandomWrapper;
 
@@ -38,6 +39,17 @@ public class GenerateCreditCardStringTest {
     public void test() {
         output = gccs.generateMaskedRow(null).toString();
         assertEquals(output, "4384055893226268"); //$NON-NLS-1$
+    }
+
+    @Test
+    public void testCheck() {
+        gccs.setRandomWrapper(new RandomWrapper());
+        boolean res = true;
+        for (int i = 0; i < 10; ++i) {
+            String tmp = gccs.generateMaskedRow(null);
+            res = GenerateCreditCard.luhnTest(new StringBuilder(tmp));
+            assertEquals("Wrong number : " + tmp, res, true); //$NON-NLS-1$
+        }
     }
 
     @Test

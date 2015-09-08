@@ -41,6 +41,17 @@ public class GeneratePhoneNumberJapanTest {
     }
 
     @Test
+    public void testCheck() {
+        boolean res = true;
+        gpnj.setRandomWrapper(new RandomWrapper());
+        for (int i = 0; i < 10; ++i) {
+            String tmp = gpnj.generateMaskedRow(null);
+            res = (tmp.charAt(0) == '3');
+            assertEquals("invalid pĥone number " + tmp, res, true); //$NON-NLS-1$
+        }
+    }
+
+    @Test
     public void testNull() {
         gpnj.keepNull = true;
         assertEquals(output, null);

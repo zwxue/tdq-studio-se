@@ -36,9 +36,21 @@ public class GenerateBetweenIntegerTest {
 
     @Test
     public void testGood() {
-        gbi.parameters = "10,20".split(","); //$NON-NLS-1$ //$NON-NLS-2$
-        output = gbi.generateMaskedRow(0).toString();
+        gbi.parse("10,20", false, new RandomWrapper(42)); //$NON-NLS-1$
+        output = gbi.generateMaskedRow(null).toString();
         assertEquals(output, "17"); //$NON-NLS-1$
+    }
+
+    @Test
+    public void testCheck() {
+        gbi.setRandomWrapper(new RandomWrapper());
+        gbi.parameters = "0,100".split(","); //$NON-NLS-1$ //$NON-NLS-2$
+        boolean res = true;
+        for (int i = 0; i < 10; ++i) {
+            int tmp = gbi.generateMaskedRow(null);
+            res = (tmp <= 100 && tmp >= 0);
+            assertEquals("Wrong number : " + tmp, res, true); //$NON-NLS-1$
+        }
     }
 
     @Test

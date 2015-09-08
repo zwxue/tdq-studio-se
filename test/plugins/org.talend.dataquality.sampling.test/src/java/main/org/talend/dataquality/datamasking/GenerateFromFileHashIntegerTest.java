@@ -33,8 +33,7 @@ public class GenerateFromFileHashIntegerTest {
 
     @Before
     public void setUp() throws Exception {
-        gffhi.setRandomWrapper(new RandomWrapper(42));
-        gffhi.parameters = path.split(","); //$NON-NLS-1$
+        gffhi.parse(path, false, new RandomWrapper(42));
     }
 
     @Test

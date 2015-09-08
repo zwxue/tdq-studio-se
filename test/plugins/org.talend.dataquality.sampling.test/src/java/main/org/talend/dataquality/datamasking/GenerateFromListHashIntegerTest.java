@@ -31,8 +31,7 @@ public class GenerateFromListHashIntegerTest {
 
     @Before
     public void setUp() throws Exception {
-        gflhi.setRandomWrapper(new RandomWrapper(42));
-        gflhi.parameters = "101, 11, 0".split(","); //$NON-NLS-1$ //$NON-NLS-2$
+        gflhi.parse("101, 11, 0", false, new RandomWrapper(42)); //$NON-NLS-1$
     }
 
     @Test
@@ -45,7 +44,7 @@ public class GenerateFromListHashIntegerTest {
     public void testNull() {
         gflhi.keepNull = true;
         output = gflhi.generateMaskedRow(0).toString();
-        assertEquals(output, "101");
+        assertEquals(output, "101"); //$NON-NLS-1$
     }
 
 }

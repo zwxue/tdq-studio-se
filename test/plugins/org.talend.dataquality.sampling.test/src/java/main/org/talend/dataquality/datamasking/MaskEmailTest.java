@@ -31,8 +31,7 @@ public class MaskEmailTest {
     @Test
     public void testGood() {
         String mail = "jugonzalez@talend.com"; //$NON-NLS-1$
-        me.parameters = "test".split(","); //$NON-NLS-1$ //$NON-NLS-2$
-        me.rnd = new RandomWrapper(42);
+        me.parse("test", false, new RandomWrapper(42)); //$NON-NLS-1$
         output = me.generateMaskedRow(mail);
         assertEquals(output, "test@talend.com"); //$NON-NLS-1$
     }
