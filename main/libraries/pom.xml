@@ -51,9 +51,9 @@
         </repository>
     </repositories>
     <modules>
-        <module>../plugins/org.talend.dataquality.common/pom_dq.xml</module>
-        <module>../plugins/org.talend.dataquality.record.linkage/pom_dq.xml</module>
-        <module>../plugins/org.talend.dataquality.sampling/pom_dq.xml</module>
+        <module>../plugins/org.talend.dataquality.common</module>
+        <module>../plugins/org.talend.dataquality.record.linkage</module>
+        <module>../plugins/org.talend.dataquality.sampling</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -152,6 +152,12 @@
                     <version>2.7</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <inherited>true</inherited>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.18.1</version>
@@ -169,8 +175,14 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
                     <instructions>
-                        <Embed-Dependency>*;scope=runtime;inline=true</Embed-Dependency>
+                        <_nouses>true</_nouses>
+                        <_removeheaders>JAVA_1_5_HOME,JAVA_1_6_HOME,JAVA_1_7_HOME,JAVA_1_8_HOME</_removeheaders>
+                        <_include>META-INF/MANIFEST.MF</_include>
+                        <Import-Package></Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
