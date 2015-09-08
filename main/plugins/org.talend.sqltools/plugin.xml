@@ -7,7 +7,7 @@
             context="plugin:org.talend.sqltools"
             language="java"
             message="Needed for sqltools"
-            name="Zql.jar"
+            name="Zql.jar" mvn_uri="mvn:org.talend.libraries/Zql/6.0.0" 
             required="true">
       </libraryNeeded>
    </extension>
