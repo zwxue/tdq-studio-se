@@ -94,10 +94,30 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         PreferenceManager preferenceManager = workbenchWindowConfigurer.getWindow().getWorkbench().getPreferenceManager();
         preferenceManager.remove("org.eclipse.debug.ui.DebugPreferencePage"+WorkbenchPlugin.PREFERENCE_PAGE_CATEGORY_SEPARATOR+"org.eclipse.ui.externaltools.ExternalToolsPreferencePage");
 
-      //hide toolBar item
+        //hide toolBar item for org.eclipse.ui.externaltools
         IActionBarConfigurer actionBarConfigurer = workbenchWindowConfigurer.getActionBarConfigurer();
         ICoolBarManager coolBarManager = actionBarConfigurer.getCoolBarManager();
         IContributionItem toolBarItem = coolBarManager.find("org.eclipse.debug.ui.launchActionSet");
+        if(toolBarItem!=null){
+            coolBarManager.remove(toolBarItem);
+        }
+        //hide toolBar item for org.talend.repository
+        toolBarItem = coolBarManager.find("org.talend.repository.bootTalendActionSet");
+        if(toolBarItem!=null){
+            coolBarManager.remove(toolBarItem);
+        }
+        //hide toolBar item for org.talend.repository
+        toolBarItem = coolBarManager.find("org.talend.repository.actionSet");
+        if(toolBarItem!=null){
+            coolBarManager.remove(toolBarItem);
+        }
+        //hide toolBar item for org.talend.repository
+        toolBarItem = coolBarManager.find("org.talend.repository.localprovider.actionSet");
+        if(toolBarItem!=null){
+            coolBarManager.remove(toolBarItem);
+        }
+        //hide toolBar item for org.talend.repository
+        toolBarItem = coolBarManager.find("org.talend.repository.demoprojcet.actionSet");
         if(toolBarItem!=null){
             coolBarManager.remove(toolBarItem);
         }
