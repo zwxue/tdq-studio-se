@@ -1,4 +1,12 @@
-*.iml
-**/target/*
+*.jardesc
 *.directory
 dist/
+target/
+bin/
+class/
+.settings/
+.idea/
+*.ipr
+*.iml
+*.iws
+.cache*
