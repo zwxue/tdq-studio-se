@@ -19,13 +19,17 @@ import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.LegendItemCollection;
+import org.jfree.chart.LegendItemSource;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
@@ -225,11 +229,7 @@ public final class ChartDecorator {
         domainAxis.setTickLabelFont(font);
         valueAxis.setTickLabelFont(font);
 
-        font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);//$NON-NLS-1$
-        LegendTitle legend = chart.getLegend();
-        if (legend != null) {
-            legend.setItemFont(font);
-        }
+        setLegendFont(chart);
 
         font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);//$NON-NLS-1$
         TextTitle title = chart.getTitle();
@@ -242,7 +242,7 @@ public final class ChartDecorator {
         if (render instanceof BarRenderer) {
 
             int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
-            if (!isContainsChineseColumn(chart)) {
+            if (!isContainCJKCharacter(chart.getCategoryPlot().getDataset().getColumnKeys().toArray())) {
                 domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));//$NON-NLS-1$
             }
             domainAxis.setUpperMargin(0.1);
@@ -258,6 +258,36 @@ public final class ChartDecorator {
             // TDQ-5111~
         }
         // ~10998
+    }
+
+    /**
+     * 
+     * if it contians CJK, set Font to "Arial Unicode MS".Or else, the Font is "Tahoma".
+     * 
+     * @param chart
+     */
+    private static void setLegendFont(JFreeChart chart) {
+        Font font;
+        LegendTitle legend = chart.getLegend();
+        if (legend != null) {
+            font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);//$NON-NLS-1$
+            // get legend label to judge if it contains CJK.
+            LegendItemSource[] sources = legend.getSources();
+            Set<String> itemLabels = new HashSet<String>();
+            for (LegendItemSource source : sources) {
+                LegendItemCollection legendItems = source.getLegendItems();
+                for (int i = 0; i < legendItems.getItemCount(); i++) {
+                    String label = legendItems.get(i).getLabel();
+                    if (label != null) {
+                        itemLabels.add(label);
+                    }
+                }
+            }
+            if (isContainCJKCharacter(itemLabels.toArray())) {
+                font = getCJKFont(Font.PLAIN, BASE_LEGEND_LABEL_SIZE);//$NON-NLS-1$
+            }
+            legend.setItemFont(font);
+        }
     }
 
     /**
@@ -287,11 +317,7 @@ public final class ChartDecorator {
         domainAxis.setTickLabelFont(font);
         valueAxis.setTickLabelFont(font);
 
-        font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);//$NON-NLS-1$
-        LegendTitle legend = chart.getLegend();
-        if (legend != null) {
-            legend.setItemFont(font);
-        }
+        setLegendFont(chart);
 
         font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);//$NON-NLS-1$
         TextTitle title = chart.getTitle();
@@ -316,11 +342,8 @@ public final class ChartDecorator {
         if (textTitle != null) {
             textTitle.setFont(font);
         }
-        font = new Font("Tahoma", Font.PLAIN, BASE_ITEM_LABEL_SIZE);//$NON-NLS-1$
-        LegendTitle legend = chart.getLegend();
-        if (legend != null) {
-            legend.setItemFont(font);
-        }
+
+        setLegendFont(chart);
         // TDQ-5213~
         PiePlot plot = (PiePlot) chart.getPlot();
         font = new Font("Monospaced", Font.PLAIN, 10);//$NON-NLS-1$
@@ -546,7 +569,9 @@ public final class ChartDecorator {
      * 
      * @param str
      * @return
+     * @deprecated replace it with isContainCJKCharacter(String str)
      */
+    @Deprecated
     private static boolean isContainsChineseColumn(JFreeChart chart) {
         Object[] columnNames = chart.getCategoryPlot().getDataset().getColumnKeys().toArray();
         String regEx = "[\u4e00-\u9fa5]";//$NON-NLS-1$
@@ -560,5 +585,65 @@ public final class ChartDecorator {
             }
         }
         return flg;
+    }
+
+    /**
+     * 
+     * if this String contain CJK array.
+     * 
+     * @param array
+     * @return
+     */
+    private static boolean isContainCJKCharacter(Object[] array) {
+        for (Object str : array) {
+            if (str != null && isContainCJKCharacter(str.toString())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * if this String contain CJK char.
+     * 
+     * @param str
+     * @return
+     */
+    public static boolean isContainCJKCharacter(String str) {
+        if (str == null || str.length() == 0) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+            if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                    || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                    || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                    || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                    || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+                    || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                    // Korean characters
+                    || ub == Character.UnicodeBlock.HANGUL_SYLLABLES || ub == Character.UnicodeBlock.HANGUL_JAMO
+                    || ub == Character.UnicodeBlock.HANGUL_COMPATIBILITY_JAMO
+                    // Japanese 3 characters: hiragana,katakana,Katakana phonetic extensions
+                    || ub == Character.UnicodeBlock.HIRAGANA || ub == Character.UnicodeBlock.KATAKANA
+                    || ub == Character.UnicodeBlock.KATAKANA_PHONETIC_EXTENSIONS) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * font for Chinese Japanese and Korean .
+     * 
+     * @param Style
+     * @param size
+     * @return
+     */
+    public static Font getCJKFont(int Style, int size) {
+        return new Font("Arial Unicode MS", Style, size);
     }
 }
