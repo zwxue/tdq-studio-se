@@ -125,82 +125,85 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                 IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getAnalysisHelpContextID());
                 IHelpResource[] relatedTopics = context.getRelatedTopics();
                 String href = null;
+
+                String currentLiteral = node.getLiteral();
+                if ("Functional Dependency Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                    currentLiteral = AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY.getLiteral();
+                } else if ("Connection Overview Analysis".equals(currentLiteral)) { //$NON-NLS-1$
+                    currentLiteral = AnalysisType.CONNECTION.getLiteral();
+                } else if ("Catalog Overview Analysis".equals(currentLiteral)) { //$NON-NLS-1$
+                    currentLiteral = AnalysisType.CATALOG.getLiteral();
+                } else if ("Schema Overview Analysis".equals(currentLiteral)) { //$NON-NLS-1$
+                    currentLiteral = AnalysisType.SCHEMA.getLiteral();
+                }
+                AnalysisType currentType = AnalysisType.get(currentLiteral);
                 if (parent == null) {
                     setPageComplete(false);
 
                     // MOD hcheng 2009-06-05 add help in analysis wizard
-                    AnalysisType type = AnalysisType.get(node.getLiteral());
-                    switch (type) {
+                    switch (currentType) {
                     case CONNECTION:
                         href = relatedTopics[0].getHref();
                         break;
-                    case CATALOG:
-                        href = relatedTopics[1].getHref();
-                        break;
-                    case SCHEMA:
-                        href = relatedTopics[2].getHref();
-                        break;
-                    case TABLE:
-                        href = relatedTopics[3].getHref();
-                        break;
-                    case MULTIPLE_COLUMN:
+                    case COLUMNS_COMPARISON:
                         href = relatedTopics[4].getHref();
                         break;
-                    case COLUMNS_COMPARISON:
-                        href = relatedTopics[5].getHref();
-                        break;
-                    case COLUMN_CORRELATION:
+                    case TABLE:
                         href = relatedTopics[6].getHref();
                         break;
-                    case TABLE_FUNCTIONAL_DEPENDENCY:
-                        href = null;
+                    case MULTIPLE_COLUMN:
+                        href = relatedTopics[11].getHref();
+                        break;
+                    case COLUMN_CORRELATION:
+                        href = relatedTopics[18].getHref();
                         break;
                     default:
                     }
                 } else {
-                    String literal = parent.getLiteral();
-
                     AnalysisParameter parameter = null;
-
-                    AnalysisType type = AnalysisType.get(literal);
-
-                    AnalysisType currentType = AnalysisType.get(node.getLiteral());
+                    AnalysisType parentType = AnalysisType.get(parent.getLiteral());
 
                     FolderProvider folderProvider = getCurrentFolderProvider() == null ? ((CreateNewAnalysisWizard) getWizard())
                             .getCurrentFolderProvider() : getCurrentFolderProvider();
-                    switch (type) {
+                    switch (parentType) {
                     case COLUMN_CORRELATION:
                         AnalysisParameter correlationColumnParam = new AnalysisLabelParameter();
                         ((AnalysisLabelParameter) correlationColumnParam).setCategoryLabel(node.getName());
                         correlationColumnParam.setFolderProvider(folderProvider);
                         parameter = correlationColumnParam;
-                        //TDQ-10498 split column correlation page to three pages.
-                        //Added those final string is to judge different analysis type.
-                        //We are not have those analysisType on the EMF model, And this issue is about display only.
-                        //So that don't choose modify EMF model
-                        if("Numerical Correlation Analysis".equals(node.getLiteral())){//$NON-NLS-1$
-                            href = relatedTopics[10].getHref();
-                        }else if("Time Correlation Analysis".equals(node.getLiteral())){//$NON-NLS-1$
-                            href = relatedTopics[11].getHref();
-                        }else if("Nominal Correlation Analysis".equals(node.getLiteral())){//$NON-NLS-1$
-                            href = relatedTopics[12].getHref();
-                        }else{
-                            href = relatedTopics[6].getHref();
+                        // TDQ-10498 split column correlation page to three pages.
+                        // Added those final string is to judge different analysis type.
+                        // We are not have those analysisType on the EMF model, And this issue is about display only.
+                        // So that don't choose modify EMF model
+                        if ("Numerical Correlation Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[19].getHref();
+                        } else if ("Time Correlation Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[20].getHref();
+                        } else if ("Nominal Correlation Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[21].getHref();
+                        } else {
+                            href = relatedTopics[18].getHref();
                         }
                         break;
                     case MULTIPLE_COLUMN:
                         AnalysisParameter correlationParam = new AnalysisParameter();
                         correlationParam.setFolderProvider(folderProvider);
                         parameter = correlationParam;
-                        if (currentType == AnalysisType.MATCH_ANALYSIS) {// Added 20130724 TDQ-7504
-                            type = currentType;
-                            href = relatedTopics[9].getHref();
+                        if ("Semantic Discovery Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[12].getHref();
+                        } else if ("Empty Single Column Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[13].getHref();
+                        } else if ("Nominal Values Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[14].getHref();
+                        } else if ("Pattern Frequency Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[15].getHref();
+                        } else if ("Discrete Data Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[16].getHref();
+                        } else if ("Summary Statistics Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                            href = relatedTopics[17].getHref();
                         } else {
-                            type = currentType == AnalysisType.COLUMN_SET ? currentType : type;
-                            href = currentType == AnalysisType.COLUMN_SET ? relatedTopics[8].getHref() : relatedTopics[4]
-                                    .getHref();
+                            href = relatedTopics[13].getHref();
                         }
-
                         break;
                     case COLUMNS_COMPARISON:
                         AnalysisParameter anaParam = new AnalysisParameter();
@@ -209,51 +212,55 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         href = relatedTopics[5].getHref();
                         break;
                     case CONNECTION:
-                        AnalysisFilterParameter connParam = new AnalysisFilterParameter();
-                        connParam.setFolderProvider(folderProvider);
-                        parameter = connParam;
-                        href = relatedTopics[0].getHref();
-                        break;
-                    // MOD mzhao 2008-12-31 CATALOG and SCHEMA added here.
-                    case CATALOG:
-                        PackagesAnalyisParameter catalogParam = new PackagesAnalyisParameter();
-                        catalogParam.setFolderProvider(folderProvider);
-                        parameter = catalogParam;
-                        href = relatedTopics[1].getHref();
-                        break;
-                    case SCHEMA:
-                        PackagesAnalyisParameter schemaParam = new PackagesAnalyisParameter();
-                        schemaParam.setFolderProvider(folderProvider);
-                        parameter = schemaParam;
-                        href = relatedTopics[2].getHref();
+                        switch (currentType) {
+                        case CONNECTION:
+                        default:
+                            AnalysisFilterParameter connParam = new AnalysisFilterParameter();
+                            connParam.setFolderProvider(folderProvider);
+                            parameter = connParam;
+                            href = relatedTopics[1].getHref();
+                            break;
+                        case CATALOG:
+                            PackagesAnalyisParameter catalogParam = new PackagesAnalyisParameter();
+                            catalogParam.setFolderProvider(folderProvider);
+                            parameter = catalogParam;
+                            href = relatedTopics[2].getHref();
+                            break;
+                        case SCHEMA:
+                            PackagesAnalyisParameter schemaParam = new PackagesAnalyisParameter();
+                            schemaParam.setFolderProvider(folderProvider);
+                            parameter = schemaParam;
+                            href = relatedTopics[3].getHref();
+                            break;
+                        }
                         break;
                     case TABLE:
                         switch (currentType) {
                         case MATCH_ANALYSIS:
                             parameter = new AnalysisParameter();
                             parameter.setFolderProvider(folderProvider);
-                            href = relatedTopics[9].getHref();
-                            type = currentType;
+                            href = relatedTopics[8].getHref();
+                            parentType = currentType;
                             break;
                         case COLUMN_SET:
                             AnalysisParameter corrParam = new AnalysisParameter();
                             corrParam.setFolderProvider(folderProvider);
                             parameter = corrParam;
-                            href = relatedTopics[8].getHref();
-                            type = currentType;
+                            href = relatedTopics[10].getHref();
+                            parentType = currentType;
                             break;
                         case TABLE_FUNCTIONAL_DEPENDENCY:
                             FuncationDependencyParameter funcationDependency = new FuncationDependencyParameter();
                             funcationDependency.setFolderProvider(folderProvider);
                             parameter = funcationDependency;
-                            href = relatedTopics[7].getHref();
-                            type = currentType;
+                            href = relatedTopics[9].getHref();
+                            parentType = currentType;
                             break;
                         default:
                             NamedColumnSetAnalysisParameter tableParam = new NamedColumnSetAnalysisParameter();
                             tableParam.setFolderProvider(folderProvider);
                             parameter = tableParam;
-                            href = relatedTopics[3].getHref();
+                            href = relatedTopics[7].getHref();
                             break;
                         }
                         break;
@@ -261,7 +268,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         parameter = new AnalysisParameter();
                     }
 
-                    selectedWizard = WizardFactory.createAnalysisWizard(type, parameter);
+                    selectedWizard = WizardFactory.createAnalysisWizard(parentType, parameter);
                     setPageComplete(true);
                 }
                 // MOD by hcheng,0007483: Add help in analysis wizard

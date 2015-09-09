@@ -1,39 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataquality.category:AnalysisCategories xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.category="http://org.talend.dataquality.category">
-  <categories analysisType="Connection Analysis" label="Connection Analysis">
-    <subCategories label="Database Structure Overview"/>
+  <categories analysisType="Connection Analysis" label="Structural Analysis">
+    <subCategories analysisType="Connection Analysis" label="Connection Overview Analysis"/>
+    <subCategories analysisType="Catalog Analysis" label="Catalog Overview Analysis"/>
+    <subCategories analysisType="Schema Analysis" label="Schema Overview Analysis"/>
   </categories>
-  <categories analysisType="Catalog Analysis" label="Catalog Analysis">
-    <subCategories analysisType="Catalog Analysis" label="Catalog Structure Overview"/>
-  </categories>
-  <categories analysisType="Schema Analysis" label="Schema Analysis">
-    <subCategories analysisType="Schema Analysis" label="Schema Structure Overview"/>
+  <categories analysisType="Columns Comparison Analysis" label="Cross Table Analysis">
+    <subCategories analysisType="Columns Comparison Analysis" label="Redundancy Analysis"/>
   </categories>
   <categories analysisType="Table Analysis" label="Table Analysis">
-    <subCategories analysisType="Match Analysis" label="Match Analysis"/>
     <subCategories analysisType="Table Analysis" label="Business Rule Analysis"/>
-    <subCategories analysisType="Functional Dependency" label="Functional Dependency"/>
+    <subCategories analysisType="Match Analysis" label="Match Analysis"/>
+    <subCategories analysisType="Functional Dependency" label="Functional Dependency Analysis"/>
     <subCategories analysisType="Column Set Analysis" label="Column Set Analysis"/>
-    <!-- subCategories analysisType="Table Analysis" label="Duplicate Analysis"/ -->
   </categories>
   <categories analysisType="Multiple Column Analysis" label="Column Analysis">
-    <!--subCategories label="Default Analysis"/-->
-    <subCategories analysisType="Multiple Column Analysis" label="Column Analysis"/>
-    <subCategories analysisType="Column Set Analysis" label="Column Set Analysis"/>
-    <subCategories analysisType="Match Analysis" label="Match Analysis"/>
+    <subCategories analysisType="Multiple Column Analysis" label="Semantic Discovery Analysis"/>
+    <subCategories analysisType="Multiple Column Analysis" label="Empty Single Column Analysis"/>
+    <subCategories analysisType="Multiple Column Analysis" label="Nominal Values Analysis"/>
+    <subCategories analysisType="Multiple Column Analysis" label="Pattern Frequency Analysis"/>
+    <subCategories analysisType="Multiple Column Analysis" label="Discrete Data Analysis"/>
+    <subCategories analysisType="Multiple Column Analysis" label="Summary Statistics Analysis"/>
   </categories>
-  <!--categories label="Analysis on a column">
-    <subCategories label="Default Analysis"/>
-    <subCategories label="Nominal values analysis"/>
-    <subCategories label="Numerical values analysis"/>
-    <subCategories label="Time analysis"/>
-  </categories-->
-  <categories analysisType="Columns Comparison Analysis" label="Redundancy Analysis">
-    <!--subCategories analysisType="Table Comparison" label="Table comparison"/>
-    <subCategories analysisType="Columns Comparison Analysis" label="Column Set Comparison"/-->
-    <subCategories analysisType="Columns Comparison Analysis" label="Column Content Comparison"/>
-  </categories>
-  <categories analysisType="Column Correlation Analysis" label="Column Correlation Analysis">
+  <categories analysisType="Column Correlation Analysis" label="Correlation Analysis">
     <subCategories analysisType="Column Correlation Analysis" label="Numerical Correlation Analysis"/>
     <subCategories analysisType="Column Correlation Analysis" label="Time Correlation Analysis"/>
     <subCategories analysisType="Column Correlation Analysis" label="Nominal Correlation Analysis"/>

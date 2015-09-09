@@ -42,7 +42,14 @@ public final class ViewerDataFactory {
             if (category.getSubCategories() != null) {
                 List<AnalysisTypeNode> subCategories = new ArrayList<AnalysisTypeNode>();
                 for (AnalysisCategory subCategory : category.getSubCategories()) {
-                    subCategories.add(new AnalysisTypeNode(subCategory.getLabel(), subCategory.getLabel(), typeNode));
+                    // the Semantic analysis must not appear in TOS DQ.
+                    String label = subCategory.getLabel();
+                    if (org.talend.commons.utils.platform.PluginChecker.isOnlyTopLoaded()) {
+                        if (label.equals("Semantic Discovery Analysis")) { //$NON-NLS-1$
+                            continue;
+                        }
+                    }
+                    subCategories.add(new AnalysisTypeNode(label, label, typeNode));
                 }
                 typeNode.setChildren(subCategories.toArray());
             }
