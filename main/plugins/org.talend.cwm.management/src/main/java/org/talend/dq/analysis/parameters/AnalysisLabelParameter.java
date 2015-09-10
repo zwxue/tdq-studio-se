@@ -26,6 +26,26 @@ public class AnalysisLabelParameter extends AnalysisParameter {
 
     public static final String NOMINAL_CORRELATION = "Nominal Correlation Analysis"; //$NON-NLS-1$
 
+    public static final String FUNCTIONAL_DEPENDENCY_ANALYSIS = "Functional Dependency Analysis"; //$NON-NLS-1$
+
+    public static final String CONNECTION_OVERVIEW_ANALYSIS = "Connection Overview Analysis"; //$NON-NLS-1$
+
+    public static final String CATALOG_OVERVIEW_ANALYSIS = "Catalog Overview Analysis"; //$NON-NLS-1$
+
+    public static final String SCHEMA_OVERVIEW_ANALYSIS = "Schema Overview Analysis"; //$NON-NLS-1$
+
+    public static final String SEMANTIC_DISCOVERY_ANALYSIS = "Semantic Discovery Analysis"; //$NON-NLS-1$
+
+    public static final String EMPTY_SINGLE_COLUMN_ANALYSIS = "Empty Single Column Analysis"; //$NON-NLS-1$
+
+    public static final String NOMINAL_VALUES_ANALYSIS = "Nominal Values Analysis"; //$NON-NLS-1$
+
+    public static final String PATTERN_FREQUENCY_ANALYSIS = "Pattern Frequency Analysis"; //$NON-NLS-1$
+
+    public static final String DISCRETE_DATA_ANALYSIS = "Discrete Data Analysis"; //$NON-NLS-1$
+
+    public static final String SUMMARY_STATISTICS_ANALYSIS = "Summary Statistics Analysis"; //$NON-NLS-1$
+
     protected String categoryLabel;
 
     public String getCategoryLabel() {
@@ -34,6 +54,30 @@ public class AnalysisLabelParameter extends AnalysisParameter {
 
     public void setCategoryLabel(String categoryLabel) {
         this.categoryLabel = categoryLabel;
+    }
+
+    public boolean isSemanticDiscoveryAnalysis() {
+        return SEMANTIC_DISCOVERY_ANALYSIS.equals(categoryLabel);
+    }
+
+    public boolean isEmptySingleColumnAnalysis() {
+        return EMPTY_SINGLE_COLUMN_ANALYSIS.equals(categoryLabel);
+    }
+
+    public boolean isNominalValuesAnalysis() {
+        return NOMINAL_VALUES_ANALYSIS.equals(categoryLabel);
+    }
+
+    public boolean isPatternFrequencyAnalysis() {
+        return PATTERN_FREQUENCY_ANALYSIS.equals(categoryLabel);
+    }
+
+    public boolean isDiscreteDataAnalysis() {
+        return DISCRETE_DATA_ANALYSIS.equals(categoryLabel);
+    }
+
+    public boolean isSummaryStatisticsAnalysis() {
+        return SUMMARY_STATISTICS_ANALYSIS.equals(categoryLabel);
     }
 
     public boolean isNumbericCorrelation() {
@@ -47,4 +91,5 @@ public class AnalysisLabelParameter extends AnalysisParameter {
     public boolean isNominalCorrelation() {
         return NOMINAL_CORRELATION.equals(categoryLabel);
     }
+
 }

@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.pattern.CreatePatternWizard;
 import org.talend.dataprofiler.core.sql.CreateSqlFileWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.catalog.CatalogAnalysisWizard;
@@ -32,6 +33,7 @@ import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
 import org.talend.dataprofiler.core.ui.wizard.matchrule.NewMatchRuleWizard;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.NewParserRulesWizard;
+import org.talend.dataprofiler.service.ISemanticStudioService;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -81,6 +83,34 @@ public final class WizardFactory {
                 parameter = new AnalysisParameter();
             }
             parameter.setAnalysisTypeName(type.getLiteral());
+
+            if (((AnalysisLabelParameter) parameter).isSemanticDiscoveryAnalysis()) {
+                ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
+                if (service != null) {
+                    return service.getSemanticDiscoveryWizard(null);
+                }
+            }
+
+            if (((AnalysisLabelParameter) parameter).isEmptySingleColumnAnalysis()) {
+                return new ColumnWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isNominalValuesAnalysis()) {
+                return new ColumnNominalWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isPatternFrequencyAnalysis()) {
+                return new ColumnNominalWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isDiscreteDataAnalysis()) {
+                return new ColumnNominalWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isSummaryStatisticsAnalysis()) {
+                return new ColumnNominalWizard(parameter);
+            }
+
             return new ColumnWizard(parameter);
         case COLUMNS_COMPARISON:
             if (parameter == null) {

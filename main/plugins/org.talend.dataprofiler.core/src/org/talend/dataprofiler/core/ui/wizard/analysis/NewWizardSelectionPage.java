@@ -127,13 +127,13 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                 String href = null;
 
                 String currentLiteral = node.getLiteral();
-                if ("Functional Dependency Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                if (AnalysisLabelParameter.FUNCTIONAL_DEPENDENCY_ANALYSIS.equals(currentLiteral)) {
                     currentLiteral = AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY.getLiteral();
-                } else if ("Connection Overview Analysis".equals(currentLiteral)) { //$NON-NLS-1$
+                } else if (AnalysisLabelParameter.CONNECTION_OVERVIEW_ANALYSIS.equals(currentLiteral)) {
                     currentLiteral = AnalysisType.CONNECTION.getLiteral();
-                } else if ("Catalog Overview Analysis".equals(currentLiteral)) { //$NON-NLS-1$
+                } else if (AnalysisLabelParameter.CATALOG_OVERVIEW_ANALYSIS.equals(currentLiteral)) {
                     currentLiteral = AnalysisType.CATALOG.getLiteral();
-                } else if ("Schema Overview Analysis".equals(currentLiteral)) { //$NON-NLS-1$
+                } else if (AnalysisLabelParameter.SCHEMA_OVERVIEW_ANALYSIS.equals(currentLiteral)) {
                     currentLiteral = AnalysisType.SCHEMA.getLiteral();
                 }
                 AnalysisType currentType = AnalysisType.get(currentLiteral);
@@ -175,31 +175,32 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         // Added those final string is to judge different analysis type.
                         // We are not have those analysisType on the EMF model, And this issue is about display only.
                         // So that don't choose modify EMF model
-                        if ("Numerical Correlation Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+
+                        if (AnalysisLabelParameter.NUMBERIC_CORRELATION.equals(currentLiteral)) {
                             href = relatedTopics[19].getHref();
-                        } else if ("Time Correlation Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                        } else if (AnalysisLabelParameter.DATE_CORRELATION.equals(currentLiteral)) {
                             href = relatedTopics[20].getHref();
-                        } else if ("Nominal Correlation Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                        } else if (AnalysisLabelParameter.NOMINAL_CORRELATION.equals(currentLiteral)) {
                             href = relatedTopics[21].getHref();
                         } else {
                             href = relatedTopics[18].getHref();
                         }
                         break;
                     case MULTIPLE_COLUMN:
-                        AnalysisParameter correlationParam = new AnalysisParameter();
-                        correlationParam.setFolderProvider(folderProvider);
-                        parameter = correlationParam;
-                        if ("Semantic Discovery Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                        AnalysisParameter multipleColumnParam = new AnalysisParameter();
+                        multipleColumnParam.setFolderProvider(folderProvider);
+                        parameter = multipleColumnParam;
+                        if (AnalysisLabelParameter.SEMANTIC_DISCOVERY_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[12].getHref();
-                        } else if ("Empty Single Column Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                        } else if (AnalysisLabelParameter.EMPTY_SINGLE_COLUMN_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[13].getHref();
-                        } else if ("Nominal Values Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                        } else if (AnalysisLabelParameter.NOMINAL_VALUES_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[14].getHref();
-                        } else if ("Pattern Frequency Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                        } else if (AnalysisLabelParameter.PATTERN_FREQUENCY_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[15].getHref();
-                        } else if ("Discrete Data Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                        } else if (AnalysisLabelParameter.DISCRETE_DATA_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[16].getHref();
-                        } else if ("Summary Statistics Analysis".equals(currentLiteral)) {//$NON-NLS-1$
+                        } else if (AnalysisLabelParameter.SUMMARY_STATISTICS_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[17].getHref();
                         } else {
                             href = relatedTopics[13].getHref();
@@ -219,18 +220,21 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                             connParam.setFolderProvider(folderProvider);
                             parameter = connParam;
                             href = relatedTopics[1].getHref();
+                            parentType = currentType;
                             break;
                         case CATALOG:
                             PackagesAnalyisParameter catalogParam = new PackagesAnalyisParameter();
                             catalogParam.setFolderProvider(folderProvider);
                             parameter = catalogParam;
                             href = relatedTopics[2].getHref();
+                            parentType = currentType;
                             break;
                         case SCHEMA:
                             PackagesAnalyisParameter schemaParam = new PackagesAnalyisParameter();
                             schemaParam.setFolderProvider(folderProvider);
                             parameter = schemaParam;
                             href = relatedTopics[3].getHref();
+                            parentType = currentType;
                             break;
                         }
                         break;
