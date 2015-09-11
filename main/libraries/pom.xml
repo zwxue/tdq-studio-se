@@ -8,6 +8,14 @@
     <packaging>pom</packaging>
     <name>tdq-se-libs</name>
 
+    <inceptionYear>2015</inceptionYear>
+    <url>http://www.talend.com</url>
+
+    <issueManagement>
+        <system>jira</system>
+        <url>https://jira.talendforge.org/browse/TDQ</url>
+    </issueManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.7.12</slf4j.version>
@@ -189,11 +197,12 @@
                         <_nouses>true</_nouses>
                         <_removeheaders>JAVA_1_5_HOME,JAVA_1_6_HOME,JAVA_1_7_HOME,JAVA_1_8_HOME</_removeheaders>
                         <_include>META-INF/MANIFEST.MF</_include>
-                        <Import-Package></Import-Package>
+                        <Built-By>.Talend SA.</Built-By>
+                        <Private-Package></Private-Package>
+                        <Include-Resource></Include-Resource>
                     </instructions>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 </project>
