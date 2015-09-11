@@ -16,15 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
+
 /**
- * Provides a way to combine several {@link Analyzer} together and a
+ * Provides a way to combine several {@link Analyzer<?>} together and a
  * {@link org.talend.datascience.common.inference.Analyzers.Result result} that stores all underlying results.
  *
- * @see #with(Analyzer[])
+ * @see #with(Analyzer<?>[])
  */
 public class Analyzers implements Analyzer<Analyzers.Result> {
 
-    private static final long serialVersionUID = -1330741170544874400L;
+    private static final long serialVersionUID = 3718737129904789140L;
 
     private final Analyzer<?>[] analyzers;
 
@@ -35,7 +37,7 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
     }
 
     /**
-     * Creates a single analyzer with provided {@link Analyzer analyzers}.
+     * Creates a single analyzer with provided {@link Analyzer<?> analyzers}.
      * 
      * @param analyzers The analyzers to be combined together.
      * @return A single analyzer that ensure all underlying analyzers get called.
@@ -48,11 +50,6 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
         for (Analyzer<?> analyzer : analyzers) {
             analyzer.init();
         }
-    }
-
-    @Override
-    public boolean analyzeArray(String[] record) {
-        return analyze(record);
     }
 
     public boolean analyze(String... record) {
@@ -81,7 +78,8 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
     }
 
     /**
-     * A generic composite result which aggregates several analyzer's results.
+     * <<<<<<< HEAD A generic composite result which aggregates several analyzer's results. ======= Composite result
+     * aggregates several analyzer's result together. >>>>>>> workitem/TDQ-10955_remove_analyzeArray_method
      *
      */
     public static class Result {
@@ -106,6 +104,6 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
 
     @Override
     public Analyzer<Result> merge(Analyzer<Result> another) {
-        return null;
+        throw new NotImplementedException();
     }
 }
