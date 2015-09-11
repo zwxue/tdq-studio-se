@@ -24,11 +24,13 @@ import java.util.Map;
  */
 public class Analyzers implements Analyzer<Analyzers.Result> {
 
-    private final Analyzer[] analyzers;
+    private static final long serialVersionUID = -1330741170544874400L;
+
+    private final Analyzer<?>[] analyzers;
 
     private final ResizableList<Result> results = new ResizableList<Result>(Result.class);
 
-    private Analyzers(Analyzer... analyzers) {
+    private Analyzers(Analyzer<?>... analyzers) {
         this.analyzers = analyzers;
     }
 
@@ -38,12 +40,12 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
      * @param analyzers The analyzers to be combined together.
      * @return A single analyzer that ensure all underlying analyzers get called.
      */
-    public static Analyzer<Analyzers.Result> with(Analyzer... analyzers) {
+    public static Analyzer<Analyzers.Result> with(Analyzer<?>... analyzers) {
         return new Analyzers(analyzers);
     }
 
     public void init() {
-        for (Analyzer analyzer : analyzers) {
+        for (Analyzer<?> analyzer : analyzers) {
             analyzer.init();
         }
     }
@@ -56,32 +58,30 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
     public boolean analyze(String... record) {
         boolean result = true;
         results.resize(record.length);
-        for (Analyzer analyzer : analyzers) {
+        for (Analyzer<?> analyzer : analyzers) {
             result &= analyzer.analyze(record);
         }
         return result;
     }
 
     public void end() {
-        for (Analyzer executor : analyzers) {
+        for (Analyzer<?> executor : analyzers) {
             executor.end();
         }
     }
 
     public List<Result> getResult() {
-        for (Analyzer analyzer : analyzers) {
-            final List analysis = analyzer.getResult();
-            for (int i = 0; i < analysis.size(); i++) {
-                for (int j = 0; j < analysis.size(); j++) {
-                    results.get(j).add(analysis.get(j));
-                }
+        for (Analyzer<?> analyzer : analyzers) {
+            final List<?> analysis = analyzer.getResult();
+            for (int j = 0; j < analysis.size(); j++) {
+                results.get(j).add(analysis.get(j));
             }
         }
         return results;
     }
 
     /**
-     * created by talend on 2015-07-28 Detailled comment.
+     * A generic composite result which aggregates several analyzer's results.
      *
      */
     public static class Result {
@@ -95,11 +95,15 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
             throw new IllegalArgumentException("No result of type '" + clazz.getName() + "'.");
         }
 
+        public <T> boolean exist(Class<T> clazz) {
+            return results.containsKey(clazz);
+        }
+
         public void add(Object result) {
             results.put(result.getClass(), result);
         }
     }
-    
+
     @Override
     public Analyzer<Result> merge(Analyzer<Result> another) {
         return null;
