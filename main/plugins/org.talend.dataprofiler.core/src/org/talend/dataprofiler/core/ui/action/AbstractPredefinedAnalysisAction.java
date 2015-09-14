@@ -158,7 +158,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
                 parameter = new AnalysisLabelParameter();
                 parameter.setCategoryLabel(getCategoryLabel());
-                parameter.setColumns(getColumns());
+                parameter.setColumnNodes(getColumns());
                 parameter.setConnectionRepNode(repositoryNode);
 
                 return getStandardAnalysisWizardDialog(type, parameter);
@@ -168,7 +168,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
             IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
             parameter = new AnalysisLabelParameter();
             parameter.setCategoryLabel(getCategoryLabel());
-            parameter.setColumns(getColumns());
+            parameter.setColumnNodes(getColumns());
             parameter.setConnectionRepNode(repositoryNode);
             return getStandardAnalysisWizardDialog(type, parameter);
         } else if (firstElement instanceof TdView) { // Added yyin 20120522 TDQ-4945, support tdView
@@ -176,7 +176,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
             IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
             parameter = new AnalysisLabelParameter();
             parameter.setCategoryLabel(getCategoryLabel());
-            parameter.setColumns(getColumns());
+            parameter.setColumnNodes(getColumns());
             parameter.setConnectionRepNode(repositoryNode);
             return getStandardAnalysisWizardDialog(type, parameter);
             // ~4945

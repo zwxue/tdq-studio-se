@@ -13,16 +13,31 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC msjian class global comment. Detailled comment
  */
-public class ColumnEmptySingleAnalysisWizard extends ColumnWizard {
+public class DiscreteDataWizard extends ColumnWizard {
 
-    public ColumnEmptySingleAnalysisWizard(AnalysisParameter parameter) {
+    public DiscreteDataWizard(AnalysisParameter parameter) {
         super(parameter);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard#getPredefinedColumnIndicator()
+     */
+    @Override
+    protected ModelElementIndicator[] getPredefinedColumnIndicator() {
+        IndicatorEnum[] allwedEnumes = new IndicatorEnum[2];
+        allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
+        allwedEnumes[1] = IndicatorEnum.FrequencyIndicatorEnum;
+        return composePredefinedColumnIndicator(allwedEnumes);
     }
 
     /*
@@ -33,7 +48,11 @@ public class ColumnEmptySingleAnalysisWizard extends ColumnWizard {
     @Override
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
-        // no select column wizard here
+        // when from the right menu, no need to show select data wizard
+        if (parameter.getConnectionRepNode() == null) {
+            selectionPage = new NumericalDPSelectionPage();
+            addPage(selectionPage);
+        }
         for (WizardPage page : getExtenalPages()) {
             addPage(page);
         }

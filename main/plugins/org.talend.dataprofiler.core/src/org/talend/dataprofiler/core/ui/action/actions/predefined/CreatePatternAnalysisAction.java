@@ -39,13 +39,11 @@ public class CreatePatternAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected ModelElementIndicator[] getPredefinedColumnIndicator() {
-
         IndicatorEnum[] allwedEnumes = new IndicatorEnum[4];
         allwedEnumes[0] = IndicatorEnum.RowCountIndicatorEnum;
         allwedEnumes[1] = IndicatorEnum.NullCountIndicatorEnum;
         allwedEnumes[2] = IndicatorEnum.PatternFreqIndicatorEnum;
         allwedEnumes[3] = IndicatorEnum.PatternLowFreqIndicatorEnum;
-
         return composePredefinedColumnIndicator(allwedEnumes);
     }
 
@@ -56,7 +54,6 @@ public class CreatePatternAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected WizardDialog getPredefinedDialog() {
-        // TODO Auto-generated method stub
         return null;
     }
 

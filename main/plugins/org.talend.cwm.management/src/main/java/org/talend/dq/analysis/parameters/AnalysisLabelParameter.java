@@ -56,11 +56,11 @@ public class AnalysisLabelParameter extends AnalysisParameter {
         return categoryLabel;
     }
 
-    public IRepositoryNode[] getColumns() {
+    public IRepositoryNode[] getColumnNodes() {
         return nodes;
     }
 
-    public void setColumns(IRepositoryNode[] nodes) {
+    public void setColumnNodes(IRepositoryNode[] nodes) {
         this.nodes = nodes;
     }
 

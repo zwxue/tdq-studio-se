@@ -15,17 +15,21 @@ package org.talend.dataprofiler.core.ui.wizard.analysis;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.pattern.CreatePatternWizard;
 import org.talend.dataprofiler.core.sql.CreateSqlFileWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.catalog.CatalogAnalysisWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnEmptySingleAnalysisWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnNominalWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnNumbericWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnSetWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnSummaryStatisticsWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnTimeWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.DiscreteDataWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.EmptySingleColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.MatchWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.NominalCorrelationWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.NominalValuesWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.NumericalCorrelationWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.PatternFrequencyWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.SummaryStatisticsWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.TimeCorrelationWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.schema.SchemaAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.FunctionDependencyWizard;
@@ -34,6 +38,7 @@ import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
 import org.talend.dataprofiler.core.ui.wizard.matchrule.NewMatchRuleWizard;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.NewParserRulesWizard;
+import org.talend.dataprofiler.service.ISemanticStudioService;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -68,15 +73,15 @@ public final class WizardFactory {
             }
             parameter.setAnalysisTypeName(type.getLiteral());
             if (((AnalysisLabelParameter) parameter).isNumbericCorrelation()) {
-                return new ColumnNumbericWizard(parameter);
+                return new NumericalCorrelationWizard(parameter);
             }
 
             if (((AnalysisLabelParameter) parameter).isDateCorrelation()) {
-                return new ColumnTimeWizard(parameter);
+                return new TimeCorrelationWizard(parameter);
             }
 
             if (((AnalysisLabelParameter) parameter).isNominalCorrelation()) {
-                return new ColumnNominalWizard(parameter);
+                return new NominalCorrelationWizard(parameter);
             }
         case MULTIPLE_COLUMN:
             if (parameter == null) {
@@ -84,31 +89,32 @@ public final class WizardFactory {
             }
             parameter.setAnalysisTypeName(type.getLiteral());
 
-            // if (((AnalysisLabelParameter) parameter).isSemanticDiscoveryAnalysis()) {
-            // ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
-            // if (service != null) {
-            // return service.getSemanticDiscoveryWizard(null);
-            // }
-            // }
-            //
-            if (((AnalysisLabelParameter) parameter).isEmptySingleColumnAnalysis()) {
-                return new ColumnEmptySingleAnalysisWizard(parameter);
+            if (((AnalysisLabelParameter) parameter).isSemanticDiscoveryAnalysis()) {
+                ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
+                if (service != null) {
+                    Wizard semanticDiscoveryWizard = service.getSemanticDiscoveryWizard(null);
+                    return semanticDiscoveryWizard;
+                }
             }
-            //
-            // if (((AnalysisLabelParameter) parameter).isNominalValuesAnalysis()) {
-            // return new ColumnNominalWizard(parameter);
-            // }
-            //
-            // if (((AnalysisLabelParameter) parameter).isPatternFrequencyAnalysis()) {
-            // return new ColumnNominalWizard(parameter);
-            // }
-            //
-            // if (((AnalysisLabelParameter) parameter).isDiscreteDataAnalysis()) {
-            // return new ColumnNominalWizard(parameter);
-            // }
-            //
+
+            if (((AnalysisLabelParameter) parameter).isEmptySingleColumnAnalysis()) {
+                return new EmptySingleColumnWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isNominalValuesAnalysis()) {
+                return new NominalValuesWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isPatternFrequencyAnalysis()) {
+                return new PatternFrequencyWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isDiscreteDataAnalysis()) {
+                return new DiscreteDataWizard(parameter);
+            }
+
             if (((AnalysisLabelParameter) parameter).isSummaryStatisticsAnalysis()) {
-                return new ColumnSummaryStatisticsWizard(parameter);
+                return new SummaryStatisticsWizard(parameter);
             }
 
             return new ColumnWizard(parameter);

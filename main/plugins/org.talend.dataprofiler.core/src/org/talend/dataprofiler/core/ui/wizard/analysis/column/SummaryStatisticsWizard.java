@@ -21,9 +21,9 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 /**
  * DOC msjian class global comment. Detailled comment
  */
-public class ColumnSummaryStatisticsWizard extends ColumnWizard {
+public class SummaryStatisticsWizard extends ColumnWizard {
 
-    public ColumnSummaryStatisticsWizard(AnalysisParameter parameter) {
+    public SummaryStatisticsWizard(AnalysisParameter parameter) {
         super(parameter);
     }
 
@@ -52,7 +52,7 @@ public class ColumnSummaryStatisticsWizard extends ColumnWizard {
         addPage(new AnalysisMetadataWizardPage());
         // when from the right menu, no need to show select data wizard
         if (parameter.getConnectionRepNode() == null) {
-            selectionPage = new SummaryStatisAnaDPSelectionPage();
+            selectionPage = new NumericalDPSelectionPage();
             addPage(selectionPage);
         }
         for (WizardPage page : getExtenalPages()) {

@@ -34,10 +34,8 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
      */
     @Override
     protected ModelElementIndicator[] getPredefinedColumnIndicator() {
-
         IndicatorEnum[] allwedEnumes = new IndicatorEnum[1];
         allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
-
         return composePredefinedColumnIndicator(allwedEnumes);
     }
 
@@ -48,7 +46,6 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
      */
     @Override
     protected WizardDialog getPredefinedDialog() {
-
         return null;
     }
 
@@ -73,7 +70,6 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
      */
     @Override
     protected boolean preDo() {
-
         return true;
     }
 

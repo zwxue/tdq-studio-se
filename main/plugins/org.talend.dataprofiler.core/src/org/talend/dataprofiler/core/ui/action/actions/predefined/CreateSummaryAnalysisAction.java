@@ -46,7 +46,6 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
         allowedEnumes[0] = IndicatorEnum.BoxIIndicatorEnum;
         allowedEnumes[1] = IndicatorEnum.RowCountIndicatorEnum;
         allowedEnumes[2] = IndicatorEnum.NullCountIndicatorEnum;
-
         return composePredefinedColumnIndicator(allowedEnumes);
     }
 
@@ -70,16 +69,6 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
         if (!RepNodeUtils.isAllNumberalColumns(Arrays.asList(getColumns()))) {
             return false;
         }
-        // for (IRepositoryNode repositoryNode : getColumns()) {
-        // MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
-        //
-        // int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
-        //
-        // if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
-        // return false;
-        // }
-        // }
-
         if (!RepNodeUtils.isValidSelectionFromSameTable(getSelection().toList())) {
             return false;
         }
@@ -94,7 +83,6 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected boolean preDo() {
-
         return true;
     }
 

@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dq.nodes.ColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -31,20 +32,23 @@ import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
 
 /**
- * DOC msjian class global comment. Detailled comment
+ * this select data page only can select numerical data for analysis: Discrete Data Analysis Summary Statistics Analysis
  * 
  */
-public class SummaryStatisAnaDPSelectionPage extends ColumnAnalysisDOSelectionPage {
+public class NumericalDPSelectionPage extends ColumnAnalysisDOSelectionPage {
 
-    protected static Logger log = Logger.getLogger(SummaryStatisAnaDPSelectionPage.class);
+    protected static Logger log = Logger.getLogger(NumericalDPSelectionPage.class);
 
-    /**
-     */
-    public SummaryStatisAnaDPSelectionPage() {
+    public NumericalDPSelectionPage() {
         super();
         setPageComplete(false);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnAnalysisDOSelectionPage#addListeners()
+     */
     @Override
     protected void addListeners() {
 
@@ -82,11 +86,11 @@ public class SummaryStatisAnaDPSelectionPage extends ColumnAnalysisDOSelectionPa
                             } else {
                                 setPageComplete(false);
                                 setMessage(
-                                        "Only numerical type columns can be selected for the summary statistics Analysis.", ERROR); //$NON-NLS-1$
+                                        DefaultMessagesImpl.getString("ColumnAnalysisDOSelectionPage.selectColumnError2"), ERROR); //$NON-NLS-1$
                             }
                         } else {
                             setPageComplete(false);
-                            setMessage("Columns can not be selected from different tables/views", ERROR); //$NON-NLS-1$
+                            setMessage(DefaultMessagesImpl.getString("ColumnAnalysisDOSelectionPage.selectColumnError1"), ERROR); //$NON-NLS-1$
                         }
                     } else {
                         setPageComplete(false);

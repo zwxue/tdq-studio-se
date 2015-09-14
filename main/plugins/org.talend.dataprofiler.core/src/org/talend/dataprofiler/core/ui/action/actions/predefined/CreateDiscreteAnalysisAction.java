@@ -56,15 +56,6 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
         if (!RepNodeUtils.isAllNumberalColumns(Arrays.asList(getColumns()))) {
             return false;
         }
-        // for (IRepositoryNode repositoryNode : getColumns()) {
-        // MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
-        //
-        // int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
-        //
-        // if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
-        // return false;
-        // }
-        // }
         if (!RepNodeUtils.isValidSelectionFromSameTable(getSelection().toList())) {
             return false;
         }
@@ -79,13 +70,11 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
      */
     @Override
     protected boolean preDo() {
-
         return true;
     }
 
     @Override
     protected WizardDialog getPredefinedDialog() {
-
         return null;
     }
 

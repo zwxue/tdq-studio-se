@@ -18,15 +18,15 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 /**
  * DOC BZhou class global comment. Detailled comment
  */
-public class ColumnNominalWizard extends ColumnSetWizard {
+public class NumericalCorrelationWizard extends ColumnSetWizard {
 
     /**
-     * DOC BZhou ColumnNominalWizard constructor comment.
+     * DOC BZhou ColumnNumbericWizard constructor comment.
      * 
      * @param parameter
      */
-    public ColumnNominalWizard(AnalysisParameter parameter) {
+    public NumericalCorrelationWizard(AnalysisParameter parameter) {
         super(parameter);
-        setIndicator(ColumnsetFactory.eINSTANCE.createWeakCorrelationIndicator());
+        setIndicator(ColumnsetFactory.eINSTANCE.createCountAvgNullIndicator());
     }
 }

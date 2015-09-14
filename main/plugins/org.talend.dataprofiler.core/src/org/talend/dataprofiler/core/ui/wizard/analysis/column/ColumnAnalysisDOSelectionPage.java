@@ -36,11 +36,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
 
     protected static Logger log = Logger.getLogger(ColumnAnalysisDOSelectionPage.class);
 
-    private static String newAnaStr = DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.newAnalysis"); //$NON-NLS-1$
-
     protected static String chooseConnStr = DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.chooseColumn"); //$NON-NLS-1$
-
-    private static String connsStr = DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.Columns"); //$NON-NLS-1$
 
     public List<IRepositoryNode> nodes;
 
@@ -48,20 +44,23 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
      * @param pageName
      */
     public ColumnAnalysisDOSelectionPage() {
-        super(newAnaStr, chooseConnStr, connsStr, new ColumnContentProvider(), true);
-
-        setPageComplete(true);
+        this(new ColumnContentProvider());
     }
 
     /**
      * @param contentProvider, use diffirent ContentProvider for Match analysis and column analysis.
      */
     public ColumnAnalysisDOSelectionPage(ResourceViewContentProvider contentProvider) {
-        super(newAnaStr, chooseConnStr, connsStr, contentProvider, true);
-
+        super(DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.newAnalysis"), chooseConnStr, DefaultMessagesImpl //$NON-NLS-1$
+                .getString("ColumnAnalysisPageStep0.Columns"), contentProvider, true); //$NON-NLS-1$
         setPageComplete(true);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage#addListeners()
+     */
     @Override
     protected void addListeners() {
 
@@ -107,7 +106,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
             this.setMessage(chooseConnStr);
         } else {
             setPageComplete(false);
-            this.setMessage("Columns can not be selected from different tables/views", ERROR);
+            this.setMessage(DefaultMessagesImpl.getString("ColumnAnalysisDOSelectionPage.selectColumnError1"), ERROR); //$NON-NLS-1$
         }
 
     }

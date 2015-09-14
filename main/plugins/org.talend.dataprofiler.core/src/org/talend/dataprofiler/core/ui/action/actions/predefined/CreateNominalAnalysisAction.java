@@ -27,6 +27,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -46,7 +47,6 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
 
     @Override
     public ModelElementIndicator[] getPredefinedColumnIndicator() {
-
         // MOD qiongli 2011-3-31,bug 19810.if contain none-nominal data,don't add TextIndicator.
         List<IndicatorEnum> allwedEnumeLs = new ArrayList<IndicatorEnum>();
         allwedEnumeLs.add(IndicatorEnum.CountsIndicatorEnum);
@@ -55,7 +55,6 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
             allwedEnumeLs.add(IndicatorEnum.TextIndicatorEnum);
         }
         IndicatorEnum[] allwedEnumeArray = allwedEnumeLs.toArray(new IndicatorEnum[allwedEnumeLs.size()]);
-
         return composePredefinedColumnIndicator(allwedEnumeArray);
     }
 
@@ -74,7 +73,7 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         addTextIndicator = true;
         for (IRepositoryNode repositoryNode : getColumns()) {
             DFColumnRepNode columnNode = new DFColumnRepNode(repositoryNode.getObject(), repositoryNode.getParent(),
-                    ENodeType.TDQ_REPOSITORY_ELEMENT, null);
+                    ENodeType.TDQ_REPOSITORY_ELEMENT, ((DQRepositoryNode) repositoryNode).getProject());
             int javaSQLType = TalendTypeConvert.convertToJDBCType(columnNode.getMetadataColumn().getTalendType());
             if (!Java2SqlType.isTextInSQL(javaSQLType)) {
                 tempList.add(columnNode);
@@ -108,7 +107,6 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
 
     @Override
     protected WizardDialog getPredefinedDialog() {
-
         return null;
     }
 

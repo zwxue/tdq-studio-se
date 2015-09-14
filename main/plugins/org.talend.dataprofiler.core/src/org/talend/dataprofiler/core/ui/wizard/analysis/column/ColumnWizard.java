@@ -184,7 +184,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
         List<IRepositoryNode> nodes;
         // from the right menu
         if (selectionPage == null) {
-            nodes = Arrays.asList(((AnalysisLabelParameter) parameter).getColumns());
+            nodes = Arrays.asList(((AnalysisLabelParameter) parameter).getColumnNodes());
         } else {
             nodes = selectionPage.nodes;
         }

@@ -398,8 +398,13 @@ public final class RepNodeUtils {
         return Boolean.FALSE;
     }
 
+    /**
+     * check is All the Columns are Numberal type.
+     * 
+     * @param nodes
+     * @return
+     */
     public static boolean isAllNumberalColumns(List<IRepositoryNode> nodes) {
-
         if (nodes != null && nodes.size() > 0) {
             for (int index = 0; index < nodes.size(); index++) {
                 IRepositoryNode repositoryNode = nodes.get(index);
@@ -408,21 +413,26 @@ public final class RepNodeUtils {
                 if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
                     return false;
                 }
+            }
+        }
+        return Boolean.TRUE;
+    }
 
-                // if (columnNode instanceof DBColumnRepNode) {
-                // DBColumnRepNode node = (DBColumnRepNode) columnNode;
-                // TdColumn column = node.getTdColumn();
-                // if (!Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
-                // return Boolean.FALSE;
-                // }
-                // } else if (columnNode instanceof DFColumnRepNode) {
-                // DFColumnRepNode node = (DFColumnRepNode) columnNode;
-                // MetadataColumn column = node.getMetadataColumn();
-                // int javaType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
-                // if (!Java2SqlType.isNumbericInSQL(javaType)) {
-                // return Boolean.FALSE;
-                // }
-                // }
+    /**
+     * check is All the Columns are text type.
+     * 
+     * @param nodes
+     * @return
+     */
+    public static boolean isAllTextColumns(List<IRepositoryNode> nodes) {
+        if (nodes != null && nodes.size() > 0) {
+            for (int index = 0; index < nodes.size(); index++) {
+                IRepositoryNode repositoryNode = nodes.get(index);
+                MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+                int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
+                if (!Java2SqlType.isTextInSQL(javaSQLType)) {
+                    return false;
+                }
             }
         }
         return Boolean.TRUE;

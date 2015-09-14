@@ -12,17 +12,30 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
+import org.eclipse.jface.wizard.WizardPage;
+import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 
 /**
- * @author zqin
- * 
+ * DOC msjian class global comment. Detailled comment
  */
-public class ColumnTimeWizard extends ColumnSetWizard {
+public class EmptySingleColumnWizard extends ColumnWizard {
 
-    public ColumnTimeWizard(AnalysisParameter parameter) {
+    public EmptySingleColumnWizard(AnalysisParameter parameter) {
         super(parameter);
-        setIndicator(ColumnsetFactory.eINSTANCE.createMinMaxDateIndicator());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard#addPages()
+     */
+    @Override
+    public void addPages() {
+        addPage(new AnalysisMetadataWizardPage());
+        // no select column wizard here
+        for (WizardPage page : getExtenalPages()) {
+            addPage(page);
+        }
     }
 }
