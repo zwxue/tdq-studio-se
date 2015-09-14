@@ -187,7 +187,8 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         }
                         break;
                     case MULTIPLE_COLUMN:
-                        AnalysisParameter multipleColumnParam = new AnalysisParameter();
+                        AnalysisParameter multipleColumnParam = new AnalysisLabelParameter();
+                        ((AnalysisLabelParameter) multipleColumnParam).setCategoryLabel(node.getName());
                         multipleColumnParam.setFolderProvider(folderProvider);
                         parameter = multipleColumnParam;
                         if (AnalysisLabelParameter.SEMANTIC_DISCOVERY_ANALYSIS.equals(currentLiteral)) {

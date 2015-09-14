@@ -82,4 +82,13 @@ public class CreateSimpleAnalysisAction extends AbstractPredefinedAnalysisAction
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getCategoryLabel()
+     */
+    @Override
+    protected String getCategoryLabel() {
+        return null;
+    }
 }

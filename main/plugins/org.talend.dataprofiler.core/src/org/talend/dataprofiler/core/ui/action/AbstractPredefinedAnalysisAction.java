@@ -45,6 +45,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.rules.JoinElement;
+import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
@@ -144,7 +145,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
     protected WizardDialog getStandardAnalysisWizardDialog(AnalysisType type) {
         // MOD klliu 2011-02-17 feature 15387
-        AnalysisParameter parameter = null;
+        AnalysisLabelParameter parameter = null;
         Object firstElement = this.selection.getFirstElement();
 
         if (firstElement instanceof IRepositoryNode) {
@@ -155,7 +156,9 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 Connection connection = connectionItem.getConnection();
 
                 IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
-                parameter = new AnalysisParameter();
+                parameter = new AnalysisLabelParameter();
+                parameter.setCategoryLabel(getCategoryLabel());
+                parameter.setColumns(getColumns());
                 parameter.setConnectionRepNode(repositoryNode);
 
                 return getStandardAnalysisWizardDialog(type, parameter);
@@ -163,13 +166,17 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         } else if (firstElement instanceof TdTable) {
             Connection connection = ConnectionHelper.getConnection((TdTable) firstElement);
             IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
-            parameter = new AnalysisParameter();
+            parameter = new AnalysisLabelParameter();
+            parameter.setCategoryLabel(getCategoryLabel());
+            parameter.setColumns(getColumns());
             parameter.setConnectionRepNode(repositoryNode);
             return getStandardAnalysisWizardDialog(type, parameter);
         } else if (firstElement instanceof TdView) { // Added yyin 20120522 TDQ-4945, support tdView
             Connection connection = ConnectionHelper.getConnection((TdView) firstElement);
             IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
-            parameter = new AnalysisParameter();
+            parameter = new AnalysisLabelParameter();
+            parameter.setCategoryLabel(getCategoryLabel());
+            parameter.setColumns(getColumns());
             parameter.setConnectionRepNode(repositoryNode);
             return getStandardAnalysisWizardDialog(type, parameter);
             // ~4945
@@ -281,20 +288,22 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
             if (dialog.open() == Window.OK) {
 
-                ModelElementIndicator[] predefinedColumnIndicator = getPredefinedColumnIndicator();
-                if (predefinedColumnIndicator != null) {
-                    ColumnMasterDetailsPage masterPage = getMasterPage();
-                    if (masterPage != null) {
-                        masterPage.refreshTheTree(predefinedColumnIndicator);
-                        masterPage.refreshPreviewTable(predefinedColumnIndicator, false);
-                        masterPage.doSave(null);
-                    }
-                }
+                // ModelElementIndicator[] predefinedColumnIndicator = getPredefinedColumnIndicator();
+                // if (predefinedColumnIndicator != null) {
+                // ColumnMasterDetailsPage masterPage = getMasterPage();
+                // if (masterPage != null) {
+                // masterPage.refreshTheTree(predefinedColumnIndicator);
+                // masterPage.refreshPreviewTable(predefinedColumnIndicator, false);
+                // masterPage.doSave(null);
+                // }
+                // }
             }
         }
     }
 
     protected abstract ModelElementIndicator[] getPredefinedColumnIndicator();
+
+    protected abstract String getCategoryLabel();
 
     protected abstract WizardDialog getPredefinedDialog();
 

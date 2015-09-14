@@ -43,7 +43,7 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
 
     protected AnalysisType analysisType;
 
-    private AnalysisParameter parameter;
+    protected AnalysisParameter parameter;
 
     private AnalysisBuilder analysisBuilder;
 

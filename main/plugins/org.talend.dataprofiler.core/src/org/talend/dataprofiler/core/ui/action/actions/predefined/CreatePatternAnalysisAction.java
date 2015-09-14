@@ -17,6 +17,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
@@ -79,8 +80,16 @@ public class CreatePatternAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected boolean preDo() {
-        // TODO Auto-generated method stub
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getCategoryLabel()
+     */
+    @Override
+    protected String getCategoryLabel() {
+        return AnalysisLabelParameter.PATTERN_FREQUENCY_ANALYSIS;
+    }
 }

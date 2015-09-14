@@ -91,4 +91,13 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getCategoryLabel()
+     */
+    @Override
+    protected String getCategoryLabel() {
+        return null;
+    }
 }

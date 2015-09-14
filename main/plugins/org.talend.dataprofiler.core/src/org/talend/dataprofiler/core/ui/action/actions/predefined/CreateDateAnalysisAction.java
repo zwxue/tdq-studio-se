@@ -208,4 +208,13 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
         return new OpeningHelpWizardDialog(null, wizard, FormEnum.TimeSlicesForm.getHelpHref(), page);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getCategoryLabel()
+     */
+    @Override
+    protected String getCategoryLabel() {
+        return null;
+    }
 }

@@ -59,7 +59,7 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
      */
     @Override
     protected boolean isAllowed() {
-        //column analysis only suit same table case
+        // column analysis only suit same table case
         if (getSelection().toList().size() > 1) {
             return false;
         }
@@ -75,6 +75,16 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
     protected boolean preDo() {
 
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getCategoryLabel()
+     */
+    @Override
+    protected String getCategoryLabel() {
+        return null;
     }
 
 }

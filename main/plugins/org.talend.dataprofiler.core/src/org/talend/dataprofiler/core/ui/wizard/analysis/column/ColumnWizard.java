@@ -12,22 +12,32 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -41,7 +51,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     private Indicator indicator;
 
-    private ColumnAnalysisDOSelectionPage selectionPage;
+    protected ColumnAnalysisDOSelectionPage selectionPage;
 
     public WizardPage[] getExtenalPages() {
         if (extenalPages == null) {
@@ -123,23 +133,95 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     @Override
     public void openEditor(Item item) {
         super.openEditor(item);
-        if (this.selectionPage != null) {
-            AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getActiveEditor();
-            if (editor != null) {
-                AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
+        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor();
+        if (editor != null) {
+            AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
+
+            // from the create analysis wizard
+            if (this.selectionPage != null) {
                 List<IRepositoryNode> nodes = this.selectionPage.nodes;
                 if (nodes != null && nodes.size() > 0) {
                     // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status
                     if (masterPage instanceof ColumnMasterDetailsPage) {
                         ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
+                        ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
+                        if (predefinedColumnIndicator != null) {
+                            ((ColumnMasterDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
+                            ((ColumnMasterDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
+                        }
                     } else {
                         masterPage.getTreeViewer().setInput(nodes.toArray(new RepositoryNode[nodes.size()]));
                     }
                     masterPage.doSave(new NullProgressMonitor());
                     // TDQ-6665~
                 }
+            } else {
+                // from the column right menu
+                if (masterPage instanceof ColumnMasterDetailsPage) {
+                    ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
+                    if (predefinedColumnIndicator != null) {
+                        ((ColumnMasterDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
+                        ((ColumnMasterDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
+                        masterPage.doSave(new NullProgressMonitor());
+                    }
+                }
             }
         }
     }
+
+    /**
+     * DOC msjian Comment method "getPredefinedColumnIndicator".
+     * 
+     * @return
+     */
+    protected ModelElementIndicator[] getPredefinedColumnIndicator() {
+        // need to implement in the subClass
+        return null;
+    }
+
+    protected ModelElementIndicator[] composePredefinedColumnIndicator(IndicatorEnum[] allowedEnum) {
+        List<IRepositoryNode> nodes;
+        // from the right menu
+        if (selectionPage == null) {
+            nodes = Arrays.asList(((AnalysisLabelParameter) parameter).getColumns());
+        } else {
+            nodes = selectionPage.nodes;
+        }
+        ModelElementIndicator[] predefinedColumnIndicator = new ModelElementIndicator[nodes.size()];
+        for (int i = 0; i < nodes.size(); i++) {
+
+            IRepositoryNode columnNode = nodes.get(i);
+            ModelElementIndicator columnIndicator = ModelElementIndicatorHelper.createModelElementIndicator(columnNode);
+
+            for (IndicatorEnum oneEnum : allowedEnum) {
+                columnIndicator.addTempIndicatorEnum(oneEnum);
+                if (oneEnum.getChildren() != null) {
+                    for (IndicatorEnum childEnum : oneEnum.getChildren()) {
+                        // MOD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose by
+                        // user.
+                        IRepositoryViewObject object = columnNode.getObject();
+
+                        ModelElement element = null;
+                        if (object instanceof MetadataColumnRepositoryObject) {
+                            element = ((MetadataColumnRepositoryObject) object).getTdColumn();
+                        } else if (object instanceof MetadataXmlElementTypeRepositoryObject) {
+                            element = ((MetadataXmlElementTypeRepositoryObject) object).getModelElement();
+                        }
+
+                        if (element != null && ModelElementIndicatorRule.patternRule(childEnum, element, ExecutionLanguage.SQL)) {
+                            columnIndicator.addTempIndicatorEnum(childEnum);
+                        }
+                    }
+                }
+            }
+
+            columnIndicator.storeTempIndicator();
+
+            predefinedColumnIndicator[i] = columnIndicator;
+        }
+
+        return predefinedColumnIndicator;
+    }
+
 }

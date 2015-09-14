@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
@@ -109,6 +110,16 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
     protected WizardDialog getPredefinedDialog() {
 
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getCategoryLabel()
+     */
+    @Override
+    protected String getCategoryLabel() {
+        return AnalysisLabelParameter.NOMINAL_VALUES_ANALYSIS;
     }
 
 }

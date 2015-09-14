@@ -12,17 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.wizard.WizardDialog;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.repository.model.IRepositoryNode;
-import org.talend.utils.sql.Java2SqlType;
-import org.talend.utils.sql.TalendTypeConvert;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -55,16 +53,18 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
      */
     @Override
     protected boolean isAllowed() {
-
-        for (IRepositoryNode repositoryNode : getColumns()) {
-            MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
-
-            int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
-
-            if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
-                return false;
-            }
+        if (!RepNodeUtils.isAllNumberalColumns(Arrays.asList(getColumns()))) {
+            return false;
         }
+        // for (IRepositoryNode repositoryNode : getColumns()) {
+        // MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+        //
+        // int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
+        //
+        // if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
+        // return false;
+        // }
+        // }
         if (!RepNodeUtils.isValidSelectionFromSameTable(getSelection().toList())) {
             return false;
         }
@@ -87,6 +87,16 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
     protected WizardDialog getPredefinedDialog() {
 
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getCategoryLabel()
+     */
+    @Override
+    protected String getCategoryLabel() {
+        return AnalysisLabelParameter.DISCRETE_DATA_ANALYSIS;
     }
 
 }

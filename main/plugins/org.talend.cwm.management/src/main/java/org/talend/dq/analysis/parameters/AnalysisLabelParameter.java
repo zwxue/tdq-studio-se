@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dq.analysis.parameters;
 
+import org.talend.repository.model.IRepositoryNode;
+
 /**
  * DOC zqin class global comment. Detailled comment <br/>
  * 
@@ -48,8 +50,18 @@ public class AnalysisLabelParameter extends AnalysisParameter {
 
     protected String categoryLabel;
 
+    IRepositoryNode[] nodes;
+
     public String getCategoryLabel() {
         return categoryLabel;
+    }
+
+    public IRepositoryNode[] getColumns() {
+        return nodes;
+    }
+
+    public void setColumns(IRepositoryNode[] nodes) {
+        this.nodes = nodes;
     }
 
     public void setCategoryLabel(String categoryLabel) {

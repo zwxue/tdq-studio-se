@@ -38,7 +38,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
 
     private static String newAnaStr = DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.newAnalysis"); //$NON-NLS-1$
 
-    private static String chooseConnStr = DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.chooseColumn"); //$NON-NLS-1$
+    protected static String chooseConnStr = DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.chooseColumn"); //$NON-NLS-1$
 
     private static String connsStr = DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.Columns"); //$NON-NLS-1$
 
@@ -100,7 +100,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
      * 
      * DOC talend Comment method "updateCompleteState".
      */
-    private void updateCompleteState() {
+    void updateCompleteState() {
         // Nodes come from same table or empty both are valid
         if (nodes.size() == 0 || RepNodeUtils.isValidSelectionFromSameTable(nodes)) {
             setPageComplete(true);

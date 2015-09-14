@@ -29,6 +29,7 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -58,6 +59,8 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sql.TalendTypeConvert;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -393,5 +396,35 @@ public final class RepNodeUtils {
             }
         }
         return Boolean.FALSE;
+    }
+
+    public static boolean isAllNumberalColumns(List<IRepositoryNode> nodes) {
+
+        if (nodes != null && nodes.size() > 0) {
+            for (int index = 0; index < nodes.size(); index++) {
+                IRepositoryNode repositoryNode = nodes.get(index);
+                MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+                int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
+                if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
+                    return false;
+                }
+
+                // if (columnNode instanceof DBColumnRepNode) {
+                // DBColumnRepNode node = (DBColumnRepNode) columnNode;
+                // TdColumn column = node.getTdColumn();
+                // if (!Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
+                // return Boolean.FALSE;
+                // }
+                // } else if (columnNode instanceof DFColumnRepNode) {
+                // DFColumnRepNode node = (DFColumnRepNode) columnNode;
+                // MetadataColumn column = node.getMetadataColumn();
+                // int javaType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
+                // if (!Java2SqlType.isNumbericInSQL(javaType)) {
+                // return Boolean.FALSE;
+                // }
+                // }
+            }
+        }
+        return Boolean.TRUE;
     }
 }
