@@ -10,17 +10,16 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.cwm.db.connection.datasource;
+package org.talend.dataquality.sampling;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.log4j.Logger;
-import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
-import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
-import org.talend.dq.helper.FileUtils;
 
 import com.talend.csv.CSVReader;
 
@@ -28,13 +27,13 @@ import com.talend.csv.CSVReader;
  * File delimited data.
  *
  */
-public class FileSamplingDataSource extends AbstractSamplingDataSource<DelimitedFileConnection> {
+public class FileSamplingDataSource implements SamplingDataSource<File> {
 
     private static Logger log = Logger.getLogger(FileSamplingDataSource.class);
 
     private CSVReader csvReader = null;
 
-    private DelimitedFileConnection fileConnection = null;
+    private File sourceFile = null;
 
     private String fieldSeperator = ","; //$NON-NLS-1$
 
@@ -46,21 +45,14 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
 
     private String escapeChar = "\\"; //$NON-NLS-1$
 
-    private Map<Integer, String> columnIndexMap = null;
-
-    private List<String> oldFullColumns = null;
-
-    public FileSamplingDataSource(List<String> columnNames) {
-        oldFullColumns = columnNames;
-    }
-
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.datascience.SamplingDataSource#setDataSource(java.lang.Object)
      */
-    public void setDataSource(DelimitedFileConnection conn) {
-        fileConnection = conn;
+    @Override
+    public void setDataSource(File ds) {
+        sourceFile = ds;
     }
 
     public void setFieldSeperator(String sep) {
@@ -99,11 +91,16 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
      * 
      * @see org.talend.dq.datascience.SamplingDataSource#getDatasize()
      */
+    @Override
     public boolean hasNext() throws Exception {
         boolean hasNext = false;
         try {
             if (csvReader == null) {
-                return false;
+                if (sourceFile != null) {
+                    csvReader = createCsvReader(sourceFile);
+                } else {
+                    return false;
+                }
             }
             hasNext = csvReader.readNext();
             if (!hasNext) {
@@ -122,15 +119,38 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
      * 
      * @see org.talend.dq.datascience.SamplingDataSource#getRecord()
      */
+    @Override
     public Object[] getRecord() {
-        Object[] oneRow = new Object[columnSize];
+        return csvReader.getValues();
+    }
 
-        // --- for each column
-        for (int i = 0; i < columnSize; i++) {
-            // --- get content of column
-            oneRow[i] = csvReader.get(oldFullColumns.indexOf(columnIndexMap.get(i)));
+    /**
+     * DOC zhao create csv reader given file, field separator , encoding and row separator .
+     * 
+     * @param file
+     * @param fieldSeperator field separator
+     * @param encoding file encoding
+     * @param rowSep row separator
+     * @param textEnclosure text enclosure
+     * @param escapeChar escape character.
+     * @return CSVReader instance.
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    private CSVReader createCsvReader(File file) throws UnsupportedEncodingException, FileNotFoundException {
+
+        CSVReader csvReaderNew = new CSVReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
+                encoding)), fieldSeperator.charAt(0));
+        csvReaderNew.setSeparator(rowSep.charAt(0));
+
+        csvReaderNew.setSkipEmptyRecords(true);
+        if (textEnclosure != null && textEnclosure.length() > 0) {
+            csvReaderNew.setQuoteChar(textEnclosure.charAt(0));
         }
-        return oneRow;
+        if (escapeChar != null) {
+            csvReaderNew.setEscapeChar(escapeChar.charAt(0));
+        }
+        return csvReaderNew;
     }
 
     /*
@@ -138,6 +158,7 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
      * 
      * @see org.talend.dataprofiler.core.sampling.SamplingDataSource#finalizeDataSampling()
      */
+    @Override
     public boolean finalizeDataSampling() throws Exception {
         if (csvReader != null) {
             try {
@@ -149,28 +170,10 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.db.connection.datasource.AbstractSamplingDataSource#getColumnHeader()
-     */
-    public void initColumnHeader(String[] columnHeaders) {
-
-        if (fileConnection != null) {
-            try {
-                int headValue = JavaSqlFactory.getHeadValue(fileConnection);
-                csvReader = FileUtils.createCsvReader(fileConnection);
-                FileUtils.initializeCsvReader(fileConnection, csvReader);
-                if (headValue != 0) {
-                    csvReader.readHeaders();
-                }
-                this.columnIndexMap = new HashMap<Integer, String>();
-                for (int index = 0; index < columnHeaders.length; index++) {
-                    this.columnIndexMap.put(index, columnHeaders[index]);
-                }
-            } catch (IOException e) {
-                log.error(e, e);
-            }
-        }
+    @Override
+    public long getRecordSize() {
+        // TODO Auto-generated method stub
+        return 0;
     }
+
 }

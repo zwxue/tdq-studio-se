@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.cwm.db.connection.datasource;
+package org.talend.dataquality.sampling;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,17 +24,22 @@ import org.apache.log4j.Logger;
  * the parameter ResultSet should be closed by the caller who set it.
  *
  */
-public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet> {
+public class JDBCSamplingDataSource implements SamplingDataSource<ResultSet> {
 
     private static Logger log = Logger.getLogger(JDBCSamplingDataSource.class);
 
     private ResultSet jdbcResultSet = null;
+
+    private int columnSize = 0;
+
+    private long recordSize;
 
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.datascience.SamplingDataSource#setDataSource(java.lang.Object)
      */
+    @Override
     public void setDataSource(ResultSet rs) {
         jdbcResultSet = rs;
     }
@@ -44,6 +49,7 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
      * 
      * @see org.talend.dq.datascience.SamplingDataSource#getDatasize()
      */
+    @Override
     public boolean hasNext() throws Exception {
         try {
             if (jdbcResultSet == null) {
@@ -55,11 +61,23 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
         }
     }
 
+    /**
+     * 
+     * DOC zhao Set column size .
+     * 
+     * @param columnSize the size of the columns in a record.
+     */
+    public void setColumnSize(int columnSize) {
+        this.columnSize = columnSize;
+
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.datascience.SamplingDataSource#getRecord()
      */
+    @Override
     public Object[] getRecord() throws Exception {
         try {
             Object[] oneRow = new Object[columnSize];
@@ -90,6 +108,7 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
      * 
      * @see org.talend.dataprofiler.core.sampling.SamplingDataSource#finalizeDataSampling()
      */
+    @Override
     public boolean finalizeDataSampling() throws Exception {
         if (jdbcResultSet != null) {
             Statement statement = jdbcResultSet.getStatement();
@@ -102,13 +121,12 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.sampling.SamplingDataSource#initColumnHeader()
-     */
-    public void initColumnHeader(String[] columnHeaders) {
-        // no need any implement
+    public void setRecordSize(long recordSize) {
+        this.recordSize = recordSize;
     }
 
+    @Override
+    public long getRecordSize() {
+        return recordSize;
+    }
 }
