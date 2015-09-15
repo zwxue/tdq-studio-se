@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.sampling;
+package org.talend.cwm.db.connection.datasource;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,6 +20,7 @@ import java.sql.Statement;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.talend.dataquality.sampling.SamplingDataSource;
 
 /**
  * created by zhao on 2015年4月22日 Detailled comment

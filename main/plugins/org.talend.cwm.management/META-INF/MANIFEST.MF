@@ -35,6 +35,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.talend.dq.CWMPlugin
 Export-Package: org.talend.commons.emf,
  org.talend.cwm.db.connection,
+ org.talend.cwm.db.connection.datasource,
  org.talend.cwm.db.connection.talendResultSet,
  org.talend.cwm.dependencies,
  org.talend.cwm.exception,

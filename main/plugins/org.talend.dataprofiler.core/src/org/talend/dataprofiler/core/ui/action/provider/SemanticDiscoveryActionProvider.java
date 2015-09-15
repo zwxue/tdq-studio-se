@@ -21,17 +21,19 @@ import java.util.Set;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.model.MetadataTableWithFilter;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.SemanticDiscoveryAction;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
 
 public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvider {
 
@@ -70,31 +72,36 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
             DBTableRepNode node = (DBTableRepNode) firstElement;
             semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
             // otherwise is some columns in the same columnset are selected.
-        } else {
+        } else if (firstElement instanceof DFTableRepNode) {
+            DFTableRepNode node = (DFTableRepNode) firstElement;
+            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getMetadataTable());
+        } else {// keep all of columns belong to same one table and create SemanticDiscoveryAction.
             Set<String> currentTableSet = new HashSet<String>();
-            TdTable createTdTable = RelationalFactory.eINSTANCE.createTdTable();
+            MetadataTable createTable = ConnectionFactory.eINSTANCE.createMetadataTable();
             List<String> filterNames = new ArrayList<String>();
             Iterator<Object> columnIterator = currentSelection.iterator();
-            TdTable columnOwnerAsTdTable = null;
             while (columnIterator.hasNext()) {
                 Object columnNode = columnIterator.next();
+                MetadataColumn metadataColumn = null;
                 if (DBColumnRepNode.class.isInstance(columnNode)) {
-                    TdColumn tdColumn = ((DBColumnRepNode) columnNode).getTdColumn();
-                    columnOwnerAsTdTable = ColumnHelper.getColumnOwnerAsTdTable(tdColumn);
-                    currentTableSet.add(ResourceHelper.getUUID(columnOwnerAsTdTable));
-                    // all of columns should come from same table
-                    if (currentTableSet.size() > 1) {
-                        return;
-                    } else if (currentTableSet.size() == 1) {
-                        createTdTable = columnOwnerAsTdTable;
-                    }
-                    filterNames.add(tdColumn.getName());
+                    metadataColumn = ((DBColumnRepNode) columnNode).getTdColumn();
+                    createTable = ColumnHelper.getColumnOwnerAsTdTable((TdColumn) metadataColumn);
+                } else if (DFColumnRepNode.class.isInstance(columnNode)) {
+                    metadataColumn = ((DFColumnRepNode) columnNode).getMetadataColumn();
+                    createTable = ColumnHelper.getColumnOwnerAsMetadataTable(metadataColumn);
                 } else {
                     // If not all of elements which be selected is columns
                     return;
                 }
+
+                currentTableSet.add(ResourceHelper.getUUID(createTable));
+                // all of columns should come from same table
+                if (currentTableSet.size() > 1) {
+                    return;
+                }
+                filterNames.add(metadataColumn.getName());
             }
-            MetadataTable metadataTableWithFilter = new MetadataTableWithFilter(filterNames, createTdTable);
+            MetadataTable metadataTableWithFilter = new MetadataTableWithFilter(filterNames, createTable);
             semanticDiscoveryAction = new SemanticDiscoveryAction(metadataTableWithFilter);
         }
         menu.add(semanticDiscoveryAction);
