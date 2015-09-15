@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
@@ -56,7 +56,7 @@ public class PatternFrequencyWizard extends ColumnWizard {
             selectionPage = new ColumnAnalysisDOSelectionPage();
             addPage(selectionPage);
         }
-        for (WizardPage page : getExtenalPages()) {
+        for (IWizardPage page : getExtenalPages()) {
             addPage(page);
         }
     }

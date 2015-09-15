@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
@@ -47,20 +48,20 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ColumnWizard extends AbstractAnalysisWizard {
 
-    private WizardPage[] extenalPages;
+    private IWizardPage[] extenalPages;
 
     private Indicator indicator;
 
     protected ColumnAnalysisDOSelectionPage selectionPage;
 
-    public WizardPage[] getExtenalPages() {
+    public IWizardPage[] getExtenalPages() {
         if (extenalPages == null) {
             return new WizardPage[0];
         }
         return extenalPages;
     }
 
-    public void setExtenalPages(WizardPage[] extenalPages) {
+    public void setExtenalPages(IWizardPage[] extenalPages) {
         this.extenalPages = extenalPages;
     }
 
@@ -100,7 +101,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
             selectionPage = new ColumnAnalysisDOSelectionPage();
             addPage(selectionPage);
         }
-        for (WizardPage page : getExtenalPages()) {
+        for (IWizardPage page : getExtenalPages()) {
             addPage(page);
         }
     }

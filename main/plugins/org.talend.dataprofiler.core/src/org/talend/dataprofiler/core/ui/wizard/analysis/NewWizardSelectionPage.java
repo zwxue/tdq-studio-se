@@ -274,6 +274,16 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     }
 
                     selectedWizard = WizardFactory.createAnalysisWizard(parentType, parameter);
+
+                    // if (((AnalysisLabelParameter) parameter).isSemanticDiscoveryAnalysis()) {
+                    // selectedWizard.setForcePreviousAndNextButtons(true);
+                    // ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
+                    // if (service != null) {
+                    // Wizard semanticDiscoveryWizard = service.getSemanticDiscoveryWizard(null);
+                    // IWizardPage[] pages = semanticDiscoveryWizard.getPages();
+                    // ((ColumnWizard) selectedWizard).setExtenalPages(pages);
+                    // }
+                    // }
                     setPageComplete(true);
                 }
                 // MOD by hcheng,0007483: Add help in analysis wizard

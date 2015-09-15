@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -47,7 +47,7 @@ public class MatchWizard extends ColumnWizard {
 
     private ColumnAnalysisDOSelectionPage selectionPage;
 
-    //Added TDQ-8647, used for judge the status of button Finish
+    // Added TDQ-8647, used for judge the status of button Finish
     private AnalysisMetadataWizardPage metadataPage;
 
     /**
@@ -69,7 +69,7 @@ public class MatchWizard extends ColumnWizard {
             selectionPage = new ColumnAnalysisDOSelectionPage(new MatchAnaColumnContentProvider(true));
             addPage(selectionPage);
         }
-        for (WizardPage page : getExtenalPages()) {
+        for (IWizardPage page : getExtenalPages()) {
             addPage(page);
         }
     }
