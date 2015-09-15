@@ -79,7 +79,7 @@ public final class IndicatorHelper {
     /**
      * The available threshold types.
      */
-    private static enum ThresholdType {
+    public static enum ThresholdType {
         VALUE_THRESHOLD("Value Threshold"), //$NON-NLS-1$
         PERCENTAGE_THRESHOLD("Percentage Threshold"); //$NON-NLS-1$
 
