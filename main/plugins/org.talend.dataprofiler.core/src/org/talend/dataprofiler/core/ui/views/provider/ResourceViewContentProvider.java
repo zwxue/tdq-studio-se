@@ -163,7 +163,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 instance.createRepositoryNodeSystemFolders(node, resContants);
             } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
                 List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                resContants.add(EResourceConstant.EXCHANGE);
+                // MOD TDQ-10933 msjian 20150915: Hide the Exchange node
+                if (!TalendPropertiesUtil.isHideExchange()) {
+                    resContants.add(EResourceConstant.EXCHANGE);
+                }
+                // TDQ-10933~
                 resContants.add(EResourceConstant.INDICATORS);
                 if (PluginChecker.isTDQLoaded()) {
                     resContants.add(EResourceConstant.JRXML_TEMPLATE);
