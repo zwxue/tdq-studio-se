@@ -47,6 +47,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryPrefConstants;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.runtime.CoreRuntimePlugin;
@@ -211,7 +212,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     resContants.add(EResourceConstant.REPORTS);
                 }
             } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
-                resContants.add(EResourceConstant.EXCHANGE);
+                // MOD TDQ-10933 msjian 20150915: Hide the Exchange node
+                if (!TalendPropertiesUtil.isHideExchange()) {
+                    resContants.add(EResourceConstant.EXCHANGE);
+                }
+                // TDQ-10933~
                 resContants.add(EResourceConstant.INDICATORS);
                 if (PluginChecker.isTDQLoaded()) {
                     resContants.add(EResourceConstant.JRXML_TEMPLATE);

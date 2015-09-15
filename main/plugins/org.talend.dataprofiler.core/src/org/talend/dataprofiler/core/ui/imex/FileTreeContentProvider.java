@@ -18,11 +18,13 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -50,26 +52,34 @@ public class FileTreeContentProvider implements ITreeContentProvider {
      */
     private Object[] filterRecords(ItemRecord[] childern) {
         ItemRecord[] result = childern;
-        result = hideTechnialIndicators(result);
+        result = hideSomeItems(result);
         return result;
     }
 
     /**
-     * hide the Technial indicators.
+     * hide Some Items.
      * 
      * @param itemRecords
      * @return
      */
-    private ItemRecord[] hideTechnialIndicators(ItemRecord[] itemRecords) {
+    private ItemRecord[] hideSomeItems(ItemRecord[] itemRecords) {
         List<ItemRecord> result = new ArrayList<ItemRecord>();
         for (ItemRecord itemRecord : itemRecords) {
-            if (itemRecord != null && itemRecord.getElement() != null && itemRecord.getElement() instanceof IndicatorDefinition
-                    && !(itemRecord.getElement() instanceof UDIndicatorDefinition)) {
-                IndicatorDefinition indDef = (IndicatorDefinition) itemRecord.getElement();
-                String uuid = ResourceHelper.getUUID(indDef);
-                if (IndicatorDefinitionFileHelper.isTechnialIndicator(uuid)) {
+            if (itemRecord != null) {
+                // hide the Technial indicators
+                if (itemRecord.getElement() != null && itemRecord.getElement() instanceof IndicatorDefinition
+                        && !(itemRecord.getElement() instanceof UDIndicatorDefinition)) {
+                    IndicatorDefinition indDef = (IndicatorDefinition) itemRecord.getElement();
+                    String uuid = ResourceHelper.getUUID(indDef);
+                    if (IndicatorDefinitionFileHelper.isTechnialIndicator(uuid)) {
+                        continue;
+                    }
+                }
+                // TDQ-10933: Hide the Exchange node
+                if (TalendPropertiesUtil.isHideExchange() && EResourceConstant.EXCHANGE.getName().equals(itemRecord.getName())) {
                     continue;
                 }
+                // TDQ-10933~
             }
             result.add(itemRecord);
         }
