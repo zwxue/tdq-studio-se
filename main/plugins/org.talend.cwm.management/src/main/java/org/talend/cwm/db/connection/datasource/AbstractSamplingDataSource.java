@@ -19,17 +19,7 @@ import org.talend.dataquality.sampling.SamplingDataSource;
  */
 public abstract class AbstractSamplingDataSource<DataSource> implements SamplingDataSource<DataSource> {
 
-    protected long recordSize;
-
     protected int columnSize = 0;
-
-    public void setRecordSize(long recordSize) {
-        this.recordSize = recordSize;
-    }
-
-    public long getRecordSize() {
-        return recordSize;
-    }
 
     /**
      * 

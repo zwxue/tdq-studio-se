@@ -77,40 +77,4 @@ public class ResultSetHelper {
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
-
-    public static long getResultSize(MetadataTable metadataTable) {
-        Statement createStatement = null;
-        ResultSet resultSet = null;
-        try {
-            Connection tdDataProvider = TableHelper.getFirstConnection(metadataTable);
-            IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
-            TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
-            if (!createConnection.isOk()) {
-                return 0;
-            }
-            java.sql.Connection sqlConn = createConnection.getObject();
-            DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-            createStatement = dbmsLanguage.createStatement(sqlConn);
-
-            Expression columnQueryExpression = dbmsLanguage.getTableCountQueryExpression(metadataTable, null);
-            resultSet = createStatement.executeQuery(columnQueryExpression.getBody());
-            if (resultSet.next()) {
-                return resultSet.getLong(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (createStatement != null) {
-                    createStatement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return 0;
-    }
 }
