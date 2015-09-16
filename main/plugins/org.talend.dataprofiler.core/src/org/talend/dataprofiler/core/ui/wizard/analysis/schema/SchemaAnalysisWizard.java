@@ -45,6 +45,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
         super(parameter);
     }
 
+    @Override
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
         if (getParameter().getConnectionRepNode() == null) {
@@ -89,7 +90,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
     }
 
     @Override
-    protected PackagesAnalyisParameter getParameter() {
+    public PackagesAnalyisParameter getParameter() {
         return (PackagesAnalyisParameter) super.getParameter();
     }
 }

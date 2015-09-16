@@ -48,7 +48,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapter {
+public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapter, IConnectionParameter {
 
     protected ModelElement modelElement = null;
 
@@ -170,7 +170,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
 
     protected abstract ResourceFileMap getResourceFileMap();
 
-    protected abstract ConnectionParameter getParameter();
+    public abstract ConnectionParameter getParameter();
 
     protected abstract String getEditorName();
 

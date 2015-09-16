@@ -115,7 +115,7 @@ public class NewDQRulesWizard extends AbstractWizard {
     }
 
     @Override
-    protected DQRulesParameter getParameter() {
+    public DQRulesParameter getParameter() {
         return parameter;
     }
 

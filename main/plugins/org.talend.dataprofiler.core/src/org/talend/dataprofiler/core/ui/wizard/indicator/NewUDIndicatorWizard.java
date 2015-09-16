@@ -133,7 +133,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
     }
 
     @Override
-    protected UDIndicatorParameter getParameter() {
+    public UDIndicatorParameter getParameter() {
         return parameter;
     }
 

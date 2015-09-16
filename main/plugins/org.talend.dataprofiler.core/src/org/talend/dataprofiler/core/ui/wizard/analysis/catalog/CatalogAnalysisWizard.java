@@ -42,6 +42,7 @@ public class CatalogAnalysisWizard extends AnalysisFilterWizard {
         super(parameter);
     }
 
+    @Override
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
 
@@ -82,7 +83,7 @@ public class CatalogAnalysisWizard extends AnalysisFilterWizard {
     }
 
     @Override
-    protected PackagesAnalyisParameter getParameter() {
+    public PackagesAnalyisParameter getParameter() {
         return (PackagesAnalyisParameter) super.getParameter();
     }
 }

@@ -97,6 +97,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         super(parameter);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public void addPages() {
         this.getParameter().setName(""); //$NON-NLS-1$
@@ -132,7 +133,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         TypedReturnCode<Object> saveCWMFile = super.createAndSaveCWMFile(analysis);
 
         if (saveCWMFile.isOk() && connection != null) {
-            ElementWriterFactory.getInstance().createDataProviderWriter().save((Connection) connection);
+            ElementWriterFactory.getInstance().createDataProviderWriter().save(connection);
         }
 
         return saveCWMFile;
@@ -192,7 +193,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     }
 
     @Override
-    protected NamedColumnSetAnalysisParameter getParameter() {
+    public NamedColumnSetAnalysisParameter getParameter() {
         return (NamedColumnSetAnalysisParameter) super.getParameter();
     }
 

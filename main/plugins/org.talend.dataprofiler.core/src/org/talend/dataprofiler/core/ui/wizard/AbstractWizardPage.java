@@ -23,7 +23,7 @@ import org.talend.dq.analysis.parameters.ConnectionParameter;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public abstract class AbstractWizardPage extends WizardPage {
+public abstract class AbstractWizardPage extends WizardPage implements IConnectionParameter {
 
     // ----message define----
 
@@ -122,7 +122,10 @@ public abstract class AbstractWizardPage extends WizardPage {
         return statusLevel;
     }
 
-    protected ConnectionParameter getParameter() {
-        return ((AbstractWizard) getWizard()).getParameter();
+    public ConnectionParameter getParameter() {
+        if (getWizard() instanceof IConnectionParameter) {
+            return ((IConnectionParameter) getWizard()).getParameter();
+        }
+        return null;
     }
 }

@@ -122,7 +122,7 @@ public class NewParserRulesWizard extends AbstractWizard {
     }
 
     @Override
-    protected DQParserRulesParameter getParameter() {
+    public DQParserRulesParameter getParameter() {
         return parameter;
     }
 

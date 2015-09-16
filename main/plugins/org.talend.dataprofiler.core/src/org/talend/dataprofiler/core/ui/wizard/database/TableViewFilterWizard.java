@@ -125,7 +125,7 @@ public class TableViewFilterWizard extends AbstractWizard {
     }
 
     @Override
-    protected ConnectionParameter getParameter() {
+    public ConnectionParameter getParameter() {
         return null;
     }
 

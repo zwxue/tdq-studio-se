@@ -16,8 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.Wizard;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
+import org.talend.dataprofiler.service.ISemanticStudioService;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -53,12 +56,12 @@ public class ColumnSemanticDiscoveryWizard extends ColumnWizard {
         selectionPage = new ColumnAnalysisDOSelectionPage();
         addPage(selectionPage);
 
-        // ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
-        // if (service != null) {
-        // Wizard semanticDiscoveryWizard = service.getSemanticDiscoveryWizard(null);
-        // IWizardPage[] pages = semanticDiscoveryWizard.getPages();
-        // this.setExtenalPages(pages);
-        // }
+        ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
+        if (service != null) {
+            Wizard semanticDiscoveryWizard = service.getSemanticDiscoveryWizard(null);
+            IWizardPage[] pages = semanticDiscoveryWizard.getPages();
+            this.setExtenalPages(pages);
+        }
         //
         // for (IWizardPage page : getExtenalPages()) {
         // addPage(page);

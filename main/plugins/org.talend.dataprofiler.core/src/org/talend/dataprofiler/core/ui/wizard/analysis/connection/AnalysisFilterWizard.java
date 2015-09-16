@@ -101,7 +101,7 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
     }
 
     @Override
-    protected AnalysisFilterParameter getParameter() {
+    public AnalysisFilterParameter getParameter() {
         return (AnalysisFilterParameter) super.getParameter();
     }
 }

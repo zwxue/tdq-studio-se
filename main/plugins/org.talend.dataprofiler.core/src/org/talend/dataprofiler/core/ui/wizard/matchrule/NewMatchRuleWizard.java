@@ -142,7 +142,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#getParameter()
      */
     @Override
-    protected ConnectionParameter getParameter() {
+    public ConnectionParameter getParameter() {
         return parameter;
     }
 

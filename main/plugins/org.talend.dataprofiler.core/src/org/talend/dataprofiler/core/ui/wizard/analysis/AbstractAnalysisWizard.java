@@ -78,7 +78,7 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
     }
 
     @Override
-    protected ConnectionParameter getParameter() {
+    public ConnectionParameter getParameter() {
         return this.parameter;
     }
 

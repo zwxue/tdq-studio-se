@@ -155,7 +155,7 @@ public class CreatePatternWizard extends AbstractWizard {
     }
 
     @Override
-    protected PatternParameter getParameter() {
+    public PatternParameter getParameter() {
         return this.parameter;
     }
 

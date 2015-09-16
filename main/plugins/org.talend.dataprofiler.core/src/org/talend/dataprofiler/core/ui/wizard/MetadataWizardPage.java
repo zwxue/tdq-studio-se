@@ -45,7 +45,6 @@ import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.model.bridge.ReponsitoryContextBridge;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
 
 /**
@@ -54,6 +53,10 @@ import orgomg.cwm.objectmodel.core.CorePackage;
 public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     private static final int TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT = 200;
+
+    public String getNameTextValue() {
+        return nameText.getText();
+    }
 
     // protected members
     protected Text nameText;
