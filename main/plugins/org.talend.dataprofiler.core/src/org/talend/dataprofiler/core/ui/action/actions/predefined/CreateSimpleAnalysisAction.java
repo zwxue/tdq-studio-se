@@ -16,6 +16,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.IndicatorEnumUtils;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
@@ -36,9 +37,8 @@ public class CreateSimpleAnalysisAction extends AbstractPredefinedAnalysisAction
      */
     @Override
     protected ModelElementIndicator[] getPredefinedColumnIndicator() {
-        IndicatorEnum[] allwedEnumes = new IndicatorEnum[1];
-        allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
-        return composePredefinedColumnIndicator(allwedEnumes);
+        IndicatorEnum[] allowedEnumes = IndicatorEnumUtils.getForSimpleAnalysis();
+        return composePredefinedColumnIndicator(allowedEnumes);
     }
 
     /*

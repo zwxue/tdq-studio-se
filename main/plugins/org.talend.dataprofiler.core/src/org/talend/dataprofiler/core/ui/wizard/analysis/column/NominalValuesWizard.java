@@ -12,11 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.wizard.IWizardPage;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.utils.IndicatorEnumUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -37,18 +35,12 @@ public class NominalValuesWizard extends ColumnWizard {
      */
     @Override
     protected ModelElementIndicator[] getPredefinedColumnIndicator() {
-        // MOD qiongli 2011-3-31,bug 19810.if contain none-nominal data,don't add TextIndicator.
-        List<IndicatorEnum> allwedEnumeLs = new ArrayList<IndicatorEnum>();
-        allwedEnumeLs.add(IndicatorEnum.CountsIndicatorEnum);
-        allwedEnumeLs.add(IndicatorEnum.FrequencyIndicatorEnum);
+        boolean addTextIndicator = true;
         if (selectionPage != null) {
-            if (((NominalValuesDPSelectionPage) selectionPage).isAddTextIndicator()) {
-                allwedEnumeLs.add(IndicatorEnum.TextIndicatorEnum);
-            }
+            addTextIndicator = ((NominalValuesDPSelectionPage) selectionPage).isAddTextIndicator();
         }
-        IndicatorEnum[] allwedEnumeArray = allwedEnumeLs.toArray(new IndicatorEnum[allwedEnumeLs.size()]);
-
-        return composePredefinedColumnIndicator(allwedEnumeArray);
+        IndicatorEnum[] allowedEnumes = IndicatorEnumUtils.getForNominalValuesAnalysis(addTextIndicator);
+        return composePredefinedColumnIndicator(allowedEnumes);
     }
 
     /*

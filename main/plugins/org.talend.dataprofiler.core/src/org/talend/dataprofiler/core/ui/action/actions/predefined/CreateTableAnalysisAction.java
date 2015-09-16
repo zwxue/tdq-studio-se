@@ -16,6 +16,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedTableAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.IndicatorEnumUtils;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
@@ -29,10 +30,8 @@ public class CreateTableAnalysisAction extends AbstractPredefinedTableAnalysisAc
 
     @Override
     protected TableIndicator[] getPredefinedTableIndicator() {
-        IndicatorEnum[] allwedEnumes = new IndicatorEnum[1];
-        allwedEnumes[0] = IndicatorEnum.WhereRuleIndicatorEnum;
-
-        return composePredefinedTableIndicator(allwedEnumes);
+        IndicatorEnum[] allowedEnumes = IndicatorEnumUtils.getForTableAnalysis();
+        return composePredefinedTableIndicator(allowedEnumes);
     }
 
     @Override

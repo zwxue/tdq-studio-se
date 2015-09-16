@@ -21,6 +21,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.IndicatorEnumUtils;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -47,15 +48,8 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
 
     @Override
     public ModelElementIndicator[] getPredefinedColumnIndicator() {
-        // MOD qiongli 2011-3-31,bug 19810.if contain none-nominal data,don't add TextIndicator.
-        List<IndicatorEnum> allwedEnumeLs = new ArrayList<IndicatorEnum>();
-        allwedEnumeLs.add(IndicatorEnum.CountsIndicatorEnum);
-        allwedEnumeLs.add(IndicatorEnum.FrequencyIndicatorEnum);
-        if (addTextIndicator) {
-            allwedEnumeLs.add(IndicatorEnum.TextIndicatorEnum);
-        }
-        IndicatorEnum[] allwedEnumeArray = allwedEnumeLs.toArray(new IndicatorEnum[allwedEnumeLs.size()]);
-        return composePredefinedColumnIndicator(allwedEnumeArray);
+        IndicatorEnum[] allowedEnumes = IndicatorEnumUtils.getForNominalValuesAnalysis(addTextIndicator);
+        return composePredefinedColumnIndicator(allowedEnumes);
     }
 
     @Override

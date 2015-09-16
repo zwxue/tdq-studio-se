@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.utils.IndicatorEnumUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -34,12 +35,7 @@ public class PatternFrequencyWizard extends ColumnWizard {
      */
     @Override
     protected ModelElementIndicator[] getPredefinedColumnIndicator() {
-        IndicatorEnum[] allowedEnumes = new IndicatorEnum[4];
-        allowedEnumes[0] = IndicatorEnum.RowCountIndicatorEnum;
-        allowedEnumes[1] = IndicatorEnum.NullCountIndicatorEnum;
-        allowedEnumes[2] = IndicatorEnum.PatternFreqIndicatorEnum;
-        allowedEnumes[3] = IndicatorEnum.PatternLowFreqIndicatorEnum;
-
+        IndicatorEnum[] allowedEnumes = IndicatorEnumUtils.getForPatternFrequencyAnalysis();
         return composePredefinedColumnIndicator(allowedEnumes);
     }
 
