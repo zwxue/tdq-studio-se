@@ -134,13 +134,11 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     @Override
     public void openEditor(Item item) {
         super.openEditor(item);
-        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-        if (editor != null) {
-            AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
-
-            // from the create analysis wizard
-            if (this.selectionPage != null) {
+        if (this.selectionPage != null) {
+            AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
+            if (editor != null) {
+                AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
                 List<IRepositoryNode> nodes = this.selectionPage.nodes;
                 if (nodes != null && nodes.size() > 0) {
                     // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status
@@ -157,18 +155,45 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                     masterPage.doSave(new NullProgressMonitor());
                     // TDQ-6665~
                 }
-            } else {
-                // from the column right menu
-                if (masterPage instanceof ColumnMasterDetailsPage) {
-                    ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
-                    if (predefinedColumnIndicator != null) {
-                        ((ColumnMasterDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
-                        ((ColumnMasterDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
-                        masterPage.doSave(new NullProgressMonitor());
-                    }
-                }
             }
         }
+
+        // super.openEditor(item);
+        // AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+        // .getActiveEditor();
+        // if (editor != null) {
+        // AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
+        //
+        // // from the create analysis wizard
+        // if (this.selectionPage != null) {
+        // List<IRepositoryNode> nodes = this.selectionPage.nodes;
+        // if (nodes != null && nodes.size() > 0) {
+        // // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status
+        // if (masterPage instanceof ColumnMasterDetailsPage) {
+        // ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
+        // ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
+        // if (predefinedColumnIndicator != null) {
+        // ((ColumnMasterDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
+        // ((ColumnMasterDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
+        // }
+        // } else {
+        // masterPage.getTreeViewer().setInput(nodes.toArray(new RepositoryNode[nodes.size()]));
+        // }
+        // masterPage.doSave(new NullProgressMonitor());
+        // // TDQ-6665~
+        // }
+        // // } else {
+        // // // from the column right menu
+        // // if (masterPage instanceof ColumnMasterDetailsPage) {
+        // // ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
+        // // if (predefinedColumnIndicator != null) {
+        // // ((ColumnMasterDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
+        // // ((ColumnMasterDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
+        // // masterPage.doSave(new NullProgressMonitor());
+        // // }
+        // // }
+        // }
+        // }
     }
 
     /**

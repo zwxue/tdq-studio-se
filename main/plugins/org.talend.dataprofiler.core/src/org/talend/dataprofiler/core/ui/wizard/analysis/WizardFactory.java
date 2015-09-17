@@ -90,7 +90,6 @@ public final class WizardFactory {
             parameter.setAnalysisTypeName(type.getLiteral());
 
             if (((AnalysisLabelParameter) parameter).isSemanticDiscoveryAnalysis()) {
-                // return new ColumnSemanticDiscoveryWizard(parameter);
                 ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
                 if (service != null) {
                     return service.getSemanticDiscoveryWizard(null);

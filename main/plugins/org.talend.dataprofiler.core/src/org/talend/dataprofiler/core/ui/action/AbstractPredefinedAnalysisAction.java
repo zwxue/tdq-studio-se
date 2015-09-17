@@ -287,16 +287,15 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
             dialog.setPageSize(500, 340);
 
             if (dialog.open() == Window.OK) {
-
-                // ModelElementIndicator[] predefinedColumnIndicator = getPredefinedColumnIndicator();
-                // if (predefinedColumnIndicator != null) {
-                // ColumnMasterDetailsPage masterPage = getMasterPage();
-                // if (masterPage != null) {
-                // masterPage.refreshTheTree(predefinedColumnIndicator);
-                // masterPage.refreshPreviewTable(predefinedColumnIndicator, false);
-                // masterPage.doSave(null);
-                // }
-                // }
+                ModelElementIndicator[] predefinedColumnIndicator = getPredefinedColumnIndicator();
+                if (predefinedColumnIndicator != null) {
+                    ColumnMasterDetailsPage masterPage = getMasterPage();
+                    if (masterPage != null) {
+                        masterPage.refreshTheTree(predefinedColumnIndicator);
+                        masterPage.refreshPreviewTable(predefinedColumnIndicator, false);
+                        masterPage.doSave(null);
+                    }
+                }
             }
         }
     }
