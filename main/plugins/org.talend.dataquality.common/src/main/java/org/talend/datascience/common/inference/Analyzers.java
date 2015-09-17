@@ -106,4 +106,9 @@ public class Analyzers implements Analyzer<Analyzers.Result> {
     public Analyzer<Result> merge(Analyzer<Result> another) {
         throw new NotImplementedException();
     }
+
+    @Override
+    public void close() throws Exception {
+    }
+    
 }
