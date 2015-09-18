@@ -84,7 +84,7 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
 
     private void addToSummaryMap(IndicatorEnum indicatorType, Object value) {
         Object indValue = value;
-        if (value == null) {
+        if (value == null || "null".equals(value)) { //$NON-NLS-1$
             indValue = 0;
         }
         summaryValues.put(indicatorType, Double.parseDouble(String.valueOf(indValue)));
