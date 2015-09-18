@@ -303,7 +303,7 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
         if (IndicatorValueType.REAL_VALUE.equals(this.getValueType())) {
             // MOD xqliu 2009-06-29 bug 7068
             try {
-                return value == null ? null : Double.valueOf(value);
+                return value == null || "null".equalsIgnoreCase(value) ? null : Double.valueOf(value);
             } catch (NumberFormatException e) {
                 log.error(e, e);
             }
