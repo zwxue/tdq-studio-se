@@ -31,7 +31,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#getImageByName(java.lang.String)
      */
     @Override
@@ -41,7 +41,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#createMatchRuleCTabFolderRenderer()
      */
     @Override
@@ -51,7 +51,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#getAddImage()
      */
     @Override
@@ -61,17 +61,19 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#getMatchRuleTable()
      */
     @Override
     public Composite createMatchRuleTable(SashForm parent, List<String> columnNames) {
-        return new MatchRuleDataTable(parent, columnNames.toArray(new String[0]));
+        MatchRuleDataTable matchRuleDataTable = new MatchRuleDataTable(parent, columnNames.toArray(new String[0]));
+        matchRuleDataTable.setUiService(this);
+        return matchRuleDataTable;
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#createMatchRuleDataChart(org.eclipse.swt.widgets.Composite,
      * java.util.List, java.util.List)
      */
@@ -88,30 +90,30 @@ public class MatchRuleUIService implements IMatchRuleUIService {
      * @param columnNames
      * @return
      */
-    private TreeMap<Object, Long> computeGroupSize2FreqMap(List<String[]> viewData, List<String> columnNames) {
+    public TreeMap<Object, Long> computeGroupSize2FreqMap(List<String[]> viewData, List<String> columnNames) {
         List<String> matchRowSchemaList = columnNames;
         int groupSizeColumnIndex = matchRowSchemaList.indexOf(MatchAnalysisConstant.GRP_SIZE);
         int masterColumnIndex = matchRowSchemaList.indexOf(MatchAnalysisConstant.MASTER);
         TreeMap<Object, Long> groupSize2groupFrequency = new TreeMap<Object, Long>();
         if (viewData != null) {
 
-        for (String[] values : viewData) {
-            if (Boolean.valueOf(values[masterColumnIndex])) { // Find the master row
-                if (null == groupSize2groupFrequency.get(values[groupSizeColumnIndex])) {
-                    groupSize2groupFrequency.put(values[groupSizeColumnIndex], 1l);
-                } else {
-                    long freq = groupSize2groupFrequency.get(values[groupSizeColumnIndex]) + 1;
-                    groupSize2groupFrequency.put(values[groupSizeColumnIndex], freq);
+            for (String[] values : viewData) {
+                if (Boolean.valueOf(values[masterColumnIndex])) { // Find the master row
+                    if (null == groupSize2groupFrequency.get(values[groupSizeColumnIndex])) {
+                        groupSize2groupFrequency.put(values[groupSizeColumnIndex], 1l);
+                    } else {
+                        long freq = groupSize2groupFrequency.get(values[groupSizeColumnIndex]) + 1;
+                        groupSize2groupFrequency.put(values[groupSizeColumnIndex], freq);
+                    }
                 }
             }
-        }
         }
         return groupSize2groupFrequency;
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#setNeedDisplayCount(int)
      */
     @Override
@@ -126,24 +128,24 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#refreshMatchRuleChart(java.util.List,
      * org.eclipse.swt.widgets.Composite)
      */
     @Override
     public void refreshMatchRuleChart(List<String[]> viewData, Composite com, List<String> columnNames) {
+        TreeMap<Object, Long> groupSize2groupFrequency = computeGroupSize2FreqMap(viewData, columnNames);
         if (com instanceof MatchRuleDataChart) {
-            TreeMap<Object, Long> groupSize2groupFrequency = computeGroupSize2FreqMap(viewData, columnNames);
             ((MatchRuleDataChart) com).refresh(groupSize2groupFrequency);
         } else if (com instanceof MatchRuleDataTable) {
-            ((MatchRuleDataTable) com).refresh(viewData);
+            ((MatchRuleDataTable) com).refresh(viewData, groupSize2groupFrequency);
         }
 
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#layoutMatchRuleChart()
      */
     @Override
@@ -156,7 +158,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.core.service.IMatchRuleUIService#disposeMatchRuleChart(org.eclipse.swt.widgets.Composite)
      */
     @Override

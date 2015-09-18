@@ -15,6 +15,7 @@ package org.talend.dataprofiler.chart.util;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.text.NumberFormat;
@@ -38,6 +39,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.chart.renderer.category.StackedBarRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
@@ -58,10 +60,9 @@ import org.jfree.data.xy.XYZDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
 import org.talend.dataprofiler.chart.ChartDecorator;
+import org.talend.dataprofiler.chart.TalendBarRenderer;
 import org.talend.dataprofiler.chart.i18n.Messages;
-import org.talend.dataprofiler.chart.preview.CustomRenderer;
 import org.talend.dataprofiler.chart.preview.DQRuleItemLabelGenerator;
-import org.talend.dataprofiler.chart.preview.MatchRuleColorRegistry;
 
 /**
  * @author scorreia
@@ -69,8 +70,6 @@ import org.talend.dataprofiler.chart.preview.MatchRuleColorRegistry;
  * Chart factory adapted for TOP.
  */
 public final class TopChartFactory {
-
-    public static final Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForAwt();
 
     private static final int BASE_ITEM_LABEL_SIZE = 12;
 
@@ -353,7 +352,7 @@ public final class TopChartFactory {
         JFreeChart chart = ChartFactory.createBarChart(null, titile,
                 Messages.getString("TopChartFactory.count"), dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
                 true, false);
-        ChartDecorator.decorateBarChart(chart);
+        ChartDecorator.decorateBarChart(chart, new TalendBarRenderer(true, ChartDecorator.COLOR_LIST));
         return chart;
     }
 
@@ -378,10 +377,11 @@ public final class TopChartFactory {
         domainAxis.setTickLabelPaint(EMPTY_FIELD, Color.RED);
 
         // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        BarRenderer renderer = new TalendBarRenderer(false, ChartDecorator.COLOR_LIST);
         renderer.setShadowVisible(false);
         // TDQ-5251~
 
+        plot.setRenderer(renderer);
         return createBarChart;
     }
 
@@ -402,12 +402,12 @@ public final class TopChartFactory {
                 "DataChart.title", sumItemCount(dataset), sumGroupCount(dataset)))); //$NON-NLS-1$
         CategoryPlot plot = (CategoryPlot) localJFreeChart.getPlot();
 
-        CustomRenderer customrenderer = new CustomRenderer(COLOR_LIST);
-        customrenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        customrenderer.setBaseItemLabelsVisible(true);
+        BarRenderer barRenderer = new TalendBarRenderer(true, ChartDecorator.COLOR_LIST);
+        barRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        barRenderer.setBaseItemLabelsVisible(true);
         // remove the shadow
-        customrenderer.setShadowVisible(Boolean.FALSE);
-        plot.setRenderer(customrenderer);
+        barRenderer.setShadowVisible(Boolean.FALSE);
+        plot.setRenderer(barRenderer);
 
         CategoryAxis localCategoryAxis = plot.getDomainAxis();
         localCategoryAxis.setCategoryMargin(0.25D);
@@ -431,12 +431,21 @@ public final class TopChartFactory {
         decorateCategoryPlot(chart);
         plot.setRangeGridlinesVisible(true);
 
-        XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
+        XYBarRenderer renderer = new XYBarRenderer() {
+
+            private static final long serialVersionUID = 4168794048090452033L;
+
+            @Override
+            public Paint getItemPaint(int row, int column) {
+                return ChartDecorator.COLOR_LIST.get(0);
+            }
+        };
         renderer.setBaseItemLabelsVisible(true);
         renderer.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
         renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer.setShadowVisible(Boolean.FALSE);
+        plot.setRenderer(renderer);
 
         return chart;
     }
@@ -524,6 +533,10 @@ public final class TopChartFactory {
         double unit = (max - min) / 10;
         rangeAxis.setRange(min - unit, max + unit);
         rangeAxis.setTickUnit(new NumberTickUnit(unit));
+
+        BoxAndWhiskerRenderer renderer = (BoxAndWhiskerRenderer) plot.getRenderer();
+        renderer.setArtifactPaint(ChartDecorator.COLOR_LIST.get(1));
+
         return chart;
     }
 
@@ -665,7 +678,7 @@ public final class TopChartFactory {
             boolean toolTips, boolean urls) {
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         JFreeChart pieChart = ChartFactory.createPieChart(title, dataset, showLegend, toolTips, urls);
-        ChartDecorator.decorate(pieChart, null);
+        ChartDecorator.decorateDuplicatePieChart(pieChart);
         return pieChart;
     }
 }

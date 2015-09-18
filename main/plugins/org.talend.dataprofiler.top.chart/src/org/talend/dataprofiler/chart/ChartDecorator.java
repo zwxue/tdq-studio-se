@@ -60,6 +60,37 @@ import org.talend.dataprofiler.chart.util.PluginConstant;
  */
 public final class ChartDecorator {
 
+    public static final String[] COLORS = { "#236192", "#C4D600", "#DB662A", "#F7A800", "#787121", "#00A9CE", "#A7A8AA",
+            "#ECAB7C", "#B8B370", "#D4D3D3", "#83D3E6", "#FFD38B" };
+
+    public static final List<Color> COLOR_LIST = new ArrayList<Color>();
+    static {
+        for (String color : COLORS) {
+            COLOR_LIST.add(Color.decode(color));
+        }
+    }
+
+    private static List<Color> PIE_COLOR_LIST = new ArrayList<Color>();
+    static {
+        PIE_COLOR_LIST.add(COLOR_LIST.get(0));
+        PIE_COLOR_LIST.add(COLOR_LIST.get(1));
+        PIE_COLOR_LIST.add(COLOR_LIST.get(3));
+        PIE_COLOR_LIST.add(COLOR_LIST.get(2));
+    }
+
+    private static List<Color> DUPLICATE_PIE_COLOR_LIST = new ArrayList<Color>();
+    static {
+        DUPLICATE_PIE_COLOR_LIST.add(COLOR_LIST.get(2));
+        DUPLICATE_PIE_COLOR_LIST.add(COLOR_LIST.get(1));
+        DUPLICATE_PIE_COLOR_LIST.add(COLOR_LIST.get(0));
+    }
+
+    private static List<Color> STACK_BAR_COLOR_LIST = new ArrayList<Color>();
+    static {
+        STACK_BAR_COLOR_LIST.add(COLOR_LIST.get(2));
+        STACK_BAR_COLOR_LIST.add(COLOR_LIST.get(1));
+    }
+
     private static final int BASE_ITEM_LABEL_SIZE = 10;
 
     private static final int BASE_LABEL_SIZE = 12;
@@ -89,6 +120,22 @@ public final class ChartDecorator {
     private ChartDecorator() {
     }
 
+    public static void decorateStackedBarChart(JFreeChart chart, PlotOrientation orientation) {
+        if (chart != null) {
+            Plot plot = chart.getPlot();
+            if (plot instanceof CategoryPlot) {
+                decorateCategoryPlot(chart, orientation);
+                int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
+                for (int i = 0; i < rowCount; i++) {
+                    if (i >= STACK_BAR_COLOR_LIST.size()) {
+                        STACK_BAR_COLOR_LIST.add(generateRandomColor(STACK_BAR_COLOR_LIST));
+                    }
+                    ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, STACK_BAR_COLOR_LIST.get(i));
+                }
+            }
+        }
+    }
+
     /**
      * DOC bZhou Comment method "decorate".
      * 
@@ -101,14 +148,13 @@ public final class ChartDecorator {
                 decorateCategoryPlot(chart, orientation);
 
                 int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
-
                 for (int i = 0; i < rowCount; i++) {
-                    // by zshen bug 14173 add the color in the colorList when chart neend more the color than 8.
-                    if (i >= colorList.size()) {
-                        colorList.add(generateRandomColor(colorList));
+                    // by zshen bug 14173 add the color in the colorList when chart need more the color than 8.
+                    if (i >= COLOR_LIST.size()) {
+                        COLOR_LIST.add(generateRandomColor(COLOR_LIST));
                     }
                     // ~14173
-                    ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, colorList.get(i));
+                    ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, COLOR_LIST.get(i));
                 }
 
             }
@@ -119,11 +165,11 @@ public final class ChartDecorator {
                 int count = chart.getXYPlot().getDataset().getSeriesCount();
                 for (int i = 0; i < count; i++) {
                     // by zshen bug 14173 add the color in the colorList when chart need the colors more than 8.
-                    if (i >= colorList.size()) {
-                        colorList.add(generateRandomColor(colorList));
+                    if (i >= COLOR_LIST.size()) {
+                        COLOR_LIST.add(generateRandomColor(COLOR_LIST));
                     }
                     // ~14173
-                    ((XYPlot) plot).getRenderer().setSeriesPaint(i, colorList.get(i));
+                    ((XYPlot) plot).getRenderer().setSeriesPaint(i, COLOR_LIST.get(i));
                 }
             }
 
@@ -133,11 +179,31 @@ public final class ChartDecorator {
                 // ADD msjian TDQ-8046 2013-10-17: add the color's control for pie chart
                 PieDataset piedataset = ((PiePlot) plot).getDataset();
                 for (int i = 0; i < piedataset.getItemCount(); i++) {
-                    if (i >= pieColorList.size()) {
-                        pieColorList.add(generateRandomColor(pieColorList));
+                    if (i >= PIE_COLOR_LIST.size()) {
+                        PIE_COLOR_LIST.add(generateRandomColor(PIE_COLOR_LIST));
                     }
                     Comparable<?> key = piedataset.getKey(i);
-                    ((PiePlot) plot).setSectionPaint(key, pieColorList.get(i));
+                    ((PiePlot) plot).setSectionPaint(key, PIE_COLOR_LIST.get(i));
+                }
+                // TDQ-8046~
+            }
+        }
+    }
+
+    public static void decorateDuplicatePieChart(JFreeChart chart) {
+        if (chart != null) {
+            Plot plot = chart.getPlot();
+            if (plot instanceof PiePlot) {
+                decoratePiePlot(chart);
+
+                // ADD msjian TDQ-8046 2013-10-17: add the color's control for pie chart
+                PieDataset piedataset = ((PiePlot) plot).getDataset();
+                for (int i = 0; i < piedataset.getItemCount(); i++) {
+                    if (i >= DUPLICATE_PIE_COLOR_LIST.size()) {
+                        DUPLICATE_PIE_COLOR_LIST.add(generateRandomColor(DUPLICATE_PIE_COLOR_LIST));
+                    }
+                    Comparable<?> key = piedataset.getKey(i);
+                    ((PiePlot) plot).setSectionPaint(key, DUPLICATE_PIE_COLOR_LIST.get(i));
                 }
                 // TDQ-8046~
             }
@@ -192,8 +258,8 @@ public final class ChartDecorator {
     public static void decorateColumnDependency(JFreeChart chart) {
         decorate(chart, PlotOrientation.HORIZONTAL);
         CategoryItemRenderer renderer = ((CategoryPlot) chart.getPlot()).getRenderer();
-        renderer.setSeriesPaint(0, colorList.get(1));
-        renderer.setSeriesPaint(1, colorList.get(0));
+        renderer.setSeriesPaint(0, COLOR_LIST.get(1));
+        renderer.setSeriesPaint(1, COLOR_LIST.get(2));
     }
 
     /**
@@ -284,7 +350,7 @@ public final class ChartDecorator {
                 }
             }
             if (isContainCJKCharacter(itemLabels.toArray())) {
-                font = getCJKFont(Font.PLAIN, BASE_LEGEND_LABEL_SIZE);//$NON-NLS-1$
+                font = getCJKFont(Font.PLAIN, BASE_LEGEND_LABEL_SIZE);
             }
             legend.setItemFont(font);
         }
@@ -367,34 +433,33 @@ public final class ChartDecorator {
      * create bar chart with customized bar render class which can be adapted in JFreeChart class.
      * 
      * @param chart
+     * @param barRenderer
      */
-    public static void decorateBarChart(JFreeChart chart) {
+    public static void decorateBarChart(JFreeChart chart, BarRenderer barRenderer) {
         CategoryPlot plot = chart.getCategoryPlot();
         plot.getRangeAxis().setUpperMargin(0.08);
-        // plot.getRangeAxis().setLowerBound(-0.08);
-
         plot.setRangeGridlinesVisible(true);
 
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-        renderer.setBaseItemLabelsVisible(true);
-        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        barRenderer.setBaseItemLabelsVisible(true);
+        barRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        barRenderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        barRenderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         // MOD klliu 2010-09-25 bug15514: The chart of summary statistic indicators not beautiful
-        renderer.setMaximumBarWidth(0.1);
+        barRenderer.setMaximumBarWidth(0.1);
         // renderer.setItemMargin(0.000000005);
         // renderer.setBase(0.04);
         // ADD yyi 2009-09-24 9243
-        renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat
+        barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat
                 .getInstance()));
 
         // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
-        renderer.setShadowVisible(false);
+        barRenderer.setShadowVisible(false);
         // TDQ-5251~
 
         // CategoryAxis domainAxis = plot.getDomainAxis();
         // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
 
+        plot.setRenderer(barRenderer);
     }
 
     /**
@@ -425,8 +490,7 @@ public final class ChartDecorator {
     public static JFreeChart decorateBenfordLawChart(CategoryDataset dataset, JFreeChart barChart, String title,
             String categoryAxisLabel, List<String> dotChartLabels, double[] formalValues) {
         CategoryPlot barplot = barChart.getCategoryPlot();
-        barplot.setRenderer(new BenfordLawLineAndShapeRenderer());
-        decorateBarChart(barChart);
+        decorateBarChart(barChart, new BenfordLawLineAndShapeRenderer());
         // display percentage on top of the bar
         DecimalFormat df = new DecimalFormat(PERCENT_FORMAT);
         barplot.getRenderer().setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", df)); //$NON-NLS-1$
@@ -448,7 +512,7 @@ public final class ChartDecorator {
         vn.setNumberFormatOverride(df);
         // set points format
         LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
-        renderer.setPaint(Color.BLUE);
+        renderer.setPaint(COLOR_LIST.get(1));
         renderer.setSeriesShape(1, new Rectangle2D.Double(-1.5, -1.5, 3, 3));
         renderer.setShapesVisible(true); // show the point shape
         renderer.setBaseLinesVisible(false);// do not show the line
@@ -473,7 +537,7 @@ public final class ChartDecorator {
 
         @Override
         public Paint getItemPaint(final int row, final int column) {
-            return (column > 8) ? Color.RED : new Color(193, 216, 047);
+            return (column > 8) ? COLOR_LIST.get(2) : COLOR_LIST.get(0);
         }
     }
 
@@ -490,77 +554,6 @@ public final class ChartDecorator {
             linedataset.addValue(formalValues[i], "Expected(%)", dotChartLabels.get(i)); //$NON-NLS-1$
         }
         return linedataset;
-    }
-
-    private static final Color COLOR_0 = new Color(244, 147, 32);
-
-    private static final Color COLOR_1 = new Color(128, 119, 178);
-
-    private static final Color COLOR_2 = new Color(190, 213, 48);
-
-    private static final Color COLOR_3 = new Color(236, 23, 133);
-
-    private static final Color COLOR_4 = new Color(35, 157, 190);
-
-    private static final Color COLOR_5 = new Color(164, 155, 100);
-
-    private static final Color COLOR_6 = new Color(250, 212, 16);
-
-    private static final Color COLOR_7 = new Color(234, 28, 36);
-
-    private static final Color COLOR_8 = new Color(192, 131, 91);
-
-    private static List<Color> colorList = new ArrayList<Color>();
-
-    private static List<Color> pieColorList = new ArrayList<Color>();
-
-    /**
-     * 
-     * DOC mzhao 2009-07-28 Bind the indicator with specific color.
-     */
-    public static enum IndiBindColor {
-        INDICATOR_ROW_COUNT("Row Count", COLOR_7), //$NON-NLS-1$
-        INDICATOR_NULL_COUNT("Null Count", COLOR_2), //$NON-NLS-1$
-        INDICATOR_DISTINCT_COUNT("Distinct Count", COLOR_0), //$NON-NLS-1$
-        INDICATOR_UNIQUE_COUNT("Unique Count", COLOR_1), //$NON-NLS-1$
-        INDICATOR_DUPLICATE_COUNT("Duplicate Count", COLOR_3);//$NON-NLS-1$
-
-        String indLabel = null;
-
-        Color color = null;
-
-        public Color getColor() {
-            return color;
-        }
-
-        IndiBindColor(String indicatorLabel, Color bindColor) {
-            indLabel = indicatorLabel;
-            color = bindColor;
-        }
-    }
-
-    static {
-        colorList.add(COLOR_7);
-        colorList.add(COLOR_2);
-        colorList.add(COLOR_0);
-        colorList.add(COLOR_1);
-        colorList.add(COLOR_3);
-        colorList.add(COLOR_4);
-        colorList.add(COLOR_5);
-        colorList.add(COLOR_6);
-        colorList.add(COLOR_8);
-    }
-
-    static {
-        pieColorList.add(COLOR_2);
-        pieColorList.add(COLOR_7);
-        pieColorList.add(COLOR_0);
-        pieColorList.add(COLOR_1);
-        pieColorList.add(COLOR_3);
-        pieColorList.add(COLOR_4);
-        pieColorList.add(COLOR_5);
-        pieColorList.add(COLOR_6);
-        pieColorList.add(COLOR_8);
     }
 
     /**

@@ -16,7 +16,10 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * DOC yyi class global comment. Detailled comment
+ * 
+ * @deprecated don't use this class any more.
  */
+@Deprecated
 public class MatchRuleColorRegistry {
 
     public static final int[][] COLORS = { { 244, 147, 32 }, { 128, 119, 178 }, { 190, 213, 48 }, { 35, 157, 190 },

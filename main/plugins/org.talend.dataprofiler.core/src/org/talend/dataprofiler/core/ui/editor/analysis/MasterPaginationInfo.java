@@ -33,6 +33,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.PatternStatisticsState;
 import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
@@ -147,6 +148,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
      */
     private void createChart(Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
         final IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
+        boolean isPattern = chartTypeState instanceof PatternStatisticsState;
         Object chart = null;
         // MOD TDQ-8787 20140722 yyin:(when first switch from master to result) if there is some dynamic event for the
         // current indicator, use its dataset directly (TDQ-9241)
@@ -161,7 +163,9 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         if (chart == null) {
             return;
         }
-        TOPChartUtils.getInstance().decorateChart(chart, false);
+        if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
+            TOPChartUtils.getInstance().decorateChart(chart, false);
+        }
         Object chartComp = TOPChartUtils.getInstance().createChartComposite(comp, SWT.NONE, chart, true);
         addListenerToChartComp(chartComp, chartTypeState);
 

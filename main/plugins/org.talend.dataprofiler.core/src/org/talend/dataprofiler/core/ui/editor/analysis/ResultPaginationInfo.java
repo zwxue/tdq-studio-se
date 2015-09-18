@@ -38,6 +38,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesFacto
 import org.talend.dataprofiler.core.ui.editor.preview.model.TableTypeStatesFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.PatternStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.table.ITableTypeStates;
 import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
@@ -224,6 +225,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         // create chart
         if (!EditorPreferencePage.isHideGraphics() && TOPChartUtils.getInstance().isTOPChartInstalled()) {
             IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
+            boolean isPattern = chartTypeState instanceof PatternStatisticsState;
             if (event == null) {
                 chart = chartTypeState.getChart();
                 if (chart != null && isSQLMode) {// chart is null for MODE. Get the dataset by this way for SQL mode
@@ -243,7 +245,9 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             // }
             dyModel.setDataset(dataset);
             if (chart != null) {
-                TOPChartUtils.getInstance().decorateChart(chart, false);
+                if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
+                    TOPChartUtils.getInstance().decorateChart(chart, false);
+                }
                 Object chartComposite = TOPChartUtils.getInstance().createTalendChartComposite(composite, SWT.NONE, chart, true);
                 if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
                     // for summary indicators: need to record the chart composite, which is used for create BAW chart

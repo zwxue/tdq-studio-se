@@ -19,6 +19,8 @@ import org.jfree.data.category.CategoryDataset;
 
 /**
  * DOC yyi DataChart class global comment. Detailled comment
+ * 
+ * @deprecated replaced by TalendBarRender
  */
 public class CustomRenderer extends BarRenderer {
 

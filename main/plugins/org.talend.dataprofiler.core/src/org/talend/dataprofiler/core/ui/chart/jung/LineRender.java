@@ -36,6 +36,8 @@ import edu.uci.ics.jung.visualization.PluggableRenderer;
  */
 public class LineRender extends PluggableRenderer {
 
+    private static Color TALEND_GRAY = Color.decode("#A7A8AA");
+
     public LineRender(final GraphBuilder graphbuilder) {
         setEdgeShapeFunction(new EdgeShape.Line());
 
@@ -51,7 +53,7 @@ public class LineRender extends PluggableRenderer {
             }
 
             public Paint getDrawPaint(Vertex v) {
-                return Color.BLACK;
+                return TALEND_GRAY;
             }
         });
 
@@ -89,12 +91,7 @@ public class LineRender extends PluggableRenderer {
             }
 
             private Paint getInternalPaint(Edge e) {
-                final Object userDatum = e.getUserDatum(GraphBuilder.E_ROWNUM_KEY);
-                if (userDatum != null) {
-                    Integer color = (Integer) userDatum;
-                    return AWTColorUtils.getColor(color);
-                }
-                return Color.GRAY;
+                return TALEND_GRAY;
             }
         });
 

@@ -458,7 +458,6 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         Object chart = TOPChartUtils.getInstance().createStackedBarChart(
                 DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
                 true, true);
-        TOPChartUtils.getInstance().decorateChart(chart, true);
 
         final Object chartComp = TOPChartUtils.getInstance().createChartComposite(parent, SWT.NONE, chart, true);
 

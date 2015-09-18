@@ -13,9 +13,11 @@
 package org.talend.dataquality.record.linkage.ui.composite.table;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,7 +40,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.talend.core.service.IMatchRuleUIService;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.record.linkage.ui.MatchRuleUIService;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
@@ -79,7 +83,29 @@ public class MatchRuleDataTable extends Composite {
     // TDQ-9297: Set the default value of "hide groups less than" to 2 instead of 1
     private int disGroupSize = PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT;
 
+    private List<Integer> groupSizeList = new ArrayList<Integer>();
+
     private final ControlAdapter matchRuleTableResizeListener = new MatchRuleTableResizeListener();
+
+    private IMatchRuleUIService uiService = null;
+
+    /**
+     * Getter for uiService.
+     * 
+     * @return the uiService
+     */
+    public IMatchRuleUIService getUiService() {
+        return this.uiService;
+    }
+
+    /**
+     * Sets the uiService.
+     * 
+     * @param uiService the uiService to set
+     */
+    public void setUiService(IMatchRuleUIService uiService) {
+        this.uiService = uiService;
+    }
 
     /**
      * DOC yyi DataTable constructor comment.
@@ -114,7 +140,10 @@ public class MatchRuleDataTable extends Composite {
         this.masterColumn = header.indexOf("MASTER"); //$NON-NLS-1$
         createTable();
         createPagination();
-        refresh(viewData);
+        if (this.getUiService() != null) {
+            MatchRuleUIService service = (MatchRuleUIService) this.getUiService();
+            refresh(viewData, service.computeGroupSize2FreqMap(viewData, header));
+        }
         return true;
     }
 
@@ -275,14 +304,39 @@ public class MatchRuleDataTable extends Composite {
         updateButons();
     }
 
-    public void refresh(List<String[]> newViewData) {
+    public void refresh(List<String[]> newViewData, TreeMap<Object, Long> groupSize2groupFrequency) {
         this.viewData = newViewData;
+        initGroupSizeArray(groupSize2groupFrequency, getDisGroupSize());
         clearDisGIDList();
         filterDisViewData();
         intiTableData(getDisplayViewData());
         reComputePageSize();
         loadPage(page);
         this.dataViewer.refresh();
+    }
+
+    /**
+     * DOC xqliu Comment method "buildGroupSizeArray".
+     * 
+     * @param groupSize2groupFrequency
+     * @param minGroupSize
+     */
+    private void initGroupSizeArray(TreeMap<Object, Long> groupSize2groupFrequency, int minGroupSize) {
+        groupSizeList.clear();
+        for (Object obj : groupSize2groupFrequency.keySet()) {
+            int grpSize = Integer.valueOf(obj.toString());
+            if (grpSize >= minGroupSize) {
+                groupSizeList.add(grpSize);
+            }
+        }
+        groupSizeList.sort(new Comparator<Integer>() {
+
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 - o2;
+            }
+
+        });
     }
 
     /**
@@ -339,7 +393,7 @@ public class MatchRuleDataTable extends Composite {
         @Override
         public org.eclipse.swt.graphics.Color getBackground(Object element, int columnIndex) {
             int grpSizeValue = getGrpSize(((String[]) element)[gidColumn]);
-            return COLOR_LIST[grpSizeValue % COLOR_LIST.length];
+            return COLOR_LIST[groupSizeList.indexOf(grpSizeValue) % COLOR_LIST.length];
         }
 
         private int getGrpSize(String grpId) {

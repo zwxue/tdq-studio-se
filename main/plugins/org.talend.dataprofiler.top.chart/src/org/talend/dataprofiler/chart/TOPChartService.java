@@ -374,18 +374,21 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public Object createStackedBarChart(String title, Object dataset, boolean showLegend) {
         JFreeChart stackedBarChart = TopChartFactory.createStackedBarChart(title, (CategoryDataset) dataset, showLegend);
-        ChartDecorator.decorate(stackedBarChart, null);
+        ChartDecorator.decorateStackedBarChart(stackedBarChart, null);
         return stackedBarChart;
     }
 
     @Override
     public Object createStackedBarChart(String title, Object dataset, boolean isHorizatal, boolean showLegend) {
+        JFreeChart chart = null;
         if (isHorizatal) {
-            return TopChartFactory
-                    .createStackedBarChart(title, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, showLegend);
+            chart = TopChartFactory.createStackedBarChart(title, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL,
+                    showLegend);
         } else {
-            return TopChartFactory.createStackedBarChart(title, (CategoryDataset) dataset, PlotOrientation.VERTICAL, showLegend);
+            chart = TopChartFactory.createStackedBarChart(title, (CategoryDataset) dataset, PlotOrientation.VERTICAL, showLegend);
         }
+        ChartDecorator.decorateStackedBarChart(chart, null);
+        return chart;
     }
 
     @Override
