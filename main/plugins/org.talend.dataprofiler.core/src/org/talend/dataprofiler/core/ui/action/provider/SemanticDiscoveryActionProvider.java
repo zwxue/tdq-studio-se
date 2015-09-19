@@ -26,12 +26,12 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.model.MetadataTableWithFilter;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.SemanticDiscoveryAction;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 
 public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvider {
 
@@ -69,18 +69,20 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
         if (firstElement instanceof DBTableRepNode) {
             DBTableRepNode node = (DBTableRepNode) firstElement;
             semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
+        } else if (firstElement instanceof DBViewRepNode) {
+            DBViewRepNode node = (DBViewRepNode) firstElement;
+            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdView());
             // otherwise is some columns in the same columnset are selected.
         } else {
             Set<String> currentTableSet = new HashSet<String>();
-            TdTable createTdTable = RelationalFactory.eINSTANCE.createTdTable();
+            MetadataTable createTdTable = RelationalFactory.eINSTANCE.createTdTable();
             List<String> filterNames = new ArrayList<String>();
             Iterator<Object> columnIterator = currentSelection.iterator();
-            TdTable columnOwnerAsTdTable = null;
             while (columnIterator.hasNext()) {
                 Object columnNode = columnIterator.next();
                 if (DBColumnRepNode.class.isInstance(columnNode)) {
                     TdColumn tdColumn = ((DBColumnRepNode) columnNode).getTdColumn();
-                    columnOwnerAsTdTable = ColumnHelper.getColumnOwnerAsTdTable(tdColumn);
+                    MetadataTable columnOwnerAsTdTable = ColumnHelper.getColumnOwnerAsMetadataTable(tdColumn);
                     currentTableSet.add(ResourceHelper.getUUID(columnOwnerAsTdTable));
                     // all of columns should come from same table
                     if (currentTableSet.size() > 1) {
