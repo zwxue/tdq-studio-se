@@ -73,13 +73,13 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableAnalysisResultPage extends AbstractAnalysisResultPageWithChart implements PropertyChangeListener {
+public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWithChart implements PropertyChangeListener {
 
-    protected static Logger log = Logger.getLogger(TableAnalysisResultPage.class);
+    protected static Logger log = Logger.getLogger(BusinessRuleAnalysisResultPage.class);
 
     private Composite resultComp;
 
-    TableMasterDetailsPage masterPage;
+    BusinessRuleAnalysisDetailsPage masterPage;
 
     AnalysisTableTreeViewer tableTreeViewer;
 
@@ -104,10 +104,10 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPageWithChart
      * @param id
      * @param title
      */
-    public TableAnalysisResultPage(FormEditor editor, String id, String title) {
+    public BusinessRuleAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-        this.masterPage = (TableMasterDetailsPage) analysisEditor.getMasterPage();
+        this.masterPage = (BusinessRuleAnalysisDetailsPage) analysisEditor.getMasterPage();
     }
 
     @Override
@@ -439,7 +439,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPageWithChart
      */
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage1) {
-        this.masterPage = (TableMasterDetailsPage) masterPage1;
+        this.masterPage = (BusinessRuleAnalysisDetailsPage) masterPage1;
 
         disposeComposite();
 

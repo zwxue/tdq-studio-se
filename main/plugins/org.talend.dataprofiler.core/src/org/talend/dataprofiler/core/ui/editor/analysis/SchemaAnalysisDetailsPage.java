@@ -30,9 +30,9 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage {
+public class SchemaAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
-    public SchemaAnalysisMasterDetailsPage(FormEditor editor, String id, String title) {
+    public SchemaAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 

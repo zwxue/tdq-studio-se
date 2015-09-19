@@ -38,10 +38,10 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.CorrelationAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.BusinessRuleAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.DateTimeDialog;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
@@ -208,17 +208,17 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             anaEditor = (AnalysisEditor) editor;
             Object temp = anaEditor.getMasterPage();
             if (temp != null) {
-                tableMasterPage = temp instanceof TableMasterDetailsPage;
-                columnSetMasterPage = temp instanceof ColumnSetMasterPage;
-                columnCorrelationMasterPage = temp instanceof ColumnCorrelationNominalAndIntervalMasterPage;
+                tableMasterPage = temp instanceof BusinessRuleAnalysisDetailsPage;
+                columnSetMasterPage = temp instanceof ColumnSetAnalysisDetailsPage;
+                columnCorrelationMasterPage = temp instanceof CorrelationAnalysisDetailsPage;
                 if (tableMasterPage) {
-                    masterPage = (TableMasterDetailsPage) temp;
+                    masterPage = (BusinessRuleAnalysisDetailsPage) temp;
                 } else if (columnSetMasterPage) {
-                    masterPage = (ColumnSetMasterPage) temp;
+                    masterPage = (ColumnSetAnalysisDetailsPage) temp;
                 } else if (columnCorrelationMasterPage) {
-                    masterPage = (ColumnCorrelationNominalAndIntervalMasterPage) temp;
+                    masterPage = (CorrelationAnalysisDetailsPage) temp;
                 } else {
-                    masterPage = (ColumnMasterDetailsPage) temp;
+                    masterPage = (ColumnAnalysisDetailsPage) temp;
                 }
             }
         }
@@ -226,14 +226,14 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         if (masterPage != null) {
             Analysis ana;
             if (tableMasterPage) {
-                ana = ((TableMasterDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
+                ana = ((BusinessRuleAnalysisDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
             } else if (columnSetMasterPage) {
-                ana = ((ColumnSetMasterPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
+                ana = ((ColumnSetAnalysisDetailsPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
             } else if (columnCorrelationMasterPage) {
-                ana = ((ColumnCorrelationNominalAndIntervalMasterPage) masterPage).getColumnCorrelationAnalysisHandler()
+                ana = ((CorrelationAnalysisDetailsPage) masterPage).getColumnCorrelationAnalysisHandler()
                         .getAnalysis();
             } else {
-                ana = ((ColumnMasterDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
+                ana = ((ColumnAnalysisDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
             }
             isContainRowCount = AnalysisHelper.containsRowCount(ana);
         }

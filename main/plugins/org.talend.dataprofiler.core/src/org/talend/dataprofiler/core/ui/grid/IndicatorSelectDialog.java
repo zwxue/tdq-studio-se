@@ -33,7 +33,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -93,8 +93,8 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
         Object editorPart = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editorPart instanceof AnalysisEditor) {
             AnalysisEditor analyEditor = (AnalysisEditor) editorPart;
-            if (analyEditor.getMasterPage() instanceof ColumnMasterDetailsPage) {
-                this.language = ExecutionLanguage.get(((ColumnMasterDetailsPage) analyEditor.getMasterPage()).getExecCombo()
+            if (analyEditor.getMasterPage() instanceof ColumnAnalysisDetailsPage) {
+                this.language = ExecutionLanguage.get(((ColumnAnalysisDetailsPage) analyEditor.getMasterPage()).getExecCombo()
                         .getText());
             }
         }

@@ -39,7 +39,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -225,12 +225,12 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         return dialog;
     }
 
-    protected ColumnMasterDetailsPage getMasterPage() {
+    protected ColumnAnalysisDetailsPage getMasterPage() {
         AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                 .getActiveEditor();
 
         if (editor != null) {
-            return (ColumnMasterDetailsPage) editor.getMasterPage();
+            return (ColumnAnalysisDetailsPage) editor.getMasterPage();
         } else {
             return null;
         }
@@ -289,7 +289,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
             if (dialog.open() == Window.OK) {
                 ModelElementIndicator[] predefinedColumnIndicator = getPredefinedColumnIndicator();
                 if (predefinedColumnIndicator != null) {
-                    ColumnMasterDetailsPage masterPage = getMasterPage();
+                    ColumnAnalysisDetailsPage masterPage = getMasterPage();
                     if (masterPage != null) {
                         masterPage.refreshTheTree(predefinedColumnIndicator);
                         masterPage.refreshPreviewTable(predefinedColumnIndicator, false);

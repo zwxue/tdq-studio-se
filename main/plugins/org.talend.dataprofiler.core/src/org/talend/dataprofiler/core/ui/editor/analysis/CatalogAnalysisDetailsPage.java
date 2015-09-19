@@ -32,7 +32,7 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
+public class CatalogAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     private List<CatalogIndicator> catalogIndicatorList = new ArrayList<CatalogIndicator>();
 
@@ -45,7 +45,7 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
      * @param id
      * @param title
      */
-    public CatalogMasterDetailsPage(FormEditor editor, String id, String title) {
+    public CatalogAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 

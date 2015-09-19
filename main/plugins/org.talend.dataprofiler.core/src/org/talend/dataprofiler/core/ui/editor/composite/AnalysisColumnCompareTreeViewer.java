@@ -62,7 +62,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnDependencyMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.FunctionalDependencyAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -242,7 +242,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         // way.
         // MOD qiongli 2010-6-10,bug 13600:remove "reverse columns" button for
         // ColumnSet comparison analysis.
-        if (masterPage instanceof ColumnDependencyMasterDetailsPage) {
+        if (masterPage instanceof FunctionalDependencyAnalysisDetailsPage) {
             columnReverseButtion = new Button(compareToplevelComp, SWT.NONE);
             // GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(compareToplevelComp);
             columnReverseButtion.setText("Reverse columns");
@@ -281,7 +281,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
         String hyperlinkTextLeft = null;
         String hyperlinkTextRight = null;
-        if (masterPage instanceof ColumnDependencyMasterDetailsPage) {
+        if (masterPage instanceof FunctionalDependencyAnalysisDetailsPage) {
             hyperlinkTextLeft = DefaultMessagesImpl.getString("AnalysisColumnCompareTreeViewer.DeterminantCol"); //$NON-NLS-1$
             hyperlinkTextRight = DefaultMessagesImpl.getString("AnalysisColumnCompareTreeViewer.DependentCol"); //$NON-NLS-1$
         } else {

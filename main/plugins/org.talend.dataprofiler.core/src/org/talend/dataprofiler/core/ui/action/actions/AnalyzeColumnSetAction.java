@@ -30,7 +30,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
@@ -130,7 +130,7 @@ public class AnalyzeColumnSetAction extends Action {
                     .getActiveEditor();
             List<IRepositoryNode> column = new ArrayList<IRepositoryNode>();
             if (editor != null) {
-                ColumnSetMasterPage page = (ColumnSetMasterPage) editor.getMasterPage();
+                ColumnSetAnalysisDetailsPage page = (ColumnSetAnalysisDetailsPage) editor.getMasterPage();
                 if (this.needselection && !this.selection.isEmpty()) {
                     IRepositoryNode[] nodeArray = new IRepositoryNode[selection.size()];
                     Iterator it = this.selection.iterator();

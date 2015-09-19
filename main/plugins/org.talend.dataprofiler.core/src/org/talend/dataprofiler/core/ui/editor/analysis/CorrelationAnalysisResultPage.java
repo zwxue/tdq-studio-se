@@ -77,15 +77,15 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC xzhao class global comment. Detailled comment
  */
-public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
+public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
-    protected static Logger log = Logger.getLogger(ColumnCorrelationNominalIntervalResultPage.class);
+    protected static Logger log = Logger.getLogger(CorrelationAnalysisResultPage.class);
 
     // private Composite resultComp;
 
     private Composite graphicsAndTableComp;
 
-    private ColumnCorrelationNominalAndIntervalMasterPage masterPage;
+    private CorrelationAnalysisDetailsPage masterPage;
 
     private ColumnSetMultiValueIndicator columnSetMultiIndicator;
 
@@ -104,10 +104,10 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
      * @param id
      * @param title
      */
-    public ColumnCorrelationNominalIntervalResultPage(FormEditor editor, String id, String title) {
+    public CorrelationAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-        this.masterPage = (ColumnCorrelationNominalAndIntervalMasterPage) analysisEditor.getMasterPage();
+        this.masterPage = (CorrelationAnalysisDetailsPage) analysisEditor.getMasterPage();
         columnSetMultiIndicator = masterPage.getColumnSetMultiValueIndicator();
     }
 
@@ -444,7 +444,6 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
 
         public Image getColumnImage(Object element, int columnIndex) {
-            // TODO Auto-generated method stub
             return null;
         }
 
@@ -463,7 +462,6 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
 
         public boolean isLabelProperty(Object element, String property) {
-            // TODO Auto-generated method stub
             return false;
         }
 
@@ -519,7 +517,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
      */
     @Override
     public void refresh(AbstractAnalysisMetadataPage mPage) {
-        this.masterPage = (ColumnCorrelationNominalAndIntervalMasterPage) mPage;
+        this.masterPage = (CorrelationAnalysisDetailsPage) mPage;
 
         if (summaryComp != null && !summaryComp.isDisposed()) {
             summaryComp.dispose();

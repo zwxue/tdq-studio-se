@@ -19,7 +19,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 
@@ -31,13 +31,13 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer
  */
 public class OpenIndicatorSelectorAction extends Action implements ICheatSheetAction {
 
-    private ColumnMasterDetailsPage page;
+    private ColumnAnalysisDetailsPage page;
 
     public OpenIndicatorSelectorAction() {
 
         AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                 .getActiveEditor();
-        page = (ColumnMasterDetailsPage) editor.getMasterPage();
+        page = (ColumnAnalysisDetailsPage) editor.getMasterPage();
     }
 
     /*

@@ -61,7 +61,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.CorrelationAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -93,7 +93,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     private List<RepositoryNode> columnSetMultiValueList;
 
-    private ColumnCorrelationNominalAndIntervalMasterPage masterPage;
+    private CorrelationAnalysisDetailsPage masterPage;
 
     private Menu menu;
 
@@ -106,7 +106,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         columnSetMultiValueList = new ArrayList<RepositoryNode>();
     }
 
-    public AnalysisColumnNominalIntervalTreeViewer(Composite parent, ColumnCorrelationNominalAndIntervalMasterPage masterPage) {
+    public AnalysisColumnNominalIntervalTreeViewer(Composite parent, CorrelationAnalysisDetailsPage masterPage) {
         this(parent);
         this.masterPage = masterPage;
         createButtonSection(parent.getParent());

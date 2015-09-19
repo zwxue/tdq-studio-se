@@ -113,9 +113,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * Detail Page of the match analysis
  */
-public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(MatchMasterDetailsPage.class);
+    private static Logger log = Logger.getLogger(MatchAnalysisDetailsPage.class);
 
     private EventReceiver afterCreateConnectionReceiver = null;
 
@@ -176,7 +176,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @param id
      * @param title
      */
-    public MatchMasterDetailsPage(FormEditor editor, String id, String title) {
+    public MatchAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
         analyzeDataDefaultInfo = DefaultMessagesImpl.getString("MatchMasterDetailsPage.DataDefultInfor"); //$NON-NLS-1$

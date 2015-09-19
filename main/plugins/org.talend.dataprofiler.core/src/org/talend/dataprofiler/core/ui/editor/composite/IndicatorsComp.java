@@ -34,8 +34,8 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.CorrelationAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
@@ -328,10 +328,10 @@ public class IndicatorsComp extends AbstractPagePart {
      * @return the analysis
      */
     public Analysis getAnalysis() {
-        if (masterPage instanceof ColumnSetMasterPage) {
-            return ((ColumnSetMasterPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
-        } else if (masterPage instanceof ColumnCorrelationNominalAndIntervalMasterPage) {
-            return ((ColumnCorrelationNominalAndIntervalMasterPage) masterPage).getAnalysis();
+        if (masterPage instanceof ColumnSetAnalysisDetailsPage) {
+            return ((ColumnSetAnalysisDetailsPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
+        } else if (masterPage instanceof CorrelationAnalysisDetailsPage) {
+            return ((CorrelationAnalysisDetailsPage) masterPage).getAnalysis();
         }
         return null;
     }
@@ -342,10 +342,10 @@ public class IndicatorsComp extends AbstractPagePart {
 
     @Override
     public void updateModelViewer() {
-        if (masterPage instanceof ColumnSetMasterPage) {
-            ((ColumnSetMasterPage) masterPage).recomputeIndicators();
-        } else if (masterPage instanceof ColumnCorrelationNominalAndIntervalMasterPage) {
-            ((ColumnCorrelationNominalAndIntervalMasterPage) masterPage).recomputeIndicators();
+        if (masterPage instanceof ColumnSetAnalysisDetailsPage) {
+            ((ColumnSetAnalysisDetailsPage) masterPage).recomputeIndicators();
+        } else if (masterPage instanceof CorrelationAnalysisDetailsPage) {
+            ((CorrelationAnalysisDetailsPage) masterPage).recomputeIndicators();
         }
         columnSetMultiValueList.clear();
     }

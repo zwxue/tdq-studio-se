@@ -65,9 +65,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * This page show the comparisons information of column set.
  */
-public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(ColumnsComparisonMasterDetailsPage.class);
+    private static Logger log = Logger.getLogger(RedundancyAnalysisDetailsPage.class);
 
     private RowMatchingIndicator rowMatchingIndicatorA;
 
@@ -93,7 +93,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     private String stringDataFilterB;
 
-    public ColumnsComparisonMasterDetailsPage(FormEditor editor, String id, String title) {
+    public RedundancyAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
 
     }

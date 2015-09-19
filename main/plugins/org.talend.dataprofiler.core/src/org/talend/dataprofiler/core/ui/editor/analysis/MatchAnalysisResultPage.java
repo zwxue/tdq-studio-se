@@ -35,7 +35,7 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
     private Composite resultComp;
 
-    private MatchMasterDetailsPage matchAnalysisMasterPage;
+    private MatchAnalysisDetailsPage matchAnalysisMasterPage;
 
     private DuplicateRecordStatisticsSection duplicateRecordStatisticsSection;
 
@@ -51,7 +51,7 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
     public MatchAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-        this.matchAnalysisMasterPage = (MatchMasterDetailsPage) analysisEditor.getMasterPage();
+        this.matchAnalysisMasterPage = (MatchAnalysisDetailsPage) analysisEditor.getMasterPage();
     }
 
     /*

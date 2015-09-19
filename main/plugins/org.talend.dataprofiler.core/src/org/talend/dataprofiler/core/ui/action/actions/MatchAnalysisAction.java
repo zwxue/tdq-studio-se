@@ -31,7 +31,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataTableRepository
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
@@ -107,7 +107,7 @@ public class MatchAnalysisAction extends Action {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
             if (editor != null) {
-                MatchMasterDetailsPage page = (MatchMasterDetailsPage) editor.getMasterPage();
+                MatchAnalysisDetailsPage page = (MatchAnalysisDetailsPage) editor.getMasterPage();
                 IRepositoryNode[] columns = getColumns();
                 if (this.needselection && columns.length > 0) {
                     page.updateAnalyzeDataLabel(columns[0]);

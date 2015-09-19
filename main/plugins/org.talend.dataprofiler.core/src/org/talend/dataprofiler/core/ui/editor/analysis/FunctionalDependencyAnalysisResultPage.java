@@ -48,7 +48,7 @@ import org.talend.utils.format.StringFormatUtil;
 /**
  * DOC jet class global comment. Detailled comment
  */
-public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithChart {
+public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResultPageWithChart {
 
     private Composite analyzedColumnSetsComp;
 
@@ -56,7 +56,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithCh
 
     private Section resultSection = null;
 
-    private ColumnDependencyMasterDetailsPage masterPage;
+    private FunctionalDependencyAnalysisDetailsPage masterPage;
 
     private ColumnDependencyIndicator columnDependencyIndicator;
 
@@ -75,10 +75,10 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithCh
      * @param id
      * @param title
      */
-    public ColumnDependencyResultPage(FormEditor editor, String id, String title) {
+    public FunctionalDependencyAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-        this.masterPage = (ColumnDependencyMasterDetailsPage) analysisEditor.getMasterPage();
+        this.masterPage = (FunctionalDependencyAnalysisDetailsPage) analysisEditor.getMasterPage();
     }
 
     /*
@@ -101,7 +101,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithCh
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage1) {
 
-        this.masterPage = (ColumnDependencyMasterDetailsPage) masterPage1;
+        this.masterPage = (FunctionalDependencyAnalysisDetailsPage) masterPage1;
         if (summaryComp != null && !summaryComp.isDisposed()) {
             summaryComp.dispose();
         }
@@ -222,7 +222,6 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithCh
         // create table items
         CustomerDefaultCategoryDataset dataset = initCustomerDataset();
         ChartDataEntity[] dataEntities = dataset.getDataEntities();
-        int i = 0;
         if (dataEntities != null) {
             // MOD mzhao bug 8839 There might be duplicate dependencies on left and right columnSet.
             if (canShowChart() && TOPChartUtils.getInstance().getColumnCount(dataset.getDataset()) < dataEntities.length) {
@@ -250,7 +249,6 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPageWithCh
                     item.setText(3, String.valueOf(row));
 
                     item.setData(dataEntity);
-                    i++;
                 }
             }
         }

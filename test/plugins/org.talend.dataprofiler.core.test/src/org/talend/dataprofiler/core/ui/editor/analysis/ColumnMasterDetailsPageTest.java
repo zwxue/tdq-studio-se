@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -30,9 +29,9 @@ public class ColumnMasterDetailsPageTest {
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
 
-    private ColumnMasterDetailsPage detail;
-
-    private AnaResourceFileHelper helper_mock;
+    // private ColumnAnalysisDetailsPage detail;
+    //
+    // private AnaResourceFileHelper helper_mock;
 
     /**
      * DOC yyin Comment method "setUp".

@@ -20,7 +20,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisDetailsPage;
 
 public class SelectDataForMatchAnalysisAction extends Action implements ICheatSheetAction {
 
@@ -38,7 +38,7 @@ public class SelectDataForMatchAnalysisAction extends Action implements ICheatSh
     public void run(String[] arg0, ICheatSheetManager arg1) {
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editor instanceof MatchAnalysisEditor) {
-            MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) ((MatchAnalysisEditor) editor).getMasterPage();
+            MatchAnalysisDetailsPage masterPage = (MatchAnalysisDetailsPage) ((MatchAnalysisEditor) editor).getMasterPage();
             masterPage.openColumnsSelectionDialog(null);
         }
     }

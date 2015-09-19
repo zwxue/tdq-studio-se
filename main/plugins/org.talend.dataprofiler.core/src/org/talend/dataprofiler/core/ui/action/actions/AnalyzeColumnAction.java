@@ -28,7 +28,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
@@ -63,7 +63,7 @@ public class AnalyzeColumnAction extends Action {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
             if (editor != null) {
-                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                ColumnAnalysisDetailsPage page = (ColumnAnalysisDetailsPage) editor.getMasterPage();
                 if (!this.selection.isEmpty()) {
                     List<RepositoryNode> nodeList = new ArrayList<RepositoryNode>();
                     Object[] objs = this.selection.toArray();

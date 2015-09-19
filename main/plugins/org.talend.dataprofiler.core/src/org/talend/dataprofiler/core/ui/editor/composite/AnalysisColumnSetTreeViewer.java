@@ -56,7 +56,7 @@ import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
@@ -89,13 +89,13 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private List<IRepositoryNode> columnSetMultiValueList;
 
-    private ColumnSetMasterPage masterPage;
+    private ColumnSetAnalysisDetailsPage masterPage;
 
     private ExecutionLanguage language;
 
     private AnalysisColumnSetTreeViewer setTreeViewer;
 
-    public AnalysisColumnSetTreeViewer(Composite parent, ColumnSetMasterPage masterPage) {
+    public AnalysisColumnSetTreeViewer(Composite parent, ColumnSetAnalysisDetailsPage masterPage) {
         absMasterPage = masterPage;
         viewKey = VIEWER_KEY;
         parentComp = parent;

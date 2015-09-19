@@ -93,9 +93,9 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements PropertyChangeListener {
+public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(TableMasterDetailsPage.class);
+    private static Logger log = Logger.getLogger(BusinessRuleAnalysisDetailsPage.class);
 
     AnalysisTableTreeViewer treeViewer;
 
@@ -121,7 +121,7 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
      * @param id
      * @param title
      */
-    public TableMasterDetailsPage(FormEditor editor, String id, String title) {
+    public BusinessRuleAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
         execLang = ExecutionLanguage.SQL.getLiteral();

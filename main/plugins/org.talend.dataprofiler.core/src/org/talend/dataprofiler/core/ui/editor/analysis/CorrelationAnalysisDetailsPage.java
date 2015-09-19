@@ -95,9 +95,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author xzhao
  */
-public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(ColumnCorrelationNominalAndIntervalMasterPage.class);
+    private static Logger log = Logger.getLogger(CorrelationAnalysisDetailsPage.class);
 
     AnalysisColumnNominalIntervalTreeViewer treeViewer;
 
@@ -144,7 +144,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private Composite previewComp;
 
-    public ColumnCorrelationNominalAndIntervalMasterPage(FormEditor editor, String id, String title) {
+    public CorrelationAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 

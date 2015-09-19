@@ -38,11 +38,11 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * @author rli
  */
-public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
+public class ConnectionAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     private ConnectionRepNode connectionNode;
 
-    public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
+    public ConnectionAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 

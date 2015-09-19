@@ -127,40 +127,40 @@ public class AnalysisEditor extends SupportContextEditor {
         switch (analysisType) {
 
         case COLUMN_CORRELATION:
-            masterPage = new ColumnCorrelationNominalAndIntervalMasterPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            resultPage = new ColumnCorrelationNominalIntervalResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
+            masterPage = new CorrelationAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new CorrelationAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case MULTIPLE_COLUMN:
-            masterPage = new ColumnMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            masterPage = new ColumnAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             resultPage = new ColumnAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case CONNECTION:
-            masterPage = new ConnectionMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            masterPage = new ConnectionAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             break;
         case CATALOG:
-            masterPage = new CatalogMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            masterPage = new CatalogAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             break;
         case SCHEMA:
-            masterPage = new SchemaAnalysisMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            masterPage = new SchemaAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             break;
         case COLUMNS_COMPARISON:
-            masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            resultPage = new ColumnsComparisonAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
+            masterPage = new RedundancyAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new RedundancyAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case TABLE:
-            masterPage = new TableMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            resultPage = new TableAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
+            masterPage = new BusinessRuleAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new BusinessRuleAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case TABLE_FUNCTIONAL_DEPENDENCY:
-            masterPage = new ColumnDependencyMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            resultPage = new ColumnDependencyResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
+            masterPage = new FunctionalDependencyAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new FunctionalDependencyAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case COLUMN_SET:
-            masterPage = new ColumnSetMasterPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            resultPage = new ColumnSetResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
+            masterPage = new ColumnSetAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new ColumnSetAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case MATCH_ANALYSIS:// Added 20130724 TDQ-7504
-            masterPage = new MatchMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            masterPage = new MatchAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             resultPage = new MatchAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         default:
@@ -307,10 +307,10 @@ public class AnalysisEditor extends SupportContextEditor {
             return;
         }
         if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
-            ((ColumnMasterDetailsPage) masterPage).performGlobalAction(id);
+            ((ColumnAnalysisDetailsPage) masterPage).performGlobalAction(id);
         }
         if (analysisType == AnalysisType.TABLE) {
-            ((TableMasterDetailsPage) masterPage).performGlobalAction(id);
+            ((BusinessRuleAnalysisDetailsPage) masterPage).performGlobalAction(id);
         }
     }
 
@@ -501,7 +501,7 @@ public class AnalysisEditor extends SupportContextEditor {
 
                 @Override
                 public boolean handle(Object data) {
-                    ((ColumnSetMasterPage) getMasterPage()).refreshIndicatorsSection();
+                    ((ColumnSetAnalysisDetailsPage) getMasterPage()).refreshIndicatorsSection();
                     return true;
                 }
             };
@@ -523,8 +523,8 @@ public class AnalysisEditor extends SupportContextEditor {
                         if (resultPage != null) {
                             if (resultPage instanceof ColumnAnalysisResultPage) {
                                 ((ColumnAnalysisResultPage) resultPage).registerDynamicEvent();
-                            } else if (resultPage instanceof TableAnalysisResultPage) {
-                                ((TableAnalysisResultPage) resultPage).registerDynamicEvent();
+                            } else if (resultPage instanceof BusinessRuleAnalysisResultPage) {
+                                ((BusinessRuleAnalysisResultPage) resultPage).registerDynamicEvent();
                             }
                         }
                     }
@@ -545,8 +545,8 @@ public class AnalysisEditor extends SupportContextEditor {
                         if (resultPage != null) {
                             if (resultPage instanceof ColumnAnalysisResultPage) {
                                 ((ColumnAnalysisResultPage) resultPage).unRegisterDynamicEvent();
-                            } else if (resultPage instanceof TableAnalysisResultPage) {
-                                ((TableAnalysisResultPage) resultPage).unRegisterDynamicEvent();
+                            } else if (resultPage instanceof BusinessRuleAnalysisResultPage) {
+                                ((BusinessRuleAnalysisResultPage) resultPage).unRegisterDynamicEvent();
                             }
                         }
                     }

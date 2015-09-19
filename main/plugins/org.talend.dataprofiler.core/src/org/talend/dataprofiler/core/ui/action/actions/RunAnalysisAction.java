@@ -55,7 +55,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisResultPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.DynamicAnalysisMasterPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.TableAnalysisResultPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.BusinessRuleAnalysisResultPage;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.service.ISemanticStudioService;
@@ -289,7 +289,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 return false;
             } else {// run from the run button in the editor
                 return listener instanceof DynamicAnalysisMasterPage || listener instanceof ColumnAnalysisResultPage
-                        || listener instanceof TableAnalysisResultPage;
+                        || listener instanceof BusinessRuleAnalysisResultPage;
             }
         } else {
             return false;

@@ -117,7 +117,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author rli
  */
-public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implements PropertyChangeListener {
+public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage implements PropertyChangeListener {
 
     /**
      * the temp value used to store the old connection value, when the user didn't save this page, use to revert
@@ -160,7 +160,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
     private EventReceiver afterCreateConnectionReceiver = null;
 
-    public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
+    public ColumnAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
     }
@@ -445,7 +445,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
                                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotOpenSelectIndicatorDialog")); //$NON-NLS-1$
                         return;
                     }
-                    ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnMasterDetailsPage.this.getSite()
+                    ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnAnalysisDetailsPage.this.getSite()
                             .getShell());
                     if (result != null) {
                         refreshCurrentTreeViewer(result);

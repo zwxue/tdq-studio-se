@@ -97,13 +97,13 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 /**
  * @author yyi 2009-12-16
  */
-public class ColumnSetResultPage extends AbstractAnalysisResultPageWithChart implements PropertyChangeListener {
+public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithChart implements PropertyChangeListener {
 
-    protected static Logger log = Logger.getLogger(ColumnSetResultPage.class);
+    protected static Logger log = Logger.getLogger(ColumnSetAnalysisResultPage.class);
 
     private Composite graphicsAndTableComp;
 
-    private ColumnSetMasterPage masterPage;
+    private ColumnSetAnalysisDetailsPage masterPage;
 
     private SimpleStatIndicator simpleStaticIndicator;
 
@@ -128,10 +128,10 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPageWithChart imp
      * @param id
      * @param title
      */
-    public ColumnSetResultPage(FormEditor editor, String id, String title) {
+    public ColumnSetAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-        this.masterPage = (ColumnSetMasterPage) analysisEditor.getMasterPage();
+        this.masterPage = (ColumnSetAnalysisDetailsPage) analysisEditor.getMasterPage();
         simpleStaticIndicator = masterPage.getSimpleStatIndicator();
         allMatchIndicator = masterPage.getAllMatchIndicator();
     }
@@ -320,13 +320,13 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPageWithChart imp
                     List<Indicator> indicatorsList = masterPage.analysisItem.getAnalysis().getResults().getIndicators();
                     SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
                     wizard.setFilterType(filterType);
-                    wizard.setOldTableInputList(ColumnSetResultPage.this.tableFilterResult);
+                    wizard.setOldTableInputList(ColumnSetAnalysisResultPage.this.tableFilterResult);
                     WizardDialog dialog = new WizardDialog(null, wizard);
                     dialog.setPageSize(300, 400);
                     wizard.setContainer(dialog);
                     wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));//$NON-NLS-1$
                     if (WizardDialog.OK == dialog.open()) {
-                        ColumnSetResultPage.this.tableFilterResult = wizard.getPatternSelectPage().getTableInputList();
+                        ColumnSetAnalysisResultPage.this.tableFilterResult = wizard.getPatternSelectPage().getTableInputList();
                         filterType = wizard.getPatternSelectPage().getFilterType();
                         columnsElementViewer.refresh();
                     }
@@ -403,13 +403,13 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPageWithChart imp
                     List<Indicator> indicatorsList = masterPage.analysisItem.getAnalysis().getResults().getIndicators();
                     SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
                     wizard.setFilterType(filterType);
-                    wizard.setOldTableInputList(ColumnSetResultPage.this.tableFilterResult);
+                    wizard.setOldTableInputList(ColumnSetAnalysisResultPage.this.tableFilterResult);
                     WizardDialog dialog = new WizardDialog(null, wizard);
                     dialog.setPageSize(300, 400);
                     wizard.setContainer(dialog);
                     wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));//$NON-NLS-1$
                     if (WizardDialog.OK == dialog.open()) {
-                        ColumnSetResultPage.this.tableFilterResult = wizard.getPatternSelectPage().getTableInputList();
+                        ColumnSetAnalysisResultPage.this.tableFilterResult = wizard.getPatternSelectPage().getTableInputList();
                         filterType = wizard.getPatternSelectPage().getFilterType();
                         columnsElementViewer.refresh();
                     }
@@ -622,7 +622,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPageWithChart imp
                 return true;
             }
             if (tableFilterResult != null) {
-                for (Map<Integer, RegexpMatchingIndicator> tableItem : ColumnSetResultPage.this.tableFilterResult) {
+                for (Map<Integer, RegexpMatchingIndicator> tableItem : ColumnSetAnalysisResultPage.this.tableFilterResult) {
                     if (element instanceof Object[]) {
                         for (int index = 0; index < ((Object[]) element).length; index++) {
                             RegexpMatchingIndicator regMatIndicator = tableItem.get(index);
@@ -678,7 +678,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPageWithChart imp
      */
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
-        this.masterPage = (ColumnSetMasterPage) masterPage;
+        this.masterPage = (ColumnSetAnalysisDetailsPage) masterPage;
         simpleStaticIndicator = this.masterPage.getSimpleStatIndicator();
 
         if (summaryComp != null && !summaryComp.isDisposed()) {

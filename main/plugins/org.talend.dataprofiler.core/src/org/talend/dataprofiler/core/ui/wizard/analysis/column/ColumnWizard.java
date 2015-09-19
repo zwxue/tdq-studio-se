@@ -27,7 +27,7 @@ import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
@@ -142,12 +142,12 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                 List<IRepositoryNode> nodes = this.selectionPage.nodes;
                 if (nodes != null && nodes.size() > 0) {
                     // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status
-                    if (masterPage instanceof ColumnMasterDetailsPage) {
-                        ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
+                    if (masterPage instanceof ColumnAnalysisDetailsPage) {
+                        ((ColumnAnalysisDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
                         ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
                         if (predefinedColumnIndicator != null) {
-                            ((ColumnMasterDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
-                            ((ColumnMasterDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
+                            ((ColumnAnalysisDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
+                            ((ColumnAnalysisDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
                         }
                     } else {
                         masterPage.getTreeViewer().setInput(nodes.toArray(new RepositoryNode[nodes.size()]));

@@ -109,9 +109,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author yyi 2009-12-16
  */
-public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(ColumnSetMasterPage.class);
+    private static Logger log = Logger.getLogger(ColumnSetAnalysisDetailsPage.class);
 
     AnalysisColumnSetTreeViewer treeViewer;
 
@@ -147,7 +147,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private Composite previewComp;
 
-    public ColumnSetMasterPage(FormEditor editor, String id, String title) {
+    public ColumnSetAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
     }
@@ -841,9 +841,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     private void resetResultPageData() {
-        ColumnSetResultPage theResultPage = null;
-        if (((AnalysisEditor) currentEditor).getResultPage() instanceof ColumnSetResultPage) {
-            theResultPage = (ColumnSetResultPage) ((AnalysisEditor) currentEditor).getResultPage();
+        ColumnSetAnalysisResultPage theResultPage = null;
+        if (((AnalysisEditor) currentEditor).getResultPage() instanceof ColumnSetAnalysisResultPage) {
+            theResultPage = (ColumnSetAnalysisResultPage) ((AnalysisEditor) currentEditor).getResultPage();
         }
         if (theResultPage.getTableFilterResult() != null) {
             theResultPage.setTableFilterResult(null);

@@ -27,7 +27,7 @@ import org.talend.cwm.helper.PackageHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.BusinessRuleAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -109,11 +109,11 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
         return dialog;
     }
 
-    protected TableMasterDetailsPage getMasterPage() {
+    protected BusinessRuleAnalysisDetailsPage getMasterPage() {
         AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                 .getActiveEditor();
         if (editor != null) {
-            return (TableMasterDetailsPage) editor.getMasterPage();
+            return (BusinessRuleAnalysisDetailsPage) editor.getMasterPage();
         } else {
             return null;
         }

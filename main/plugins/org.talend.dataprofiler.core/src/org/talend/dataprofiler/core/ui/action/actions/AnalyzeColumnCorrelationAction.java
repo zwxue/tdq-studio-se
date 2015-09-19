@@ -24,7 +24,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.CorrelationAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -65,7 +65,7 @@ public class AnalyzeColumnCorrelationAction extends Action {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
             if (editor != null) {
-                ColumnCorrelationNominalAndIntervalMasterPage page = (ColumnCorrelationNominalAndIntervalMasterPage) editor
+                CorrelationAnalysisDetailsPage page = (CorrelationAnalysisDetailsPage) editor
                         .getMasterPage();
                 if (!this.selection.isEmpty()) {
                     DBColumnRepNode[] columns = new DBColumnRepNode[selection.size()];

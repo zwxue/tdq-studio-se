@@ -25,7 +25,7 @@ import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.matchrule.NewMatchRuleWizard;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
@@ -108,7 +108,7 @@ public class ExportMatchRuleAction extends Action implements ICheatSheetAction {
     public void run(String[] arg0, ICheatSheetManager arg1) {
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editor instanceof MatchAnalysisEditor) {
-            MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) ((MatchAnalysisEditor) editor).getMasterPage();
+            MatchAnalysisDetailsPage masterPage = (MatchAnalysisDetailsPage) ((MatchAnalysisEditor) editor).getMasterPage();
             RecordMatchingIndicator rmIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(masterPage.getAnalysis());
             this.matchRule = rmIndicator.getBuiltInMatchRuleDefinition();
             this.run();

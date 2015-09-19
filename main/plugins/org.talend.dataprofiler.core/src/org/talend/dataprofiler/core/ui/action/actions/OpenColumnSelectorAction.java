@@ -19,12 +19,12 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnDependencyMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnsComparisonMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.CorrelationAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.FunctionalDependencyAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.RedundancyAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.BusinessRuleAnalysisDetailsPage;
 import org.talend.dataquality.analysis.AnalysisType;
 
 /**
@@ -76,12 +76,12 @@ public class OpenColumnSelectorAction extends Action implements ICheatSheetActio
             }
             switch (analysisCatigory) {
             case AnalysisType.BUSINESS_RULE_VALUE:
-                TableMasterDetailsPage page4 = (TableMasterDetailsPage) editor.getMasterPage();
+                BusinessRuleAnalysisDetailsPage page4 = (BusinessRuleAnalysisDetailsPage) editor.getMasterPage();
                 page4.openTableSelectionDialog();
                 page4.doSave(null);
                 break;
             case AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY_VALUE:
-                ColumnDependencyMasterDetailsPage page3 = (ColumnDependencyMasterDetailsPage) editor.getMasterPage();
+                FunctionalDependencyAnalysisDetailsPage page3 = (FunctionalDependencyAnalysisDetailsPage) editor.getMasterPage();
                 if (params[1] != null) {
                     if ("A".equalsIgnoreCase(params[1])) {//$NON-NLS-1$
                         page3.openColumnsSetASelectionDialog();
@@ -92,19 +92,19 @@ public class OpenColumnSelectorAction extends Action implements ICheatSheetActio
                 // page3.doSave(null);
                 break;
             case AnalysisType.COLUMN_SET_VALUE:
-                ColumnSetMasterPage page0 = (ColumnSetMasterPage) editor.getMasterPage();
+                ColumnSetAnalysisDetailsPage page0 = (ColumnSetAnalysisDetailsPage) editor.getMasterPage();
                 page0.openColumnsSelectionDialog();
                 page0.doSave(null);
                 break;
 
             case AnalysisType.MULTIPLE_COLUMN_VALUE:
-                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                ColumnAnalysisDetailsPage page = (ColumnAnalysisDetailsPage) editor.getMasterPage();
                 page.openColumnsSelectionDialog();
                 page.doSave(null);
                 break;
 
             case AnalysisType.COLUMNS_COMPARISON_VALUE:
-                ColumnsComparisonMasterDetailsPage page1 = (ColumnsComparisonMasterDetailsPage) editor.getMasterPage();
+                RedundancyAnalysisDetailsPage page1 = (RedundancyAnalysisDetailsPage) editor.getMasterPage();
                 if (params[1] != null) {
                     if (NumberUtils.isNumber(params[1])) {
                         int pos = NumberUtils.toInt(params[1]);
@@ -120,7 +120,7 @@ public class OpenColumnSelectorAction extends Action implements ICheatSheetActio
                 break;
 
             case AnalysisType.COLUMN_CORRELATION_VALUE:
-                ColumnCorrelationNominalAndIntervalMasterPage page2 = (ColumnCorrelationNominalAndIntervalMasterPage) editor
+                CorrelationAnalysisDetailsPage page2 = (CorrelationAnalysisDetailsPage) editor
                         .getMasterPage();
                 page2.openColumnsSelectionDialog();
                 page2.doSave(null);

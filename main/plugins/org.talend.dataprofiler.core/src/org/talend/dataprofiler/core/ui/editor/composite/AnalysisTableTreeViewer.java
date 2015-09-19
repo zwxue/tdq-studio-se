@@ -67,7 +67,7 @@ import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.BusinessRuleAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
@@ -121,7 +121,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     private Composite parentComp;
 
-    private TableMasterDetailsPage masterPage;
+    private BusinessRuleAnalysisDetailsPage masterPage;
 
     private TableIndicator[] tableIndicators;
 
@@ -156,7 +156,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      * @param tree
      * @param tableMasterDetailsPage
      */
-    public AnalysisTableTreeViewer(Composite parent, TableMasterDetailsPage masterPage) {
+    public AnalysisTableTreeViewer(Composite parent, BusinessRuleAnalysisDetailsPage masterPage) {
         this(parent);
         this.masterPage = masterPage;
         this.setElements(masterPage.getCurrentTableIndicators());

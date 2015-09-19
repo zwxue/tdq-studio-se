@@ -71,7 +71,7 @@ import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.grid.utils.Observerable;
@@ -113,7 +113,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
 
     private Composite parentComp;
 
-    final private ColumnMasterDetailsPage masterPage;
+    final private ColumnAnalysisDetailsPage masterPage;
 
     // ADD xqliu 2009-08-24 bug 8776
     private ExecutionLanguage language;
@@ -130,7 +130,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         this.language = language;
     }
 
-    public AnalysisColumnTreeViewer(Composite parent, ColumnMasterDetailsPage masterPage) {
+    public AnalysisColumnTreeViewer(Composite parent, ColumnAnalysisDetailsPage masterPage) {
         this.viewKey = VIEWER_KEY;
         absMasterPage = masterPage;
         parentComp = parent;

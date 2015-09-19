@@ -48,11 +48,9 @@ import org.talend.dq.indicators.preview.EIndicatorChartType;
  */
 public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
-    // private static Logger log = Logger.getLogger(ColumnAnalysisResultPage.class);
-
     private Composite resultComp;
 
-    ColumnMasterDetailsPage masterPage;
+    ColumnAnalysisDetailsPage masterPage;
 
     private Section resultSection = null;
 
@@ -78,7 +76,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     public ColumnAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-        this.masterPage = (ColumnMasterDetailsPage) analysisEditor.getMasterPage();
+        this.masterPage = (ColumnAnalysisDetailsPage) analysisEditor.getMasterPage();
     }
 
     @Override
@@ -173,7 +171,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
      */
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage1) {
-        this.masterPage = (ColumnMasterDetailsPage) masterPage1;
+        this.masterPage = (ColumnAnalysisDetailsPage) masterPage1;
 
         disposeComposite();
         masterPage1.refresh();

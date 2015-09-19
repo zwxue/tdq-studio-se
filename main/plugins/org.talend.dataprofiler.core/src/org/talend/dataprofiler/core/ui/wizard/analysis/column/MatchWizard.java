@@ -22,7 +22,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.MatchAnaColumnContentProvider;
@@ -90,7 +90,7 @@ public class MatchWizard extends ColumnWizard {
     // when calling this method, the validation of the selection has been approved.the nodes will only contains one
     // column set, or some columns from one same column set.
     private void updateAnalysisBySelectedNode(AnalysisEditor editor) {
-        MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) editor.getMasterPage();
+        MatchAnalysisDetailsPage masterPage = (MatchAnalysisDetailsPage) editor.getMasterPage();
         List<IRepositoryNode> nodes = selectionPage.nodes;
 
         if (nodes != null && nodes.size() > 0) {

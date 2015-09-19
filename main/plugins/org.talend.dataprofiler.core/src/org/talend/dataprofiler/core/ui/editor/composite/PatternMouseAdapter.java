@@ -29,8 +29,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
@@ -135,7 +135,7 @@ public class PatternMouseAdapter extends MouseAdapter {
             // Added yyin 20121121 TDQ-6329: after remove all, should also add the old selected patterns
             // because the columnset does not have pagination, can not refresh automatically
             boolean addOldSelected = false;
-            if (masterPage instanceof ColumnSetMasterPage) {
+            if (masterPage instanceof ColumnSetAnalysisDetailsPage) {
                 addOldSelected = true;
             }
             if (addOldSelected) {
@@ -155,7 +155,7 @@ public class PatternMouseAdapter extends MouseAdapter {
                 if (trc.isOk()) {
                     createOneUnit(trc.getObject());
                     // TDQ-8860 add msjian 2014-4-30:check whether show allmatchindicator in the indicators section
-                    if (masterPage instanceof ColumnSetMasterPage) {
+                    if (masterPage instanceof ColumnSetAnalysisDetailsPage) {
                         EventManager.getInstance().publish(analysis, EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
                     }
                     // TDQ-8860~
@@ -163,8 +163,8 @@ public class PatternMouseAdapter extends MouseAdapter {
             }
 
             treeItem.setExpanded(true);
-            if (masterPage instanceof ColumnMasterDetailsPage) {
-                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) masterPage;
+            if (masterPage instanceof ColumnAnalysisDetailsPage) {
+                ColumnAnalysisDetailsPage page = (ColumnAnalysisDetailsPage) masterPage;
                 page.refreshTheTree(page.getCurrentModelElementIndicators());
             }
         }

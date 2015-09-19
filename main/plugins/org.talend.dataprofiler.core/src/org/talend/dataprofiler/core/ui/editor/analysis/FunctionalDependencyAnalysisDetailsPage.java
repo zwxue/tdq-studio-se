@@ -64,9 +64,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * 
  * @author jet
  */
-public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(ColumnDependencyMasterDetailsPage.class);
+    private static Logger log = Logger.getLogger(FunctionalDependencyAnalysisDetailsPage.class);
 
     private Section columnsComparisonSection = null;
 
@@ -145,7 +145,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      * @param id
      * @param title
      */
-    public ColumnDependencyMasterDetailsPage(FormEditor editor, String id, String title) {
+    public FunctionalDependencyAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 

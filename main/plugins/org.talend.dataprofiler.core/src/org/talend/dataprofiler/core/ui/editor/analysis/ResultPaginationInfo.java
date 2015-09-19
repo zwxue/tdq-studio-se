@@ -62,7 +62,7 @@ import org.talend.repository.model.IRepositoryNode;
  */
 public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
-    private ColumnMasterDetailsPage masterPage;
+    private ColumnAnalysisDetailsPage masterPage;
 
     // Added TDQ-8787 20140617 yyin : store the temp indicator and its related table between one running
     private Map<List<Indicator>, TableViewer> indicatorTableMap = new HashMap<List<Indicator>, TableViewer>();
@@ -71,7 +71,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
     private boolean isSQLMode = true;
 
     public ResultPaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
-            ColumnMasterDetailsPage masterPage, UIPagination uiPagination) {
+            ColumnAnalysisDetailsPage masterPage, UIPagination uiPagination) {
         super(form, modelElementIndicators, uiPagination);
         this.masterPage = masterPage;
         if (masterPage.getTreeViewer() != null) {

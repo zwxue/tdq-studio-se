@@ -69,13 +69,13 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultPageWithChart {
+public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWithChart {
 
     private static final String NOT_MATCHING = DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Not_matching"); //$NON-NLS-1$
 
     private static final String MATCHING = DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Matching"); //$NON-NLS-1$
 
-    private ColumnsComparisonMasterDetailsPage masterPage;
+    private RedundancyAnalysisDetailsPage masterPage;
 
     private RowMatchingIndicator rowMatchingIndicatorA;
 
@@ -104,10 +104,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
      * @param id
      * @param title
      */
-    public ColumnsComparisonAnalysisResultPage(FormEditor editor, String id, String title) {
+    public RedundancyAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-        this.masterPage = (ColumnsComparisonMasterDetailsPage) analysisEditor.getMasterPage();
+        this.masterPage = (RedundancyAnalysisDetailsPage) analysisEditor.getMasterPage();
     }
 
     @Override
@@ -485,7 +485,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
      */
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
-        this.masterPage = (ColumnsComparisonMasterDetailsPage) masterPage;
+        this.masterPage = (RedundancyAnalysisDetailsPage) masterPage;
         if (summaryComp != null && !summaryComp.isDisposed()) {
             summaryComp.dispose();
         }
