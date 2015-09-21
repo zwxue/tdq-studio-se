@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.composite.table;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -329,7 +330,7 @@ public class MatchRuleDataTable extends Composite {
                 groupSizeList.add(grpSize);
             }
         }
-        groupSizeList.sort(new Comparator<Integer>() {
+        Collections.sort(groupSizeList, new Comparator<Integer>() {
 
             @Override
             public int compare(Integer o1, Integer o2) {
