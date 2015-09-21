@@ -26,12 +26,12 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.model.MetadataTableWithFilter;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.SemanticDiscoveryAction;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 
@@ -71,10 +71,13 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
         if (firstElement instanceof DBTableRepNode) {
             DBTableRepNode node = (DBTableRepNode) firstElement;
             semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
-            // otherwise is some columns in the same columnset are selected.
+        } else if (firstElement instanceof DBViewRepNode) {
+            DBViewRepNode node = (DBViewRepNode) firstElement;
+            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdView());
         } else if (firstElement instanceof DFTableRepNode) {
             DFTableRepNode node = (DFTableRepNode) firstElement;
             semanticDiscoveryAction = new SemanticDiscoveryAction(node.getMetadataTable());
+            // otherwise is some columns in the same columnset are selected.
         } else {// keep all of columns belong to same one table and create SemanticDiscoveryAction.
             Set<String> currentTableSet = new HashSet<String>();
             MetadataTable createTable = ConnectionFactory.eINSTANCE.createMetadataTable();
@@ -85,7 +88,7 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
                 MetadataColumn metadataColumn = null;
                 if (DBColumnRepNode.class.isInstance(columnNode)) {
                     metadataColumn = ((DBColumnRepNode) columnNode).getTdColumn();
-                    createTable = ColumnHelper.getColumnOwnerAsTdTable((TdColumn) metadataColumn);
+                    createTable = ColumnHelper.getColumnOwnerAsMetadataTable(metadataColumn);
                 } else if (DFColumnRepNode.class.isInstance(columnNode)) {
                     metadataColumn = ((DFColumnRepNode) columnNode).getMetadataColumn();
                     createTable = ColumnHelper.getColumnOwnerAsMetadataTable(metadataColumn);
