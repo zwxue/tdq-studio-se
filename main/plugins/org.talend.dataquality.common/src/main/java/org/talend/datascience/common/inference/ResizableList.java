@@ -134,13 +134,6 @@ public class ResizableList<T> implements List<T>, Serializable {
         return innerList.retainAll(collection);
     }
 
-    // public void replaceAll(UnaryOperator<T> operator) {
-    // innerList.replaceAll(operator);
-    // }
-    //
-    // public void sort(Comparator<? super T> c) {
-    // innerList.sort(c);
-    // }
 
     public void clear() {
         innerList.clear();
@@ -192,23 +185,4 @@ public class ResizableList<T> implements List<T>, Serializable {
         return innerList.subList(i, i1);
     }
 
-    // public Spliterator<T> spliterator() {
-    // return innerList.spliterator();
-    // }
-    //
-    // public boolean removeIf(Predicate<? super T> filter) {
-    // return innerList.removeIf(filter);
-    // }
-    //
-    // public Stream<T> stream() {
-    // return innerList.stream();
-    // }
-    //
-    // public Stream<T> parallelStream() {
-    // return innerList.parallelStream();
-    // }
-    //
-    // public void forEach(Consumer<? super T> action) {
-    // innerList.forEach(action);
-    // }
 }

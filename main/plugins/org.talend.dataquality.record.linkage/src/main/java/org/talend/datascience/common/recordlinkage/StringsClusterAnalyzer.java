@@ -37,7 +37,7 @@ import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.datascience.common.inference.Analyzer;
 
 /**
- * Sting clustering analyzer.
+ * String clustering analyzer.
  * 
  * @author zhao
  *
@@ -229,5 +229,9 @@ public class StringsClusterAnalyzer implements Analyzer<StringClusters> {
         public void remove() {
             throw new UnsupportedOperationException("remove");
         }
+    }
+    @Override
+    public void close() throws Exception {
+        
     }
 }
