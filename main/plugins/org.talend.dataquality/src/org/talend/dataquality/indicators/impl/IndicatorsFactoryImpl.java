@@ -210,6 +210,8 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR: return createPhoneNumbStatisticsIndicator();
             case IndicatorsPackage.FORMAT_FREQ_PIE_INDICATOR: return createFormatFreqPieIndicator();
             case IndicatorsPackage.BENFORD_LAW_FREQUENCY_INDICATOR: return createBenfordLawFrequencyIndicator();
+            case IndicatorsPackage.EAST_ASIA_PATTERN_FREQ_INDICATOR: return createEastAsiaPatternFreqIndicator();
+            case IndicatorsPackage.EAST_ASIA_PATTERN_LOW_FREQ_INDICATOR: return createEastAsiaPatternLowFreqIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -975,6 +977,26 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public BenfordLawFrequencyIndicator createBenfordLawFrequencyIndicator() {
         BenfordLawFrequencyIndicatorImpl benfordLawFrequencyIndicator = new BenfordLawFrequencyIndicatorImpl();
         return benfordLawFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EastAsiaPatternFreqIndicator createEastAsiaPatternFreqIndicator() {
+        EastAsiaPatternFreqIndicatorImpl eastAsiaPatternFreqIndicator = new EastAsiaPatternFreqIndicatorImpl();
+        return eastAsiaPatternFreqIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EastAsiaPatternLowFreqIndicator createEastAsiaPatternLowFreqIndicator() {
+        EastAsiaPatternLowFreqIndicatorImpl eastAsiaPatternLowFreqIndicator = new EastAsiaPatternLowFreqIndicatorImpl();
+        return eastAsiaPatternLowFreqIndicator;
     }
 
     /**

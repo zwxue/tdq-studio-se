@@ -17,7 +17,7 @@ import org.talend.utils.string.AsciiUtils;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl implements PatternLowFreqIndicator {
@@ -25,6 +25,9 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
     private String charsToReplace = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
+
+    // Mark replace parameter whether has been setting by the user.
+    private boolean hasBeanCustomized = false;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -51,6 +54,7 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
         final TextParameters textParameter = this.getParameters() == null ? null : this.getParameters().getTextParameter();
         // ~
         if (textParameter != null) {
+            hasBeanCustomized = true;
             // TDQ-10044: fix when the user didn't set the replace and charactersToReplace, use the default value(only
             // for jave engine)
             String replacementCharacters = textParameter.getReplacementCharacters();
@@ -94,6 +98,15 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
     @Override
     protected String getFrequencyLabel(Object name) {
         return convertCharacters(name.toString());
+    }
+
+    /**
+     * Getter for hasBeanCustomized.
+     * 
+     * @return the hasBeanCustomized
+     */
+    public boolean isBeanCustomized() {
+        return hasBeanCustomized;
     }
 
 } // PatternLowFreqIndicatorImpl

@@ -17,7 +17,6 @@ import org.talend.dq.analysis.explore.BenfordLawFrequencyExplorer;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
 import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
-import org.talend.dq.analysis.explore.PatternExplorer;
 import org.talend.dq.analysis.explore.RegexPatternExplorer;
 import org.talend.dq.analysis.explore.SQLPatternExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
@@ -41,6 +40,10 @@ public enum EIndicatorChartType {
                                  Messages.getString("EIndicatorChartType.PatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
     PATTERN_LOW_FREQUENCE_STATISTICS(
                                      Messages.getString("EIndicatorChartType.PatternLowFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
+    EAST_ASIA_PATTERN_FREQUENCE_STATISTICS(
+                                           Messages.getString("EIndicatorChartType.EastAsiaPatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
+    EAST_ASIA_PATTERN_LOW_FREQUENCE_STATISTICS(
+                                               Messages.getString("EIndicatorChartType.EastAsiaPatternLowFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
     DATE_PATTERN_FREQUENCE_STATISTICS(
                                       Messages.getString("EIndicatorChartType.DatePatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
     SUMMARY_STATISTICS(Messages.getString("EIndicatorChartType.SummaryStatistics"), new SummaryStastictisExplorer()), //$NON-NLS-1$

@@ -47,28 +47,24 @@ import org.talend.dataquality.rules.impl.RulesPackageImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSqlPackage {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private EClass userDefIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private EClass whereRuleIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private EClass javaUserDefIndicatorEClass = null;
@@ -92,7 +88,6 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private static boolean isInited = false;
@@ -111,13 +106,10 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * @generated
      */
     public static IndicatorSqlPackage init() {
-        if (isInited) {
-            return (IndicatorSqlPackage) EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI);
-        }
+        if (isInited) return (IndicatorSqlPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI);
 
         // Obtain or create and register package
-        IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE
-                .get(eNS_URI) : new IndicatorSqlPackageImpl());
+        IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new IndicatorSqlPackageImpl());
 
         isInited = true;
 
@@ -126,45 +118,20 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         XMLTypePackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
-        AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
-        CategoryPackageImpl theCategoryPackage = (CategoryPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(CategoryPackage.eNS_URI) instanceof CategoryPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(CategoryPackage.eNS_URI) : CategoryPackage.eINSTANCE);
-        ReportsPackageImpl theReportsPackage = (ReportsPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(ReportsPackage.eNS_URI) instanceof ReportsPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(ReportsPackage.eNS_URI) : ReportsPackage.eINSTANCE);
-        IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
-        SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
-        DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
-        UserdefinePackageImpl theUserdefinePackage = (UserdefinePackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(UserdefinePackage.eNS_URI) instanceof UserdefinePackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(UserdefinePackage.eNS_URI) : UserdefinePackage.eINSTANCE);
-        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
-        ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
-        DomainPackageImpl theDomainPackage = (DomainPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
-        PatternPackageImpl thePatternPackage = (PatternPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
-        SQLPackageImpl theSQLPackage = (SQLPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
-        RulesPackageImpl theRulesPackage = (RulesPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
-        PropertiesPackageImpl thePropertiesPackage_1 = (PropertiesPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(org.talend.dataquality.properties.PropertiesPackage.eNS_URI) instanceof PropertiesPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(org.talend.dataquality.properties.PropertiesPackage.eNS_URI)
-                : org.talend.dataquality.properties.PropertiesPackage.eINSTANCE);
+        AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
+        CategoryPackageImpl theCategoryPackage = (CategoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) instanceof CategoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) : CategoryPackage.eINSTANCE);
+        ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI) instanceof ReportsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI) : ReportsPackage.eINSTANCE);
+        IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
+        SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
+        DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
+        UserdefinePackageImpl theUserdefinePackage = (UserdefinePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) instanceof UserdefinePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) : UserdefinePackage.eINSTANCE);
+        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
+        ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
+        DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
+        PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
+        SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
+        RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
+        PropertiesPackageImpl thePropertiesPackage_1 = (PropertiesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.properties.PropertiesPackage.eNS_URI) instanceof PropertiesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.properties.PropertiesPackage.eNS_URI) : org.talend.dataquality.properties.PropertiesPackage.eINSTANCE);
 
         // Create package meta-data objects
         theIndicatorSqlPackage.createPackageContents();
@@ -203,6 +170,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         // Mark meta-data to indicate it can't be changed
         theIndicatorSqlPackage.freeze();
 
+  
         // Update the registry and return the package
         EPackage.Registry.INSTANCE.put(IndicatorSqlPackage.eNS_URI, theIndicatorSqlPackage);
         return theIndicatorSqlPackage;
@@ -210,7 +178,6 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -220,107 +187,96 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_UserCount() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(0);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_MatchingValueCount() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(1);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_NotMatchingValueCount() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(2);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(2);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_UniqueValues() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(3);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(3);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_DistinctValueCount() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(4);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(4);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_UniqueValueCount() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(5);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(5);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_DuplicateValueCount() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(6);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(6);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_ValueToFreq() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(7);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(7);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_Value() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(8);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(8);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public EAttribute getUserDefIndicator_Datatype() {
-        return (EAttribute) userDefIndicatorEClass.getEStructuralFeatures().get(9);
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(9);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -330,7 +286,6 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -340,31 +295,27 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public IndicatorSqlFactory getIndicatorSqlFactory() {
-        return (IndicatorSqlFactory) getEFactoryInstance();
+        return (IndicatorSqlFactory)getEFactoryInstance();
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private boolean isCreated = false;
 
     /**
-     * Creates the meta-model objects for the package. This method is guarded to have no affect on any invocation but
-     * its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * Creates the meta-model objects for the package.  This method is
+     * guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void createPackageContents() {
-        if (isCreated) {
-            return;
-        }
+        if (isCreated) return;
         isCreated = true;
 
         // Create classes and their features
@@ -387,21 +338,18 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private boolean isInitialized = false;
 
     /**
-     * Complete the initialization of the package and its meta-model. This method is guarded to have no affect on any
-     * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * Complete the initialization of the package and its meta-model.  This
+     * method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void initializePackageContents() {
-        if (isInitialized) {
-            return;
-        }
+        if (isInitialized) return;
         isInitialized = true;
 
         // Initialize package
@@ -410,10 +358,9 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         setNsURI(eNS_URI);
 
         // Obtain other dependent packages
-        IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage) EPackage.Registry.INSTANCE
-                .getEPackage(IndicatorsPackage.eNS_URI);
-        XMLTypePackage theXMLTypePackage = (XMLTypePackage) EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
-        AnalysisPackage theAnalysisPackage = (AnalysisPackage) EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
+        IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
+        XMLTypePackage theXMLTypePackage = (XMLTypePackage)EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
+        AnalysisPackage theAnalysisPackage = (AnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
 
         // Create type parameters
 
@@ -425,39 +372,19 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         javaUserDefIndicatorEClass.getESuperTypes().add(this.getUserDefIndicator());
 
         // Initialize classes and features; add operations and parameters
-        initEClass(userDefIndicatorEClass, UserDefIndicator.class, "UserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE,
-                IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getUserDefIndicator_UserCount(), ecorePackage.getELongObject(), "userCount", null, 0, 1,
-                UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-                !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1,
-                UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-                !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null,
-                0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-                !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_UniqueValues(), ecorePackage.getEJavaObject(), "uniqueValues", null, 0, -1,
-                UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-                !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_DistinctValueCount(), ecorePackage.getELongObject(), "distinctValueCount", null, 0, 1,
-                UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-                !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_UniqueValueCount(), ecorePackage.getELongObject(), "uniqueValueCount", null, 0, 1,
-                UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-                !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_DuplicateValueCount(), ecorePackage.getELongObject(), "duplicateValueCount", null, 0,
-                1, UserDefIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-                !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_ValueToFreq(), theIndicatorsPackage.getJavaHashMap(), "valueToFreq", null, 0, 1,
-                UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-                !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_Value(), ecorePackage.getEString(), "value", null, 0, 1, UserDefIndicator.class,
-                !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_Datatype(), ecorePackage.getEInt(), "datatype", null, 0, 1, UserDefIndicator.class,
-                !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(userDefIndicatorEClass, UserDefIndicator.class, "UserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getUserDefIndicator_UserCount(), ecorePackage.getELongObject(), "userCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_UniqueValues(), ecorePackage.getEJavaObject(), "uniqueValues", null, 0, -1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_DistinctValueCount(), ecorePackage.getELongObject(), "distinctValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_UniqueValueCount(), ecorePackage.getELongObject(), "uniqueValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_DuplicateValueCount(), ecorePackage.getELongObject(), "duplicateValueCount", null, 0, 1, UserDefIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_ValueToFreq(), theIndicatorsPackage.getJavaHashMap(), "valueToFreq", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_Value(), ecorePackage.getEString(), "value", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_Datatype(), ecorePackage.getEInt(), "datatype", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        EOperation op = addEOperation(userDefIndicatorEClass, ecorePackage.getEDoubleObject(), "getFrequency", 0, 1, IS_UNIQUE,
-                IS_ORDERED);
+        EOperation op = addEOperation(userDefIndicatorEClass, ecorePackage.getEDoubleObject(), "getFrequency", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         addEOperation(userDefIndicatorEClass, theIndicatorsPackage.getJavaSet(), "getDistinctValues", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -465,14 +392,12 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         op = addEOperation(userDefIndicatorEClass, ecorePackage.getELongObject(), "getCount", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-        initEClass(whereRuleIndicatorEClass, WhereRuleIndicator.class, "WhereRuleIndicator", !IS_ABSTRACT, !IS_INTERFACE,
-                IS_GENERATED_INSTANCE_CLASS);
+        initEClass(whereRuleIndicatorEClass, WhereRuleIndicator.class, "WhereRuleIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         op = addEOperation(whereRuleIndicatorEClass, theXMLTypePackage.getBoolean(), "setCount", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, theIndicatorsPackage.getObjectArray(), "objects", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-        initEClass(javaUserDefIndicatorEClass, JavaUserDefIndicator.class, "JavaUserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE,
-                IS_GENERATED_INSTANCE_CLASS);
+        initEClass(javaUserDefIndicatorEClass, JavaUserDefIndicator.class, "JavaUserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         op = addEOperation(javaUserDefIndicatorEClass, null, "setJavaUserDefObject", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, this.getUserDefIndicator(), "javaUDIObj", 0, 1, IS_UNIQUE, IS_ORDERED);

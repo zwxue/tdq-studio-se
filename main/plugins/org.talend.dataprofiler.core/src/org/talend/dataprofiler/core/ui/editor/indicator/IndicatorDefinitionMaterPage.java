@@ -64,6 +64,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
@@ -302,6 +303,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             hasAggregateExpression = definition.getAggregate1argFunctions().size() > 0;
             hasDateExpression = definition.getDate1argFunctions().size() > 0;
             hasCharactersMapping = definition.getCharactersMapping().size() > 0;
+            hasCharactersMapping = hasCharactersMapping || isEastAsiaPatternFequencyStatics(definition);
         }
         afExpressionMap = new HashMap<String, AggregateDateExpression>();
         afExpressionMapTemp = new HashMap<String, AggregateDateExpression>();
@@ -318,6 +320,21 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             this.definitionItem = (TDQIndicatorDefinitionItem) this.indicatorDefinitionRepNode.getObject().getProperty()
                     .getItem();
         }
+    }
+
+    /**
+     * DOC talend Comment method "isEastAsiaPatternFequencyStatics".
+     * 
+     * @param indicatorDefinition
+     * @return
+     */
+    private boolean isEastAsiaPatternFequencyStatics(IndicatorDefinition indicatorDefinition) {
+        String uuid = ResourceHelper.getUUID(indicatorDefinition);
+        // EastAsiaPatternFrequency and EastAsiaPatternLowFrequency
+        if ("_JMeW0F0TEeWGcZIHtEALuw".equals(uuid) || "_GIAgQF0TEeWGcZIHtEALuw".equals(uuid)) { //$NON-NLS-1$//$NON-NLS-2$
+            return true;
+        }
+        return false;
     }
 
     protected void removeJavaType() {

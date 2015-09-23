@@ -30,11 +30,10 @@ import org.talend.utils.collections.MapValueSorter;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.SoundexFreqIndicatorImpl#getValueToDistinctFreq <em>Value To
- * Distinct Freq</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.SoundexFreqIndicatorImpl#getValueToDistinctFreq <em>Value To Distinct Freq</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements SoundexFreqIndicator {
@@ -67,7 +66,6 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected SoundexFreqIndicatorImpl() {
@@ -76,7 +74,6 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -86,7 +83,6 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -96,17 +92,14 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void setValueToDistinctFreq(HashMap<Object, Long> newValueToDistinctFreq) {
         HashMap<Object, Long> oldValueToDistinctFreq = valueToDistinctFreq;
         valueToDistinctFreq = newValueToDistinctFreq;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ, oldValueToDistinctFreq, valueToDistinctFreq));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ, oldValueToDistinctFreq, valueToDistinctFreq));
     }
 
     /**
@@ -126,74 +119,66 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
-            return getValueToDistinctFreq();
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+                return getValueToDistinctFreq();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
-            setValueToDistinctFreq((HashMap<Object, Long>) newValue);
-            return;
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+                setValueToDistinctFreq((HashMap<Object, Long>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
-            setValueToDistinctFreq(VALUE_TO_DISTINCT_FREQ_EDEFAULT);
-            return;
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+                setValueToDistinctFreq(VALUE_TO_DISTINCT_FREQ_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
-            return VALUE_TO_DISTINCT_FREQ_EDEFAULT == null ? valueToDistinctFreq != null : !VALUE_TO_DISTINCT_FREQ_EDEFAULT
-                    .equals(valueToDistinctFreq);
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+                return VALUE_TO_DISTINCT_FREQ_EDEFAULT == null ? valueToDistinctFreq != null : !VALUE_TO_DISTINCT_FREQ_EDEFAULT.equals(valueToDistinctFreq);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (valueToDistinctFreq: ");

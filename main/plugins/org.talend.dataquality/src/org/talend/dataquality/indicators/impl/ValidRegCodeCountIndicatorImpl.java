@@ -24,19 +24,18 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.ValidRegCodeCountIndicatorImpl#getValidRegCount <em>Valid Reg Count
- * </em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.ValidRegCodeCountIndicatorImpl#getValidRegCount <em>Valid Reg Count</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements ValidRegCodeCountIndicator {
 
     /**
-     * The default value of the '{@link #getValidRegCount() <em>Valid Reg Count</em>}' attribute. <!-- begin-user-doc
+     * The default value of the '{@link #getValidRegCount() <em>Valid Reg Count</em>}' attribute.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @see #getValidRegCount()
      * @generated
      * @ordered
@@ -44,9 +43,9 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
     protected static final Long VALID_REG_COUNT_EDEFAULT = new Long(0L);
 
     /**
-     * The cached value of the '{@link #getValidRegCount() <em>Valid Reg Count</em>}' attribute. <!-- begin-user-doc -->
+     * The cached value of the '{@link #getValidRegCount() <em>Valid Reg Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getValidRegCount()
      * @generated
      * @ordered
@@ -55,7 +54,6 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected ValidRegCodeCountIndicatorImpl() {
@@ -64,7 +62,6 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -74,7 +71,6 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -84,22 +80,18 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void setValidRegCount(Long newValidRegCount) {
         Long oldValidRegCount = validRegCount;
         validRegCount = newValidRegCount;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT, oldValidRegCount, validRegCount));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT, oldValidRegCount, validRegCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -111,72 +103,65 @@ public class ValidRegCodeCountIndicatorImpl extends IndicatorImpl implements Val
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT:
-            return getValidRegCount();
+            case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT:
+                return getValidRegCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT:
-            setValidRegCount((Long) newValue);
-            return;
+            case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT:
+                setValidRegCount((Long)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT:
-            setValidRegCount(VALID_REG_COUNT_EDEFAULT);
-            return;
+            case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT:
+                setValidRegCount(VALID_REG_COUNT_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT:
-            return VALID_REG_COUNT_EDEFAULT == null ? validRegCount != null : !VALID_REG_COUNT_EDEFAULT.equals(validRegCount);
+            case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT:
+                return VALID_REG_COUNT_EDEFAULT == null ? validRegCount != null : !VALID_REG_COUNT_EDEFAULT.equals(validRegCount);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (validRegCount: ");

@@ -17,14 +17,13 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public abstract class PatternMatchingIndicatorImpl extends MatchingIndicatorImpl implements PatternMatchingIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected PatternMatchingIndicatorImpl() {
@@ -33,7 +32,6 @@ public abstract class PatternMatchingIndicatorImpl extends MatchingIndicatorImpl
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

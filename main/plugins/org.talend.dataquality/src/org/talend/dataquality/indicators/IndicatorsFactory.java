@@ -656,6 +656,24 @@ public interface IndicatorsFactory extends EFactory {
     BenfordLawFrequencyIndicator createBenfordLawFrequencyIndicator();
 
     /**
+     * Returns a new object of class '<em>East Asia Pattern Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>East Asia Pattern Freq Indicator</em>'.
+     * @generated
+     */
+    EastAsiaPatternFreqIndicator createEastAsiaPatternFreqIndicator();
+
+    /**
+     * Returns a new object of class '<em>East Asia Pattern Low Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>East Asia Pattern Low Freq Indicator</em>'.
+     * @generated
+     */
+    EastAsiaPatternLowFreqIndicator createEastAsiaPatternLowFreqIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

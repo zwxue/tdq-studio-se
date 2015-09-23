@@ -28,11 +28,10 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImpl#getWellFormE164PhoneCount <em>
- * Well Form E164 Phone Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImpl#getWellFormE164PhoneCount <em>Well Form E164 Phone Count</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implements WellFormE164PhoneCountIndicator {
@@ -42,7 +41,6 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
     /**
      * The default value of the '{@link #getWellFormE164PhoneCount() <em>Well Form E164 Phone Count</em>}' attribute.
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @see #getWellFormE164PhoneCount()
      * @generated
      * @ordered
@@ -52,7 +50,6 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
     /**
      * The cached value of the '{@link #getWellFormE164PhoneCount() <em>Well Form E164 Phone Count</em>}' attribute.
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @see #getWellFormE164PhoneCount()
      * @generated
      * @ordered
@@ -61,7 +58,6 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected WellFormE164PhoneCountIndicatorImpl() {
@@ -70,7 +66,6 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -80,7 +75,6 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -90,23 +84,18 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void setWellFormE164PhoneCount(Long newWellFormE164PhoneCount) {
         Long oldWellFormE164PhoneCount = wellFormE164PhoneCount;
         wellFormE164PhoneCount = newWellFormE164PhoneCount;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT,
-                    oldWellFormE164PhoneCount, wellFormE164PhoneCount));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT, oldWellFormE164PhoneCount, wellFormE164PhoneCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -118,73 +107,65 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT:
-            return getWellFormE164PhoneCount();
+            case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT:
+                return getWellFormE164PhoneCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT:
-            setWellFormE164PhoneCount((Long) newValue);
-            return;
+            case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT:
+                setWellFormE164PhoneCount((Long)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT:
-            setWellFormE164PhoneCount(WELL_FORM_E164_PHONE_COUNT_EDEFAULT);
-            return;
+            case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT:
+                setWellFormE164PhoneCount(WELL_FORM_E164_PHONE_COUNT_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT:
-            return WELL_FORM_E164_PHONE_COUNT_EDEFAULT == null ? wellFormE164PhoneCount != null
-                    : !WELL_FORM_E164_PHONE_COUNT_EDEFAULT.equals(wellFormE164PhoneCount);
+            case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT:
+                return WELL_FORM_E164_PHONE_COUNT_EDEFAULT == null ? wellFormE164PhoneCount != null : !WELL_FORM_E164_PHONE_COUNT_EDEFAULT.equals(wellFormE164PhoneCount);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (wellFormE164PhoneCount: ");

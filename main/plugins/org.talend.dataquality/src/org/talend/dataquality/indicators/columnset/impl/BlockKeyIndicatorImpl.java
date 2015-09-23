@@ -19,11 +19,10 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.BlockKeyIndicatorImpl#getBlockSize2frequency <em>Block
- * Size2frequency</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.BlockKeyIndicatorImpl#getBlockSize2frequency <em>Block Size2frequency</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class BlockKeyIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements BlockKeyIndicator {
@@ -50,7 +49,6 @@ public class BlockKeyIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected BlockKeyIndicatorImpl() {
@@ -59,7 +57,6 @@ public class BlockKeyIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -69,7 +66,6 @@ public class BlockKeyIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -79,89 +75,78 @@ public class BlockKeyIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void setBlockSize2frequency(TreeMap<Object, Long> newBlockSize2frequency) {
         TreeMap<Object, Long> oldBlockSize2frequency = blockSize2frequency;
         blockSize2frequency = newBlockSize2frequency;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY,
-                    oldBlockSize2frequency, blockSize2frequency));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY, oldBlockSize2frequency, blockSize2frequency));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY:
-            return getBlockSize2frequency();
+            case ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY:
+                return getBlockSize2frequency();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY:
-            setBlockSize2frequency((TreeMap<Object, Long>) newValue);
-            return;
+            case ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY:
+                setBlockSize2frequency((TreeMap<Object, Long>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY:
-            setBlockSize2frequency(BLOCK_SIZE2FREQUENCY_EDEFAULT);
-            return;
+            case ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY:
+                setBlockSize2frequency(BLOCK_SIZE2FREQUENCY_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY:
-            return BLOCK_SIZE2FREQUENCY_EDEFAULT == null ? blockSize2frequency != null : !BLOCK_SIZE2FREQUENCY_EDEFAULT
-                    .equals(blockSize2frequency);
+            case ColumnsetPackage.BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY:
+                return BLOCK_SIZE2FREQUENCY_EDEFAULT == null ? blockSize2frequency != null : !BLOCK_SIZE2FREQUENCY_EDEFAULT.equals(blockSize2frequency);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (blockSize2frequency: ");

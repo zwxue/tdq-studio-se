@@ -27,11 +27,10 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.PossiblePhoneCountIndicatorImpl#getPossiblePhoneCount <em>Possible
- * Phone Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.PossiblePhoneCountIndicatorImpl#getPossiblePhoneCount <em>Possible Phone Count</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements PossiblePhoneCountIndicator {
@@ -58,7 +57,6 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected PossiblePhoneCountIndicatorImpl() {
@@ -67,7 +65,6 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -77,7 +74,6 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -87,23 +83,18 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void setPossiblePhoneCount(Long newPossiblePhoneCount) {
         Long oldPossiblePhoneCount = possiblePhoneCount;
         possiblePhoneCount = newPossiblePhoneCount;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT, oldPossiblePhoneCount,
-                    possiblePhoneCount));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT, oldPossiblePhoneCount, possiblePhoneCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -115,73 +106,65 @@ public class PossiblePhoneCountIndicatorImpl extends IndicatorImpl implements Po
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT:
-            return getPossiblePhoneCount();
+            case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT:
+                return getPossiblePhoneCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT:
-            setPossiblePhoneCount((Long) newValue);
-            return;
+            case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT:
+                setPossiblePhoneCount((Long)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT:
-            setPossiblePhoneCount(POSSIBLE_PHONE_COUNT_EDEFAULT);
-            return;
+            case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT:
+                setPossiblePhoneCount(POSSIBLE_PHONE_COUNT_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT:
-            return POSSIBLE_PHONE_COUNT_EDEFAULT == null ? possiblePhoneCount != null : !POSSIBLE_PHONE_COUNT_EDEFAULT
-                    .equals(possiblePhoneCount);
+            case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT:
+                return POSSIBLE_PHONE_COUNT_EDEFAULT == null ? possiblePhoneCount != null : !POSSIBLE_PHONE_COUNT_EDEFAULT.equals(possiblePhoneCount);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (possiblePhoneCount: ");

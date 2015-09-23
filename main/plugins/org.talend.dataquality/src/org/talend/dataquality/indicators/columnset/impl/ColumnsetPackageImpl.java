@@ -835,13 +835,13 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * @generated
      */
     protected void createExtendedMetaDataAnnotations() {
-        String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";				
+        String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";	
         addAnnotation
           (columnDependencyIndicatorEClass, 
            source, 
            new String[] {
              "name", "ColumnDependencyIndicator"
-           });					
+           });
     }
 
 } //ColumnsetPackageImpl

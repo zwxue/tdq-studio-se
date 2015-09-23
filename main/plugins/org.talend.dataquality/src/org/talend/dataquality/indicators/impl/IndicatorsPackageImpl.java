@@ -52,6 +52,8 @@ import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.EastAsiaPatternFreqIndicator;
+import org.talend.dataquality.indicators.EastAsiaPatternLowFreqIndicator;
 import org.talend.dataquality.indicators.EnumStatistics;
 import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
@@ -609,6 +611,20 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass benfordLawFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass eastAsiaPatternFreqIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass eastAsiaPatternLowFreqIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2231,6 +2247,24 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getEastAsiaPatternFreqIndicator() {
+        return eastAsiaPatternFreqIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getEastAsiaPatternLowFreqIndicator() {
+        return eastAsiaPatternLowFreqIndicatorEClass;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -2569,6 +2603,10 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
 
         benfordLawFrequencyIndicatorEClass = createEClass(BENFORD_LAW_FREQUENCY_INDICATOR);
 
+        eastAsiaPatternFreqIndicatorEClass = createEClass(EAST_ASIA_PATTERN_FREQ_INDICATOR);
+
+        eastAsiaPatternLowFreqIndicatorEClass = createEClass(EAST_ASIA_PATTERN_LOW_FREQ_INDICATOR);
+
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
         dataminingTypeEEnum = createEEnum(DATAMINING_TYPE);
@@ -2694,6 +2732,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         phoneNumbStatisticsIndicatorEClass.getESuperTypes().add(this.getCompositeIndicator());
         formatFreqPieIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         benfordLawFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        eastAsiaPatternFreqIndicatorEClass.getESuperTypes().add(this.getPatternFreqIndicator());
+        eastAsiaPatternLowFreqIndicatorEClass.getESuperTypes().add(this.getPatternLowFreqIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3026,6 +3066,10 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getFormatFreqPieIndicator_CurrentKey(), ecorePackage.getEString(), "currentKey", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(benfordLawFrequencyIndicatorEClass, BenfordLawFrequencyIndicator.class, "BenfordLawFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(eastAsiaPatternFreqIndicatorEClass, EastAsiaPatternFreqIndicator.class, "EastAsiaPatternFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(eastAsiaPatternLowFreqIndicatorEClass, EastAsiaPatternLowFreqIndicator.class, "EastAsiaPatternLowFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

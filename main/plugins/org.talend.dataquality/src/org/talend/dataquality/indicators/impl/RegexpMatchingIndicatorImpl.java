@@ -27,7 +27,7 @@ import org.talend.i18n.Messages;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements RegexpMatchingIndicator {
@@ -54,7 +54,6 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected RegexpMatchingIndicatorImpl() {
@@ -63,7 +62,6 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

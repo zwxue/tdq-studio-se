@@ -38,9 +38,9 @@ import org.talend.resource.ResourceManager;
 public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicator {
 
     /**
-     * The default value of the '{@link #getLength() <em>Length</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getLength() <em>Length</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getLength()
      * @generated
      * @ordered
@@ -48,9 +48,9 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     protected static final Long LENGTH_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getLength() <em>Length</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getLength() <em>Length</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getLength()
      * @generated
      * @ordered
@@ -61,7 +61,6 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected LengthIndicatorImpl() {
@@ -70,7 +69,6 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -80,7 +78,6 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -90,72 +87,66 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void setLength(Long newLength) {
         Long oldLength = length;
         length = newLength;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.LENGTH_INDICATOR__LENGTH, oldLength, length));
-        }
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
-            return getLength();
+            case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
+                return getLength();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
-            setLength((Long) newValue);
-            return;
+            case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
+                setLength((Long)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
-            setLength(LENGTH_EDEFAULT);
-            return;
+            case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
+                setLength(LENGTH_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
-            return LENGTH_EDEFAULT == null ? length != null : !LENGTH_EDEFAULT.equals(length);
+            case IndicatorsPackage.LENGTH_INDICATOR__LENGTH:
+                return LENGTH_EDEFAULT == null ? length != null : !LENGTH_EDEFAULT.equals(length);
         }
         return super.eIsSet(featureID);
     }

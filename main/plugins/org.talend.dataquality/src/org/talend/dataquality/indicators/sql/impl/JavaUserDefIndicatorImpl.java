@@ -16,14 +16,13 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements JavaUserDefIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected JavaUserDefIndicatorImpl() {
@@ -32,7 +31,6 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

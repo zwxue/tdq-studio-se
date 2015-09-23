@@ -103,7 +103,8 @@ public final class IndicatorTreeModelBuilder {
 
         // build pattern finder categoryNode
         IndicatorEnum[] patternFinderEnums = new IndicatorEnum[] { IndicatorEnum.PatternFreqIndicatorEnum,
-                IndicatorEnum.PatternLowFreqIndicatorEnum, IndicatorEnum.DatePatternFreqIndicatorEnum };
+                IndicatorEnum.PatternLowFreqIndicatorEnum, IndicatorEnum.EastAsiaPatternFreqIndicatorEnum,
+                IndicatorEnum.EastAsiaPatternLowFreqIndicatorEnum, IndicatorEnum.DatePatternFreqIndicatorEnum };
         IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode(PATTERN_LABEL, patternFinderEnums);
 
         // MOD mzhao 2009-03-05 build Soundex Statistic categoryNode

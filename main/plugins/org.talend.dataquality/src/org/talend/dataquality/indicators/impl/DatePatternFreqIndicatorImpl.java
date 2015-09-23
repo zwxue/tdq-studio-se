@@ -38,7 +38,7 @@ import org.talend.dataquality.matching.date.pattern.ModelMatcher;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements DatePatternFreqIndicator {
@@ -51,7 +51,6 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected DatePatternFreqIndicatorImpl() {
@@ -60,7 +59,6 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

@@ -227,6 +227,16 @@ public enum IndicatorEnum {
                                 IndicatorsPackage.Literals.PATTERN_LOW_FREQ_INDICATOR,
                                 "Pattern Low Frequency Table", //$NON-NLS-1$
                                 null),
+    EastAsiaPatternFreqIndicatorEnum(
+                                     IndicatorsPackage.EAST_ASIA_PATTERN_FREQ_INDICATOR,
+                                     IndicatorsPackage.Literals.EAST_ASIA_PATTERN_FREQ_INDICATOR,
+                                     "East Asia Pattern Frequency Table", //$NON-NLS-1$
+                                     null),
+    EastAsiaPatternLowFreqIndicatorEnum(
+                                        IndicatorsPackage.EAST_ASIA_PATTERN_LOW_FREQ_INDICATOR,
+                                        IndicatorsPackage.Literals.EAST_ASIA_PATTERN_LOW_FREQ_INDICATOR,
+                                        "East Asia Pattern Low Frequency Table", //$NON-NLS-1$
+                                        null),
     DatePatternFreqIndicatorEnum(
                                  IndicatorsPackage.DATE_PATTERN_FREQ_INDICATOR,
                                  IndicatorsPackage.Literals.DATE_PATTERN_FREQ_INDICATOR,
@@ -547,6 +557,10 @@ public enum IndicatorEnum {
             returnEnum = PatternFreqIndicatorEnum;
         } else if (indicatorType == PatternLowFreqIndicatorEnum.getIndicatorType()) {
             returnEnum = PatternLowFreqIndicatorEnum;
+        } else if (indicatorType == EastAsiaPatternFreqIndicatorEnum.getIndicatorType()) {
+            returnEnum = EastAsiaPatternFreqIndicatorEnum;
+        } else if (indicatorType == EastAsiaPatternLowFreqIndicatorEnum.getIndicatorType()) {
+            returnEnum = EastAsiaPatternLowFreqIndicatorEnum;
         } else if (indicatorType == DatePatternFreqIndicatorEnum.getIndicatorType()) {
             returnEnum = DatePatternFreqIndicatorEnum;
         } else if (indicatorType == TextIndicatorEnum.getIndicatorType()) {

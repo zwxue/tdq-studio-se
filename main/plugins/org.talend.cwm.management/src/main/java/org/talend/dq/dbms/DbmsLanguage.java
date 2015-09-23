@@ -61,7 +61,6 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.metadata.managment.ui.i18n.Messages;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sql.Java2SqlType;
-
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -741,6 +740,23 @@ public class DbmsLanguage {
     }
 
     /**
+     * Method "getChartacterMappingExpression".
+     * 
+     * @param indicatorDefinition contains a list of possible expression (one for each supported database)
+     * @return the expression for this database language or for the default SQL or null when not found
+     */
+    public CharactersMapping getChartacterMappingExpression(IndicatorDefinition indicatorDefinition) {
+        EList<CharactersMapping> charactersMappingExpression = indicatorDefinition.getCharactersMapping();
+
+        // MOD xqliu 2010-02-25 feature 11201 MOD by zshen for bug 10630
+        boolean excelToAccess = "Distinct Count".equals(indicatorDefinition.getName()) && "EXCEL".equals(this.dbmsName);//$NON-NLS-1$//$NON-NLS-2$
+        String dbms = excelToAccess ? "Access" : this.dbmsName;//$NON-NLS-1$
+        return getCharacterMappingExpression(indicatorDefinition, dbms, charactersMappingExpression, this.getDbVersion());
+        // ~11201
+
+    }
+
+    /**
      * 
      * Get the query Expression for one column
      * 
@@ -794,18 +810,19 @@ public class DbmsLanguage {
     /**
      * 
      * Get select column string
+     * 
      * @param metadataTable
-     * @return if columns size is zero will return * else return look like a,b,c 
+     * @return if columns size is zero will return * else return look like a,b,c
      */
     protected String getSelectColumnsStr(MetadataTable metadataTable) {
-        StringBuffer strBuff=new StringBuffer();
+        StringBuffer strBuff = new StringBuffer();
         EList<MetadataColumn> filterColumns = metadataTable.getColumns();
-        if(filterColumns.size()<=0){
+        if (filterColumns.size() <= 0) {
             return ASTERISK;
         }
-        for(MetadataColumn column:filterColumns){
-            if(strBuff.length()>0){
-                strBuff.append(getSeparatedCharacter());   
+        for (MetadataColumn column : filterColumns) {
+            if (strBuff.length() > 0) {
+                strBuff.append(getSeparatedCharacter());
             }
             strBuff.append(this.quote(column.getName()));
         }
@@ -968,6 +985,64 @@ public class DbmsLanguage {
             }
         }
         return null;
+    }
+
+    /**
+     * get language Sql Expression from TdExpression list with dbVersion, if not found, use the default "SQL" language.
+     * 
+     * @param language
+     * @param sqlGenericExpression
+     * @param dbVersion
+     * @return
+     */
+    public static CharactersMapping getCharacterMappingExpression(IndicatorDefinition indicatorDefinition, String language,
+            EList<CharactersMapping> characterMappingExpression, ProductVersion dbVersion) {
+        CharactersMapping defaultExpression = null;
+        if (characterMappingExpression == null || characterMappingExpression.size() == 0) {
+            return defaultExpression;
+        }
+
+        List<CharactersMapping> tempExpressions = new ArrayList<CharactersMapping>();
+        // exact match the language first, if don't match then use fuzzy matching
+        boolean matchingFlag = false;
+        for (CharactersMapping cmExpr : characterMappingExpression) {
+            if (DbmsLanguageFactory.equalsDbmsLanguage(language, cmExpr.getLanguage())) {
+                tempExpressions.add(cmExpr);
+                matchingFlag = true;
+            }
+        }
+        if (!matchingFlag) {
+            // if the language contain the key word, it is considered to be equals
+            for (CharactersMapping sqlGenExpr : characterMappingExpression) {
+                if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
+                    tempExpressions.add(sqlGenExpr);
+                }
+            }
+        }
+        for (CharactersMapping exp : tempExpressions) {
+            defaultExpression = exp;
+        }
+        if (defaultExpression != null) {
+            // return the found default version expression
+            return defaultExpression;
+        }
+
+        // else try with default language (ANSI SQL)
+        String defaultLanguage = getDefaultLanguage();
+
+        // if can not find the expression of default language, return null
+        if (language.equals(defaultLanguage)) {
+            return null;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.warn("The indicator SQL expression has not been found for the database type " + language //$NON-NLS-1$
+                    + " for the indicator" + indicatorDefinition.getName() //$NON-NLS-1$
+                    + ". This is not necessarily a problem since the default SQL expression will be used. " //$NON-NLS-1$
+                    + "Nevertheless, if an SQL error during the analysis, this could be the cause."); //$NON-NLS-1$
+            log.info("Trying to compute the indicator with the default language " + defaultLanguage); //$NON-NLS-1$
+        }
+        return getCharacterMappingExpression(indicatorDefinition, defaultLanguage, characterMappingExpression, dbVersion);
     }
 
     /**
@@ -2064,7 +2139,7 @@ public class DbmsLanguage {
         }
         return functionName;
     }
-    
+
     /**
      * DOC talend Comment method "splictExpression".
      * 

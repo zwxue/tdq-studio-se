@@ -14,14 +14,13 @@ import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class MinMaxDateIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements MinMaxDateIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MinMaxDateIndicatorImpl() {
@@ -30,7 +29,6 @@ public class MinMaxDateIndicatorImpl extends ColumnSetMultiValueIndicatorImpl im
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

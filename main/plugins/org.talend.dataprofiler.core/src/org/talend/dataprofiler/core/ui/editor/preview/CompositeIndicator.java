@@ -42,9 +42,10 @@ public final class CompositeIndicator {
     private Map<EIndicatorChartType, List<TableIndicatorUnit>> tableSeparatedMap;
 
     private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, soundexFrequencyList,
-            soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, datePatternFrequencyList, summaryList,
-            patternList, sqlPatternList, modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList,
-            dateFrequencyList, dateLowFrequencyList, simpleTextList, phoneNumbList, formatFreqList;
+            soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, eastAsiaPatternFrequencylist,
+            eastAsiaPatternLowFrequencyList, datePatternFrequencyList, summaryList, patternList, sqlPatternList,
+            modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList, dateFrequencyList,
+            dateLowFrequencyList, simpleTextList, phoneNumbList, formatFreqList;
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
@@ -83,6 +84,8 @@ public final class CompositeIndicator {
         soundexLowFrequencyList = new ArrayList<IndicatorUnit>();
         patternFrequencylist = new ArrayList<IndicatorUnit>();
         patternLowFrequencyList = new ArrayList<IndicatorUnit>();
+        eastAsiaPatternLowFrequencyList = new ArrayList<IndicatorUnit>();
+        eastAsiaPatternFrequencylist = new ArrayList<IndicatorUnit>();
         datePatternFrequencyList = new ArrayList<IndicatorUnit>();
         summaryList = new ArrayList<IndicatorUnit>();
         patternList = new ArrayList<IndicatorUnit>();
@@ -129,6 +132,8 @@ public final class CompositeIndicator {
         soundexLowFrequencyList.clear();
         patternFrequencylist.clear();
         patternLowFrequencyList.clear();
+        eastAsiaPatternFrequencylist.clear();
+        eastAsiaPatternLowFrequencyList.clear();
         datePatternFrequencyList.clear();
         summaryList.clear();
         patternList.clear();
@@ -272,6 +277,12 @@ public final class CompositeIndicator {
             case PatternLowFreqIndicatorEnum:
                 patternLowFrequencyList.add(one);
                 break;
+            case EastAsiaPatternFreqIndicatorEnum:
+                eastAsiaPatternFrequencylist.add(one);
+                break;
+            case EastAsiaPatternLowFreqIndicatorEnum:
+                eastAsiaPatternLowFrequencyList.add(one);
+                break;
             case DatePatternFreqIndicatorEnum:
                 datePatternFrequencyList.add(one);
                 break;
@@ -353,6 +364,8 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.SOUNDEX_LOW_FREQUENCY_TABLE, soundexLowFrequencyList);
         separatedMap.put(EIndicatorChartType.PATTERN_FREQUENCE_STATISTICS, patternFrequencylist);
         separatedMap.put(EIndicatorChartType.PATTERN_LOW_FREQUENCE_STATISTICS, patternLowFrequencyList);
+        separatedMap.put(EIndicatorChartType.EAST_ASIA_PATTERN_FREQUENCE_STATISTICS, eastAsiaPatternFrequencylist);
+        separatedMap.put(EIndicatorChartType.EAST_ASIA_PATTERN_LOW_FREQUENCE_STATISTICS, eastAsiaPatternLowFrequencyList);
         separatedMap.put(EIndicatorChartType.DATE_PATTERN_FREQUENCE_STATISTICS, datePatternFrequencyList);
         separatedMap.put(EIndicatorChartType.SUMMARY_STATISTICS, summaryList);
         separatedMap.put(EIndicatorChartType.PATTERN_MATCHING, patternList);

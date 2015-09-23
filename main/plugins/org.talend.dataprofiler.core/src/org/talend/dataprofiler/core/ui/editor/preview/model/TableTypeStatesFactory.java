@@ -23,6 +23,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.Bi
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.DateFrequencyStatisticsTableState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.DateLowFrequencyStatisticsTableState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.DatePatternFrequencyStatisticsTableState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.EastAsiaPatternFrequencyStatisticsTableState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.EastAsiaPatternLowFrequencyStatisticsTableState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.FrequencyStatisticsTableState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.LowFrequencyStatisticsTableState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.PatternFrequencyStatisticsTableState;
@@ -100,6 +102,12 @@ public class TableTypeStatesFactory {
 
         case PATTERN_LOW_FREQUENCE_STATISTICS:
             return new PatternLowFrequencyStatisticsTableState(units);
+
+        case EAST_ASIA_PATTERN_FREQUENCE_STATISTICS:
+            return new EastAsiaPatternFrequencyStatisticsTableState(units);
+
+        case EAST_ASIA_PATTERN_LOW_FREQUENCE_STATISTICS:
+            return new EastAsiaPatternLowFrequencyStatisticsTableState(units);
 
         case DATE_PATTERN_FREQUENCE_STATISTICS:
             return new DatePatternFrequencyStatisticsTableState(units);

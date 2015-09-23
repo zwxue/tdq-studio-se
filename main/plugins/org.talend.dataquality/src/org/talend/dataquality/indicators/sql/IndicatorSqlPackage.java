@@ -358,6 +358,15 @@ public interface IndicatorSqlPackage extends EPackage {
     int USER_DEF_INDICATOR__STORE_DATA = IndicatorsPackage.INDICATOR__STORE_DATA;
 
     /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
+
+    /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -753,6 +762,15 @@ public interface IndicatorSqlPackage extends EPackage {
      * @ordered
      */
     int WHERE_RULE_INDICATOR__STORE_DATA = USER_DEF_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = USER_DEF_INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.
@@ -1151,6 +1169,15 @@ public interface IndicatorSqlPackage extends EPackage {
      * @ordered
      */
     int JAVA_USER_DEF_INDICATOR__STORE_DATA = USER_DEF_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = USER_DEF_INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.

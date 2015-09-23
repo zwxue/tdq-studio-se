@@ -34,11 +34,10 @@ import org.talend.utils.sql.Java2SqlType;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.DefValueCountIndicatorImpl#getDefaultValCount <em>Default Val Count
- * </em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.DefValueCountIndicatorImpl#getDefaultValCount <em>Default Val Count</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValueCountIndicator {
@@ -54,9 +53,9 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
     protected static final Long DEFAULT_VAL_COUNT_EDEFAULT = new Long(0L);
 
     /**
-     * The cached value of the '{@link #getDefaultValCount() <em>Default Val Count</em>}' attribute. <!-- begin-user-doc
+     * The cached value of the '{@link #getDefaultValCount() <em>Default Val Count</em>}' attribute.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @see #getDefaultValCount()
      * @generated
      * @ordered
@@ -73,7 +72,6 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected DefValueCountIndicatorImpl() {
@@ -82,7 +80,6 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -92,7 +89,6 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -102,88 +98,77 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void setDefaultValCount(Long newDefaultValCount) {
         Long oldDefaultValCount = defaultValCount;
         defaultValCount = newDefaultValCount;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT,
-                    oldDefaultValCount, defaultValCount));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT, oldDefaultValCount, defaultValCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
-            return getDefaultValCount();
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
+                return getDefaultValCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
-            setDefaultValCount((Long) newValue);
-            return;
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
+                setDefaultValCount((Long)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
-            setDefaultValCount(DEFAULT_VAL_COUNT_EDEFAULT);
-            return;
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
+                setDefaultValCount(DEFAULT_VAL_COUNT_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
-            return DEFAULT_VAL_COUNT_EDEFAULT == null ? defaultValCount != null : !DEFAULT_VAL_COUNT_EDEFAULT
-                    .equals(defaultValCount);
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
+                return DEFAULT_VAL_COUNT_EDEFAULT == null ? defaultValCount != null : !DEFAULT_VAL_COUNT_EDEFAULT.equals(defaultValCount);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (defaultValCount: ");

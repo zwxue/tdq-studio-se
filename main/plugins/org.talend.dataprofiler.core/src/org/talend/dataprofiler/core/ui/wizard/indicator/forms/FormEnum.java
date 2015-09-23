@@ -177,6 +177,8 @@ public enum FormEnum {
         case LowFrequencyIndicatorEnum:
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
+        case EastAsiaPatternFreqIndicatorEnum:
+        case EastAsiaPatternLowFreqIndicatorEnum:
         case DatePatternFreqIndicatorEnum:
             forms = getFormsForFreqencyIndicators(sqlType, dataminingType, indicatorType);
             break;
@@ -280,7 +282,9 @@ public enum FormEnum {
             }
             if (exeLanguage != null
                     && ExecutionLanguage.JAVA.equals(exeLanguage)
-                    && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {
+                    && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum
+                            || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum
+                            || indicatorType == IndicatorEnum.EastAsiaPatternFreqIndicatorEnum || indicatorType == IndicatorEnum.EastAsiaPatternLowFreqIndicatorEnum)) {
                 forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
             } else {
                 forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm };
