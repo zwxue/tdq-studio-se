@@ -133,6 +133,8 @@ public class AnalysisUtils {
         case YEAR_LOW_FREQUENCE_STATISTICS:
         case MODE_INDICATOR:
         case PATTERN_FREQUENCE_STATISTICS:
+        case EAST_ASIA_PATTERN_FREQUENCE_STATISTICS:
+        case EAST_ASIA_PATTERN_LOW_FREQUENCE_STATISTICS:
         case PATTERN_LOW_FREQUENCE_STATISTICS:
             return true;
         }

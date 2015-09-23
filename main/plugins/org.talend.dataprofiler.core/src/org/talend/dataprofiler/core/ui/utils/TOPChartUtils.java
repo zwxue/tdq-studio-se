@@ -246,7 +246,8 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
             item.addSelectionListener(createSelectionAdapter(analysis, currentEngine, currentDataEntity, currentIndicator,
                     itemEntity, checkSql));
 
-            if (ChartTableFactory.isPatternFrequencyIndicator(currentIndicator) && createPatternFlag == 0) {
+            if (ChartTableFactory.isPatternFrequencyIndicator(currentIndicator)
+                    && !ChartTableFactory.isEastAsiaPatternFrequencyIndicator(currentIndicator) && createPatternFlag == 0) {
                 ChartTableFactory.createMenuOfGenerateRegularPattern(analysis, menu, currentDataEntity);
             }
 

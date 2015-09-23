@@ -190,6 +190,8 @@ public final class IndicatorCommonUtil {
                     case BinLowFrequencyIndicatorEnum:
                     case PatternFreqIndicatorEnum:
                     case PatternLowFreqIndicatorEnum:
+                    case EastAsiaPatternFreqIndicatorEnum:
+                    case EastAsiaPatternLowFreqIndicatorEnum:
                     case DatePatternFreqIndicatorEnum:
                     case SoundexIndicatorEnum:
                     case SoundexLowIndicatorEnum:

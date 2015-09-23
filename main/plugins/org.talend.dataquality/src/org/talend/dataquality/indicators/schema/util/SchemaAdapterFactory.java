@@ -12,6 +12,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.schema.*;
 import org.talend.dataquality.indicators.schema.AbstractTableIndicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;

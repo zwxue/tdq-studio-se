@@ -22,9 +22,11 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -121,7 +123,8 @@ public class SysIndicatorFolderRepNode extends DQFolderRepNode {
                 if (category != null && IndicatorCategoryHelper.isPhoneNumberCategory(category)) {
                     isPhoneNumberStatics = true;
                 }
-                if (!isPhoneNumberStatics && (indiExpression == null || indiExpression.size() == 0)) {
+                if (!isPhoneNumberStatics && !isEastAsiaPatternFequencyStatics(repNode.getIndicatorDefinition())
+                        && (indiExpression == null || indiExpression.size() == 0)) {
                     continue;
                 }
                 // ~23161
@@ -129,6 +132,21 @@ public class SysIndicatorFolderRepNode extends DQFolderRepNode {
                 super.getChildren().add(repNode);
             }
         }
+    }
+
+    /**
+     * DOC talend Comment method "isEastAsiaPatternFequencyStatics".
+     * 
+     * @param indicatorDefinition
+     * @return
+     */
+    private boolean isEastAsiaPatternFequencyStatics(IndicatorDefinition indicatorDefinition) {
+        String uuid = ResourceHelper.getUUID(indicatorDefinition);
+        // EastAsiaPatternFrequency and EastAsiaPatternLowFrequency
+        if ("_JMeW0F0TEeWGcZIHtEALuw".equals(uuid) || "_GIAgQF0TEeWGcZIHtEALuw".equals(uuid)) { //$NON-NLS-1$//$NON-NLS-2$
+            return true;
+        }
+        return false;
     }
 
 }

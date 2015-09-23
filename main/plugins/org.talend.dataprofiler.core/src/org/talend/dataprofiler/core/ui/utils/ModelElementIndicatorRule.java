@@ -25,6 +25,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -171,6 +172,13 @@ public final class ModelElementIndicatorRule {
                 }
             }
             break;
+        case EastAsiaPatternFreqIndicatorEnum:
+        case EastAsiaPatternLowFreqIndicatorEnum:
+            if (isSQLEngine && isEmpryExpression(indicator, dbmsLanguage)) {
+                return false;
+            } else if (isJavaEngine) {
+                return true;
+            }
         case BenfordLawFrequencyIndicatorEnum:
             // Added yyin 20121211 TDQ-6099: disable these three for INTERVAL type of Teradata
             // disable the benford for interval type: both sql and java
@@ -179,7 +187,7 @@ public final class ModelElementIndicatorRule {
             }
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
-            if (indicatorType != IndicatorEnum.BenfordLawFrequencyIndicatorEnum && isTeradataSQL) {
+            if (isTeradataSQL) {
                 return false;
             }
         case ModeIndicatorEnum:
@@ -191,7 +199,14 @@ public final class ModelElementIndicatorRule {
         case LowFrequencyIndicatorEnum:
             if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL) {
                 if (isHiveSQL
-                        && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {
+                        && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {// ||
+                                                                                                                                                     // indicatorType
+                                                                                                                                                     // ==
+                                                                                                                                                     // IndicatorEnum.EastAsiaPatternFreqIndicatorEnum
+                                                                                                                                                     // ||
+                                                                                                                                                     // indicatorType
+                                                                                                                                                     // ==
+                                                                                                                                                     // IndicatorEnum.EastAsiaPatternLowFreqIndicatorEnum
                     return false;
                 }
                 return true;
@@ -334,6 +349,19 @@ public final class ModelElementIndicatorRule {
         }
 
         return false;
+    }
+
+    /**
+     * DOC talend Comment method "isEmpryExpression".
+     * 
+     * @param indicator
+     * @return
+     */
+    private static boolean isEmpryExpression(Indicator indicator, DbmsLanguage dbmsLanguage) {
+        Expression sqlExpression = dbmsLanguage.getSqlExpression(indicator.getIndicatorDefinition());
+        CharactersMapping characterMappingExpression = dbmsLanguage.getChartacterMappingExpression(indicator
+                .getIndicatorDefinition());
+        return sqlExpression == null || characterMappingExpression == null;
     }
 
     /**

@@ -485,6 +485,8 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/FormatFreqPieIndicator/currentKey"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/BenfordLawFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/EastAsiaPatternFreqIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/EastAsiaPatternLowFreqIndicator"/>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">

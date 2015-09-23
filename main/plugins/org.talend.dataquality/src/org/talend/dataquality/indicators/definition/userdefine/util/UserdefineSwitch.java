@@ -11,6 +11,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.*;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
 import orgomg.cwm.objectmodel.core.Element;

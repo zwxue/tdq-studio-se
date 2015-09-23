@@ -15,14 +15,13 @@ import org.talend.dataquality.indicators.MaxLengthWithNullIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class MaxLengthWithNullIndicatorImpl extends MaxLengthIndicatorImpl implements MaxLengthWithNullIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MaxLengthWithNullIndicatorImpl() {
@@ -31,7 +30,6 @@ public class MaxLengthWithNullIndicatorImpl extends MaxLengthIndicatorImpl imple
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

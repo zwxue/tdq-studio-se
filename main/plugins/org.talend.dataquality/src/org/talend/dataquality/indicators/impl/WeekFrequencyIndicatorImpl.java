@@ -24,7 +24,7 @@ import org.talend.dataquality.indicators.WeekFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class WeekFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements WeekFrequencyIndicator {
@@ -33,7 +33,6 @@ public class WeekFrequencyIndicatorImpl extends FrequencyIndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected WeekFrequencyIndicatorImpl() {
@@ -42,7 +41,6 @@ public class WeekFrequencyIndicatorImpl extends FrequencyIndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

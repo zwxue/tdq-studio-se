@@ -63,6 +63,8 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.EastAsiaPatternFreqIndicator;
+import org.talend.dataquality.indicators.EastAsiaPatternLowFreqIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
@@ -221,7 +223,7 @@ public final class ChartTableFactory {
                                 }
                                 // TDQ-4470~
 
-                                if (isPatternFrequencyIndicator(indicator)) {
+                                if (isPatternFrequencyIndicator(indicator) && !isEastAsiaPatternFrequencyIndicator(indicator)) {
                                     createMenuOfGenerateRegularPattern(analysis, menu, dataEntity);
                                 }
                             }
@@ -363,7 +365,7 @@ public final class ChartTableFactory {
                                 } else {
                                     DrillDownUtils.createDrillDownMenuForJava(dataEntity, menu, itemEntities, analysis);
                                 }
-                                if (isPatternFrequencyIndicator(indicator)) {
+                                if (isPatternFrequencyIndicator(indicator) && !isEastAsiaPatternFrequencyIndicator(indicator)) {
                                     for (final MenuItemEntity itemEntity : itemEntities) {
                                         createMenuOfGenerateRegularPattern(analysis, menu, dataEntity);
                                     }
@@ -556,6 +558,43 @@ public final class ChartTableFactory {
             public Indicator casePatternLowFreqIndicator(PatternLowFreqIndicator object) {
                 return object;
             }
+        };
+
+        return iSwitch.doSwitch(indicator) != null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isPatternFrequencyIndicator".
+     * 
+     * @param indicator
+     * @return false if the indicator is not pattern frequency indicator.
+     */
+    public static boolean isEastAsiaPatternFrequencyIndicator(Indicator indicator) {
+        IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#caseEastAsiaPatternFreqIndicator(org.talend.
+             * dataquality.indicators.EastAsiaPatternFreqIndicator)
+             */
+            @Override
+            public Indicator caseEastAsiaPatternFreqIndicator(EastAsiaPatternFreqIndicator object) {
+                return object;
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.util.IndicatorsSwitch#caseEastAsiaPatternLowFreqIndicator(org.talend
+             * .dataquality.indicators.EastAsiaPatternLowFreqIndicator)
+             */
+            @Override
+            public Indicator caseEastAsiaPatternLowFreqIndicator(EastAsiaPatternLowFreqIndicator object) {
+                return object;
+            }
+
         };
 
         return iSwitch.doSwitch(indicator) != null;

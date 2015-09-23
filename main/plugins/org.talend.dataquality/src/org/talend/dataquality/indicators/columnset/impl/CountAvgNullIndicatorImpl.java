@@ -14,14 +14,13 @@ import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class CountAvgNullIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements CountAvgNullIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected CountAvgNullIndicatorImpl() {
@@ -30,7 +29,6 @@ public class CountAvgNullIndicatorImpl extends ColumnSetMultiValueIndicatorImpl 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

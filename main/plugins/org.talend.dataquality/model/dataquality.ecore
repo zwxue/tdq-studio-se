@@ -818,6 +818,8 @@
         <details key="documentation" value="This Class provide the function to compute a group of data by Benford's Law and output the leading digits with its distribution in this dataset. Then the user can use it to compare with the standard, to detect possible cases of Fraud. can handle type: positive number, string, can not handle: negetive number"/>
       </eAnnotations>
     </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EastAsiaPatternFreqIndicator" eSuperTypes="#//indicators/PatternFreqIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EastAsiaPatternLowFreqIndicator" eSuperTypes="#//indicators/PatternLowFreqIndicator"/>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eOperations name="addTableIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">

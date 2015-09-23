@@ -15,14 +15,13 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class AvgLengthWithBlankNullIndicatorImpl extends AverageLengthIndicatorImpl implements AvgLengthWithBlankNullIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected AvgLengthWithBlankNullIndicatorImpl() {
@@ -31,7 +30,6 @@ public class AvgLengthWithBlankNullIndicatorImpl extends AverageLengthIndicatorI
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

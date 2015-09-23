@@ -31,6 +31,15 @@ import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.WellFormIntePhoneCountIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImplTest;
+import org.talend.dataquality.indicators.util.FullwidthLatinLowercasedLettersTest;
+import org.talend.dataquality.indicators.util.FullwidthLatinNumbersTest;
+import org.talend.dataquality.indicators.util.FullwidthLatinUppercasedLettersTest;
+import org.talend.dataquality.indicators.util.HangulTest;
+import org.talend.dataquality.indicators.util.HiraganaSmallTest;
+import org.talend.dataquality.indicators.util.HiraganaTest;
+import org.talend.dataquality.indicators.util.KanjiTest;
+import org.talend.dataquality.indicators.util.KatakanaSmallTest;
+import org.talend.dataquality.indicators.util.KatakanaTest;
 import org.talend.dataquality.properties.impl.TDQJrxmlItemImplTest;
 import org.talend.dataquality.properties.impl.TDQSourceFileItemImplTest;
 
@@ -44,7 +53,9 @@ import org.talend.dataquality.properties.impl.TDQSourceFileItemImplTest;
         WellFormIntePhoneCountIndicatorImplTest.class, WellFormNationalPhoneCountIndicatorImplTest.class,
         IndicatorHelperTest.class, ColumnSetMultiValueIndicatorImplTest.class, RecordMatchingIndicatorImplTest.class,
         TDQJrxmlItemImplTest.class, TDQSourceFileItemImplTest.class, DBMapTest.class, DBSetTest.class, ColumnSetDBMapTest.class,
-        FrequencyIndicatorImplTest.class })
+        FrequencyIndicatorImplTest.class, KatakanaTest.class, KatakanaSmallTest.class, KanjiTest.class, HiraganaTest.class,
+        HiraganaSmallTest.class, HangulTest.class, FullwidthLatinUppercasedLettersTest.class, FullwidthLatinNumbersTest.class,
+        FullwidthLatinLowercasedLettersTest.class })
 public class AllDataQualityTests {
 
 }

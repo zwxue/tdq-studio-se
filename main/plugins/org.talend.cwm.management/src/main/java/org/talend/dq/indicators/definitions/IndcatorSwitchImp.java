@@ -29,6 +29,8 @@ import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.EastAsiaPatternFreqIndicator;
+import org.talend.dataquality.indicators.EastAsiaPatternLowFreqIndicator;
 import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
@@ -333,6 +335,16 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     @Override
     public Boolean casePatternLowFreqIndicator(PatternLowFreqIndicator object) {
         return setIndicatorDefinition(object, IndicatorEnum.PatternLowFreqIndicatorEnum.getLabel());
+    }
+
+    @Override
+    public Boolean caseEastAsiaPatternFreqIndicator(EastAsiaPatternFreqIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.EastAsiaPatternFreqIndicatorEnum.getLabel());
+    }
+
+    @Override
+    public Boolean caseEastAsiaPatternLowFreqIndicator(EastAsiaPatternLowFreqIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.EastAsiaPatternLowFreqIndicatorEnum.getLabel());
     }
 
     @Override

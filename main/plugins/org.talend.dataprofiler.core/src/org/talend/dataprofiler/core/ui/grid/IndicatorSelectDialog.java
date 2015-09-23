@@ -125,7 +125,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
         style |= SWT.BORDER;
         style |= SWT.SINGLE;
         gridPrview = new ColumnPreviewGrid(this, redrewComp, style, modelElementIndicators, this.limitNumber);
-        gridIndicator = new IndicatorSelectGrid(this, redrewComp, style, modelElementIndicators,gridPrview.getColumnsWidth());
+        gridIndicator = new IndicatorSelectGrid(this, redrewComp, style, modelElementIndicators, gridPrview.getColumnsWidth());
         gridIndicator.setHeaderVisible(false);
         gridIndicator.addObserver(gridPrview);
         gridPrview.addObserver(gridIndicator);
@@ -233,8 +233,9 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
         if (null != indicatorInstance && !(indicatorInstance instanceof DatePatternFreqIndicator)
                 && null != indicatorInstance.getIndicatorDefinition()
                 && indicatorInstance.getIndicatorDefinition().getSqlGenericExpression().size() < 1
-                && !UDIHelper.isJavaUDI(indicatorInstance) && !indicatorNode.hasChildren()
-                && !(currentIndicator instanceof DelimitedFileIndicator) && !isParentPhoneStatistics) {
+                && ExecutionLanguage.SQL.equals(language) && !UDIHelper.isJavaUDI(indicatorInstance)
+                && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)
+                && !isParentPhoneStatistics) {
             returnValueForCurrentIndicator = false;
         }
         return returnValueForCurrentIndicator;

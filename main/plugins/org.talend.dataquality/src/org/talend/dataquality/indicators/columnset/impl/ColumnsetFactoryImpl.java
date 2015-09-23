@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.indicators.columnset.*;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
@@ -43,7 +44,7 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
      */
     public static ColumnsetFactory init() {
         try {
-            ColumnsetFactory theColumnsetFactory = (ColumnsetFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.columnset"); 
+            ColumnsetFactory theColumnsetFactory = (ColumnsetFactory)EPackage.Registry.INSTANCE.getEFactory(ColumnsetPackage.eNS_URI);
             if (theColumnsetFactory != null) {
                 return theColumnsetFactory;
             }
@@ -234,8 +235,8 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
      * @generated
      */
     @SuppressWarnings("unchecked")
-    public List createListObjectFromString(EDataType eDataType, String initialValue) {
-        return (List)super.createFromString(initialValue);
+    public List<Object> createListObjectFromString(EDataType eDataType, String initialValue) {
+        return (List<Object>)super.createFromString(initialValue);
     }
 
     /**

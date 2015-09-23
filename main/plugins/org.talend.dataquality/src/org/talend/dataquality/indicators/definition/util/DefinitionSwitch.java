@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.dataquality.indicators.definition.*;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;

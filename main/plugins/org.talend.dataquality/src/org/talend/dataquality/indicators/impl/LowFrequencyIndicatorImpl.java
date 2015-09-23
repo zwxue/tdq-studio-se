@@ -17,14 +17,13 @@ import org.talend.utils.collections.MapValueSorter;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class LowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements LowFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected LowFrequencyIndicatorImpl() {
@@ -33,7 +32,6 @@ public class LowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

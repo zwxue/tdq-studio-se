@@ -15,14 +15,13 @@ import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class MaxLengthWithBlankIndicatorImpl extends MaxLengthIndicatorImpl implements MaxLengthWithBlankIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MaxLengthWithBlankIndicatorImpl() {
@@ -31,7 +30,6 @@ public class MaxLengthWithBlankIndicatorImpl extends MaxLengthIndicatorImpl impl
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

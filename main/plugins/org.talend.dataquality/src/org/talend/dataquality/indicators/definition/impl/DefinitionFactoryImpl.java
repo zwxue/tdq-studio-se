@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.indicators.definition.*;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
@@ -34,7 +35,7 @@ public class DefinitionFactoryImpl extends EFactoryImpl implements DefinitionFac
      */
     public static DefinitionFactory init() {
         try {
-            DefinitionFactory theDefinitionFactory = (DefinitionFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.definition"); 
+            DefinitionFactory theDefinitionFactory = (DefinitionFactory)EPackage.Registry.INSTANCE.getEFactory(DefinitionPackage.eNS_URI);
             if (theDefinitionFactory != null) {
                 return theDefinitionFactory;
             }

@@ -359,6 +359,15 @@ public interface SchemaPackage extends EPackage {
     int SCHEMA_INDICATOR__STORE_DATA = IndicatorsPackage.COMPOSITE_INDICATOR__STORE_DATA;
 
     /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SCHEMA_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = IndicatorsPackage.COMPOSITE_INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
+
+    /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -778,6 +787,15 @@ public interface SchemaPackage extends EPackage {
     int ABSTRACT_TABLE_INDICATOR__STORE_DATA = IndicatorsPackage.INDICATOR__STORE_DATA;
 
     /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
+
+    /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1091,6 +1109,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int TABLE_INDICATOR__STORE_DATA = ABSTRACT_TABLE_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = ABSTRACT_TABLE_INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
@@ -1424,6 +1451,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CATALOG_INDICATOR__STORE_DATA = SCHEMA_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CATALOG_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = SCHEMA_INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -1820,6 +1856,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CONNECTION_INDICATOR__STORE_DATA = CATALOG_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = CATALOG_INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -2244,6 +2289,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int VIEW_INDICATOR__STORE_DATA = ABSTRACT_TABLE_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Built In Indicator Definition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__BUILT_IN_INDICATOR_DEFINITION = ABSTRACT_TABLE_INDICATOR__BUILT_IN_INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.

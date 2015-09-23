@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.indicators.definition.userdefine.*;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
 import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
@@ -30,7 +31,7 @@ public class UserdefineFactoryImpl extends EFactoryImpl implements UserdefineFac
      */
     public static UserdefineFactory init() {
         try {
-            UserdefineFactory theUserdefineFactory = (UserdefineFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.definition.userdefine"); 
+            UserdefineFactory theUserdefineFactory = (UserdefineFactory)EPackage.Registry.INSTANCE.getEFactory(UserdefinePackage.eNS_URI);
             if (theUserdefineFactory != null) {
                 return theUserdefineFactory;
             }

@@ -14,14 +14,13 @@ import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class WeakCorrelationIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements WeakCorrelationIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected WeakCorrelationIndicatorImpl() {
@@ -30,7 +29,6 @@ public class WeakCorrelationIndicatorImpl extends ColumnSetMultiValueIndicatorIm
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

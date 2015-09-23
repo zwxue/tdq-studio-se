@@ -24,7 +24,7 @@ import org.talend.resource.ResourceManager;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements UpperQuartileIndicator {
@@ -35,7 +35,6 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected UpperQuartileIndicatorImpl() {
@@ -58,7 +57,6 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

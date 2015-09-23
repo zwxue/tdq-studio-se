@@ -22,10 +22,10 @@ import org.talend.utils.collections.MapValueSorter;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.ModeIndicatorImpl#getMode <em>Mode</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.ModeIndicatorImpl#getMode <em>Mode</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeIndicator {
@@ -54,7 +54,6 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected ModeIndicatorImpl() {
@@ -63,7 +62,6 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -73,7 +71,6 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -83,72 +80,66 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void setMode(Object newMode) {
         Object oldMode = mode;
         mode = newMode;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.MODE_INDICATOR__MODE, oldMode, mode));
-        }
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.MODE_INDICATOR__MODE:
-            return getMode();
+            case IndicatorsPackage.MODE_INDICATOR__MODE:
+                return getMode();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.MODE_INDICATOR__MODE:
-            setMode(newValue);
-            return;
+            case IndicatorsPackage.MODE_INDICATOR__MODE:
+                setMode(newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.MODE_INDICATOR__MODE:
-            setMode(MODE_EDEFAULT);
-            return;
+            case IndicatorsPackage.MODE_INDICATOR__MODE:
+                setMode(MODE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.MODE_INDICATOR__MODE:
-            return MODE_EDEFAULT == null ? mode != null : !MODE_EDEFAULT.equals(mode);
+            case IndicatorsPackage.MODE_INDICATOR__MODE:
+                return MODE_EDEFAULT == null ? mode != null : !MODE_EDEFAULT.equals(mode);
         }
         return super.eIsSet(featureID);
     }
@@ -197,14 +188,11 @@ public class ModeIndicatorImpl extends FrequencyIndicatorImpl implements ModeInd
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (mode: ");

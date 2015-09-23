@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.indicators.schema.*;
 import org.talend.dataquality.indicators.schema.AbstractTableIndicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
@@ -35,7 +36,7 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
      */
     public static SchemaFactory init() {
         try {
-            SchemaFactory theSchemaFactory = (SchemaFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.schema"); 
+            SchemaFactory theSchemaFactory = (SchemaFactory)EPackage.Registry.INSTANCE.getEFactory(SchemaPackage.eNS_URI);
             if (theSchemaFactory != null) {
                 return theSchemaFactory;
             }

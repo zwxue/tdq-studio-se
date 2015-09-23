@@ -868,6 +868,29 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.EAST_ASIA_PATTERN_FREQ_INDICATOR: {
+                EastAsiaPatternFreqIndicator eastAsiaPatternFreqIndicator = (EastAsiaPatternFreqIndicator)theEObject;
+                T result = caseEastAsiaPatternFreqIndicator(eastAsiaPatternFreqIndicator);
+                if (result == null) result = casePatternFreqIndicator(eastAsiaPatternFreqIndicator);
+                if (result == null) result = caseFrequencyIndicator(eastAsiaPatternFreqIndicator);
+                if (result == null) result = caseIndicator(eastAsiaPatternFreqIndicator);
+                if (result == null) result = caseModelElement(eastAsiaPatternFreqIndicator);
+                if (result == null) result = caseElement(eastAsiaPatternFreqIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.EAST_ASIA_PATTERN_LOW_FREQ_INDICATOR: {
+                EastAsiaPatternLowFreqIndicator eastAsiaPatternLowFreqIndicator = (EastAsiaPatternLowFreqIndicator)theEObject;
+                T result = caseEastAsiaPatternLowFreqIndicator(eastAsiaPatternLowFreqIndicator);
+                if (result == null) result = casePatternLowFreqIndicator(eastAsiaPatternLowFreqIndicator);
+                if (result == null) result = caseLowFrequencyIndicator(eastAsiaPatternLowFreqIndicator);
+                if (result == null) result = caseFrequencyIndicator(eastAsiaPatternLowFreqIndicator);
+                if (result == null) result = caseIndicator(eastAsiaPatternLowFreqIndicator);
+                if (result == null) result = caseModelElement(eastAsiaPatternLowFreqIndicator);
+                if (result == null) result = caseElement(eastAsiaPatternLowFreqIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -1722,6 +1745,36 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseBenfordLawFrequencyIndicator(BenfordLawFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>East Asia Pattern Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>East Asia Pattern Freq Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseEastAsiaPatternFreqIndicator(EastAsiaPatternFreqIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>East Asia Pattern Low Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>East Asia Pattern Low Freq Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseEastAsiaPatternLowFreqIndicator(EastAsiaPatternLowFreqIndicator object) {
         return null;
     }
 
