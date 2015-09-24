@@ -146,6 +146,8 @@
                   </enumeration>
                   <enumeration value="6.0.1">
                   </enumeration>
+                  <enumeration value="6.1.0">
+                  </enumeration>
                </restriction>
             </simpleType>
          </attribute>
