@@ -81,6 +81,7 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
         } else {// keep all of columns belong to same one table and create SemanticDiscoveryAction.
             Set<String> currentTableSet = new HashSet<String>();
             MetadataTable createTable = ConnectionFactory.eINSTANCE.createMetadataTable();
+
             List<String> filterNames = new ArrayList<String>();
             Iterator<Object> columnIterator = currentSelection.iterator();
             while (columnIterator.hasNext()) {
