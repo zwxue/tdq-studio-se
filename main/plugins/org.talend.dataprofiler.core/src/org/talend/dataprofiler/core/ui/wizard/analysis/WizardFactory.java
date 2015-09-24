@@ -89,31 +89,33 @@ public final class WizardFactory {
             }
             parameter.setAnalysisTypeName(type.getLiteral());
 
-            if (((AnalysisLabelParameter) parameter).isSemanticDiscoveryAnalysis()) {
-                ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
-                if (service != null) {
-                    return service.getSemanticDiscoveryWizard(null);
+            if (parameter instanceof AnalysisLabelParameter) {
+                if (((AnalysisLabelParameter) parameter).isSemanticDiscoveryAnalysis()) {
+                    ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
+                    if (service != null) {
+                        return service.getSemanticDiscoveryWizard(null);
+                    }
                 }
-            }
 
-            if (((AnalysisLabelParameter) parameter).isEmptySingleColumnAnalysis()) {
-                return new EmptySingleColumnWizard(parameter);
-            }
+                if (((AnalysisLabelParameter) parameter).isEmptySingleColumnAnalysis()) {
+                    return new EmptySingleColumnWizard(parameter);
+                }
 
-            if (((AnalysisLabelParameter) parameter).isNominalValuesAnalysis()) {
-                return new NominalValuesWizard(parameter);
-            }
+                if (((AnalysisLabelParameter) parameter).isNominalValuesAnalysis()) {
+                    return new NominalValuesWizard(parameter);
+                }
 
-            if (((AnalysisLabelParameter) parameter).isPatternFrequencyAnalysis()) {
-                return new PatternFrequencyWizard(parameter);
-            }
+                if (((AnalysisLabelParameter) parameter).isPatternFrequencyAnalysis()) {
+                    return new PatternFrequencyWizard(parameter);
+                }
 
-            if (((AnalysisLabelParameter) parameter).isDiscreteDataAnalysis()) {
-                return new DiscreteDataWizard(parameter);
-            }
+                if (((AnalysisLabelParameter) parameter).isDiscreteDataAnalysis()) {
+                    return new DiscreteDataWizard(parameter);
+                }
 
-            if (((AnalysisLabelParameter) parameter).isSummaryStatisticsAnalysis()) {
-                return new SummaryStatisticsWizard(parameter);
+                if (((AnalysisLabelParameter) parameter).isSummaryStatisticsAnalysis()) {
+                    return new SummaryStatisticsWizard(parameter);
+                }
             }
 
             return new ColumnWizard(parameter);
