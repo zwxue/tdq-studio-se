@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -477,24 +476,21 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         String connectionStr = JavaSqlFactory.getURL(tdDataProvider);
         Properties pameterProperties = SupportDBUrlStore.getInstance().getDBPameterProperties(connectionStr);
-        String labelContent = StringUtils.EMPTY;
         toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.DBMS")); //$NON-NLS-1$
         // MOD TDQ-8539, find the db type from the connection, not from the properties file
         toolkit.createLabel(leftComp, getDatabaseType(pameterProperties));
 
-        labelContent = pameterProperties
-                .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.HOSTNAME_PROPERTY);
+        String serverName = JavaSqlFactory.getServerName(tdDataProvider);
         toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.server")); //$NON-NLS-1$
-        toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
+        toolkit.createLabel(leftComp, serverName == null ? PluginConstant.EMPTY_STRING : serverName);
 
-        labelContent = pameterProperties
-                .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.PORT_PROPERTY);
+        String port = JavaSqlFactory.getPort(tdDataProvider);
         toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port")); //$NON-NLS-1$
-        toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
+        toolkit.createLabel(leftComp, port == null ? PluginConstant.EMPTY_STRING : port);
 
-        labelContent = JavaSqlFactory.getUsername(tdDataProvider);
+        String username = JavaSqlFactory.getUsername(tdDataProvider);
         toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs")); //$NON-NLS-1$
-        toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
+        toolkit.createLabel(leftComp, username == null ? PluginConstant.EMPTY_STRING : username);
 
         List<Catalog> tdCatalogs = getCatalogs();
         // TDQ-6735 get the correct numbers of schema.
