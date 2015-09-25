@@ -74,7 +74,8 @@ public final class AlgoUtils {
 
         double kthValue = totalCount * p;
 
-        double localMedian = 0;
+        // TDQ-8185: set the default value is, becasue sometimes there is no data, 0 is not exactly
+        double localMedian = Double.NaN;
 
         long sumCount = 0;
         Iterator<Object> keyIterator = keys.iterator();
@@ -93,7 +94,11 @@ public final class AlgoUtils {
                     localMedian = extracted(searchedKey).doubleValue();
                     if (sumCount - kthValue < 1) { // in case there are not many identical values
                         Number nextKey = (Number) keyIterator.next(); // CAST here
-                        localMedian = (localMedian + extracted(nextKey).doubleValue()) / 2; // with averaging
+                        if (Double.isNaN(localMedian)) {
+                            localMedian = (extracted(nextKey).doubleValue()) / 2; // with averaging
+                        } else {
+                            localMedian = (localMedian + extracted(nextKey).doubleValue()) / 2; // with averaging
+                        }
                     }
                 }
                 break; // we got it.
