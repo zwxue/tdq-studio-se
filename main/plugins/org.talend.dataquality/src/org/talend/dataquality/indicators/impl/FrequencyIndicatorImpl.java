@@ -283,9 +283,10 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     public void setDistinctValueCount(Long newDistinctValueCount) {
         Long oldDistinctValueCount = distinctValueCount;
         distinctValueCount = newDistinctValueCount;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT,
                     oldDistinctValueCount, distinctValueCount));
+        }
     }
 
     /**
@@ -307,9 +308,10 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     public void setUniqueValueCount(Long newUniqueValueCount) {
         Long oldUniqueValueCount = uniqueValueCount;
         uniqueValueCount = newUniqueValueCount;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT,
                     oldUniqueValueCount, uniqueValueCount));
+        }
     }
 
     /**
@@ -370,9 +372,10 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     public void setValueToFreqGen(HashMap<Object, Long> newValueToFreq) {
         HashMap<Object, Long> oldValueToFreq = valueToFreq;
         valueToFreq = newValueToFreq;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ,
                     oldValueToFreq, valueToFreq));
+        }
     }
 
     /**
