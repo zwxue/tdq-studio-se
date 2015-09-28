@@ -447,8 +447,8 @@ public final class DefinitionHandler {
 
     public IndicatorDefinition getIndicatorDefinitionBySemanticLabel(String label) {
         for (IndicatorDefinition indicatorDefinition : this.getIndicatorsDefinitions()) {
-            if (indicatorDefinition != null && indicatorDefinition.getLabel() != null
-                    && indicatorDefinition.getLabel().replace(" ", "_").compareTo(label) == 0) {
+            if (indicatorDefinition != null && indicatorDefinition.getName() != null
+                    && indicatorDefinition.getName().replace(" ", "_").compareTo(label) == 0) {
                 return indicatorDefinition;
             }
         }
