@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
@@ -75,8 +74,8 @@ public class FileTreeContentProvider implements ITreeContentProvider {
                         continue;
                     }
                 }
-                // TDQ-10933: Hide the Exchange node
-                if (TalendPropertiesUtil.isHideExchange() && EResourceConstant.EXCHANGE.getName().equals(itemRecord.getName())) {
+                // TDQ-10933: Hide the Exchange node TDQ-11036: always hidden
+                if (EResourceConstant.EXCHANGE.getName().equals(itemRecord.getName())) {
                     continue;
                 }
                 // TDQ-10933~
