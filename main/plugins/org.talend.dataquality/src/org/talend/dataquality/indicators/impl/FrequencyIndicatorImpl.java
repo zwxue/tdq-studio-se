@@ -30,6 +30,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
+import org.talend.dataquality.indicators.mapdb.TalendFormatDate;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.collections.MapValueSorter;
 
@@ -282,6 +283,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     public void setDistinctValueCount(Long newDistinctValueCount) {
         Long oldDistinctValueCount = distinctValueCount;
         distinctValueCount = newDistinctValueCount;
+
         if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT,
                     oldDistinctValueCount, distinctValueCount));
@@ -604,6 +606,10 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * @return
      */
     protected String getFrequencyLabel(Object name) {
+        // TDQ-10833 format Date .like as :yyyy-MM-dd,yyyy-MM-dd HH:MM:ss
+        if (name instanceof Date) {
+            return new TalendFormatDate(((Date) name)).toString();
+        }
         return name.toString();
     }
 
