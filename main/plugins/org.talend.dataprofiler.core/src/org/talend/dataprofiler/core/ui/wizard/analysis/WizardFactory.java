@@ -22,7 +22,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.catalog.CatalogAnalysisWi
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnSetWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.DiscreteDataWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.column.EmptySingleColumnWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.BasicColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.MatchWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.NominalCorrelationWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.NominalValuesWizard;
@@ -97,8 +97,8 @@ public final class WizardFactory {
                     }
                 }
 
-                if (((AnalysisLabelParameter) parameter).isEmptySingleColumnAnalysis()) {
-                    return new EmptySingleColumnWizard(parameter);
+                if (((AnalysisLabelParameter) parameter).isBasicColumnAnalysis()) {
+                    return new BasicColumnWizard(parameter);
                 }
 
                 if (((AnalysisLabelParameter) parameter).isNominalValuesAnalysis()) {

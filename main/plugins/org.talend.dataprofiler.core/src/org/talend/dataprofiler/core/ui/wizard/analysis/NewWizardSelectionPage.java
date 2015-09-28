@@ -193,7 +193,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         parameter = multipleColumnParam;
                         if (AnalysisLabelParameter.SEMANTIC_DISCOVERY_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[12].getHref();
-                        } else if (AnalysisLabelParameter.EMPTY_SINGLE_COLUMN_ANALYSIS.equals(currentLiteral)) {
+                        } else if (AnalysisLabelParameter.BASIC_COLUMN_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[13].getHref();
                         } else if (AnalysisLabelParameter.NOMINAL_VALUES_ANALYSIS.equals(currentLiteral)) {
                             href = relatedTopics[14].getHref();

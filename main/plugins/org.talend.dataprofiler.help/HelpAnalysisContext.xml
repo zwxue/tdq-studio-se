@@ -15,7 +15,7 @@
       <topic label="Column Set Analysis" href="$nl$/html/wizard/analysis/columnSetAnalysis.html"/>
       <topic label="Column Analysis" href="$nl$/html/wizard/analysis/columnAnalysis.html"/>
       <topic label="Semantic Discovery Analysis" href="$nl$/html/wizard/analysis/semanticDiscoveryAnalysis.html"/>
-      <topic label="Empty Single Column Analysis" href="$nl$/html/wizard/analysis/emptySingleColumnAnalysis.html"/>
+      <topic label="Basic Column Analysis" href="$nl$/html/wizard/analysis/basicColumnAnalysis.html"/>
       <topic label="Nominal Values Analysis" href="$nl$/html/wizard/analysis/nominalValuesAnalysis.html"/>
       <topic label="Pattern Frequency Analysis" href="$nl$/html/wizard/analysis/patternFrequencyAnalysis.html"/>
       <topic label="Discrete Data Analysis" href="$nl$/html/wizard/analysis/discreteDataAnalysis.html"/>

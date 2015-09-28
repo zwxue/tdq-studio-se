@@ -19,9 +19,9 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 /**
  * DOC msjian class global comment. Detailled comment
  */
-public class EmptySingleColumnWizard extends ColumnWizard {
+public class BasicColumnWizard extends ColumnWizard {
 
-    public EmptySingleColumnWizard(AnalysisParameter parameter) {
+    public BasicColumnWizard(AnalysisParameter parameter) {
         super(parameter);
     }
 

@@ -38,7 +38,7 @@ public class AnalysisLabelParameter extends AnalysisParameter {
 
     public static final String SEMANTIC_DISCOVERY_ANALYSIS = "Semantic Discovery Analysis"; //$NON-NLS-1$
 
-    public static final String EMPTY_SINGLE_COLUMN_ANALYSIS = "Empty Single Column Analysis"; //$NON-NLS-1$
+    public static final String BASIC_COLUMN_ANALYSIS = "Basic Column Analysis"; //$NON-NLS-1$
 
     public static final String NOMINAL_VALUES_ANALYSIS = "Nominal Values Analysis"; //$NON-NLS-1$
 
@@ -72,8 +72,8 @@ public class AnalysisLabelParameter extends AnalysisParameter {
         return SEMANTIC_DISCOVERY_ANALYSIS.equals(categoryLabel);
     }
 
-    public boolean isEmptySingleColumnAnalysis() {
-        return EMPTY_SINGLE_COLUMN_ANALYSIS.equals(categoryLabel);
+    public boolean isBasicColumnAnalysis() {
+        return BASIC_COLUMN_ANALYSIS.equals(categoryLabel);
     }
 
     public boolean isNominalValuesAnalysis() {

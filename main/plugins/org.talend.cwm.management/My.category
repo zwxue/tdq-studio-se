@@ -16,7 +16,7 @@
   </categories>
   <categories analysisType="Multiple Column Analysis" label="Column Analysis">
     <subCategories analysisType="Multiple Column Analysis" label="Semantic Discovery Analysis"/>
-    <subCategories analysisType="Multiple Column Analysis" label="Empty Single Column Analysis"/>
+    <subCategories analysisType="Multiple Column Analysis" label="Basic Column Analysis"/>
     <subCategories analysisType="Multiple Column Analysis" label="Nominal Values Analysis"/>
     <subCategories analysisType="Multiple Column Analysis" label="Pattern Frequency Analysis"/>
     <subCategories analysisType="Multiple Column Analysis" label="Discrete Data Analysis"/>
