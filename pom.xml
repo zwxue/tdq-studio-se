@@ -68,7 +68,6 @@
 		<module>main/plugins/org.talend.dataprofiler.service</module>
 		<module>main/plugins/org.talend.dataquality</module>
 		<module>main/plugins/org.talend.dataquality.edit</module>
-		<module>main/plugins/org.talend.dataquality.editor</module>
 		<module>main/plugins/org.talend.dataquality.matching</module>
 		<!--module>main/plugins/org.talend.dataquality.record.linkage</module-->
 		<module>main/plugins/org.talend.dataquality.record.linkage.ui</module>
