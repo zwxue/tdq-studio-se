@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -184,6 +185,10 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
     public V put(K key, V value) {
         if (key == null) {
             return dbMap.put((K) EMPTY, value);
+        }
+        // TDQ-10833 format Date when put Date type.like as :yyyy-MM-dd.yyyy-MM-dd HH:MM:ss
+        if (key instanceof Date) {
+            return dbMap.put((K) new TalendFormatDate(((Date) key)), value);
         }
         return dbMap.put(key, value);
     }
