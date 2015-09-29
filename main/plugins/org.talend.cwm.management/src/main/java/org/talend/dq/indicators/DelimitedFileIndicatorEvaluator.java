@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.talend.core.IRepositoryContextService;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
@@ -88,68 +89,101 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         String path = JavaSqlFactory.getURL(delimitedFileconnection);
         IPath iPath = new Path(path);
 
-        try {
-            File file = iPath.toFile();
+        File file = iPath.toFile();
 
-            if (!file.exists()) {
-                returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false); //$NON-NLS-1$
-                return returnCode;
+        if (!file.exists()) {
+            returnCode.setReturnCode(Messages.getString("DelimitedFileIndicatorEvaluator.CanNotFindFile"), false); //$NON-NLS-1$
+            return returnCode;
+        }
+
+        List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
+        EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
+        indicToRowMap.clear();
+
+        List<MetadataColumn> columnElementList = new ArrayList<MetadataColumn>();
+        for (int i = 0; i < analysisElementList.size(); i++) {
+            MetadataColumn mColumn = (MetadataColumn) analysisElementList.get(i);
+            MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
+            columnElementList = mTable == null ? columnElementList : mTable.getColumns();
+            if (!columnElementList.isEmpty()) {
+                break;
             }
+        }
+        ReturnCode readDataReturnCode = new ReturnCode(true);
+        // use CsvReader to parse.
+        if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
+            readDataReturnCode = useCsvReader(file, analysisElementList, columnElementList, indicToRowMap);
+        } else {
+            readDataReturnCode = useDelimitedReader(analysisElementList, columnElementList, indicToRowMap);
 
-            List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
-            EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
-            indicToRowMap.clear();
+        }
 
-            List<MetadataColumn> columnElementList = new ArrayList<MetadataColumn>();
-            for (int i = 0; i < analysisElementList.size(); i++) {
-                MetadataColumn mColumn = (MetadataColumn) analysisElementList.get(i);
-                MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
-                columnElementList = mTable == null ? columnElementList : mTable.getColumns();
-                if (!columnElementList.isEmpty()) {
+        // handle error message
+        if (!readDataReturnCode.isOk()) {
+            Display.getDefault().asyncExec(new Runnable() {
+
+                public void run() {
+                    MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"), //$NON-NLS-1$
+                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message")); //$NON-NLS-1$
+                }
+            });
+        }
+
+        // Added yyin 20120608 TDQ-3589
+        for (MetadataColumn col : columnElementList) {
+            List<Indicator> indicators = getIndicators(col.getLabel());
+            for (Indicator indicator : indicators) {
+                if (indicator instanceof DuplicateCountIndicator) {
+                    AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
+                    if (analyzedDataSet == null) {
+                        analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
+                        indicToRowMap.put(indicator, analyzedDataSet);
+                        analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
+                        analyzedDataSet.setRecordSize(0);
+                    }
+                    // indicator.finalizeComputation();
+                    addResultToIndicatorToRowMap(indicator, indicToRowMap);
+                }
+            }
+        }// ~
+
+        return returnCode;
+    }
+
+    /**
+     * DOC talend Comment method "useDelimitedReader".
+     * 
+     * @param file
+     * @param delimitedFileconnection2
+     * @param analysisElementList
+     * @param columnElementList
+     * @param indicToRowMap
+     * @return
+     */
+    private ReturnCode useDelimitedReader(List<ModelElement> analysisElementList, List<MetadataColumn> columnElementList,
+            EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+        // use TOSDelimitedReader in FileInputDelimited to parse.
+        ReturnCode returnCode = new ReturnCode(true);
+        try {
+            FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
+
+            long currentRow = JavaSqlFactory.getHeadValue(delimitedFileconnection);
+
+            while (fileInputDelimited.nextRecord()) {
+                if (!continueRun()) {
                     break;
                 }
-            }
-            // use CsvReader to parse.
-            if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
-                useCsvReader(file, delimitedFileconnection, analysisElementList, columnElementList, indicToRowMap);
-            } else {
-                // use TOSDelimitedReader in FileInputDelimited to parse.
-                FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
-
-                long currentRow = JavaSqlFactory.getHeadValue(delimitedFileconnection);
-
-                while (fileInputDelimited.nextRecord()) {
-                    if (!continueRun()) {
-                        break;
-                    }
-                    currentRow++;
-                    int columsCount = fileInputDelimited.getColumnsCountOfCurrentRow();
-                    String[] rowValues = new String[columsCount];
-                    for (int i = 0; i < columsCount; i++) {
-                        rowValues[i] = fileInputDelimited.get(i);
-                    }
-                    handleByARow(rowValues, currentRow, analysisElementList, columnElementList, indicToRowMap);
+                currentRow++;
+                int columsCount = fileInputDelimited.getColumnsCountOfCurrentRow();
+                String[] rowValues = new String[columsCount];
+                for (int i = 0; i < columsCount; i++) {
+                    rowValues[i] = fileInputDelimited.get(i);
                 }
-                fileInputDelimited.close();
+                returnCode.setOk(returnCode.isOk()
+                        && handleByARow(rowValues, currentRow, analysisElementList, columnElementList, indicToRowMap).isOk());
             }
-            // Added yyin 20120608 TDQ-3589
-            for (MetadataColumn col : columnElementList) {
-                List<Indicator> indicators = getIndicators(col.getLabel());
-                for (Indicator indicator : indicators) {
-                    if (indicator instanceof DuplicateCountIndicator) {
-                        AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
-                        if (analyzedDataSet == null) {
-                            analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
-                            indicToRowMap.put(indicator, analyzedDataSet);
-                            analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
-                            analyzedDataSet.setRecordSize(0);
-                        }
-                        // indicator.finalizeComputation();
-                        addResultToIndicatorToRowMap(indicator, indicToRowMap);
-                    }
-                }
-            }// ~
-
+            fileInputDelimited.close();
         } catch (IOException e) {
             log.error(e, e);
         }
@@ -187,8 +221,9 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         }
     }
 
-    private void useCsvReader(File file, DelimitedFileConnection dfCon, List<ModelElement> analysisElementList,
-            List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+    private ReturnCode useCsvReader(File file, List<ModelElement> analysisElementList, List<MetadataColumn> columnElementList,
+            EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+        ReturnCode returnCode = new ReturnCode(true);
         int limitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
         int headValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
         CSVReader csvReader = null;
@@ -208,7 +243,8 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     break;
                 }
                 rowValues = csvReader.getValues();
-                handleByARow(rowValues, currentRecord, analysisElementList, columnElementList, indicToRowMap);
+                returnCode.setOk(returnCode.isOk()
+                        && handleByARow(rowValues, currentRecord, analysisElementList, columnElementList, indicToRowMap).isOk());
             }
         } catch (IOException e) {
             log.error(e, e);
@@ -221,6 +257,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 }
             }
         }
+        return returnCode;
     }
 
     @Override
@@ -245,8 +282,9 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         return new ReturnCode(true);
     }
 
-    private void handleByARow(String[] rowValues, long currentRow, List<ModelElement> analysisElementList,
+    private ReturnCode handleByARow(String[] rowValues, long currentRow, List<ModelElement> analysisElementList,
             List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+        ReturnCode returnCode = new ReturnCode(true);
         Object object = null;
         int maxNumberRows = analysis.getParameters().getMaxNumberRows();
         int recordIncrement = 0;
@@ -257,17 +295,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             if (position == null || position >= rowValues.length) {
                 log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData", //$NON-NLS-1$
                         mColumn.getLabel(), currentRow, delimitedFileconnection.getFilePath()));
-                if (!isBablyForm) {
-                    isBablyForm = true;
-                    Display.getDefault().asyncExec(new Runnable() {
-
-                        public void run() {
-                            MessageDialog.openWarning(null,
-                                    Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"), //$NON-NLS-1$
-                                    Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message")); //$NON-NLS-1$
-                        }
-                    });
-                }
+                returnCode.setOk(false);
                 continue;
             }
 
@@ -351,6 +379,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             }
 
         }
+        return returnCode;
     }
 
 }
