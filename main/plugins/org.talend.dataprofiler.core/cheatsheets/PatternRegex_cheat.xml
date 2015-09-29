@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a new regex pattern">
+      title="Create a new regular expresion pattern">
    <intro>
       <description>
          Regular patterns are different to SQL patterns. For example, if you search strings starting with &apos;S&apos;, the regular pattern is &apos;S.*&apos;, as opposed to &apos;S%&apos;. 

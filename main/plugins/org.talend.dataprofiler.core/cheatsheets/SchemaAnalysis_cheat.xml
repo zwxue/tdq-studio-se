@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a new schema analysis">
+      title="Create a new schema overview analysis">
    <intro>
       <description>
          This type of analysis examines one specific schema in a database. The analysis returns information about the physical structure of the database.
@@ -11,7 +11,7 @@
       <description>
          Note that schema analysis is only possible in databases that include schema entities in their physical structure. 
 		 
-		 To open the <b>Create New Analysis</b> wizard, right click <b>Analyzes</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then select <b>Schema Structure Overview</b> in order to browse to and select the schema to analyze. The wizard prompts you to provide the schema analysis metadata (name, purpose, description...). Add table or view filters if required, using SQL language. Upon completion, an editor opens in which you can modify the analysis metadata or settings, if necessary. 
+		 To open the <b>Create New Analysis</b> wizard, right click <b>Analyzes</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then Expand <b>Structural Analysis</b> and select <b>Schema Overview Analysis</b> in order to browse to and select the schema to analyze. The wizard prompts you to provide the schema analysis metadata (name, purpose, description...). Add table or view filters if required, using SQL language. Upon completion, an editor opens in which you can modify the analysis metadata or settings, if necessary. 
 		  
       </description>
        <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core"  param1="5" confirm="false"/>

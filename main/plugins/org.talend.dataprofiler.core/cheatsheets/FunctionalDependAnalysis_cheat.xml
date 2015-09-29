@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a new Functional Dependency Analysis">
+      title="Create a new functional dependency analysis">
    <intro
          href="http://en.wikipedia.org/wiki/Functional_dependency">
       <description>
@@ -12,7 +12,7 @@ The value of a “City” column, for instance, determines the value of a “Cou
    <item
          title="Set the analysis metadata.">
       <description>
-       To open the <b>Create New Analysis</b> wizard, right click <b>Analyzes</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then select <b>Functional Dependency Analysis</b>.  The wizard prompts you to provide the analysis metadata (name, purpose, description...). Upon completion, an editor opens in which you can modify the analysis metadata and define the analysis settings. 	  
+       To open the <b>Create New Analysis</b> wizard, right click <b>Analyzes</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then expand <b>Table Analysis</b> and select <b>Functional Dependency Analysis</b>.  The wizard prompts you to provide the analysis metadata (name, purpose, description...). Upon completion, an editor opens in which you can modify the analysis metadata and define the analysis settings. 	  
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="9">
       </action>

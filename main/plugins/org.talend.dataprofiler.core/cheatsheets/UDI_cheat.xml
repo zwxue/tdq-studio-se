@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a new User Defined Indicator">
+      title="Create a new user defined indicator">
    <intro>
       <description>
          You can create your own personalized indicators and manage them in the same way that you manage any system indicators. This tutorial guides you through the creation of a user defined indicator.

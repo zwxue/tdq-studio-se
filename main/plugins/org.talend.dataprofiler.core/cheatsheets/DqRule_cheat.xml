@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a new Business Rule">
+      title="Create a new business rule">
    <intro>
       <description>
         To open the <b>New Business Rule</b> creation wizard, expand the Rules node under Libraries in the DQ Repository view. Right click the SQL folder and select New Business Rule. The wizard prompts you to enter the rule's metadata (name, purpose, description...). Enter the WHERE clause to be used in the analysis and click Finish. Upon completion, an editor opens in which you can set the Business Rule information and content.

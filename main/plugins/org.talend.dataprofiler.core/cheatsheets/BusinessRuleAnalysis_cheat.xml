@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a new Business Rule Analysis">
+      title="Create a new business rule analysis">
    <intro>
       <description>
          This kind of analysis allows you to apply your Business Rules to a selected table. 
