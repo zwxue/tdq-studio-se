@@ -35,9 +35,9 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
     public Image getImage(Object element) {
         AnalysisTypeNode node = (AnalysisTypeNode) element;
         if (node.getParent() != null) {
-            return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+            return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
         } else {
-            return ImageLib.getImage(ImageLib.PROJECT_ACTIVE);
+            return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         }
     }
 
