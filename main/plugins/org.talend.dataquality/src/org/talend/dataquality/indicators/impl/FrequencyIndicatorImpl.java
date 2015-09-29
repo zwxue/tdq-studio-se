@@ -283,6 +283,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     public void setDistinctValueCount(Long newDistinctValueCount) {
         Long oldDistinctValueCount = distinctValueCount;
         distinctValueCount = newDistinctValueCount;
+
         if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT,
                     oldDistinctValueCount, distinctValueCount));
