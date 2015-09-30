@@ -1801,6 +1801,12 @@
            name="Add East Asia PatternFrequencyIndicator"
            version="6.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.AddPatternISBN13Task"
+           id="org.talend.dataprofiler.core.migration.impl.AddPatternISBN13Task"
+           name="Add pattern ISBN_13 and update IPV6"
+           version="6.1.0">
+     </workspacetask>
   </extension>
   
   <extension
