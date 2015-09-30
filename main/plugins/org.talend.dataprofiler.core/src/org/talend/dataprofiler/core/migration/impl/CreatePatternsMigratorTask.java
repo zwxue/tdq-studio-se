@@ -181,7 +181,7 @@ public class CreatePatternsMigratorTask extends AbstractWorksapceUpdateTask {
         return null;
     }
 
-    private void setTagValue(Pattern pattern, String decription, String purpose) {
+    private void setTagValue(Pattern pattern, String purpose, String decription) {
         TaggedValueHelper.setTaggedValue(pattern, TaggedValueHelper.DESCRIPTION, decription);
         TaggedValueHelper.setTaggedValue(pattern, TaggedValueHelper.PURPOSE, purpose);
         TaggedValueHelper.setTaggedValue(pattern, TaggedValueHelper.VALID_STATUS, String.valueOf(true));

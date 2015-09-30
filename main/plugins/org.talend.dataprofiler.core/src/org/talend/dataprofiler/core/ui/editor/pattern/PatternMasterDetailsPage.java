@@ -298,6 +298,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         final Text patternText = new Text(expressComp, SWT.BORDER);
         patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
         GridDataFactory.fillDefaults().span(6, 1).grab(true, true).applyTo(patternText);
+        // TDQ-10804, if the content is too long, the below "add" button will be disapper.set widthHint to '0' so that
+        // the Text width isn't adaptive width.
+        ((GridData) patternText.getLayoutData()).widthHint = 0;
         patternText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {

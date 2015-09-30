@@ -1792,6 +1792,12 @@
            name="Create New Patterns based on Categorizer json file"
            version="6.0.1">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.AddPatternISBN13Task"
+           id="org.talend.dataprofiler.core.migration.impl.AddPatternISBN13Task"
+           name="Add pattern ISBN_13 and update IPV6"
+           version="6.0.2">
+     </workspacetask>
   </extension>
   
   <extension
