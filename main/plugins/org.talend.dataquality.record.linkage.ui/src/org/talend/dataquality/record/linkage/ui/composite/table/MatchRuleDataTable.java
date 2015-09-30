@@ -166,6 +166,9 @@ public class MatchRuleDataTable extends Composite {
      * @return the displayViewData
      */
     private List<String[]> getDisplayViewData() {
+        if (this.displayViewData == null) {
+            this.displayViewData = new ArrayList<String[]>();
+        }
         return this.displayViewData;
     }
 
