@@ -55,7 +55,6 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.talend.csv.CSVReader;
@@ -132,8 +131,8 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
                         this.remove(this.indexOf(currentItem));
                         return;
                     }
-                    int minWith=columnValue.length()*7>100?100:columnValue.length()*7;
-                    column.setWidth(COLUMN_WIDTH<minWith?minWith:COLUMN_WIDTH);
+                    int minWith = columnValue.length() * 7 > 100 ? 100 : columnValue.length() * 7;
+                    column.setWidth(COLUMN_WIDTH < minWith ? minWith : COLUMN_WIDTH);
                     currentItem.setText(i, columnValue);
                 }
             }
@@ -340,7 +339,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             break;
         case ColumnHighlight:
             Object data = observer.getData(ObserverEvent.COLUMN_HIGH_LIGHT);
-            handleColumnHighlight(((Integer)data));
+            handleColumnHighlight(((Integer) data));
             break;
         }
 
@@ -504,8 +503,6 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
             observer.update(observerEvent);
         }
     }
-    
-    
 
     @Override
     protected void notifyhandleColumnHighlight(MouseEvent e) {
@@ -515,15 +512,12 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
         for (TDQObserver<ObserverEvent> observer : observers) {
             ObserverEvent observerEvent = new ObserverEvent(ObserverEventEnum.ColumnHighlight);
             GridColumn currentColumn = this.getColumn(new Point(e.x, e.y));
-            if(currentColumn!=null){
+            if (currentColumn != null) {
                 observerEvent.putData(ObserverEvent.COLUMN_HIGH_LIGHT, this.indexOf(currentColumn));
                 observer.update(observerEvent);
             }
         }
     }
-    
-    
-
 
     /**
      * Check whether the where clause is valid
@@ -555,13 +549,13 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
         }
         return true;
     }
-    
-    public int[] getColumnsWidth(){
-       int[] result=new int[this.getColumnCount()] ;
-       for(int index=0;index<this.getColumnCount();index++){
-           result[index]=this.getColumn(index).getWidth();
-       }
-       return result;
+
+    public int[] getColumnsWidth() {
+        int[] result = new int[this.getColumnCount()];
+        for (int index = 0; index < this.getColumnCount(); index++) {
+            result[index] = this.getColumn(index).getWidth();
+        }
+        return result;
     }
 
     @Override
