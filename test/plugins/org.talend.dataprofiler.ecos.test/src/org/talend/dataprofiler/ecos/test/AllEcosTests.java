@@ -16,12 +16,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcherTest;
+import org.talend.dataprofiler.ecos.service.EcosystemServiceTest;
 
 /**
  * DOC yyin class global comment. Detailled comment
  */
 @RunWith(Suite.class)
-@SuiteClasses({ ComponentSearcherTest.class })
+@SuiteClasses({ ComponentSearcherTest.class, EcosystemServiceTest.class })
 public class AllEcosTests {
 
 }

@@ -12,9 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.ecos.service;
 
-import java.io.File;
 import java.io.StringReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,10 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.map.JavaTypeMapper;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Version;
-import org.talend.dataprofiler.ecos.EcosPlugin;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.RevisionInfo;
 import org.talend.dataprofiler.ecos.model.VersionInfo;
@@ -56,51 +51,32 @@ public abstract class EcosystemService {
 
     public final static String REVISION_LIST_URL = "http://talendforge.org/exchange/top/api/get_revision_list.php"; //$NON-NLS-1$
 
-    private final static Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(RC|M)\\d+)?_r\\d+"); //$NON-NLS-1$
-
-    private final static Pattern DEFAULT_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.*(\\d*)"); //$NON-NLS-1$
-
     private final static String CATEGORY_LIST_URL = "http://talendforge.org/exchange/top/api/get_category_list.php";//$NON-NLS-1$
 
     private static MultiValueMap versionMap = new MultiValueMap();
 
     private final static int TIMEOUT = 1000000;
 
-    /**
-     * Make sure that the version match x.x.x or x.x.xMx or x.x.xRCx, where x are all digit.
-     * 
-     * @param version
-     * @return
-     */
-    public static String normalizeVersion(String version) {
-        Matcher matcher = VERSION_PATTERN.matcher(version);
-        if (matcher.matches()) {
-            String str = version.substring(0, version.indexOf("_r")); //$NON-NLS-1$
-            return str.replaceAll("\\.RC", "RC").replaceAll("\\.M", "M"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        } else {
-            // try again, ignore M, RC
-            matcher = DEFAULT_PATTERN.matcher(version);
-            matcher.find();
-            return matcher.group();
-        }
-    }
-
     public static String[] getBranch(String version) throws Exception {
-        version = getMainVersion(version);
+        String mainVersion = getMainVersion(version);
         if (versionMap.isEmpty()) {
             getVersionList();
         }
-        Collection<String> branch = versionMap.getCollection(version);
+        Collection<String> branch = versionMap.getCollection(mainVersion);
         return branch == null ? null : branch.toArray(new String[branch.size()]);
     }
 
     public static String getMainVersion(String version) {
+        if (version == null) {
+            return version;
+        }
         Pattern pattern = Pattern.compile("(\\d+\\.\\d+).*"); //$NON-NLS-1$
         Matcher matcher = pattern.matcher(version);
+        String resultVersion = version;
         if (matcher.matches()) {
-            version = matcher.group(1);
+            resultVersion = matcher.group(1);
         }
-        return version;
+        return resultVersion;
     }
 
     @SuppressWarnings("unchecked")
@@ -122,6 +98,7 @@ public abstract class EcosystemService {
             List<String> versions = new ArrayList<String>(versionMap.keySet());
             Collections.sort(versions, new Comparator<String>() {
 
+                @Override
                 public int compare(String o1, String o2) {
                     Version ver1 = new Version(o1);
                     Version ver2 = new Version(o2);
@@ -138,6 +115,9 @@ public abstract class EcosystemService {
     public static <T> List<T> parseJsonObject(String jsonContent, Class<T> clazz) throws Exception {
         // need factory for creating parser to use
         JsonFactory jf = new JsonFactory();
+        if (jsonContent == null || clazz == null) {
+            return new ArrayList<T>();
+        }
         List<?> result = (List<?>) new JavaTypeMapper().read(jf.createJsonParser(new StringReader(jsonContent)));
         List<T> objList = new ArrayList<T>(result.size());
         for (int i = 0; i < result.size(); i++) {
@@ -237,7 +217,6 @@ public abstract class EcosystemService {
         if (branch != null) {
             url.append(StringUtils.join(branch, ",")); //$NON-NLS-1$
             String jsonContent = sendGetRequest(url.toString());
-            System.out.println(url);
             if (StringUtils.isNotEmpty(jsonContent)) {
                 return parseJsonObject(jsonContent, RevisionInfo.class);
             }
@@ -246,19 +225,4 @@ public abstract class EcosystemService {
         return new ArrayList<RevisionInfo>();
     }
 
-    /**
-     * Get the folder that will store downloaded component.
-     * 
-     * @return
-     */
-    public static File getComponentFolder() {
-        URL url = FileLocator.find(EcosPlugin.getDefault().getBundle(), new Path("Patterns"), null); //$NON-NLS-1$
-        try {
-            URL fileUrl = FileLocator.toFileURL(url);
-            return new File(fileUrl.getPath());
-        } catch (Exception e) {
-            log.error(e, e);
-        }
-        return null;
-    }
 }
