@@ -169,6 +169,28 @@ public final class IndicatorHelper {
             validDomain = DomainHelper.createDomain("Indicator threshold"); //$NON-NLS-1$
             parameters.setIndicatorValidDomain(validDomain);
         }
+        addThresholdToIndiParameterDomain(min, max, thresholdType, validDomain);
+    }
+
+    public static void setDataDomainInIndicatorParameter(IndicatorParameters parameters, String min, String max) {
+        assert parameters != null;
+        Domain validDomain = parameters.getDataValidDomain();
+        if (validDomain == null) {
+            validDomain = DomainHelper.createDomain("Data Thresholds"); //$NON-NLS-1$
+            parameters.setDataValidDomain(validDomain);
+        }
+        addThresholdToIndiParameterDomain(min, max, ThresholdType.VALUE_THRESHOLD, validDomain);
+    }
+
+    /**
+     * DOC yyin Comment method "addThresholdToIndiParameterDomain".
+     * 
+     * @param min
+     * @param max
+     * @param thresholdType
+     * @param validDomain
+     */
+    private static void addThresholdToIndiParameterDomain(String min, String max, ThresholdType thresholdType, Domain validDomain) {
         EList<RangeRestriction> ranges = validDomain.getRanges();
         for (RangeRestriction rangeRestriction : ranges) {
             if (thresholdType.getLabel().equals(rangeRestriction.getName())) {
