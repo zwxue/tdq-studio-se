@@ -13,12 +13,14 @@
 package org.talend.dq.helper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.StringUtils;
@@ -26,7 +28,6 @@ import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.CatalogHelper;
@@ -284,14 +285,15 @@ public final class AnalysisExecutorHelper {
         // Get indicator definition from dependent file
         IndicatorDefinition dependentDefinition = indicator.getIndicatorDefinition();
         if (isDependentFileExist(dependentDefinition)) {
-            IndicatorDefinition deepCopiedDefinition = EObjectHelper.deepCopy(dependentDefinition);
+            IndicatorDefinition deepCopiedDefinition;
+            if (dependentDefinition instanceof WhereRule) {
+                deepCopiedDefinition = copyWhereRule((WhereRule) dependentDefinition);
+            } else {
+                deepCopiedDefinition = EObjectHelper.deepCopy(dependentDefinition);
+            }
             // Hot copy to built-in definition.
             deepCopiedDefinition.getSupplierDependency().clear();
             indicator.setBuiltInIndicatorDefinition(deepCopiedDefinition);
-            if (deepCopiedDefinition instanceof WhereRule) {
-                // Copy where rule join elements
-                addJoinElementsToResource((WhereRule) deepCopiedDefinition);
-            }
             EMFUtil.saveResource(indicator.eResource());
         } else {
             IndicatorDefinition builtInDefinition = indicator.getBuiltInIndicatorDefinition();
@@ -307,24 +309,30 @@ public final class AnalysisExecutorHelper {
     }
 
     /**
-     * Add the join elements to analysis resource . TDQ-10738 Added (Because in EMF model, the JoinElement's property is
-     * "containment=false")
+     * DOC yyin Comment method "copyWhereRule".
      * 
-     * @param deepCopiedDefinition
+     * @param dependentDefinition
      */
-    private static void addJoinElementsToResource(WhereRule deepCopiedDefinition) {
-        for (JoinElement element : deepCopiedDefinition.getJoins()) {
-            ((MetadataColumn) element.getColA()).getUniqueKey().clear();
-            ((MetadataColumn) element.getColA()).getKeyRelationship().clear();
-            ((MetadataColumn) element.getColB()).getUniqueKey().clear();
-            ((MetadataColumn) element.getColB()).getKeyRelationship().clear();
-            if (element.getColA().eResource() == null) {
-                element.eResource().getContents().add(element.getColA());
+    private static IndicatorDefinition copyWhereRule(WhereRule dependentDefinition) {
+        // firstly clear the dependency of the analysis
+        dependentDefinition.getSupplierDependency().clear();
+        // then , record the joins in a temp list
+        EList<JoinElement> joins = dependentDefinition.getJoins();
+        List<JoinElement> copyJoins = new ArrayList<JoinElement>();
+        if (!joins.isEmpty()) {
+            for (JoinElement element : joins) {
+                copyJoins.add(element);
             }
-            if (element.getColB().eResource() == null) {
-                element.eResource().getContents().add(element.getColB());
+            dependentDefinition.getJoins().clear();
+        }
+        IndicatorDefinition deepCopiedDefinition = EObjectHelper.deepCopy(dependentDefinition);
+        // after deep copy, restore the joins.
+        if (!copyJoins.isEmpty()) {
+            for (JoinElement element : copyJoins) {
+                dependentDefinition.getJoins().add(element);
             }
         }
+        return deepCopiedDefinition;
     }
 
     /**
@@ -363,7 +371,7 @@ public final class AnalysisExecutorHelper {
     private static ReturnCode checkMatchingIndicator(Indicator indicator) {
         ReturnCode rc = new ReturnCode(Boolean.TRUE);
         Domain domain = indicator.getParameters().getDataValidDomain();
-        if (domain.getBuiltInPatterns() != null) {
+        if (!domain.getBuiltInPatterns().isEmpty()) {
             return rc;
         }
         List<Pattern> patterns = domain.getPatterns();
@@ -410,6 +418,7 @@ public final class AnalysisExecutorHelper {
     private static void hotCopyPatterns(Indicator indicator, List<Pattern> patterns) {
         Set<Pattern> deepCopiedPatterns = new HashSet<Pattern>();
         for (Pattern pattern : patterns) {
+            pattern.getSupplierDependency().clear();
             Pattern deepCopiedPattern = EObjectHelper.deepCopy(pattern);
             deepCopiedPattern.getSupplierDependency().clear();
             deepCopiedPatterns.add(deepCopiedPattern);
