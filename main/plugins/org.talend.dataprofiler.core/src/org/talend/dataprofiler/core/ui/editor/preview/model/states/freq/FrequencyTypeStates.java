@@ -71,6 +71,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                         SpecialValueDisplay.EMPTY_FIELD, false);
                 FrequencyExt fre = new FrequencyExt();
                 fre.setValue(0l);
+                fre.setFrequency(0d);
                 setValueToDataset(customerdataset, fre, unit.getIndicatorName());
 
                 customerdataset.addDataEntity(entity);
