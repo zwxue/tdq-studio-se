@@ -51,6 +51,16 @@ public class EcosystemServiceTest {
             Assert.assertNull(branch);
             branch = EcosystemService.getBranch("100000.1.1"); //$NON-NLS-1$
             Assert.assertNull(branch);
+            branch = EcosystemService.getBranch("6"); //$NON-NLS-1$
+            Assert.assertNull(branch);
+            branch = EcosystemService.getBranch("6aaaaaa"); //$NON-NLS-1$
+            Assert.assertNull(branch);
+            branch = EcosystemService.getBranch("6.aaa"); //$NON-NLS-1$
+            Assert.assertNull(branch);
+            branch = EcosystemService.getBranch("0.0"); //$NON-NLS-1$
+            Assert.assertNull(branch);
+            branch = EcosystemService.getBranch("0"); //$NON-NLS-1$
+            Assert.assertNull(branch);
             branch = EcosystemService.getBranch(null);
             Assert.assertNull(branch);
             branch = EcosystemService.getBranch(StringUtils.EMPTY);
@@ -79,6 +89,16 @@ public class EcosystemServiceTest {
         Assert.assertEquals(mainVersion, "100000.1"); //$NON-NLS-1$
         mainVersion = EcosystemService.getMainVersion("100000"); //$NON-NLS-1$
         Assert.assertEquals(mainVersion, "100000"); //$NON-NLS-1$
+        mainVersion = EcosystemService.getMainVersion("6"); //$NON-NLS-1$
+        Assert.assertEquals(mainVersion, "6"); //$NON-NLS-1$
+        mainVersion = EcosystemService.getMainVersion("6aaaaaa"); //$NON-NLS-1$
+        Assert.assertEquals(mainVersion, "6aaaaaa"); //$NON-NLS-1$
+        mainVersion = EcosystemService.getMainVersion("6.aaa"); //$NON-NLS-1$
+        Assert.assertEquals(mainVersion, "6.aaa"); //$NON-NLS-1$
+        mainVersion = EcosystemService.getMainVersion("0.0"); //$NON-NLS-1$
+        Assert.assertEquals(mainVersion, "0.0"); //$NON-NLS-1$
+        mainVersion = EcosystemService.getMainVersion("0"); //$NON-NLS-1$
+        Assert.assertEquals(mainVersion, "0"); //$NON-NLS-1$
         mainVersion = EcosystemService.getMainVersion(null);
         Assert.assertEquals(mainVersion, null);
         mainVersion = EcosystemService.getMainVersion(StringUtils.EMPTY);
