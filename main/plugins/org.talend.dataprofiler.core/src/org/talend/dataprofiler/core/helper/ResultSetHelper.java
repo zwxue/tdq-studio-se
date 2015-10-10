@@ -34,7 +34,8 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class ResultSetHelper {
 
-    public static ResultSet getResultSet(ColumnIndicator columnIndicator, String whereExpression) throws SQLException {
+    public static ResultSet getResultSet(ColumnIndicator columnIndicator, String whereExpression, int limitNumber)
+            throws SQLException {
         Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(columnIndicator);
         TdColumn tdColumn = columnIndicator.getTdColumn();
         IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
@@ -45,6 +46,7 @@ public class ResultSetHelper {
         java.sql.Connection sqlConn = createConnection.getObject();
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
         Statement createStatement = dbmsLanguage.createStatement(sqlConn);
+        createStatement.setMaxRows(limitNumber);
 
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn, whereExpression);
         return createStatement.executeQuery(columnQueryExpression.getBody());
