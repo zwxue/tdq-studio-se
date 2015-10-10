@@ -329,7 +329,7 @@ public final class AnalysisExecutorHelper {
         // after deep copy, restore the joins.
         if (!copyJoins.isEmpty()) {
             for (JoinElement element : copyJoins) {
-                dependentDefinition.getJoins().add(element);
+                ((WhereRule) deepCopiedDefinition).getJoins().add(element);
             }
         }
         return deepCopiedDefinition;
