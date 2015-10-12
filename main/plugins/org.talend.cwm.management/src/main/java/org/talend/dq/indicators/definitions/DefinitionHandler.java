@@ -440,6 +440,9 @@ public final class DefinitionHandler {
             if (indicatorDefinition != null && indicatorDefinition.getLabel() != null
                     && indicatorDefinition.getLabel().compareTo(label) == 0) {
                 return indicatorDefinition;
+            } else if (indicatorDefinition != null && indicatorDefinition.getName() != null
+                    && indicatorDefinition.getName().compareTo(label) == 0) {
+                return indicatorDefinition;
             }
         }
         return null;
