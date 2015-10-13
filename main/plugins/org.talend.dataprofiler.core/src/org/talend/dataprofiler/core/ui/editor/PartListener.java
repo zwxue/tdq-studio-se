@@ -43,8 +43,6 @@ public class PartListener implements IPartListener {
 
     private IFile propertyFile = null;
 
-    protected boolean     maxCheatSheetHasSHow = false;
-
     public PartListener() {
     }
 
@@ -84,14 +82,13 @@ public class PartListener implements IPartListener {
 
         if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart) {
             // The cheat sheet view has been open and max display then don't do it again
-            if (CheatSheetUtils.getInstance().isFirstTime()&&!PlatformUI.getWorkbench().isClosing()) {
+            if (CheatSheetUtils.getInstance().isFirstTime() && !PlatformUI.getWorkbench().isClosing()) {
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 if (activePage != null) {
                     if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
                         // only the first time Open CheatSheet view
                         try {
-                            OpenCheatSheetAction action = new OpenCheatSheetAction(
-                                    PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID); //$NON-NLS-1$
+                            OpenCheatSheetAction action = new OpenCheatSheetAction(PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID);
                             action.run();
                         } catch (Exception e) {
                             // There will have a NullPointerException when show cheat sheet view
@@ -99,7 +96,6 @@ public class PartListener implements IPartListener {
                             log.warn(e, e);
                         }
                         CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
-                        maxCheatSheetHasSHow = true;
                     }
                 }
             }

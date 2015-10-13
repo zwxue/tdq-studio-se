@@ -1969,13 +1969,6 @@
              commandId="org.talend.dataprofiler.core.importItem">
        </handler>
     </extension>
-    <extension
-          point="org.talend.core.ui.showPerspectiveAtStartup">
-       <perspective
-             appearsAfter="org.talend.camel.perspective | org.talend.rcp.perspective"
-             id="org.talend.dataprofiler.DataProfilingPerspective">
-       </perspective>
-    </extension>
 
 </plugin>
 
