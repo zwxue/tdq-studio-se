@@ -20,10 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
@@ -80,16 +77,8 @@ public class CommonEditorPartListener extends PartListener {
         return tdqItem;
     }
 
-    @SuppressWarnings("restriction")
     @Override
     public void partClosed(IWorkbenchPart part) {
-        if (maxCheatSheetHasSHow && part instanceof org.eclipse.ui.internal.cheatsheets.views.CheatSheetView) {
-            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            for (IViewReference ref : activePage.getViewReferences()) {
-                activePage.setPartState(ref, IWorkbenchPage.STATE_RESTORED);
-            }
-            maxCheatSheetHasSHow = false;
-        }
         // Added TDQ-7531 20130718 add unlock support for sql source file/jrxml file
         if (part.getClass().getName().equals(SqlExplorerUtils.SQLEDITOR_ID)) {
             unlockFile(part);
