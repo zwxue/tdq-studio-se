@@ -59,14 +59,14 @@ public class TdCellRenderer extends AbstractTdCellRenderer {
                 // draw background oval
                 int offset = (getBounds().width - getBounds().height);
                 gc.setBackground(IndicatorSelectGrid.blue);
-                gc.fillOval(originX + offset / 2 + 1, getBounds().y + 1, getBounds().width - offset - 2, getBounds().height - 2);
+                gc.fillOval(originX + offset / 2 + 2, getBounds().y + 2, getBounds().width - offset - 4, getBounds().height - 4);
 
                 // draw a white oval for partially selected cells
                 if (item.getGrayed(column)) {
                     gc.setBackground(systemBackColor);
                     gc.setAlpha(160);
-                    gc.fillOval(originX + offset / 2 + 1, getBounds().y + 1, getBounds().width - offset - 2,
-                            getBounds().height - 2);
+                    gc.fillOval(originX + offset / 2 + 2, getBounds().y + 2, getBounds().width - offset - 4,
+                            getBounds().height - 4);
                     gc.setAlpha(-1);
                 }
 
@@ -77,9 +77,9 @@ public class TdCellRenderer extends AbstractTdCellRenderer {
                     gc.setForeground(systemBackColor);
                 }
                 gc.setLineWidth(3);
-                gc.drawLine(originX + offset / 2 + 4, getBounds().y + 11, originX + offset / 2 + getBounds().height - 12,
-                        getBounds().y + 16);
-                gc.drawLine(originX + offset / 2 + 7, getBounds().y + 16, originX + offset / 2 + getBounds().height - 4,
+                gc.drawLine(originX + offset / 2 + 4, getBounds().y + 10, originX + offset / 2 + getBounds().height - 12,
+                        getBounds().y + 15);
+                gc.drawLine(originX + offset / 2 + 7, getBounds().y + 15, originX + offset / 2 + getBounds().height - 5,
                         getBounds().y + 6);
                 gc.setLineWidth(1);
             }

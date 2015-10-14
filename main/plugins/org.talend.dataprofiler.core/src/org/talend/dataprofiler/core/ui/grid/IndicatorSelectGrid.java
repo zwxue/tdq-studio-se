@@ -36,8 +36,8 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
         TDQObserver<ObserverEvent> {
 
     private List<TDQObserver<ObserverEvent>> observers = null;
-    
-    private int[] preferColumnsWidth=null;
+
+    private int[] preferColumnsWidth = null;
 
     /**
      * DOC talend IndicatorSelectGrid constructor comment.
@@ -48,9 +48,9 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
      * @param modelElementIndicators
      */
     public IndicatorSelectGrid(IndicatorSelectDialog dialog, Composite parent, int style,
-            ModelElementIndicator[] modelElementIndicators,int[] preferColumnsWidth) {
+            ModelElementIndicator[] modelElementIndicators, int[] preferColumnsWidth) {
         super(dialog, parent, style, modelElementIndicators);
-        this.preferColumnsWidth=preferColumnsWidth;
+        this.preferColumnsWidth = preferColumnsWidth;
         initializeGrid();
         addVscrollBarListener();
     }
@@ -220,7 +220,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
             break;
         case ColumnHighlight:
             data = observerEvent.getData(ObserverEvent.COLUMN_HIGH_LIGHT);
-            handleColumnHighlight(((Integer)data));
+            handleColumnHighlight(((Integer) data));
             break;
         }
 
@@ -260,7 +260,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
         }
 
     }
-    
+
     @Override
     protected void notifyhandleColumnHighlight(MouseEvent e) {
         if (observers == null) {
@@ -269,7 +269,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
         for (TDQObserver<ObserverEvent> observer : observers) {
             ObserverEvent observerEvent = new ObserverEvent(ObserverEventEnum.ColumnHighlight);
             GridColumn currentColumn = this.getColumn(new Point(e.x, e.y));
-            if(currentColumn!=null){
+            if (currentColumn != null) {
                 observerEvent.putData(ObserverEvent.COLUMN_HIGH_LIGHT, this.indexOf(currentColumn));
                 observer.update(observerEvent);
             }
@@ -297,9 +297,9 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     @Override
     protected int getPreferWidth(int index) {
-        if(index<preferColumnsWidth.length+2){
-            return preferColumnsWidth[index+2];
-        }else{
+        if (index < preferColumnsWidth.length + 2) {
+            return preferColumnsWidth[index + 2];
+        } else {
             return COLUMN_WIDTH;
         }
     }
