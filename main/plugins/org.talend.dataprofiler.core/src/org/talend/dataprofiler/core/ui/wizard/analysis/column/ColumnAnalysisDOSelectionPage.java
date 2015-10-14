@@ -22,6 +22,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.grid.utils.Observerable;
+import org.talend.dataprofiler.core.ui.grid.utils.TDQObserver;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
@@ -32,13 +34,15 @@ import org.talend.repository.model.IRepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment,2011-02-16 feature 15387
  */
-public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
+public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage implements Observerable {
 
     protected static Logger log = Logger.getLogger(ColumnAnalysisDOSelectionPage.class);
 
     protected static String chooseConnStr = DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.chooseColumn"); //$NON-NLS-1$
 
     public List<IRepositoryNode> nodes;
+
+    public List<TDQObserver> observers = new ArrayList();
 
     /**
      * @param pageName
@@ -84,6 +88,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
                         List<IRepositoryNode> list = ((IStructuredSelection) event.getSelection()).toList();
                         nodes.addAll(list);
                         updateCompleteState();
+                        notifyObservers();
                     } else {
                         setPageComplete(false);
                     }
@@ -107,6 +112,49 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
         } else {
             setPageComplete(false);
             this.setMessage(DefaultMessagesImpl.getString("ColumnAnalysisDOSelectionPage.selectColumnError1"), ERROR); //$NON-NLS-1$
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
+     * .TDQObserver)
+     */
+    public boolean addObserver(TDQObserver observer) {
+        return observers.add(observer);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
+     * .TDQObserver)
+     */
+    public boolean removeObserver(TDQObserver observer) {
+        return observers.remove(observer);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
+     */
+    public void clearObserver() {
+        observers.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
+     */
+    public void notifyObservers() {
+        for (TDQObserver observer : observers) {
+            observer.update(this);
         }
 
     }
