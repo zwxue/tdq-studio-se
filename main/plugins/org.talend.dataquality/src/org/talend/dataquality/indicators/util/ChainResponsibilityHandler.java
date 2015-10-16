@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +21,8 @@ import java.util.regex.Pattern;
  * DOC talend class global comment. Detailled comment
  */
 public abstract class ChainResponsibilityHandler {
+
+    private Map<String, Pattern> regexStr2Pattern = new HashMap<>();
 
     /**
      * Next one successor
@@ -32,7 +36,15 @@ public abstract class ChainResponsibilityHandler {
     public String handleRequest(String value) {
         String tempValue = value;
         if (this.canHandler(value)) {
-            Matcher matcher = Pattern.compile(getRegex()).matcher(value);
+            String regStr = getRegex();
+            Pattern pattern = regexStr2Pattern.get(regStr);
+            if (pattern == null) {
+                // Compile the pattern and put to map.
+                pattern = Pattern.compile(regStr);
+                regexStr2Pattern.put(regStr, pattern);
+
+            }
+            Matcher matcher = pattern.matcher(value);
             tempValue = matcher.replaceAll(getReplaceStr());
         }
         if (this.getSuccessor() == null) {

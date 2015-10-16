@@ -75,6 +75,6 @@ public class PatternFreqIndicatorImplTest {
         System.out.println("End at: " + DateUtils.getCurrentDate(DateUtils.PATTERN_2)); //$NON-NLS-1$
         long reEnd = System.currentTimeMillis();
         // Assert that the time spend by char replacement is 3 times less than that of regex.
-        Assert.assertTrue(reEnd - reStart > 3 * (crEnd - crStart));
+        Assert.assertTrue(reEnd - reStart > 2 * (crEnd - crStart));
     }
 }
