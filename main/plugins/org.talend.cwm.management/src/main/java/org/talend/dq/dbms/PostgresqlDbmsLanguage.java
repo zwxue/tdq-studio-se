@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.properties.PropertiesLoader;
@@ -212,5 +216,19 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
     @Override
     public String getRandomQuery(String query) {
         return query + orderBy() + "RANDOM() "; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#createStatementForBigdata(java.sql.Connection)
+     */
+    @Override
+    public Statement createStatementForBigdata(Connection connection, int fetchSize) throws SQLException {
+        // fetchSize is effective only when not auto commit mode
+        if (fetchSize != -1) {
+            connection.setAutoCommit(false);
+        }
+        return super.createStatementForBigdata(connection, fetchSize);
     }
 }

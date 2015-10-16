@@ -12,6 +12,11 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.indicators.DateGrain;
@@ -206,5 +211,17 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
     @Override
     public String getSchemaNameFromContext(DatabaseConnection dbConn) {
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#createStatementForBigdata(java.sql.Connection)
+     */
+    @Override
+    public Statement createStatementForBigdata(Connection connection, int fetchSize) throws SQLException {
+        Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        statement.setFetchSize(Integer.MIN_VALUE);
+        return statement;
     }
 }

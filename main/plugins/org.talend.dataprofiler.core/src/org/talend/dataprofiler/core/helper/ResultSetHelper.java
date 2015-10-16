@@ -73,15 +73,9 @@ public class ResultSetHelper {
         }
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-        Statement createStatement = dbmsLanguage.createStatement(sqlConn);
-        // TDQ-10991 Reservoir sampling:let FetchSize use default size 0, JDBC will decide size according some cases.
-        // if it is Mysql:ResultSet as data streaming results. avoid to load all result to memory.
-        if (maxRows == 0 && "Mysql".equalsIgnoreCase(tdDataProvider.getConnectionTypeName())) {
-
-            createStatement = sqlConn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            createStatement.setFetchSize(Integer.MIN_VALUE);
-        }
+        Statement createStatement = dbmsLanguage.createStatementForBigdata(sqlConn, 1000);
         createStatement.setMaxRows(maxRows);
+
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
         return createStatement.executeQuery(columnQueryExpression.getBody());
     }
