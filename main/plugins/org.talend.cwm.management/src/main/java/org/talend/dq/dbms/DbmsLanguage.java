@@ -1788,6 +1788,22 @@ public class DbmsLanguage {
     }
 
     /**
+     * * for big data, use parameter ResultSet.TYPE_FORWARD_ONLY and fetchSize to enhance performance.
+     *
+     * @param connection
+     * @param fetchSize -1 no need setFecthcSize() for statement.
+     * @return
+     * @throws SQLException
+     */
+    public Statement createStatementForBigdata(java.sql.Connection connection, int fetchSize) throws SQLException {
+        Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        if (fetchSize != -1) {
+            statement.setFetchSize(fetchSize);
+        }
+        return statement;
+    }
+
+    /**
      * DOC msjian Comment method "createStatement".
      * 
      * @param connection
