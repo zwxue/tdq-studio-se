@@ -947,14 +947,6 @@
   <perspectiveExtension
     targetID="org.talend.dataprofiler.DataProfilingPerspective">
         <view
-              id="org.eclipse.ui.cheatsheets.views.CheatSheetView"
-              ratio="0.25"
-              relationship="left"
-              relative="org.eclipse.ui.editorss"
-              standalone="false"
-              visible="true">
-        </view>
-        <view
            id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
            ratio="0.33"
            relationship="left"
