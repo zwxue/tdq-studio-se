@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * DOC talend class global comment. Detailled comment
  */
 public class FullwidthLatinLowercasedLetters extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\uFF41-\\uFF5A]");
 
     /*
      * (non-Javadoc)
@@ -33,8 +37,8 @@ public class FullwidthLatinLowercasedLetters extends ChainResponsibilityHandler 
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ
-        return "[\\uFF41-\\uFF5A]";
+        return pattern;
     }
 }

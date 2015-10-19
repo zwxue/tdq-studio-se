@@ -12,10 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * DOC talend class global comment. Detailled comment
  */
 public class HiraganaSmall extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern
+            .compile("[\\u3041,\\u3043,\\u3045,\\u3047,\\u3049,\\u3063,\\u3083,\\u3085,\\u3087,\\u308E,\\u3095,\\u3096]");
 
     /*
      * (non-Javadoc)
@@ -33,9 +38,9 @@ public class HiraganaSmall extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // ........ぁ,...... ぃ ,.... ぅ ,.....ぇ,..... ぉ,.... っ,.... ゃ ,..... ゅ,.... ょ,.... ゎ ,..... ゕ ,..... ゖ
-        return "[\\u3041,\\u3043,\\u3045,\\u3047,\\u3049,\\u3063,\\u3083,\\u3085,\\u3087,\\u308E,\\u3095,\\u3096]";
+        return pattern;
     }
 
 }

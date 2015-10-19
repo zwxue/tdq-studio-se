@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -88,7 +90,7 @@ public class KanjiTest {
              * @see org.talend.dataquality.indicators.util.Kanji#getRegex()
              */
             @Override
-            protected String getRegex() {
+            protected Pattern getRegex() {
                 return null;
             }
 

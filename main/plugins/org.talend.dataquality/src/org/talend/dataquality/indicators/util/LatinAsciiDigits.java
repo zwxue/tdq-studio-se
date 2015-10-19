@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * Regex replacement for latin characters "0123456789"
  * 
@@ -19,6 +21,8 @@ package org.talend.dataquality.indicators.util;
  *
  */
 public class LatinAsciiDigits extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\u0030-\\u0039]");
 
     /*
      * (non-Javadoc)
@@ -36,10 +40,10 @@ public class LatinAsciiDigits extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // [A-Z] from http://www.unicode.org/charts/PDF/U0000.pdf
         // [À-ß] exclude ×
-        return "[\\u0030-\\u0039]";
+        return pattern;
     }
 
 }

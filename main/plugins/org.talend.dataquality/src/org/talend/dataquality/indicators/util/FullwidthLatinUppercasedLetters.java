@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * DOC talend class global comment. Detailled comment
  */
 public class FullwidthLatinUppercasedLetters extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\uFF21-\\uFF3A]");
 
     /*
      * (non-Javadoc)
@@ -33,9 +37,9 @@ public class FullwidthLatinUppercasedLetters extends ChainResponsibilityHandler 
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ
-        return "[\\uFF21-\\uFF3A]";
+        return pattern;
     }
 
 }

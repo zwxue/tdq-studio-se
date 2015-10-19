@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * Regex replacement for latin characters "abcdefghijklmnopqrstuvwxyzàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ"
  * 
@@ -19,6 +21,8 @@ package org.talend.dataquality.indicators.util;
  *
  */
 public class LatinLettersSmall extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\u0061-\\u007a|\\u00E0-\\u00F6|\\u00F8-\\u00FF]");
 
     /*
      * (non-Javadoc)
@@ -36,10 +40,10 @@ public class LatinLettersSmall extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // [a-z] from http://www.unicode.org/charts/PDF/U0000.pdf
         // [à-ÿ] exclude ÷
-        return "[\\u0061-\\u007a|\\u00E0-\\u00F6|\\u00F8-\\u00FF]";
+        return pattern;
     }
 
 }

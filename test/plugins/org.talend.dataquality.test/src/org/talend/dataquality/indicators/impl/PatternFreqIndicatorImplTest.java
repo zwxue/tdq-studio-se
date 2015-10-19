@@ -42,8 +42,8 @@ public class PatternFreqIndicatorImplTest {
 
         // Character replace
         Random r = new Random();
-        int count = 10000000;
-        int length = count / 1000000;
+        int count = 100000000;
+        int length = count / 10000000;
         StringBuffer bf = new StringBuffer();
         long crStart = System.currentTimeMillis();
         System.out.println("Char replacement start at: " + DateUtils.getCurrentDate(DateUtils.PATTERN_2)); //$NON-NLS-1$

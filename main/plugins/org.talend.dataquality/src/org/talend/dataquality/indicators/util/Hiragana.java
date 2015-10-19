@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * DOC talend class global comment. Detailled comment
  */
 public class Hiragana extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\u3041-\\u3096]");
 
     /*
      * (non-Javadoc)
@@ -33,9 +37,9 @@ public class Hiragana extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // あ ......゛.......゜........ゟ
-        return "[\\u3041-\\u3096]";
+        return pattern;
     }
 
 }

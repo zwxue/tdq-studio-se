@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * DOC talend class global comment. Detailled comment
  */
 public class Kanji extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\u4E00-\\u9FFF]");
 
     /*
      * (non-Javadoc)
@@ -33,9 +37,9 @@ public class Kanji extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // look at here http://www.unicode.org/charts/PDF/U4E00.pdf
-        return "[\\u4E00-\\u9FFF]";
+        return pattern;
     }
 
 }

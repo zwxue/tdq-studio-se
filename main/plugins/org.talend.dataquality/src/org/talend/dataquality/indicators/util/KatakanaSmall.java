@@ -12,10 +12,15 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * DOC talend class global comment. Detailled comment
  */
 public class KatakanaSmall extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern
+            .compile("[\\u31F0-\\u31FF|\\uFF67-\\uFF6F|\\u30A1|\\u30A3|\\u30A5|\\u30A7|\\u30A9|\\u30C3|\\u30E3|\\u30E5|\\u30E7|\\u30EE|\\u30F5|\\u30F6]");
 
     /*
      * (non-Javadoc)
@@ -33,12 +38,12 @@ public class KatakanaSmall extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // 31F0-31FF is Katakana Phonetic Extensions
         // ㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
         // uFF67-FF6F small ｧ ｨ ｩ ｪ ｫ ｬ ｭ ｮ ｯ
         // other is ァ ィ ゥ ェ ォッャュョヮヵヶ
-        return "[\\u31F0-\\u31FF|\\uFF67-\\uFF6F|\\u30A1|\\u30A3|\\u30A5|\\u30A7|\\u30A9|\\u30C3|\\u30E3|\\u30E5|\\u30E7|\\u30EE|\\u30F5|\\u30F6]";
+        return pattern;
     }
 
 }

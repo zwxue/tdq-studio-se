@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.indicators.util;
 
+import java.util.regex.Pattern;
+
 /**
  * DOC talend class global comment. Detailled comment
  */
 public class Katakana extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\u30A1-\\u30FA|\\uFF66-\\uFF9F]");
 
     /*
      * (non-Javadoc)
@@ -33,8 +37,8 @@ public class Katakana extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
-        return "[\\u30A1-\\u30FA|\\uFF66-\\uFF9F]";
+    protected Pattern getRegex() {
+        return pattern;
     }
 
 }
