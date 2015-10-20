@@ -219,10 +219,10 @@ public class TOPChartService implements ITOPChartService {
                     CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
 
                     Menu menu = getCurrentMenu(cateEntity);
-
-                    chartComp.setMenu(menu);
-
-                    menu.setVisible(true);
+                    if (menu != null) {
+                        chartComp.setMenu(menu);
+                        menu.setVisible(true);
+                    }
                 }
             }
 
