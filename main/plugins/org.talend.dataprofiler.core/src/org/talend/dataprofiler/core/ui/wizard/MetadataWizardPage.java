@@ -55,7 +55,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     private static final int TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT = 200;
 
     public String getNameTextValue() {
-        return nameText.getText();
+        return nameText != null ? nameText.getText() : ""; //$NON-NLS-1$
     }
 
     // protected members
