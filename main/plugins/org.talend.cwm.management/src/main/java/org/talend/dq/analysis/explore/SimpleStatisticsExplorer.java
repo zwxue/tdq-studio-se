@@ -66,6 +66,7 @@ public class SimpleStatisticsExplorer extends DataExplorer {
             break;
 
         case UniqueIndicatorEnum:
+        case DuplicateCountIndicatorEnum:
             if (analysisType != AnalysisType.COLUMN_SET) {
                 if (!isHive) {
                     map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
@@ -80,16 +81,6 @@ public class SimpleStatisticsExplorer extends DataExplorer {
                     : null);
             break;
 
-        case DuplicateCountIndicatorEnum:
-            if (analysisType != AnalysisType.COLUMN_SET) {
-                if (!isHive) {
-                    map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
-                } else if (!isSqlEngine) {
-                    map.put(MENU_VIEW_ROWS, null);
-                }
-            }
-            map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
-            break;
         default:
         }
 
