@@ -10,17 +10,17 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.indicators.util;
+package org.talend.datascience.common.regex;
 
 import java.util.regex.Pattern;
 
 /**
  * DOC talend class global comment. Detailled comment
  */
-public class HiraganaSmall extends ChainResponsibilityHandler {
+public class KatakanaSmall extends ChainResponsibilityHandler {
 
     private Pattern pattern = Pattern
-            .compile("[\\u3041,\\u3043,\\u3045,\\u3047,\\u3049,\\u3063,\\u3083,\\u3085,\\u3087,\\u308E,\\u3095,\\u3096]");
+            .compile("[\\u31F0-\\u31FF|\\uFF67-\\uFF6F|\\u30A1|\\u30A3|\\u30A5|\\u30A7|\\u30A9|\\u30C3|\\u30E3|\\u30E5|\\u30E7|\\u30EE|\\u30F5|\\u30F6]");
 
     /*
      * (non-Javadoc)
@@ -29,7 +29,7 @@ public class HiraganaSmall extends ChainResponsibilityHandler {
      */
     @Override
     protected String getReplaceStr() {
-        return "h";
+        return "k";
     }
 
     /*
@@ -39,7 +39,10 @@ public class HiraganaSmall extends ChainResponsibilityHandler {
      */
     @Override
     protected Pattern getRegex() {
-        // ........ぁ,...... ぃ ,.... ぅ ,.....ぇ,..... ぉ,.... っ,.... ゃ ,..... ゅ,.... ょ,.... ゎ ,..... ゕ ,..... ゖ
+        // 31F0-31FF is Katakana Phonetic Extensions
+        // ㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+        // uFF67-FF6F small ｧ ｨ ｩ ｪ ｫ ｬ ｭ ｮ ｯ
+        // other is ァ ィ ゥ ェ ォッャュョヮヵヶ
         return pattern;
     }
 

@@ -19,7 +19,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
@@ -91,7 +90,7 @@ public class RegexpMatchingIndicatorImplTest {
         RegularExpression createJavaRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
         TdExpression createJavaTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
         createJavaTdExpression.setBody(JavaRegex);
-        createJavaTdExpression.setLanguage(SupportDBUrlType.MSSQLDEFAULTURL.getLanguage());
+        createJavaTdExpression.setLanguage("Microsoft SQL Server");
         createJavaRegularExpression.setExpression(createJavaTdExpression);
         createJavaRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
         EList<PatternComponent> components = createJavaPattern.getComponents();
@@ -163,7 +162,7 @@ public class RegexpMatchingIndicatorImplTest {
         RegularExpression createJavaRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
         TdExpression createJavaTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
         createJavaTdExpression.setBody(JavaRegex);
-        createJavaTdExpression.setLanguage(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
+        createJavaTdExpression.setLanguage("Java");
         createJavaRegularExpression.setExpression(createJavaTdExpression);
         createJavaRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
         EList<PatternComponent> components = createJavaPattern.getComponents();

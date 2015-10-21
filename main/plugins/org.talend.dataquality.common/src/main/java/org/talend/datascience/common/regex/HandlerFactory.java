@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.indicators.util;
+package org.talend.datascience.common.regex;
 
 /**
  * DOC talend class global comment. Detailled comment

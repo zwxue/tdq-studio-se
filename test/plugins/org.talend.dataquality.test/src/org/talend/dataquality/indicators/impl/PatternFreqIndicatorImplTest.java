@@ -16,8 +16,8 @@ import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.talend.dataquality.indicators.util.ChainResponsibilityHandler;
-import org.talend.dataquality.indicators.util.HandlerFactory;
+import org.talend.datascience.common.regex.ChainResponsibilityHandler;
+import org.talend.datascience.common.regex.HandlerFactory;
 import org.talend.utils.dates.DateUtils;
 
 /**
@@ -42,8 +42,8 @@ public class PatternFreqIndicatorImplTest {
 
         // Character replace
         Random r = new Random();
-        int count = 100000000;
-        int length = count / 10000000;
+        int count = 10000000;
+        int length = count / 1000000;
         StringBuffer bf = new StringBuffer();
         long crStart = System.currentTimeMillis();
         System.out.println("Char replacement start at: " + DateUtils.getCurrentDate(DateUtils.PATTERN_2)); //$NON-NLS-1$

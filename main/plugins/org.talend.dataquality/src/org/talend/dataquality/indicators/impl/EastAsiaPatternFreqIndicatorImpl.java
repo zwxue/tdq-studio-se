@@ -5,8 +5,8 @@ package org.talend.dataquality.indicators.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.EastAsiaPatternFreqIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.util.ChainResponsibilityHandler;
-import org.talend.dataquality.indicators.util.HandlerFactory;
+import org.talend.datascience.common.regex.ChainResponsibilityHandler;
+import org.talend.datascience.common.regex.HandlerFactory;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>East Asia Pattern Freq Indicator</b></em>'.
