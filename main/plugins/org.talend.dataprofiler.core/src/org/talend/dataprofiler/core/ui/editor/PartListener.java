@@ -26,10 +26,8 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.talend.commons.ui.utils.CheatSheetUtils;
 import org.talend.core.ui.branding.IBrandingConfiguration;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ContextViewHelper;
 import org.talend.dq.helper.PropertyHelper;
 
@@ -86,21 +84,11 @@ public class PartListener implements IPartListener {
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 if (activePage != null) {
                     if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
-                        // only the first time Open CheatSheet view
-                        try {
-                            OpenCheatSheetAction action = new OpenCheatSheetAction(PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID);
-                            action.run();
-                        } catch (Exception e) {
-                            // There will have a NullPointerException when show cheat sheet view
-                            // but it is not effect current function so that notice it by warning style only
-                            log.warn(e, e);
-                        }
                         CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
                     }
                 }
             }
         }
-
     }
 
     public void partOpened(IWorkbenchPart part) {
