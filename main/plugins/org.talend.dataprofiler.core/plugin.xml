@@ -1803,7 +1803,7 @@
            class="org.talend.dataprofiler.core.migration.impl.UpdatePatternENMonthTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdatePatternENMonthTask"
            name="Update pattern EN Month"
-           version="6.0.2">
+           version="6.1.0">
      </workspacetask>
   </extension>
   
