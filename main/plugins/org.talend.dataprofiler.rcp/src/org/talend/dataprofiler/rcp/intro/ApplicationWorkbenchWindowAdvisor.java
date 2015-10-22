@@ -12,28 +12,25 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp.intro;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.talend.commons.ui.utils.CheatSheetUtils;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.ITDQRepositoryService;
-import org.talend.core.PluginChecker;
 import org.talend.core.ui.branding.IBrandingService;
+import org.talend.core.utils.ProductUtils;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
@@ -64,8 +61,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         String buildId = VersionUtils.getVersion();
         IBrandingService brandingService = GlobalServiceRegister.getDefault().getBrandingService(IBrandingService.class);
         configurer.setTitle(brandingService.getFullProductName() + " (" + buildId + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-        
-       
+
     }
 
     /*
@@ -85,24 +81,23 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             tdqRepositoryService.addPartListener();
             tdqRepositoryService.addSoftwareSystemUpdateListener();
         }
-        
 
-       
         IWorkbenchWindowConfigurer workbenchWindowConfigurer = getWindowConfigurer();
-        
-        //hide Preference page
-        PreferenceManager preferenceManager = workbenchWindowConfigurer.getWindow().getWorkbench().getPreferenceManager();
-        preferenceManager.remove("org.eclipse.debug.ui.DebugPreferencePage"+WorkbenchPlugin.PREFERENCE_PAGE_CATEGORY_SEPARATOR+"org.eclipse.ui.externaltools.ExternalToolsPreferencePage");
 
-      //hide toolBar item
+        // hide Preference page
+        PreferenceManager preferenceManager = workbenchWindowConfigurer.getWindow().getWorkbench().getPreferenceManager();
+        preferenceManager.remove("org.eclipse.debug.ui.DebugPreferencePage" + WorkbenchPlugin.PREFERENCE_PAGE_CATEGORY_SEPARATOR
+                + "org.eclipse.ui.externaltools.ExternalToolsPreferencePage");
+
+        // hide toolBar item
         IActionBarConfigurer actionBarConfigurer = workbenchWindowConfigurer.getActionBarConfigurer();
         ICoolBarManager coolBarManager = actionBarConfigurer.getCoolBarManager();
         IContributionItem toolBarItem = coolBarManager.find("org.eclipse.debug.ui.launchActionSet");
-        if(toolBarItem!=null){
+        if (toolBarItem != null) {
             coolBarManager.remove(toolBarItem);
         }
-        
-        //hide run menu
+
+        // hide run menu
         IMenuManager menuManager = actionBarConfigurer.getMenuManager();
         IContributionItem[] menuItems = menuManager.getItems();
         for (IContributionItem menuItem : menuItems) {
@@ -113,6 +108,16 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 menuManager.remove(menuItem);
             }
         }
+
+        // max the cheat sheet at first time
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        if (activePage != null) {
+            if (CheatSheetUtils.getInstance().isFirstTime()
+                    && activePage.getPerspective().getId().equals(ProductUtils.PERSPECTIVE_DQ_ID)) {
+                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
+            }
+        }
+
     }
 
 }
