@@ -37,13 +37,27 @@ public class PatternFreqIndicatorImplTest {
     }
 
     @Test
-    public void testLatin1Perf() {
+    public void testLatin1PerfWithLoop() {
+        int countStart = 800000;
+        int countMax = 1000000;
+        int countStep = 500000;
+
+        int lengthStart = 5;
+        int lengthMax = 20;
+        int lengthStep = 5;
+
+        for (int count = countStart; count < countMax; count += countStep) {
+            for (int length = lengthStart; length <= lengthMax; length += lengthStep) {
+                testLatin1Perf(count, length);
+            }
+        }
+    }
+
+    private void testLatin1Perf(int count, int length) {
         PatternFreqIndicatorImpl matchIndicator = new PatternFreqIndicatorImpl();
 
         // Character replace
         Random r = new Random();
-        int count = 10000000;
-        int length = count / 1000000;
         StringBuffer bf = new StringBuffer();
         long crStart = System.currentTimeMillis();
         System.out.println("Char replacement start at: " + DateUtils.getCurrentDate(DateUtils.PATTERN_2)); //$NON-NLS-1$
@@ -75,6 +89,7 @@ public class PatternFreqIndicatorImplTest {
         System.out.println("End at: " + DateUtils.getCurrentDate(DateUtils.PATTERN_2)); //$NON-NLS-1$
         long reEnd = System.currentTimeMillis();
         // Assert that the time spend by char replacement is 3 times less than that of regex.
-        Assert.assertTrue(reEnd - reStart > 2 * (crEnd - crStart));
+        Assert.assertTrue(reEnd - reStart > crEnd - crStart);
+        Assert.assertTrue(reEnd - reStart < 4 * (crEnd - crStart));
     }
 }
