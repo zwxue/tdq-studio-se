@@ -37,7 +37,7 @@ public class AddPatternISBN13Task extends AbstractWorksapceUpdateTask {
 
     private PatternParameter parameter = null;
 
-    private final String REGEX_BODY = "'^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$'";
+    private final String REGEX_BODY = "'^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b)\\.){3}(\\b((25[0-5])|(1\\d{2})|(2[0-4]\\d)|(\\d{1,2}))\\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$'"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -65,35 +65,51 @@ public class AddPatternISBN13Task extends AbstractWorksapceUpdateTask {
     @Override
     protected boolean doExecute() throws Exception {
         parameter = new PatternParameter();
+        ReturnCode rc1 = new ReturnCode(true), rc2 = new ReturnCode(true), rc3 = new ReturnCode(true);
+
         // number folder
-        IFolder folder = ResourceManager.getPatternRegexFolder().getFolder("number");
+        IFolder folder = ResourceManager.getPatternRegexFolder().getFolder("number"); //$NON-NLS-1$
         if (folder.exists()) {
-            Pattern pattern = newPattern("ISBN 13 Checker", "Java",
-                    "'^ISBN(?:-13)?:?\\ *(97(?:8|9)([ -]?)(?=[0-9]{1,5}\\2?[0-9]{1,7}\\2?[0-9]{1,6}\\2?[0-9])(?:[0-9]\\2*){9}[0-9])$'");
+            Pattern pattern = newPattern("ISBN 13 Checker", "Java", //$NON-NLS-1$ //$NON-NLS-2$
+                    "'^ISBN(?:-13)?:?\\ *(97(?:8|9)([ -]?)(?=[0-9]{1,5}\\2?[0-9]{1,7}\\2?[0-9]{1,6}\\2?[0-9])(?:[0-9]\\2*){9}[0-9])$'"); //$NON-NLS-1$
             if (pattern != null) {
-                setTagValue(pattern, "ISBN-13: 978-2711791415 | ISBN 978-2711791415 |  ISBN: 978-2711791415",
-                        "International Standard Book Number 13 digits");
-                ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
+                setTagValue(pattern, "ISBN-13: 978-2711791415 | ISBN 978-2711791415 |  ISBN: 978-2711791415", //$NON-NLS-1$
+                        "International Standard Book Number 13 digits"); //$NON-NLS-1$
+                rc1 = ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
             }
         }
         // Update IPv6 Address.pattern.
-        IFile file = ResourceManager.getPatternRegexFolder().getFolder("internet").getFile("IPv6_Address_0.1.pattern");
+        IFile file = ResourceManager.getPatternRegexFolder().getFolder("internet").getFile("IPv6_Address_0.1.pattern"); //$NON-NLS-1$  
         if (file.exists()) {
             Pattern ipv6Pattern = PatternResourceFileHelper.getInstance().findPattern(file);
             if (ipv6Pattern != null) {
                 List<PatternComponent> componentLs = new ArrayList<PatternComponent>();
-                componentLs.add(BooleanExpressionHelper.createRegularExpression("Java", REGEX_BODY, ExpressionType.REGEXP));
-                componentLs.add(BooleanExpressionHelper.createRegularExpression("MySQL", REGEX_BODY, ExpressionType.REGEXP));
-                componentLs.add(BooleanExpressionHelper.createRegularExpression("PostgreSQL", REGEX_BODY, ExpressionType.REGEXP));
+                componentLs.add(BooleanExpressionHelper.createRegularExpression("Java", REGEX_BODY, ExpressionType.REGEXP)); //$NON-NLS-1$
+                componentLs.add(BooleanExpressionHelper.createRegularExpression("MySQL", REGEX_BODY, ExpressionType.REGEXP)); //$NON-NLS-1$
+                componentLs.add(BooleanExpressionHelper.createRegularExpression("PostgreSQL", REGEX_BODY, ExpressionType.REGEXP)); //$NON-NLS-1$
                 ipv6Pattern.getComponents().clear();
                 ipv6Pattern.getComponents().addAll(componentLs);
 
-                ReturnCode rc = PatternResourceFileHelper.getInstance().save(ipv6Pattern);
-
-                return rc.isOk();
+                rc2 = PatternResourceFileHelper.getInstance().save(ipv6Pattern);
             }
         }
-        return true;
+
+        // Update EN Month.pattern. for expresstion add ()
+        IFile file2 = ResourceManager.getPatternRegexFolder().getFolder("date").getFile("EN_Month_0.1.pattern"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (file2.exists()) {
+            Pattern enMonthPattern = PatternResourceFileHelper.getInstance().findPattern(file2);
+            if (enMonthPattern != null) {
+                List<PatternComponent> componentLs = new ArrayList<PatternComponent>();
+                String regexBody = "'^(January|June|July|February|March|May|April|August|September|October|November|December)$'"; //$NON-NLS-1$
+                componentLs.add(BooleanExpressionHelper.createRegularExpression("SQL", regexBody, ExpressionType.REGEXP)); //$NON-NLS-1$
+                enMonthPattern.getComponents().clear();
+                enMonthPattern.getComponents().addAll(componentLs);
+
+                rc3 = PatternResourceFileHelper.getInstance().save(enMonthPattern);
+
+            }
+        }
+        return rc1.isOk() && rc2.isOk() && rc3.isOk();
     }
 
     private Pattern newPattern(String name, String lang, String express) {
@@ -102,7 +118,7 @@ public class AddPatternISBN13Task extends AbstractWorksapceUpdateTask {
         if (patternInitialized) {
             Pattern pattern = patternBuilder.getPattern();
             RegularExpression regularExpr = BooleanExpressionHelper.createRegularExpression(lang, express);
-            regularExpr.setExpressionType("REGEXP");
+            regularExpr.setExpressionType("REGEXP"); //$NON-NLS-1$
             pattern.getComponents().add(regularExpr);
             return pattern;
         }
