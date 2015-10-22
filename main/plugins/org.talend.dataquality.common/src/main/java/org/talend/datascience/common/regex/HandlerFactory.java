@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.indicators.util;
+package org.talend.datascience.common.regex;
 
 /**
  * DOC talend class global comment. Detailled comment
@@ -24,5 +24,11 @@ public class HandlerFactory {
                 .linkSuccessor(new FullwidthLatinUppercasedLetters()).linkSuccessor(new Hangul()).linkSuccessor(new Kanji());
         return handler;
 
+    }
+
+    public static ChainResponsibilityHandler createLatinPatternHandler() {
+        ChainResponsibilityHandler handler = new LatinLetters();
+        handler.linkSuccessor(new LatinLettersSmall()).linkSuccessor(new LatinAsciiDigits());
+        return handler;
     }
 }

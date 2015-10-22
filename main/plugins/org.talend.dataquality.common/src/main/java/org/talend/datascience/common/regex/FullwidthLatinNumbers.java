@@ -10,12 +10,16 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.indicators.util;
+package org.talend.datascience.common.regex;
+
+import java.util.regex.Pattern;
 
 /**
  * DOC talend class global comment. Detailled comment
  */
 public class FullwidthLatinNumbers extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\uFF10-\\uFF19]");
 
     /*
      * (non-Javadoc)
@@ -33,9 +37,9 @@ public class FullwidthLatinNumbers extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
+    protected Pattern getRegex() {
         // ０１３４５６７８９
-        return "[\\uFF10-\\uFF19]";
+        return pattern;
     }
 
 }

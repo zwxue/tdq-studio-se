@@ -22,9 +22,19 @@ import org.talend.utils.string.AsciiUtils;
  */
 public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements PatternFreqIndicator {
 
-    private String charsToReplace = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    /**
+     * Note that these two constant string are identical to whom in {
+     * {@link org.talend.dataquality.statistics.frequency.recognition.AsciiCharPatternRecognition} in project
+     * "org.talend.dataquality.statistics". But the project can not be used currently due to the JRE version differences
+     * so here we keep another copy.
+     */
+    public static final String CHARS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß0123456789";
 
-    private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
+    public static final String REPLACEMENT_CHARS = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
+
+    private String charsToReplace = CHARS_TO_REPLACE;
+
+    private String replacementChars = REPLACEMENT_CHARS;
 
     // Mark replace parameter whether has been setting by the user.
     private boolean hasBeanCustomized = false;

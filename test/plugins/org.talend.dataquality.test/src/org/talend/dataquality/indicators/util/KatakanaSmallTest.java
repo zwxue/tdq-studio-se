@@ -14,6 +14,7 @@ package org.talend.dataquality.indicators.util;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.talend.datascience.common.regex.KatakanaSmall;
 
 /**
  * DOC talend class global comment. Detailled comment
@@ -22,7 +23,7 @@ public class KatakanaSmallTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.indicators.util.ChainResponsibilityHandler#handleRequest(java.lang.String)}. case1
+     * {@link org.talend.dataquality.statistics.frequency.regex.ChainResponsibilityHandler#handleRequest(java.lang.String)}. case1
      * small k
      */
     @Test
@@ -34,7 +35,7 @@ public class KatakanaSmallTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.indicators.util.ChainResponsibilityHandler#handleRequest(java.lang.String)}. case2
+     * {@link org.talend.dataquality.statistics.frequency.regex.ChainResponsibilityHandler#handleRequest(java.lang.String)}. case2
      * K
      */
     @Test
@@ -46,7 +47,7 @@ public class KatakanaSmallTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.indicators.util.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
+     * {@link org.talend.dataquality.statistics.frequency.regex.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
      * 
      * case3 ｧ ｨ ｩ ｪ ｫ ｬ ｭ ｮ ｯ
      */
@@ -59,7 +60,7 @@ public class KatakanaSmallTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.indicators.util.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
+     * {@link org.talend.dataquality.statistics.frequency.regex.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
      * 
      * case4 ァ ィ ゥ ェ ォッャュョヮヵヶ
      */
@@ -72,7 +73,7 @@ public class KatakanaSmallTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.indicators.util.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
+     * {@link org.talend.dataquality.statistics.frequency.regex.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
      * 
      * case5 ㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
      */

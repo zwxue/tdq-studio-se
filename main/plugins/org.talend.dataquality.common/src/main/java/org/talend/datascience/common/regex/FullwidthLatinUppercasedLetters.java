@@ -10,12 +10,16 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.indicators.util;
+package org.talend.datascience.common.regex;
+
+import java.util.regex.Pattern;
 
 /**
  * DOC talend class global comment. Detailled comment
  */
-public class Hiragana extends ChainResponsibilityHandler {
+public class FullwidthLatinUppercasedLetters extends ChainResponsibilityHandler {
+
+    private Pattern pattern = Pattern.compile("[\\uFF21-\\uFF3A]");
 
     /*
      * (non-Javadoc)
@@ -24,7 +28,7 @@ public class Hiragana extends ChainResponsibilityHandler {
      */
     @Override
     protected String getReplaceStr() {
-        return "H";
+        return "A";
     }
 
     /*
@@ -33,9 +37,9 @@ public class Hiragana extends ChainResponsibilityHandler {
      * @see org.talend.dataquality.indicators.util.ChainResponsibilityHandler#getRegex()
      */
     @Override
-    protected String getRegex() {
-        // あ ......゛.......゜........ゟ
-        return "[\\u3041-\\u3096]";
+    protected Pattern getRegex() {
+        // ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ
+        return pattern;
     }
 
 }
