@@ -644,6 +644,6 @@ public final class ChartDecorator {
      * @return
      */
     public static Font getCJKFont(int Style, int size) {
-        return new Font("Arial Unicode MS", Style, size);
+        return new Font("Source Han Sans", Style, size);
     }
 }
