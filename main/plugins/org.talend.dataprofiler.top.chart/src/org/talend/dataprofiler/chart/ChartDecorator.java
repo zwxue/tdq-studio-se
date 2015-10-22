@@ -637,6 +637,7 @@ public final class ChartDecorator {
      * @return
      */
     public static Font getCJKFont(int Style, int size) {
-        return new Font("Source Han Sans", Style, size);
+        // Java Font "Monospaced" is enough to display CJK.no Need external font.
+        return new Font("Monospaced", Style, size);
     }
 }
