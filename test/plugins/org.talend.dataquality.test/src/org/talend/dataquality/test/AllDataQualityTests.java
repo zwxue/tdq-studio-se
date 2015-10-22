@@ -27,6 +27,7 @@ import org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.FrequencyIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.MeanIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.ModeIndicatorImplTest;
+import org.talend.dataquality.indicators.impl.PatternFreqIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImplTest;
 import org.talend.dataquality.indicators.impl.WellFormIntePhoneCountIndicatorImplTest;
@@ -55,7 +56,7 @@ import org.talend.dataquality.properties.impl.TDQSourceFileItemImplTest;
         TDQJrxmlItemImplTest.class, TDQSourceFileItemImplTest.class, DBMapTest.class, DBSetTest.class, ColumnSetDBMapTest.class,
         FrequencyIndicatorImplTest.class, KatakanaTest.class, KatakanaSmallTest.class, KanjiTest.class, HiraganaTest.class,
         HiraganaSmallTest.class, HangulTest.class, FullwidthLatinUppercasedLettersTest.class, FullwidthLatinNumbersTest.class,
-        FullwidthLatinLowercasedLettersTest.class })
+        FullwidthLatinLowercasedLettersTest.class, PatternFreqIndicatorImplTest.class })
 public class AllDataQualityTests {
 
 }

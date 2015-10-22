@@ -70,6 +70,7 @@ Require-Bundle: org.talend.utils;visibility:=reexport,
  org.talend.dataquality.matching,
  org.talend.libraries.google.libphonumber,
  org.talend.commons.runtime,
- org.talend.libraries.mapdb;visibility:=reexport
+ org.talend.libraries.mapdb;visibility:=reexport,
+ org.talend.dataquality.common
 Eclipse-RegisterBuddy: org.apache.log4j,org.talend.testutils,org.talend.libraries.mapdb
 Bundle-ActivationPolicy: lazy

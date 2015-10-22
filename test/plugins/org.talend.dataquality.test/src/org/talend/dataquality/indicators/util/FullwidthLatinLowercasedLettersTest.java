@@ -14,6 +14,7 @@ package org.talend.dataquality.indicators.util;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.talend.datascience.common.regex.FullwidthLatinLowercasedLetters;
 
 /**
  * DOC talend class global comment. Detailled comment
@@ -22,7 +23,7 @@ public class FullwidthLatinLowercasedLettersTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.indicators.util.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
+     * {@link org.talend.dataquality.statistics.frequency.regex.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
      * 
      * case1 normal case
      */
@@ -35,7 +36,7 @@ public class FullwidthLatinLowercasedLettersTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.indicators.util.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
+     * {@link org.talend.dataquality.statistics.frequency.regex.ChainResponsibilityHandler#handleRequest(java.lang.String)}.
      * 
      * case 2 special case
      */

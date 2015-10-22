@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.indicators.util;
+package org.talend.datascience.common.regex;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +32,8 @@ public abstract class ChainResponsibilityHandler {
     public String handleRequest(String value) {
         String tempValue = value;
         if (this.canHandler(value)) {
-            Matcher matcher = Pattern.compile(getRegex()).matcher(value);
+            Pattern pattern = getRegex();
+            Matcher matcher = pattern.matcher(value);
             tempValue = matcher.replaceAll(getReplaceStr());
         }
         if (this.getSuccessor() == null) {
@@ -49,7 +50,7 @@ public abstract class ChainResponsibilityHandler {
     /**
      * DOC talend Comment method "getRegex".
      */
-    protected abstract String getRegex();
+    protected abstract Pattern getRegex();
 
     /**
      * 
