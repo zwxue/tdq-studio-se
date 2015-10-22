@@ -23,11 +23,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-import org.talend.commons.ui.utils.CheatSheetUtils;
-import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.dataprofiler.core.helper.ContextViewHelper;
 import org.talend.dq.helper.PropertyHelper;
 
@@ -78,17 +74,6 @@ public class PartListener implements IPartListener {
     public void partDeactivated(IWorkbenchPart part) {
         ContextViewHelper.resetContextView();
 
-        if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart) {
-            // The cheat sheet view has been open and max display then don't do it again
-            if (CheatSheetUtils.getInstance().isFirstTime() && !PlatformUI.getWorkbench().isClosing()) {
-                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                if (activePage != null) {
-                    if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
-                        CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
-                    }
-                }
-            }
-        }
     }
 
     public void partOpened(IWorkbenchPart part) {
