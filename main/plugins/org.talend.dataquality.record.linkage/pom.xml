@@ -50,7 +50,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.talend.studio</groupId>
+            <groupId>org.talend</groupId>
             <artifactId>org.talend.utils</artifactId>
             <version>6.1.0</version>
             <exclusions>
