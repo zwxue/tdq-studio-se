@@ -18,13 +18,15 @@
 		 
 Under <b>Data Mining Type</b>, define the type of the corresponding column. 		 
 		 
-Note: <b>Nominal</b> means that the column contains textual values (no order or mathematical function applicable). <b>Interval</b> means that mathematical functions (such as the average) can be used. average) can be used.</description>
+Note: <b>Nominal</b> means that the column contains textual values (no order or mathematical function applicable). <b>Interval</b> means that mathematical functions (such as the average) can be used.
+      </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="6">
       </action>
    </item>
    <item title="Select the indicators to compute." dialog="true" skip="false">
       <description>
-         Click the <b>Select Indicators</b>  button under the <b>Data Preview</b> section to open the <b>Indicator Selection</b> dialog box. Apply the indicators required for each column by selecting the corresponding check boxes(or click the link below).iption>
+         Click the <b>Select Indicators</b>  button under the <b>Data Preview</b> section to open the <b>Indicator Selection</b> dialog box. Apply the indicators required for each column by selecting the corresponding check boxes(or click the link below).
+      </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenIndicatorSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>

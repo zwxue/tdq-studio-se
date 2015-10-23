@@ -9,7 +9,7 @@
    <item dialog="true"
          title="Set the analysis metadata">
       <description>
-         To open the <b>Create New Analysis</b> wizard,  right click the <b>Analyses</b> folder on the <b>DQ Repository</b> tree view and select <b>New Analysis</b> (or click the link below). Expand <b>Correlation Analysis</b> and select <b>Nominal Correlation Analysis </b>in the wizard. The wizard prompts you to provide the analysis metadata (name, purpose, description....). Upon completion, an editor opens in which you can define the analysis settings.ings.
+         To open the <b>Create New Analysis</b> wizard,  right click the <b>Analyses</b> folder on the <b>DQ Repository</b> tree view and select <b>New Analysis</b> (or click the link below). Expand <b>Correlation Analysis</b> and select <b>Nominal Correlation Analysis </b>in the wizard. The wizard prompts you to provide the analysis metadata (name, purpose, description....). Upon completion, an editor opens in which you can define the analysis settings.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="true" param1="8" param2="1"/>
    </item>
