@@ -1,3 +1,5 @@
+package org.talend.dataquality.record.linkage;
+
 // ============================================================================
 //
 // Copyright (C) 2006-2015 Talend Inc. - www.talend.com
@@ -10,7 +12,6 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
