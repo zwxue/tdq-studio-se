@@ -114,7 +114,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         if (activePage != null) {
             if (CheatSheetUtils.getInstance().isFirstTime()
                     && activePage.getPerspective().getId().equals(ProductUtils.PERSPECTIVE_DQ_ID)) {
-                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
+                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet("org.talend.dataprofiler.core.talenddataprofiler");
             }
         }
 
