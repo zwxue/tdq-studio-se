@@ -7,26 +7,24 @@
    </intro>
    <item title="Set the analysis metadata." dialog="true" skip="false">
       <description>
-         To open the <b>Create New Analysis</b> wizard, right click <b>Analyzes</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then select <b>Column Analysis</b>. Alternatively, browse to and click right on a column on the <b> DQ Repository </b> view tree and select <b>Analyze</b>. The wizard prompts you to provide the analysis metadata (name, purpose, description...). Upon completion, an editor opens in which you can modify the analysis metadata and define the analysis settings. 		 		
+         To open the <b>Create New Analysis</b> wizard, right click <b>Analyses</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then select analysis under <b>Column Analysis</b> folder. Alternatively, browse to and click right on a column on the <b> DQ Repository </b> view tree and select <b>Analyze</b>. The wizard prompts you to provide the analysis metadata (name, purpose, description...). Upon completion, an editor opens in which you can modify the analysis metadata and define the analysis settings. 		 		
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="6">
       </action>
    </item>
    <item title="Select the columns to analyze." dialog="true" skip="false">
       <description>
-          In the editor, click <b> Analyzed Columns</b> (or click the link below). Then click <b>Select columns to analyze</b> to open a dialog box in which you can browse to and select the columns to analyze. Alternatively, you can drop the columns from the <b>DQ Repository</b> tree view onto the <b>Analyzed Columns</b> box in the editor.
+          In the editor, click <b>Select Data</b> button(or <b>New Connection</b> first) under the <b>Data preview</b> section to open a dialog box in which you can browse to and select data to analyze. Alternatively, you can drop the columns from the <b>DQ Repository</b> tree view onto the <b>Analyzed Columns</b> box in the editor.
 		 
 Under <b>Data Mining Type</b>, define the type of the corresponding column. 		 
 		 
-Note: <b>Nominal</b> means that the column contains textual values (no order or mathematical function applicable). <b>Interval</b> means that mathematical functions (such as the average) can be used.
-      </description>
+Note: <b>Nominal</b> means that the column contains textual values (no order or mathematical function applicable). <b>Interval</b> means that mathematical functions (such as the average) can be used. average) can be used.</description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="6">
       </action>
    </item>
    <item title="Select the indicators to compute." dialog="true" skip="false">
       <description>
-         Click the <b>Select indicators for each column</b> hyperlink to open the <b>Indicator Selection</b> dialog box. Apply the indicators required for each column by selecting the corresponding check boxes(or click the link below).
-      </description>
+         Click the <b>Select Indicators</b>  button under the <b>Data Preview</b> section to open the <b>Indicator Selection</b> dialog box. Apply the indicators required for each column by selecting the corresponding check boxes(or click the link below).iption>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenIndicatorSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
