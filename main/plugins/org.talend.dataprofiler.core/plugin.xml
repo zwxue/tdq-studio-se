@@ -1114,7 +1114,7 @@
      </cheatsheet>
      <cheatsheet
            category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
-           contentFile="$nl$/cheatsheets/ColumnsComparisonAnalysis_cheat.xml"
+           contentFile="$nl$/cheatsheets/RedundancyAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.columnComparison.analysis"
            name="%ColumnComparisonAnalysisCreation">
      </cheatsheet>
