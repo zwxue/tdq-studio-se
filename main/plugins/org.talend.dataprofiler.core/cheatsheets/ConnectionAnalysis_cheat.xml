@@ -7,7 +7,7 @@
    </intro>
    <item title="Set the analysis metadata." dialog="true" skip="false">
       <description>
-To open the <b>Create New Analysis</b> wizard, right click <b>Analyzes</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then select <b>Database Structure Overview</b>. The wizard prompts you to provide the analysis metadata (name, purpose, description...). Select the connection of interest from the list and then set filters on the tables or views if required. Upon completion, an editor opens in which you can modify the analysis metadata and define the analysis settings.      
+To open the <b>Create New Analysis</b> wizard, right click <b>Analyses</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then select <b>Database Structure Overview</b>. The wizard prompts you to provide the analysis metadata (name, purpose, description...). Select the connection of interest from the list and then set filters on the tables or views if required. Upon completion, an editor opens in which you can modify the analysis metadata and define the analysis settings.      
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
