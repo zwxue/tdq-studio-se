@@ -63,10 +63,16 @@ public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
         File newFolder = WorkspaceUtils.ifolderToFile(ResourceManager.getSysIndicatorPatternFinderFolder());
         boolean result = oldFolder.renameTo(newFolder);
 
-        // replace for the path in TalendProperties:ItemState of indicators
-        String[] indicatorProFileExtentionName = { FactoriesUtil.PROPERTIES_EXTENSION };
         try {
+            // replace for the path in TalendProperties:ItemState of indicators
+            String[] indicatorProFileExtentionName = { FactoriesUtil.PROPERTIES_EXTENSION };
             result &= FilesUtils.migrateFolder(newFolder, indicatorProFileExtentionName, initIndicatorReplaceMap(), log);
+
+            // replace for the indicatorDefinition in analysis item file
+            File analysisFolder = WorkspaceUtils.ifolderToFile(ResourceManager.getAnalysisFolder());
+            String[] analysisFileExtentionName = { FactoriesUtil.ANA };
+            result &= FilesUtils.migrateFolder(analysisFolder, analysisFileExtentionName, initIndicatorReplaceMap(), log);
+
             ResourceService.refreshStructure();
         } catch (Exception e) {
             result = false;
