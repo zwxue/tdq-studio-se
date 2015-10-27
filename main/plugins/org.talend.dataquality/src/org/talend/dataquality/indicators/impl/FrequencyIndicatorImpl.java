@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -31,6 +32,7 @@ import org.talend.dataquality.indicators.mapdb.AbstractDB;
 import org.talend.dataquality.indicators.mapdb.DBMap;
 import org.talend.dataquality.indicators.mapdb.StandardDBName;
 import org.talend.dataquality.indicators.mapdb.TalendFormatDate;
+import org.talend.dataquality.indicators.mapdb.TalendFormatTime;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.collections.MapValueSorter;
 
@@ -591,7 +593,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         if (StringUtils.EMPTY.equals(name)) {
             return SpecialValueDisplay.EMPTY_FIELD;
         } else {
-            if (datePattern != null) {
+            if (datePattern != null && name instanceof Date) {
                 return getFormatName(name);
             } else {
                 return getFrequencyLabel(name);
@@ -606,8 +608,11 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * @return
      */
     protected String getFrequencyLabel(Object name) {
-        // TDQ-10833 format Date .like as :yyyy-MM-dd,yyyy-MM-dd HH:MM:ss
+        // TDQ-10833 format Date .like as :Date and Timsatamp(yyyy-MM-dd HH:mm:ss:SSS),Time(HH:MM:ss)
         if (name instanceof Date) {
+            if (name instanceof Time) {
+                return new TalendFormatTime(((Time) name)).toString();
+            }
             return new TalendFormatDate(((Date) name)).toString();
         }
         return name.toString();
