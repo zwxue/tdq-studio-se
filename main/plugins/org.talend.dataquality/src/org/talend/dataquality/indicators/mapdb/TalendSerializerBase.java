@@ -16,6 +16,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -37,6 +38,10 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
     static final int TALEND_NULL = 181;
 
     static final int TALEND_TIMESTAMP = 182;
+
+    static final int TALEND_FORMAT_DATE = 183;
+
+    static final int TALEND_FORMAT_TIME = 184;
 
     private static Logger log = Logger.getLogger(TalendSerializerBase.class);
 
@@ -89,15 +94,22 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
     protected void serializeUnknownObject(DataOutput out, Object obj, FastArrayList<Object> objectStack) throws IOException {
         // TDQ-10833 super method only consider 'java.util.Date','java.sql.Date' and 'java.sql.Timestamp' are as
         // UnkowObject. We need to serialize them at here.
-        if (Timestamp.class.isInstance(obj)) {
-            out.write(TALEND_TIMESTAMP);
-            out.writeLong(((Timestamp) obj).getTime());
+
+        if (TalendFormatTime.class.isInstance(obj)) {
+            out.write(TALEND_FORMAT_TIME);
+            out.writeLong(((Time) obj).getTime());
             return;
         }
 
-        if (Date.class.isInstance(obj)) {
-            out.write(Header.DATE);
+        if (TalendFormatDate.class.isInstance(obj)) {
+            out.write(TALEND_FORMAT_DATE);
             out.writeLong(((Date) obj).getTime());
+            return;
+        }
+
+        if (Timestamp.class.isInstance(obj)) {
+            out.write(TALEND_TIMESTAMP);
+            out.writeLong(((Timestamp) obj).getTime());
             return;
         }
         Object newObj = obj.toString();
@@ -115,7 +127,16 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
         if (TALEND_NULL == head) {
             return new TupleEmpty();
         }
-        // TDQ-10833 'java.sql.Timestamp' is as UnkownHeader on super deserialize. deserialize it at here.
+        // TDQ-10833 'java.sql.Timestamp' and 'TALEND_FORMAT_DATE' are as UnkownHeader on super deserialize. deserialize
+        // it at here.
+
+        if (head == TALEND_FORMAT_TIME) {
+            return new TalendFormatTime(new Time(is.readLong()));
+        }
+        if (head == TALEND_FORMAT_DATE) {
+            return new TalendFormatDate(new Date(is.readLong()));
+        }
+
         if (head == TALEND_TIMESTAMP) {
             return new Timestamp(is.readLong());
         }

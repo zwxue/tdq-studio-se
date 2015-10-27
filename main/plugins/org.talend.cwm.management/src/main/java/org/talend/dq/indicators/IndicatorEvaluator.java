@@ -15,7 +15,9 @@ package org.talend.dq.indicators;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -48,6 +50,8 @@ import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.mapdb.MapDBUtils;
+import org.talend.dataquality.indicators.mapdb.TalendFormatDate;
+import org.talend.dataquality.indicators.mapdb.TalendFormatTime;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -172,6 +176,16 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             for (int j = 0; j < columnCount; j++) {
                                 String newcol = columnList.get(j).getName();
                                 Object newobject = ResultSetUtils.getObject(resultSet, newcol);
+                                // TDQ-10833 Format Drill down Date data by TalendFormatTime with
+                                // "HH:mm:ss:SSS",TalendFormatDate with "yyyy-MM-dd HH:mm:ss:SSS".So that it is
+                                // same format as result page.
+                                if (newobject instanceof Date) {
+                                    if (newobject instanceof Time) {
+                                        newobject = new TalendFormatTime((Time) newobject);
+                                    } else {
+                                        newobject = new TalendFormatDate((Date) newobject);
+                                    }
+                                }
                                 if (indicator.isUsedMapDBMode()) {
                                     inputRowList.add(newobject == null ? PluginConstant.NULL_STRING : newobject);
                                     continue;
