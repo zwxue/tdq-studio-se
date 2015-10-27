@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.indicators.mapdb;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -186,8 +187,11 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
         if (key == null) {
             return dbMap.put((K) EMPTY, value);
         }
-        // TDQ-10833 format Date when put Date type.like as :yyyy-MM-dd.yyyy-MM-dd HH:MM:ss
+        // TDQ-10833 format Date.like as :Date and Timestamp is "yyyy-MM-dd HH:MM:ss";Time is "HH:MM:ss".
         if (key instanceof Date) {
+            if (key instanceof Time) {
+                return dbMap.put((K) new TalendFormatTime(((Time) key)), value);
+            }
             return dbMap.put((K) new TalendFormatDate(((Date) key)), value);
         }
         return dbMap.put(key, value);

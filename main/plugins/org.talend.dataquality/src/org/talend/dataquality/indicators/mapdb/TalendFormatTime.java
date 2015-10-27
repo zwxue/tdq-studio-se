@@ -12,43 +12,43 @@
 // ============================================================================
 package org.talend.dataquality.indicators.mapdb;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.talend.dataquality.PluginConstant;
 
 /**
- * ovririd "toString()" to format Date and Timestamp to specify pattern.
+ * DOC qiongli class global comment. Detailled comment
  */
-public class TalendFormatDate extends Date {
+public class TalendFormatTime extends Time {
+
+    private Time time = null;
+
+    // pattern for Date and Timestamp.
+    private String pattern = "HH:mm:ss.SSS";//$NON-NLS-1$
 
     /**
      * 
      */
-    private static final long serialVersionUID = -510723001255244666L;
+    private static final long serialVersionUID = 2840349445774526174L;
 
-    // pattern for Date and Timestamp.
-    private String pattern = "yyyy-MM-dd HH:mm:ss.SSS";//$NON-NLS-1$
-
-    private Date dateObj = null;
-
-    public TalendFormatDate(Date obj) {
-        super(obj.getTime());
-        this.dateObj = obj;
+    public TalendFormatTime(Time time) {
+        super(time.getTime());
+        this.time = time;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see java.util.Date#toString()
+     * @see java.sql.Timestamp#toString()
      */
     @Override
     public String toString() {
-        if (dateObj == null || pattern == null) {
+        if (time == null) {
             return PluginConstant.EMPTY_STRING;
         }
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        return formatter.format(dateObj);
+        return formatter.format(time);
     }
 
 }
