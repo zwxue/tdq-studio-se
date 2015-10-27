@@ -320,6 +320,10 @@ public final class ResourceManager {
         return getOneFolder(EResourceConstant.SYSTEM_INDICATORS);
     }
 
+    public static IFolder getSysIndicatorPatternFinderFolder() {
+        return getOneFolder(EResourceConstant.SYSTEM_INDICATORS_PATTERN_FINDER);
+    }
+
     /**
      * DOC bZhou Comment method "getUDIFolder".
      * 

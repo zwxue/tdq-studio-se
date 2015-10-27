@@ -389,7 +389,7 @@ public class DbmsLanguage {
      * Method "getPatternFinderDefaultFunction".
      * 
      * @param expression a column name or a string
-     * @return a default SQL expression which can be used as pattern finder or null
+     * @return a default SQL expression which can be used as Pattern Frequncey Statistics or null
      * @deprecated use {@link #getPatternFinderFunction(String, String, String)} instead
      */
     @Deprecated
@@ -403,7 +403,7 @@ public class DbmsLanguage {
      * @param expression a column name or a string
      * @param charsToReplace the list of characters to remove
      * @param replacementChars the replacement characters
-     * @return a default SQL expression which can be used as pattern finder or null
+     * @return a default SQL expression which can be used as Pattern Frequncey Statistics or null
      */
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
         return null;
@@ -414,7 +414,7 @@ public class DbmsLanguage {
      * 
      * @param colName a column name or a string
      * @param charactersMapping the mapping of the character to replace
-     * @return an SQL expression which can be used as pattern finder or null
+     * @return an SQL expression which can be used as Pattern Frequncey Statistics or null
      */
     public String getPatternFinderFunction(String colName, EList<CharactersMapping> charactersMapping) {
         CharactersMapping charactersMap = adaptCharactersMapping(charactersMapping);

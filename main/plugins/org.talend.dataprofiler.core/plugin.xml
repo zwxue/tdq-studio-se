@@ -1799,6 +1799,12 @@
            name="Add pattern ISBN_13 and update IPV6"
            version="6.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.RenamePatternFinderFolderTask"
+           id="org.talend.dataprofiler.core.migration.impl.RenamePatternFinderFolderTask"
+           name="Rename Pattern Finder to Pattern Frequncey Statistics"
+           version="6.1.0">
+     </workspacetask>
   </extension>
   
   <extension

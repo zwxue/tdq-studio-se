@@ -40,7 +40,7 @@
     <taggedValue xmi:id="_jXDvYPbCEd298st2mPm9SA" tag="Purpose" value="use Soundex algorithm to analyze data"/>
     <taggedValue xmi:id="_sYi-APbCEd298st2mPm9SA" tag="Description" value="uses SOUNDEX algorithm provided by database in the indicator"/>
   </categories>
-  <categories xmi:id="_0n3BsJR-Ed2XO-JvLwVAwg" name="Pattern Finder" label="Pattern Finder">
+  <categories xmi:id="_0n3BsJR-Ed2XO-JvLwVAwg" name="Pattern Frequncey Statistics" label="Pattern Frequncey Statistics">
     <taggedValue xmi:id="_3MEq4JR-Ed2XO-JvLwVAwg" tag="Description" value="for each distinct pattern, counts the number of patterns."/>
     <taggedValue xmi:id="_3MEq4ZR-Ed2XO-JvLwVAwg" tag="Purpose" value="evaluate the frequencies of patterns"/>
   </categories>

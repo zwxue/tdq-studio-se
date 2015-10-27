@@ -11,9 +11,9 @@ import org.talend.resource.ResourceManager;
 
 public class AddEastAsiaPatternFrequencyIndicatorTask extends AbstractWorksapceUpdateTask {
 
-    private final String DESFOLDERNAME = "Pattern Finder"; //$NON-NLS-1$
+    private final String DESFOLDERNAME = "Pattern Frequncey Statistics"; //$NON-NLS-1$
 
-    private final String SRCFOLDERPATH = "/indicators/Pattern Finder"; //$NON-NLS-1$
+    private final String SRCFOLDERPATH = "/indicators/Pattern Frequncey Statistics"; //$NON-NLS-1$
 
     public AddEastAsiaPatternFrequencyIndicatorTask() {
     }

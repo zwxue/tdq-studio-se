@@ -301,7 +301,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_CORRELATION);
             childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION);
             childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY);
-            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS);
             childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING);
             childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS);
             childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_ROW_COMPARISON);
