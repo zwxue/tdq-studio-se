@@ -321,7 +321,7 @@ public final class ResourceManager {
     }
 
     public static IFolder getSysIndicatorPatternFinderFolder() {
-        return getOneFolder(EResourceConstant.SYSTEM_INDICATORS_PATTERN_FINDER);
+        return getOneFolder(EResourceConstant.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS);
     }
 
     /**
