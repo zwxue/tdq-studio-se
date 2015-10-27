@@ -31,6 +31,7 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC klliu class global comment. Detailled comment: system indicator folder repository node
@@ -91,9 +92,10 @@ public class SysIndicatorFolderRepNode extends DQFolderRepNode {
             Folder folder = new Folder((Property) container.getProperty(),
                     RepositoryNodeHelper.getSystemIndicatorFolderRepositoryType(container.getLabel()));
 
-            if (!withDeleted && folder.isDeleted()) {
+            if (isIgnoreFolder(withDeleted, project, folder)) {
                 continue;
             }
+
             SysIndicatorFolderRepNode childNodeFolder = new SysIndicatorFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER,
                     project);
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
@@ -108,7 +110,17 @@ public class SysIndicatorFolderRepNode extends DQFolderRepNode {
                 continue;
             }
 
-            if (!viewObject.getLabel().equals("Sum")) {//$NON-NLS-1$
+            // TDQ-11110: hidden some system indicators.
+            String viewObjectlabel = viewObject.getLabel();
+            if (viewObjectlabel.equals("Multiple Column Correlation") //$NON-NLS-1$
+                    || viewObjectlabel.equals("Multiple Column Frequency Table") //$NON-NLS-1$
+                    || viewObjectlabel.equals("All Match") //$NON-NLS-1$
+                    || viewObjectlabel.equals("Multiple Column Simple Statistics")) { //$NON-NLS-1$
+                continue;
+            }
+            // TDQ-11110~
+
+            if (!viewObjectlabel.equals("Sum")) {//$NON-NLS-1$
                 SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
                         ENodeType.REPOSITORY_ELEMENT, project);
                 repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
@@ -132,6 +144,29 @@ public class SysIndicatorFolderRepNode extends DQFolderRepNode {
                 super.getChildren().add(repNode);
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQFolderRepNode#isIgnoreFolder(boolean, org.talend.core.model.general.Project,
+     * org.talend.core.model.repository.Folder)
+     */
+    @Override
+    public boolean isIgnoreFolder(boolean withDeleted, Project project, Folder folder) {
+        if (!withDeleted && folder.isDeleted()) {
+            return true;
+        }
+
+        // TDQ-11110: hidden some system indicator folders.
+        boolean isBusinessRules = folder.getLabel().equals(EResourceConstant.SYSTEM_INDICATORS_BUSINESS_RULES.getName());
+        boolean isPhoneNumber = folder.getLabel().equals(EResourceConstant.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS.getName());
+        if (isBusinessRules || isPhoneNumber) {
+            return true;
+        }
+        // TDQ-11110~
+
+        return false;
     }
 
     /**

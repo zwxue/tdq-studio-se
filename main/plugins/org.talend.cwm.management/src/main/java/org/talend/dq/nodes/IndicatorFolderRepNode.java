@@ -26,6 +26,7 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC gdbu class global commente
@@ -83,7 +84,7 @@ public class IndicatorFolderRepNode extends DQFolderRepNode {
         RootContainer<String, IRepositoryViewObject> tdqViewObjects = super.getTdqViewObjects(project, this);
         // sub folders
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-            boolean isSystem = container.getLabel().equals("System Indicators"); //$NON-NLS-1$
+            boolean isSystem = container.getLabel().equals(EResourceConstant.SYSTEM_INDICATORS.getName());
 
             ERepositoryObjectType eRepositoryObjectType = isSystem ? ERepositoryObjectType.TDQ_SYSTEM_INDICATORS
                     : ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
