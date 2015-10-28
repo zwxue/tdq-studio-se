@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -382,8 +383,16 @@ public final class DQStructureManager {
                         }
                     }
                     if (targetfolder.members().length != 0) {
-                        // already initialized
-                        continue;
+                        boolean containFiles = false;
+                        for (IResource resource : targetfolder.members()) {
+                            if (resource instanceof IFile) {
+                                containFiles = true;
+                                break;
+                            }
+                        }
+                        if (containFiles) {
+                            continue;
+                        }
                     }
                     copyFilesToFolder(plugin, currentPath, recurse, sourcefolder, suffix, type);
                     continue;
