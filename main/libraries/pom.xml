@@ -65,6 +65,7 @@
         <module>../plugins/org.talend.dataquality.common</module>
         <module>../plugins/org.talend.dataquality.record.linkage</module>
         <module>../plugins/org.talend.dataquality.sampling</module>
+        <module>../plugins/org.talend.dataquality.standardization</module>
     </modules>
     <dependencyManagement>
         <dependencies>
