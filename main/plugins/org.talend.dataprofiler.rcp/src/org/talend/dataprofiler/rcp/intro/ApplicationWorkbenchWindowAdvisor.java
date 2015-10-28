@@ -61,7 +61,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         String buildId = VersionUtils.getVersion();
         IBrandingService brandingService = GlobalServiceRegister.getDefault().getBrandingService(IBrandingService.class);
         configurer.setTitle(brandingService.getFullProductName() + " (" + buildId + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-
     }
 
     /*
@@ -69,6 +68,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      * 
      * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#postWindowOpen()
      */
+    @SuppressWarnings("restriction")
     @Override
     public void postWindowOpen() {
 
@@ -108,16 +108,15 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 menuManager.remove(menuItem);
             }
         }
-
         // max the cheat sheet at first time
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        if (activePage != null) {
-            if (CheatSheetUtils.getInstance().isFirstTime()
-                    && activePage.getPerspective().getId().equals(ProductUtils.PERSPECTIVE_DQ_ID)) {
-                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet("org.talend.dataprofiler.core.talenddataprofiler");
+        if (activePage != null && CheatSheetUtils.getInstance().isFirstTime()
+                && activePage.getPerspective().getId().equals(ProductUtils.PERSPECTIVE_DQ_ID)) {
+            if (!(activePage.getActivePart() instanceof org.eclipse.ui.internal.ViewIntroAdapterPart)) {
+                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet("org.talend.dataprofiler.core.talenddataprofiler"); //$NON-NLS-1$
             }
+
         }
 
     }
-
 }
