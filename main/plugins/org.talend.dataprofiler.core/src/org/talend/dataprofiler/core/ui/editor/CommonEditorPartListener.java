@@ -21,13 +21,16 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.ui.utils.CheatSheetUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -45,6 +48,8 @@ import org.talend.resource.EResourceConstant;
 public class CommonEditorPartListener extends PartListener {
 
     private static Logger log = Logger.getLogger(CommonEditorPartListener.class);
+
+    private boolean firstTime = true;
 
     public Item getItem(IEditorPart editor) {
         Item tdqItem = null;
@@ -103,6 +108,24 @@ public class CommonEditorPartListener extends PartListener {
         }
 
         super.partClosed(part);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.PartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
+     */
+    @SuppressWarnings("restriction")
+    @Override
+    public void partDeactivated(IWorkbenchPart part) {
+        super.partDeactivated(part);
+        if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart) {
+            // The cheat sheet view has been open and max display then don't do it again
+            if (CheatSheetUtils.getInstance().isFirstTime() && !PlatformUI.getWorkbench().isClosing() && firstTime) {
+                firstTime = false;
+                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet(PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID);
+            }
+        }
     }
 
     @Override
