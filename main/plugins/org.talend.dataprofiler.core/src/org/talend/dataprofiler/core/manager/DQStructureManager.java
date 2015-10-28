@@ -381,6 +381,10 @@ public final class DQStructureManager {
                             sourcefolder.getProperty().getItem().getState().setPath(subSourceFolder);
                         }
                     }
+                    if (targetfolder.members().length != 0) {
+                        // already initialized
+                        continue;
+                    }
                     copyFilesToFolder(plugin, currentPath, recurse, sourcefolder, suffix, type);
                     continue;
                 }
@@ -407,16 +411,17 @@ public final class DQStructureManager {
                     continue;
                 }
                 IFolder folder = project.getFolder(folderName);
-                if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
-                    String name = file.getName();
-                    int indexOf = name.indexOf("."); //$NON-NLS-1$
-                    String label = name.substring(0, indexOf);
-                    String extendtion = name.substring(indexOf + 1);
-                    createSourceFileItem(file, Path.EMPTY, label, extendtion);
-                } else {
-                    copyFileToFolder(openStream, fileName, folder);
+                if (folder.members().length == 0) {
+                    if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
+                        String name = file.getName();
+                        int indexOf = name.indexOf("."); //$NON-NLS-1$
+                        String label = name.substring(0, indexOf);
+                        String extendtion = name.substring(indexOf + 1);
+                        createSourceFileItem(file, Path.EMPTY, label, extendtion);
+                    } else {
+                        copyFileToFolder(openStream, fileName, folder);
+                    }
                 }
-
                 openStream.close();
             } catch (IOException e) {
                 log.error(e, e);
