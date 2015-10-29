@@ -27,7 +27,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -382,18 +381,6 @@ public final class DQStructureManager {
                             sourcefolder.getProperty().getItem().getState().setPath(subSourceFolder);
                         }
                     }
-                    if (targetfolder.members().length != 0) {
-                        boolean containFiles = false;
-                        for (IResource resource : targetfolder.members()) {
-                            if (resource instanceof IFile) {
-                                containFiles = true;
-                                break;
-                            }
-                        }
-                        if (containFiles) {
-                            continue;
-                        }
-                    }
                     copyFilesToFolder(plugin, currentPath, recurse, sourcefolder, suffix, type);
                     continue;
                 }
@@ -420,17 +407,16 @@ public final class DQStructureManager {
                     continue;
                 }
                 IFolder folder = project.getFolder(folderName);
-                if (folder.members().length == 0) {
-                    if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
-                        String name = file.getName();
-                        int indexOf = name.indexOf("."); //$NON-NLS-1$
-                        String label = name.substring(0, indexOf);
-                        String extendtion = name.substring(indexOf + 1);
-                        createSourceFileItem(file, Path.EMPTY, label, extendtion);
-                    } else {
-                        copyFileToFolder(openStream, fileName, folder);
-                    }
+                if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
+                    String name = file.getName();
+                    int indexOf = name.indexOf("."); //$NON-NLS-1$
+                    String label = name.substring(0, indexOf);
+                    String extendtion = name.substring(indexOf + 1);
+                    createSourceFileItem(file, Path.EMPTY, label, extendtion);
+                } else {
+                    copyFileToFolder(openStream, fileName, folder);
                 }
+
                 openStream.close();
             } catch (IOException e) {
                 log.error(e, e);
@@ -462,8 +448,14 @@ public final class DQStructureManager {
             if (modelElement != null) {
                 AElementPersistance writer = ElementWriterFactory.getInstance().create(elementFile.getFileExtension());
                 if (writer != null) {
-                    writer.create(modelElement, folder, isImportItem);
-                    elementFile.delete(true, null);
+                    Property initProperty = writer.initProperty(modelElement);
+                    String propFileName = initProperty.getLabel() + "_" + initProperty.getVersion() + "." //$NON-NLS-1$ //$NON-NLS-2$
+                            + elementFile.getFileExtension();
+                    IFile file = elementFile.getParent().getFile(new Path(propFileName));
+                    if (file == null || !file.exists()) {
+                        writer.create(modelElement, folder, isImportItem);
+                        elementFile.delete(true, null);
+                    }
                 }
             }
         }
@@ -488,12 +480,18 @@ public final class DQStructureManager {
             ExceptionHandler.process(e);
         }
         sourceFileItem.setContent(byteArray);
-        IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
-        try {
-            property.setId(repositoryFactory.getNextId());
-            repositoryFactory.create(sourceFileItem, path);
-        } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
+
+        String sqlFileName = property.getLabel() + "_" + property.getVersion() + "." //$NON-NLS-1$ //$NON-NLS-2$
+                + extension;
+        IFile file = ResourceManager.getSourceFileFolder().getFile(path.append(new Path(sqlFileName)));
+        if (file == null || !file.exists()) {
+            IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
+            try {
+                property.setId(repositoryFactory.getNextId());
+                repositoryFactory.create(sourceFileItem, path);
+            } catch (PersistenceException e) {
+                ExceptionHandler.process(e);
+            }
         }
         return sourceFileItem;
     }

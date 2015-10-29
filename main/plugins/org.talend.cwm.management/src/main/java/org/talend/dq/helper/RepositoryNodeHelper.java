@@ -520,6 +520,8 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.TDQ_RULES_SQL;
         } else if (EResourceConstant.RULES_MATCHER.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_RULES_MATCHER;
+        } else if (EResourceConstant.RULES_PARSER.getPath().equals(path)) {
+            return ERepositoryObjectType.TDQ_RULES_PARSER;
         } else if (EResourceConstant.SOURCE_FILES.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT;
         } else if (EResourceConstant.METADATA.getPath().equals(path)) {
@@ -555,7 +557,8 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY;
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW).endsWith(label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW;
-        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS).endsWith(label)) {
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS)
+                .endsWith(label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS;
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING).endsWith(label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING;
