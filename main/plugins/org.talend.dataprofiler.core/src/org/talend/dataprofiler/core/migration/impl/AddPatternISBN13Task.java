@@ -68,14 +68,18 @@ public class AddPatternISBN13Task extends AbstractWorksapceUpdateTask {
         ReturnCode rc1 = new ReturnCode(true), rc2 = new ReturnCode(true), rc3 = new ReturnCode(true);
 
         // number folder
+
         IFolder folder = ResourceManager.getPatternRegexFolder().getFolder("number"); //$NON-NLS-1$
         if (folder.exists()) {
-            Pattern pattern = newPattern("ISBN 13 Checker", "Java", //$NON-NLS-1$ //$NON-NLS-2$
-                    "'^ISBN(?:-13)?:?\\ *(97(?:8|9)([ -]?)(?=[0-9]{1,5}\\2?[0-9]{1,7}\\2?[0-9]{1,6}\\2?[0-9])(?:[0-9]\\2*){9}[0-9])$'"); //$NON-NLS-1$
-            if (pattern != null) {
-                setTagValue(pattern, "ISBN-13: 978-2711791415 | ISBN 978-2711791415 |  ISBN: 978-2711791415", //$NON-NLS-1$
-                        "International Standard Book Number 13 digits"); //$NON-NLS-1$
-                rc1 = ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
+            // only create ISBN 13 Checker when not found.
+            if (!folder.getFile("ISBN_13_Checker_0.1.pattern").exists()) {
+                Pattern pattern = newPattern("ISBN 13 Checker", "Java", //$NON-NLS-1$ //$NON-NLS-2$
+                        "'^ISBN(?:-13)?:?\\ *(97(?:8|9)([ -]?)(?=[0-9]{1,5}\\2?[0-9]{1,7}\\2?[0-9]{1,6}\\2?[0-9])(?:[0-9]\\2*){9}[0-9])$'"); //$NON-NLS-1$
+                if (pattern != null) {
+                    setTagValue(pattern, "ISBN-13: 978-2711791415 | ISBN 978-2711791415 |  ISBN: 978-2711791415", //$NON-NLS-1$
+                            "International Standard Book Number 13 digits"); //$NON-NLS-1$
+                    rc1 = ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
+                }
             }
         }
         // Update IPv6 Address.pattern.
