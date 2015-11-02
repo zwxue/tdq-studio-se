@@ -52,9 +52,9 @@ import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.ModelElementMatchEngine;
 import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.compare.factory.DQMatchEngineFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
-import org.talend.cwm.compare.factory.DQMatchEngineFactory;
 import org.talend.cwm.compare.factory.update.AddTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
@@ -136,15 +136,25 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         IFile tempFile = createTempConnectionFile();
 
         if (compareWithReloadObject()) {
-            // Copy db type and db version tagged values .
-            String databaseType = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, tempReloadProvider);
-            String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, tempReloadProvider);
-            TaggedValueHelper.setTaggedValue(oldDataProvider, TaggedValueHelper.DB_PRODUCT_NAME, databaseType);
-            TaggedValueHelper.setTaggedValue(oldDataProvider, TaggedValueHelper.DB_PRODUCT_VERSION, productVersion);
+
+            // before save, reset the old the taggedvalues
+            resetTaggedValues();
+
             saveReloadResult();
         }
         deleteTempConnectionFile(tempFile);
         return oldDataProvider;
+    }
+
+    /**
+     * reset the targedvalues
+     */
+    protected void resetTaggedValues() throws ReloadCompareException {
+        // Copy db type and db version tagged values .
+        String databaseType = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, tempReloadProvider);
+        String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, tempReloadProvider);
+        TaggedValueHelper.setTaggedValue(oldDataProvider, TaggedValueHelper.DB_PRODUCT_NAME, databaseType);
+        TaggedValueHelper.setTaggedValue(oldDataProvider, TaggedValueHelper.DB_PRODUCT_VERSION, productVersion);
     }
 
     /**

@@ -14,9 +14,11 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
@@ -30,6 +32,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -40,12 +43,14 @@ import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -57,6 +62,10 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
     protected static Logger log = Logger.getLogger(TableViewComparisonLevel.class);
 
     private static final List<TdColumn> EMPTY_COLUMN_LIST = Collections.emptyList();
+
+    private String tmpConceptName = StringUtils.EMPTY;
+
+    private Map<String, String[]> tmpTaggedValuesMap = new HashMap<String, String[]>();
 
     public TableViewComparisonLevel(DBColumnFolderRepNode dbFolderNode) {
         super(dbFolderNode);
@@ -144,6 +153,23 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
     protected EObject getSavedReloadObject() throws ReloadCompareException {
         ColumnSet selectedColumnSet = getCurrentColumnSet();
         ColumnSet toReloadcolumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
+
+        // ADD TDQ-11146 msjian: to save the TaggedValues before clear
+        if (PluginChecker.isTDQLoaded()) {
+            tmpConceptName = TaggedValueHelper.getValueString(TaggedValueHelper.CONCEPT_NAME, toReloadcolumnSet);
+            EList<Feature> feature = toReloadcolumnSet.getFeature();
+            tmpTaggedValuesMap = new HashMap<String, String[]>();
+            for (Feature fea : feature) {
+                String[] values = new String[] { StringUtils.EMPTY, StringUtils.EMPTY };
+                values[0] = TaggedValueHelper.getValueString(TaggedValueHelper.SEMANTIC_NAME, fea);
+                values[1] = TaggedValueHelper.getValueString(TaggedValueHelper.CONTENT_TYPE, fea);
+                if (StringUtils.isNotBlank(values[0]) || StringUtils.isNotBlank(values[1])) {
+                    tmpTaggedValuesMap.put(fea.getName(), values);
+                }
+            }
+        }
+        // TDQ-11146~
+
         // MOD scorreia 2009-01-29 clear content of findMatchedColumnSet
         ColumnSetHelper.setColumns(toReloadcolumnSet, EMPTY_COLUMN_LIST);
         toReloadcolumnSet.getOwnedElement().clear();
@@ -240,11 +266,27 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractTableComparisonLevel#saveReloadResult()
+     * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#resetTaggedValues()
      */
     @Override
-    protected void saveReloadResult() {
-        super.saveReloadResult();
-    }
+    protected void resetTaggedValues() throws ReloadCompareException {
+        super.resetTaggedValues();
 
+        if (PluginChecker.isTDQLoaded()) {
+            ColumnSet selectedColumnSet = getCurrentColumnSet();
+            ColumnSet oldColumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, oldDataProvider);
+            // reset table's taggedvalues "CONCEPT_NAME".
+            TaggedValueHelper.setTaggedValue(oldColumnSet, TaggedValueHelper.CONCEPT_NAME, tmpConceptName);
+
+            EList<Feature> oldFeatures = oldColumnSet.getFeature();
+            for (Feature fea : oldFeatures) {
+                // reset the column's tagged values "SEMATIC_NAME", "Content Type".
+                String[] strings = tmpTaggedValuesMap.get(fea.getName());
+                if (strings != null) {
+                    TaggedValueHelper.setTaggedValue(fea, TaggedValueHelper.SEMANTIC_NAME, strings[0]);
+                    TaggedValueHelper.setTaggedValue(fea, TaggedValueHelper.CONTENT_TYPE, strings[1]);
+                }
+            }
+        }
+    }
 }

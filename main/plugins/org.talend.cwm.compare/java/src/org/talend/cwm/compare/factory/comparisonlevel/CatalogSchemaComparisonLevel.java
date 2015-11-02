@@ -13,9 +13,11 @@
 package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -27,6 +29,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -40,6 +43,7 @@ import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -63,6 +67,8 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     private boolean isCompareTabel;
 
     private boolean isCompareView;
+
+    private Map<String, String> tmpTableTaggedValuesMap = new HashMap<String, String>();
 
     public CatalogSchemaComparisonLevel(RepositoryNode dbFolderNode) {
         super(dbFolderNode);
@@ -174,6 +180,28 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected EObject getSavedReloadObject() throws ReloadCompareException {
         Package selectedPackage = getPackageFromObject(selectedObj);
+
+        // ADD TDQ-11146 msjian: to save the TaggedValues before clear
+        if (PluginChecker.isTDQLoaded()) {
+            tmpTableTaggedValuesMap = new HashMap<String, String>();
+            List<TdTable> tables = PackageHelper.getTables(selectedPackage);
+            for (TdTable table : tables) {
+                String tmpTableConceptName = TaggedValueHelper.getValueString(TaggedValueHelper.CONCEPT_NAME, table);
+                if (StringUtils.isNotBlank(tmpTableConceptName)) {
+                    tmpTableTaggedValuesMap.put(table.getName(), tmpTableConceptName);
+                }
+            }
+
+            List<TdView> views = PackageHelper.getViews(selectedPackage);
+            for (TdView view : views) {
+                String tmpViewConceptName = TaggedValueHelper.getValueString(TaggedValueHelper.CONCEPT_NAME, view);
+                if (StringUtils.isNotBlank(tmpViewConceptName)) {
+                    tmpTableTaggedValuesMap.put(view.getName(), tmpViewConceptName);
+                }
+            }
+        }
+        // TDQ-11146~
+
         // MOD mzhao 2009-01-20 Extract method findMatchedPackage to
         // DQStructureComparer class
         // for common use.
@@ -336,6 +364,38 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     private boolean isValidTableHandle(EObject object) {
         TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(object);
         return isCompareTabel && table != null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#resetTaggedValues()
+     */
+    @Override
+    protected void resetTaggedValues() throws ReloadCompareException {
+        super.resetTaggedValues();
+
+        if (PluginChecker.isTDQLoaded()) {
+            Package selectedPackage = getPackageFromObject(selectedObj);
+
+            List<TdTable> tables = PackageHelper.getTables(selectedPackage);
+            for (TdTable table : tables) {
+                // reset the table's tagged values "CONCEPT_NAME".
+                String tmpTableConceptName = tmpTableTaggedValuesMap.get(table.getName());
+                if (tmpTableConceptName != null) {
+                    TaggedValueHelper.setTaggedValue(table, TaggedValueHelper.CONCEPT_NAME, tmpTableConceptName);
+                }
+            }
+
+            List<TdView> views = PackageHelper.getViews(selectedPackage);
+            for (TdView view : views) {
+                // reset the view's tagged values "CONCEPT_NAME".
+                String tmpViewConceptName = tmpTableTaggedValuesMap.get(view.getName());
+                if (tmpViewConceptName != null) {
+                    TaggedValueHelper.setTaggedValue(view, TaggedValueHelper.CONCEPT_NAME, tmpViewConceptName);
+                }
+            }
+        }
     }
 
 }
