@@ -89,7 +89,7 @@ public class SynonymTest extends TestCase {
             Analyzer analyzer = createAnalyzer();
 
             // Term termName = new Term("steph");
-            QueryParser qp = new QueryParser(luceneVersion, FIELD_NAME, analyzer);
+            QueryParser qp = new QueryParser(FIELD_NAME, analyzer);
             Query q = qp.parse("Stephane");
 
             TopDocsCollector<?> collector = TopScoreDocCollector.create(2, false);
@@ -114,10 +114,9 @@ public class SynonymTest extends TestCase {
 
     }
 
-    private static final Version luceneVersion = Version.LUCENE_30;
 
     static Analyzer createAnalyzer() {
-        return new StandardAnalyzer(luceneVersion);
+        return new StandardAnalyzer();
     }
 
     /**

@@ -107,8 +107,6 @@ public class CombinedQueryTest {
     public void testSearchDocumentBySynonym() throws IOException {
         SynonymIndexSearcher searcher = getSearcher();
         searcher.setTopDocLimit(10);
-        // searcher.setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
-        // TopDocs docs = searcher.searchDocumentBySynonym(word_to_search);
 
         for (String word_to_search : TEST_CASE_MAP.keySet()) {
             List<Integer> expectation = TEST_CASE_MAP.get(word_to_search);

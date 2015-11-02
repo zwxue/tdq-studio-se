@@ -81,7 +81,7 @@ public class MyTest extends TestCase {
             for (String data : set) {
 
                 // Term termName = new Term("steph");
-                QueryParser qp = new QueryParser(Version.LUCENE_30, "FIELD_NAME", analyzer);
+                QueryParser qp = new QueryParser("FIELD_NAME", analyzer);
                 Query q = qp.parse(data);
 
                 TopDocsCollector<?> collector = TopScoreDocCollector.create(2, false);

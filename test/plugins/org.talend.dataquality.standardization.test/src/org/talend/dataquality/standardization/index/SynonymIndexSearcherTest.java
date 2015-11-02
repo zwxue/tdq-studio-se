@@ -24,9 +24,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.util.Version;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,6 +65,7 @@ public class SynonymIndexSearcherTest {
         synonymIdxBuilder.closeIndex();
     }
 
+    @Override
     @After
     public void finalize() throws Throwable {
         super.finalize();
@@ -127,7 +128,7 @@ public class SynonymIndexSearcherTest {
     public void testSearchDocumentBySynonym() throws IOException {
         printLineToConsole("\n-----------Test searchDocumentBySynonym----------");
         SynonymIndexSearcher searcher = getSearcher();
-        searcher.setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
+        searcher.setAnalyzer(new StandardAnalyzer(CharArraySet.EMPTY_SET));
         TopDocs docs = searcher.searchDocumentBySynonym("ibm");
         printLineToConsole(docs.totalHits + " documents found.");
 

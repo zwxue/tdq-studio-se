@@ -25,7 +25,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 /**
  * The similarity scoring formula of Lucene:
@@ -55,7 +54,7 @@ public class Explainer {
         String indexDir = args[0];
         String queryExpression = args[1];
         Directory directory = FSDirectory.open(new File(indexDir));
-        QueryParser parser = new QueryParser(Version.LUCENE_30, "contents", new SimpleAnalyzer());
+        QueryParser parser = new QueryParser("contents", new SimpleAnalyzer());
         Query query = parser.parse(queryExpression);
         System.out.println("Query: " + queryExpression);
         DirectoryReader indexReader = DirectoryReader.open(directory);
