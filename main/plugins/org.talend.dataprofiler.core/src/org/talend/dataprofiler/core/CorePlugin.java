@@ -60,6 +60,7 @@ import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.helper.StatusHelper;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.prefs.ITalendCorePrefConstants;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.IRepositoryFactory;
@@ -77,8 +78,12 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dataprofiler.service.ISemanticStudioService;
+import org.talend.dataquality.analysis.impl.AnalysisImpl;
+import org.talend.dataquality.reports.impl.TdReportImpl;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
@@ -86,6 +91,7 @@ import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -335,6 +341,29 @@ public class CorePlugin extends AbstractUIPlugin {
             if (repositoryView != null && repositoryView.getCommonViewer() != null) {
                 repositoryView.getCommonViewer().refresh(object);
             }
+        }
+    }
+
+    /**
+     * after create analysis, do refresh
+     */
+    public void refresh(ModelElement modelElement) {
+        if (modelElement instanceof AnalysisImpl || modelElement instanceof TdReportImpl) {
+            // MOD by zshen refresh the folder which contain the modelElement but not select it
+            CorePlugin.getDefault().refreshDQView(
+                    RepositoryNodeHelper.findNearestSystemFolderNode(RepositoryNodeHelper.recursiveFind(modelElement)));
+        } else {
+            IRepositoryNode currentSelectionNode = CorePlugin.getDefault().getCurrentSelectionNode();
+            // if DqRepositoryView is not opened currentSelectionNode will be null and refreshDQView method will
+            // get one error log.
+            CorePlugin.getDefault().refreshDQView(currentSelectionNode);
+        }
+        CorePlugin.getDefault().refreshWorkSpace();
+        // MOD gdbu 2011-11-18 TDQ-3969 : after create items re-filter the tree , to create a new list .
+        if (DQRepositoryNode.isOnFilterring()) {
+            RepositoryNodeHelper.fillTreeList(null);
+            RepositoryNodeHelper
+                    .setFilteredNode(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
         }
     }
 
