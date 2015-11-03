@@ -26,11 +26,9 @@ import junit.framework.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.TopDocs;
 import org.junit.Test;
-import org.talend.core.ui.utils.PluginUtil;
 import org.talend.dataquality.standardization.index.SynonymIndexBuilder;
 import org.talend.dataquality.standardization.index.SynonymIndexBuilderTest;
 import org.talend.dataquality.standardization.index.SynonymIndexSearcher;
-import org.talend.dataquality.standardization.main.HandLuceneImplTest;
 import org.talend.dataquality.standardization.record.SynonymRecordSearcher.RecordResult;
 import org.talend.dataquality.standardization.record.SynonymRecordSearcher.WordResult;
 
@@ -166,9 +164,8 @@ public class SynonymRecordSearcherTest {
     public void testSearch(String[] record, int topDocLimit, int resultLimit) {
         SynonymRecordSearcher recSearcher = new SynonymRecordSearcher(record.length);
         for (int i = 0; i < record.length; i++) {
-            initIdx(PluginUtil.getPluginInstallPath(HandLuceneImplTest.PLUGIN_ID).concat("data/idx") + (i + 1));
-            SynonymIndexSearcher searcher = new SynonymIndexSearcher(PluginUtil
-                    .getPluginInstallPath(HandLuceneImplTest.PLUGIN_ID).concat("data/idx") + (i + 1));
+            initIdx("data/idx" + (i + 1));
+            SynonymIndexSearcher searcher = new SynonymIndexSearcher("data/idx" + (i + 1));
             searcher.setTopDocLimit(topDocLimit);
             recSearcher.addSearcher(searcher, i);
         }
