@@ -16,20 +16,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.TermVector;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
-import org.apache.lucene.index.IndexReader.FieldOption;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
@@ -42,12 +39,13 @@ import org.apache.lucene.util.Version;
 public class IndexMigrator {
 
     // Use standard analyzer without English stop words like "an", "was"
-    private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30, new HashSet<Object>());
+    private Analyzer analyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
 
     // Default value points to an SVN working copy.
     // The provided indexes are located at "addons" folder of the studio.
-    // private String inputPath = "/misc/repo/tdq/org.talend.dataquality.data.resources/data/synonym";//$NON-NLS-1$
-    private String inputPath = "/path/to/studio/addons/data/synonym";//$NON-NLS-1$
+    private String inputPath = "/misc/repo-td/tdq-studio-ee/main/plugins/org.talend.dataquality.data.resources/data/synonym";//$NON-NLS-1$
+
+    //private String inputPath = "/path/to/studio/addons/data/synonym";//$NON-NLS-1$
 
     private String outputPath = "";
 
@@ -99,7 +97,7 @@ public class IndexMigrator {
     /**
      * prepare I/O folders and call regeneration process.
      * 
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public int run() throws IOException {
         File inputFolder = new File(inputPath);
@@ -133,7 +131,7 @@ public class IndexMigrator {
      * 
      * @param inputFolder
      * @param outputFolder
-     * @throws IOException
+     * @throws java.io.IOException
      */
     private int regenerate(File inputFolder, File outputFolder) throws IOException {
         FSDirectory indexDir = FSDirectory.open(inputFolder);
@@ -150,37 +148,23 @@ public class IndexMigrator {
         } else {
             System.out.println("REGENERATE: " + inputFolder.getAbsoluteFile());
             FSDirectory outputDir = FSDirectory.open(outputFolder);
-            IndexWriter writer = new IndexWriter(outputDir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED);
 
-            IndexSearcher searcher = new IndexSearcher(indexDir);
+            IndexWriterConfig config = new IndexWriterConfig(Version.LATEST, analyzer);
+            IndexWriter writer = new IndexWriter(outputDir, config);
+            // IndexWriter writer = new IndexWriter(outputDir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED);
 
-            Collection<String> fieldNames = searcher.getIndexReader().getFieldNames(FieldOption.ALL);
+            IndexReader reader = DirectoryReader.open(indexDir);
+            // IndexSearcher searcher = new IndexSearcher(reader);
+            // IndexSearcher searcher = new IndexSearcher(indexDir);
+
             Document newDoc = null;
-            if (fieldNames.contains(F_WORD) && fieldNames.contains(F_SYN)) {
-                // for "out of the box" indexes, regenerate the index with 2
-                // extra fields ("SYNTERM" and "WORDTERM") for
-                // better scoring.
-                for (int i = 0; i < searcher.maxDoc(); i++) {
-                    Document oldDoc = searcher.doc(i);
-                    String word = oldDoc.getValues(F_WORD)[0];
-                    String[] synonyms = oldDoc.getValues(F_SYN);
-                    Set<String> synonymSet = new HashSet<String>();
-                    for (String syn : synonyms) {
-                        if (!syn.equals(word)) {
-                            synonymSet.add(syn);
-                        }
-                    }
-                    newDoc = generateDocument(word, synonymSet);
-                    writer.addDocument(newDoc);
-                }
-            } else {
-                // for any other indexes, regenerate with new Analyzer, but no
-                // changes to document.
-                for (int i = 0; i < searcher.maxDoc(); i++) {
-                    newDoc = searcher.doc(i);
-                    writer.addDocument(newDoc);
-                }
+            // for any other indexes, regenerate with new Analyzer, but no
+            // changes to document.
+            for (int i = 0; i < reader.maxDoc(); i++) {
+                newDoc = reader.document(i);
+                writer.addDocument(newDoc);
             }
+
             writer.commit();
             writer.close();
             outputDir.close();
@@ -194,32 +178,6 @@ public class IndexMigrator {
             }
         }
         return 0;
-    }
-
-    /**
-     * generate a document with 2 extra fields.
-     * 
-     * @param word
-     * @param synonyms
-     * @return
-     */
-    private Document generateDocument(String word, Set<String> synonyms) {
-        Document doc = new Document();
-        word = word.trim();
-        Field wordField = new Field(F_WORD, word, Field.Store.YES, Field.Index.ANALYZED_NO_NORMS, TermVector.NO);
-        doc.add(wordField);
-        Field wordTermField = new Field(F_WORDTERM, word.toLowerCase(), Field.Store.NO, Field.Index.NOT_ANALYZED, TermVector.NO);
-        doc.add(wordTermField);
-        for (String syn : synonyms) {
-            if (syn != null) {
-                syn = syn.trim();
-                if (syn.length() > 0 && !syn.equals(word)) {
-                    doc.add(new Field(F_SYN, syn, Field.Store.YES, Field.Index.ANALYZED_NO_NORMS, TermVector.NO));
-                    doc.add(new Field(F_SYNTERM, syn.toLowerCase(), Field.Store.NO, Field.Index.NOT_ANALYZED, TermVector.NO));
-                }
-            }
-        }
-        return doc;
     }
 
     /**
