@@ -65,8 +65,6 @@ public class IndicatorNode extends AbstractNode {
                 // MOD yyin 20130118 make it international
                 return InternationalizationUtil.getDefinitionInternationalizationLabel(PropertyHelper.getProperty(define));
             }
-        } else {
-            return "bb"; //$NON-NLS-1$
         }
 
         return PluginConstant.EMPTY_STRING;

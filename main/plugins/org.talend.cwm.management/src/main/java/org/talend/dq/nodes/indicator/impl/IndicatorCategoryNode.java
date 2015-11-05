@@ -110,7 +110,7 @@ public class IndicatorCategoryNode extends AbstractNode implements ICategoryNode
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.nodes.indicator.AbstractIndicatorNode#hasChildren()
+     * @see org.talend.dq.nodes.indicator.AbstractNode#hasChildren()
      */
     @Override
     public boolean hasChildren() {
