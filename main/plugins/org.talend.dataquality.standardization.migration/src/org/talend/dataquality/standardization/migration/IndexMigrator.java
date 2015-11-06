@@ -16,11 +16,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.DirectoryReader;
@@ -43,7 +50,9 @@ public class IndexMigrator {
 
     // Default value points to an SVN working copy.
     // The provided indexes are located at "addons" folder of the studio.
-    private String inputPath = "/misc/repo-td/tdq-studio-ee/main/plugins/org.talend.dataquality.data.resources/data/synonym";//$NON-NLS-1$
+    //private String inputPath = "/misc/repo-td/tdq-studio-ee/main/plugins/org.talend.dataquality.data.resources/data/synonym";//$NON-NLS-1$
+
+    private String inputPath = "/Volumes/Macintosh/repo-td/tdq-studio-ee/main/plugins/org.talend.dataquality.data.index/TalendGivenNames_index";
 
     //private String inputPath = "/path/to/studio/addons/data/synonym";//$NON-NLS-1$
 
@@ -56,6 +65,12 @@ public class IndexMigrator {
     public static final String F_WORDTERM = "wordterm";
 
     public static final String F_SYNTERM = "synterm";
+
+    private static final boolean IS_MIGRATING_FIRSTNAME_INDEX = true;
+
+    private Map<String, List<String[]>> nameMap = new HashMap<String, List<String[]>>();
+
+    private int count = 0;
 
     /**
      * Sets the inputPath.
@@ -157,13 +172,22 @@ public class IndexMigrator {
             // IndexSearcher searcher = new IndexSearcher(reader);
             // IndexSearcher searcher = new IndexSearcher(indexDir);
 
-            Document newDoc = null;
+            Document doc = null;
             // for any other indexes, regenerate with new Analyzer, but no
             // changes to document.
             for (int i = 0; i < reader.maxDoc(); i++) {
-                newDoc = reader.document(i);
-                writer.addDocument(newDoc);
+                doc = reader.document(i);
+
+                if (IS_MIGRATING_FIRSTNAME_INDEX) {
+                    Document newDoc = generateFirstNameDoc(doc);
+                    if (newDoc != null) {
+                        writer.addDocument(newDoc);
+                    }
+                } else {
+                    writer.addDocument(doc);
+                }
             }
+            System.out.println("count: " + count);
 
             writer.commit();
             writer.close();
@@ -178,6 +202,67 @@ public class IndexMigrator {
             }
         }
         return 0;
+    }
+
+    private Document generateFirstNameDoc(Document doc) {
+
+        String name = doc.get("name");//$NON-NLS-1$
+        String country = doc.get("country");//$NON-NLS-1$
+        String gender = doc.get("gender");//$NON-NLS-1$
+
+        List<String[]> variants = nameMap.get(name);
+        if (variants != null) {
+            // see if the current doc is duplicated
+            for (String[] tuple : variants) {
+                if ((country == null && tuple[0] == null || country != null && country.equals(tuple[0]))//
+                        && (gender == null && tuple[1] == null || gender != null && gender.equals(tuple[1]))) {
+                    return null;
+                }
+            }
+            // return null;
+        } else {
+            variants = new ArrayList<String[]>();
+        }
+        variants.add(new String[] { country, gender });
+        nameMap.put(name, variants);
+
+        count++;
+        // TODO Auto-generated method stub
+        return generateDocument(name, country, gender);
+    }
+
+    /**
+     * generate a document.
+     *
+     * @param word
+     * @param synonyms
+     * @return
+     */
+    private Document generateDocument(String name, String country, String gender) {
+        name = name.trim();
+        Document doc = new Document();
+        FieldType ft = new FieldType();
+        ft.setStored(true);
+        ft.setIndexed(true);
+        ft.setOmitNorms(true);
+        ft.freeze();
+
+        Field wordField = new Field("name", name, ft);
+        doc.add(wordField);
+
+        Field wordTermField = new StringField("nameterm", name.toLowerCase(), Field.Store.NO);
+        doc.add(wordTermField);
+
+        if (country != null) {
+            Field countryField = new StringField("country", country, Field.Store.YES);
+            doc.add(countryField);
+        }
+
+        if (gender != null) {
+            Field genderField = new StringField("gender", gender, Field.Store.YES);
+            doc.add(genderField);
+        }
+        return doc;
     }
 
     /**
