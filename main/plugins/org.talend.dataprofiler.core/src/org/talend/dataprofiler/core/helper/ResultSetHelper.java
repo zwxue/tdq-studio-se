@@ -20,7 +20,7 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -62,7 +62,7 @@ public class ResultSetHelper {
 
     public static ResultSet getResultSet(MetadataTable metadataTable, java.sql.Connection sqlConn, String whereExpression,
             int maxRows) throws SQLException {
-        Connection tdDataProvider = TableHelper.getFirstConnection(metadataTable);
+        Connection tdDataProvider = ConnectionHelper.getTdDataProvider(metadataTable);
         if (sqlConn == null) {
             IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
             TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
