@@ -43,18 +43,6 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
      * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
      */
     @Override
-    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
-        Statement statement = createStatement(connection);
-        statement.setFetchSize(fetchSize);
-        return statement;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
-     */
-    @Override
     public Statement createStatement(Connection connection) throws SQLException {
         return connection.createStatement();
     }

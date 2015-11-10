@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -205,28 +201,6 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     @Override
     public String getAverageLengthWithNullBlankRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEILING(CAST(SUM(LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " ))*1.00 AS FLOAT) / COUNT(*)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection, int)
-     */
-    @Override
-    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
-        Statement statement = createStatement(connection);
-        statement.setFetchSize(fetchSize);
-        return statement;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
-     */
-    @Override
-    public Statement createStatement(Connection connection) throws SQLException {
-        return connection.createStatement();
     }
 
     /*

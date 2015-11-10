@@ -146,14 +146,4 @@ public class IngresDbmsLanguage extends DbmsLanguage {
         return createStatement(connection);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
-     */
-    @Override
-    public Statement createStatement(Connection connection) throws SQLException {
-        return connection.createStatement();
-    }
-
 }
