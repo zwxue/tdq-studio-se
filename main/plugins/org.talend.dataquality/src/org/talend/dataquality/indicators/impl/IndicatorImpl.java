@@ -362,8 +362,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setCount(Long newCount) {
         Long oldCount = count;
         count = newCount;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__COUNT, oldCount, count));
+        }
     }
 
     /**
@@ -383,8 +384,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setNullCount(Long newNullCount) {
         Long oldNullCount = nullCount;
         nullCount = newNullCount;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__NULL_COUNT, oldNullCount, nullCount));
+        }
     }
 
     /**
@@ -405,7 +407,11 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         parameters = newParameters;
         if (eNotificationRequired()) {
             ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__PARAMETERS, oldParameters, newParameters);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            if (msgs == null) {
+                msgs = notification;
+            } else {
+                msgs.add(notification);
+            }
         }
         return msgs;
     }
@@ -418,15 +424,20 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setParameters(IndicatorParameters newParameters) {
         if (newParameters != parameters) {
             NotificationChain msgs = null;
-            if (parameters != null)
+            if (parameters != null) {
                 msgs = ((InternalEObject)parameters).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR__PARAMETERS, null, msgs);
-            if (newParameters != null)
+            }
+            if (newParameters != null) {
                 msgs = ((InternalEObject)newParameters).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR__PARAMETERS, null, msgs);
+            }
             msgs = basicSetParameters(newParameters, msgs);
-            if (msgs != null) msgs.dispatch();
+            if (msgs != null) {
+                msgs.dispatch();
+            }
         }
-        else if (eNotificationRequired())
+        else if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__PARAMETERS, newParameters, newParameters));
+        }
     }
 
     /**
@@ -439,8 +450,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             InternalEObject oldAnalyzedElement = (InternalEObject)analyzedElement;
             analyzedElement = (ModelElement)eResolveProxy(oldAnalyzedElement);
             if (analyzedElement != oldAnalyzedElement) {
-                if (eNotificationRequired())
+                if (eNotificationRequired()) {
                     eNotify(new ENotificationImpl(this, Notification.RESOLVE, IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT, oldAnalyzedElement, analyzedElement));
+                }
             }
         }
         return analyzedElement;
@@ -462,8 +474,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setAnalyzedElement(ModelElement newAnalyzedElement) {
         ModelElement oldAnalyzedElement = analyzedElement;
         analyzedElement = newAnalyzedElement;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT, oldAnalyzedElement, analyzedElement));
+        }
     }
 
     /**
@@ -493,7 +506,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public DataminingType getDataminingTypeGen() {
+    protected DataminingType getDataminingTypeGen() {
         return dataminingType;
     }
 
@@ -505,8 +518,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setDataminingType(DataminingType newDataminingType) {
         DataminingType oldDataminingType = dataminingType;
         dataminingType = newDataminingType == null ? DATAMINING_TYPE_EDEFAULT : newDataminingType;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__DATAMINING_TYPE, oldDataminingType, dataminingType));
+        }
     }
 
     /**
@@ -548,8 +562,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setIndicatorDefinition(IndicatorDefinition newIndicatorDefinition) {
         IndicatorDefinition oldIndicatorDefinition = indicatorDefinition;
         indicatorDefinition = newIndicatorDefinition;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION, oldIndicatorDefinition, indicatorDefinition));
+        }
     }
 
     /**
@@ -581,8 +596,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setComputed(boolean newComputed) {
         boolean oldComputed = computed;
         computed = newComputed;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__COMPUTED, oldComputed, computed));
+        }
     }
 
     /**
@@ -614,8 +630,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setMaxNumberRows(int newMaxNumberRows) {
         int oldMaxNumberRows = maxNumberRows;
         maxNumberRows = newMaxNumberRows;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS, oldMaxNumberRows, maxNumberRows));
+        }
     }
 
     /**
@@ -635,8 +652,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setValidRow(boolean newValidRow) {
         boolean oldValidRow = validRow;
         validRow = newValidRow;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__VALID_ROW, oldValidRow, validRow));
+        }
     }
 
     /**
@@ -656,8 +674,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setInValidRow(boolean newInValidRow) {
         boolean oldInValidRow = inValidRow;
         inValidRow = newInValidRow;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__IN_VALID_ROW, oldInValidRow, inValidRow));
+        }
     }
 
     /**
@@ -677,8 +696,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setStoreData(boolean newStoreData) {
         boolean oldStoreData = storeData;
         storeData = newStoreData;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__STORE_DATA, oldStoreData, storeData));
+        }
     }
 
     /**
@@ -700,7 +720,11 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         builtInIndicatorDefinition = newBuiltInIndicatorDefinition;
         if (eNotificationRequired()) {
             ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION, oldBuiltInIndicatorDefinition, newBuiltInIndicatorDefinition);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            if (msgs == null) {
+                msgs = notification;
+            } else {
+                msgs.add(notification);
+            }
         }
         return msgs;
     }
@@ -713,15 +737,20 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public void setBuiltInIndicatorDefinition(IndicatorDefinition newBuiltInIndicatorDefinition) {
         if (newBuiltInIndicatorDefinition != builtInIndicatorDefinition) {
             NotificationChain msgs = null;
-            if (builtInIndicatorDefinition != null)
+            if (builtInIndicatorDefinition != null) {
                 msgs = ((InternalEObject)builtInIndicatorDefinition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION, null, msgs);
-            if (newBuiltInIndicatorDefinition != null)
+            }
+            if (newBuiltInIndicatorDefinition != null) {
                 msgs = ((InternalEObject)newBuiltInIndicatorDefinition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION, null, msgs);
+            }
             msgs = basicSetBuiltInIndicatorDefinition(newBuiltInIndicatorDefinition, msgs);
-            if (msgs != null) msgs.dispatch();
+            if (msgs != null) {
+                msgs.dispatch();
+            }
         }
-        else if (eNotificationRequired())
+        else if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__BUILT_IN_INDICATOR_DEFINITION, newBuiltInIndicatorDefinition, newBuiltInIndicatorDefinition));
+        }
     }
 
     /**
@@ -1075,12 +1104,16 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             case IndicatorsPackage.INDICATOR__PARAMETERS:
                 return getParameters();
             case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
-                if (resolve) return getAnalyzedElement();
+                if (resolve) {
+                    return getAnalyzedElement();
+                }
                 return basicGetAnalyzedElement();
             case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
                 return getDataminingType();
             case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
-                if (resolve) return getIndicatorDefinition();
+                if (resolve) {
+                    return getIndicatorDefinition();
+                }
                 return basicGetIndicatorDefinition();
             case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
                 return getInstantiatedExpressions();
@@ -1279,7 +1312,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy()) {
+            return super.toString();
+        }
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (count: ");
@@ -1365,7 +1400,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @return the drillDownLimitSize
      */
-    public Long getDrillDownLimitSize() {
+    protected Long getDrillDownLimitSize() {
         Analysis analysis = AnalysisHelper.getAnalysis(this);
         if (analysis != null) {
             this.drillDownLimitSize = Long.valueOf(analysis.getParameters().getMaxNumberRows());
@@ -1379,7 +1414,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @return true is allowed else false
      */
-    public boolean checkAllowDrillDown() {
+    protected boolean checkAllowDrillDown() {
         Analysis analysis = AnalysisHelper.getAnalysis(this);
         boolean isStoreData = false;
         boolean isJavaEngine = false;
@@ -1395,7 +1430,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @param drillDownLimitSize the drillDownLimitSize to set
      */
-    public void setDrillDownLimitSize(Long drillDownLimitSize) {
+    protected void setDrillDownLimitSize(Long drillDownLimitSize) {
         this.drillDownLimitSize = drillDownLimitSize;
     }
 
@@ -1404,7 +1439,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @return the dirllDownRowCount
      */
-    public Long getDrillDownRowCount() {
+    protected Long getDrillDownRowCount() {
         return this.drillDownRowCount;
     }
 
@@ -1413,7 +1448,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @param dirllDownRowCount the dirllDownRowCount to set
      */
-    public void setDrillDownRowCount(Long drillDownRowCount) {
+    protected void setDrillDownRowCount(Long drillDownRowCount) {
         this.drillDownRowCount = drillDownRowCount;
     }
 
@@ -1421,7 +1456,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * Reset drillDownRowCount
      */
-    public void resetDrillDownRowCount() {
+    protected void resetDrillDownRowCount() {
         this.drillDownRowCount = 0l;
     }
 
