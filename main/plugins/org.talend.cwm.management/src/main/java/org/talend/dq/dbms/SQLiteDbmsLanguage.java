@@ -12,10 +12,6 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.relational.TdColumn;
@@ -123,28 +119,6 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
                 + ")) / (COUNT(*)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> ) e, <%=__TABLE_NAME__%> t " + "WHERE LENGTH("
                 + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN f AND c";
         return sql;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection, int)
-     */
-    @Override
-    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
-        Statement statement = createStatement(connection);
-        statement.setFetchSize(fetchSize);
-        return statement;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
-     */
-    @Override
-    public Statement createStatement(Connection connection) throws SQLException {
-        return connection.createStatement();
     }
 
     /*

@@ -219,7 +219,10 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      * @see org.talend.dq.dbms.DbmsLanguage#createStatementForBigdata(java.sql.Connection)
      */
     @Override
-    public Statement createStatementForBigdata(Connection connection, int fetchSize) throws SQLException {
+    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
+        // TDQ-10991,TDQ-11124 we use stream result to enhance performance on big data.
+        // comment form Mysql API "createStreamingResultSet()":We only stream result sets when they are forward-only,
+        // read-only, and the fetch size has been set to Integer.MIN_VALUE.
         Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         statement.setFetchSize(Integer.MIN_VALUE);
         return statement;

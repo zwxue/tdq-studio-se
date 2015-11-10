@@ -224,11 +224,9 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      * @see org.talend.dq.dbms.DbmsLanguage#createStatementForBigdata(java.sql.Connection)
      */
     @Override
-    public Statement createStatementForBigdata(Connection connection, int fetchSize) throws SQLException {
+    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
         // fetchSize is effective only when not auto commit mode
-        if (fetchSize != -1) {
-            connection.setAutoCommit(false);
-        }
-        return super.createStatementForBigdata(connection, fetchSize);
+        connection.setAutoCommit(false);
+        return super.createStatement(connection, fetchSize);
     }
 }

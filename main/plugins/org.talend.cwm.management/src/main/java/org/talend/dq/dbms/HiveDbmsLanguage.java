@@ -142,16 +142,6 @@ public class HiveDbmsLanguage extends DbmsLanguage {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
-     */
-    @Override
-    public Statement createStatement(java.sql.Connection connection) throws SQLException {
-        return connection.createStatement();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dq.dbms.DbmsLanguage#getQueryColumnsWithPrefix(org.talend.cwm.relational.TdColumn[])
      */
     @Override

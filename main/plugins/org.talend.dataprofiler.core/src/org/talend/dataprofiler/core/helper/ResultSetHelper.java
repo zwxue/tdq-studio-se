@@ -73,7 +73,12 @@ public class ResultSetHelper {
         }
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-        Statement createStatement = dbmsLanguage.createStatementForBigdata(sqlConn, 1000);
+        Statement createStatement = null;
+        if (maxRows != 0) {// TOPN algorithm, it has row limited,no need the fetch size.
+            createStatement = dbmsLanguage.createStatement(sqlConn);
+        } else {// Resevoir Sample algorithm
+            createStatement = dbmsLanguage.createStatement(sqlConn, 1000);
+        }
         createStatement.setMaxRows(maxRows);
 
         Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(metadataTable, whereExpression);
