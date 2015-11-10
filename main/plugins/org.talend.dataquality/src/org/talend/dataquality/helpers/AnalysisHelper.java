@@ -141,19 +141,31 @@ public final class AnalysisHelper {
     }
 
     /**
-     * Current analysis whether is java engin
+     * Current analysis whether is java engine
      * 
      * @param analysis the analysis
      * @return true if is java engin else false
      */
     public static boolean isJavaExecutionEngine(Analysis analysis) {
         AnalysisParameters parameters = analysis.getParameters();
-
         if (parameters == null) {
             return false;
         }
-        ExecutionLanguage executionLanguage = parameters.getExecutionLanguage();
-        return ExecutionLanguage.JAVA == executionLanguage;
+        return ExecutionLanguage.JAVA == parameters.getExecutionLanguage();
+    }
+
+    /**
+     * Current analysis whether is store data
+     * 
+     * @param analysis
+     * @return
+     */
+    public static boolean isStoreData(Analysis analysis) {
+        AnalysisParameters parameters = analysis.getParameters();
+        if (parameters == null) {
+            return false;
+        }
+        return parameters.isStoreData();
     }
 
     /**

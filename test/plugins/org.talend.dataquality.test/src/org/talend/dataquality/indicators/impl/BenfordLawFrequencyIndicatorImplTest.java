@@ -26,6 +26,7 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.ResourceUtils;
 import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 
@@ -46,6 +47,7 @@ public class BenfordLawFrequencyIndicatorImplTest {
     @Before
     public void setUp() throws Exception {
         benIndicator = IndicatorsFactory.eINSTANCE.createBenfordLawFrequencyIndicator();
+        ResourceUtils.createAnalysis(benIndicator);
 
         values = new ArrayList<Object[]>();
         values.add(new Object[] { "1", 30L });

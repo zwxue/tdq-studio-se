@@ -121,7 +121,8 @@ public final class ResourceManager {
             return getRootFolderLocation();
         } else {
             String talendProjctPathFromReportApplication = System.getProperty("talend.project.path");//$NON-NLS-1$
-            return new Path(talendProjctPathFromReportApplication).removeLastSegments(1);
+            return talendProjctPathFromReportApplication == null ? new Path("") : new Path(talendProjctPathFromReportApplication)
+                    .removeLastSegments(1);
         }
     }
 

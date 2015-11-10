@@ -1382,10 +1382,11 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     public boolean checkAllowDrillDown() {
         Analysis analysis = AnalysisHelper.getAnalysis(this);
         boolean isStoreData = false;
+        boolean isJavaEngine = false;
         if (analysis != null) {
-            isStoreData = analysis.getParameters().isStoreData();
+            isStoreData = AnalysisHelper.isStoreData(analysis);
+            isJavaEngine = AnalysisHelper.isJavaExecutionEngine(analysis);
         }
-        boolean isJavaEngine = AnalysisHelper.isJavaExecutionEngine(analysis);
         return isStoreData && isJavaEngine;
     }
 
