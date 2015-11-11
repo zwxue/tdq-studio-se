@@ -53,9 +53,9 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.analysis.BusinessRuleAnalysisResultPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisResultPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.DynamicAnalysisMasterPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.BusinessRuleAnalysisResultPage;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.service.ISemanticStudioService;
@@ -203,9 +203,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 @Override
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
-                    monitor.beginTask(
-                            DefaultMessagesImpl.getString("RunAnalysisAction.running", item.getAnalysis().getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ 
-
+                    monitor.beginTask(DefaultMessagesImpl.getString("RunAnalysisAction.running", item.getAnalysis().getName()), 5); //$NON-NLS-1$ 
                     Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
@@ -235,7 +233,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             return Status.CANCEL_STATUS;
                         }
 
-                        monitor.done();
                         if (isNeedUnlock) {
                             unlockAnalysis();
                         }
@@ -265,6 +262,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     displayResultStatus(executed);
                     // TODO move this code to the right place
                     addAnalysisToRef(item.getAnalysis());
+                    monitor.done();
                     return Status.OK_STATUS;
                 }
 

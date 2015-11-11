@@ -59,8 +59,6 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
 
     private static Logger log = Logger.getLogger(MatchAnalysisExecutor.class);
 
-    private IProgressMonitor monitor;
-
     private long usedMemory;
 
     private volatile boolean isLowMemory = false;
@@ -76,7 +74,6 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
      */
     public ReturnCode execute(Analysis analysis) {
         assert analysis != null;
-
         // --- preconditions
         ReturnCode rc = AnalysisExecutorHelper.check(analysis);
         if (!rc.isOk()) {
@@ -127,7 +124,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             rc.setOk(Boolean.FALSE);
             return rc;
         }
-        monitor.worked(20);
+        getMonitor().worked(1);
 
         // Set schema for match key.
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>();
@@ -190,9 +187,8 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             rc.setOk(returnCode.isOk());
             rc.setMessage(returnCode.getMessage());
         }
+        getMonitor().worked(1);
 
-        monitor.worked(100);
-        monitor.done();
         // --- set metadata information of analysis
         AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, rc.isOk());
 
@@ -211,7 +207,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             resultMetadata.setExecutionDuration((int) (endtime - startime));
             resultMetadata.setOutThreshold(false);
         }
-
+        getMonitor().worked(1);
         return rc;
     }
 
@@ -297,7 +293,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             return true;
         }
 
-        if (monitor != null && monitor.isCanceled()) {
+        if (getMonitor() != null && getMonitor().isCanceled()) {
             keepRunning = false;
         } else if (this.isLowMemory) {
             keepRunning = false;
@@ -308,12 +304,19 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             keepRunning = false;
         }
         return keepRunning;
-    } /*
-       * (non-Javadoc)
-       * 
-       * @see org.talend.dq.analysis.IAnalysisExecutor#setMonitor(org.eclipse.core.runtime.IProgressMonitor)
-       */
+    }
 
+    private IProgressMonitor monitor;
+
+    public IProgressMonitor getMonitor() {
+        return monitor;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.IAnalysisExecutor#setMonitor(org.eclipse.core.runtime.IProgressMonitor)
+     */
     public void setMonitor(IProgressMonitor monitor) {
         this.monitor = monitor;
     }

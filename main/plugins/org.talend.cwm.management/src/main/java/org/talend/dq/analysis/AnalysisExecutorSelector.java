@@ -140,7 +140,7 @@ public final class AnalysisExecutorSelector {
         return executeAnalysis(analysis, null);
     }
 
-    public static ReturnCode executeAnalysis(final TDQAnalysisItem analysisItem, IProgressMonitor monitor) {
+    public static ReturnCode executeAnalysis(final TDQAnalysisItem analysisItem, final IProgressMonitor monitor) {
 
         IAnalysisExecutor analysisExecutor = getAnalysisExecutor(analysisItem.getAnalysis());
         if (analysisExecutor != null) {
@@ -155,6 +155,7 @@ public final class AnalysisExecutorSelector {
                     public void run() {
                         AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
                         writer.save(analysisItem, Boolean.FALSE);
+                        monitor.worked(1);
                     }
                 });
             }

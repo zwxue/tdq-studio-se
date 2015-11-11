@@ -98,11 +98,11 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @see org.talend.dq.analysis.IAnalysisExecutor#execute(org.talend.dataquality.analysis.Analysis)
      */
     public ReturnCode execute(final Analysis analysis) {
+        assert analysis != null;
         // --- preconditions
         if (!check(analysis)) {
             return getReturnCode(false);
         }
-        assert analysis != null;
 
         // --- creation time
         final long startime = AnalysisExecutorHelper.setExecutionDateInAnalysisResult(analysis);
@@ -110,11 +110,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // MOD qiongli 2012-3-14 TDQ-4433,if import from low vesion and not import SystemIdicator,should initionlize
         // these indicator.
         initializeIndicators(analysis);
-
         // --- create SQL statement
-        if (this.getMonitor() != null) {
-            this.getMonitor().setTaskName(Messages.getString("AnalysisExecutor.CreateSQLStatements")); //$NON-NLS-1$
-        }
         String sql = createSqlStatement(analysis);
         if (sql == null) {
             return getReturnCode(false);
@@ -128,6 +124,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             }
         }
         // ~
+        getMonitor().worked(1);
 
         // --- run analysis
         boolean ok = false;
@@ -139,6 +136,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
                 }
                 ok = runAnalysis(analysis, sql);
             }
+
         } catch (Exception e) {
             ok = false;
             log.error(e, e);
@@ -151,6 +149,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
                 MapDBManager.getInstance().closeDB(analysis);
             }
         }
+        getMonitor().worked(1);
 
         // --- set metadata information of analysis
         // MOD TDQ-8374 when the setExecutionNumberInAnalysisResult return message is null, should not make the null
@@ -177,6 +176,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
                 }
             }// ~
         }
+        getMonitor().worked(1);
         return new ReturnCode(this.errorMessage.toString(), ok);
     }
 
