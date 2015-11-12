@@ -75,12 +75,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         this.getWindowConfigurer().getWindow().getShell().setMaximized(true);
         super.postWindowOpen();
         ChangePerspectiveAction.getAction().switchTitle();
-        ITDQRepositoryService tdqRepositoryService = (ITDQRepositoryService) org.talend.core.GlobalServiceRegister.getDefault()
-                .getService(ITDQRepositoryService.class);
-        if (tdqRepositoryService != null) {
-            tdqRepositoryService.addPartListener();
-            tdqRepositoryService.addSoftwareSystemUpdateListener();
-        }
+       
 
         IWorkbenchWindowConfigurer workbenchWindowConfigurer = getWindowConfigurer();
 
@@ -108,14 +103,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 menuManager.remove(menuItem);
             }
         }
-        // max the cheat sheet at first time
-        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        if (activePage != null && CheatSheetUtils.getInstance().isFirstTime()
-                && activePage.getPerspective().getId().equals(ProductUtils.PERSPECTIVE_DQ_ID)) {
-            if (!(activePage.getActivePart() instanceof org.eclipse.ui.internal.ViewIntroAdapterPart)) {
-                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet("org.talend.dataprofiler.core.talenddataprofiler"); //$NON-NLS-1$
-            }
-
+        ITDQRepositoryService tdqRepositoryService = (ITDQRepositoryService) org.talend.core.GlobalServiceRegister.getDefault()
+                .getService(ITDQRepositoryService.class);
+        if (tdqRepositoryService != null) {
+            tdqRepositoryService.addPartListener();
+            tdqRepositoryService.addSoftwareSystemUpdateListener();
         }
 
     }
