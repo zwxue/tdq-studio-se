@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
@@ -49,8 +47,7 @@ public class FileSamplingDataSourceTest {
 
     @Test
     public void testGetRecord() throws Exception {
-        List<String> columnNames = new ArrayList<String>();
-        fileDataSource = new FileSamplingDataSource(columnNames);
+        fileDataSource = new FileSamplingDataSource();
         DelimitedFileConnection createDelimitedFileConnection = ConnectionFactory.eINSTANCE.createDelimitedFileConnection();
         fileDataSource.setDataSource(createDelimitedFileConnection);
         // CSVReader csvReader = createCsvReader(new File(getClass().getClassLoader()

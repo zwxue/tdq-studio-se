@@ -14,7 +14,6 @@ package org.talend.cwm.db.connection.datasource;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -47,12 +46,6 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
     private String escapeChar = "\\"; //$NON-NLS-1$
 
     private Map<Integer, String> columnIndexMap = null;
-
-    private List<String> oldFullColumns = null;
-
-    public FileSamplingDataSource(List<String> columnNames) {
-        oldFullColumns = columnNames;
-    }
 
     /*
      * (non-Javadoc)
@@ -126,9 +119,14 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
         Object[] oneRow = new Object[columnSize];
 
         // --- for each column
-        for (int i = 0; i < columnSize; i++) {
-            // --- get content of column
-            oneRow[i] = csvReader.get(oldFullColumns.indexOf(columnIndexMap.get(i)));
+        try {
+            for (int i = 0; i < columnSize; i++) {
+                // --- get content of column
+                String headerName = columnIndexMap.get(i);
+                oneRow[i] = csvReader.get(headerName);
+            }
+        } catch (IOException e) {
+            log.error(e, e);
         }
         return oneRow;
     }
