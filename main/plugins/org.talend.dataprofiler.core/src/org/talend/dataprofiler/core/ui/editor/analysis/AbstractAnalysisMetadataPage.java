@@ -455,7 +455,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * This method will make connection elem become proxy, look out for use it.
      */
     public void reloadDataproviderAndFillConnCombo() {
-        List<IRepositoryNode> connsWithoutDeletion = RepositoryNodeHelper.getConnectionRepositoryNodes(false);
+        List<IRepositoryNode> connsWithoutDeletion = getConnectionsWithoutDeleted();
 
         if (connsWithoutDeletion.size() == 0 && !RepositoryNodeHelper.isOpenDQCommonViewer()) {
             return;
@@ -491,6 +491,15 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
 
         setSampleDataShowWayStatus();
+    }
+
+    /**
+     * DOC msjian Comment method "getConnectionsWithoutDeleted".
+     * 
+     * @return
+     */
+    protected List<IRepositoryNode> getConnectionsWithoutDeleted() {
+        return RepositoryNodeHelper.getConnectionRepositoryNodes(false, true);
     }
 
     /**

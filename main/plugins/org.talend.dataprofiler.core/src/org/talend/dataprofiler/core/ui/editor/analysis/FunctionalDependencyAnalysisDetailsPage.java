@@ -52,6 +52,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -377,6 +378,16 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
                 anaColumnCompareViewer.setDirty(false);
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getConnectionsWithoutDeleted()
+     */
+    @Override
+    protected List<IRepositoryNode> getConnectionsWithoutDeleted() {
+        return RepositoryNodeHelper.getConnectionRepositoryNodes(false, false);
     }
 
 }

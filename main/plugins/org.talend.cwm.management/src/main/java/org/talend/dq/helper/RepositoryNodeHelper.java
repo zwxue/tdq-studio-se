@@ -1998,18 +1998,20 @@ public final class RepositoryNodeHelper {
      * from the reference projects).
      * 
      * @param withDeleted
+     * @param isContainFileConnections, if true, will contain the file connections
      * @return
      */
-    public static List<IRepositoryNode> getConnectionRepositoryNodes(boolean withDeleted) {
+    public static List<IRepositoryNode> getConnectionRepositoryNodes(boolean withDeleted, boolean isContainFileConnections) {
         List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
 
         if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
             RepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
-
             if (node != null) {
                 List<IRepositoryNode> childrens = node.getChildren(withDeleted);
                 for (IRepositoryNode subNode : childrens) {
-                    if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
+                    if (subNode instanceof DBConnectionFolderRepNode) {
+                        connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
+                    } else if (subNode instanceof DFConnectionFolderRepNode && isContainFileConnections) {
                         connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
                     }
                 }
@@ -2022,7 +2024,9 @@ public final class RepositoryNodeHelper {
                 if (node != null) {
                     List<IRepositoryNode> childrens = node.getChildren(withDeleted);
                     for (IRepositoryNode subNode : childrens) {
-                        if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
+                        if (subNode instanceof DBConnectionFolderRepNode) {
+                            connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
+                        } else if (subNode instanceof DFConnectionFolderRepNode && isContainFileConnections) {
                             connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
                         }
                     }
