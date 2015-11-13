@@ -22,7 +22,7 @@ import org.talend.commons.utils.io.FilesUtils;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class DQFolderFliter extends ViewerFilter {
+public class DQFolderFilter extends ViewerFilter {
 
     private static final String XSD_FOLDER_NAME = ".xsd";//$NON-NLS-1$ 
 
@@ -30,11 +30,11 @@ public class DQFolderFliter extends ViewerFilter {
 
     private boolean isShowFile;
 
-    public DQFolderFliter() {
+    public DQFolderFilter() {
         this(false);
     }
 
-    public DQFolderFliter(boolean isShowFile) {
+    public DQFolderFilter(boolean isShowFile) {
         this.isShowFile = isShowFile;
     }
 

@@ -40,7 +40,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFilter;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dq.analysis.parameters.SqlFileParameter;
@@ -166,7 +166,7 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
         dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
         dialog.setInput(inputFolder);
-        dialog.addFilter(new DQFolderFliter());
+        dialog.addFilter(new DQFolderFilter());
         dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
         if (dialog.open() == Window.OK) {

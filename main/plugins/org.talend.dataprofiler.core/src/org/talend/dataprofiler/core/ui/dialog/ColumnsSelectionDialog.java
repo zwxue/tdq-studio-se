@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFilter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.HadoopCLusterFolderNodeFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
@@ -92,7 +92,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         modelElementCheckedMap = new MultiValueMap();
         initCheckedElements(checkedRepoNodes);
         addFilter(new EMFObjFilter());
-        addFilter(new DQFolderFliter(true));
+        addFilter(new DQFolderFilter(true));
         addFilter(new TDQEEConnectionFolderFilter());
         // ADD msjian TDQ-10441: hide the hadoop cluster folder node
         addFilter(new HadoopCLusterFolderNodeFilter());

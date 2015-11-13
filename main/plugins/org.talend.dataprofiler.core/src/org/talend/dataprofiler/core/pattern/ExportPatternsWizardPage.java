@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFilter;
 import org.talend.dataprofiler.core.ui.utils.DQCheckedTreeViewer;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
@@ -170,7 +170,7 @@ public class ExportPatternsWizardPage extends WizardPage {
         group.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         selectedPatternsTree = new DQCheckedTreeViewer(group);
-        selectedPatternsTree.addFilter(new DQFolderFliter(true));
+        selectedPatternsTree.addFilter(new DQFolderFilter(true));
         selectedPatternsTree.setInput(this.node);
         selectedPatternsTree.setWizardPage(this);
 

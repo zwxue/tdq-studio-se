@@ -42,7 +42,7 @@ import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFilter;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.model.bridge.ReponsitoryContextBridge;
 import orgomg.cwm.objectmodel.core.CorePackage;
@@ -235,7 +235,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
         dialog.setInput(inputFolder);
-        dialog.addFilter(new DQFolderFliter());
+        dialog.addFilter(new DQFolderFilter());
 
         if (dialog.open() == Window.OK) {
             if (dialog.getResult() == null || dialog.getResult().length == 0) {
