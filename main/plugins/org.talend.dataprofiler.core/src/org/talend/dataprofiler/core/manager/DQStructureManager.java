@@ -454,8 +454,8 @@ public final class DQStructureManager {
                     IFile file = elementFile.getParent().getFile(new Path(propFileName));
                     if (file == null || !file.exists()) {
                         writer.create(modelElement, folder, isImportItem);
-                        elementFile.delete(true, null);
                     }
+                    elementFile.delete(true, null);
                 }
             }
         }
