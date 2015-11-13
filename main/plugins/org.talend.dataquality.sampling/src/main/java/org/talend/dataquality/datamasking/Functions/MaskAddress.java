@@ -13,14 +13,11 @@
 package org.talend.dataquality.datamasking.Functions;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
-import org.talend.dataquality.datamasking.Function;
 import org.talend.dataquality.duplicating.RandomWrapper;
 
 /**
@@ -28,7 +25,7 @@ import org.talend.dataquality.duplicating.RandomWrapper;
  * Moreover, there is a list of key words that won’t be transformed.
  *
  */
-public class MaskAddress extends Function<String> implements Serializable {
+public class MaskAddress extends GenerateFromFile<String> implements Serializable {
 
     private static final long serialVersionUID = -4661073390672757141L;
 
@@ -47,13 +44,8 @@ public class MaskAddress extends Function<String> implements Serializable {
 
     private void addKeys(String[] para) {
         if (para.length > 0) {
-            Scanner in;
             try {
-                in = new Scanner(new FileReader(para[0]));
-                while (in.hasNext()) {
-                    keys.add(in.next().trim());
-                }
-                in.close();
+                keys = KeysLoader.loadKeys(para[0], tokenDelimiter);
             } catch (FileNotFoundException | NullPointerException e) {
                 for (String element : para) {
                     keys.add(element);
