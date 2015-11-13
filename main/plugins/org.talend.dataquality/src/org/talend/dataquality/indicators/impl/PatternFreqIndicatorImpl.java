@@ -72,17 +72,23 @@ public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         final TextParameters textParameter = this.getParameters() == null ? null : this.getParameters().getTextParameter();
         // ~
         if (textParameter != null) {
-            hasBeanCustomized = true;
+
             // TDQ-10044: fix when the user didn't set the replace and charactersToReplace, use the default value(only
             // for jave engine)
             String replacementCharacters = textParameter.getReplacementCharacters();
             if (!StringUtils.isBlank(replacementCharacters)) {
                 this.replacementChars = replacementCharacters;
+                hasBeanCustomized = true;
+            } else {
+                replacementChars = REPLACEMENT_CHARS;
+                hasBeanCustomized = false;
             }
 
             String charactersToReplace = textParameter.getCharactersToReplace();
             if (!StringUtils.isBlank(charactersToReplace)) {
                 this.charsToReplace = charactersToReplace;
+            } else {
+                charsToReplace = CHARS_TO_REPLACE;
             }
             // TDQ-10044~
 

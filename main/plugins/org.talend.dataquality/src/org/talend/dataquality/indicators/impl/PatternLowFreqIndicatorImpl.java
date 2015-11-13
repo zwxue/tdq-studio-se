@@ -54,17 +54,23 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
         final TextParameters textParameter = this.getParameters() == null ? null : this.getParameters().getTextParameter();
         // ~
         if (textParameter != null) {
-            hasBeanCustomized = true;
+
             // TDQ-10044: fix when the user didn't set the replace and charactersToReplace, use the default value(only
             // for jave engine)
             String replacementCharacters = textParameter.getReplacementCharacters();
             if (!StringUtils.isBlank(replacementCharacters)) {
                 this.replacementChars = replacementCharacters;
+                hasBeanCustomized = true;
+            } else {
+                replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
+                hasBeanCustomized = false;
             }
 
             String charactersToReplace = textParameter.getCharactersToReplace();
             if (!StringUtils.isBlank(charactersToReplace)) {
                 this.charsToReplace = charactersToReplace;
+            } else {
+                charsToReplace = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             }
             // TDQ-10044~
 
