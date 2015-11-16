@@ -33,16 +33,13 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableCursor;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -151,12 +148,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.KEYS) },
             { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.INDEXES),
                     new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.INDEXES) } };
-
-    private static final int TABLE_COLUMN_INDEX = 0;
-
-    private static final int VIEW_COLUMN_INDEX = 2;
-
-    private static final int VIEW_COLUMN_INDEXES = 3;
 
     private static final int COLUMN_TABLE_WIDTH = 100;
 
@@ -899,7 +890,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         List<OverviewIndUIElement> tableElements = wapperInput(indicatorTableList, parentNode);
         if (tableOfCatalogOrSchemaViewer == null) {
             tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
-                    | SWT.SINGLE);
+                    | SWT.FULL_SELECTION); // SWT.SINGLE);
             final Table catalogOrSchemaTable = tableOfCatalogOrSchemaViewer.getTable();
             catalogOrSchemaTable.setHeaderVisible(true);
             catalogOrSchemaTable.setLinesVisible(true);
@@ -913,85 +904,58 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             tableOfCatalogOrSchemaViewer.setLabelProvider(providerTable);
             tableOfCatalogOrSchemaViewer.setContentProvider(providerTable);
 
-            final TableCursor cursor = new TableCursor(catalogOrSchemaTable, SWT.NONE);
-            cursor.setBackground(catalogOrSchemaTable.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION));
-            cursor.setForeground(catalogOrSchemaTable.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
-            cursor.setLayout(new FillLayout());
-            // cursor.setVisible(true);
-            final Menu menu = new Menu(catalogOrSchemaTable);
-            MenuItem keyitem = new MenuItem(menu, SWT.PUSH);
-            keyitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewKeys")); //$NON-NLS-1$
-            keyitem.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
-
-            final Menu menu1 = new Menu(catalogOrSchemaTable);
-            MenuItem indexitem = new MenuItem(menu1, SWT.PUSH);
-            indexitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewIndexes")); //$NON-NLS-1$
-            indexitem.setImage(ImageLib.getImage(ImageLib.INDEX_VIEW));
-
-            final Menu menu2 = new Menu(catalogOrSchemaTable);
-            MenuItem tableAnalysisitem = new MenuItem(menu2, SWT.PUSH);
-            tableAnalysisitem.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
-            tableAnalysisitem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
-
-            keyitem.addSelectionListener(new SelectionAdapter() {
+            catalogOrSchemaTable.addMouseListener(new MouseAdapter() {
 
                 @Override
-                public void widgetSelected(SelectionEvent e) {
-                    runMenu(cursor, DefaultMessagesImpl.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
-                }
+                public void mouseDown(MouseEvent e) {
+                    if (e.button == 3) {
+                        final Menu menu = new Menu(catalogOrSchemaTable.getShell(), SWT.POP_UP);
+                        catalogOrSchemaTable.setMenu(menu);
 
-            });
+                        MenuItem viewKeyMenuItem = new MenuItem(menu, SWT.PUSH);
+                        viewKeyMenuItem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewKeys")); //$NON-NLS-1$
+                        viewKeyMenuItem.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
+                        viewKeyMenuItem.addSelectionListener(new SelectionAdapter() {
 
-            indexitem.addSelectionListener(new SelectionAdapter() {
+                            @Override
+                            public void widgetSelected(SelectionEvent e) {
+                                runMenu(catalogOrSchemaTable, DefaultMessagesImpl.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
+                            }
 
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    runMenu(cursor, DefaultMessagesImpl.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
-                }
+                        });
 
-            });
+                        MenuItem viewIndexMenuItem = new MenuItem(menu, SWT.PUSH);
+                        viewIndexMenuItem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewIndexes")); //$NON-NLS-1$
+                        viewIndexMenuItem.setImage(ImageLib.getImage(ImageLib.INDEX_VIEW));
+                        viewIndexMenuItem.addSelectionListener(new SelectionAdapter() {
 
-            tableAnalysisitem.addSelectionListener(new SelectionAdapter() {
+                            @Override
+                            public void widgetSelected(SelectionEvent e) {
+                                runMenu(catalogOrSchemaTable, DefaultMessagesImpl.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
+                            }
 
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    TableItem tableItem = cursor.getRow();
-                    OverviewIndUIElement data = (OverviewIndUIElement) tableItem.getData();
-                    runTableAnalysis(data);
-                }
+                        });
 
-            });
+                        MenuItem tableAnalysisMenuItem = new MenuItem(menu, SWT.PUSH);
+                        tableAnalysisMenuItem.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
+                        tableAnalysisMenuItem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
+                        tableAnalysisMenuItem.addSelectionListener(new SelectionAdapter() {
 
-            cursor.addMenuDetectListener(new MenuDetectListener() {
+                            @Override
+                            public void widgetSelected(SelectionEvent e) {
+                                TableItem tableItem = catalogOrSchemaTable.getItem(catalogOrSchemaTable.getSelectionIndex());
+                                OverviewIndUIElement data = (OverviewIndUIElement) tableItem.getData();
+                                runTableAnalysis(data);
+                            }
 
-                public void menuDetected(MenuDetectEvent e) {
-                    boolean isHive = false;
-                    if (tdDataProvider instanceof DatabaseConnection) {
-                        isHive = ConnectionHelper.isHive(tdDataProvider);
-                    }
-                    int column = cursor.getColumn();
-                    if (column == TABLE_COLUMN_INDEX) {
-                        cursor.setMenu(menu2);
-                        menu2.setVisible(true);
-                    } else if (column == VIEW_COLUMN_INDEXES) {
-                        if (!isHive) {
-                            cursor.setMenu(menu1);
-                            menu1.setVisible(true);
-                        }
-                    } else if (column == VIEW_COLUMN_INDEX) {
-                        if (!isHive) {
-                            cursor.setMenu(menu);
-                            menu.setVisible(true);
-                        }
-                    } else {
-                        cursor.setMenu(null);
+                        });
                     }
                 }
             });
 
             viewOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
                     | SWT.FULL_SELECTION);
-            Table tableCatalogOrSchemaView = viewOfCatalogOrSchemaViewer.getTable();
+            final Table tableCatalogOrSchemaView = viewOfCatalogOrSchemaViewer.getTable();
             tableCatalogOrSchemaView.setHeaderVisible(true);
             tableCatalogOrSchemaView.setLinesVisible(true);
             layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -1005,38 +969,30 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             viewOfCatalogOrSchemaViewer.setContentProvider(viewProvider);
 
             // ADD msjian TDQ-4523 2013-1-22: Add "Table analysis" menu on the views
-            final Menu menuForView = new Menu(tableCatalogOrSchemaView);
-            MenuItem tableAnalysisitemForView = new MenuItem(menuForView, SWT.PUSH);
-            tableAnalysisitemForView.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
-            tableAnalysisitemForView.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
-
-            final TableCursor cursorForView = new TableCursor(tableCatalogOrSchemaView, SWT.NONE);
-            cursorForView.setBackground(tableCatalogOrSchemaView.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION));
-            cursorForView.setForeground(tableCatalogOrSchemaView.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
-            cursorForView.setLayout(new FillLayout());
-
-            cursorForView.addMenuDetectListener(new MenuDetectListener() {
-
-                public void menuDetected(MenuDetectEvent e) {
-                    int column = cursorForView.getColumn();
-                    if (column == TABLE_COLUMN_INDEX) {
-                        cursorForView.setMenu(menuForView);
-                        menuForView.setVisible(true);
-                    } else {
-                        cursorForView.setMenu(null);
-                    }
-                }
-            });
-
-            tableAnalysisitemForView.addSelectionListener(new SelectionAdapter() {
+            tableCatalogOrSchemaView.addMouseListener(new MouseAdapter() {
 
                 @Override
-                public void widgetSelected(SelectionEvent e) {
-                    TableItem tableItem = cursorForView.getRow();
-                    ViewIndicator viewIndicator = (ViewIndicator) tableItem.getData();
-                    runTableAnalysis(viewIndicator.getTableName());
-                }
+                public void mouseDown(MouseEvent e) {
+                    if (e.button == 3) {
+                        final Menu menu = new Menu(tableCatalogOrSchemaView.getShell(), SWT.POP_UP);
+                        tableCatalogOrSchemaView.setMenu(menu);
 
+                        MenuItem tableAnalysisMenuItem = new MenuItem(menu, SWT.PUSH);
+                        tableAnalysisMenuItem.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
+                        tableAnalysisMenuItem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
+                        tableAnalysisMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                            @Override
+                            public void widgetSelected(SelectionEvent e) {
+                                TableItem tableItem = tableCatalogOrSchemaView.getItem(tableCatalogOrSchemaView
+                                        .getSelectionIndex());
+                                ViewIndicator viewIndicator = (ViewIndicator) tableItem.getData();
+                                runTableAnalysis(viewIndicator.getTableName());
+                            }
+
+                        });
+                    }
+                }
             });
             // TDQ-4523~
         }
@@ -1060,8 +1016,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * @param cursor
      * @param message
      */
-    private void runMenu(final TableCursor cursor, String message) {
-        TableItem tableItem = cursor.getRow();
+    private void runMenu(final Table catalogOrSchemaTable, String message) {
+        TableItem tableItem = catalogOrSchemaTable.getItem(catalogOrSchemaTable.getSelectionIndex());
         String tableName = tableItem.getText(0);
         Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
         // MOD qiongli bug 13093,2010-7-2
