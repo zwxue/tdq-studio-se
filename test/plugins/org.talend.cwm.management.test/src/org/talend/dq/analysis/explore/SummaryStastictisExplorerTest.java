@@ -12,10 +12,9 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -29,6 +28,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -66,7 +66,8 @@ public class SummaryStastictisExplorerTest {
         when(mockDbLanguage.like()).thenReturn(" like ");
         when(mockDbLanguage.getDbmsName()).thenReturn("Teradata");
         when(mockDbLanguage.quote("INTERVAL_MONTH")).thenReturn("\"INTERVAL_MONTH\"");
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(mockDbLanguage);
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(
+                mockDbLanguage);
         SumIndicator indicator = mock(SumIndicator.class);
         when(indicator.eClass()).thenReturn(null);
         when(indicator.getAnalyzedElement()).thenReturn(column);

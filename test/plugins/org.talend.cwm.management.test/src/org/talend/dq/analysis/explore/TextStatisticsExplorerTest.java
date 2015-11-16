@@ -72,7 +72,7 @@ public class TextStatisticsExplorerTest {
         when(context.getConnection()).thenReturn(dataManager);
         HiveDbmsLanguage hiveDBMS = mock(HiveDbmsLanguage.class);
 
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(hiveDBMS);//$NON-NLS-1$ 
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(hiveDBMS);//$NON-NLS-1$ 
 
         AverageLengthIndicator averageLengthIndicator = IndicatorsFactory.eINSTANCE.createAverageLengthIndicator();
         ChartDataEntity chartDataEntity = new ChartDataEntity(averageLengthIndicator, "", ""); //$NON-NLS-1$  //$NON-NLS-2$

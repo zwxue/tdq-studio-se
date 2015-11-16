@@ -12,13 +12,10 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +28,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -82,7 +80,7 @@ public class AbstractSchemaEvaluatorTest {
 
         DbmsLanguage mysqlDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MYSQLDEFAULTURL.getLanguage(),
                 dbVersion);
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(mysqlDbmsLanguage); //$NON-NLS-1$
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(mysqlDbmsLanguage); //$NON-NLS-1$
 
         String catalogNameWithQuote = catalogEvaluator.getCatalogNameWithQuote(schemarIndicator);
         assertNotNull(catalogNameWithQuote);
@@ -99,7 +97,7 @@ public class AbstractSchemaEvaluatorTest {
         when(schemarIndicator.getAnalyzedElement()).thenReturn(schema);
         DbmsLanguage mysqlDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(
                 SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage(), dbVersion);
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(mysqlDbmsLanguage); //$NON-NLS-1$
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(mysqlDbmsLanguage); //$NON-NLS-1$
 
         String catalogNameWithQuote = schemaEvaluate.getCatalogNameWithQuote(schemarIndicator);
         assertNull(catalogNameWithQuote);
@@ -116,7 +114,7 @@ public class AbstractSchemaEvaluatorTest {
         when(schemarIndicator.getAnalyzedElement()).thenReturn(schema);
         DbmsLanguage mysqlDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL.getLanguage(),
                 dbVersion);
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(mysqlDbmsLanguage); //$NON-NLS-1$
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(mysqlDbmsLanguage); //$NON-NLS-1$
 
         String catalogNameWithQuote = schemaEvaluator.getCatalogNameWithQuote(schemarIndicator);
         assertNotNull(catalogNameWithQuote);

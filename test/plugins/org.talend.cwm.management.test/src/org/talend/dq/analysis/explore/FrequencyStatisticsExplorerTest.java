@@ -12,13 +12,10 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.sql.Types;
 
@@ -73,7 +70,7 @@ public class FrequencyStatisticsExplorerTest {
     @Before
     public void setUp() throws Exception {
         DataExplorerTestHelper.initDataExplorer();
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(mockDbLanguage); //$NON-NLS-1$
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(mockDbLanguage); //$NON-NLS-1$
     }
 
     /**

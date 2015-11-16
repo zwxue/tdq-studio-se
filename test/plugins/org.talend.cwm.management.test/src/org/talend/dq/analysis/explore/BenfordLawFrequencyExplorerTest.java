@@ -12,11 +12,10 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -28,6 +27,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -62,7 +62,8 @@ public class BenfordLawFrequencyExplorerTest {
 
         mockDbLanguage = mock(DbmsLanguage.class);
         when(mockDbLanguage.like()).thenReturn(" like ");
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(mockDbLanguage);
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(
+                mockDbLanguage);
 
         benfordIndicator = mock(BenfordLawFrequencyIndicator.class);
         when(benfordIndicator.eClass()).thenReturn(null);

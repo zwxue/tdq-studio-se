@@ -103,7 +103,7 @@ public class SimpleStatisticsExplorerTest {
         when(dbmsLanguage.where()).thenReturn(" WHERE "); //$NON-NLS-1$
         when(dbmsLanguage.and()).thenReturn(" AND "); //$NON-NLS-1$
         when(dbmsLanguage.quote(anyString())).thenReturn("CAL_DATE"); //$NON-NLS-1$
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(dbmsLanguage);//$NON-NLS-1$ 
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(dbmsLanguage);//$NON-NLS-1$ 
 
         // create user define indicator
         UserDefIndicator userDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();

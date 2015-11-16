@@ -24,6 +24,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -55,7 +56,8 @@ public class DataExplorerTestHelper {
         when(indicator.eClass()).thenReturn(null);
 
         // MOCKING STATIC METHODS
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(dbmsLanguage);
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(
+                dbmsLanguage);
 
         return analysis;
     }
