@@ -94,10 +94,11 @@ public class AnalysisColumnTreeViewerTest {
 
         Object[] result = filterInputData_after(params);
         assertNotNull(result);
-        assertEquals(result.length, 2);
+        assertEquals(result.length, 1);
 
     }
 
+    // Due to TDQ-9553 : not consider MDM related any more.
     Object[] filterInputData_after(Object[] objs) {
         List<IRepositoryNode> reposList = new ArrayList<IRepositoryNode>();
         for (Object obj : objs) {
