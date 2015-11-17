@@ -146,7 +146,7 @@ public class TypeInferenceUtils {
                 return false;
             }
             // 2. Check it by list of patterns
-            return DatetimePatternUtils.getInstance().isDate(value);
+            return DatetimePatternManager.getInstance().isDate(value);
         }
         return false;
     }
@@ -164,7 +164,7 @@ public class TypeInferenceUtils {
                 return false;
             }
             // 2. Check it by list of patterns
-            return DatetimePatternUtils.getInstance().isTime(value);
+            return DatetimePatternManager.getInstance().isTime(value);
         }
         return false;
     }
