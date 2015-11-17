@@ -397,7 +397,7 @@ public class MatchRuleDataTable extends Composite {
         @Override
         public org.eclipse.swt.graphics.Color getBackground(Object element, int columnIndex) {
             int grpSizeValue = getGrpSize(((String[]) element)[gidColumn]);
-            return COLOR_LIST[groupSizeList.indexOf(grpSizeValue) % COLOR_LIST.length];
+            return COLOR_LIST[grpSizeValue % COLOR_LIST.length];
         }
 
         private int getGrpSize(String grpId) {

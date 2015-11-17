@@ -19,7 +19,10 @@ import java.awt.Paint;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
@@ -84,6 +87,8 @@ public final class TopChartFactory {
     public static final String NULL_FIELD = "<null>"; //$NON-NLS-1$
 
     public static final String EMPTY_FIELD = "Empty field"; //$NON-NLS-1$
+
+    public static final Logger log = Logger.getLogger(TopChartFactory.class);
 
     private TopChartFactory() {
     }
@@ -401,8 +406,15 @@ public final class TopChartFactory {
         localJFreeChart.addSubtitle(new TextTitle(Messages.getString(
                 "DataChart.title", sumItemCount(dataset), sumGroupCount(dataset)))); //$NON-NLS-1$
         CategoryPlot plot = (CategoryPlot) localJFreeChart.getPlot();
-
-        BarRenderer barRenderer = new TalendBarRenderer(true, ChartDecorator.COLOR_LIST);
+        // get real color list from ChartDecorator.COLOR_LIST dataset.getColumnKeys()
+        List<Color> currentColorList = null;
+        try {
+            currentColorList = getCurrentColorList(dataset.getColumnKeys());
+        } catch (NumberFormatException e) {
+            log.warn(e, e);
+            currentColorList = ChartDecorator.COLOR_LIST;
+        }
+        BarRenderer barRenderer = new TalendBarRenderer(true, currentColorList);
         barRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         barRenderer.setBaseItemLabelsVisible(true);
         // remove the shadow
@@ -418,6 +430,22 @@ public final class TopChartFactory {
         localNumberAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         localNumberAxis.setUpperMargin(0.1D);
         return localJFreeChart;
+    }
+
+    /**
+     * DOC talend Comment method "getCurrentColorList".
+     * 
+     * @param columnKeys
+     * @return
+     */
+    private static List<Color> getCurrentColorList(List<?> columnKeys) {
+        List<Color> colorList = new ArrayList<>();
+        int colorSize = ChartDecorator.COLOR_LIST.size();
+        for (Object columnKey : columnKeys) {
+            int groupSize = Integer.parseInt(columnKey.toString());
+            colorList.add(ChartDecorator.COLOR_LIST.get(groupSize % colorSize));
+        }
+        return colorList;
     }
 
     public static JFreeChart createBlockingBarChart(String title, HistogramDataset dataset) {
