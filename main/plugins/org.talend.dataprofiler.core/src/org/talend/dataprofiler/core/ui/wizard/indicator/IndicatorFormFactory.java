@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.NumbericNomin
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.PhoneNumberForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextLengthForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextParametersForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextParametersWithoutOptionsForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TimeSlicesForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqBinsDesignerForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTextLengthForm;
@@ -63,6 +64,11 @@ public final class IndicatorFormFactory {
         case TextParametersForm:
 
             form = new TextParametersForm(parent, SWT.NONE, parameters);
+
+            break;
+        case TextParametersWithoutOptionsForm:
+
+            form = new TextParametersWithoutOptionsForm(parent, SWT.NONE, parameters);
 
             break;
         case DataThresholdsForm:
