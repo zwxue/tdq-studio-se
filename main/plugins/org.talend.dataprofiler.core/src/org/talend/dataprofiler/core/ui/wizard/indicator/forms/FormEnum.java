@@ -264,9 +264,15 @@ public enum FormEnum {
         FormEnum[] forms = null;
         if (dataminingType == DataminingType.INTERVAL) {
             if (Java2SqlType.isNumbericInSQL(sqlType)) {
-                forms = new FormEnum[] { FreqBinsDesignerForm };
-            }
-            if (Java2SqlType.isDateInSQL(sqlType)) {
+                // TDQ-11196: Disable bins for frequency table indicator
+                if (indicatorType == IndicatorEnum.FrequencyIndicatorEnum
+                        || indicatorType == IndicatorEnum.LowFrequencyIndicatorEnum) {
+                    forms = new FormEnum[] {};
+                } else {
+                    forms = new FormEnum[] { FreqBinsDesignerForm };
+                }
+                // TDQ-11196～
+            } else if (Java2SqlType.isDateInSQL(sqlType)) {
                 // MOD qiongli 2011-11-8,TDQ-3864,remove TimeSlice from UI
                 forms = new FormEnum[] { NumbericNominalForm };
             }
