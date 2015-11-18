@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.model.general.Project;
 import org.talend.cwm.relational.TdExpression;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
@@ -51,9 +51,7 @@ public class IndicatorDefinitionFileHelperTest {
 
         //        UnitTestBuildHelper.deleteCurrentProject("testForIndicatorDefinitionFileHelperTest"); //$NON-NLS-1$
         //        UnitTestBuildHelper.createRealProject("testForIndicatorDefinitionFileHelperTest"); //$NON-NLS-1$
-        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
-            DQStructureManager.getInstance().createDQStructure();
-        }
+        UnitTestBuildHelper.initProjectStructure();
     }
 
     @After

@@ -203,17 +203,33 @@ public class UnitTestBuildHelper {
      * @return
      */
     public static IProject initProjectStructure(String projectName) {
+        IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        if (!rootProject.exists()) {
+            initProxyRepository(rootProject);
+        }
 
         if (DQStructureManager.getInstance().isNeedCreateStructure()) {
             DQStructureManager.getInstance().createDQStructure();
         }
-        return null;
+        return rootProject;
+    }
+
+    public static IProject initProjectStructure() {
+        IProject rootProject = ReponsitoryContextBridge.getRootProject();
+        if (!rootProject.exists()) {
+            initProxyRepository(rootProject);
+        }
+
+        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
+            DQStructureManager.getInstance().createDQStructure();
+        }
+        return rootProject;
     }
 
     /**
      * DOC talend Comment method "initProxyRepository".
      */
-    private static void initProxyRepository(IProject rootProject) {
+    public static void initProxyRepository(IProject rootProject) {
         Project project = null;
 
         ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
