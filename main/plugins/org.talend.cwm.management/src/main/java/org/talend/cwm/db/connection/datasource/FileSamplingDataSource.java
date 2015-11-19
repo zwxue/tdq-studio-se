@@ -13,8 +13,6 @@
 package org.talend.cwm.db.connection.datasource;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
@@ -35,17 +33,7 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
 
     private DelimitedFileConnection fileConnection = null;
 
-    private String fieldSeperator = ","; //$NON-NLS-1$
-
-    private String encoding = "UTF-8"; //$NON-NLS-1$
-
-    private String rowSep = "\\n"; //$NON-NLS-1$
-
-    private String textEnclosure = "\""; //$NON-NLS-1$
-
-    private String escapeChar = "\\"; //$NON-NLS-1$
-
-    private Map<Integer, String> columnIndexMap = null;
+    private int[] positions;
 
     /*
      * (non-Javadoc)
@@ -54,37 +42,18 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
      */
     public void setDataSource(DelimitedFileConnection conn) {
         fileConnection = conn;
-    }
-
-    public void setFieldSeperator(String sep) {
-        this.fieldSeperator = sep;
-    }
-
-    /**
-     * Sets the rowSep.
-     * 
-     * @param rowSep the rowSep to set
-     */
-    public void setRowSep(String rowSep) {
-        this.rowSep = rowSep;
-    }
-
-    /**
-     * Sets the textEnclosure.
-     * 
-     * @param textEnclosure the textEnclosure to set
-     */
-    public void setTextEnclosure(String textEnclosure) {
-        this.textEnclosure = textEnclosure;
-    }
-
-    /**
-     * Sets the escapeChar.
-     * 
-     * @param escapeChar the escapeChar to set
-     */
-    public void setEscapeChar(String escapeChar) {
-        this.escapeChar = escapeChar;
+        if (fileConnection != null) {
+            try {
+                int headValue = JavaSqlFactory.getHeadValue(fileConnection);
+                csvReader = FileUtils.createCsvReader(fileConnection);
+                FileUtils.initializeCsvReader(fileConnection, csvReader);
+                if (headValue != 0) {
+                    csvReader.readHeaders();
+                }
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
     }
 
     /*
@@ -116,17 +85,12 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
      * @see org.talend.dq.datascience.SamplingDataSource#getRecord()
      */
     public Object[] getRecord() {
-        Object[] oneRow = new Object[columnSize];
+        Object[] oneRow = new Object[positions.length];
 
         // --- for each column
-        try {
-            for (int i = 0; i < columnSize; i++) {
-                // --- get content of column
-                String headerName = columnIndexMap.get(i);
-                oneRow[i] = csvReader.get(headerName);
-            }
-        } catch (IOException e) {
-            log.error(e, e);
+        for (int i = 0; i < positions.length; i++) {
+            // --- get content of column
+            oneRow[i] = csvReader.get(positions[i]);
         }
         return oneRow;
     }
@@ -147,28 +111,7 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.db.connection.datasource.AbstractSamplingDataSource#getColumnHeader()
-     */
-    public void initColumnHeader(String[] columnHeaders) {
-
-        if (fileConnection != null) {
-            try {
-                int headValue = JavaSqlFactory.getHeadValue(fileConnection);
-                csvReader = FileUtils.createCsvReader(fileConnection);
-                FileUtils.initializeCsvReader(fileConnection, csvReader);
-                if (headValue != 0) {
-                    csvReader.readHeaders();
-                }
-                this.columnIndexMap = new HashMap<Integer, String>();
-                for (int index = 0; index < columnHeaders.length; index++) {
-                    this.columnIndexMap.put(index, columnHeaders[index]);
-                }
-            } catch (IOException e) {
-                log.error(e, e);
-            }
-        }
+    public void setColumnPositions(int[] positions) {
+        this.positions = positions;
     }
 }

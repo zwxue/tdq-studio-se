@@ -102,13 +102,4 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.sampling.SamplingDataSource#initColumnHeader()
-     */
-    public void initColumnHeader(String[] columnHeaders) {
-        // no need any implement
-    }
-
 }
