@@ -155,7 +155,9 @@ public final class AnalysisExecutorSelector {
                     public void run() {
                         AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
                         writer.save(analysisItem, Boolean.FALSE);
-                        monitor.worked(1);
+                        if (monitor != null) {
+                            monitor.worked(1);
+                        }
                     }
                 });
             }

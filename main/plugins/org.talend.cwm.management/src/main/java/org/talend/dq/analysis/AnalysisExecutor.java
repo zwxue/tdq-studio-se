@@ -124,7 +124,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             }
         }
         // ~
-        getMonitor().worked(1);
+        // TDQ-11283: for the tDqReportRun, the monitor is null
+        if (getMonitor() != null) {
+            getMonitor().worked(1);
+        }
 
         // --- run analysis
         boolean ok = false;
@@ -149,7 +152,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
                 MapDBManager.getInstance().closeDB(analysis);
             }
         }
-        getMonitor().worked(1);
+
+        if (getMonitor() != null) {
+            getMonitor().worked(1);
+        }
 
         // --- set metadata information of analysis
         // MOD TDQ-8374 when the setExecutionNumberInAnalysisResult return message is null, should not make the null
@@ -176,7 +182,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
                 }
             }// ~
         }
-        getMonitor().worked(1);
+
+        if (getMonitor() != null) {
+            getMonitor().worked(1);
+        }
         return new ReturnCode(this.errorMessage.toString(), ok);
     }
 

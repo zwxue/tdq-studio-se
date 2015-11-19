@@ -124,7 +124,9 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             rc.setOk(Boolean.FALSE);
             return rc;
         }
-        getMonitor().worked(1);
+        if (getMonitor() != null) {
+            getMonitor().worked(1);
+        }
 
         // Set schema for match key.
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>();
@@ -187,7 +189,10 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             rc.setOk(returnCode.isOk());
             rc.setMessage(returnCode.getMessage());
         }
-        getMonitor().worked(1);
+
+        if (getMonitor() != null) {
+            getMonitor().worked(1);
+        }
 
         // --- set metadata information of analysis
         AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, rc.isOk());
@@ -207,7 +212,9 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             resultMetadata.setExecutionDuration((int) (endtime - startime));
             resultMetadata.setOutThreshold(false);
         }
-        getMonitor().worked(1);
+        if (getMonitor() != null) {
+            getMonitor().worked(1);
+        }
         return rc;
     }
 
