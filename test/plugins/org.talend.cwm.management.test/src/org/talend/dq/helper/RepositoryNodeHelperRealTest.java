@@ -86,6 +86,7 @@ public class RepositoryNodeHelperRealTest {
     @Before
     public void setUp() throws Exception {
         // do something here
+        UnitTestBuildHelper.initProjectStructure();
     }
 
     @After
