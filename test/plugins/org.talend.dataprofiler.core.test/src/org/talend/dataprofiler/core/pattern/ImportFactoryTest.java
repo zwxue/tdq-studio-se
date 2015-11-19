@@ -35,7 +35,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.relational.TdExpression;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataprofiler.core.ui.action.actions.ImportObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
@@ -84,9 +84,7 @@ public class ImportFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
-            DQStructureManager.getInstance().createDQStructure();
-        }
+        UnitTestBuildHelper.initProjectStructure();
     }
 
     /**
@@ -112,9 +110,9 @@ public class ImportFactoryTest {
 
         // the expect expression's values: name and body will add double quote after import, lang will not add double
         // quote after import
-        String name = "\"\"a\"\""; //$NON-NLS-1$
-        String lang = "\"Enumeration\""; //$NON-NLS-1$
-        String body = "\"\"'a'|'b'\"\""; //$NON-NLS-1$
+        String name = "\"a\""; //$NON-NLS-1$
+        String lang = "Enumeration"; //$NON-NLS-1$
+        String body = "\"'a'|'b'\""; //$NON-NLS-1$
 
         File dict = new File(""); //$NON-NLS-1$
         File importFile = new File(dict.getAbsolutePath() + File.separator + "paser_rule.csv"); //$NON-NLS-1$
@@ -172,9 +170,9 @@ public class ImportFactoryTest {
 
         // the expect expression's values: name and body will add double quote after import, lang will not add double
         // quote after import
-        String name = "\"\"a\"\""; //$NON-NLS-1$
-        String lang = "\"Enumeration\""; //$NON-NLS-1$
-        String body = "\"\"'a'|'b'\"\""; //$NON-NLS-1$
+        String name = "\"a\""; //$NON-NLS-1$
+        String lang = "Enumeration"; //$NON-NLS-1$
+        String body = "\"'a'|'b'\""; //$NON-NLS-1$
 
         File dict = new File(""); //$NON-NLS-1$
         File importFile = new File(dict.getAbsolutePath() + File.separator + "paser_rule.csv"); //$NON-NLS-1$
