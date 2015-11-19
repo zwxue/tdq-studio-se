@@ -12,14 +12,9 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import java.sql.Types;
 
@@ -30,6 +25,9 @@ import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.language.ECodeLanguage;
+import org.talend.core.language.LanguageManager;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
@@ -49,6 +47,7 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.dates.DateUtils;
@@ -59,7 +58,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-@PrepareForTest({ DbmsLanguageFactory.class, IndicatorEnum.class, Messages.class })
+@PrepareForTest({ DbmsLanguageFactory.class, IndicatorEnum.class, Messages.class, ContextHelper.class, LanguageManager.class,
+        GlobalServiceRegister.class })
 public class PatternExplorerTest {
 
     @Rule
@@ -134,6 +134,15 @@ public class PatternExplorerTest {
         Expression instantiatedExpression = mock(Expression.class);
         when(dbmsLanguage.getInstantiatedExpression(indicator)).thenReturn(instantiatedExpression);
         when(instantiatedExpression.getBody()).thenReturn(" FROM `tbi`.`customer` "); //$NON-NLS-1$
+
+        PowerMockito.mockStatic(LanguageManager.class);
+        when(LanguageManager.getCurrentLanguage()).thenReturn(ECodeLanguage.JAVA);
+        //
+        // GlobalServiceRegister gs = mock(GlobalServiceRegister.class);
+        // PowerMockito.mockStatic(GlobalServiceRegister.class);
+        // when(GlobalServiceRegister.getDefault()).thenReturn(gs);
+        // ICoreService ic = mock(ICoreService.class);
+        // when(gs.getService(ICoreService.class)).thenReturn(ic);
     }
 
     /**
@@ -249,6 +258,9 @@ public class PatternExplorerTest {
                         "SELECT <%=__COLUMN_NAMES__%> FROM <%=__TABLE_NAME__%> ", "CAL_DATE", "TDQ_CALENDAR")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 .thenReturn("SELECT CAL_DATE FROM TDQ_CALENDAR"); //$NON-NLS-1$
 
+        PowerMockito.mockStatic(ContextHelper.class);
+        when(ContextHelper.getDataFilterWithoutContext(analysis)).thenReturn("");
+
         RegexPatternExplorer freqExp = new RegexPatternExplorer();
         Assert.assertTrue(freqExp.setAnalysis(analysis));
         freqExp.setEnitty(chartDataEntity);
@@ -320,6 +332,9 @@ public class PatternExplorerTest {
                 dbmsLanguage.fillGenericQueryWithColumnsAndTable(
                         "SELECT <%=__COLUMN_NAMES__%> FROM <%=__TABLE_NAME__%> WHERE NOT (id>=1) ", "CAL_DATE", "TDQ_CALENDAR")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 .thenReturn("SELECT CAL_DATE FROM TDQ_CALENDAR WHERE NOT (id>=1)"); //$NON-NLS-1$
+
+        PowerMockito.mockStatic(ContextHelper.class);
+        when(ContextHelper.getDataFilterWithoutContext(analysis)).thenReturn("");
 
         RegexPatternExplorer freqExp = new RegexPatternExplorer();
         Assert.assertTrue(freqExp.setAnalysis(analysis));
@@ -393,6 +408,9 @@ public class PatternExplorerTest {
                         "SELECT * FROM <%=__TABLE_NAME__%> WHERE NOT (id>=1) ", "CAL_DATE", "TDQ_CALENDAR")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 .thenReturn("SELECT * FROM TDQ_CALENDAR WHERE NOT (id>=1)"); //$NON-NLS-1$
 
+        PowerMockito.mockStatic(ContextHelper.class);
+        when(ContextHelper.getDataFilterWithoutContext(analysis)).thenReturn("");
+
         RegexPatternExplorer freqExp = new RegexPatternExplorer();
         Assert.assertTrue(freqExp.setAnalysis(analysis));
         freqExp.setEnitty(chartDataEntity);
@@ -463,6 +481,9 @@ public class PatternExplorerTest {
         when(dbmsLanguage.toQualifiedName(null, null, "TDQ_CALENDAR")).thenReturn("TDQ_CALENDAR"); //$NON-NLS-1$ //$NON-NLS-2$
         when(dbmsLanguage.fillGenericQueryWithColumnsAndTable("SELECT * FROM <%=__TABLE_NAME__%> ", "CAL_DATE", "TDQ_CALENDAR")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 .thenReturn("SELECT * FROM TDQ_CALENDAR"); //$NON-NLS-1$
+
+        PowerMockito.mockStatic(ContextHelper.class);
+        when(ContextHelper.getDataFilterWithoutContext(analysis)).thenReturn("");
 
         RegexPatternExplorer freqExp = new RegexPatternExplorer();
         Assert.assertTrue(freqExp.setAnalysis(analysis));

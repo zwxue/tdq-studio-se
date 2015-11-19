@@ -109,15 +109,6 @@ public final class ConnectionUtils {
 
     private static Boolean timeout = null;
 
-    private static ILibraryManagerService libManagerServic = null;
-
-    static {
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ILibraryManagerService.class)) {
-            libManagerServic = (ILibraryManagerService) GlobalServiceRegister.getDefault().getService(
-                    ILibraryManagerService.class);
-        }
-    }
-
     // MOD mzhao 2009-06-05 Bug 7571
     // private static final Map<String, Driver> DRIVER_CACHE = new HashMap<String, Driver>();
 
@@ -1311,7 +1302,9 @@ public final class ConnectionUtils {
                     continue;
                 }
             }
-            if (libManagerServic != null) {
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ILibraryManagerService.class)) {
+                ILibraryManagerService libManagerServic = (ILibraryManagerService) GlobalServiceRegister.getDefault().getService(
+                        ILibraryManagerService.class);
                 String libPath = libManagerServic.getJarPath(jarName);
                 if (libPath == null) {
                     jarNotFound = true;
