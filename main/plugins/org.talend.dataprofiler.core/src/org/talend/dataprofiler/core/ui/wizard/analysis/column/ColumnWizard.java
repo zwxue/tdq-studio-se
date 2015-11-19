@@ -37,6 +37,7 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
@@ -143,7 +144,8 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                 if (nodes != null && nodes.size() > 0) {
                     // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status
                     if (masterPage instanceof ColumnAnalysisDetailsPage) {
-                        ((ColumnAnalysisDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
+                        ((ColumnAnalysisDetailsPage) masterPage)
+                                .setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
                         ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
                         if (predefinedColumnIndicator != null) {
                             ((ColumnAnalysisDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
@@ -158,42 +160,6 @@ public class ColumnWizard extends AbstractAnalysisWizard {
             }
         }
 
-        // super.openEditor(item);
-        // AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-        // .getActiveEditor();
-        // if (editor != null) {
-        // AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
-        //
-        // // from the create analysis wizard
-        // if (this.selectionPage != null) {
-        // List<IRepositoryNode> nodes = this.selectionPage.nodes;
-        // if (nodes != null && nodes.size() > 0) {
-        // // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status
-        // if (masterPage instanceof ColumnMasterDetailsPage) {
-        // ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
-        // ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
-        // if (predefinedColumnIndicator != null) {
-        // ((ColumnMasterDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
-        // ((ColumnMasterDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
-        // }
-        // } else {
-        // masterPage.getTreeViewer().setInput(nodes.toArray(new RepositoryNode[nodes.size()]));
-        // }
-        // masterPage.doSave(new NullProgressMonitor());
-        // // TDQ-6665~
-        // }
-        // // } else {
-        // // // from the column right menu
-        // // if (masterPage instanceof ColumnMasterDetailsPage) {
-        // // ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
-        // // if (predefinedColumnIndicator != null) {
-        // // ((ColumnMasterDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
-        // // ((ColumnMasterDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
-        // // masterPage.doSave(new NullProgressMonitor());
-        // // }
-        // // }
-        // }
-        // }
     }
 
     /**
@@ -212,7 +178,9 @@ public class ColumnWizard extends AbstractAnalysisWizard {
         if (selectionPage == null) {
             nodes = Arrays.asList(((AnalysisLabelParameter) parameter).getColumnNodes());
         } else {
-            nodes = selectionPage.nodes;
+            // TDQ-11240:　get all the column nodes
+            nodes = Arrays.asList(RepositoryNodeHelper.getAllColumnNodes(selectionPage.nodes
+                    .toArray(new IRepositoryNode[selectionPage.nodes.size()])));
         }
         ModelElementIndicator[] predefinedColumnIndicator = new ModelElementIndicator[nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {

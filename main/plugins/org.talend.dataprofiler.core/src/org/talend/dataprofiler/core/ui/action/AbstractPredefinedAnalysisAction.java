@@ -12,10 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -23,14 +19,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.talend.core.model.metadata.MetadataXmlElementType;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdTable;
@@ -44,14 +37,11 @@ import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.rules.JoinElement;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -81,57 +71,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
     }
 
     protected IRepositoryNode[] getColumns() {
-        List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
-        Object firstElement = getSelection().getFirstElement();
-        if (firstElement instanceof IRepositoryNode) {
-            IRepositoryNode repNode = (IRepositoryNode) firstElement;
-            IRepositoryViewObject repViewObject = repNode.getObject();
-            if (repViewObject instanceof MetadataColumnRepositoryObject || repViewObject instanceof MetadataXmlElementType) {
-                IRepositoryNode[] column = new IRepositoryNode[getSelection().size()];
-                for (int i = 0; i < getSelection().size(); i++) {
-                    column[i] = (IRepositoryNode) getSelection().toArray()[i];
-                }
-                return column;
-            } else if (repViewObject instanceof MetadataTableRepositoryObject) {
-                Object[] selections = getSelection().toArray();
-                for (Object currentObj : selections) {
-                    IRepositoryNode columnSetNode = (IRepositoryNode) currentObj;
-                    List<IRepositoryNode> children = columnSetNode.getChildren();
-                    if (children.size() > 0) {
-                        list.addAll(children.get(0).getChildren());
-                    }
-                }
-                return list.toArray(new IRepositoryNode[list.size()]);
-            }
-        } else if (firstElement instanceof TdTable) {
-            TdTable table = (TdTable) firstElement;
-            EList<MetadataColumn> columns = table.getColumns();
-            for (MetadataColumn column : columns) {
-                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(column);
-                list.add(recursiveFind);
-            }
-            return list.toArray(new IRepositoryNode[list.size()]);
-        } else if (firstElement instanceof WhereRuleChartDataEntity) {
-            // ADD msjian 2012-2-9 TDQ-4470: get columns from the join conditions
-            EList<JoinElement> joinConditions = ((WhereRuleChartDataEntity) firstElement).getIndicator().getJoinConditions();
-            if (joinConditions != null && joinConditions.size() > 0) {
-                JoinElement joinElement = joinConditions.get(0);
-                list.add(RepositoryNodeHelper.recursiveFind(joinElement.getColA()));
-                list.add(RepositoryNodeHelper.recursiveFind(joinElement.getColB()));
-                return list.toArray(new IRepositoryNode[list.size()]);
-            }
-            // TDQ-4470 ~
-        } else if (firstElement instanceof TdView) {
-            // Added yyin 20120522 TDQ-4945, support tdView
-            TdView view = (TdView) firstElement;
-            EList<MetadataColumn> columns = view.getColumns();
-            for (MetadataColumn column : columns) {
-                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(column);
-                list.add(recursiveFind);
-            }
-            return list.toArray(new IRepositoryNode[list.size()]);
-        } // ~
-        return null;
+        return RepositoryNodeHelper.getAllColumnNodes(getSelection().toArray());
     }
 
     /**
@@ -237,12 +177,11 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
     }
 
     protected ModelElementIndicator[] composePredefinedColumnIndicator(IndicatorEnum[] allowedEnum) {
-
-        ModelElementIndicator[] predefinedColumnIndicator = new ModelElementIndicator[getColumns().length];
+        IRepositoryNode[] columns = getColumns();
+        ModelElementIndicator[] predefinedColumnIndicator = new ModelElementIndicator[columns.length];
         ExecutionLanguage language = ExecutionLanguage.get(getMasterPage().getExecCombo().getText());
-        for (int i = 0; i < getColumns().length; i++) {
-
-            IRepositoryNode columnNode = getColumns()[i];
+        for (int i = 0; i < columns.length; i++) {
+            IRepositoryNode columnNode = columns[i];
             ModelElementIndicator columnIndicator = ModelElementIndicatorHelper.createModelElementIndicator(columnNode);
 
             for (IndicatorEnum oneEnum : allowedEnum) {

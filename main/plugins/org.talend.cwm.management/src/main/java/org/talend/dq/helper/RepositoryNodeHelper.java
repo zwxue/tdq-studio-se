@@ -46,6 +46,7 @@ import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.runtime.model.repository.ERepositoryStatus;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.MetadataXmlElementType;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
@@ -66,6 +67,7 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.model.repository.helper.RepositoryObjectTypeHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.helper.CatalogHelper;
@@ -92,9 +94,11 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
@@ -3873,5 +3877,69 @@ public final class RepositoryNodeHelper {
             displayName += dqRepositoryNode.getDisplayProjectName();
         }
         return displayName;
+    }
+
+    /**
+     * get All the Column level Nodes.
+     * 
+     * @param selectedNodes
+     * @return
+     */
+    public static IRepositoryNode[] getAllColumnNodes(Object[] selectedNodes) {
+        List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
+
+        if (selectedNodes == null || selectedNodes.length == 0) {
+            return list.toArray(new IRepositoryNode[list.size()]);
+        }
+
+        Object firstElement = selectedNodes[0];
+        if (firstElement instanceof IRepositoryNode) {
+            IRepositoryNode repNode = (IRepositoryNode) firstElement;
+            IRepositoryViewObject repViewObject = repNode.getObject();
+            if (repViewObject instanceof MetadataColumnRepositoryObject || repViewObject instanceof MetadataXmlElementType) {
+                IRepositoryNode[] column = new IRepositoryNode[selectedNodes.length];
+                for (int i = 0; i < selectedNodes.length; i++) {
+                    column[i] = (IRepositoryNode) selectedNodes[i];
+                }
+                return column;
+            } else if (repViewObject instanceof MetadataTableRepositoryObject) {
+                for (Object currentObj : selectedNodes) {
+                    IRepositoryNode columnSetNode = (IRepositoryNode) currentObj;
+                    List<IRepositoryNode> children = columnSetNode.getChildren();
+                    if (children.size() > 0) {
+                        list.addAll(children.get(0).getChildren());
+                    }
+                }
+                return list.toArray(new IRepositoryNode[list.size()]);
+            }
+        } else if (firstElement instanceof TdTable) {
+            TdTable table = (TdTable) firstElement;
+            EList<MetadataColumn> columns = table.getColumns();
+            for (MetadataColumn column : columns) {
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(column);
+                list.add(recursiveFind);
+            }
+            return list.toArray(new IRepositoryNode[list.size()]);
+        } else if (firstElement instanceof WhereRuleChartDataEntity) {
+            // ADD msjian 2012-2-9 TDQ-4470: get columns from the join conditions
+            EList<JoinElement> joinConditions = ((WhereRuleChartDataEntity) firstElement).getIndicator().getJoinConditions();
+            if (joinConditions != null && joinConditions.size() > 0) {
+                JoinElement joinElement = joinConditions.get(0);
+                list.add(RepositoryNodeHelper.recursiveFind(joinElement.getColA()));
+                list.add(RepositoryNodeHelper.recursiveFind(joinElement.getColB()));
+                return list.toArray(new IRepositoryNode[list.size()]);
+            }
+            // TDQ-4470 ~
+        } else if (firstElement instanceof TdView) {
+            // Added yyin 20120522 TDQ-4945, support tdView
+            TdView view = (TdView) firstElement;
+            EList<MetadataColumn> columns = view.getColumns();
+            for (MetadataColumn column : columns) {
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(column);
+                list.add(recursiveFind);
+            }
+            return list.toArray(new IRepositoryNode[list.size()]);
+        } // ~
+        return null;
     }
 }
