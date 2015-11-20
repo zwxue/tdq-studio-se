@@ -52,8 +52,10 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -410,6 +412,16 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
                 anaColumnCompareViewer.setDirty(false);
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getConnectionsWithoutDeleted()
+     */
+    @Override
+    protected List<IRepositoryNode> getConnectionsWithoutDeleted() {
+        return RepositoryNodeHelper.getConnectionRepositoryNodes(false, false);
     }
 
 }
