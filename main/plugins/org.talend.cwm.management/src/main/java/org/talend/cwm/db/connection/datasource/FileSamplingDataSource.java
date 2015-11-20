@@ -114,4 +114,10 @@ public class FileSamplingDataSource extends AbstractSamplingDataSource<Delimited
     public void setColumnPositions(int[] positions) {
         this.positions = positions;
     }
+
+    @Deprecated
+    public void initColumnHeader(String[] columnHeaders) {
+        // no implementation to make
+    }
+
 }

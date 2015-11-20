@@ -102,4 +102,9 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
         return true;
     }
 
+    @Deprecated
+    public void initColumnHeader(String[] columnHeaders) {
+        // no implementation to make
+    }
+
 }
