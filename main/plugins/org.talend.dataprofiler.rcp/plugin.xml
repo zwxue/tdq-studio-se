@@ -136,7 +136,7 @@
             message="Wizard use for TOP"
             name="hbase-0.90.1-cdh3u0.jar" mvn_uri="mvn:org.talend.libraries/hbase-0.90.1-cdh3u0/6.0.0" 
             required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.0.20.cdh3/lib/hbase-0.90.1-cdh3u0.jar">
+            uripath="platform:/plugin/org.talend.libraries.hadoop/lib/hbase-0.90.1-cdh3u0.jar">
       </libraryNeeded>
       <libraryNeeded
             context="Hive wizard"
