@@ -126,30 +126,6 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hive-jdbc-0.8.1.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.8.1/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-jdbc-0.8.1.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hive-metastore-0.8.1.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.8.1/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-metastore-0.8.1.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hive-service-0.8.1.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.8.1/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-service-0.8.1.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
             name="hadoop-0.20.2-cdh3u1-core.jar" mvn_uri="mvn:org.talend.libraries/hadoop-0.20.2-cdh3u1-core/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.0.20.cdh3/lib/hadoop-0.20.2-cdh3u1-core.jar">
@@ -209,54 +185,6 @@
             name="hbase-0.92.1-cdh4.0.1-security.jar" mvn_uri="mvn:org.talend.libraries/hbase-0.92.1-cdh4.0.1-security/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hbase-0.92.1-cdh4.0.1-security.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hive-builtins-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-builtins-0.8.1-cdh4.0.1/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-builtins-0.8.1-cdh4.0.1.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hive-exec-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-exec-0.8.1-cdh4.0.1/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-exec-0.8.1-cdh4.0.1.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hive-hbase-handler-0.8.1-cdh4.0.0.jar" mvn_uri="mvn:org.talend.libraries/hive-hbase-handler-0.8.1-cdh4.0.0/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-hbase-handler-0.8.1-cdh4.0.0.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hive-jdbc-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-jdbc-0.8.1-cdh4.0.1/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-jdbc-0.8.1-cdh4.0.1.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hive-metastore-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-metastore-0.8.1-cdh4.0.1/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-metastore-0.8.1-cdh4.0.1.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hive-service-0.8.1-cdh4.0.1.jar" mvn_uri="mvn:org.talend.libraries/hive-service-0.8.1-cdh4.0.1/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-service-0.8.1-cdh4.0.1.jar">
       </libraryNeeded>
       <libraryNeeded
             context="Hive wizard"
