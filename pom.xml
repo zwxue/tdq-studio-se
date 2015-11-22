@@ -77,6 +77,7 @@
 		<module>main/plugins/org.talend.libraries.google.libphonumber</module>
 		<module>main/plugins/org.talend.libraries.jung</module>
 		<module>main/plugins/org.talend.libraries.mapdb</module>
+		<module>main/plugins/org.talend.libraries.clearspring.analytics</module>
 		<module>main/plugins/org.talend.rcp.branding.top</module>
 		<module>sample/test.myudi</module>
 		<module>test/plugins/org.talend.cwm.compare.test</module>
