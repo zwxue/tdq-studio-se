@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.pref;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.views.markers.MarkerSupportInternalUtilities;
+import org.talend.commons.ui.runtime.CommonUIPlugin;
 
 /**
  * created by msjian on 2015年11月6日 Detailled comment
@@ -37,6 +38,10 @@ public class TaskViewPreferenceInitializer extends AbstractPreferenceInitializer
     @SuppressWarnings({ "restriction", "deprecation" })
     @Override
     public void initializeDefaultPreferences() {
+        // for commandline mode
+        if (CommonUIPlugin.isFullyHeadless()) {
+            return;
+        }
 
         String migrationPreference = MarkerSupportInternalUtilities.MIGRATE_TASK_FILTERS;
         // Already migrated
@@ -52,7 +57,6 @@ public class TaskViewPreferenceInitializer extends AbstractPreferenceInitializer
         IDEWorkbenchPlugin.getDefault().getPreferenceStore()
                 .putValue("org.eclipse.ui.internal.views.markers.CachedMarkerBuilderorg.eclipse.ui.views.TaskList", writer); //$NON-NLS-1$
         IDEWorkbenchPlugin.getDefault().savePluginPreferences();
-
     }
 
 }
