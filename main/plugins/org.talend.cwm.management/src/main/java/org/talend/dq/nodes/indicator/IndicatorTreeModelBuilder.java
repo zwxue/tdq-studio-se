@@ -32,6 +32,7 @@ import org.talend.dq.nodes.indicator.impl.PatternNode;
 import org.talend.dq.nodes.indicator.impl.UDINode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.io.FilesUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -177,7 +178,14 @@ public final class IndicatorTreeModelBuilder {
             }
             for (IResource resource : folder.members()) {
                 if (resource instanceof IFile) {
-                    ModelElement modelElement = resourceMap.getModelElement((IFile) resource);
+                    IFile iFile = (IFile) resource;
+                    // TDQ-11217: ignore ".gitkeep" file under the git remote project's folders
+                    if (iFile.getName().equalsIgnoreCase(FilesUtils.GITKEEP)) {
+                        continue;
+                    }
+                    // TDQ-11217~
+
+                    ModelElement modelElement = resourceMap.getModelElement(iFile);
                     if (modelElement == null) {
                         continue;
                     }
