@@ -392,7 +392,17 @@ public final class ImageLib {
      * @param originalImgName
      * @return
      */
-    public static ImageDescriptor createInvalidIcon(String originalImgName) {
+    public static ImageDescriptor createInvalidIconDes(String originalImgName) {
+        return getOverlayIconDes(originalImgName, WARN_OVR);
+    }
+
+    /**
+     * DOC bZhou Comment method "createInvalidIcon".
+     * 
+     * @param originalImgName
+     * @return
+     */
+    public static Image createInvalidIcon(String originalImgName) {
         return getOverlayIcon(originalImgName, WARN_OVR);
     }
 
@@ -418,7 +428,7 @@ public final class ImageLib {
      */
     @Deprecated
     public static ImageDescriptor createLockedIcon(String originalImgName) {
-        return getOverlayIcon(originalImgName, ICON_LOCK);
+        return getOverlayIconDes(originalImgName, ICON_LOCK);
     }
 
     /**
@@ -451,24 +461,44 @@ public final class ImageLib {
     /**
      * 
      * make the original image name and overlay image name as a key, find the image from ImageLib.imageRegistry by this
-     * key. if not found,create a new Overlay image and put it into imageRegistry.
+     * key. if not found,create a new Overlay image and put it's ImageDescriptor into imageRegistry.
      * 
      * @param originalName
      * @param overImgName
-     * @return
+     * @return the ImageDescriptor
      */
-    public static ImageDescriptor getOverlayIcon(String originalName, String overImgName) {
+    public static ImageDescriptor getOverlayIconDes(String originalName, String overImgName) {
+        if (getOverlayIcon(originalName, overImgName) != null) {
+            String orininal_over_name = originalName + PluginConstant.UNDER_LINE + overImgName;
+            return imageRegistry.getDescriptor(orininal_over_name);
+        } else {
+            return null;
+        }
+
+    }
+
+    /**
+     * 
+     * make the original image name and overlay image name as a key, find the image from ImageLib.imageRegistry by this
+     * key. if not found,create a new Overlay image and put it's ImageDescriptor into imageRegistry.
+     * 
+     * @param originalName
+     * @param overImgName
+     * @return the image
+     */
+    public static Image getOverlayIcon(String originalName, String overImgName) {
         String orininal_over_name = originalName + PluginConstant.UNDER_LINE + overImgName;
         if (imageRegistry == null) {
             initialize();
         }
-        ImageDescriptor originalOverImg = imageRegistry.getDescriptor(orininal_over_name);
+        Image originalOverImg = imageRegistry.get(orininal_over_name);
         if (originalOverImg == null) {
             ImageDescriptor orignalImg = getImageDescriptor(originalName);
             ImageDescriptor overImg = getImageDescriptor(overImgName);
             if (orignalImg != null && overImg != null) {
-                originalOverImg = createIcon(orignalImg.createImage(), overImg);
-                imageRegistry.put(orininal_over_name, originalOverImg);
+                ImageDescriptor originalOverImgDes = createIcon(orignalImg.createImage(), overImg);
+                imageRegistry.put(orininal_over_name, originalOverImgDes);
+                originalOverImg = imageRegistry.get(orininal_over_name);
             }
 
         }
@@ -532,7 +562,7 @@ public final class ImageLib {
      * @param originalImgName
      * @return
      */
-    public static ImageDescriptor createErrorIcon(String originalImgName) {
+    public static Image createErrorIcon(String originalImgName) {
         return getOverlayIcon(originalImgName, ICON_ERROR_VAR);
     }
 
@@ -558,7 +588,7 @@ public final class ImageLib {
      * @return
      */
     public static ImageDescriptor createAddedIcon(String originalImgName) {
-        return getOverlayIcon(originalImgName, ICON_ADD_VAR);
+        return getOverlayIconDes(originalImgName, ICON_ADD_VAR);
     }
 
     /**
@@ -574,7 +604,7 @@ public final class ImageLib {
         return originalImg != null ? new DecorationOverlayIcon(originalImg.createImage(), addImg, IDecoration.TOP_RIGHT) : null;
     }
 
-    public static ImageDescriptor createLockedByOtherIcon(String originalImgName) {
+    public static Image createLockedByOtherIcon(String originalImgName) {
         return getOverlayIcon(originalImgName, ICON_LOCK_BYOTHER);
     }
 
@@ -598,7 +628,7 @@ public final class ImageLib {
         return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
-    public static ImageDescriptor createLockedByOwnIcon(String originalImgName) {
+    public static Image createLockedByOwnIcon(String originalImgName) {
         return getOverlayIcon(originalImgName, ICON_LOCK);
     }
 

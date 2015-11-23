@@ -19,6 +19,7 @@ import org.eclipse.nebula.widgets.grid.GridCellRenderer;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.nebula.widgets.grid.TalendGrid;
+import org.eclipse.nebula.widgets.grid.TalendGridColumn;
 import org.eclipse.nebula.widgets.grid.TalendGridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -192,7 +193,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
         // database columns
         for (int index = 0; index < _modelElementIndicators.length; index++) {
             ModelElementIndicator _modelElementIndicator = _modelElementIndicators[index];
-            final GridColumn newCol = new GridColumn(this, SWT.CHECK);
+            final GridColumn newCol = new TalendGridColumn(this, SWT.CHECK);
             AbstractColumnHerderRenderer headerRenderer = getColumnHeaderRenderer();
             headerRenderer.setRotation(COLUMN_HEADER_ROTATION);
             newCol.setHeaderRenderer(headerRenderer);
@@ -305,7 +306,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
      * This column just used to take in space so that visible is false
      */
     protected void createRowSelectColumn() {
-        GridColumn rowSelectCol = new GridColumn(this, SWT.CHECK);
+        GridColumn rowSelectCol = new TalendGridColumn(this, SWT.CHECK);
         rowSelectCol.setHeaderRenderer(getColumnHeaderRenderer());
         rowSelectCol.setCellRenderer(getCellRenderer());
         rowSelectCol.setText("Select All"); //$NON-NLS-1$
@@ -319,7 +320,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
      * This column just used to take in space so that visible is false
      */
     protected void createIndicatorLabelColumn() {
-        GridColumn indicatorLabelColumn = new GridColumn(this, SWT.NONE);
+        GridColumn indicatorLabelColumn = new TalendGridColumn(this, SWT.NONE);
         indicatorLabelColumn.setHeaderRenderer(getColumnHeaderRenderer());
         indicatorLabelColumn.setTree(true);
         indicatorLabelColumn.setWidth(200);

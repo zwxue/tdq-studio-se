@@ -236,10 +236,10 @@ public class TreeMessageInfoDialog extends MessageDialog {
                                 Item item = property.getItem();
                                 if (item != null) {
                                     if (ProxyRepositoryManager.getInstance().isLockByUserOwn(item)) {
-                                        modelElementImage = ImageLib.createLockedByOwnIcon(imgName).createImage();
+                                        modelElementImage = ImageLib.createLockedByOwnIcon(imgName);
                                         imagesNeedDisposedList.add(modelElementImage);
                                     } else if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
-                                        modelElementImage = ImageLib.createLockedByOtherIcon(imgName).createImage();
+                                        modelElementImage = ImageLib.createLockedByOtherIcon(imgName);
                                         imagesNeedDisposedList.add(modelElementImage);
                                     }
                                 }

@@ -751,7 +751,7 @@ class MouseClickListener implements KeyListener, MouseListener,
 			return;
 
 		Display display = text.getDisplay();
-		fColor = new Color(display, new RGB(0, 0, 255));
+		fColor = display.getSystemColor(SWT.COLOR_BLUE);
 	}
 
 }

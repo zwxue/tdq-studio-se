@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.grid;
 
 import org.eclipse.nebula.widgets.grid.GridColumn;
+import org.eclipse.nebula.widgets.grid.ITalendGridHeaderRendererHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -26,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * The column header renderer.
  */
-public class TdColumnHeaderRenderer extends AbstractColumnHerderRenderer {
+public class TdColumnHeaderRenderer extends AbstractColumnHerderRenderer implements ITalendGridHeaderRendererHandler {
 
     int leftMargin = 6;
 
@@ -258,5 +259,14 @@ public class TdColumnHeaderRenderer extends AbstractColumnHerderRenderer {
         if (_transformInv != null) {
             _transformInv.dispose();
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.nebula.widgets.grid.ITalendGridHeaderRendererHandle#dispose()
+     */
+    public void dispose() {
+        disposeTransformations();
     }
 }

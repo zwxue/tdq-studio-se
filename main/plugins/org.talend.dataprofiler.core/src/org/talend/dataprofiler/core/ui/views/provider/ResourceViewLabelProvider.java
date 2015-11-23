@@ -77,7 +77,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                     Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                     if (pattern != null) {
                         if (!TaggedValueHelper.getValidStatus(pattern)) {
-                            image = ImageLib.createInvalidIcon(ImageLib.PATTERN_REG);
+                            image = ImageLib.createInvalidIconDes(ImageLib.PATTERN_REG);
                         }
                     }
                 } else if (FactoriesUtil.isReportFile(fileExtension)) {
@@ -90,7 +90,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                         boolean validStatus = TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi);
 
                         if (!validStatus) {
-                            image = ImageLib.createInvalidIcon(ImageLib.IND_DEFINITION);
+                            image = ImageLib.createInvalidIconDes(ImageLib.IND_DEFINITION);
                         }
                     }
                 } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {

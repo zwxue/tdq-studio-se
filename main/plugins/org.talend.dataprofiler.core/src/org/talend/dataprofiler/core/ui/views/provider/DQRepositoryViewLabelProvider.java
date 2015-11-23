@@ -177,9 +177,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     if (node instanceof DBConnectionRepNode) {
                         originalImageName = ImageLib.TD_DATAPROVIDER;
                         if (!RepositoryNodeHelper.isSupportedConnection(node) || isNeedAddDriverConnection(node)) {
-                            image = ImageLib.createErrorIcon(originalImageName).createImage();
+                            image = ImageLib.createErrorIcon(originalImageName);
                         } else if (isInvalidJDBCConnection(node)) {
-                            image = ImageLib.createInvalidIcon(originalImageName).createImage();
+                            image = ImageLib.createInvalidIcon(originalImageName);
                         } else {
                             image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                         }
@@ -241,9 +241,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
                         if (ERepositoryStatus.DEFAULT != status && originalImageName != null) {
                             if (ERepositoryStatus.LOCK_BY_USER == status) {
-                                image = ImageLib.createLockedByOwnIcon(originalImageName).createImage();
+                                image = ImageLib.createLockedByOwnIcon(originalImageName);
                             } else if (ERepositoryStatus.LOCK_BY_OTHER == status) {
-                                image = ImageLib.createLockedByOtherIcon(originalImageName).createImage();
+                                image = ImageLib.createLockedByOtherIcon(originalImageName);
                             }
                         }
                     }
@@ -299,13 +299,13 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 DataManager connection = analysis.getContext().getConnection();
                 if (analysedElements.isEmpty() || connection instanceof MDMConnection) {
-                    return ImageLib.createInvalidIcon(originalImageName).createImage();
+                    return ImageLib.createInvalidIcon(originalImageName);
                 }
             } else if (ERepositoryObjectType.TDQ_REPORT_ELEMENT == objectType) {
                 TdReport report = (TdReport) modEle;
                 EList<AnalysisMap> analysisMap = report.getAnalysisMap();
                 if (analysisMap.isEmpty()) {
-                    return ImageLib.createInvalidIcon(originalImageName).createImage();
+                    return ImageLib.createInvalidIcon(originalImageName);
                 }
                 for (AnalysisMap anaMap : report.getAnalysisMap()) {
                     Analysis analysis = anaMap.getAnalysis();
@@ -314,7 +314,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     }
                     DataManager connection = analysis.getContext().getConnection();
                     if (connection instanceof MDMConnection) {
-                        return ImageLib.createInvalidIcon(originalImageName).createImage();
+                        return ImageLib.createInvalidIcon(originalImageName);
                     }
                 }
             }
