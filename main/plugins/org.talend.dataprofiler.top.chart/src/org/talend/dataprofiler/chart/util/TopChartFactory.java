@@ -18,6 +18,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.text.NumberFormat;
+import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -62,6 +63,7 @@ import org.talend.dataprofiler.chart.i18n.Messages;
 import org.talend.dataprofiler.chart.preview.CustomRenderer;
 import org.talend.dataprofiler.chart.preview.DQRuleItemLabelGenerator;
 import org.talend.dataprofiler.chart.preview.MatchRuleColorRegistry;
+import org.talend.dataprofiler.service.utils.ValueAggregator;
 
 /**
  * @author scorreia
@@ -271,7 +273,8 @@ public final class TopChartFactory {
      * @param numericColumn the analyzed numeric column
      * @return the bubble chart
      */
-    public static JFreeChart createBubbleChart(String chartName, Object dataset) {
+    public static JFreeChart createBubbleChart(String chartName, Object dataset, Map<String, ValueAggregator> xyzDatasets) {
+        final Map<String, ValueAggregator> xyzDatasetsFinal = xyzDatasets;
         JFreeChart chart = TopChartFactory
                 .createBubbleChart(
                         chartName,
@@ -293,10 +296,13 @@ public final class TopChartFactory {
             protected Object[] createItemArray(XYZDataset dset, int series, int item) {
                 final Comparable<?> seriesKey = dset.getSeriesKey(series);
                 final String seriesK = String.valueOf(seriesKey);
-                // final ValueAggregator valueAggregator = createXYZDatasets.get(seriesKey);
-                // String label = valueAggregator.getLabels(seriesK).get(item);
+                String label = seriesK;
+                if (xyzDatasetsFinal != null) {
+                    ValueAggregator valueAggregator = xyzDatasetsFinal.get(seriesKey);
+                    label = valueAggregator.getLabels(seriesK).get(item);
+                }
                 final Object[] itemArray = super.createItemArray(dset, series, item);
-                itemArray[0] = "";// label;
+                itemArray[0] = label;// label;
                 itemArray[1] = "avg=" + itemArray[1]; //$NON-NLS-1$
                 itemArray[2] = "record count=" + itemArray[2]; //$NON-NLS-1$
                 itemArray[3] = "null count=" + itemArray[3]; //$NON-NLS-1$

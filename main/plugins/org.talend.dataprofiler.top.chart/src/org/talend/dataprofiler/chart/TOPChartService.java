@@ -80,6 +80,7 @@ import org.talend.dataprofiler.chart.util.PluginConstant;
 import org.talend.dataprofiler.chart.util.TalendChartComposite;
 import org.talend.dataprofiler.chart.util.TopChartFactory;
 import org.talend.dataprofiler.service.ITOPChartService;
+import org.talend.dataprofiler.service.utils.ValueAggregator;
 
 /**
  * created by yyin on 2014-11-28 Detailled comment
@@ -796,8 +797,8 @@ public class TOPChartService implements ITOPChartService {
      * @see org.talend.dataprofiler.service.ITOPChartService#createBubbleChart(java.lang.String, java.lang.Object)
      */
     @Override
-    public Object createBubbleChart(String chartName, Object dataset) {
-        return TopChartFactory.createBubbleChart(chartName, dataset);
+    public Object createBubbleChart(String chartName, Object dataset, Map<String, ValueAggregator> xyzDatasets) {
+        return TopChartFactory.createBubbleChart(chartName, dataset, xyzDatasets);
     }
 
     /*
