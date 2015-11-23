@@ -18,7 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.TdExpression;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
@@ -93,7 +93,7 @@ public class TextIndicatorForNetezzaTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        DQStructureManager.getInstance().createDQStructure();
+        UnitTestBuildHelper.initProjectStructure();
     }
 
     @Test
