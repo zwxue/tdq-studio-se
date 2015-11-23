@@ -353,6 +353,7 @@ public class SQLTextEditor extends TextEditor {
 
             private ExecSQLAction _execSQLAction = new ExecSQLAction(thisEditor);
 
+            @Override
             public void verifyKey(VerifyEvent event) {
 
                 if (event.stateMask == SWT.CTRL && event.keyCode == 13) {
@@ -385,9 +386,10 @@ public class SQLTextEditor extends TextEditor {
         if (editor.getSite() != null && editor.getSite().getShell() != null && editor.getSite().getShell().getDisplay() != null) {
             editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 
+                @Override
                 public void run() {
 
-                    if (sqlTextViewer != null) {
+                    if (sqlTextViewer != null && !editor.getTitleImage().isDisposed()) {
                         sqlTextViewer.setNewDictionary(dictionary);
                     }
 

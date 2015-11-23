@@ -149,6 +149,10 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
     // True if the editor does not have a filename yet
     private boolean isUntitled;
 
+    final static Color firstColor = new Color(null, 211, 225, 250);
+
+    final static Color secondColor = new Color(null, 175, 201, 246);
+
     /*
      * (non-Javadoc)
      * 
@@ -179,6 +183,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         // Make sure we get notification that our editor is closing because
         // we may need to stop running queries
         getSite().getPage().addPartListener(new PartAdapter2() {
+
             /*
              * (non-JavaDoc)
              * 
@@ -214,6 +219,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
     @Override
     public void dispose() {
         setSession(null);
+        if (this.textEditor.getTitleImage() != null) {
+            this.textEditor.getTitleImage().dispose();
+        }
         super.dispose();
     }
 
@@ -297,9 +305,11 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
 
         toolBar.addResizeListener(new ControlListener() {
 
+            @Override
             public void controlMoved(ControlEvent e) {
             }
 
+            @Override
             public void controlResized(ControlEvent e) {
                 parent.getParent().layout(true);
                 parent.layout(true);
@@ -326,6 +336,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
              * @see
              * org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
              */
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
@@ -335,6 +346,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
              * 
              * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 FormData data = (FormData) sash.getLayoutData();
                 Rectangle rect = sash.getParent().getBounds();
@@ -360,6 +372,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         textEditor.createPartControl(editorParent);
         textEditor.addPropertyListener(new IPropertyListener() {
 
+            @Override
             public void propertyChanged(Object source, int propertyId) {
                 SQLEditor.this.firePropertyChange(propertyId);
             }
@@ -381,8 +394,8 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
 
         // Set up a gradient background for the selected tab
         Display display = getSite().getShell().getDisplay();
-        tabFolder.setSelectionBackground(new Color[] { display.getSystemColor(SWT.COLOR_WHITE), new Color(null, 211, 225, 250),
-                new Color(null, 175, 201, 246), IConstants.TAB_BORDER_COLOR }, new int[] { 25, 50, 75 }, true);
+        tabFolder.setSelectionBackground(new Color[] { display.getSystemColor(SWT.COLOR_WHITE), firstColor, secondColor,
+                IConstants.TAB_BORDER_COLOR }, new int[] { 25, 50, 75 }, true);
 
         messagesTab = new CTabItem(tabFolder, SWT.NONE);
         messagesTab.setText(Messages.getString("SQLEditor.Results.Messages.Caption"));
@@ -943,6 +956,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @param session The new Session
      */
+    @Override
     public void setSession(Session session) {
         if (session == this.session) {
             return;
@@ -964,6 +978,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
     /**
      * @return the session
      */
+    @Override
     public Session getSession() {
         // In theory, if our session is somehow closed by something else then we will have already
         // had our session changed or reset; however, just in case this doesn't happen we can
@@ -1113,6 +1128,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see net.sourceforge.sqlexplorer.plugin.editors.SwitchableSessionEditor#refreshToolbars()
      */
+    @Override
     public void refreshToolbars() {
         getEditorToolBar().refresh();
     }

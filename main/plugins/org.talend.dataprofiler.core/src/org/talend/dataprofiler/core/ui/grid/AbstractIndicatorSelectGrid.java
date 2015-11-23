@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.grid;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import org.eclipse.nebula.widgets.grid.GridCellRenderer;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.nebula.widgets.grid.TalendGrid;
+import org.eclipse.nebula.widgets.grid.TalendGridColumn;
 import org.eclipse.nebula.widgets.grid.TalendGridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.talend.commons.ui.runtime.utils.TalendColorPalette;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -110,7 +109,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
         _modelElementIndicators = modelElementIndicators;
         addExtraListeners();
         tanRotation = Math.tan(Math.PI * COLUMN_HEADER_ROTATION / 180);
-        
+
     }
 
     /**
@@ -194,9 +193,9 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
         createRowSelectColumn();
 
         // database columns
-        for (int index=0;index<_modelElementIndicators.length;index++) {
-            ModelElementIndicator _modelElementIndicator=_modelElementIndicators[index];
-            final GridColumn newCol = new GridColumn(this, SWT.CHECK);
+        for (int index = 0; index < _modelElementIndicators.length; index++) {
+            ModelElementIndicator _modelElementIndicator = _modelElementIndicators[index];
+            final GridColumn newCol = new TalendGridColumn(this, SWT.CHECK);
             AbstractColumnHerderRenderer headerRenderer = getColumnHeaderRenderer();
             headerRenderer.setRotation(COLUMN_HEADER_ROTATION);
             newCol.setHeaderRenderer(headerRenderer);
@@ -261,7 +260,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
         }
     }
 
-    protected abstract  int getPreferWidth(int index);
+    protected abstract int getPreferWidth(int index);
 
     /**
      * 
@@ -309,7 +308,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
      * This column just used to take in space so that visible is false
      */
     protected void createRowSelectColumn() {
-        GridColumn rowSelectCol = new GridColumn(this, SWT.CHECK);
+        GridColumn rowSelectCol = new TalendGridColumn(this, SWT.CHECK);
         rowSelectCol.setHeaderRenderer(getColumnHeaderRenderer());
         rowSelectCol.setCellRenderer(getCellRenderer());
         rowSelectCol.setText("Select All"); //$NON-NLS-1$
@@ -323,7 +322,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
      * This column just used to take in space so that visible is false
      */
     protected void createIndicatorLabelColumn() {
-        GridColumn indicatorLabelColumn = new GridColumn(this, SWT.NONE);
+        GridColumn indicatorLabelColumn = new TalendGridColumn(this, SWT.NONE);
         indicatorLabelColumn.setHeaderRenderer(getColumnHeaderRenderer());
         indicatorLabelColumn.setTree(true);
         indicatorLabelColumn.setWidth(200);
@@ -458,7 +457,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     protected void notifyhandleColumnHighlight(MouseEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 
     private class HoverScrollThread extends Thread {
@@ -631,9 +630,10 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
             }
         }
     }
+
     protected void handleColumnHighlight(int columnIndex) {
-        GridColumn currentColumn =getColumn(columnIndex);
-        GridVisibleRange range=this.getVisibleRange();
+        GridColumn currentColumn = getColumn(columnIndex);
+        GridVisibleRange range = this.getVisibleRange();
         if (currentColumn != null && !isDraggingColumn()) {
             int currentColumnIndex = columnIndex;
 
