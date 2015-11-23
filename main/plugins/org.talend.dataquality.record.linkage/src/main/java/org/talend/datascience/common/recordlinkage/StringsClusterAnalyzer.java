@@ -39,7 +39,7 @@ import org.talend.datascience.common.inference.Analyzer;
 /**
  * String clustering analyzer.
  * 
- * @author zhao
+ * @author mzhao
  *
  */
 public class StringsClusterAnalyzer implements Analyzer<StringClusters> {

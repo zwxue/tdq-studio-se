@@ -41,7 +41,6 @@ public interface Analyzer<T> extends Serializable, AutoCloseable {
      */
     boolean analyze(String... record);
 
-
     /**
      * Ends the analysis (implementations may perform result optimizations after the repeated call to
      * {@link #analyze(String[])}).
@@ -55,10 +54,12 @@ public interface Analyzer<T> extends Serializable, AutoCloseable {
      * column in record.
      */
     List<T> getResult();
-    
+
     /**
      * Merge this analyzer with another one.<br>
+     * 
      * @return new analyzer with this and another analyzer merged together.
      */
     Analyzer<T> merge(Analyzer<T> another);
+
 }
