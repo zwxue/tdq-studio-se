@@ -778,7 +778,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             if (grpSizeValue == 0) {// default color when no
                 return GUIHelper.COLOR_LIST_BACKGROUND;
             }
-            return COLOR_LIST[grpSizeValue % COLOR_LIST.length];
+            return COLOR_LIST[Math.abs((grpSizeValue - 1) % COLOR_LIST.length)];
         }
 
         /**
@@ -1251,6 +1251,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Getter for isShowRandomData.
+     * 
      * @return the isShowRandomData
      */
     public Boolean isShowRandomData() {
@@ -1259,6 +1260,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Sets the isShowRandomData.
+     * 
      * @param isShowRandomData the isShowRandomData to set
      */
     public void setShowRandomData(Boolean isShowRandomData) {

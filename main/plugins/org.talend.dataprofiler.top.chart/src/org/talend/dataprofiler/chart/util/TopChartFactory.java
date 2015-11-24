@@ -449,7 +449,7 @@ public final class TopChartFactory {
         int colorSize = ChartDecorator.COLOR_LIST.size();
         for (Object columnKey : columnKeys) {
             int groupSize = Integer.parseInt(columnKey.toString());
-            colorList.add(ChartDecorator.COLOR_LIST.get(groupSize % colorSize));
+            colorList.add(ChartDecorator.COLOR_LIST.get(Math.abs((groupSize - 1) % colorSize)));
         }
         return colorList;
     }
