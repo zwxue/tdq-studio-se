@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jfree.data.xy.DefaultXYZDataset;
 import org.talend.dataprofiler.service.ITOPChartService;
 import org.talend.utils.collections.DoubleValueAggregate;
 import org.talend.utils.collections.MultiMapHelper;
@@ -35,7 +34,7 @@ public class ValueAggregator extends DoubleValueAggregate<MultipleKey> {
     private Map<String, List<String>> seriesKeyToLabel = new HashMap<String, List<String>>();
 
     /**
-     * Method "getLabels". Must not be called before the {@link #addSeriesToXYZDataset(DefaultXYZDataset, String)}
+     * Method "getLabels". Must not be called before the {@link #addSeriesToXYZDataset(Object, String,ITOPChartService)}
      * method.
      * 
      * @param seriesKey
