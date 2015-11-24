@@ -62,6 +62,8 @@ import org.talend.dataquality.indicators.ValueIndicator;
 import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
+import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
@@ -619,10 +621,21 @@ public final class IndicatorHelper {
 
         };
 
+        // TDQ-11114: consider the UDI type
         IndicatorSqlSwitch<String> sqlSwitch = new IndicatorSqlSwitch<String>() {
 
             @Override
             public String caseWhereRuleIndicator(WhereRuleIndicator object) {
+                return String.valueOf(object.getUserCount());
+            }
+
+            @Override
+            public String caseUserDefIndicator(UserDefIndicator object) {
+                return String.valueOf(object.getUserCount());
+            }
+
+            @Override
+            public String caseJavaUserDefIndicator(JavaUserDefIndicator object) {
                 return String.valueOf(object.getUserCount());
             }
         };
