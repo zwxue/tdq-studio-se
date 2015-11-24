@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.DatasetUtils.DateValueAggregate;
-import org.talend.dataprofiler.core.ui.editor.preview.DatasetUtils.ValueAggregator;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dataprofiler.service.utils.ValueAggregator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -154,14 +154,14 @@ public class HideSeriesChartComposite {
         final Iterator<String> iterator = createXYZDatasets.keySet().iterator();
         while (iterator.hasNext()) {
             final String next = iterator.next();
-            createXYZDatasets.get(next).addSeriesToXYZDataset(dataset, next);
+            createXYZDatasets.get(next).addSeriesToXYZDataset(dataset, next, TOPChartUtils.getInstance().getChartService());
         }
 
         bubbleQueryMap = DatasetUtils.getQueryMap(createXYZDatasets, indicator, column, analysis);
 
         String chartName = DefaultMessagesImpl.getString("TopChartFactory.ChartName", column.getName()); //$NON-NLS-1$
 
-        return TOPChartUtils.getInstance().createBubbleChart(chartName, dataset);
+        return TOPChartUtils.getInstance().createBubbleChart(chartName, dataset, createXYZDatasets);
     }
 
     private void createUtilityControl(Composite parent) {

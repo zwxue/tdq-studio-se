@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.talend.dataprofiler.service.utils.ValueAggregator;
+
 /**
  * created by yyin on 2014-11-28 Detailled comment
  * 
@@ -156,7 +158,7 @@ public interface ITOPChartService {
 
     Object createGanttChart(String chartAxies, Object ganttDataset);
 
-    Object createBubbleChart(String chartName, Object dataset);
+    Object createBubbleChart(String chartName, Object dataset, Map<String, ValueAggregator> xyzDatasets);
 
     void createAnnotOnGantt(Object chart, List<Object[]> rowList, int multiDateColumn, int nominal);
 

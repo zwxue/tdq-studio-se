@@ -40,6 +40,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenera
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultBAWDataset;
 import org.talend.dataprofiler.service.ITOPChartService;
+import org.talend.dataprofiler.service.utils.ValueAggregator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
@@ -431,9 +432,9 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         }
     }
 
-    public Object createBubbleChart(String chartName, Object dataset) {
+    public Object createBubbleChart(String chartName, Object dataset, Map<String, ValueAggregator> createXYZDatasets) {
         if (isTOPChartInstalled()) {
-            return chartService.createBubbleChart(chartName, dataset);
+            return chartService.createBubbleChart(chartName, dataset, createXYZDatasets);
         }
         return null;
     }
@@ -524,6 +525,10 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
             return chartService.createBarChart(title, dataset, showLegend);
         }
         return null;
+    }
+
+    public ITOPChartService getChartService() {
+        return chartService;
     }
 
 }

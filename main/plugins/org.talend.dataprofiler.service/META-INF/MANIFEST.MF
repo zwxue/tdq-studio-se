@@ -9,7 +9,9 @@ Require-Bundle: org.eclipse.equinox.util,
  org.eclipse.equinox.ds,
  org.eclipse.osgi.services,
  org.talend.model,
- org.talend.dataquality
-Export-Package: org.talend.dataprofiler.service
+ org.talend.dataquality;visibility:=reexport
+Export-Package: org.talend.dataprofiler.service,
+ org.talend.dataprofiler.service.utils
 Import-Package: org.eclipse.jface.wizard,
  org.jfree.data.category
+
