@@ -1115,54 +1115,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.talend.libraries.hadoop.apache.0.20.2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.hadoop.apache.0.20.203"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.hadoop.apache.0.20.204"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.hadoop.apache.1.0.0"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.hadoop.cloudera.cdh4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.hadoop.hdp.1.2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.hadoop.mapr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.talend.libraries.hadoop.mapr2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.talend.libraries.slf4j"
          download-size="0"
          install-size="0"
