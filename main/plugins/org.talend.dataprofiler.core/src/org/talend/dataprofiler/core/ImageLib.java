@@ -492,15 +492,19 @@ public final class ImageLib {
             initialize();
         }
         Image originalOverImg = imageRegistry.get(orininal_over_name);
-        if (originalOverImg == null) {
-            ImageDescriptor orignalImg = getImageDescriptor(originalName);
-            ImageDescriptor overImg = getImageDescriptor(overImgName);
-            if (orignalImg != null && overImg != null) {
-                ImageDescriptor originalOverImgDes = createIcon(orignalImg.createImage(), overImg);
+        ImageDescriptor descriptor = imageRegistry.getDescriptor(orininal_over_name);
+        if (originalOverImg == null || descriptor == null) {
+            ImageDescriptor orignalImgDes = getImageDescriptor(originalName);
+            ImageDescriptor overImgDes = getImageDescriptor(overImgName);
+            if (orignalImgDes != null && overImgDes != null) {
+                ImageDescriptor originalOverImgDes = createIcon(orignalImgDes.createImage(), overImgDes);
                 imageRegistry.put(orininal_over_name, originalOverImgDes);
                 originalOverImg = imageRegistry.get(orininal_over_name);
             }
-
+        }
+        if (originalOverImg != null && originalOverImg.isDisposed() && descriptor != null) {
+            descriptor = imageRegistry.getDescriptor(orininal_over_name);
+            originalOverImg = descriptor.createImage();
         }
         return originalOverImg;
 
