@@ -47,7 +47,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
@@ -275,7 +274,7 @@ public class ColumnViewerDND {
             TreeItem item = (TreeItem) event.item;
             Object indData = item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
             // MOD yyi 2011-06-15 22419:column set pattern for MDM
-            if (indData instanceof ColumnIndicator) {
+            if (indData instanceof ModelElementIndicator) {
                 // ColumnIndicator data = (ColumnIndicator) indData;
                 ModelElementIndicator data = (ModelElementIndicator) indData;
                 // MOD klliu 2010-06-12 bug 13696
