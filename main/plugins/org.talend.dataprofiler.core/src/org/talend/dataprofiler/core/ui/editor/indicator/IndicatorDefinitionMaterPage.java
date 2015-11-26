@@ -105,6 +105,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private static final String DELETE_EXPRESSION_TOOLTIP = DefaultMessagesImpl
             .getString("IndicatorDefinitionMaterPage.deleteExpression"); //$NON-NLS-1$
 
+    private static final String DELETE_CHARACTER_MAPPING_TOOLTIP = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.deleteCharacterMapping"); //$NON-NLS-1$
+
     private static final String NO_MORE_PATTERN_ERROR = DefaultMessagesImpl
             .getString("PatternMasterDetailsPage.patternExpression"); //$NON-NLS-1$
 
@@ -561,7 +564,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         });
 
         final Composite cmBodyComp = new Composite(cmComp, SWT.NONE);
-        cmBodyComp.setLayout(new GridLayout(1, false));
+        cmBodyComp.setLayout(new GridLayout(2, false));
         cmBodyComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
@@ -594,7 +597,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             tableColumn.setText(headers[i]);
             tableColumn.setWidth(widths[i]);
         }
-
         TableViewer tableViewer = new TableViewer(table);
 
         tableViewer.setUseHashlookup(true);
@@ -609,6 +611,36 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         tableViewer.setContentProvider(new CommonContentProvider());
         tableViewer.setLabelProvider(new CharactersMappingLabelProvider());
         tableViewer.setInput(charactersMapping);
+
+        createDelButton(cmBodyComp, charactersMapping.getLanguage());
+    }
+
+    /**
+     * DOC talend Comment method "createDelButton".
+     * 
+     * @param cmBodyComp
+     */
+    private void createDelButton(final Composite parent, final String language) {
+        Button delButton = new Button(parent, SWT.PUSH);
+        delButton.setImage(DELETE_BUTTON_IMAGE);
+        delButton.setToolTipText(DELETE_CHARACTER_MAPPING_TOOLTIP);
+        GridData labelGd = new GridData();
+        labelGd.horizontalAlignment = SWT.LEFT;
+        labelGd.widthHint = 30;
+        delButton.setLayoutData(labelGd);
+        delButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                parent.getParent().dispose();
+                // String languageName = PatternLanguageType.findNameByLanguage(language);
+                charactersMappingMapTemp.remove(language);
+                charactersMappingSection.setExpanded(true);
+                setDirty(true);
+            }
+
+        });
+
     }
 
     /**
@@ -1579,7 +1611,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (!rc.isOk()) {
             return;
         }
-        super.doSave(monitor);
         boolean needReloadJUDIJar = false;
         // ADD xqliu 2010-02-25 feature 11201
         rc = checkBeforeSave();
@@ -1604,11 +1635,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             rc = UDIHelper.validate(definition);
         }
 
-        // MOD by zshen for bug 18724 2011.02.23
-        if (this.definitionItem != null) {
-            this.definitionItem.setIndicatorDefinition(definition);
-        }
         if (rc.isOk()) {
+            // MOD by zshen for bug 18724 2011.02.23
+            if (this.definitionItem != null) {
+                this.definitionItem.setIndicatorDefinition(definition);
+            }
+            super.doSave(monitor);
             this.isDirty = false;
             // Mod TDQ-7474, only when rc is ok, should save the definition
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
@@ -1751,11 +1783,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     protected ReturnCode checkBeforeSave() {
-        ReturnCode rc = new ReturnCode();
+        ReturnCode rc = null;
 
         // Added TDQ-7474 20131213 yyin
         // check the size of the tempExpressionMap, if size=0(means no expression), return false
         if (tempExpressionMap.size() == 0) {
+            rc = new ReturnCode();
             rc.setOk(false);
             rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.validateNoExpression"));//$NON-NLS-1$
             return rc;
@@ -1763,11 +1796,63 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
         if (!checkWhithspace()) {
+            rc = new ReturnCode();
             rc.setOk(false);
             rc.setMessage(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace"));//$NON-NLS-1$
             return rc;
         }
 
+        ReturnCode checkCorrectForExpression = checkCorrectForExpression();
+        if (!checkCorrectForExpression.isOk()) {
+            return checkCorrectForExpression;
+        }
+
+        return checkCorrectForCharacterMapping();
+    }
+
+    /**
+     * DOC talend Comment method "checkDuplicateLanguage".
+     * 
+     * @param rc
+     * @return
+     */
+    private ReturnCode checkCorrectForCharacterMapping() {
+        ReturnCode rc = new ReturnCode();
+        Map<String, Integer> languageCountMap = new HashMap<String, Integer>();
+        Iterator<CharactersMapping> charMappIterator = charactersMappingMapTemp.values().iterator();
+        while (charMappIterator.hasNext()) {
+            CharactersMapping cm = charMappIterator.next();
+            String language = cm.getLanguage();
+            Integer languageCount = languageCountMap.get(language);
+            if (languageCount == null) {
+                languageCount = 1;
+            } else {
+                languageCount++;
+            }
+            languageCountMap.put(language, languageCount);
+        }
+
+        Iterator<String> iterator = languageCountMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Integer integer = languageCountMap.get(key);
+            if (integer > 1) {
+                rc.setOk(false);
+                rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeatedCharMapp", key));//$NON-NLS-1$
+                return rc;
+            }
+        }
+        return rc;
+    }
+
+    /**
+     * DOC talend Comment method "checkDuplicateLanguage".
+     * 
+     * @param rc
+     * @return
+     */
+    private ReturnCode checkCorrectForExpression() {
+        ReturnCode rc = new ReturnCode();
         Map<String, Integer> languageVersionCountMap = new HashMap<String, Integer>();
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
         while (it.hasNext()) {
@@ -1793,18 +1878,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 languageVersionCountMap.put(language, integer + 1);
             }
         }
-
         Iterator<String> iterator = languageVersionCountMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
             Integer integer = languageVersionCountMap.get(key);
             if (integer > 1) {
                 rc.setOk(false);
-                rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", key));//$NON-NLS-1$
+                rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeatedExp", key));//$NON-NLS-1$
                 return rc;
             }
         }
-
         return rc;
     }
 
