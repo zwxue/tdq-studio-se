@@ -138,6 +138,17 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 if (object != null && !(object instanceof String) && object.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$
                     object = resultSet.getTimestamp(col);
                 }
+
+                // TDQ-11299: fix the ClassCastException: java.sql.Date cannot be cast to java.lang.String
+                if (object instanceof Date) {
+                    if (object instanceof Time) {
+                        object = new TalendFormatTime((Time) object);
+                    } else {
+                        object = new TalendFormatDate((Date) object);
+                    }
+                }
+                // TDQ-11299~
+
                 // --- give row to handle to indicators
                 for (Indicator indicator : indicators) {
                     // MOD xqliu 2009-02-09 bug 6237
