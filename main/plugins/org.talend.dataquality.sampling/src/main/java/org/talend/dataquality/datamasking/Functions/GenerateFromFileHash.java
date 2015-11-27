@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.Functions;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,20 +30,20 @@ import org.talend.dataquality.datamasking.Function;
  */
 public abstract class GenerateFromFileHash<T2> extends Function<T2> {
 
-    private Scanner in = null;
+    private BufferedReader in = null;
 
     protected List<String> StringTokens = new ArrayList<>();
 
     protected void init() {
         try {
-            in = new Scanner(new FileReader(parameters[0]));
-            while (in.hasNext()) {
-                StringTokens.add(in.next().trim());
+            in = new BufferedReader(new FileReader(parameters[0]));
+            while (in.ready()) {
+                StringTokens.add(in.readLine().trim());
             }
             in.close();
-        } catch (FileNotFoundException | NullPointerException e) {
+        } catch (IOException | NullPointerException e) {
             // We do nothing here because in is already set.
-        }
+        } 
     }
 
     @Override
