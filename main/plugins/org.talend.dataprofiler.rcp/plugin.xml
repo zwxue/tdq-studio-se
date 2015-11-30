@@ -94,14 +94,6 @@
             context="Hive wizard"
             language="java"
             message="Wizard use for TOP"
-            name="hadoop-core-0.20.204.0.jar" mvn_uri="mvn:org.talend.libraries/hadoop-core-0.20.204.0/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.204/lib/hadoop-core-0.20.204.0.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
             name="hadoop-core-1.0.0.jar" mvn_uri="mvn:org.talend.libraries/hadoop-core-1.0.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hadoop-core-1.0.0.jar">
@@ -361,14 +353,6 @@
             name="libthrift-0.9.0.jar" mvn_uri="mvn:org.talend.libraries/libthrift-0.9.0/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/libthrift-0.9.0.jar">
-      </libraryNeeded>
-      <libraryNeeded
-            context="Hive wizard"
-            language="java"
-            message="Wizard use for TOP"
-            name="hadoop-0.20.2-dev-core.jar" mvn_uri="mvn:org.talend.libraries/hadoop-0.20.2-dev-core/6.0.0" 
-            required="true"
-            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr/lib/hadoop-0.20.2-dev-core.jar">
       </libraryNeeded>
       <libraryNeeded
             context="Hive wizard"
