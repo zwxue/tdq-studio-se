@@ -42,7 +42,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.talend.commons.exception.BusinessException;
@@ -61,10 +60,8 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
-import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -99,8 +96,6 @@ public class DQDeleteAction extends DeleteAction {
     private static Logger log = Logger.getLogger(DQDeleteAction.class);
 
     private List<IRepositoryNode> selectedNodes;
-
-    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     // key in nodeWithDependsMap is the repostiory node and value is the dependencies of this node.
     private Map<IRepositoryNode, List<ModelElement>> nodeWithDependsMap = new HashMap<IRepositoryNode, List<ModelElement>>();
@@ -169,11 +164,6 @@ public class DQDeleteAction extends DeleteAction {
         return getSelection();
     }
 
-    @Override
-    public void init(TreeViewer viewer, IStructuredSelection selection) {
-        // no implementation
-    }
-
     ISelectionProvider deletionSelProv = new ISelectionProvider() {
 
         public void setSelection(ISelection arg0) {
@@ -197,17 +187,13 @@ public class DQDeleteAction extends DeleteAction {
         }
     };
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.repository.ui.actions.DeleteAction#doRun()
+     */
     @Override
-    public void run() {
-        repositoryObjectCRUD.refreshDQViewForRemoteProject();
-
-        // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
-        if (!repositoryObjectCRUD.isSelectionAvailable()) {
-            repositoryObjectCRUD.showWarningDialog();
-            return;
-        }
-        // TDQ-7006~
-
+    public void doRun() {
         // MOD qiongli 2012-4-1 TDQ-4926.fill selectedNodes,and delete opration will base on the List.
         if (deleteElements.length == 0) {
             return;
@@ -641,7 +627,7 @@ public class DQDeleteAction extends DeleteAction {
 
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
         super.setAvoidUnloadResources(true);
-        super.run();
+        super.doRun();
         // because reuse tos codes.remove current node from its parent(simple folder) for phisical delete or logical
         // delete dependency.
         if (repoNode != null) {

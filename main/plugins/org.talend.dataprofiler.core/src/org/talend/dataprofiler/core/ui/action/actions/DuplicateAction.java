@@ -17,7 +17,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -36,15 +35,12 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
-import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
-import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -61,43 +57,24 @@ import org.talend.resource.EResourceConstant;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class DuplicateAction extends Action {
+public class DuplicateAction extends org.talend.core.repository.ui.actions.DuplicateAction {
 
     private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
 
-    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
-
     private Logger log = Logger.getLogger(DuplicateAction.class);
 
-    /**
-     * DOC bZhou DuplicateAction constructor comment.
-     */
-    public DuplicateAction() {
-        super(DefaultMessagesImpl.getString("DuplicateCWMResourceAction.Duplicate")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DUPLICATE));
-    }
-
     public DuplicateAction(IRepositoryNode[] nodeArray) {
-        this();
+        super();
         this.nodeArray = nodeArray;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.jface.action.Action#run()
+     * @see org.talend.repository.ui.actions.AContextualAction#doRun()
      */
     @Override
-    public void run() {
-        repositoryObjectCRUD.refreshDQViewForRemoteProject();
-
-        // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
-        if (!repositoryObjectCRUD.isSelectionAvailable()) {
-            repositoryObjectCRUD.showWarningDialog();
-            return;
-        }
-        // TDQ-7006~
-
+    protected void doRun() {
         try {
             String newLabel = null;
             Item lastDuplicateItem = null;

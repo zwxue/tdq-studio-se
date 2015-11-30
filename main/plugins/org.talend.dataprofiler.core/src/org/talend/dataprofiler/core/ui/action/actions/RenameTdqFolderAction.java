@@ -33,11 +33,8 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.i18n.Messages;
 import org.talend.core.repository.ui.actions.RenameFolderAction;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
-import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -50,14 +47,12 @@ public class RenameTdqFolderAction extends RenameFolderAction {
 
     protected static Logger log = Logger.getLogger(RenameTdqFolderAction.class);
 
-    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
-
     /**
      * @param node a folder
      */
     public RenameTdqFolderAction(RepositoryNode node) {
+        super();
         this.repositoryNode = node;
-        setText(DefaultMessagesImpl.getString("RenameTdqFolderAction.renameFolder")); //$NON-NLS-1$
     }
 
     /*
@@ -134,12 +129,6 @@ public class RenameTdqFolderAction extends RenameFolderAction {
         }
     }
 
-    @Override
-    public ISelection getSelection() {
-        repositoryObjectCRUD.refreshDQViewForRemoteProject();
-        return repositoryObjectCRUD.getUISelection();
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -158,7 +147,16 @@ public class RenameTdqFolderAction extends RenameFolderAction {
         if (repositoryViewPart == null) {
             return null;
         }
-        ISelection selection = repositoryViewPart.getCommonViewer().getSelection();
-        return selection;
+        return repositoryViewPart.getCommonViewer().getSelection();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.ui.actions.AContextualAction#getSelection()
+     */
+    @Override
+    public ISelection getSelection() {
+        return getRepositorySelection();
     }
 }
