@@ -812,4 +812,14 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
         return new ReturnCode(true);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getConnectionsWithoutDeleted()
+     */
+    @Override
+    protected List<IRepositoryNode> getConnectionsWithoutDeleted() {
+        return RepositoryNodeHelper.getConnectionRepositoryNodes(false, false);
+    }
 }
