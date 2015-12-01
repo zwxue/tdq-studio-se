@@ -93,8 +93,8 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
             return;
         }
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-            ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getChartComposite(),
-                    ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
+            final ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(
+                    uiPagination.getChartComposite(), ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
 
             needDispostWidgets.add(exComp);
             exComp.setText(DefaultMessagesImpl
@@ -129,6 +129,10 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
                 public void expansionStateChanged(ExpansionEvent e) {
                     uiPagination.getChartComposite().layout();
                     form.reflow(true);
+                    if (e.getState()) {
+                        exComp.setExpanded(e.getState());
+                        exComp.getParent().pack();
+                    }
                 }
 
             });

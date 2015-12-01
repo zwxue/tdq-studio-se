@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.dataprofiler.core.ImageLib;
@@ -126,12 +125,10 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
          * layout ChartComposite and Refolw Form.
          */
         public void layoutChartCompositeRefolwForm() {
-            ScrolledForm form = getMasterPage().getForm();
             Composite comp = getMasterPage().getChartComposite();
             if (comp != null && !comp.isDisposed()) {
-                comp.layout();
+                comp.getParent().pack();
             }
-            form.reflow(true);
         }
 
     };
