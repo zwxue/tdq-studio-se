@@ -62,6 +62,7 @@ import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -170,7 +171,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         List<IRepositoryNode> children = node.getChildren();
         DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
 
-        if ((node instanceof DBTableFolderRepNode || node instanceof DBViewFolderRepNode) && !DQRepositoryNode.isOnFilterring()) {
+        if ((node instanceof DBTableFolderRepNode || node instanceof DBViewFolderRepNode || node instanceof DBColumnFolderRepNode)
+                && !DQRepositoryNode.isOnFilterring()) {
             if (0 < children.size()) {
                 try {
 

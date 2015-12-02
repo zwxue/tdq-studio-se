@@ -259,18 +259,6 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
         return this.getTdTable() != null ? this.getTdTable() : this.getTdView();
     }
 
-    public String getNodeName() {
-        return "Columns (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    public int getChildrenCount() {
-        List<IRepositoryNode> children2 = this.getChildren();
-        if (children2 != null) {
-            return children2.size();
-        }
-        return 0;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -278,16 +266,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
      */
     @Override
     public String getLabel() {
-        return getNodeName();
+        return "Columns (" + children.size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
-     */
-    @Override
-    public String getDisplayText() {
-        return getNodeName();
-    }
 }
