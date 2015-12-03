@@ -63,6 +63,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dataprofiler.core.migration.impl.RenamePatternFinderFolderTask;
 import org.talend.dataprofiler.migration.IMigrationTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
@@ -720,7 +721,7 @@ public class FileSystemImportWriter implements IImportWriter {
             if (siDefCategory != null && indDefCategory != null && !siDefCategory.eIsProxy()) {
                 if (!indDefCategory.equals(siDefCategory)) {
                     // especially: "Pattern Finder" is changed by us
-                    if (!indDefCategory.getLabel().equals("Pattern Finder")) { //$NON-NLS-1$
+                    if (!indDefCategory.getLabel().equals(RenamePatternFinderFolderTask.PATTERN_FINDER)) {
                         IndicatorCategoryHelper.setCategory(siDef, indDefCategory);
                         isModified = true;
                     }

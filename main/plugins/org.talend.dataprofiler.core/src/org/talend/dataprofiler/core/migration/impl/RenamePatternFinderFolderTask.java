@@ -37,7 +37,7 @@ public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
 
     protected static Logger log = Logger.getLogger(RenamePatternFinderFolderTask.class);
 
-    private static final String PATTERN_FINDER = "Pattern Finder"; //$NON-NLS-1$
+    public static final String PATTERN_FINDER = "Pattern Finder"; //$NON-NLS-1$
 
     private static final String PATTERN_FREQUNCEY_STATISTICS = "Pattern Frequncey Statistics"; //$NON-NLS-1$
 
