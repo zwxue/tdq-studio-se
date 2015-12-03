@@ -27,7 +27,6 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
 
     @Override
     public Boolean handleDrop(final IRepositoryNode targetNode) {
-        boolean result = Boolean.FALSE;
         // TDQ-11324: surround with this to avoid after refresh, get selected node is empty for git remote project
         RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("handle Drop", this) { //$NON-NLS-1$
 
@@ -66,7 +65,7 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
         };
         repositoryWorkUnit.setAvoidUnloadResources(true);
         CoreRuntimePlugin.getInstance().getProxyRepositoryFactory().executeRepositoryWorkUnit(repositoryWorkUnit);
-        return result;
+        return (Boolean) repositoryWorkUnit.getResult();
     }
 
     private boolean superHandle(IRepositoryNode targetNode) {
