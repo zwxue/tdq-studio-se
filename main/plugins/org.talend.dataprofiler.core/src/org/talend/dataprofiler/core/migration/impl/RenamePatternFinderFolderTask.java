@@ -37,19 +37,9 @@ public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
 
     protected static Logger log = Logger.getLogger(RenamePatternFinderFolderTask.class);
 
-    private static final String PATTERN_FINDER = "Pattern Finder"; //$NON-NLS-1$
+    public static final String PATTERN_FINDER = "Pattern Finder"; //$NON-NLS-1$
 
     private static final String PATTERN_FREQUNCEY_STATISTICS = "Pattern Frequncey Statistics"; //$NON-NLS-1$
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
-     */
-    @Override
-    public boolean valid() {
-        return !ResourceManager.getSysIndicatorPatternFinderFolder().exists() && super.valid();
-    }
 
     /*
      * (non-Javadoc)
@@ -58,10 +48,15 @@ public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
      */
     @Override
     protected boolean doExecute() throws Exception {
-        // rename folder name
-        File oldFolder = ResourceManager.getSystemIndicatorFolder().getRawLocation().append(PATTERN_FINDER).toFile();
-        File newFolder = WorkspaceUtils.ifolderToFile(ResourceManager.getSysIndicatorPatternFinderFolder());
-        boolean result = oldFolder.renameTo(newFolder);
+        boolean result = true;
+        File newFolder = WorkspaceUtils.ifolderToFile(ResourceManager.getSysIndicatorPatternFrequnceyStatisticsFolder());
+
+        // only when "Pattern Frequncey Statistics" do not exist, then do rename
+        if (!ResourceManager.getSysIndicatorPatternFrequnceyStatisticsFolder().exists()) {
+            // rename folder name
+            File oldFolder = ResourceManager.getSystemIndicatorFolder().getRawLocation().append(PATTERN_FINDER).toFile();
+            result &= oldFolder.renameTo(newFolder);
+        }
 
         try {
             // replace for the path in TalendProperties:ItemState of indicators

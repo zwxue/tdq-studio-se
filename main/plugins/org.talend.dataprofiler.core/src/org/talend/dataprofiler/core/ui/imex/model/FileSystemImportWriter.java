@@ -55,6 +55,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
@@ -62,6 +63,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dataprofiler.core.migration.impl.RenamePatternFinderFolderTask;
 import org.talend.dataprofiler.migration.IMigrationTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
@@ -134,7 +136,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private final Map<TDQItem, ModelElement> need2MergeModelElementMap = new HashMap<TDQItem, ModelElement>();
 
-    private final List<IPath> allDeletedItems = new ArrayList<IPath>();
+    private final List<IPath> allImportItems = new ArrayList<IPath>();
 
     private List<File> updateFiles = new ArrayList<File>();
 
@@ -419,7 +421,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
                 if (property != null) {
                     User user = ReponsitoryContextBridge.getUser();
-                    if (user != null && property.getAuthor() == null) {
+                    if (user != null && property.getAuthor().getLogin() == null) {
                         property.setAuthor(user);
                         EMFSharedResources.getInstance().saveResource(property.eResource());
                     }
@@ -460,7 +462,7 @@ public class FileSystemImportWriter implements IImportWriter {
         final IProgressMonitor fMonitor = monitor;
 
         need2MergeModelElementMap.clear();
-        allDeletedItems.clear();
+        allImportItems.clear();
 
         RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Import TDQ Element") {//$NON-NLS-1$
 
@@ -535,7 +537,7 @@ public class FileSystemImportWriter implements IImportWriter {
                                         write(resPath, desPath);
                                         allCopiedFiles.add(desPath.toFile());
                                     }
-                                    allDeletedItems.add(desPath);
+                                    allImportItems.add(desPath);
                                 }
 
                                 for (File file : updateFiles) {
@@ -707,10 +709,23 @@ public class FileSystemImportWriter implements IImportWriter {
         // handle the category
         IndicatorCategory siDefCategory = IndicatorCategoryHelper.getCategory(siDef);
         IndicatorCategory indDefCategory = IndicatorCategoryHelper.getCategory(indDef);
-        if (siDefCategory != null && indDefCategory != null && !indDefCategory.eIsProxy()) {
-            if (!siDefCategory.equals(indDefCategory)) {
-                IndicatorCategoryHelper.setCategory(siDef, indDefCategory);
-                isModified = true;
+        siDefCategory = (IndicatorCategory) EObjectHelper.resolveObject(siDefCategory);
+        indDefCategory = (IndicatorCategory) EObjectHelper.resolveObject(indDefCategory);
+
+        if (!ModelElementHelper.compareUUID(siDefCategory, indDefCategory)) {
+            // use the imported one
+            IndicatorCategoryHelper.setCategory(siDef, indDefCategory);
+            isModified = true;
+        } else {
+            // if the uuid is the same, but the label is different
+            if (siDefCategory != null && indDefCategory != null && !siDefCategory.eIsProxy()) {
+                if (!indDefCategory.equals(siDefCategory)) {
+                    // especially: "Pattern Finder" is changed by us
+                    if (!indDefCategory.getLabel().equals(RenamePatternFinderFolderTask.PATTERN_FINDER)) {
+                        IndicatorCategoryHelper.setCategory(siDef, indDefCategory);
+                        isModified = true;
+                    }
+                }
             }
         }
 
@@ -1345,14 +1360,14 @@ public class FileSystemImportWriter implements IImportWriter {
      * @see org.talend.dataprofiler.core.ui.imex.model.IImportWriter#postFinish()
      */
     public void postFinish() throws IOException {
-        // save all deleted items
-        for (IPath path : this.allDeletedItems) {
+        // reload all import items
+        for (IPath path : this.allImportItems) {
             IFile desIFile = ResourceService.file2IFile(path.toFile());
             if (desIFile != null && desIFile.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                 Property property = PropertyHelper.getProperty(desIFile, true);
                 if (property != null) {
                     try {
-                        ProxyRepositoryFactory.getInstance().save(property.getItem(), true);
+                        ProxyRepositoryFactory.getInstance().reload(property, desIFile);
                     } catch (PersistenceException e) {
                         log.error(e);
                     }

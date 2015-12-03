@@ -65,6 +65,7 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
@@ -597,6 +598,9 @@ public abstract class AElementPersistance {
                 if (node != null && !node.getProject().isMainProject()) {
                     continue;
                 }
+
+                // fix another NPE issue.
+                toSave = EObjectHelper.resolveObject(toSave);
                 if (!toSave.eResource().getURI().segment(1)
                         .equals(ProjectManager.getInstance().getCurrentProject().getTechnicalLabel())) {
                     continue;
