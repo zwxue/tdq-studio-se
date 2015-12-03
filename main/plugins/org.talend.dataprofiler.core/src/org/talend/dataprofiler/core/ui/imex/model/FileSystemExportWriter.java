@@ -30,9 +30,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.properties.Property;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 
@@ -69,7 +71,14 @@ public class FileSystemExportWriter implements IExportWriter {
 
         // item
         IPath itemResPath = new Path(record.getFile().getAbsolutePath());
-        IPath itemDesPath = record.getFullPath();
+        // TDQ-11349 get path from property, should not contain path "repositories\1638449237\master..."
+        Property property = record.getProperty();
+        IPath itemDesPath = null;
+        if (property != null) {
+            itemDesPath = PropertyHelper.getItemPath(property);
+        } else {
+            itemDesPath = record.getFullPath();
+        }
 
         // property
         IPath propResPath = record.getPropertyPath();
