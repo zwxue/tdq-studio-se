@@ -58,7 +58,7 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
 
     public static final String PLUGIN_NAME = "net.sourceforge.sqlexplorer"; //$NON-NLS-1$
 
-    private static final String SQL_EXPLORER_VERSION = "_6.0.0"; //$NON-NLS-1$
+    public static final String SQL_EXPLORER_VERSION = "_6.0.0"; //$NON-NLS-1$
 
     private static final String SQL_EXPLORER_MAVEN_VERSION = "-6.0.0-SNAPSHOT"; //$NON-NLS-1$ 
 
