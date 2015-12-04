@@ -37,8 +37,10 @@ import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ILibraryManagerService;
 import org.talend.core.model.general.ModuleNeeded;
 import org.talend.core.model.general.ModuleToInstall;
+import org.talend.core.runtime.maven.MavenConstants;
 import org.talend.core.runtime.maven.MavenUrlHelper;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.librariesmanager.utils.RemoteModulesHelper;
 import org.talend.updates.runtime.engine.factory.AbstractExtraUpdatesFactory;
@@ -59,6 +61,8 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
      * {"sqlexplorer_6.0.0.jar", "sqlexplorer.nl_6.0.0.jar"}
      */
     protected abstract List<String> getJarFileNames();
+
+    protected abstract String getCurrentVersion();
 
     /**
      * the jar file name must be in pairs and in order, jar file and jar nl file.<br/>
@@ -209,7 +213,12 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
     protected List<ModuleNeeded> getAllUninstalledModules() {
         List<ModuleNeeded> allUninstalledModules = new ArrayList<ModuleNeeded>();
         for (String jarFileName : getJarFileNames()) {
-            ModuleNeeded modelNeeded = new ModuleNeeded(getContextName(), jarFileName, getInforMessage(), true);
+            // TDQ-11359 set mvnUrl for ModuleNeeded,so that it can be found from server.
+            String artifactId = StringUtils.removeEnd(jarFileName, PluginConstant.DOT_STRING + MavenConstants.PACKAGING_JAR);
+            String mvnUrl = MavenUrlHelper.generateMvnUrl(MavenConstants.DEFAULT_LIB_GROUP_ID, artifactId, getCurrentVersion(),
+                    MavenConstants.PACKAGING_JAR, null);
+            ModuleNeeded modelNeeded = new ModuleNeeded(getContextName(), jarFileName, getInforMessage(), true, null, null,
+                    mvnUrl);
             allUninstalledModules.add(modelNeeded);
         }
         return allUninstalledModules;

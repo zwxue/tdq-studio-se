@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.download;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.service.ITOPChartService;
 
 /**
@@ -73,6 +75,16 @@ public class DQChartJarsExtraUpdatesFactory extends AbstractDQMissingJarsExtraUp
     protected Object getContainPluginNames() {
 
         return "TOP Chart"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.download.AbstractDQMissingJarsExtraUpdatesFactory#getCurrentVersion()
+     */
+    @Override
+    protected String getCurrentVersion() {
+        return StringUtils.removeStart(ITOPChartService.SERVICE_VERSION, PluginConstant.UNDER_LINE);
     }
 
 }
