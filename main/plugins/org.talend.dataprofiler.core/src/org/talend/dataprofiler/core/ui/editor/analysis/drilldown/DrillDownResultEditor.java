@@ -38,7 +38,6 @@ import org.eclipse.nebula.widgets.pagination.PageableController;
 import org.eclipse.nebula.widgets.pagination.collections.PageResult;
 import org.eclipse.nebula.widgets.pagination.collections.PageResultContentProvider;
 import org.eclipse.nebula.widgets.pagination.renderers.navigation.ResultAndNavigationPageGraphicsRenderer;
-import org.eclipse.nebula.widgets.pagination.table.SortTableColumnSelectionListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -124,13 +123,11 @@ public class DrillDownResultEditor extends EditorPart {
 
     @Override
     public boolean isDirty() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean isSaveAsAllowed() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -275,8 +272,9 @@ public class DrillDownResultEditor extends EditorPart {
             TableViewerColumn col = createTableViewerColumn(tableView2, tableColumnName);
             TableSectionViewerProvider provider = new TableSectionViewerProvider();
             col.setLabelProvider(provider);
-            col.getColumn().addSelectionListener(new SortTableColumnSelectionListener(tableColumnName, controller));
-
+            // TDQ-11356 msjian 2015-12-4: make the sort work well in the drilldown editor
+            addSorter(tableView2.getTable(), col.getColumn());
+            // TDQ-11356~
         }
 
     }
