@@ -32,7 +32,7 @@
 
 list="net.sourceforge.sqlexplorer net.sourceforge.sqlexplorer.nl \
  org.talend.dataprofiler.top.chart org.talend.dataprofiler.top.chart.nl"
-version="6.1.0"
+version="6.1.1"
 repo_id="talend-update"
 repo_url="https://talend-update.talend.com/nexus/content/repositories/libraries"
 
