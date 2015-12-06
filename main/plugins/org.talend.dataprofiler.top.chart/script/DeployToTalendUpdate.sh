@@ -26,13 +26,14 @@
 #		</server>
 #		...
 #	</servers>
-# 2. copy this file to the folder where the plugins to deploy are exported.
+# 2. copy this bundle jar files to deploy into the current folder.
 # 3. run the script form shell. (Not supported on windows unless a shell environment
 #	 is installed, such as Cygwin, MinGW, Git Bash)
 
 list="net.sourceforge.sqlexplorer net.sourceforge.sqlexplorer.nl \
  org.talend.dataprofiler.top.chart org.talend.dataprofiler.top.chart.nl"
 version="6.1.1"
+revision_suffix="20151204_1535"
 repo_id="talend-update"
 repo_url="https://talend-update.talend.com/nexus/content/repositories/libraries"
 
@@ -42,7 +43,7 @@ do
 	echo "|     " ${element}_${version} "     |"
 	echo "----------------------------------------------------"
 	mvn deploy:deploy-file -DpomFile=${element}_${version}.pom \
-      -Dfile=${element}_${version}.jar \
+      -Dfile=${element}_${version}.${revision_suffix}.jar \
       -DrepositoryId=$repo_id \
       -Durl=$repo_url
 done
