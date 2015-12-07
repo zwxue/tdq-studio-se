@@ -492,8 +492,8 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY;
         } else if (EResourceConstant.SYSTEM_INDICATORS_OVERVIEW.getPath().equals(path)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS;
+        } else if (EResourceConstant.SYSTEM_INDICATORS_PATTERN_FREQUENCEY_STATISTICS.getPath().equals(path)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUENCY_STATISTICS;
         } else if (EResourceConstant.SYSTEM_INDICATORS_PATTERN_MATCHING.getPath().equals(path)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING;
         } else if (EResourceConstant.SYSTEM_INDICATORS_ROW_COMPARISON.getPath().equals(path)) {
@@ -561,9 +561,9 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY;
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW).endsWith(label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW;
-        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS)
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUENCY_STATISTICS)
                 .endsWith(label)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUNCEY_STATISTICS;
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FREQUENCY_STATISTICS;
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING).endsWith(label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING;
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_ROW_COMPARISON).endsWith(label)) {

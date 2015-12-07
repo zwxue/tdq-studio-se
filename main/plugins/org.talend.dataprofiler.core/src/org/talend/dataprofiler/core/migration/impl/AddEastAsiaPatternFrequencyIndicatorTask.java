@@ -13,7 +13,7 @@ public class AddEastAsiaPatternFrequencyIndicatorTask extends AbstractWorksapceU
 
     private final String DESFOLDERNAME = "Pattern Finder"; //$NON-NLS-1$
 
-    private final String SRCFOLDERPATH = "/indicators/Pattern Frequncey Statistics/"; //$NON-NLS-1$
+    private final String SRCFOLDERPATH = "/indicators/Pattern Frequency Statistics/"; //$NON-NLS-1$
 
     public AddEastAsiaPatternFrequencyIndicatorTask() {
     }
@@ -45,10 +45,10 @@ public class AddEastAsiaPatternFrequencyIndicatorTask extends AbstractWorksapceU
     protected boolean doExecute() throws Exception {
         DQStructureManager manager = DQStructureManager.getInstance();
         // if the project version is lower than 6.1 and import from logon window, the target folder is "Pattern Finder".
-        // or else, the target folder is renamed to "Pattern Frequncey Statistics" by TDQ-11101.
+        // or else, the target folder is renamed to "Pattern Frequency Statistics" by TDQ-11101.
         IFolder desFolder = ResourceManager.getSystemIndicatorFolder().getFolder(DESFOLDERNAME);
         if (!desFolder.exists()) {
-            desFolder = ResourceManager.getSystemIndicatorFolder().getFolder("Pattern Frequncey Statistics"); //$NON-NLS-1$
+            desFolder = ResourceManager.getSystemIndicatorFolder().getFolder("Pattern Frequency Statistics"); //$NON-NLS-1$
         }
         manager.copyFilesToFolder(CorePlugin.getDefault(), new Path(SRCFOLDERPATH).toString(), false, desFolder, null);
         return true;
