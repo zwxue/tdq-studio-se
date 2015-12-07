@@ -88,7 +88,7 @@ public enum EResourceConstant {
                                             "TDQ_Libraries/Indicators/System Indicators/Functional Dependency",//$NON-NLS-1$
                                             ResourceConstant.READONLY),
     SYSTEM_INDICATORS_OVERVIEW("Overview", "TDQ_Libraries/Indicators/System Indicators/Overview", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
-    SYSTEM_INDICATORS_PATTERN_FREQUENCEY_STATISTICS("Pattern Frequency Statistics",//$NON-NLS-1$
+    SYSTEM_INDICATORS_PATTERN_FREQUENCY_STATISTICS("Pattern Frequency Statistics",//$NON-NLS-1$
                                                     "TDQ_Libraries/Indicators/System Indicators/Pattern Frequency Statistics",//$NON-NLS-1$
                                                     ResourceConstant.READONLY),
     SYSTEM_INDICATORS_PATTERN_MATCHING("Pattern Matching",//$NON-NLS-1$
