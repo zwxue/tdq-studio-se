@@ -31,7 +31,7 @@ import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
 /**
- * TDQ-11101: Rename "Pattern Finder" to "Pattern Frequncey Statistics" Task
+ * TDQ-11101: Rename "Pattern Finder" to "Pattern Frequency Statistics" Task
  */
 public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
 
@@ -39,7 +39,7 @@ public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
 
     public static final String PATTERN_FINDER = "Pattern Finder"; //$NON-NLS-1$
 
-    private static final String PATTERN_FREQUNCEY_STATISTICS = "Pattern Frequncey Statistics"; //$NON-NLS-1$
+    private static final String PATTERN_FREQUENCY_STATISTICS = "Pattern Frequency Statistics"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -49,10 +49,10 @@ public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
     @Override
     protected boolean doExecute() throws Exception {
         boolean result = true;
-        File newFolder = WorkspaceUtils.ifolderToFile(ResourceManager.getSysIndicatorPatternFrequnceyStatisticsFolder());
+        File newFolder = WorkspaceUtils.ifolderToFile(ResourceManager.getSysIndicatorPatternFrequencyStatisticsFolder());
 
-        // only when "Pattern Frequncey Statistics" do not exist, then do rename
-        if (!ResourceManager.getSysIndicatorPatternFrequnceyStatisticsFolder().exists()) {
+        // only when "Pattern Frequency Statistics" do not exist, then do rename
+        if (!ResourceManager.getSysIndicatorPatternFrequencyStatisticsFolder().exists()) {
             // rename folder name
             File oldFolder = ResourceManager.getSystemIndicatorFolder().getRawLocation().append(PATTERN_FINDER).toFile();
             result &= oldFolder.renameTo(newFolder);
@@ -109,7 +109,7 @@ public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
      */
     public static Map<String, String> initIndicatorReplaceMap() {
         Map<String, String> replaceStringMap = new HashMap<String, String>();
-        replaceStringMap.put(PATTERN_FINDER, PATTERN_FREQUNCEY_STATISTICS);
+        replaceStringMap.put(PATTERN_FINDER, PATTERN_FREQUENCY_STATISTICS);
         return replaceStringMap;
     }
 }

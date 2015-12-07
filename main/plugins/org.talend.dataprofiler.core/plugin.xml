@@ -1802,7 +1802,7 @@
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.RenamePatternFinderFolderTask"
            id="org.talend.dataprofiler.core.migration.impl.RenamePatternFinderFolderTask"
-           name="Rename Pattern Finder to Pattern Frequncey Statistics"
+           name="Rename Pattern Finder to Pattern Frequency Statistics"
            version="6.1.0">
      </workspacetask>
   </extension>

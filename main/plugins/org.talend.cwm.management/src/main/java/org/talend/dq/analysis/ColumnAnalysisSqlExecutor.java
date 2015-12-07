@@ -326,10 +326,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             } else { // usual nominal frequencies
-                // wrap column name into a function for Pattern Frequncey Statistics indicator
+                // wrap column name into a function for Pattern Frequency Statistics indicator
                 if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternFreqIndicator())
                         || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternLowFreqIndicator())) {
-                    // done scorreia: get user defined functions for Pattern Frequncey Statistics
+                    // done scorreia: get user defined functions for Pattern Frequency Statistics
                     // MOD xqliu 2009-07-01 bug 7818
                     // MOD zshen for bug 12675 2010-05-12
                     if (Java2SqlType.isNumbericInSQL(tdColumn.getSqlDataType().getJavaDataType())

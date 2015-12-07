@@ -102,7 +102,7 @@ public final class IndicatorTreeModelBuilder {
         // build Summary Statistic categoryNode
         IndicatorCategoryNode boxCategoryNode = new IndicatorCategoryNode(SUMMARY_LABEL, IndicatorEnum.BoxIIndicatorEnum);
 
-        // build Pattern Frequncey Statistics categoryNode
+        // build Pattern Frequency Statistics categoryNode
         IndicatorEnum[] patternFinderEnums = new IndicatorEnum[] { IndicatorEnum.PatternFreqIndicatorEnum,
                 IndicatorEnum.PatternLowFreqIndicatorEnum, IndicatorEnum.EastAsiaPatternFreqIndicatorEnum,
                 IndicatorEnum.EastAsiaPatternLowFreqIndicatorEnum, IndicatorEnum.DatePatternFreqIndicatorEnum };

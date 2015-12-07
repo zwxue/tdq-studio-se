@@ -23,7 +23,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * created by yyin on 2014-2-18 : add the sql expressions for the database:Netezza, in the system indicators of: some
- * Text indicators, Pattern Frequncey Statistics, Soundex, and Benford indicator; and add the default one in pattern
+ * Text indicators, Pattern Frequency Statistics, Soundex, and Benford indicator; and add the default one in pattern
  * finder and soundex who does not have the default one before
  * 
  */
