@@ -78,7 +78,7 @@ public class FileSystemExportWriter implements IExportWriter {
             // TDQ-11370: get a relative path to make the export structure correctly.
             itemDesPath = PropertyHelper.getItemPath(property).makeRelative();
         } else {
-            itemDesPath = record.getFullPath();
+            itemDesPath = itemResPath.makeRelativeTo(ResourceManager.getRootProject().getLocation().removeLastSegments(1));
         }
 
         // property
