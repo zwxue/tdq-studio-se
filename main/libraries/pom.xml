@@ -193,7 +193,7 @@
             <plugin>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-build-plugin</artifactId>
-                <version>1.5-SNAPSHOT</version>
+                <version>1.5</version>
             </plugin>
 
             <plugin>
