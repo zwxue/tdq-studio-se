@@ -34,7 +34,9 @@ import org.talend.core.repository.i18n.Messages;
 import org.talend.core.repository.ui.actions.RenameFolderAction;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -46,6 +48,8 @@ import org.talend.repository.model.RepositoryNode;
 public class RenameTdqFolderAction extends RenameFolderAction {
 
     protected static Logger log = Logger.getLogger(RenameTdqFolderAction.class);
+
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     /**
      * @param node a folder
@@ -157,6 +161,7 @@ public class RenameTdqFolderAction extends RenameFolderAction {
      */
     @Override
     public ISelection getSelection() {
-        return getRepositorySelection();
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
+        return repositoryObjectCRUD.getUISelection();
     }
 }

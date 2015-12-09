@@ -41,6 +41,8 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -61,6 +63,8 @@ public class DuplicateAction extends org.talend.core.repository.ui.actions.Dupli
 
     private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
 
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
+
     private Logger log = Logger.getLogger(DuplicateAction.class);
 
     public DuplicateAction(IRepositoryNode[] nodeArray) {
@@ -75,6 +79,8 @@ public class DuplicateAction extends org.talend.core.repository.ui.actions.Dupli
      */
     @Override
     protected void doRun() {
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
+
         try {
             String newLabel = null;
             Item lastDuplicateItem = null;

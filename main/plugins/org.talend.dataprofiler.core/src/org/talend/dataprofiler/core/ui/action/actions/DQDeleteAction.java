@@ -60,8 +60,10 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -96,6 +98,8 @@ public class DQDeleteAction extends DeleteAction {
     private static Logger log = Logger.getLogger(DQDeleteAction.class);
 
     private List<IRepositoryNode> selectedNodes;
+
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     // key in nodeWithDependsMap is the repostiory node and value is the dependencies of this node.
     private Map<IRepositoryNode, List<ModelElement>> nodeWithDependsMap = new HashMap<IRepositoryNode, List<ModelElement>>();
@@ -194,6 +198,8 @@ public class DQDeleteAction extends DeleteAction {
      */
     @Override
     public void doRun() {
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
+
         // MOD qiongli 2012-4-1 TDQ-4926.fill selectedNodes,and delete opration will base on the List.
         if (deleteElements.length == 0) {
             return;

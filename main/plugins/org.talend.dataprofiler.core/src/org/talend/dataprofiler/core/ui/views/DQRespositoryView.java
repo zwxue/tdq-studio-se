@@ -81,6 +81,7 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.progress.UIJob;
+import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.swt.dialogs.ProgressDialog;
 import org.talend.core.model.general.Project;
@@ -926,19 +927,32 @@ public class DQRespositoryView extends CommonNavigator {
 
         @Override
         public void run() {
-            ProxyRepositoryManager.getInstance().refresh();
-            // MOD qiongli 2010-12-7 bug 16843.
-            // MOD qiongli 2011-1-20. shield for resusing TOS delete mechanism.
-            // LogicalDeleteFileHandle.setManualRefresh(true);
-            // LogicalDeleteFileHandle.setFinishScanAllFolders(false);
-            getCommonViewer().refresh();
-            super.run();
+            RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
+                    "refresh DQ Reponsitory View") { //$NON-NLS-1$
+
+                @Override
+                protected void run() throws LoginException, PersistenceException {
+                    // equals super.run()
+                    // new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()).run();
+                    CorePlugin.getDefault().refreshWorkSpace();
+
+                    ProxyRepositoryManager.getInstance().refresh();
+                    getCommonViewer().refresh();
+                }
+
+            };
+            repositoryWorkUnit.setAvoidUnloadResources(true);
+            ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+            try {
+                repositoryWorkUnit.throwPersistenceExceptionIfAny();
+            } catch (PersistenceException e) {
+                log.error(e);
+            }
         }
     }
 
     public void refresh() {
-        RefreshDQReponsitoryViewAction refresh = new RefreshDQReponsitoryViewAction();
-        refresh.run();
+        new RefreshDQReponsitoryViewAction().run();
     }
 
     @Override
