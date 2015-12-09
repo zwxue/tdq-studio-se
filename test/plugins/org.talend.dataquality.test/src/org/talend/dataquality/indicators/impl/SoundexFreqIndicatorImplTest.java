@@ -91,12 +91,12 @@ public class SoundexFreqIndicatorImplTest {
         Assert.assertEquals(false, soundexFreqIndicator.getUniqueValues().isEmpty());
         Assert.assertEquals(1, soundexFreqIndicator.getUniqueValues().size());
         Assert.assertEquals(2, soundexFreqIndicator.getValueToDistinctFreq().get("mic").intValue()); //$NON-NLS-1$
-        Assert.assertEquals(0, soundexFreqIndicator.getValueToDistinctFreq().get("Null field").intValue()); //$NON-NLS-1$
+        Assert.assertNull(soundexFreqIndicator.getValueToDistinctFreq().get("Null field")); //$NON-NLS-1$
         Assert.assertEquals(1, soundexFreqIndicator.getValueToDistinctFreq().get("machine").intValue()); //$NON-NLS-1$
         Assert.assertEquals(1, soundexFreqIndicator.getValueToDistinctFreq().get("unique").intValue()); //$NON-NLS-1$
 
         Assert.assertEquals(4, soundexFreqIndicator.getValueToFreq().get("mic").intValue()); //$NON-NLS-1$
-        Assert.assertEquals(3, soundexFreqIndicator.getValueToFreq().get("Null field").intValue()); //$NON-NLS-1$
+        Assert.assertNull(soundexFreqIndicator.getValueToDistinctFreq().get("Null field")); //$NON-NLS-1$
         Assert.assertEquals(2, soundexFreqIndicator.getValueToFreq().get("machine").intValue()); //$NON-NLS-1$
         Assert.assertEquals(1, soundexFreqIndicator.getValueToDistinctFreq().get("unique").intValue()); //$NON-NLS-1$
     }

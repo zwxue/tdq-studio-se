@@ -29,7 +29,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -70,9 +69,7 @@ public class TextStatisticIndicatorsForOracleTest {
      */
     @Before
     public void setUp() throws Exception {
-        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
-            DQStructureManager.getInstance().createDQStructure();
-        }
+        UnitTestBuildHelper.initProjectStructure();
     }
 
     /**

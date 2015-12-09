@@ -33,12 +33,14 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC yyin class global comment. Detailled comment
  */
-@PrepareForTest({ ConnectionHelper.class, Messages.class })
+@PrepareForTest({ ConnectionHelper.class, Messages.class, DbmsLanguageFactory.class })
 public class ModelElementIndicatorRuleTest {
 
     @Rule
@@ -127,6 +129,14 @@ public class ModelElementIndicatorRuleTest {
         PowerMockito.mockStatic(ConnectionHelper.class);
         when(ConnectionHelper.getTdDataProvider(me)).thenReturn(connection);
         when(ConnectionHelper.isHive(connection)).thenReturn(true);
+
+        DbmsLanguage dbmsLanguage = mock(DbmsLanguage.class);
+        when(dbmsLanguage.getDbmsName()).thenReturn("MySQL"); //$NON-NLS-1$
+        when(dbmsLanguage.getDbVersion()).thenReturn(null);
+
+        PowerMockito.mockStatic(DbmsLanguageFactory.class);
+        when(DbmsLanguageFactory.createDbmsLanguage(connection)).thenReturn(dbmsLanguage);
+
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.SoundexIndicatorEnum, me, ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule
                 .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.SQL));
@@ -211,6 +221,13 @@ public class ModelElementIndicatorRuleTest {
         PowerMockito.mockStatic(ConnectionHelper.class);
         when(ConnectionHelper.getTdDataProvider(me)).thenReturn(connection);
         when(ConnectionHelper.isTeradata(connection)).thenReturn(true);
+        DbmsLanguage dbmsLanguage = mock(DbmsLanguage.class);
+        when(dbmsLanguage.getDbmsName()).thenReturn("MySQL"); //$NON-NLS-1$
+        when(dbmsLanguage.getDbVersion()).thenReturn(null);
+
+        PowerMockito.mockStatic(DbmsLanguageFactory.class);
+        when(DbmsLanguageFactory.createDbmsLanguage(connection)).thenReturn(dbmsLanguage);
+
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
                 ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,

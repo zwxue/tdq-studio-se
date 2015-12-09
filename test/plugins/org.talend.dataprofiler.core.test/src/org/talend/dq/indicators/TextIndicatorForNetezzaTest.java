@@ -14,7 +14,7 @@ package org.talend.dq.indicators;
 
 import junit.framework.Assert;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.TdExpression;
@@ -91,8 +91,8 @@ public class TextIndicatorForNetezzaTest {
      * 
      * @throws java.lang.Exception
      */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         UnitTestBuildHelper.initProjectStructure();
     }
 
