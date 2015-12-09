@@ -811,7 +811,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         if (activePart instanceof DQRespositoryView) {
             ((DQRespositoryView) activePart).refresh();
         }
-        CorePlugin.getDefault().refreshWorkSpace();
     }
 
     /*
