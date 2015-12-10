@@ -198,7 +198,7 @@ public class TypeInferenceUtils {
      * @param value the value to be detected
      * @return true if the type of value is expected, false otherwise.
      */
-    public static boolean isValid(DataType.Type type, String value) {
+    public static boolean isValid(DataTypeEnum type, String value) {
 
         switch (type) {
         case BOOLEAN:
