@@ -38,7 +38,7 @@ public class PossiblePhoneCountIndicatorImplTest {
         possiblePhoneCountIndicatorImpl = new PossiblePhoneCountIndicatorImpl();
         IndicatorParameters createIndicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         TextParameters textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-        textParameters.setCountryCode(java.util.Locale.getDefault().getCountry());
+        textParameters.setCountryCode(java.util.Locale.CHINA.getCountry());
         createIndicatorParameters.setTextParameter(textParameters);
         possiblePhoneCountIndicatorImpl.setParameters(createIndicatorParameters);
     }
