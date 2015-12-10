@@ -200,6 +200,13 @@ public class DQDeleteAction extends DeleteAction {
     public void doRun() {
         repositoryObjectCRUD.refreshDQViewForRemoteProject();
 
+        // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
+        if (!repositoryObjectCRUD.isSelectionAvailable()) {
+            repositoryObjectCRUD.showWarningDialog();
+            return;
+        }
+        // TDQ-7006~
+
         // MOD qiongli 2012-4-1 TDQ-4926.fill selectedNodes,and delete opration will base on the List.
         if (deleteElements.length == 0) {
             return;

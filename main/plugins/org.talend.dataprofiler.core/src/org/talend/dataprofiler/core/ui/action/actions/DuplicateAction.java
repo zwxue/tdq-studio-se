@@ -81,6 +81,13 @@ public class DuplicateAction extends org.talend.core.repository.ui.actions.Dupli
     protected void doRun() {
         repositoryObjectCRUD.refreshDQViewForRemoteProject();
 
+        // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
+        if (!repositoryObjectCRUD.isSelectionAvailable()) {
+            repositoryObjectCRUD.showWarningDialog();
+            return;
+        }
+        // TDQ-7006~
+
         try {
             String newLabel = null;
             Item lastDuplicateItem = null;
