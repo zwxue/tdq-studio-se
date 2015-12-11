@@ -33,7 +33,7 @@ public class TalendFormatDate extends Date {
     private Date dateObj = null;
 
     public TalendFormatDate(Date obj) {
-        super(obj.getTime());
+        super(obj != null ? obj.getTime() : 0);
         this.dateObj = obj;
     }
 

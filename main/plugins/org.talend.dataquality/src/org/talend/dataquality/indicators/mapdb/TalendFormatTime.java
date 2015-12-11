@@ -33,7 +33,7 @@ public class TalendFormatTime extends Time {
     private static final long serialVersionUID = 2840349445774526174L;
 
     public TalendFormatTime(Time time) {
-        super(time.getTime());
+        super(time != null ? time.getTime() : 0);
         this.time = time;
     }
 
