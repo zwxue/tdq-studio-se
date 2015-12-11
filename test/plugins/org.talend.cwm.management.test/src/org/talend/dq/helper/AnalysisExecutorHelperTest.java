@@ -14,10 +14,9 @@ package org.talend.dq.helper;
 
 import static org.junit.Assert.*;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.EmfFileResourceUtil;
@@ -39,24 +38,6 @@ import orgomg.cwm.objectmodel.core.Package;
  * DOC yyin class global comment. Detailled comment
  */
 public class AnalysisExecutorHelperTest {
-
-    /**
-     * DOC yyin Comment method "setUp".
-     * 
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * DOC yyin Comment method "tearDown".
-     * 
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     /**
      * try the MSSQL db type. Test method for
@@ -190,8 +171,9 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckPatternDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "builtin/pattern_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
-        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        String anaPropertyFile = "src/org/talend/dq/helper/builtin/pattern_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = Path.fromOSString(anaPropertyFile).toString();
+        // String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
         Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
         Analysis ana = null;
         Property anaProperty = null;
@@ -215,8 +197,8 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckPatternWithOutDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "builtin/pattern_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
-        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        String anaPropertyFile = "src/org/talend/dq/helper/builtin/pattern_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = Path.fromOSString(anaPropertyFile).toString();
         Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
         Analysis ana = null;
         Property anaProperty = null;
@@ -232,14 +214,14 @@ public class AnalysisExecutorHelperTest {
 
         ReturnCode rc = AnalysisExecutorHelper.check(ana);
         assertTrue(rc.isOk());
-        assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getPatterns().get(0).getName() != null);
+        assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getPatterns().get(0).getName() == null);
     }
 
     @Test
     public void testCheckPatternWithOutDependencyFilesAndBuiltIn() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "builtin/pattern_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
-        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        String anaPropertyFile = "src/org/talend/dq/helper/builtin/pattern_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = Path.fromOSString(anaPropertyFile).toString();
         Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
         Analysis ana = null;
         Property anaProperty = null;
@@ -261,8 +243,8 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckIndicatorWithDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "builtin/indicator_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
-        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        String anaPropertyFile = "src/org/talend/dq/helper/builtin/indicator_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = Path.fromOSString(anaPropertyFile).toString();
         Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
         Analysis ana = null;
         Property anaProperty = null;
@@ -299,8 +281,8 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckIndicatorWithOutDependencyFilesAndBuiltIn() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "builtin/indicator_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
-        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        String anaPropertyFile = "src/org/talend/dq/helper/builtin/indicator_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = Path.fromOSString(anaPropertyFile).toString();
         Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
         Analysis ana = null;
         Property anaProperty = null;
@@ -326,8 +308,8 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckIndicatorWithOutDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "builtin/indicator_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
-        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        String anaPropertyFile = "src/org/talend/dq/helper/builtin/indicator_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = Path.fromOSString(anaPropertyFile).toString();
         Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
         Analysis ana = null;
         Property anaProperty = null;
@@ -363,8 +345,8 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckRuleWithDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "builtin/rule_with_dep/TDQ_Data_Profiling/Analyses/matchRuleAna_0.1.properties"; //$NON-NLS-1$
-        String absolutePath = this.getClass().getResource(anaPropertyFile).getFile();
+        String anaPropertyFile = "src/org/talend/dq/helper/builtin/rule_with_dep/TDQ_Data_Profiling/Analyses/matchRuleAna_0.1.properties"; //$NON-NLS-1$
+        String absolutePath = Path.fromOSString(anaPropertyFile).toString();
         Resource anaPropertyResource = EmfFileResourceUtil.getInstance().getFileResource(absolutePath);
         Analysis ana = null;
         Property anaProperty = null;
