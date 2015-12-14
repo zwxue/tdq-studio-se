@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -68,6 +69,7 @@ import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.runtime.services.IMavenUIService;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
@@ -536,20 +538,33 @@ public class CorePlugin extends AbstractUIPlugin {
                     List<Status> statusList = StatusHelper.parse(defaultTechnicalStatusList);
                     proxyRepository.setTechnicalStatus(statusList);
 
-                    // deploy libraries here
-                    if (GlobalServiceRegister.getDefault().isServiceRegistered(ILibrariesService.class)) {
-                        ILibrariesService librariesService = (ILibrariesService) GlobalServiceRegister.getDefault().getService(
-                                ILibrariesService.class);
-                        if (librariesService != null) {
-                            librariesService.syncLibrariesFromApp();
-                            // TDQ-9529 check libararies install status at here,so that "Optional third-party libraries"
-                            // is displayed in the "Additional Talend Package" dialog.
-                            if (org.talend.commons.utils.platform.PluginChecker.isOnlyTopLoaded()) {
-                                librariesService.checkLibraries();
+                    // TDQ-11125:setup MavenResolver properties for TOP(like as generate
+                    // 'maven_user_settings.xml').before set, must check user setting first.
+                    if (org.talend.commons.utils.platform.PluginChecker.isOnlyTopLoaded()) {
+                        if (GlobalServiceRegister.getDefault().isServiceRegistered(IMavenUIService.class)) {
+                            IMavenUIService mavenUIService = (IMavenUIService) GlobalServiceRegister.getDefault().getService(
+                                    IMavenUIService.class);
+                            if (mavenUIService != null) {
+                                mavenUIService.checkUserSettings(new NullProgressMonitor());
+                                mavenUIService.updateMavenResolver(false);
+                                mavenUIService.addMavenConfigurationChangeListener();
                             }
-                            CWMPlugin.getDefault().createLibFolderIfNotExist();
+                        }
+                        // deploy libraries and maven index here
+                        if (GlobalServiceRegister.getDefault().isServiceRegistered(ILibrariesService.class)) {
+                            ILibrariesService librariesService = (ILibrariesService) GlobalServiceRegister.getDefault()
+                                    .getService(ILibrariesService.class);
+                            if (librariesService != null) {
+                                librariesService.syncLibraries();
+                                // TDQ-9529 check libararies install status at here,so that
+                                // "Optional third-party libraries" is displayed in the "Additional Talend Package"
+                                // dialog.
+                                librariesService.checkLibraries();
+
+                            }
                         }
                     }
+                    CWMPlugin.getDefault().createLibFolderIfNotExist();
                 }
             } catch (PersistenceException e) {
                 ExceptionHandler.process(e);
