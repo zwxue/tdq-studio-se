@@ -12,14 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.matching.date.pattern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 import org.apache.log4j.Logger;
@@ -33,6 +33,8 @@ import org.talend.dataquality.matching.i18n.Messages;
 public class DatePatternRetrieverTest {
 
     private static Logger logger = Logger.getLogger(DatePatternRetrieverTest.class);
+
+    private String PATTERNS_FILENAME = "PatternsNameAndRegularExpressions.txt"; //$NON-NLS-1$
 
     /**
      * Test method for
@@ -74,13 +76,27 @@ public class DatePatternRetrieverTest {
         dtr.handle(expr);
         assertEquals(1, mm.getScore());
 
+        InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PATTERNS_FILENAME);
+        dtr.initModel2Regex(inStream);
+        assertEquals(dtr.findMatchers("1961-08-26 00:00:00").size(), 1); //$NON-NLS-1$
+
+        assertEquals(dtr.findMatchers("1961-08-26 00:00:00.0").size(), 1); //$NON-NLS-1$
+
+        assertEquals(dtr.findMatchers("1961-08-26 00:00:00:000").size(), 1); //$NON-NLS-1$
+
+        assertEquals(dtr.findMatchers("1961-08-26 00:00:00.000").size(), 1); //$NON-NLS-1$
+
+        assertEquals(dtr.findMatchers("1961-08-26 00:00:00.00").size(), 0); //$NON-NLS-1$
+
+        assertEquals(dtr.findMatchers("1961-08-26 00:00:00 0").size(), 0); //$NON-NLS-1$
+
         // ADD sizhaoliu TDQ-8139 replace the main class by junits for org.talend.dataquality.matching
         DatePatternRetriever patt = new DatePatternRetriever();
-        File file = ResourceUtil.getFileFromResource(getClass(), "/PatternsNameAndRegularExpressions.txt"); //$NON-NLS-1$
-        File filedates = ResourceUtil.getFileFromResource(getClass(), "/data/dates.txt"); //$NON-NLS-1$
-
-        patt.initModel2Regex(file);
-        parseFile(filedates, patt);
+        //       File file = ResourceUtil.getFileFromResource(getClass(), "/PatternsNameAndRegularExpressions.txt"); //$NON-NLS-1$
+        //       File filedates = ResourceUtil.getFileFromResource(getClass(), "/data/dates.txt"); //$NON-NLS-1$
+        InputStream dateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("data/dates.txt"); //$NON-NLS-1$
+        patt.initModel2Regex(inStream);
+        parseFile(dateStream, patt);
 
         final int[] EXPECTED_SCORE = { 1, 4, 3, 1, 2, 1, 1, 40, 1 };
 
@@ -97,10 +113,9 @@ public class DatePatternRetrieverTest {
         // ~ TDQ-8139
     }
 
-    private void parseFile(File fileDates, DatePatternRetriever patt) {
+    private void parseFile(InputStream dateStream, DatePatternRetriever patt) {
         try {
-            FileReader fr = new FileReader(fileDates);
-            BufferedReader br = new BufferedReader(fr);
+            BufferedReader br = new BufferedReader(new InputStreamReader(dateStream));
             String line;
             try {
                 while ((line = br.readLine()) != null) {
