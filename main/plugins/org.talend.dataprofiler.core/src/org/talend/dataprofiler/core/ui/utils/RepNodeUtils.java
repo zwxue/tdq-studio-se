@@ -31,6 +31,8 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
@@ -408,9 +410,11 @@ public final class RepNodeUtils {
         if (nodes != null && nodes.size() > 0) {
             for (int index = 0; index < nodes.size(); index++) {
                 IRepositoryNode repositoryNode = nodes.get(index);
-                MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
-                int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
-                if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
+                if (!(repositoryNode instanceof ColumnRepNode)) {
+                    return false;
+                }
+                int javaType = getColumnJavaType(repositoryNode);
+                if (!Java2SqlType.isNumbericInSQL(javaType)) {
                     return false;
                 }
             }
@@ -428,13 +432,28 @@ public final class RepNodeUtils {
         if (nodes != null && nodes.size() > 0) {
             for (int index = 0; index < nodes.size(); index++) {
                 IRepositoryNode repositoryNode = nodes.get(index);
-                MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
-                int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
-                if (!Java2SqlType.isTextInSQL(javaSQLType)) {
+                if (!(repositoryNode instanceof ColumnRepNode)) {
+                    return false;
+                }
+                int javaType = getColumnJavaType(repositoryNode);
+                if (!Java2SqlType.isTextInSQL(javaType)) {
                     return false;
                 }
             }
         }
         return Boolean.TRUE;
+    }
+
+    private static int getColumnJavaType(IRepositoryNode repositoryNode) {
+        int javaType = 0;
+        if ((repositoryNode instanceof ColumnRepNode)) {
+            MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+            if (SwitchHelpers.COLUMN_SWITCH.doSwitch(column) != null) {
+                javaType = ((TdColumn) column).getSqlDataType().getJavaDataType();
+            } else {
+                javaType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
+            }
+        }
+        return javaType;
     }
 }
