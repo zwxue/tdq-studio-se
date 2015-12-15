@@ -19,11 +19,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 
 import org.junit.Test;
-import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.dataquality.sampling.SamplingDataSource;
+import org.talend.dq.helper.UnitTestBuildHelper;
 
 import com.talend.csv.CSVReader;
 
@@ -48,8 +50,11 @@ public class FileSamplingDataSourceTest {
     @Test
     public void testGetRecord() throws Exception {
         fileDataSource = new FileSamplingDataSource();
-        DelimitedFileConnection createDelimitedFileConnection = ConnectionFactory.eINSTANCE.createDelimitedFileConnection();
-        fileDataSource.setDataSource(createDelimitedFileConnection);
+        DelimitedFileConnection fileConnection = ConnectionPackage.eINSTANCE.getConnectionFactory()
+                .createDelimitedFileConnection();
+        URL fileUrl = this.getClass().getResource("simple_data.csv"); //$NON-NLS-1$
+        UnitTestBuildHelper.getDefault().initFileConnection(fileUrl, fileConnection);
+        fileDataSource.setDataSource(fileConnection);
         // CSVReader csvReader = createCsvReader(new File(getClass().getClassLoader()
         // .getResource("org/talend/cwm/db/connection/datasource/simple_data.csv").getFile()));
         int idx = 0;
