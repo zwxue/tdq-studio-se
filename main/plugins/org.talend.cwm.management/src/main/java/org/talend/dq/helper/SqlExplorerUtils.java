@@ -210,8 +210,8 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
     }
 
     public boolean needAddDriverConnection(DatabaseConnection dbConn) {
-        if (getSqlexplorerService() != null) {
-            return getSqlexplorerService().needAddDriverConnection(dbConn);
+        if (sqlexplorerService != null) {
+            return sqlexplorerService.needAddDriverConnection(dbConn);
         }
         return false;
     }

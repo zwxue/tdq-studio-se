@@ -181,7 +181,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                         } else if (isInvalidJDBCConnection(node)) {
                             image = ImageLib.createInvalidIcon(originalImageName);
                         } else {
-                            image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+                            image = ImageLib.getImage(originalImageName);
                         }
                     } else if (node instanceof DFConnectionRepNode) {
                         originalImageName = ImageLib.FILE_DELIMITED;
@@ -392,9 +392,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     }
 
     private boolean isNeedAddDriverConnection(IRepositoryNode repNode) {
-        ERepositoryObjectType objectType = repNode.getObjectType();
-        boolean isNeed = false;
-        if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
+        if (repNode.getObjectType() == ERepositoryObjectType.METADATA_CONNECTIONS) {
             ConnectionItem connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
             if (connectionItem.getConnection() instanceof DatabaseConnection) {
                 DatabaseConnection dbConn = (DatabaseConnection) (connectionItem.getConnection());
@@ -411,12 +409,21 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     if (driver != null) {
                         return false;
                     }
-                    isNeed = SqlExplorerUtils.getDefault().needAddDriverConnection(dbConn);
+
+                    // TDQ-11432: make show the download dialog Asynchronous to fix the connection icon display
+                    Display.getCurrent().asyncExec(new Runnable() {
+
+                        public void run() {
+                            SqlExplorerUtils.getDefault().getSqlexplorerService();
+                        }
+                    });
+                    return SqlExplorerUtils.getDefault().needAddDriverConnection(dbConn);
+                    // TDQ-11432~
                 }
             }
 
         }
-        return isNeed;
+        return false;
     }
 
     /**
