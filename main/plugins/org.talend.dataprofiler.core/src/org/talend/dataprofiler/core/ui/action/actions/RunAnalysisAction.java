@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -270,6 +272,24 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
             job.setUser(true);
             job.schedule();
+
+            // TDQ-11433: fix the job name still show after run analysis for remote project.(maybe this is not the best
+            // way to fix this issue)
+            job.addJobChangeListener(new JobChangeAdapter() {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see
+                 * org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+                 */
+                @Override
+                public void done(IJobChangeEvent event) {
+                    job.setName(""); //$NON-NLS-1$
+                }
+            });
+            // TDQ-11433~
+
         } catch (BusinessException e) {
             ExceptionHandler.process(e, Level.FATAL);
         }
