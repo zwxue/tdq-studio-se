@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,10 +20,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -991,8 +992,9 @@ public final class ReportHelper {
      * @return
      */
     public static String getOutputFolderNameDefault(IFolder reportContainer, String simpleName) {
-        return ResourcesPlugin.getWorkspace().getRoot().getRawLocation().toOSString()
-                + reportContainer.getFolder("." + simpleName).getFullPath().toOSString(); //$NON-NLS-1$
+        // TDQ-11353: fix the folder path to support git remote folder path like
+        // (".repositories/1867765462/master/PROJECT_NAME/)
+        return WorkspaceUtils.ifolderToFile(reportContainer).getAbsolutePath() + File.separator + "." + simpleName;
     }
 
     /**
