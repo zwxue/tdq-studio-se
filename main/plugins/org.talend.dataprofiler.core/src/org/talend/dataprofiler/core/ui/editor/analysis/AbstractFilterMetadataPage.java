@@ -909,7 +909,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 @Override
                 public void mouseDown(MouseEvent e) {
                     if (e.button == 3) {
-                        if (catalogOrSchemaTable.getItemCount() > 0) {
+                        // TDQ-11430: show the menu only when there have data and have selected one.
+                        if (catalogOrSchemaTable.getItemCount() > 0 && catalogOrSchemaTable.getSelectionIndex() != -1) {
                             final Menu menu = new Menu(catalogOrSchemaTable.getShell(), SWT.POP_UP);
                             catalogOrSchemaTable.setMenu(menu);
 
@@ -981,7 +982,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 @Override
                 public void mouseDown(MouseEvent e) {
                     if (e.button == 3) {
-                        if (tableCatalogOrSchemaView.getItemCount() > 0) {
+                        // TDQ-11430: show the menu only when there have data and have selected one.
+                        if (tableCatalogOrSchemaView.getItemCount() > 0 && tableCatalogOrSchemaView.getSelectionIndex() != -1) {
                             final Menu menu = new Menu(tableCatalogOrSchemaView.getShell(), SWT.POP_UP);
                             tableCatalogOrSchemaView.setMenu(menu);
 
