@@ -30,6 +30,8 @@ import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositor
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -266,7 +268,25 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
      */
     @Override
     public String getLabel() {
-        return "Columns (" + children.size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        return "Columns (" + getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * TDQ-11431: use this way to get children count correctly.
+     * 
+     * @return
+     */
+    private int getChildrenCount() {
+        List<TdColumn> columnsList = new ArrayList<TdColumn>();
+        IRepositoryViewObject object = this.getParent().getObject();
+        if (object instanceof TdTableRepositoryObject) {
+            tdTable = (TdTable) ((TdTableRepositoryObject) object).getTable();
+            columnsList = TableHelper.getColumns(tdTable);
+        } else {
+            tdView = ((TdViewRepositoryObject) object).getTdView();
+            columnsList = ViewHelper.getColumns(tdView);
+        }
+        return columnsList.size();
     }
 
 }
