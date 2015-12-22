@@ -21,9 +21,15 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -81,6 +87,7 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.progress.UIJob;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.swt.dialogs.ProgressDialog;
@@ -169,14 +176,46 @@ public class DQRespositoryView extends CommonNavigator {
             manager = DQStructureManager.getInstance();
 
             if (manager.isNeedCreateStructure()) {
-                ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(
-                        new RepositoryWorkUnit<Object>("Create DQ Repository structure") { //$NON-NLS-1$
+                RepositoryWorkUnit<Object> dQRepositoryWorkUnit = new RepositoryWorkUnit<Object>("Create DQ Repository structure") { //$NON-NLS-1$
 
-                            @Override
-                            protected void run() {
+                    @Override
+                    protected void run() {
+                        final IWorkspaceRunnable op = new IWorkspaceRunnable() {
+
+                            public void run(IProgressMonitor monitor) throws CoreException {
                                 manager.createDQStructure();
                             }
-                        });
+                        };
+                        IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
+
+                            public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+                                    InterruptedException {
+                                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                                try {
+                                    ISchedulingRule schedulingRule = workspace.getRoot();
+                                    // the update the project files need to be done in the workspace runnable to
+                                    // avoid all notification of changes before the end of the modifications.
+                                    workspace.run(op, schedulingRule, IWorkspace.AVOID_UPDATE, monitor);
+                                } catch (CoreException e) {
+                                    throw new InvocationTargetException(e);
+                                }
+
+                            }
+                        };
+
+                        try {
+                            // do not use the UI related
+                            iRunnableWithProgress.run(new NullProgressMonitor());
+                        } catch (Exception e) {
+                            ExceptionHandler.process(e);
+                        }
+
+                    }
+                };
+                // TDQ-11267 by zshen ForceTransaction attribute make sure TDQ folder can be commite on the server
+                dQRepositoryWorkUnit.setForceTransaction(true);
+                ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(dQRepositoryWorkUnit);
+
             }
 
             if (manager.isNeedMigration()) {
