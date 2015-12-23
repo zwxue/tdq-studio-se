@@ -166,8 +166,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
                     createPreviewCharts(form1, chartComposite);
                 }
 
-                chartComposite.layout();
-                form1.reflow(true);
+                reLayoutChartComposite();
             }
 
         });
@@ -188,7 +187,9 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
                         comp.getParent().pack();
                     }
                 }
-
+                if (getChartComposite() != null) {
+                    getChartComposite().getParent().pack();
+                }
             }
         });
     }
@@ -280,8 +281,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
     public void reLayoutChartComposite() {
         if (chartComposite != null) {
-            chartComposite.getParent().layout();
-            chartComposite.layout();
+            chartComposite.getParent().pack();
         }
     }
 
