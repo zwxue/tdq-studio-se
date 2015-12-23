@@ -28,6 +28,8 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.XmlFactory;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import orgomg.cwm.objectmodel.core.CoreFactory;
@@ -71,6 +73,7 @@ public class ColumnSetMultiValueIndicatorImplTest {
         analyzedColumns.add(createColumn12());
         analyzedColumns.add(createColumn2());
         analyzedColumns.add(createColumn3());
+        analyzedColumns.add(createColumn4());
         // the column headers will contains 6 columns, and the order will be the same with AnalyzedColumns, the last
         // column will be COUNT(*)
         columnHeaders = columnSetMultiValueIndicatorImpl.getColumnHeaders();
@@ -82,6 +85,18 @@ public class ColumnSetMultiValueIndicatorImplTest {
         Assert.assertTrue(COLUMN_NAME_3.equals(columnHeaders.get(3)));
         Assert.assertTrue(COLUMN_NAME_4.equals(columnHeaders.get(4)));
         Assert.assertTrue(COUNT_STAR.equals(columnHeaders.get(5)));
+    }
+
+    /**
+     * create a TdXmlElementType, the DatamingType is Other.
+     * 
+     * @return
+     */
+    private ModelElement createColumn4() {
+        TdXmlElementType tdXmlElementType = XmlFactory.eINSTANCE.createTdXmlElementType();
+        tdXmlElementType.setName(COLUMN_NAME_4);
+        tdXmlElementType.setContentType(DataminingType.OTHER.getLiteral());
+        return tdXmlElementType;
     }
 
     /**
