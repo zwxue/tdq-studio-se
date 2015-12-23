@@ -62,6 +62,7 @@ import org.talend.dataquality.indicators.ValueIndicator;
 import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
@@ -653,6 +654,15 @@ public final class IndicatorHelper {
 
             @Override
             public String caseUserDefIndicator(UserDefIndicator object) {
+                // TDQ-11114: get the correct value for user define realvalue indicator
+                if (object instanceof UserDefIndicator) {
+                    UserDefIndicator userDefineIndicator = object;
+                    IndicatorCategory category = IndicatorCategoryHelper
+                            .getCategory(userDefineIndicator.getIndicatorDefinition());
+                    if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
+                        return String.valueOf(userDefineIndicator.getRealValue());
+                    }
+                }
                 return String.valueOf(object.getUserCount());
             }
 
@@ -679,7 +689,7 @@ public final class IndicatorHelper {
             // MOD SeB 11/03/2010, bug 11751 : number format exception conveerting from string to double
             // use NumberFormt instead of formatter.
             String indicatorValue = getIndicatorValue(indicator);
-            if (indicatorValue != null) { // MOD scorreia fixing NPE in bug 12250
+            if (indicatorValue != null && !indicatorValue.equals("null")) { // MOD scorreia fixing NPE in bug 12250
                 if (IndicatorsPackage.eINSTANCE.getModeIndicator().equals(indicator.eClass())) {
                     // MOD scorreia 2011: avoid parsing mode indicator (this has no meaning).
                     // do not parse mode indicator
