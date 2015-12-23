@@ -19,57 +19,24 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.context.Context;
-import org.talend.core.context.RepositoryContext;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
-import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 
 /**
  * DOC qiongli Test case for split system indicators.
  */
 public class UpdateMsSqlToJdbcTaskTest {
 
-    private static Project originalProject;
-
-    private static LocalRepositoryFactory repositoryFactory;
-
-    ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
-
-    @BeforeClass
-    public static void beforeAllTests() {
-        Context ctx = CoreRuntimePlugin.getInstance().getContext();
-        RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
-        if (repositoryContext != null) {
-            originalProject = repositoryContext.getProject();
-        }
-        repositoryFactory = new LocalRepositoryFactory();
-    }
-
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.initProjectStructure("testForDeleteActionTDQ"); //$NON-NLS-1$
-    }
-
-    @AfterClass
-    public static void afterAllTests() {
-        repositoryFactory = null;
-        if (originalProject != null) {
-            Context ctx = CoreRuntimePlugin.getInstance().getContext();
-            RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
-            repositoryContext.setProject(originalProject);
-        }
+        UnitTestBuildHelper.initProjectStructure();
     }
 
     @Test
@@ -105,7 +72,7 @@ public class UpdateMsSqlToJdbcTaskTest {
         createDatabaseConnectionItem.setProperty(createDatabaseConnectionProperty);
         createDatabaseConnectionItem.setConnection(createConnection);
         try {
-            factory.create(createDatabaseConnectionItem, createPath, false);
+            ProxyRepositoryFactory.getInstance().create(createDatabaseConnectionItem, createPath, false);
         } catch (PersistenceException e) {
             Assert.fail(e.getMessage());
         }
