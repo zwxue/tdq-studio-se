@@ -55,6 +55,8 @@ public class FileSamplingDataSourceTest {
         URL fileUrl = this.getClass().getResource("simple_data.csv"); //$NON-NLS-1$
         UnitTestBuildHelper.getDefault().initFileConnection(fileUrl, fileConnection);
         fileDataSource.setDataSource(fileConnection);
+        int[] pos = { 0 };
+        ((FileSamplingDataSource) fileDataSource).setColumnPositions(pos);
         // CSVReader csvReader = createCsvReader(new File(getClass().getClassLoader()
         // .getResource("org/talend/cwm/db/connection/datasource/simple_data.csv").getFile()));
         int idx = 0;
