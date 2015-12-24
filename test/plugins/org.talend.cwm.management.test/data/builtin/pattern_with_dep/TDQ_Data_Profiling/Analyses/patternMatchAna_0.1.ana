@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.analysis="http://dataquality.analysis" xmlns:dataquality.domain="http://dataquality.domain" xmlns:dataquality.indicators="http://dataquality.indicators" xmlns:relational="http://www.talend.org/cwm/resource/relational/2010">
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.analysis="http://dataquality.analysis" xmlns:dataquality.domain="http://dataquality.domain" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmlns:dataquality.indicators="http://dataquality.indicators" xmlns:relational="http://www.talend.org/cwm/resource/relational/2010">
   <dataquality.analysis:Analysis xmi:id="_dvgsMBpbEeWB-ZGwX1W0Mw" name="patternMatchAna" creationDate="2015-06-24T18:26:24.409+0800" defaultContext="Default">
     <clientDependency href="../../TDQ_Libraries/Patterns/Regex/text/Empty_text_0.1.pattern#_zbzZgBpbEeWB-ZGwX1W0Mw"/>
     <clientDependency href="../../metadata/connections/mysql_0.1.item#_z0OgkBpbEeWB-ZGwX1W0Mw"/>
@@ -30,6 +30,19 @@
         <parameters xmi:id="_0Rh90RruEeWznOH4n_Cm9w">
           <dataValidDomain xmi:id="_0Rh90hruEeWznOH4n_Cm9w">
             <patterns href="../../TDQ_Libraries/Patterns/Regex/text/Blank_text_0.1.pattern#_N7yi0Gk3Ed2I1bT57-sHUw"/>
+            <builtInPatterns xmi:id="_5JKE8KlVEeWdL5RTBQb1SA" name="Blank text">
+              <taggedValue xmi:id="_5JKE8alVEeWdL5RTBQb1SA" tag="Author" value="scorreia"/>
+              <taggedValue xmi:id="_5JKE8qlVEeWdL5RTBQb1SA" tag="Description" value="Matches text with only white spaces"/>
+              <taggedValue xmi:id="_5JKE86lVEeWdL5RTBQb1SA" tag="Purpose" value="Search for blank text"/>
+              <taggedValue xmi:id="_5JKE9KlVEeWdL5RTBQb1SA" tag="Status" value="Draft"/>
+              <taggedValue xmi:id="_5JKE9alVEeWdL5RTBQb1SA" tag="Validation_Status" value="true"/>
+              <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_5JKE9qlVEeWdL5RTBQb1SA" expressionType="REGEXP">
+                <expression xmi:id="_5JKE96lVEeWdL5RTBQb1SA" body="'^[[:blank:]]*$'" language="SQL"/>
+              </components>
+              <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_5JKE-KlVEeWdL5RTBQb1SA" expressionType="REGEXP">
+                <expression xmi:id="_5JKE-alVEeWdL5RTBQb1SA" body="'^\s*$'" language="Java"/>
+              </components>
+            </builtInPatterns>
           </dataValidDomain>
         </parameters>
         <analyzedElement xsi:type="relational:TdColumn" href="../../metadata/connections/mysql_0.1.item#_s89GzhpbEeWB-ZGwX1W0Mw"/>
