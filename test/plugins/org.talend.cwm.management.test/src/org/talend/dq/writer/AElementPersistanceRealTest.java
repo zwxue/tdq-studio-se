@@ -16,11 +16,13 @@ import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.RepositoryFactoryProvider;
@@ -268,6 +270,7 @@ public class AElementPersistanceRealTest {
         Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis1"); //$NON-NLS-1$
         createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        createAnalysisProperty.setId(EcoreUtil.generateUUID());
         ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
 
         // create UDI
@@ -277,13 +280,16 @@ public class AElementPersistanceRealTest {
         // create definition
         UDIndicatorDefinition createUDIndicatorDefinition = UserdefineFactory.eINSTANCE.createUDIndicatorDefinition();
         createUserDefIndicator.setIndicatorDefinition(createUDIndicatorDefinition);
+        createAnalysisResult.getIndicators().add(createUserDefIndicator);
         TDQIndicatorDefinitionItem createTDQIndicatorDefinitionItem = PropertiesFactory.eINSTANCE
                 .createTDQIndicatorDefinitionItem();
         createTDQIndicatorDefinitionItem.setIndicatorDefinition(createUDIndicatorDefinition);
         Property createProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createProperty.setLabel("AElementPersistanceRealTestUDIIndicatorDefinition1"); //$NON-NLS-1$
         createTDQIndicatorDefinitionItem.setProperty(createProperty);
-        ProxyRepositoryFactory.getInstance().create(createTDQIndicatorDefinitionItem, Path.EMPTY, false);
+        createProperty.setId(EcoreUtil.generateUUID());
+        ProxyRepositoryFactory.getInstance().create(createTDQIndicatorDefinitionItem,
+                new Path(ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS.getFolder()).removeFirstSegments(2), false);
         // case add dependency
         ReturnCode save = createAnalysisWriter.save(createTDQAnalysisItem, true);
         Assert.assertTrue(save.isOk());
@@ -326,6 +332,7 @@ public class AElementPersistanceRealTest {
         Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis2"); //$NON-NLS-1$
         createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        createAnalysisProperty.setId(EcoreUtil.generateUUID());
         ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
 
         // create pattern match indicator
@@ -344,6 +351,7 @@ public class AElementPersistanceRealTest {
         Property createProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createProperty.setLabel("AElementPersistanceRealTestUDIIndicatorDefinition2"); //$NON-NLS-1$
         createTDQIndicatorDefinitionItem.setProperty(createProperty);
+        createProperty.setId(EcoreUtil.generateUUID());
         ProxyRepositoryFactory.getInstance().create(createTDQIndicatorDefinitionItem, Path.EMPTY, false);
 
         // create pattern
@@ -354,7 +362,9 @@ public class AElementPersistanceRealTest {
         Property createPatternProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createPatternProperty.setLabel("AElementPersistanceRealTestpattern2"); //$NON-NLS-1$
         createTDQPatternItem.setProperty(createPatternProperty);
-        ProxyRepositoryFactory.getInstance().create(createTDQPatternItem, Path.EMPTY, false);
+        createPatternProperty.setId(EcoreUtil.generateUUID());
+        ProxyRepositoryFactory.getInstance().create(createTDQPatternItem,
+                new Path(ERepositoryObjectType.TDQ_PATTERN_REGEX.getFolder()).removeFirstSegments(2), false);
 
         // create Domain
         Domain createDomain = DomainFactory.eINSTANCE.createDomain();
@@ -409,13 +419,14 @@ public class AElementPersistanceRealTest {
         // create definition
 
         createAnalysisResult.getIndicators().add(whereRuleIndicator);
-        DQRule dqRule = RulesFactory.eINSTANCE.createDQRule();
+        DQRule dqRule = RulesFactory.eINSTANCE.createWhereRule();
         whereRuleIndicator.setIndicatorDefinition(dqRule);
         TDQBusinessRuleItem createTDQBusinessRuleItem = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
         createTDQBusinessRuleItem.setDqrule(dqRule);
         Property createPatternProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createPatternProperty.setLabel("AElementPersistanceRealTestDQRule3"); //$NON-NLS-1$
         createTDQBusinessRuleItem.setProperty(createPatternProperty);
+        createPatternProperty.setId(EcoreUtil.generateUUID());
         ProxyRepositoryFactory.getInstance().create(createTDQBusinessRuleItem, Path.EMPTY, false);
 
         // case add dependency
@@ -458,6 +469,7 @@ public class AElementPersistanceRealTest {
         createTDQAnalysisItem.setAnalysis(createAnalysis);
         Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis4"); //$NON-NLS-1$
+        createAnalysisProperty.setId(EcoreUtil.generateUUID());
         createTDQAnalysisItem.setProperty(createAnalysisProperty);
         ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
 
@@ -468,6 +480,7 @@ public class AElementPersistanceRealTest {
         Property createReportProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createReportProperty.setLabel("AElementPersistanceRealTestreport4"); //$NON-NLS-1$
         createTDQReportItem.setProperty(createReportProperty);
+        createReportProperty.setId(EcoreUtil.generateUUID());
         ProxyRepositoryFactory.getInstance().create(createTDQReportItem, Path.EMPTY, false);
         createTdReport.addAnalysis(createAnalysis);
 
