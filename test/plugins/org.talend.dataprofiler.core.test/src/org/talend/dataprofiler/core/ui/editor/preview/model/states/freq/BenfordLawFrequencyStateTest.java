@@ -12,36 +12,34 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 
-import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang.NumberUtils;
-import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
+import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.indicators.ext.FrequencyExt;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC yyin class global comment. Detailled comment
  */
-@SuppressWarnings("deprecation")
 public class BenfordLawFrequencyStateTest {
 
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
-
     private BenfordLawFrequencyState benState;
-
-    private FrequencyExt[] frequencyExt;
 
     /**
      * init the state.
@@ -50,33 +48,28 @@ public class BenfordLawFrequencyStateTest {
      */
     @Before
     public void setUp() throws Exception {
+        UnitTestBuildHelper.initProjectStructure();
+
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
-        IndicatorUnit unit = mock(IndicatorUnit.class);
-        units.add(unit);
-        frequencyExt = new FrequencyExt[9];
-        Long value = 100l;
-        for (int i = 0; i < 9; i++) {
-            frequencyExt[i] = new FrequencyExt();
-            frequencyExt[i].setKey(i + 1);
-            frequencyExt[i].setValue(value);
+        BenfordLawFrequencyIndicator benfordLawFrequencyIndicator = IndicatorsFactory.eINSTANCE
+                .createBenfordLawFrequencyIndicator();
+        List<IRepositoryViewObject> all = ProxyRepositoryFactory.getInstance().getAll(
+                ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION);
+        Assert.assertEquals(1, all.size());
+        IRepositoryViewObject iRepositoryViewObject = all.get(0);
+        Assert.assertNotNull(iRepositoryViewObject);
+        TDQIndicatorDefinitionItem benfordItem = (TDQIndicatorDefinitionItem) iRepositoryViewObject.getProperty().getItem();
+        benfordLawFrequencyIndicator.setIndicatorDefinition(benfordItem.getIndicatorDefinition());
+        ModelElementIndicator modelElementIndicator = UnitTestBuildHelper.createModelElementIndicator();
+        ColumnIndicatorUnit columnIndicatorUnit = new ColumnIndicatorUnit(IndicatorEnum.BenfordLawFrequencyIndicatorEnum,
+                benfordLawFrequencyIndicator, modelElementIndicator);
 
-            if (i > 4) {
-                value = value * 2;
-            } else {
-                value = value / 2;
-            }
+        // IndicatorUnit unit = mock(IndicatorUnit.class);
+        units.add(columnIndicatorUnit);
+        for (int i = 0; i < 10; i++) {
+            benfordLawFrequencyIndicator.handle(i);
         }
-        when(unit.getValue()).thenReturn(frequencyExt);
         benState = new BenfordLawFrequencyState(units);
-    }
-
-    /**
-     * DOC yyin Comment method "tearDown".
-     * 
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
     }
 
     /**
@@ -92,8 +85,8 @@ public class BenfordLawFrequencyStateTest {
         fre.setKey(2);
         fre.setValue(3l);
         fre.setFrequency(0.33);
-        benState.setValueToDataset(customerdataset, fre, "2");
-        Number n = TOPChartUtils.getInstance().getValue(customerdataset, 0, 0);
+        benState.setValueToDataset(customerdataset, fre, "2"); //$NON-NLS-1$
+        Number n = TOPChartUtils.getInstance().getValue(customerdataset.getDataset(), 0, 0);
         Assert.assertEquals(0.33, n);
     }
 
@@ -102,8 +95,22 @@ public class BenfordLawFrequencyStateTest {
      * {@link org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BenfordLawFrequencyState#sortIndicator(org.talend.dq.indicators.ext.FrequencyExt[])}
      * . just test normal cases: contains 1~9
      */
+    @SuppressWarnings("deprecation")
     @Test
     public void testSortIndicator() {
+        FrequencyExt[] frequencyExt = new FrequencyExt[9];
+        Long value = 100l;
+        for (int i = 0; i < 9; i++) {
+            frequencyExt[i] = new FrequencyExt();
+            frequencyExt[i].setKey(i + 1);
+            frequencyExt[i].setValue(value);
+
+            if (i > 4) {
+                value = value * 2;
+            } else {
+                value = value / 2;
+            }
+        }
         benState.sortIndicator(frequencyExt);
         for (int i = 0; i < 8; i++) {
             // Assert.assertTrue(frequencyExt[i].getValue() > frequencyExt[i + 1].getValue());

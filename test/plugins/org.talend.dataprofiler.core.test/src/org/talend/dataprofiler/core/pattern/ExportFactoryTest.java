@@ -73,7 +73,7 @@ public class ExportFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.initProjectStructure("testForEXportFactoryTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.initProjectStructure();
     }
 
     /**

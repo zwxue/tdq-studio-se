@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
-import java.sql.Types;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -22,13 +21,8 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
-import org.talend.cwm.relational.RelationalFactory;
-import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSqlDataType;
-import org.talend.cwm.relational.TdTable;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
@@ -37,11 +31,7 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
-import org.talend.repository.model.RepositoryNode;
 
 /**
  * created by zshen on Feb 7, 2014 Detailled comment
@@ -231,17 +221,7 @@ public class InidcatorUnitTest {
     @Test
     public void testIsExsitingFormCase1() {
         Indicator indicator = IndicatorsFactory.eINSTANCE.createIndicator();
-        TdColumn tdColumn = RelationalFactory.eINSTANCE.createTdColumn();
-        TdTable createTdTable = RelationalFactory.eINSTANCE.createTdTable();
-
-        tdColumn.setOwner(createTdTable);
-        TdSqlDataType dataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
-        dataType.setJavaDataType(Types.VARCHAR);
-        tdColumn.setSqlDataType(dataType);
-        MetadataColumnRepositoryObject columnObject = new MetadataColumnRepositoryObject(null, tdColumn);
-        IRepositoryNode columnRepNode = new DBColumnRepNode(columnObject, new RepositoryNode(null, null, null),
-                ENodeType.REPOSITORY_ELEMENT, null);
-        ModelElementIndicator modelElementIndicator = new ColumnIndicatorImpl(columnRepNode);
+        ModelElementIndicator modelElementIndicator = UnitTestBuildHelper.createModelElementIndicator();
 
         // Count UDI case
         IndicatorDefinition createIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();

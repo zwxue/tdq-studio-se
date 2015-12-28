@@ -19,6 +19,7 @@ import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,7 @@ import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.RepositoryFactoryProvider;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
@@ -79,10 +81,15 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
 import org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD;
@@ -102,6 +109,7 @@ import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
@@ -781,5 +789,20 @@ public class UnitTestBuildHelper {
         }
         Assert.assertNotNull(dataProvider);
         return dataProvider;
+    }
+
+    public static ModelElementIndicator createModelElementIndicator() {
+        TdColumn tdColumn = RelationalFactory.eINSTANCE.createTdColumn();
+        TdTable createTdTable = RelationalFactory.eINSTANCE.createTdTable();
+
+        tdColumn.setOwner(createTdTable);
+        TdSqlDataType dataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
+        dataType.setJavaDataType(Types.VARCHAR);
+        tdColumn.setSqlDataType(dataType);
+        MetadataColumnRepositoryObject columnObject = new MetadataColumnRepositoryObject(null, tdColumn);
+        IRepositoryNode columnRepNode = new DBColumnRepNode(columnObject, new RepositoryNode(null, null, null),
+                ENodeType.REPOSITORY_ELEMENT, null);
+        ModelElementIndicator modelElementIndicator = new ColumnIndicatorImpl(columnRepNode);
+        return modelElementIndicator;
     }
 }
