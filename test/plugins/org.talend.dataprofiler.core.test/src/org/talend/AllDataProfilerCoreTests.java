@@ -29,7 +29,6 @@ import org.talend.dataprofiler.core.pattern.USStateCodesPatternRegexTest;
 import org.talend.dataprofiler.core.service.TDQResourceChangeHandlerTest;
 import org.talend.dataprofiler.core.service.TOPRepositoryServiceTest;
 import org.talend.dataprofiler.core.ui.MultiColAnalysisCreationTest;
-import org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinActionTest;
 import org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSActionRealTest;
 import org.talend.dataprofiler.core.ui.action.actions.ImportObjectTest;
 import org.talend.dataprofiler.core.ui.action.actions.handle.AnalysisHandleTest;
@@ -64,11 +63,10 @@ import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
         CreateBenforLawIndicatorTaskTest.class, SplitSysIndicatorTaskTest.class, UpdateIndicatorForHiveTaskTest.class,
         UpdateMsSqlToJdbcTaskTest.class, ExportFactoryTest.class, ImportFactoryTest.class, TDQResourceChangeHandlerTest.class,
         TOPRepositoryServiceTest.class, AnalysisHandleTest.class, DBConnectionDuplicateHandleTest.class,
-        DQEmptyRecycleBinActionTest.class, ExportConnectionToTOSActionRealTest.class, ImportObjectTest.class,
-        AbstractCommonActionProviderRealProjectTest.class, AbstractCommonActionProviderTest.class,
-        DrillDownEditorInputTest.class, ColumnMasterDetailsPageTest.class, AnalysisColumnTreeViewerTest.class,
-        BenfordLawFrequencyStateTest.class, PatternStatisticsStateTest.class, ChartTableFactoryTest.class,
-        InidcatorUnitTest.class, FileSystemImportWriterTest.class, ExportWizardPageTest.class,
+        ExportConnectionToTOSActionRealTest.class, ImportObjectTest.class, AbstractCommonActionProviderRealProjectTest.class,
+        AbstractCommonActionProviderTest.class, DrillDownEditorInputTest.class, ColumnMasterDetailsPageTest.class,
+        AnalysisColumnTreeViewerTest.class, BenfordLawFrequencyStateTest.class, PatternStatisticsStateTest.class,
+        ChartTableFactoryTest.class, InidcatorUnitTest.class, FileSystemImportWriterTest.class, ExportWizardPageTest.class,
         ResourceViewLabelProviderTest.class, MultiColAnalysisCreationTest.class, CorePluginTest.class,
         AnalysisCreationTest.class, SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class,
         ModelElementIndicatorRuleTest.class, RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class,
