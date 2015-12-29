@@ -36,7 +36,7 @@ import org.talend.dq.analysis.explore.BenfordLawFrequencyExplorerTest;
 import org.talend.dq.analysis.explore.DataPatternMatchingTest;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorerTest;
 import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorerTest;
-import org.talend.dq.analysis.explore.PatternExplorerTest;
+import org.talend.dq.analysis.explore.PatternExplorerRealTest;
 import org.talend.dq.analysis.explore.RowMatchExplorerTest;
 import org.talend.dq.analysis.explore.SQLPatternExplorerTest;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorerTest;
@@ -77,7 +77,7 @@ import org.talend.dq.writer.AElementPersistanceTest;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ BenfordLawFrequencyExplorerTest.class, DataPatternMatchingTest.class, FrequencyStatisticsExplorerTest.class,
-        PatternExplorerTest.class, RowMatchExplorerTest.class, SimpleStatisticsExplorerTest.class,
+        PatternExplorerRealTest.class, RowMatchExplorerTest.class, SimpleStatisticsExplorerTest.class,
         TextStatisticsExplorerTest.class, SummaryStastictisExplorerRealTest.class, SummaryStastictisExplorerTest.class,
         AnalysisExecutorTest.class, ColumnAnalysisExecutorTest.class, ConnectionAnalysisCreationTest.class,
         ExecuteMatchRuleHandlerTest.class, MatchAnalysisExecutorTest.class, MultiColumnAnalysisExecutorTest.class,
