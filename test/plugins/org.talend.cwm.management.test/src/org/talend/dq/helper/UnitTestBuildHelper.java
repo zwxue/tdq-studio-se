@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.context.Context;
@@ -196,12 +197,14 @@ public class UnitTestBuildHelper {
      * DOC talend Comment method "initProxyRepository".
      */
     public static void initProxyRepository(IProject rootProject) {
+
         Project project = null;
 
         ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
         IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
         if (repository == null) {
-            log.fatal("No local Repository found! Probably due to a missing plugin in the product."); //$NON-NLS-1$
+            log.fatal(DefaultMessagesImpl
+                    .getString("No local Repository found! Probably due to a missing plugin in the product.")); //$NON-NLS-1$
         }
         proxyRepository.setRepositoryFactoryFromProvider(repository);
         try {

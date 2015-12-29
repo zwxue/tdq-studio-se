@@ -43,6 +43,7 @@ public class AnalysisFolderRepNodeTest {
      */
     @Before
     public void setUp() throws Exception {
+        UnitTestBuildHelper.initProjectStructure();
         if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQItemService.class)) {
             ITDQItemService tdqService = (ITDQItemService) GlobalServiceRegister.getDefault().getService(ITDQItemService.class);
             tdqService.createDQStructor();
