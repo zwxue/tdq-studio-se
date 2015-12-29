@@ -117,7 +117,8 @@ public final class WorkbenchUtils {
      * @param perspectiveID
      */
     public static void changePerspective(final String perspectiveID) {
-        Display.getCurrent().asyncExec(new Runnable() {
+        // TDQ-11403 make it is suspended until the runnable complete.
+        Display.getCurrent().syncExec(new Runnable() {
 
             public void run() {
                 IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
