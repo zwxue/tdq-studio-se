@@ -13,26 +13,26 @@
 package org.talend.dq.analysis.explore;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.sql.Types;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.talend.cwm.management.i18n.Messages;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQItemService;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -44,23 +44,20 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.dates.DateUtils;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * test for class FrequencyStatisticsExplorer.
  */
-@PrepareForTest({ DbmsLanguageFactory.class, Messages.class, IndicatorEnum.class })
 public class FrequencyStatisticsExplorerTest {
 
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
+    private FrequencyStatisticsExplorer freqExp;
 
-    FrequencyStatisticsExplorer freqExp;
+    private Analysis ana;
 
-    DbmsLanguage mockDbLanguage = DbmsLanguageFactory.createDbmsLanguage("MySQL", "5.0.2"); //$NON-NLS-1$ //$NON-NLS-2$
+    DbmsLanguage dbLanguage = DbmsLanguageFactory.createDbmsLanguage("MySQL", "5.0.2"); //$NON-NLS-1$ //$NON-NLS-2$
 
     /**
      * DOC msjian Comment method "setUp".
@@ -69,8 +66,29 @@ public class FrequencyStatisticsExplorerTest {
      */
     @Before
     public void setUp() throws Exception {
-        DataExplorerTestHelper.initDataExplorer();
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(mockDbLanguage); //$NON-NLS-1$
+        UnitTestBuildHelper.initProjectStructure();
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQItemService.class)) {
+            ITDQItemService tdqService = (ITDQItemService) GlobalServiceRegister.getDefault().getService(ITDQItemService.class);
+            tdqService.createDQStructor();
+        }
+        initAnalysis();
+    }
+
+    /**
+     * DOC yyin Comment method "initAnalysis".
+     */
+    private void initAnalysis() {
+        ana = UnitTestBuildHelper.createRealAnalysis("anaA", null, false);
+
+        AnalysisParameters parameters = AnalysisFactory.eINSTANCE.createAnalysisParameters();
+        parameters.setExecutionLanguage(ExecutionLanguage.SQL);
+        ana.setParameters(parameters);
+
+        AnalysisContext context = AnalysisFactory.eINSTANCE.createAnalysisContext();
+        ana.setContext(context);
+        Connection createConnection = ConnectionFactory.eINSTANCE.createConnection();
+        createConnection.setName("MySQL");
+        context.setConnection(createConnection);
     }
 
     /**
@@ -89,48 +107,47 @@ public class FrequencyStatisticsExplorerTest {
     @Test
     public void testGetFreqRowsStatement_1() {
 
-        // mock an analysis for the super class.
-        Analysis analysis = mock(Analysis.class);
-        AnalysisParameters parameters = mock(AnalysisParameters.class);
-        when(parameters.getExecutionLanguage()).thenReturn(ExecutionLanguage.SQL);
-        when(analysis.getParameters()).thenReturn(parameters);
-        AnalysisContext context = mock(AnalysisContext.class);
-        when(analysis.getContext()).thenReturn(context);
-        DataManager dataManager = mock(DataManager.class);
-        when(context.getConnection()).thenReturn(dataManager);
+        LowFrequencyIndicator indicator = creatFrenquceIndicator("CAL_DATE", "DATE", Types.DATE);
 
+        ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "2012-06-05", "1"); //$NON-NLS-1$  //$NON-NLS-2$
+        chartDataEntity.setLabelNull(false);
+        chartDataEntity.setKey("2012-06-05"); //$NON-NLS-1$
+        assertFalse(chartDataEntity.isLabelNull());
+
+        freqExp = new FrequencyStatisticsExplorer();
+        freqExp.setAnalysis(ana);
+        freqExp.setEnitty(chartDataEntity);
+
+        String clause = freqExp.getFreqRowsStatement();
+
+        assertEquals("SELECT * FROM TDQ_CALENDAR WHERE  (CAL_DATE = '2012-06-05') ", clause); //$NON-NLS-1$
+    }
+
+    /**
+     * DOC yyin Comment method "creatFrenquceIndicator".
+     * 
+     * @return
+     */
+    private LowFrequencyIndicator creatFrenquceIndicator(String columnName, String tdSqlName, int javaType) {
         // create database construction
         TdTable table = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdTable();
         table.setName("TDQ_CALENDAR"); //$NON-NLS-1$
         TdColumn column = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdColumn();
-        column.setName("CAL_DATE"); //$NON-NLS-1$
+        column.setName(columnName);
         TdSqlDataType tdsql = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdSqlDataType();
-        tdsql.setName("DATE"); //$NON-NLS-1$
-        tdsql.setJavaDataType(Types.DATE);
+        tdsql.setName(tdSqlName);
+        tdsql.setJavaDataType(javaType);
         column.setSqlDataType(tdsql);
         table.getOwnedElement().add(column);
         column.setOwner(table);
 
         // create indicator
         LowFrequencyIndicator indicator = IndicatorsFactory.eINSTANCE.createLowFrequencyIndicator();
-        ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "2012-06-05", "1"); //$NON-NLS-1$  //$NON-NLS-2$
-        chartDataEntity.setLabelNull(false);
-        chartDataEntity.setKey("2012-06-05"); //$NON-NLS-1$
-        assertFalse(chartDataEntity.isLabelNull());
-
         indicator.setAnalyzedElement(column);
         IndicatorParameters indicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         indicatorParameters.setDateParameters(null);
         indicator.setParameters(indicatorParameters);
-        assertNull(indicatorParameters.getDateParameters());
-
-        freqExp = new FrequencyStatisticsExplorer();
-        freqExp.setAnalysis(analysis);
-        freqExp.setEnitty(chartDataEntity);
-
-        String clause = freqExp.getFreqRowsStatement();
-
-        assertEquals("SELECT * FROM `TDQ_CALENDAR` WHERE  (`CAL_DATE` = '2012-06-05') ", clause); //$NON-NLS-1$
+        return indicator;
     }
 
     /**
@@ -139,7 +156,20 @@ public class FrequencyStatisticsExplorerTest {
      */
     @Test
     public void testGetFreqRowsStatement_2() {
-        // TODO when the column javaType is Text
+        LowFrequencyIndicator indicator = creatFrenquceIndicator("CAL_TEXT", "TEXT", Types.LONGNVARCHAR);
+
+        ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "it is a long text", "1"); //$NON-NLS-1$  //$NON-NLS-2$
+        chartDataEntity.setLabelNull(false);
+        chartDataEntity.setKey("it is a long text"); //$NON-NLS-1$
+        assertFalse(chartDataEntity.isLabelNull());
+
+        freqExp = new FrequencyStatisticsExplorer();
+        freqExp.setAnalysis(ana);
+        freqExp.setEnitty(chartDataEntity);
+
+        String clause = freqExp.getFreqRowsStatement();
+
+        assertEquals("SELECT * FROM TDQ_CALENDAR WHERE  (CAL_TEXT = 'it is a long text') ", clause); //$NON-NLS-1$
     }
 
     /**
@@ -148,8 +178,20 @@ public class FrequencyStatisticsExplorerTest {
      */
     @Test
     public void testGetFreqRowsStatement_3() {
-        // TODO when the column javaType is Number
+        LowFrequencyIndicator indicator = creatFrenquceIndicator("CAL_NUMBER", "NUMBER", Types.BIGINT);
 
+        ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "12345", "1"); //$NON-NLS-1$  //$NON-NLS-2$
+        chartDataEntity.setLabelNull(false);
+        chartDataEntity.setKey("12345"); //$NON-NLS-1$
+        assertFalse(chartDataEntity.isLabelNull());
+
+        freqExp = new FrequencyStatisticsExplorer();
+        freqExp.setAnalysis(ana);
+        freqExp.setEnitty(chartDataEntity);
+
+        String clause = freqExp.getFreqRowsStatement();
+
+        assertEquals("SELECT * FROM TDQ_CALENDAR WHERE  (CAL_NUMBER = '12345') ", clause); //$NON-NLS-1$
     }
 
     /**
@@ -158,17 +200,6 @@ public class FrequencyStatisticsExplorerTest {
      */
     @Test
     public void testGetFreqRowsStatement_4() {
-
-        // mock an analysis for the super class.
-        Analysis analysis = mock(Analysis.class);
-        AnalysisParameters parameters = mock(AnalysisParameters.class);
-        when(parameters.getExecutionLanguage()).thenReturn(ExecutionLanguage.SQL);
-        when(analysis.getParameters()).thenReturn(parameters);
-        AnalysisContext context = mock(AnalysisContext.class);
-        when(analysis.getContext()).thenReturn(context);
-        DataManager dataManager = mock(DataManager.class);
-        when(context.getConnection()).thenReturn(dataManager);
-
         // create database construction
         TdTable table = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdTable();
         table.setName("TDQ_CALENDAR"); //$NON-NLS-1$
@@ -204,12 +235,19 @@ public class FrequencyStatisticsExplorerTest {
         userDefIndicator.setParameters(indicatorParameters);
         assertNull(indicatorParameters.getDateParameters());
 
+        AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        ExecutionInformations createExecutionInformations = AnalysisFactory.eINSTANCE.createExecutionInformations();
+        createAnalysisResult.setResultMetadata(createExecutionInformations);
+        createAnalysisResult.getIndicators().add(userDefIndicator);
+        userDefIndicator.setAnalyzedElement(column);
+        ana.setResults(createAnalysisResult);
+
         freqExp = new FrequencyStatisticsExplorer();
-        freqExp.setAnalysis(analysis);
+        freqExp.setAnalysis(ana);
         freqExp.setEnitty(chartDataEntity);
 
         String clause = freqExp.getFreqRowsStatement();
 
-        assertEquals("SELECT * FROM `TDQ_CALENDAR` ", clause); //$NON-NLS-1$
+        assertEquals("SELECT * FROM TDQ_CALENDAR ", clause); //$NON-NLS-1$
     }
 }
