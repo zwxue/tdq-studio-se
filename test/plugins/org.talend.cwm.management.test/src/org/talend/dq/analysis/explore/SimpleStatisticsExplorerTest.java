@@ -22,16 +22,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQItemService;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
-import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -66,17 +62,7 @@ public class SimpleStatisticsExplorerTest {
      */
     @Test
     public void testGetQueryMap() {
-        Analysis ana = UnitTestBuildHelper.createRealAnalysis("anaA", null, false);
-
-        AnalysisParameters parameters = AnalysisFactory.eINSTANCE.createAnalysisParameters();
-        parameters.setExecutionLanguage(ExecutionLanguage.SQL);
-        ana.setParameters(parameters);
-
-        AnalysisContext context = AnalysisFactory.eINSTANCE.createAnalysisContext();
-        ana.setContext(context);
-        Connection createConnection = ConnectionFactory.eINSTANCE.createConnection();
-        createConnection.setName("MySQL");
-        context.setConnection(createConnection);
+        Analysis ana = UnitTestBuildHelper.createAndInitAnalysis();
 
         TdTable table = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdTable();
         table.setName("TDQ_CALENDAR"); //$NON-NLS-1$
@@ -127,7 +113,7 @@ public class SimpleStatisticsExplorerTest {
                         + "SELECT * FROM TDQ_CALENDAR ", queryMap.get("View rows")); //$NON-NLS-1$ //$NON-NLS-2$
 
         // test when is not sql engine
-        parameters.setExecutionLanguage(ExecutionLanguage.JAVA);
+        ana.getParameters().setExecutionLanguage(ExecutionLanguage.JAVA);
         Map<String, String> queryMap_java = simpleStatisticsExplorer.getQueryMap();
         assertFalse(queryMap_java.isEmpty());
         assertEquals(1, queryMap_java.size());

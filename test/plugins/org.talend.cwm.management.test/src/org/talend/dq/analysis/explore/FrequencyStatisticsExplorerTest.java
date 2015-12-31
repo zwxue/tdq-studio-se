@@ -21,19 +21,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQItemService;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
-import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
-import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
@@ -71,24 +66,7 @@ public class FrequencyStatisticsExplorerTest {
             ITDQItemService tdqService = (ITDQItemService) GlobalServiceRegister.getDefault().getService(ITDQItemService.class);
             tdqService.createDQStructor();
         }
-        initAnalysis();
-    }
-
-    /**
-     * DOC yyin Comment method "initAnalysis".
-     */
-    private void initAnalysis() {
-        ana = UnitTestBuildHelper.createRealAnalysis("anaA", null, false);
-
-        AnalysisParameters parameters = AnalysisFactory.eINSTANCE.createAnalysisParameters();
-        parameters.setExecutionLanguage(ExecutionLanguage.SQL);
-        ana.setParameters(parameters);
-
-        AnalysisContext context = AnalysisFactory.eINSTANCE.createAnalysisContext();
-        ana.setContext(context);
-        Connection createConnection = ConnectionFactory.eINSTANCE.createConnection();
-        createConnection.setName("MySQL");
-        context.setConnection(createConnection);
+        ana = UnitTestBuildHelper.createAndInitAnalysis();
     }
 
     /**
@@ -130,16 +108,7 @@ public class FrequencyStatisticsExplorerTest {
      */
     private LowFrequencyIndicator creatFrenquceIndicator(String columnName, String tdSqlName, int javaType) {
         // create database construction
-        TdTable table = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdTable();
-        table.setName("TDQ_CALENDAR"); //$NON-NLS-1$
-        TdColumn column = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdColumn();
-        column.setName(columnName);
-        TdSqlDataType tdsql = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdSqlDataType();
-        tdsql.setName(tdSqlName);
-        tdsql.setJavaDataType(javaType);
-        column.setSqlDataType(tdsql);
-        table.getOwnedElement().add(column);
-        column.setOwner(table);
+        TdColumn column = UnitTestBuildHelper.createRealTdColumn(columnName, tdSqlName, javaType);
 
         // create indicator
         LowFrequencyIndicator indicator = IndicatorsFactory.eINSTANCE.createLowFrequencyIndicator();

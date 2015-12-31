@@ -13,47 +13,37 @@
 package org.talend.dq.analysis.explore;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
 
+import java.sql.Types;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQItemService;
+import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisContext;
-import org.talend.dataquality.analysis.AnalysisParameters;
-import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
-import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.dbms.HiveDbmsLanguage;
+import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * created by qiongli on Sep 5, 2012 Detailled comment
  * 
  */
-// @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DbmsLanguageFactory.class, org.talend.cwm.management.i18n.Messages.class })
 public class TextStatisticsExplorerTest {
 
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
-
-    /**
-     * DOC qiongli Comment method "setUp".
-     * 
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
-        DataExplorerTestHelper.initDataExplorer();
+        UnitTestBuildHelper.initProjectStructure();
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQItemService.class)) {
+            ITDQItemService tdqService = (ITDQItemService) GlobalServiceRegister.getDefault().getService(ITDQItemService.class);
+            tdqService.createDQStructor();
+        }
+
     }
 
     /**
@@ -61,28 +51,37 @@ public class TextStatisticsExplorerTest {
      */
     @Test
     public void testGetQueryMap() {
-        // mock an analysis for the super class.
-        Analysis ana = mock(Analysis.class);
-        AnalysisParameters parameters = mock(AnalysisParameters.class);
-        when(parameters.getExecutionLanguage()).thenReturn(ExecutionLanguage.SQL);
-        when(ana.getParameters()).thenReturn(parameters);
-        AnalysisContext context = mock(AnalysisContext.class);
-        when(ana.getContext()).thenReturn(context);
-        DataManager dataManager = mock(DataManager.class);
-        when(context.getConnection()).thenReturn(dataManager);
-        HiveDbmsLanguage hiveDBMS = mock(HiveDbmsLanguage.class);
-
-        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class, ExecutionLanguage.class)).toReturn(hiveDBMS);//$NON-NLS-1$ 
-
         AverageLengthIndicator averageLengthIndicator = IndicatorsFactory.eINSTANCE.createAverageLengthIndicator();
-        ChartDataEntity chartDataEntity = new ChartDataEntity(averageLengthIndicator, "", ""); //$NON-NLS-1$  //$NON-NLS-2$
+        TdColumn column = UnitTestBuildHelper.createRealTdColumn("NAME", "NAME", Types.VARCHAR);
+        averageLengthIndicator.setAnalyzedElement(column);
+        IndicatorParameters indicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        indicatorParameters.setDateParameters(null);
+        averageLengthIndicator.setParameters(indicatorParameters);
+
+        Analysis analysis = UnitTestBuildHelper.createAndInitAnalysis();
+        TaggedValueHelper.setTaggedValue(analysis.getContext().getConnection(), TaggedValueHelper.DB_PRODUCT_NAME, "Teradata");
+        TaggedValueHelper.setTaggedValue(analysis.getContext().getConnection(), TaggedValueHelper.DB_PRODUCT_VERSION, "1");
+
+        ChartDataEntity chartDataEntity = new ChartDataEntity(averageLengthIndicator, "1", "1"); //$NON-NLS-1$  //$NON-NLS-2$
+        chartDataEntity.setLabelNull(false);
+        chartDataEntity.setKey("1"); //$NON-NLS-1$
 
         TextStatisticsExplorer textStatisticsExplorer = new TextStatisticsExplorer();
+        textStatisticsExplorer.setAnalysis(analysis);
         textStatisticsExplorer.setEnitty(chartDataEntity);
-        textStatisticsExplorer.setAnalysis(ana);
-        Map<String, String> queryMap = textStatisticsExplorer.getQueryMap();
-        assertTrue(queryMap.isEmpty());
 
+        Map<String, String> queryMap = textStatisticsExplorer.getQueryMap();
+        assertFalse(queryMap.isEmpty());
+        assertEquals(
+                "-- Analysis: anaA ;\n"
+                        + "-- Type of Analysis: Column Analysis ;\n"
+                        + "-- Purpose:  ;\n"
+                        + "-- Description:  ;\n"
+                        + "-- AnalyzedElement: NAME ;\n"
+                        + "-- Indicator: AverageLengthIndicator ;\n"
+                        + "-- Showing: View rows ;\n"
+                        + "SELECT t.* FROM(SELECT CAST(SUM( CHAR_LENGTH( CASE WHEN   CHAR_LENGTH( TRIM(NAME) ) =0  THEN '' ELSE  NAME END) ) / (COUNT(NAME )*1.00)+0.99 as int) c,CAST(SUM( CHAR_LENGTH( CASE WHEN   CHAR_LENGTH( TRIM(NAME) ) =0  THEN '' ELSE  NAME END) ) / (COUNT(NAME)*1.00) as int) f FROM TDQ_CALENDAR WHERE(NAME IS NOT NULL)) e, TDQ_CALENDAR t WHERE  CHAR_LENGTH( CASE WHEN   CHAR_LENGTH( TRIM(NAME) ) =0  THEN '' ELSE  NAME END)  BETWEEN f AND c",
+                queryMap.get("View rows"));
     }
 
 }

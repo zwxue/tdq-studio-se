@@ -73,10 +73,15 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
+import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
@@ -718,4 +723,34 @@ public class UnitTestBuildHelper {
         Assert.assertNotNull(dataProvider);
         return dataProvider;
     }
+
+    public static Analysis createAndInitAnalysis() {
+        Analysis ana = UnitTestBuildHelper.createRealAnalysis("anaA", null, false);
+
+        AnalysisParameters parameters = AnalysisFactory.eINSTANCE.createAnalysisParameters();
+        parameters.setExecutionLanguage(ExecutionLanguage.SQL);
+        ana.setParameters(parameters);
+
+        AnalysisContext context = AnalysisFactory.eINSTANCE.createAnalysisContext();
+        ana.setContext(context);
+        Connection createConnection = ConnectionFactory.eINSTANCE.createConnection();
+        createConnection.setName("MySQL");
+        context.setConnection(createConnection);
+        return ana;
+    }
+
+    public static TdColumn createRealTdColumn(String columnName, String tdSqlName, int javaType) {
+        TdTable table = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdTable();
+        table.setName("TDQ_CALENDAR"); //$NON-NLS-1$
+        TdColumn column = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdColumn();
+        column.setName(columnName);
+        TdSqlDataType tdsql = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdSqlDataType();
+        tdsql.setName(tdSqlName);
+        tdsql.setJavaDataType(javaType);
+        column.setSqlDataType(tdsql);
+        table.getOwnedElement().add(column);
+        column.setOwner(table);
+        return column;
+    }
+
 }
