@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.migration.helper;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -25,6 +24,7 @@ import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.impl.DefinitionFactoryImpl;
 
 /**
  * created by qiongli on Sep 5, 2012 Detailled comment
@@ -38,7 +38,7 @@ public class IndicatorDefinitionFileHelperTest {
 
     @Before
     public void setup() {
-        indiDefinition = mock(IndicatorDefinition.class);
+        indiDefinition = DefinitionFactoryImpl.eINSTANCE.createIndicatorDefinition();
         EList<TdExpression> tdExpessionLs = new BasicEList<TdExpression>();
         TdExpression tdExpression1 = BooleanExpressionHelper.createTdExpression("MySql",//$NON-NLS-1$
                 "SELECT SUM(CHAR_LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%>");//$NON-NLS-1$
@@ -47,10 +47,9 @@ public class IndicatorDefinitionFileHelperTest {
                         "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>");//$NON-NLS-1$
         tdExpessionLs.add(tdExpression1);
         tdExpessionLs.add(tdExpression2);
-        when(indiDefinition.getSqlGenericExpression()).thenReturn(tdExpessionLs);
+        indiDefinition.getSqlGenericExpression().add(tdExpression1);
+        indiDefinition.getSqlGenericExpression().add(tdExpression2);
 
-        //        UnitTestBuildHelper.deleteCurrentProject("testForIndicatorDefinitionFileHelperTest"); //$NON-NLS-1$
-        //        UnitTestBuildHelper.createRealProject("testForIndicatorDefinitionFileHelperTest"); //$NON-NLS-1$
         UnitTestBuildHelper.initProjectStructure();
     }
 
