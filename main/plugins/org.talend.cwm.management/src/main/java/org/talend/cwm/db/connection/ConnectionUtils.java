@@ -338,6 +338,10 @@ public final class ConnectionUtils {
                     }
                 }
                 LinkedList<String> driverJarRealPaths = getDriverJarRealPaths(driverJarNameList);
+                if (driverJarRealPaths.isEmpty()) {
+                    returnCode.setOk(false);
+                    returnCode.setMessage(Messages.getString("ConnectionUtils.JarFileCanNotBeFound")); //$NON-NLS-1$
+                }
                 for (String str : driverJarRealPaths) {
                     File jarFile = new File(str);
                     if (!jarFile.exists() || jarFile.isDirectory()) {

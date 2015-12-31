@@ -12,134 +12,31 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
-
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.net.URISyntaxException;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.FileLocator;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.database.EDatabaseTypeName;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.connection.impl.ConnectionFactoryImpl;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSqlDataType;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.impl.TdColumnImpl;
-import org.talend.dq.writer.impl.DataProviderWriter;
-import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.metadata.managment.utils.MetadataConnectionUtils;
+import org.talend.dq.CWMPlugin;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.Schema;
-import orgomg.cwm.resource.relational.impl.CatalogImpl;
-import orgomg.cwm.resource.relational.impl.SchemaImpl;
 
 /**
  * DOC msjian class global comment. Detailled comment
  */
-@PrepareForTest({ ConnectionUtils.class, ColumnSetHelper.class, ConnectionHelper.class, JavaSqlFactory.class,
-        CatalogHelper.class, SchemaHelper.class, org.talend.utils.sql.ConnectionUtils.class, ElementWriterFactory.class,
-        Messages.class, ExtractMetaDataUtils.class, MetadataConnectionUtils.class })
 public class ConnectionUtilsTest {
-
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
-
-    /**
-     * Test method for
-     * {@link org.talend.cwm.db.connection.ConnectionUtils#retrieveColumn(org.talend.core.model.metadata.builder.connection.MetadataTable)}
-     * .
-     */
-    @Test
-    public void testRetrieveColumn() {
-        ColumnSet tdTable = mock(TdTable.class);
-        when(tdTable.getName()).thenReturn("testTableName"); //$NON-NLS-1$
-
-        PowerMockito.mockStatic(ColumnSetHelper.class);
-        List<TdColumn> columnList = new ArrayList<TdColumn>();
-        TdColumnImpl testColumn = mock(TdColumnImpl.class);
-        when(testColumn.getName()).thenReturn("testColumnName"); //$NON-NLS-1$
-        columnList.add(testColumn);
-        when(ColumnSetHelper.getColumns(tdTable)).thenReturn(columnList);
-
-        Connection tempConnection = mock(Connection.class);
-        PowerMockito.mockStatic(ConnectionHelper.class);
-        when(ConnectionHelper.getConnection(testColumn)).thenReturn(tempConnection);
-
-        java.sql.Connection connection = mock(java.sql.Connection.class);
-
-        PowerMockito.mockStatic(JavaSqlFactory.class);
-        TypedReturnCode<java.sql.Connection> rc = mock(TypedReturnCode.class);
-
-        when(JavaSqlFactory.createConnection(tempConnection)).thenReturn(rc);
-        when(rc.getObject()).thenReturn(connection);
-
-        Catalog catalog = mock(CatalogImpl.class);
-        PowerMockito.mockStatic(CatalogHelper.class);
-        when(CatalogHelper.getParentCatalog(tdTable)).thenReturn(catalog);
-
-        Schema schema = mock(SchemaImpl.class);
-        PowerMockito.mockStatic(SchemaHelper.class);
-        when(SchemaHelper.getParentSchema(tdTable)).thenReturn(schema);
-
-        PowerMockito.mockStatic(ConnectionUtils.class);
-        when(ConnectionUtils.getName(catalog)).thenReturn("testCatalogName"); //$NON-NLS-1$
-        when(ConnectionUtils.getName(schema)).thenReturn("testSchemaName"); //$NON-NLS-1$
-
-        List<TdSqlDataType> list = mock(List.class);
-        try {
-            when(ConnectionUtils.getDataType("testCatalogName", "testSchemaName", "testTableName", "testColumnName", connection)) //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
-                    .thenReturn(list);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        when(list.size()).thenReturn(0);
-
-        ReturnCode returnCode = new ReturnCode();
-        returnCode.setReturnCode("ok", true); //$NON-NLS-1$
-        PowerMockito.mockStatic(org.talend.utils.sql.ConnectionUtils.class);
-        when(org.talend.utils.sql.ConnectionUtils.closeConnection(connection)).thenReturn(returnCode);
-
-        PowerMockito.mockStatic(ElementWriterFactory.class);
-
-        ElementWriterFactory instance = mock(ElementWriterFactory.class);
-        when(ElementWriterFactory.getInstance()).thenReturn(instance);
-
-        DataProviderWriter dataProviderWriter = mock(DataProviderWriter.class);
-        when(instance.createDataProviderWriter()).thenReturn(dataProviderWriter);
-
-        when(dataProviderWriter.save(tempConnection)).thenReturn(returnCode);
-
-        ConnectionUtils.retrieveColumn((MetadataTable) tdTable);
-        Assert.assertTrue(returnCode.isOk());
-    }
 
     /**
      * Test method for
@@ -148,41 +45,148 @@ public class ConnectionUtilsTest {
      */
     @Test
     public void testIsGeneralJdbc() {
-        DatabaseConnection dbConnMock = mock(DatabaseConnection.class);
+        DatabaseConnection createDatabaseConnection = ConnectionFactoryImpl.eINSTANCE.createDatabaseConnection();
         EDatabaseTypeName generalJdbcType = EDatabaseTypeName.GENERAL_JDBC;
-        when(dbConnMock.getDatabaseType()).thenReturn(generalJdbcType.getDisplayName());
-        assertTrue(ConnectionUtils.isGeneralJdbc(dbConnMock));
+        createDatabaseConnection.setDatabaseType(generalJdbcType.getDisplayName());
+        Assert.assertTrue(
+                "Current DatabaseType of connection should be " + EDatabaseTypeName.GENERAL_JDBC.getDisplayName(), ConnectionUtils.isGeneralJdbc(createDatabaseConnection)); //$NON-NLS-1$
     }
 
     /**
      * Test method for
      * {@link org.talend.cwm.db.connection.ConnectionUtils#checkGeneralJdbcJarFilePathDriverClassName(org.talend.core.model.metadata.builder.connection.DatabaseConnection)}
-     * .
+     * . case 1 success case
      */
     @Test
-    public void testCheckGeneralJdbcJarFilePathDriverClassName() {
-        String driverClass = "DriverClassName"; //$NON-NLS-1$
-        String driverJarPath = "DriverJarFilePath"; //$NON-NLS-1$
-        String msg = "msg"; //$NON-NLS-1$
+    public void testCheckGeneralJdbcJarFilePathDriverClassNameCase1() {
+        String driverClass = "om.mysql.jdbc.Driver"; //$NON-NLS-1$
+        String driverName = "mysql-connector-java-5.1.12-bin.jar"; //$NON-NLS-1$
+        CopyTheJarFile();
 
-        ResourceBundle rb = mock(ResourceBundle.class);
-        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb); //$NON-NLS-1$
-
-        PowerMockito.mockStatic(Messages.class);
-        when(Messages.getString(anyString())).thenReturn(msg);
-
-        PowerMockito.mockStatic(JavaSqlFactory.class);
-        DatabaseConnection dbConnMock = mock(DatabaseConnection.class);
-        when(JavaSqlFactory.getDriverClass(dbConnMock)).thenReturn(driverClass);
-        when(JavaSqlFactory.getDriverJarPath(dbConnMock)).thenReturn(driverJarPath);
-
+        DatabaseConnection createDatabaseConnection = ConnectionFactoryImpl.eINSTANCE.createDatabaseConnection();
+        createDatabaseConnection.setDriverClass(driverClass);
+        createDatabaseConnection.setDriverJarPath(driverName);
         try {
-            ReturnCode rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(dbConnMock);
+            ReturnCode rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(createDatabaseConnection);
 
-            assertFalse(rc.isOk());
-            assertEquals(msg, rc.getMessage());
+            Assert.assertTrue("The driver " + driverName + " of conection can not be find", rc.isOk()); //$NON-NLS-1$
         } catch (MalformedURLException e) {
             Assert.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.cwm.db.connection.ConnectionUtils#checkGeneralJdbcJarFilePathDriverClassName(org.talend.core.model.metadata.builder.connection.DatabaseConnection)}
+     * . case 2 driverClass is null or empty
+     */
+    @Test
+    public void testCheckGeneralJdbcJarFilePathDriverClassNameCase2() {
+        String driverClass = StringUtils.EMPTY;
+        String driverName = "mysql-connector-java-5.1.12-bin.jar"; //$NON-NLS-1$
+        CopyTheJarFile();
+
+        DatabaseConnection createDatabaseConnection = ConnectionFactoryImpl.eINSTANCE.createDatabaseConnection();
+        createDatabaseConnection.setDriverClass(driverClass);
+        createDatabaseConnection.setDriverJarPath(driverName);
+        try {
+            // driver class is empty case
+            ReturnCode rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(createDatabaseConnection);
+
+            Assert.assertFalse("The driver of conection is empty so that should not be found", rc.isOk()); //$NON-NLS-1$
+            Assert.assertEquals(Messages.getString("ConnectionUtils.DriverClassEmpty"), rc.getMessage()); //$NON-NLS-1$
+
+            // driver class is Null case
+            driverClass = null;
+            createDatabaseConnection.setDriverClass(driverClass);
+            rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(createDatabaseConnection);
+
+            Assert.assertFalse("The driver of conection is Null so that should not be found", rc.isOk()); //$NON-NLS-1$
+            Assert.assertEquals(Messages.getString("ConnectionUtils.DriverClassEmpty"), rc.getMessage()); //$NON-NLS-1$
+
+        } catch (MalformedURLException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.cwm.db.connection.ConnectionUtils#checkGeneralJdbcJarFilePathDriverClassName(org.talend.core.model.metadata.builder.connection.DatabaseConnection)}
+     * . case 3 driverName is null or empty
+     */
+    @Test
+    public void testCheckGeneralJdbcJarFilePathDriverClassNameCase3() {
+        String driverClass = "om.mysql.jdbc.Driver"; //$NON-NLS-1$
+        String driverName = StringUtils.EMPTY;
+        CopyTheJarFile();
+
+        DatabaseConnection createDatabaseConnection = ConnectionFactoryImpl.eINSTANCE.createDatabaseConnection();
+        createDatabaseConnection.setDriverClass(driverClass);
+        createDatabaseConnection.setDriverJarPath(driverName);
+        try {
+            // driver name is empty case
+            ReturnCode rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(createDatabaseConnection);
+
+            Assert.assertFalse("The class of driver is empty so that should not be found", rc.isOk()); //$NON-NLS-1$
+            Assert.assertEquals(Messages.getString("ConnectionUtils.DriverJarFileEmpty"), rc.getMessage()); //$NON-NLS-1$
+
+            // driver name is Null case
+            driverClass = null;
+            createDatabaseConnection.setDriverJarPath(driverName);
+            rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(createDatabaseConnection);
+
+            Assert.assertFalse("The class of driver is Null so that should not be found", rc.isOk()); //$NON-NLS-1$
+            Assert.assertEquals(Messages.getString("ConnectionUtils.DriverJarFileEmpty"), rc.getMessage()); //$NON-NLS-1$
+
+        } catch (MalformedURLException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.cwm.db.connection.ConnectionUtils#checkGeneralJdbcJarFilePathDriverClassName(org.talend.core.model.metadata.builder.connection.DatabaseConnection)}
+     * . case 4 The jar can not be found case
+     */
+    @Test
+    public void testCheckGeneralJdbcJarFilePathDriverClassNameCase4() {
+        String driverClass = "om.mysql.jdbc.Driver"; //$NON-NLS-1$
+        String driverName = "mysql-connector-java-5.1.12-bin111111.jar"; //$NON-NLS-1$
+        CopyTheJarFile();
+
+        DatabaseConnection createDatabaseConnection = ConnectionFactoryImpl.eINSTANCE.createDatabaseConnection();
+        createDatabaseConnection.setDriverClass(driverClass);
+        createDatabaseConnection.setDriverJarPath(driverName);
+        try {
+            ReturnCode rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(createDatabaseConnection);
+
+            Assert.assertFalse("The driver is not exist so that should not be found", rc.isOk()); //$NON-NLS-1$
+            Assert.assertEquals(Messages.getString("ConnectionUtils.JarFileCanNotBeFound"), rc.getMessage()); //$NON-NLS-1$
+        } catch (MalformedURLException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Copy The jar file if it is not exist or not new one.
+     */
+    private void CopyTheJarFile() {
+        try {
+            File sourceFile = null;
+            try {
+                sourceFile = new File(FileLocator.toFileURL(
+                        CWMPlugin.getDefault().getBundle().getResource("jdbc/mysql-connector-java-5.1.12-bin.jar")).toURI()); //$NON-NLS-1$
+            } catch (URISyntaxException e) {
+                Assert.fail(e.getMessage());
+            }
+            if (sourceFile == null) {
+                Assert.fail("source file is not exist"); //$NON-NLS-1$
+            }
+            String tempLibPath = ExtractMetaDataUtils.getInstance().getJavaLibPath();
+            File targetFile = new File(tempLibPath + "mysql-connector-java-5.1.12-bin.jar"); //$NON-NLS-1$
+            FilesUtils.copyFile(sourceFile, targetFile);
+        } catch (IOException e1) {
+            Assert.fail(e1.getMessage());
         }
     }
 
@@ -198,12 +202,12 @@ public class ConnectionUtilsTest {
         sqliteConn.setUsername(""); //$NON-NLS-1$
         sqliteConn.setContextMode(false);
         ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(sqliteConn);
-        assertTrue(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
+        Assert.assertTrue(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
 
         String username = "abc"; //$NON-NLS-1$
         sqliteConn.setUsername(username);
         ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(sqliteConn);
-        assertFalse(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
-        assertTrue(username.equals(sqliteConn.getUsername()));
+        Assert.assertFalse(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
+        Assert.assertTrue(username.equals(sqliteConn.getUsername()));
     }
 }
