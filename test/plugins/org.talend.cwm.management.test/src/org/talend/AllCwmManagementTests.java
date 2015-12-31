@@ -20,7 +20,6 @@ import org.talend.cwm.dependencies.DependenciesHandlerTest;
 import org.talend.cwm.management.api.SoftwareSystemManagerTest;
 import org.talend.cwm.management.i18n.MessagesTest;
 import org.talend.dq.CWMPluginTest;
-import org.talend.dq.analysis.AnalysisExecutorTest;
 import org.talend.dq.analysis.AnalysisRealExecutorForDB2Test;
 import org.talend.dq.analysis.AnalysisRecordGroupingUtilsTest;
 import org.talend.dq.analysis.ColumnAnalysisExecutorTest;
@@ -79,20 +78,20 @@ import org.talend.dq.writer.AElementPersistanceTest;
 @SuiteClasses({ BenfordLawFrequencyExplorerTest.class, DataPatternMatchingTest.class, FrequencyStatisticsExplorerTest.class,
         PatternExplorerRealTest.class, RowMatchExplorerTest.class, SimpleStatisticsExplorerTest.class,
         TextStatisticsExplorerTest.class, SummaryStastictisExplorerRealTest.class, SummaryStastictisExplorerTest.class,
-        AnalysisExecutorTest.class, ColumnAnalysisExecutorTest.class, ConnectionAnalysisCreationTest.class,
-        ExecuteMatchRuleHandlerTest.class, MatchAnalysisExecutorTest.class, MultiColumnAnalysisExecutorTest.class,
-        MultiNominalColAnalysisTest.class, CategoryHandlerTest.class, TdqAnalysisConnectionPoolTest.class,
-        DbmsLanguageTest.class, InfomixDbmsLanguageTest.class, IngresDbmsLanguageTest.class, MSSqlDbmsLanguageTest.class,
-        MySQLDbmsLanguageTest.class, AnalysisExecutorHelperTest.class, ContextHelperTest.class, DQDeleteHelperTest.class,
-        ParameterUtilTest.class, PropertyHelperTest.class, ProxyRepositoryManagerTest.class, ReportUtilsRealTest.class,
-        RepositoryNodeHelperRealTest.class, DbmsLanguageFactoryTest.class, RepositoryNodeHelperTest.class, UDIHelperTest.class,
-        AbstractSchemaEvaluatorTest.class, NetezzaDbmsLanguageTest.class, ColumnSetIndicatorEvaluatorTest.class,
-        DelimitedFileIndicatorEvaluatorTest.class, SqlIndicatorHandlerTest.class, ReportSubFolderRepNodeTest.class,
-        AElementPersistanceRealTest.class, AElementPersistanceTest.class, CWMPluginTest.class, MessagesTest.class,
-        SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, ConnectionUtilsTest.class,
-        AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class, EObjectHelperTest.class,
-        AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class, SQLPatternExplorerTest.class,
-        TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class })
+        ColumnAnalysisExecutorTest.class, ConnectionAnalysisCreationTest.class, ExecuteMatchRuleHandlerTest.class,
+        MatchAnalysisExecutorTest.class, MultiColumnAnalysisExecutorTest.class, MultiNominalColAnalysisTest.class,
+        CategoryHandlerTest.class, TdqAnalysisConnectionPoolTest.class, DbmsLanguageTest.class, InfomixDbmsLanguageTest.class,
+        IngresDbmsLanguageTest.class, MSSqlDbmsLanguageTest.class, MySQLDbmsLanguageTest.class, AnalysisExecutorHelperTest.class,
+        ContextHelperTest.class, DQDeleteHelperTest.class, ParameterUtilTest.class, PropertyHelperTest.class,
+        ProxyRepositoryManagerTest.class, ReportUtilsRealTest.class, RepositoryNodeHelperRealTest.class,
+        DbmsLanguageFactoryTest.class, RepositoryNodeHelperTest.class, UDIHelperTest.class, AbstractSchemaEvaluatorTest.class,
+        NetezzaDbmsLanguageTest.class, ColumnSetIndicatorEvaluatorTest.class, DelimitedFileIndicatorEvaluatorTest.class,
+        SqlIndicatorHandlerTest.class, ReportSubFolderRepNodeTest.class, AElementPersistanceRealTest.class,
+        AElementPersistanceTest.class, CWMPluginTest.class, MessagesTest.class, SoftwareSystemManagerTest.class,
+        DependenciesHandlerTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class,
+        ColumnAnalysisSqlExecutorTest.class, EObjectHelperTest.class, AnalysisRealExecutorForDB2Test.class,
+        LowerUpperQuantileForDB2Test.class, SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class,
+        AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class })
 public class AllCwmManagementTests {
 
 }
