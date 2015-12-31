@@ -412,6 +412,7 @@ public class AElementPersistanceRealTest {
         Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis3"); //$NON-NLS-1$
         createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        createAnalysisProperty.setId(EcoreUtil.generateUUID());
         ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
 
         // create pattern match indicator
@@ -501,5 +502,117 @@ public class AElementPersistanceRealTest {
         Assert.assertEquals(1, createAnalysis.getSupplierDependency().size());
         Assert.assertEquals(0, createAnalysis.getSupplierDependency().get(0).getClient().size());
 
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.writer.AElementPersistance#saveWithDependencies(org.talend.core.model.properties.Item, orgomg.cwm.objectmodel.core.ModelElement)}
+     * .
+     * 
+     * @throws PersistenceException
+     */
+    @Test
+    public void testSaveWithDependenciesAnalysis() throws PersistenceException {
+
+        AnalysisWriter createAnalysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
+        String anaName = "AElementPersistanceRealTestanalysis5";
+        // create analysis
+        Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
+        AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        AnalysisContext createAnalysisContext = AnalysisFactory.eINSTANCE.createAnalysisContext();
+        createAnalysis.setResults(createAnalysisResult);
+        createAnalysis.setContext(createAnalysisContext);
+        createAnalysis.setName(anaName);
+
+        // create analysis item
+        TDQAnalysisItem createTDQAnalysisItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        createTDQAnalysisItem.setAnalysis(createAnalysis);
+        Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis5"); //$NON-NLS-1$
+        createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        createAnalysisProperty.setId(EcoreUtil.generateUUID());
+        ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
+
+        // create pattern match indicator
+        WhereRuleIndicator whereRuleIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
+        // create definition
+
+        createAnalysisResult.getIndicators().add(whereRuleIndicator);
+        DQRule dqRule = RulesFactory.eINSTANCE.createWhereRule();
+        whereRuleIndicator.setIndicatorDefinition(dqRule);
+        TDQBusinessRuleItem createTDQBusinessRuleItem = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
+        createTDQBusinessRuleItem.setDqrule(dqRule);
+        Property createPatternProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createPatternProperty.setLabel("AElementPersistanceRealTestDQRule5"); //$NON-NLS-1$
+        createTDQBusinessRuleItem.setProperty(createPatternProperty);
+        createPatternProperty.setId(EcoreUtil.generateUUID());
+        ProxyRepositoryFactory.getInstance().create(createTDQBusinessRuleItem, Path.EMPTY, false);
+        String exceptedFileName = anaName + "_0.1.ana"; //$NON-NLS-1$
+
+        ReturnCode create = createAnalysisWriter.saveWithDependencies(createTDQAnalysisItem, createAnalysis);
+        assertTrue(create.isOk());
+        Assert.assertEquals(exceptedFileName, createTDQAnalysisItem.getFilename());
+
+        String anaName2 = "ana52"; //$NON-NLS-1$
+        String exceptedFileName2 = anaName2 + "_0.1.ana"; //$NON-NLS-1$
+        createAnalysis.setName(anaName2);
+
+        create = createAnalysisWriter.saveWithDependencies(createTDQAnalysisItem, createAnalysis);
+        assertTrue(create.isOk());
+        Assert.assertEquals(exceptedFileName2, createTDQAnalysisItem.getFilename());
+
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.writer.AElementPersistance#saveWithoutDependencies(org.talend.core.model.properties.Item, orgomg.cwm.objectmodel.core.ModelElement)}
+     * .
+     * 
+     * @throws PersistenceException
+     */
+    @Test
+    public void testSaveWithoutDependenciesReport() throws PersistenceException {
+        ReportWriter createReportWriter = ElementWriterFactory.getInstance().createReportWriter();
+        // create analysis
+        Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
+        AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        createAnalysis.setResults(createAnalysisResult);
+        createAnalysis.setName("AElementPersistanceRealTestanalysis6"); //$NON-NLS-1$
+
+        // create analysis item
+        TDQAnalysisItem createTDQAnalysisItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        createTDQAnalysisItem.setAnalysis(createAnalysis);
+        Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis6"); //$NON-NLS-1$
+        createAnalysisProperty.setId(EcoreUtil.generateUUID());
+        createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
+
+        // create report
+        TdReport createTdReport = ReportsFactory.eINSTANCE.createTdReport();
+        TDQReportItem createTDQReportItem = PropertiesFactory.eINSTANCE.createTDQReportItem();
+        createTDQReportItem.setReport(createTdReport);
+        Property createReportProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createReportProperty.setLabel("AElementPersistanceRealTestreport6"); //$NON-NLS-1$
+        createTDQReportItem.setProperty(createReportProperty);
+        createReportProperty.setId(EcoreUtil.generateUUID());
+        ProxyRepositoryFactory.getInstance().create(createTDQReportItem, Path.EMPTY, false);
+        createTdReport.addAnalysis(createAnalysis);
+
+        String repName = "rep61"; //$NON-NLS-1$
+        String exceptedFileName = repName + "_0.1.rep"; //$NON-NLS-1$
+        createTdReport.setName(repName);
+
+        ReturnCode create = createReportWriter.saveWithoutDependencies(createTDQReportItem, createTdReport);
+        assertTrue(create.isOk());
+        Assert.assertEquals(exceptedFileName, createTDQReportItem.getFilename());
+
+        String repName2 = "rep62"; //$NON-NLS-1$
+        String exceptedFileName2 = repName2 + "_0.1.rep"; //$NON-NLS-1$
+        createTdReport.setName(repName2);
+
+        create = createReportWriter.saveWithDependencies(createTDQReportItem, createTdReport);
+        assertTrue(create.isOk());
+        Assert.assertEquals(exceptedFileName2, createTDQReportItem.getFilename());
     }
 }
