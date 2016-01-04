@@ -24,7 +24,6 @@ import org.talend.dq.analysis.AnalysisRealExecutorForDB2Test;
 import org.talend.dq.analysis.AnalysisRecordGroupingUtilsTest;
 import org.talend.dq.analysis.ColumnAnalysisExecutorTest;
 import org.talend.dq.analysis.ColumnAnalysisSqlExecutorTest;
-import org.talend.dq.analysis.ConnectionAnalysisCreationTest;
 import org.talend.dq.analysis.ExecuteMatchRuleHandlerTest;
 import org.talend.dq.analysis.MatchAnalysisExecutorTest;
 import org.talend.dq.analysis.MultiColumnAnalysisExecutorTest;
@@ -75,19 +74,18 @@ import org.talend.dq.writer.AElementPersistanceRealTest;
 @SuiteClasses({ BenfordLawFrequencyExplorerTest.class, DataPatternMatchingTest.class, FrequencyStatisticsExplorerTest.class,
         PatternExplorerRealTest.class, RowMatchExplorerTest.class, SimpleStatisticsExplorerTest.class,
         TextStatisticsExplorerTest.class, SummaryStastictisExplorerRealTest.class, SummaryStastictisExplorerTest.class,
-        ColumnAnalysisExecutorTest.class, ConnectionAnalysisCreationTest.class, ExecuteMatchRuleHandlerTest.class,
-        MatchAnalysisExecutorTest.class, MultiColumnAnalysisExecutorTest.class, MultiNominalColAnalysisTest.class,
-        CategoryHandlerTest.class, TdqAnalysisConnectionPoolTest.class, DbmsLanguageTest.class, InfomixDbmsLanguageTest.class,
-        IngresDbmsLanguageTest.class, MSSqlDbmsLanguageTest.class, MySQLDbmsLanguageTest.class, AnalysisExecutorHelperTest.class,
-        ContextHelperTest.class, ParameterUtilTest.class, PropertyHelperTest.class, ProxyRepositoryManagerTest.class,
-        ReportUtilsRealTest.class, RepositoryNodeHelperRealTest.class, DbmsLanguageFactoryTest.class,
-        RepositoryNodeHelperTest.class, UDIHelperTest.class, AbstractSchemaEvaluatorTest.class, NetezzaDbmsLanguageTest.class,
-        ColumnSetIndicatorEvaluatorTest.class, DelimitedFileIndicatorEvaluatorTest.class, SqlIndicatorHandlerTest.class,
-        AElementPersistanceRealTest.class, CWMPluginTest.class, MessagesTest.class, SoftwareSystemManagerTest.class,
-        DependenciesHandlerTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class,
-        ColumnAnalysisSqlExecutorTest.class, EObjectHelperTest.class, AnalysisRealExecutorForDB2Test.class,
-        LowerUpperQuantileForDB2Test.class, SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class,
-        AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class })
+        ColumnAnalysisExecutorTest.class, ExecuteMatchRuleHandlerTest.class, MatchAnalysisExecutorTest.class,
+        MultiColumnAnalysisExecutorTest.class, MultiNominalColAnalysisTest.class, CategoryHandlerTest.class,
+        TdqAnalysisConnectionPoolTest.class, DbmsLanguageTest.class, InfomixDbmsLanguageTest.class, IngresDbmsLanguageTest.class,
+        MSSqlDbmsLanguageTest.class, MySQLDbmsLanguageTest.class, AnalysisExecutorHelperTest.class, ContextHelperTest.class,
+        ParameterUtilTest.class, PropertyHelperTest.class, ProxyRepositoryManagerTest.class, ReportUtilsRealTest.class,
+        RepositoryNodeHelperRealTest.class, DbmsLanguageFactoryTest.class, RepositoryNodeHelperTest.class, UDIHelperTest.class,
+        AbstractSchemaEvaluatorTest.class, NetezzaDbmsLanguageTest.class, ColumnSetIndicatorEvaluatorTest.class,
+        DelimitedFileIndicatorEvaluatorTest.class, SqlIndicatorHandlerTest.class, AElementPersistanceRealTest.class,
+        CWMPluginTest.class, MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class,
+        ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class, EObjectHelperTest.class,
+        AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class, SQLPatternExplorerTest.class,
+        TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class })
 public class AllCwmManagementTests {
 
 }
