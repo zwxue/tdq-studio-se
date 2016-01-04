@@ -67,7 +67,6 @@ import org.talend.dq.indicators.DelimitedFileIndicatorEvaluatorTest;
 import org.talend.dq.indicators.SqlIndicatorHandlerTest;
 import org.talend.dq.indicators.definitions.LowerUpperQuantileForDB2Test;
 import org.talend.dq.nodes.AnalysisFolderRepNodeTest;
-import org.talend.dq.nodes.ReportSubFolderRepNodeTest;
 import org.talend.dq.writer.AElementPersistanceRealTest;
 
 /**
@@ -85,8 +84,8 @@ import org.talend.dq.writer.AElementPersistanceRealTest;
         ProxyRepositoryManagerTest.class, ReportUtilsRealTest.class, RepositoryNodeHelperRealTest.class,
         DbmsLanguageFactoryTest.class, RepositoryNodeHelperTest.class, UDIHelperTest.class, AbstractSchemaEvaluatorTest.class,
         NetezzaDbmsLanguageTest.class, ColumnSetIndicatorEvaluatorTest.class, DelimitedFileIndicatorEvaluatorTest.class,
-        SqlIndicatorHandlerTest.class, ReportSubFolderRepNodeTest.class, AElementPersistanceRealTest.class, CWMPluginTest.class,
-        MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, ConnectionUtilsTest.class,
+        SqlIndicatorHandlerTest.class, AElementPersistanceRealTest.class, CWMPluginTest.class, MessagesTest.class,
+        SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, ConnectionUtilsTest.class,
         AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class, EObjectHelperTest.class,
         AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class, SQLPatternExplorerTest.class,
         TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class })
