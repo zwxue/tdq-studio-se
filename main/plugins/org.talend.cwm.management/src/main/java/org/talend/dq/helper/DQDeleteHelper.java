@@ -14,11 +14,8 @@ package org.talend.dq.helper;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.repository.model.IRepositoryNode;
@@ -31,8 +28,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * 
  */
 public final class DQDeleteHelper {
-
-    private static Logger log = Logger.getLogger(DQDeleteHelper.class);
 
     private DQDeleteHelper() {
     }
@@ -74,51 +69,6 @@ public final class DQDeleteHelper {
             }
         }
         return canNotDeletedNodes;
-    }
-
-    /**
-     * Special modified for Empty recycle bin, TDQ5392, but need to be modified for TDQ-6963
-     * 
-     * TODO: TDQ-6963 Make the behavior same from "Empty the recycle bin" to delete all by selecting each items in
-     * recycle bin
-     * 
-     * @param allNodes
-     * @param isCurrentPerspectiveDQ
-     * @return map: key=node, value=its dependencies
-     */
-    public static Map<IRepositoryNode, List<ModelElement>> getCanNotDeletedNodesMap(List<IRepositoryNode> allNodes,
-            boolean isCurrentPerspectiveDQ) {
-        Map<IRepositoryNode, List<ModelElement>> nodeWithDependsMap = new HashMap<IRepositoryNode, List<ModelElement>>();
-
-        if (allNodes == null) {
-            return nodeWithDependsMap;
-        }
-
-        for (IRepositoryNode node : allNodes) {
-            List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
-
-            if (dependencies == null || dependencies.isEmpty()) {
-                continue;
-            }
-            // if the current perspective is not DQ,no need to judge its client dependences are in recycle bin.
-            if (!isCurrentPerspectiveDQ) {
-                nodeWithDependsMap.put(node, dependencies);
-                continue;
-            }
-            // mod: must judge the :item.isdeleted, because if it has been in recycleBin, then not return it in the
-            // list(to allow empty)
-            for (ModelElement mod : dependencies) {
-                Property property = PropertyHelper.getProperty(mod);
-                if (property == null) {
-                    continue;
-                }
-                Item item = property.getItem();
-                if (item != null && !item.getState().isDeleted()) {
-                    nodeWithDependsMap.put(node, dependencies);
-                }
-            }
-        }
-        return nodeWithDependsMap;
     }
 
 }
