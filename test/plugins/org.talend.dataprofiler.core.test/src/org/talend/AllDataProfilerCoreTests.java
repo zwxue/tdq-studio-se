@@ -35,7 +35,6 @@ import org.talend.dataprofiler.core.ui.action.actions.handle.AnalysisHandleTest;
 import org.talend.dataprofiler.core.ui.action.actions.handle.DBConnectionDuplicateHandleTest;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProviderRealProjectTest;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProviderTest;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPageTest;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInputTest;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewerTest;
 import org.talend.dataprofiler.core.ui.editor.preview.InidcatorUnitTest;
@@ -63,13 +62,13 @@ import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
         UpdateMsSqlToJdbcTaskTest.class, ExportFactoryTest.class, ImportFactoryTest.class, TDQResourceChangeHandlerTest.class,
         TOPRepositoryServiceTest.class, AnalysisHandleTest.class, DBConnectionDuplicateHandleTest.class,
         ExportConnectionToTOSActionRealTest.class, ImportObjectTest.class, AbstractCommonActionProviderRealProjectTest.class,
-        AbstractCommonActionProviderTest.class, DrillDownEditorInputTest.class, ColumnMasterDetailsPageTest.class,
-        AnalysisColumnTreeViewerTest.class, BenfordLawFrequencyStateTest.class, PatternStatisticsStateTest.class,
-        ChartTableFactoryTest.class, InidcatorUnitTest.class, FileSystemImportWriterTest.class, ExportWizardPageTest.class,
+        AbstractCommonActionProviderTest.class, DrillDownEditorInputTest.class, AnalysisColumnTreeViewerTest.class,
+        BenfordLawFrequencyStateTest.class, PatternStatisticsStateTest.class, ChartTableFactoryTest.class,
+        InidcatorUnitTest.class, FileSystemImportWriterTest.class, ExportWizardPageTest.class,
         ResourceViewLabelProviderTest.class, MultiColAnalysisCreationTest.class, CorePluginTest.class,
-        SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class,
-        ModelElementIndicatorRuleTest.class, RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class,
-        FileTreeLabelProviderTest.class, TextIndicatorForNetezzaTest.class, USStateCodesPatternRegexTest.class })
+        SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class, ModelElementIndicatorRuleTest.class,
+        RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class, FileTreeLabelProviderTest.class,
+        TextIndicatorForNetezzaTest.class, USStateCodesPatternRegexTest.class })
 public class AllDataProfilerCoreTests {
 
 }

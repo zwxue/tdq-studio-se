@@ -34,7 +34,6 @@ import org.talend.dq.analysis.explore.FrequencyStatisticsExplorerTest;
 import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorerTest;
 import org.talend.dq.analysis.explore.PatternExplorerRealTest;
 import org.talend.dq.analysis.explore.RowMatchExplorerTest;
-import org.talend.dq.analysis.explore.SQLPatternExplorerTest;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorerTest;
 import org.talend.dq.analysis.explore.SummaryStastictisExplorerRealTest;
 import org.talend.dq.analysis.explore.SummaryStastictisExplorerTest;
@@ -81,8 +80,7 @@ import org.talend.dq.writer.AElementPersistanceRealTest;
         DelimitedFileIndicatorEvaluatorTest.class, SqlIndicatorHandlerTest.class, AElementPersistanceRealTest.class,
         CWMPluginTest.class, MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class,
         ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class, EObjectHelperTest.class,
-        SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class,
-        FunctionFrequencyStatExplorerTest.class })
+        TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class })
 public class AllCwmManagementTests {
 
 }
