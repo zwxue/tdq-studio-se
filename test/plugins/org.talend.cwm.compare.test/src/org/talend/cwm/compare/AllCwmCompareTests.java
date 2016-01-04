@@ -16,13 +16,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.talend.cwm.compare.factory.TestComparisonLevelFactoryTest;
-import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevelTest;
 
 /**
  * DOC yyin class global comment. Detailled comment
  */
 @RunWith(Suite.class)
-@SuiteClasses({ TestComparisonLevelFactoryTest.class, TableViewComparisonLevelTest.class, ModelElementMatchEngineTest.class })
+@SuiteClasses({ TestComparisonLevelFactoryTest.class, ModelElementMatchEngineTest.class })
 public class AllCwmCompareTests {
 
 }

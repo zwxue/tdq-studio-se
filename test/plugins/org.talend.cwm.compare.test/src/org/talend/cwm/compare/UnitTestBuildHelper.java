@@ -10,18 +10,14 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.helper;
+package org.talend.cwm.compare;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
-
-import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -33,6 +29,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.junit.Assert;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
@@ -43,7 +40,6 @@ import org.talend.core.context.RepositoryContext;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
-import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
@@ -71,10 +67,8 @@ import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
@@ -87,17 +81,12 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
-import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.metadata.managment.model.MetadataFillFactory;
-import org.talend.metadata.managment.ui.model.ProjectNodeHelper;
 import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.test.utils.DBPropertiesUtils;
 import org.talend.utils.string.StringUtilities;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.record.RecordFactory;
 import orgomg.cwm.resource.record.RecordFile;
@@ -595,166 +584,6 @@ public class UnitTestBuildHelper {
         return analysis1;
     }
 
-    public static DatabaseConnectionItem createDatabaseConnectionItem(String name, IFolder folder, Boolean isDelete) {
-        IPath createPath = Path.EMPTY;
-        if (folder != null) {
-            createPath = new Path(folder.getFullPath().lastSegment());
-        }
-        // connection
-        DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
-        createConnection.setName(name);
-        createConnection.setUsername("UserName"); //$NON-NLS-1$
-        createConnection.setRawPassword("Password"); //$NON-NLS-1$
-        createConnection.setURL("URL"); //$NON-NLS-1$
-        createConnection.setDatabaseType(EDatabaseTypeName.MYSQL.getXmlName());
-        // ~connection
-        DatabaseConnectionItem createDatabaseConnectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
-
-        org.talend.core.model.properties.Property createDatabaseConnectionProperty = PropertiesFactory.eINSTANCE.createProperty();
-        createDatabaseConnectionProperty.setId(EcoreUtil.generateUUID());
-        createDatabaseConnectionProperty.setItem(createDatabaseConnectionItem);
-        createDatabaseConnectionProperty.setLabel(createConnection.getName());
-        createDatabaseConnectionItem.setProperty(createDatabaseConnectionProperty);
-        createDatabaseConnectionItem.setConnection(createConnection);
-        try {
-            ProxyRepositoryFactory.getInstance().create(createDatabaseConnectionItem, createPath, false);
-        } catch (PersistenceException e) {
-            Assert.fail(e.getMessage());
-        }
-        return createDatabaseConnectionItem;
-    }
-
-    /**
-     * getDataManager of DB2
-     * 
-     * @return
-     */
-    public Connection getDB2DataManager() {
-        //        TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties"); //$NON-NLS-1$
-        String driverClassName = "com.ibm.db2.jcc.DB2Driver"; //$NON-NLS-1$
-        String dbUrl = "jdbc:db2://192.168.31.135:50000/sample"; //$NON-NLS-1$
-        String sqlTypeName = "IBM DB2"; //$NON-NLS-1$
-
-        DBConnectionParameter params = new DBConnectionParameter();
-        params.setName("DB2_Connection"); //$NON-NLS-1$
-        params.setDriverClassName(driverClassName);
-        params.setJdbcUrl(dbUrl);
-        params.setSqlTypeName(sqlTypeName);
-
-        Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.UNIVERSE, "");
-        properties.setProperty(TaggedValueHelper.DATA_FILTER, "");
-        properties.setProperty(TaggedValueHelper.USER, "db2inst1");
-        properties.setProperty(TaggedValueHelper.PASSWORD, "db2inst1");
-
-        params.setParameters(properties);
-
-        // create connection
-        ConnectionUtils.setTimeout(false);
-
-        MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
-        IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(params));
-
-        ReturnCode rc = null;
-        try {
-            rc = instance.checkConnection(metaConnection);
-        } catch (java.lang.RuntimeException e) {
-            Assert.fail("connect to " + dbUrl + "failed," + e.getMessage());
-        }
-        Connection dataProvider = null;
-        if (rc.isOk()) {
-            dataProvider = instance.fillUIConnParams(metaConnection, null);
-            dataProvider.setName("DB2_Connection");
-
-            // because the DI side code is changed, modify the following code.
-            metaConnection.setCurrentConnection(dataProvider);
-            try {
-                ProjectNodeHelper.fillCatalogAndSchemas(metaConnection, (DatabaseConnection) dataProvider);
-            } catch (ClassNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        }
-        Assert.assertNotNull("Can not connect to Database: " + dbUrl, dataProvider);
-        return dataProvider;
-    }
-
-    /**
-     * get a real database connection,the connection parameters load from a propery file.
-     * 
-     * @return
-     */
-    public Connection getRealOracleDatabase() {
-        Properties connectionParams = DBPropertiesUtils.getDefault().getProperties();
-        String driverClassName = connectionParams.getProperty("driver_oracle"); //$NON-NLS-1$
-        String dbUrl = connectionParams.getProperty("url_oracle"); //$NON-NLS-1$
-        String sqlTypeName = connectionParams.getProperty("sqlTypeName_oracle"); //$NON-NLS-1$
-        String dbVersion = connectionParams.getProperty("dbVersion_oracle"); //$NON-NLS-1$
-        String userName = connectionParams.getProperty("user_oracle"); //$NON-NLS-1$
-        String password = connectionParams.getProperty("password_oracle"); //$NON-NLS-1$
-
-        DBConnectionParameter params = new DBConnectionParameter();
-        params.setName("oracle_Connection"); //$NON-NLS-1$
-        params.setDriverClassName(driverClassName);
-        params.setJdbcUrl(dbUrl);
-        params.setSqlTypeName(sqlTypeName);
-
-        Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.USER, userName);
-        properties.setProperty(TaggedValueHelper.PASSWORD, password);
-        properties.setProperty(TaggedValueHelper.DB_PRODUCT_VERSION, dbVersion);
-
-        params.setParameters(properties);
-
-        // create connection
-        ConnectionUtils.setTimeout(false);
-
-        MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
-        IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(params));
-        metaConnection.setDbVersionString(dbVersion);
-        ReturnCode rc = null;
-        try {
-            rc = instance.checkConnection(metaConnection);
-        } catch (java.lang.RuntimeException e) {
-            Assert.fail("connect to " + dbUrl + "failed," + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        Connection dataProvider = null;
-        if (rc.isOk()) {
-            dataProvider = instance.fillUIConnParams(metaConnection, null);
-            dataProvider.setName("oracleDB");
-            // because the DI side code is changed, modify the following code.
-            metaConnection.setCurrentConnection(dataProvider);
-            try {
-                ProjectNodeHelper.fillCatalogAndSchemas(metaConnection, (DatabaseConnection) dataProvider);
-            } catch (ClassNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        }
-        Assert.assertNotNull(dataProvider);
-        return dataProvider;
-    }
-
     public static Analysis createAndInitAnalysis() {
         Analysis ana = UnitTestBuildHelper.createRealAnalysis("anaA", null, false);
 
@@ -782,6 +611,35 @@ public class UnitTestBuildHelper {
         table.getOwnedElement().add(column);
         column.setOwner(table);
         return column;
+    }
+
+    public static DatabaseConnectionItem createDatabaseConnectionItem(String name, IFolder folder, Boolean isDelete) {
+        IPath createPath = Path.EMPTY;
+        if (folder != null) {
+            createPath = new Path(folder.getFullPath().lastSegment());
+        }
+        // connection
+        DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
+        createConnection.setName(name);
+        createConnection.setUsername("UserName"); //$NON-NLS-1$
+        createConnection.setRawPassword("Password"); //$NON-NLS-1$
+        createConnection.setURL("URL"); //$NON-NLS-1$
+        createConnection.setDatabaseType(EDatabaseTypeName.MYSQL.getXmlName());
+        // ~connection
+        DatabaseConnectionItem createDatabaseConnectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+
+        org.talend.core.model.properties.Property createDatabaseConnectionProperty = PropertiesFactory.eINSTANCE.createProperty();
+        createDatabaseConnectionProperty.setId(EcoreUtil.generateUUID());
+        createDatabaseConnectionProperty.setItem(createDatabaseConnectionItem);
+        createDatabaseConnectionProperty.setLabel(createConnection.getName());
+        createDatabaseConnectionItem.setProperty(createDatabaseConnectionProperty);
+        createDatabaseConnectionItem.setConnection(createConnection);
+        try {
+            ProxyRepositoryFactory.getInstance().create(createDatabaseConnectionItem, createPath, false);
+        } catch (PersistenceException e) {
+            Assert.fail(e.getMessage());
+        }
+        return createDatabaseConnectionItem;
     }
 
 }

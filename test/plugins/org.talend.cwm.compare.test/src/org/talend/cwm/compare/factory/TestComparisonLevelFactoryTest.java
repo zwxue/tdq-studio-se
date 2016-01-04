@@ -12,54 +12,63 @@
 // ============================================================================
 package org.talend.cwm.compare.factory;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import junit.framework.Assert;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
+import org.talend.cwm.compare.UnitTestBuildHelper;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogSchemaComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.DataProviderComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.RepositoryObjectComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
-import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
-import org.talend.dq.writer.EMFSharedResources;
-
+import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
-@PrepareForTest({ EMFSharedResources.class })
 public class TestComparisonLevelFactoryTest {
 
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
+    ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
 
-    IRepositoryViewObject resObject;
-    /* (non-Javadoc)
+    DatabaseConnectionItem databaseConnectionItem = null;
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see junit.framework.TestCase#setUp()
      */
     @Before
     public void setUp() throws Exception {
-        resObject = mock(IRepositoryViewObject.class);
-        PowerMockito.mockStatic(EMFSharedResources.class);
-        when(EMFSharedResources.getInstance()).thenReturn(null);
-
+        UnitTestBuildHelper.initProjectStructure();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see junit.framework.TestCase#tearDown()
      */
     @After
@@ -74,9 +83,10 @@ public class TestComparisonLevelFactoryTest {
      */
     @Test
     public void testCreatComparisonLevelObject_1() {
-        DBConnectionRepNode node = mock(DBConnectionRepNode.class);
-        when(node.getObject()).thenReturn(resObject);
-        
+        Property property = PropertyHelper.createTDQItemProperty();
+        IRepositoryViewObject viewObj = new RepositoryViewObject(property);
+        DBConnectionRepNode node = new DBConnectionRepNode(viewObj, null, null, null);
+
         IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(node);
         Assert.assertTrue(level instanceof RepositoryObjectComparisonLevel);
     }
@@ -88,9 +98,9 @@ public class TestComparisonLevelFactoryTest {
      */
     @Test
     public void testCreatComparisonLevelObject_2() {
-        DBTableFolderRepNode node = mock(DBTableFolderRepNode.class);
-        
-        IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(node);
+        RepositoryNode dbCatalogRepNode = createCatalogRepNode();
+        DBTableFolderRepNode dbTableFolderRepNode = new DBTableFolderRepNode(null, dbCatalogRepNode, null, null);
+        IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(dbTableFolderRepNode);
         Assert.assertTrue(level instanceof CatalogSchemaComparisonLevel);
     }
 
@@ -101,31 +111,11 @@ public class TestComparisonLevelFactoryTest {
      */
     @Test
     public void testCreatComparisonLevelObject_3() {
-        DBViewFolderRepNode node = mock(DBViewFolderRepNode.class);
-        when(node.getObject()).thenReturn(resObject);
-        when(node.getCatalog()).thenReturn(null);
-        DBViewFolderRepNode parent = mock(DBViewFolderRepNode.class);
-        when(node.getParent()).thenReturn(parent);
-
+        //
+        RepositoryNode dbCatalogRepNode = createCatalogRepNode();
+        DBViewFolderRepNode node = new DBViewFolderRepNode(null, dbCatalogRepNode, null, null);
         IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(node);
         Assert.assertTrue(level instanceof CatalogSchemaComparisonLevel);
-    }
-
-    /**
-     * Test method for
-     * {@link org.talend.cwm.compare.factory.ComparisonLevelFactory#creatComparisonLevel(java.lang.Object)}. test for
-     * the type of : db view rep node
-     */
-    @Test
-    public void testCreatComparisonLevelObject_4() {
-        DBViewFolderRepNode node = mock(DBViewFolderRepNode.class);
-        when(node.getCatalog()).thenReturn(null);
-        DBConnectionFolderRepNode parent = mock(DBConnectionFolderRepNode.class);
-        when(node.getParent()).thenReturn(parent);
-        when(parent.getObject()).thenReturn(resObject);
-        
-        IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(node);
-        Assert.assertTrue(level instanceof RepositoryObjectComparisonLevel);
     }
 
     /**
@@ -135,8 +125,9 @@ public class TestComparisonLevelFactoryTest {
      */
     @Test
     public void testCreatComparisonLevelObject_5() {
-        DBColumnFolderRepNode node = mock(DBColumnFolderRepNode.class);
-
+        RepositoryNode dbCatalogRepNode = createCatalogRepNode();
+        DBTableRepNode dbTableRepNode = new DBTableRepNode(null, dbCatalogRepNode, ENodeType.TDQ_REPOSITORY_ELEMENT, null);
+        DBColumnFolderRepNode node = new DBColumnFolderRepNode(null, dbTableRepNode, null, null);
         IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(node);
         Assert.assertTrue(level instanceof TableViewComparisonLevel);
     }
@@ -148,9 +139,8 @@ public class TestComparisonLevelFactoryTest {
      */
     @Test
     public void testCreatComparisonLevelObject_6() {
-        Connection node = mock(Connection.class);
-
-        IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(node);
+        Connection connection = ConnectionFactory.eINSTANCE.createConnection();
+        IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(connection);
         Assert.assertTrue(level instanceof DataProviderComparisonLevel);
     }
 
@@ -168,9 +158,48 @@ public class TestComparisonLevelFactoryTest {
     // other type
     @Test
     public void testCreatComparisonLevelObject_8() {
-        AnalysisFolderRepNode node = mock(AnalysisFolderRepNode.class);
+        Project tProject = ProjectManager.getInstance().getCurrentProject();
+        if (tProject != null && tProject.getEmfProject() != null && tProject.getAuthor() != null) {
 
-        IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(node);
-        Assert.assertNull(level);
+            IRepositoryViewObject viewObject = UnitTestBuildHelper.buildRepositoryViewObjectSystemFolder(
+                    tProject.getEmfProject(), tProject.getAuthor(), ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+
+            RepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
+            viewObject.setRepositoryNode(node);
+            AnalysisFolderRepNode AnalysisFolderRepNode = new AnalysisFolderRepNode(viewObject, null, ENodeType.SYSTEM_FOLDER,
+                    tProject);
+            IComparisonLevel level = ComparisonLevelFactory.creatComparisonLevel(AnalysisFolderRepNode);
+            Assert.assertNull(level);
+        }
     }
+
+    private RepositoryNode createCatalogRepNode() {
+        IRepositoryViewObject lastVersion = null;
+        databaseConnectionItem = UnitTestBuildHelper.createDatabaseConnectionItem("testCompareLevelConnection", null, false); //$NON-NLS-1$
+        Assert.assertNotNull(databaseConnectionItem);
+        Assert.assertNotNull(databaseConnectionItem.getProperty());
+        String propertyID = databaseConnectionItem.getProperty().getId();
+        Catalog createCatalog = createCatalog("catalog1"); //$NON-NLS-1$
+        try {
+            lastVersion = factory.getLastVersion(propertyID);
+            lastVersion = new MetadataCatalogRepositoryObject(lastVersion, createCatalog);
+        } catch (PersistenceException e) {
+            Assert.fail(e.getMessage());
+        }
+        // ~connection data
+        // ~FileConnection
+        // create DFColumnFolderRepNode
+        Assert.assertFalse(lastVersion == null);
+        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null,
+                ENodeType.TDQ_REPOSITORY_ELEMENT, null);
+        return dbCatalogRepNode;
+    }
+
+    private Catalog createCatalog(String catalogName) {
+        Connection connection = databaseConnectionItem.getConnection();
+        Catalog createCatalog = CatalogHelper.createCatalog(catalogName);
+        ConnectionHelper.addCatalog(createCatalog, connection);
+        return createCatalog;
+    }
+
 }
