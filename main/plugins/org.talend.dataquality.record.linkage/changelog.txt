@@ -1,4 +1,7 @@
 Talend record linkage library
+2016-01-02 not modify version at this time, it is caused by incorrect data. not a major issue (TDQ-11425)
+    - Add catch SQLException, continue to do next when execute "next()" and get SQLException
+    
 V3.0.2 2015-12-01 (for Studio 6.1.1)
     - Update dependency version of org.talend.utils to 6.1.1
 
