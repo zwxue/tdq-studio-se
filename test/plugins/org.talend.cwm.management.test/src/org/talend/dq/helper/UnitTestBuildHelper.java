@@ -216,7 +216,7 @@ public class UnitTestBuildHelper {
         proxyRepository.setRepositoryFactoryFromProvider(repository);
         try {
             proxyRepository.checkAvailability();
-            proxyRepository.initialize();
+            // proxyRepository.initialize();
 
             XmiResourceManager xmiResourceManager = new XmiResourceManager();
 
