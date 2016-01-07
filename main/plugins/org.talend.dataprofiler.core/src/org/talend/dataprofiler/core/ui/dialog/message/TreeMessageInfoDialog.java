@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.dialog.message;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -69,7 +66,6 @@ public class TreeMessageInfoDialog extends MessageDialog {
 
     private boolean needCheckbox = false;
 
-    private List<Image> imagesNeedDisposedList = new ArrayList<Image>();
 
     public TreeMessageInfoDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
             int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
@@ -134,19 +130,6 @@ public class TreeMessageInfoDialog extends MessageDialog {
 
     public void setNeedCheckbox(boolean needCheckbox) {
         this.needCheckbox = needCheckbox;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.Dialog#close()
-     */
-    @Override
-    public boolean close() {
-        boolean status = super.close();
-        // Displose images
-        disposeImages();
-        return status;
     }
 
     protected ILabelProvider getLabelProvider() {
@@ -237,10 +220,8 @@ public class TreeMessageInfoDialog extends MessageDialog {
                                 if (item != null) {
                                     if (ProxyRepositoryManager.getInstance().isLockByUserOwn(item)) {
                                         modelElementImage = ImageLib.createLockedByOwnIcon(imgName);
-                                        imagesNeedDisposedList.add(modelElementImage);
                                     } else if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
                                         modelElementImage = ImageLib.createLockedByOtherIcon(imgName);
-                                        imagesNeedDisposedList.add(modelElementImage);
                                     }
                                 }
                             }
@@ -253,17 +234,5 @@ public class TreeMessageInfoDialog extends MessageDialog {
             };
         }
         return labelProvider;
-    }
-
-    /**
-     * DOC xqliu Comment method "disposeImages".
-     */
-    public void disposeImages() {
-        if (!imagesNeedDisposedList.isEmpty()) {
-            for (Image im : imagesNeedDisposedList) {
-                im.dispose();
-            }
-            imagesNeedDisposedList.clear();
-        }
     }
 }
