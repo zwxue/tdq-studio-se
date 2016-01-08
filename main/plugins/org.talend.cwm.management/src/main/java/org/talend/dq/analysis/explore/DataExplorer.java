@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -161,6 +164,9 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     protected String getRowsStatement(String whereClause) {
         String fromClause = getFromClause();
+        if (fromClause == null) {
+            return null;
+        }
         if (whereClause != null) {
             String where = fromClause.contains(dbmsLanguage.where()) ? dbmsLanguage.and() : dbmsLanguage.where();
             return SELECT_ALL + fromClause + where + whereClause;
@@ -178,6 +184,9 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     protected String getValuesStatement(String colName, String whereClause) {
         String fromClause = getFromClause();
+        if (fromClause == null) {
+            return null;
+        }
         if (whereClause != null) {
             String where = fromClause.contains(dbmsLanguage.where()) ? dbmsLanguage.and() : dbmsLanguage.where();
             return SELECT + columnName + fromClause + where + whereClause;
@@ -192,7 +201,9 @@ public abstract class DataExplorer implements IDataExplorer {
 
     protected String getValuesStatement(String columnName) {
         String fromClause = getFromClause();
-
+        if (fromClause == null) {
+            return null;
+        }
         return SELECT + columnName + fromClause;
     }
 
@@ -202,15 +213,23 @@ public abstract class DataExplorer implements IDataExplorer {
      * @return
      */
     protected String getFromClause() {
-        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
-        String instantiatedSQL = instantiatedExpression == null ? null : instantiatedExpression.getBody();
+        String instantiatedSQL = getIndicatorExpressionSQL();
         if (instantiatedSQL == null) {
-            log.error(Messages.getString("DataExplorer.NOINSTANTIATEDSQL", indicator.getName(), analysis.getName()));//$NON-NLS-1$
-            return null;
+            return instantiatedSQL;
         }
         int b = instantiatedSQL.indexOf(this.dbmsLanguage.from());
         String fromClause = instantiatedSQL.substring(b);
         return fromClause;
+    }
+
+    /**
+     * DOC msjian Comment method "getIndicatorExpressionSQL".
+     * 
+     * @return
+     */
+    protected String getIndicatorExpressionSQL() {
+        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
+        return instantiatedExpression == null ? null : instantiatedExpression.getBody();
     }
 
     public boolean setAnalysis(Analysis analysis) {
@@ -303,6 +322,9 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     protected String getRowsStatementWithSubQuery() {
         String fromClause = getFromClause();
+        if (fromClause == null) {
+            return null;
+        }
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         String table = getFullyQualifiedTableName(column);
         // MOD qiongli 2010-10-28.bug 16658 ,add it if has data filter.
@@ -315,7 +337,9 @@ public abstract class DataExplorer implements IDataExplorer {
 
     protected String getDistinctValuesStatement(String columnName) {
         String fromClause = getFromClause();
-
+        if (fromClause == null) {
+            return null;
+        }
         return SELECT_DISTINCT + columnName + fromClause;
     }
 
@@ -352,5 +376,35 @@ public abstract class DataExplorer implements IDataExplorer {
     public String inBrackets(String clause) {
         return " (" + clause + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
+     */
+    public Map<String, String> getQueryMap() {
+        // TDQ-11422: before analysis run turn to Analysis Results page will not show the menus.
+        if (NotShowMenu()) {// || dbmsLanguage.getInstantiatedExpression(indicator) == null) {
+            return new HashMap<String, String>();
+        }
+
+        return getSubClassQueryMap();
+    }
+
+    /**
+     * when return ture, will not show the drill down menus.
+     * 
+     * @return
+     */
+    protected boolean NotShowMenu() {
+        return false;
+    }
+
+    /**
+     * DOC msjian Comment method "getSubClassQueryMap".
+     * 
+     * @return
+     */
+    public abstract Map<String, String> getSubClassQueryMap();
 
 }

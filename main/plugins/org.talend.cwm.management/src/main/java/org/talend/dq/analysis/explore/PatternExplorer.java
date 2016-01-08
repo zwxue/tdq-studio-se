@@ -24,7 +24,6 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.GenericSQLHandler;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -41,17 +40,9 @@ public abstract class PatternExplorer extends DataExplorer {
     public PatternExplorer() {
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
-     */
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();// MOD zshen feature 12919 adapt to pop-menu for Jave
-        // MOD qiongli 2011-3-30,feature 19192,filter this menu and query for ColumnSet AllMatchIndicator
-        if (ColumnsetPackage.eINSTANCE.getAllMatchIndicator().isSuperTypeOf(indicator.eClass())) {
-            return map;
-        }
         // engin on result page
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(analysis.getParameters().getExecutionLanguage());
         initRegularExpressionParameter();
@@ -67,8 +58,19 @@ public abstract class PatternExplorer extends DataExplorer {
         return map;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
+     */
+    @Override
+    protected boolean NotShowMenu() {
+        // MOD qiongli 2011-3-30,feature 19192,filter this menu and query for ColumnSet AllMatchIndicator
+        return ColumnsetPackage.eINSTANCE.getAllMatchIndicator().isSuperTypeOf(indicator.eClass());
+    }
+
     protected void initRegularExpressionParameter() {
-       //The code should be implemented on the sub class
+        // The code should be implemented on the sub class
     }
 
     /**

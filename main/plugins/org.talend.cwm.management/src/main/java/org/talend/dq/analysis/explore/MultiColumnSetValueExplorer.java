@@ -42,7 +42,8 @@ public final class MultiColumnSetValueExplorer extends DataExplorer {
         return instance;
     }
 
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         return null;
     }
 
