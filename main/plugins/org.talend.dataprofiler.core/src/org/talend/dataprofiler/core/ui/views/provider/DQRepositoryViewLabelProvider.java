@@ -409,16 +409,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     if (driver != null) {
                         return false;
                     }
-
-                    // TDQ-11432: make show the download dialog Asynchronous to fix the connection icon display
-                    Display.getCurrent().asyncExec(new Runnable() {
-
-                        public void run() {
-                            SqlExplorerUtils.getDefault().getSqlexplorerService();
-                        }
-                    });
+                    // TDQ-11449 "SqlExplorerUtils.getDefault().getSqlexplorerService()" in a Thread will pop download
+                    // "sqlExplorer" many times.no need call it at here, if don't have "sqlExplorer", return false.
                     return SqlExplorerUtils.getDefault().needAddDriverConnection(dbConn);
-                    // TDQ-11432~
                 }
             }
 
