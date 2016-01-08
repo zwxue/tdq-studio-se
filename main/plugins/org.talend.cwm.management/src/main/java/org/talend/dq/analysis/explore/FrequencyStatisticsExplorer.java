@@ -280,12 +280,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         return clause;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
-     */
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
         boolean isJavaEngine = AnalysisHelper.isJavaExecutionEngine(this.analysis);
