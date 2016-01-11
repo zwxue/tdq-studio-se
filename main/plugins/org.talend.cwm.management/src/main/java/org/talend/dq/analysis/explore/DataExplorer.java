@@ -383,8 +383,7 @@ public abstract class DataExplorer implements IDataExplorer {
      * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
      */
     public Map<String, String> getQueryMap() {
-        // TDQ-11422: before analysis run turn to Analysis Results page will not show the menus.
-        if (NotShowMenu()) {// || dbmsLanguage.getInstantiatedExpression(indicator) == null) {
+        if (NotShowMenu()) {
             return new HashMap<String, String>();
         }
 
