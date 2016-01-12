@@ -281,6 +281,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         log.info("total view row count= " + connectionIndicator.getViewRowCount()); //$NON-NLS-1$
     }
 
+    @Override
     protected void addToConnectionIndicator(Indicator indicator) {
         final ConnectionIndicator connectionIndicator = getConnectionIndicator();
         if (connectionIndicator == null) {
@@ -337,6 +338,36 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
         };
         schemaSwitch.doSwitch(indicator);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.indicators.AbstractSchemaEvaluator#addToConnectionIndicator(org.talend.dataquality.indicators.schema
+     * .CatalogIndicator, org.talend.dataquality.indicators.schema.SchemaIndicator)
+     */
+    @Override
+    protected void addToConnectionIndicator(CatalogIndicator catalogIndicator, SchemaIndicator schemaIndicator) {
+        final ConnectionIndicator connectionIndicator = getConnectionIndicator();
+        if (connectionIndicator == null) {
+            return;
+        }
+
+        boolean addSuccess = connectionIndicator.addCatalogIndicator(catalogIndicator);
+        // only increment catalog/schema count when the catalogIndicator is a new instance and is added successfully.
+        if (addSuccess) {
+            connectionIndicator.setCatalogCount(connectionIndicator.getCatalogCount() + 1);
+            connectionIndicator.setSchemaCount(connectionIndicator.getSchemaCount() + catalogIndicator.getSchemaCount());
+        }
+
+        // set table count view count... from schemaIndicator not from catalogIndicator.
+        connectionIndicator.setTableCount(connectionIndicator.getTableCount() + schemaIndicator.getTableCount());
+        connectionIndicator.setTableRowCount(connectionIndicator.getTableRowCount() + schemaIndicator.getTableRowCount());
+        connectionIndicator.setViewCount(connectionIndicator.getViewCount() + schemaIndicator.getViewCount());
+        connectionIndicator.setViewRowCount(connectionIndicator.getViewRowCount() + schemaIndicator.getViewRowCount());
+        connectionIndicator.setKeyCount(connectionIndicator.getKeyCount() + schemaIndicator.getKeyCount());
+        connectionIndicator.setIndexCount(connectionIndicator.getIndexCount() + schemaIndicator.getIndexCount());
     }
 
     /**
