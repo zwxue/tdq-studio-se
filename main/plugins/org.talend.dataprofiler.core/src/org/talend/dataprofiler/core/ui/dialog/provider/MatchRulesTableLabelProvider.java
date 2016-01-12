@@ -39,6 +39,8 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
 
     public static final String THRESHOLD = "THRESHOLD"; //$NON-NLS-1$
 
+    public static final String ATTRIBUTE_THRESHOLD = "ATTRIBUTE_THRESHOLD"; //$NON-NLS-1$
+
     public static final String SURVIVORSHIP_FUNCTION = "SURVIVORSHIP_FUNCTION"; //$NON-NLS-1$
 
     public static final String PARAMETER = "PARAMETER"; //$NON-NLS-1$

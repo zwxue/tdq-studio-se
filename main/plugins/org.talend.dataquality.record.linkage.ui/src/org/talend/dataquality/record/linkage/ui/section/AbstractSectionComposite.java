@@ -84,7 +84,7 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-        listeners.addPropertyChangeListener(listener);
+        listeners.removePropertyChangeListener(listener);
     }
 
     @Override
