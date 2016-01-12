@@ -179,12 +179,13 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                             // "T_Swoosh", block importing, !!!!NOTE!!! these code are a temporary solution, we will
                             // support the importing of Match Rule which's algorithm is t-swoosh for component
                             // tMatchGroup and tRecordMatching later
-                            if ((dialogType == MATCHGROUP_TYPE || dialogType == RECORD_MATCHING_TYPE)
-                                    && T_SWOOSH_ALGORITHM.equals(matchRuleDef.getRecordLinkageAlgorithm())) {
-                                status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
-                                        "The algorithm of this Match Rule is t-swoosh, can't import it now!"); //$NON-NLS-1$
-                                return status;
-                            }
+                            // if ((dialogType == MATCHGROUP_TYPE || dialogType == RECORD_MATCHING_TYPE)
+                            // && T_SWOOSH_ALGORITHM.equals(matchRuleDef.getRecordLinkageAlgorithm())) {
+                            // status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
+                            // DefaultMessagesImpl
+                            //                                        .getString("The algorithm of this Match Rule is t-swoosh, can't import it now!")); //$NON-NLS-1$
+                            // return status;
+                            // }
                             // ~~~~~~~~~~
 
                             if (isNeedColumnWarning(matchRuleDef)) {
