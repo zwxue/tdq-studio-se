@@ -25,7 +25,8 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     @Override
     protected String getInstantiatedClause() {
-        if (entity.getKey().toString().equals("invalid")) {//$NON-NLS-1$
+        // TDQ-11422: when the analysis have not run, the entity.getKey() is null
+        if (entity.getKey() != null && entity.getKey().toString().equals("invalid")) {//$NON-NLS-1$
             return dbmsLanguage.getInvalidClauseBenFord(this.columnName);
         }
         Object value = "'" + entity.getKey() + "%'"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -60,22 +61,20 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
         return dbmsLanguage.castColumnNameToChar(columnName);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.FrequencyStatisticsExplorer#getQueryMap()
-     */
     @Override
-    public Map<String, String> getQueryMap() {
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        boolean isJavaEngine = AnalysisHelper.isJavaExecutionEngine(this.analysis);
-        if (isJavaEngine) {
-            return map;
-        }
-
         map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getFreqRowsStatement());
-
         return map;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
+     */
+    @Override
+    protected boolean NotShowMenu() {
+        return AnalysisHelper.isJavaExecutionEngine(this.analysis);
+    }
 }

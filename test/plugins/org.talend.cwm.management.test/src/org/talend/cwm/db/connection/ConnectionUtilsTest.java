@@ -15,10 +15,13 @@ package org.talend.cwm.db.connection;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;
 import org.talend.commons.utils.io.FilesUtils;
@@ -174,8 +177,14 @@ public class ConnectionUtilsTest {
         try {
             File sourceFile = null;
             try {
-                sourceFile = new File(FileLocator.toFileURL(
-                        CWMPlugin.getDefault().getBundle().getResource("jdbc/mysql-connector-java-5.1.12-bin.jar")).toURI()); //$NON-NLS-1$
+                URL resource = CWMPlugin.getDefault().getBundle()
+                        .getResource("jdbc" + Path.SEPARATOR + "mysql-connector-java-5.1.12-bin.jar"); //$NON-NLS-1$ //$NON-NLS-2$
+                System.out.println(resource.toString());
+                URL fileURL = FileLocator.toFileURL(resource);
+                System.out.println(fileURL.toString());
+                URI uri = fileURL.toURI();
+                System.out.println(uri.toString());
+                sourceFile = new File(uri);
             } catch (URISyntaxException e) {
                 Assert.fail(e.getMessage());
             }

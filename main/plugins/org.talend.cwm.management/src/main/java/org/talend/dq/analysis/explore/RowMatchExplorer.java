@@ -33,12 +33,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class RowMatchExplorer extends DataExplorer {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
-     */
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         // MOD qiongli 2012-8-14 TDQ-5907 Hive dosen't support 'NOT IN'
         if (!(dbmsLanguage instanceof HiveDbmsLanguage)) {

@@ -26,7 +26,6 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.dbms.InfomixDbmsLanguage;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sql.Java2SqlType;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * @author scorreia
@@ -89,8 +88,11 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
     }
 
     private String getFunction() {
-        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
-        final String body = instantiatedExpression.getBody();
+        String instantiatedSQL = getIndicatorExpressionSQL();
+        if (instantiatedSQL == null) {
+            return instantiatedSQL;
+        }
+
         Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
 
         // MOD mzhao 2010-04-12 bug 11554
@@ -99,7 +101,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
             p = Pattern.compile(REGEX_INFORMIX, Pattern.CASE_INSENSITIVE);
         }
         // ~
-        Matcher matcher = p.matcher(body);
+        Matcher matcher = p.matcher(instantiatedSQL);
         matcher.find();
         // MOD mzhao 2009-11-09 bug 9681: Catch the possibility that the sql body contains "TOP" keywords.
         // MOD MOD mzhao 2010-04-12 bug 11554

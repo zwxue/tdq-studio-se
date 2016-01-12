@@ -32,12 +32,9 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  */
 public class ColumnDependencyExplorer extends DataExplorer {
 
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        // MOD qiongli 2012-8-14 TDQ-5907 Hive dosen't support these sql
-        if (dbmsLanguage instanceof HiveDbmsLanguage) {
-            return map;
-        }
         map.put(MENU_VIEW_VALID_VALUES, getComment(MENU_VIEW_VALID_VALUES) + getValidValuesStatement());
         map.put(MENU_VIEW_INVALID_VALUES, getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement());
         map.put(MENU_VIEW_DETAILED_INVALID_VALUES, getComment(MENU_VIEW_DETAILED_INVALID_VALUES)
@@ -46,6 +43,17 @@ public class ColumnDependencyExplorer extends DataExplorer {
         map.put(MENU_VIEW_VALID_ROWS, getComment(MENU_VIEW_VALID_ROWS) + getValidRowsStatement());
         map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement());
         return map;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
+     */
+    @Override
+    protected boolean NotShowMenu() {
+        // MOD qiongli 2012-8-14 TDQ-5907 Hive dosen't support these sql
+        return dbmsLanguage instanceof HiveDbmsLanguage;
     }
 
     /**

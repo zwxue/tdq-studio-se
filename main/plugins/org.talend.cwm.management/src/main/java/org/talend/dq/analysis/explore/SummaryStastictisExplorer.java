@@ -108,12 +108,8 @@ public class SummaryStastictisExplorer extends DataExplorer {
         return whereClause;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
-     */
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
         boolean isJavaEngine = ExecutionLanguage.JAVA.equals(this.analysis.getParameters().getExecutionLanguage());
@@ -191,7 +187,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
         String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.greaterOrEqual() + lowerValue
                 + dbmsLanguage.and() + this.columnName + dbmsLanguage.lessOrEqual() + upperValue;
-        
+
         return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(indicator.getAnalyzedElement()) + whereClause;
 
     }

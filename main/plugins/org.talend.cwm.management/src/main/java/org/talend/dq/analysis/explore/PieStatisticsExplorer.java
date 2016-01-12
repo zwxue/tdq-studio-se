@@ -15,7 +15,7 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.helpers.AnalysisHelper;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -28,19 +28,14 @@ public class PieStatisticsExplorer extends DataExplorer {
     public PieStatisticsExplorer() {
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
-     */
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
 
         Map<String, String> map = new HashMap<String, String>();
-        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
 
         switch (this.indicatorEnum) {
         case FormatFreqPieIndictorEnum:
-            if (!isSqlEngine) {
+            if (AnalysisHelper.isJavaExecutionEngine(this.analysis)) {
                 map.put(MENU_VIEW_ROWS, null);
             }
             break;
