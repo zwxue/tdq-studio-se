@@ -172,19 +172,28 @@ public class ConnectionUtilsTest {
 
     /**
      * Copy The jar file if it is not exist or not new one.
+     * 
+     * @throws URISyntaxException
      */
     private void CopyTheJarFile() {
         try {
             File sourceFile = null;
+            URL fileURL = null;
             try {
                 URL resource = CWMPlugin.getDefault().getBundle()
                         .getResource("jdbc" + Path.SEPARATOR + "mysql-connector-java-5.1.12-bin.jar"); //$NON-NLS-1$ //$NON-NLS-2$
                 System.out.println(resource.toString());
-                URL fileURL = FileLocator.toFileURL(resource);
+                fileURL = FileLocator.toFileURL(resource);
                 System.out.println(fileURL.toString());
                 URI uri = fileURL.toURI();
                 System.out.println(uri.toString());
                 sourceFile = new File(uri);
+            } catch (IllegalArgumentException e) {
+                try {
+                    Assert.fail("url is: " + fileURL.toString() + "URI is: " + fileURL.toURI().toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                } catch (URISyntaxException e1) {
+                    Assert.fail(e1.getMessage());
+                }
             } catch (URISyntaxException e) {
                 Assert.fail(e.getMessage());
             }
