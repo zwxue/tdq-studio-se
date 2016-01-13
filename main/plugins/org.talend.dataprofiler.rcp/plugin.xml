@@ -814,6 +814,51 @@
             name="zookeeper-3.4.5.2.1.1.0-385.jar" mvn_uri="mvn:org.talend.libraries/zookeeper-3.4.5.2.1.1.0-385/6.0.0" 
             required="true"
             uripath="platform:/plugin/org.talend.libraries.zookeeper/lib/zookeeper-3.4.5.2.1.1.0-385.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="plugin:org.talend.libraries.apache.axis2"
+            id="antlr-runtime-3.4.jar"
+            message="Wizard use for TOP"
+            mvn_uri="mvn:org.talend.libraries/antlr-runtime-3.4/6.0.0"
+            name="antlr-runtime-3.4.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.axis2/lib/antlr-runtime-3.4.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="plugin:org.talend.libraries.apache.http"
+            id="commons-httpclient-3.0.1.jar"
+            message="Wizard use for TOP"
+            mvn_uri="mvn:org.talend.libraries/commons-httpclient-3.0.1/6.0.0"
+            name="commons-httpclient-3.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.http/lib/commons-httpclient-3.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="plugin:org.talend.libraries.apache.common"
+            id="commons-io-2.4.jar"
+            message="Wizard use for TOP"
+            mvn_uri="mvn:org.talend.libraries/commons-io-2.4/6.0.0"
+            name="commons-io-2.4.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-io-2.4.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="plugin:org.talend.libraries.zookeeper"
+            id="zookeeper-hdp2.2-lastest"
+            message="Wizard use for TOP"
+            mvn_uri="mvn:org.talend.libraries/zookeeper-3.4.6.2.2.0.0-2041/6.0.0"
+            name="zookeeper-3.4.6.2.2.0.0-2041.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.zookeeper/lib/zookeeper-3.4.6.2.2.0.0-2041.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="plugin:org.talend.libraries.zookeeper"
+            id="zookeeper-HDP_2_3"
+            message="Wizard use for TOP"
+            mvn_uri="mvn:org.talend.libraries/zookeeper-3.4.6.2.3.2.0-2950/6.1.0"
+            name="zookeeper-3.4.6.2.3.2.0-2950.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.zookeeper/lib/zookeeper-3.4.6.2.3.2.0-2950.jar">
       </libraryNeeded>      
    </extension>
 </plugin>
