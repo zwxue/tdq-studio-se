@@ -663,7 +663,8 @@ public final class IndicatorHelper {
                         return String.valueOf(userDefineIndicator.getRealValue());
                     }
                 }
-                return String.valueOf(object.getUserCount());
+                // TDQ-11485: fix the match udi get result value error
+                return String.valueOf(object.getIntegerValue());
             }
 
             @Override
