@@ -149,10 +149,17 @@ public final class ModelElementIndicatorHelper {
             return null;
         }
         ColumnIndicator switchColumnIndicator = switchColumnIndicator(modelElementIndicator);
-        if (switchColumnIndicator == null) {
-            return null;
+        if (switchColumnIndicator != null) {
+            return switchColumnIndicator.getTdColumn();
         }
-        return switchColumnIndicator.getTdColumn();
+
+        // TDQ-10198: support Delimited File connection column
+        DelimitedFileIndicator switchDelimitedFileIndicator = switchDelimitedFileIndicator(modelElementIndicator);
+        if (switchDelimitedFileIndicator != null) {
+            return switchDelimitedFileIndicator.getMetadataColumn();
+        }
+
+        return null;
     }
 
     /**
