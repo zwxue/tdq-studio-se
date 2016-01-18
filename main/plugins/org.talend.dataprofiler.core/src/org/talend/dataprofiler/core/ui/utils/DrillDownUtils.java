@@ -63,9 +63,10 @@ public class DrillDownUtils {
         }
 
         Indicator indicator = dataEntity.getIndicator();
-        String selectValue = dataEntity.getLabel();
+        // TDQ-10785: fix the drill down for frequency indicators can not use when the data is too long
+        String selectValue = indicator instanceof FrequencyIndicator ? (String) dataEntity.getKey() : dataEntity.getLabel();
         String dbMapName = getDBMapName(analysisType, indicator, selectValue, itemEntitie);
-        return MapDBUtils.getMapDB(dbMapName, indicator);
+        return MapDBUtils.getMapDB(dbMapName, dataEntity.getIndicator());
     }
 
     /**
