@@ -334,7 +334,11 @@ public class ChartDataEntity {
 
             // TDQ-10785: when the data is too long, add a tooltip to show the first 200 characters.
             if (indicatorEnum == IndicatorEnum.PatternFreqIndicatorEnum
-                    || indicatorEnum == IndicatorEnum.PatternLowFreqIndicatorEnum) {
+                    || indicatorEnum == IndicatorEnum.PatternLowFreqIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.FrequencyIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.LowFrequencyIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.SoundexIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.SoundexLowIndicatorEnum) {
                 if (key != null) {
                     msg.append("The original value is: " //$NON-NLS-1$
                             + (key.toString().length() > 200 ? key.toString().substring(0, 200)
