@@ -90,8 +90,12 @@ public class ResultSetIterator implements Iterator<Record> {
             }
             for (int i = 0; i < metaData.getColumnCount(); i++) {
                 Attribute attribute = new Attribute(columnNames.get(i), i);
-
-                String value = String.valueOf(resultSet.getObject(i + 1));
+                String value = null;
+                try {
+                    value = String.valueOf(resultSet.getObject(i + 1));
+                } catch (SQLException exp) {
+                    // TDQ-11425 if SQLException, keep the current attribute value null and continue.
+                }
                 attribute.setValue(value);
                 attributes.add(attribute);
             }

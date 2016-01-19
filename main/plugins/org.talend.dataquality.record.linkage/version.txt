@@ -1,7 +1,9 @@
 Talend record linkage library version: 2.0.2
 
 Changes:
+
 - 2.0.2: when compute the weight and it throw an Exception,catch the Excetpion and return 0.(TDQ-10366)
+         TDQ-11425- Add catch SQLException, continue to do next when execute "next()" and get SQLException.
 - 2.0.1: Allow to specify classloader to be used for loading custom matcher class on the match analysis side.(TDQ-8027)
 - 2.0.0: Windows key algorithms integrated into record linkage library
 - 1.0.1: the record matcher threshold can be different for each matcher of the combined matcher + attribute name stored in the attribute matcher for information.
