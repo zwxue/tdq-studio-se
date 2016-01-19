@@ -194,8 +194,8 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
-        // TDQ-11124 no support fetchSize for sqlite jdbc driver.see detail with "org.sqlite.RS.setFetchSize(int rows)"
-        // and "org.sqlite.RS.next()".
+        // TDQ-11124 "fetchSize" not support very well.it looks fetchSize as limitRows.see detail with
+        // "org.sqlite.RS.setFetchSize(int rows)" and "org.sqlite.RS.next()".
         return super.createStatement(connection);
     }
 }
