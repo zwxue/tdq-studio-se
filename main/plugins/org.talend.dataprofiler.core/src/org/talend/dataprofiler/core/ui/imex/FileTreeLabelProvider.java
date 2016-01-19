@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataquality.rules.MatchRuleDefinition;
@@ -90,7 +91,11 @@ public class FileTreeLabelProvider extends LabelProvider {
                         image = ImageLib.getImage(ImageLib.DQ_RULE);
                     }
                 } else if (fileName.endsWith(FactoriesUtil.ITEM_EXTENSION)) {
-                    image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+                    if (record.getElement() instanceof DelimitedFileConnection) {
+                        image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
+                    } else {
+                        image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+                    }
                 } else if (fileName.endsWith(FactoriesUtil.DEFINITION)) {
                     image = ImageLib.getImage(ImageLib.IND_DEFINITION);
                 } else if (fileName.endsWith(FactoriesUtil.SQL)) {
