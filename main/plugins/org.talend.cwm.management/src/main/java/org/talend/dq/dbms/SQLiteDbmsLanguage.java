@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.relational.TdColumn;
@@ -181,5 +185,17 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
     @Override
     public String getRandomQuery(String query) {
         return query + orderBy() + "RANDOM() "; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection, int)
+     */
+    @Override
+    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
+        // TDQ-11124 no support fetchSize for sqlite jdbc driver.see detail with "org.sqlite.RS.setFetchSize(int rows)"
+        // and "org.sqlite.RS.next()".
+        return super.createStatement(connection);
     }
 }
