@@ -228,4 +228,21 @@ public class ConnectionUtilsTest {
         Assert.assertFalse(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
         Assert.assertTrue(username.equals(sqliteConn.getUsername()));
     }
+
+    @Test
+    public void testIsConnectionAvailable_generalJDBC_false() {
+        String driverClass = "om.mysql.jdbc.Driver"; //$NON-NLS-1$
+        String driverName = "mysql-connector-java-5.1.12-bin.jar"; //$NON-NLS-1$
+        CopyTheJarFile();
+        DatabaseConnection createDatabaseConnection = ConnectionFactoryImpl.eINSTANCE.createDatabaseConnection();
+        createDatabaseConnection.setDriverClass(driverClass);
+        createDatabaseConnection.setDriverJarPath(driverName);
+        createDatabaseConnection.setUsername("root"); //$NON-NLS-1$
+        createDatabaseConnection.setPassword("root"); //$NON-NLS-1$
+        createDatabaseConnection.setDatabaseType("General JDBC"); //$NON-NLS-1$
+
+        ReturnCode ret = ConnectionUtils.isConnectionAvailable(createDatabaseConnection);
+        Assert.assertFalse(ret.isOk());
+
+    }
 }
