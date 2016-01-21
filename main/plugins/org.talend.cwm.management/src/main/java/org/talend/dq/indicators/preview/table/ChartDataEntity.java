@@ -343,7 +343,7 @@ public class ChartDataEntity {
                     || indicatorEnum == IndicatorEnum.LowFrequencyIndicatorEnum
                     || indicatorEnum == IndicatorEnum.SoundexIndicatorEnum
                     || indicatorEnum == IndicatorEnum.SoundexLowIndicatorEnum) {
-                if (key != null) {
+                if (key != null && key.toString().length() > 30) {
                     msg.append("The original value is: " //$NON-NLS-1$
                             + (key.toString().length() > 200 ? key.toString().substring(0, 200)
                                     + "...(" + key.toString().length() + " characters)" : key.toString())); //$NON-NLS-1$ //$NON-NLS-2$
