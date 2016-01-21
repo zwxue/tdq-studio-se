@@ -632,7 +632,7 @@ public final class ReportFileHelper {
 
         if (reportListFile != null && reportListFile.exists()) {
             try {
-                CSVReader reader = FileUtils.createCSVReader(reportListFile, FileUtils.TEXT_QUAL, FileUtils.ESCAPE_CHAR);
+				CSVReader reader = FileUtils.createCSVReader(reportListFile);
                 reader.setSkipEmptyRecords(true);
                 reader.readHeaders();
                 while (reader.readNext()) {

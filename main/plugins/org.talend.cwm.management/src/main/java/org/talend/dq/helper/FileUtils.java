@@ -200,6 +200,19 @@ public final class FileUtils {
         return csvReader;
     }
 
+
+    /**
+     * create a default CSVReader, the separator is \t
+     * 
+     * @param file
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
+     */
+    public static CSVReader createCSVReader(File file) throws UnsupportedEncodingException, FileNotFoundException {
+        return new CSVReader(new FileReader(file), CURRENT_SEPARATOR);
+    }
+
     public static boolean isCSV(String fileExtName) {
         return CSV.equalsIgnoreCase(fileExtName);
     }
