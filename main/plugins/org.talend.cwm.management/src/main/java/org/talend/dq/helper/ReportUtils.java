@@ -633,7 +633,7 @@ public final class ReportUtils {
 
         if (reportListFile != null && reportListFile.exists()) {
             try {
-                CSVReader reader = FileUtils.createCSVReader(reportListFile, FileUtils.TEXT_QUAL, FileUtils.ESCAPE_CHAR);
+                CSVReader reader = FileUtils.createCSVReader(reportListFile);
                 reader.readHeaders();
                 while (reader.readNext()) {
                     repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()),
