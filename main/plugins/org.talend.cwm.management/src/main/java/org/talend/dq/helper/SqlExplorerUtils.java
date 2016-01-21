@@ -30,7 +30,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -236,8 +235,8 @@ public class SqlExplorerUtils {
     }
 
     public boolean needAddDriverConnection(DatabaseConnection dbConn) {
-        if (getSqlexplorerService() != null) {
-            return getSqlexplorerService().needAddDriverConnection(dbConn);
+        if (sqlexplorerService != null) {
+            return sqlexplorerService.needAddDriverConnection(dbConn);
         }
         return false;
     }
