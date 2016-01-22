@@ -302,4 +302,13 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         return table;
     }
 
+    protected boolean isSchemataProxy() {
+        for (Package pckg : schemata.values()) {
+            if (pckg != null && pckg.eIsProxy()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

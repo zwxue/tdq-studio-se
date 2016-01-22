@@ -96,7 +96,8 @@ import Zql.ParseException;
 /**
  * @author scorreia
  * 
- * Generates the SQL queries for each indicator and each column to be analyzed. Then executes the queries and stores the results.
+ * Generates the SQL queries for each indicator and each column to be analyzed. Then executes the queries and stores the
+ * results.
  */
 public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
@@ -158,7 +159,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws AnalysisExecutionException
      */
     @SuppressWarnings("deprecation")
-    private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException, AnalysisExecutionException {
+    private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
+            AnalysisExecutionException {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
             traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
@@ -179,7 +181,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 buf.append(schema.getName() + " "); //$NON-NLS-1$
             }
 
-            log.error(Messages.getString("ColumnAnalysisSqlExecutor.COLUMNNOTBELONGTOEXISTSCHEMA", colName, buf.toString().trim()));//$NON-NLS-1$
+            log.error(Messages
+                    .getString("ColumnAnalysisSqlExecutor.COLUMNNOTBELONGTOEXISTSCHEMA", colName, buf.toString().trim()));//$NON-NLS-1$
             return false;
         }
         colName = dbms().castColumn4ColumnAnalysisSqlExecutor(indicator, tdColumn, colName);
@@ -252,12 +255,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (textParameter.isIgnoreCase()) {
                     colName = dbms().toUpperCase(colName);
                 }
-                if (!textParameter.isUseBlank() && IndicatorsPackage.eINSTANCE.getLengthIndicator().isSuperTypeOf(indicatorEclass)) {
+                if (!textParameter.isUseBlank()
+                        && IndicatorsPackage.eINSTANCE.getLengthIndicator().isSuperTypeOf(indicatorEclass)) {
 
                     String tdColName = getQuotedColumnName(tdColumn);
                     tdColName = dbms().replaceNullsWithString(tdColName, "'NULL TALEND'");//$NON-NLS-1$
 
-                } else if (textParameter.isUseBlank() && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {
+                } else if (textParameter.isUseBlank()
+                        && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {
                     colName = dbms().trim(colName);
                 }
             }
@@ -294,7 +299,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
 
             if (rangeStrings != null) {
-                completedSqlString = getUnionCompletedString(indicator, sqlGenericExpression, colName, table, whereExpression, rangeStrings);
+                completedSqlString = getUnionCompletedString(indicator, sqlGenericExpression, colName, table, whereExpression,
+                        rangeStrings);
                 if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
                     // get the best row
                     completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
@@ -303,7 +309,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD scorreia 2008-06-23 check column type (robustness against bug 4287)
                     && Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                 // frequencies with date aggregation
-                completedSqlString = getDateAggregatedCompletedStringWithoutAlia(sqlGenericExpression, colName, table, dateAggregationType);
+                completedSqlString = getDateAggregatedCompletedStringWithoutAlia(sqlGenericExpression, colName, table,
+                        dateAggregationType);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             } else { // usual nominal frequencies
@@ -338,8 +345,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     table = dbms().getSoundexFunction(table, colName);
                 }
 
-                completedSqlString = dbms()
-                        .fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), colName, table, colName);
+                completedSqlString = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), colName,
+                        table, colName);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             }
@@ -369,7 +376,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 // need to generate different SQL where clause for each type.
                 int javaType = tdColumn.getSqlDataType().getJavaDataType();
                 // MOD qiongli 2011-10-31 add single quotation '' for mysql date type.
-                if (!Java2SqlType.isNumbericInSQL(javaType) && !isFunction(defValue, table)
+                if (!Java2SqlType.isNumbericInSQL(javaType)
+                        && !isFunction(defValue, table)
                         || (Java2SqlType.isDateInSQL(javaType) && SupportDBUrlType.MYSQLDEFAULTURL.getLanguage().equals(language))) {
                     defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
@@ -440,9 +448,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * Method "duplicateForCrossJoin". For some SQL queries, auto-joins are used in subqueries. This means that the table has two differents
-     * aliases and the columns must be prefixed with the alias of the table. Each where clause must be duplicated. For example, the clause
-     * "AGE > 10" must be duplicated to give "a.AGE > 10" and "b.AGE" when table aliases are "a" and "b".
+     * Method "duplicateForCrossJoin". For some SQL queries, auto-joins are used in subqueries. This means that the
+     * table has two differents aliases and the columns must be prefixed with the alias of the table. Each where clause
+     * must be duplicated. For example, the clause "AGE > 10" must be duplicated to give "a.AGE > 10" and "b.AGE" when
+     * table aliases are "a" and "b".
      * 
      * @param completedSqlString the SQL query
      * 
@@ -669,7 +678,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String singleStatement = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(0, idxOfOrderBY) : sqlGenericExpression;
 
         for (int i = 0; i < last; i++) {
-            String singleSelect = getCompletedSingleSelect(indicator, singleStatement, colName, table, whereExpression, rangeStrings.get(i));
+            String singleSelect = getCompletedSingleSelect(indicator, singleStatement, colName, table, whereExpression,
+                    rangeStrings.get(i));
             // parenthesis necessary for MySQL
             buf.append('(');
             buf.append(singleSelect);
@@ -731,8 +741,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * Method "replaceCountByZeroCount" replaces "COUNT(*)" by "CASE WHEN completedRange THEN COUNT(*) ELSE 0 END" in the given SQL
-     * statement completedSqlString.
+     * Method "replaceCountByZeroCount" replaces "COUNT(*)" by "CASE WHEN completedRange THEN COUNT(*) ELSE 0 END" in
+     * the given SQL statement completedSqlString.
      * 
      * @param completedSqlString
      * @param completedRange
@@ -818,9 +828,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * 
      * @param indicator
      * @param count
-     * @return the number of rows to skip in order to compute the quartiles. In case of an odd number of rows, one row is returned and the
-     * returned value is the index of the row before the quartile. In case of an even number of rows, two rows are returned and the quartile
-     * is the average of the two values (for the median).
+     * @return the number of rows to skip in order to compute the quartiles. In case of an odd number of rows, one row
+     * is returned and the returned value is the index of the row before the quartile. In case of an even number of
+     * rows, two rows are returned and the quartile is the average of the two values (for the median).
      */
     private Long getOffsetInLimit(Indicator indicator, long count) {
         // get the number of rows to be skipped by the LIMIT n,o in MySQL query.
@@ -887,7 +897,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             throws SQLException, AnalysisExecutionException {
         TypedReturnCode<Connection> trc = this.getConnection(analysis);
         if (!trc.isOk()) {
-            throw new AnalysisExecutionException(Messages.getString("ColumnAnalysisSqlExecutor.CannotExecuteAnalysis", analysis.getName() //$NON-NLS-1$
+            throw new AnalysisExecutionException(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.CannotExecuteAnalysis", analysis.getName() //$NON-NLS-1$
                     , trc.getMessage()));
         }
         Connection connection = trc.getObject();
@@ -937,7 +948,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.analysis.AnalysisExecutor#runAnalysis(org.talend.dataquality.analysis.Analysis, java.lang.String)
+     * @see org.talend.dq.analysis.AnalysisExecutor#runAnalysis(org.talend.dataquality.analysis.Analysis,
+     * java.lang.String)
      */
     @Override
     protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
@@ -1045,8 +1057,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
          */
         @Override
         protected IStatus run(IProgressMonitor monitor) {
-            ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent, connection,
-                    elementToIndicator, indicator);
+            ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
+                    connection, elementToIndicator, indicator);
             Boolean isSuccess = columnSqlParallel.run();
 
             if (isSuccess) {
@@ -1086,8 +1098,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             for (Indicator indicator : indicators) {
                 if (this.continueRun()) {
                     if (monitor != null) {
-                        monitor.setTaskName(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement() //$NON-NLS-1$
-                                .getName()));
+                        monitor.setTaskName(Messages.getString(
+                                "ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement() //$NON-NLS-1$
+                                        .getName()));
                     }
                     Connection conn = null;
                     if (pooledConnection) {
@@ -1097,8 +1110,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     }
 
                     if (conn != null) {
-                        ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn, elementToIndicator,
-                                indicator);
+                        ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn,
+                                elementToIndicator, indicator);
                         eaj.setName(indicator.getName());
                         eaj.schedule();
                         jobs.add(eaj);
@@ -1195,7 +1208,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     protected String getCatalogOrSchemaName(ModelElement analyzedElement) {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
-            log.error(Messages.getString("ColumnAnalysisSqlExecutor.NOSCHEMAFOUNDFORCOLUMN") + ((analyzedElement != null) ? analyzedElement.getName() : "Unknow column"));//$NON-NLS-1$  //$NON-NLS-2$  
+            if (!isSchemataProxy()) {
+                log.error(Messages.getString("ColumnAnalysisSqlExecutor.NOSCHEMAFOUNDFORCOLUMN") + " " + ((analyzedElement != null) ? analyzedElement.getName() : "Unknow column"));//$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$  
+            }
             return null;
         }
         // else
