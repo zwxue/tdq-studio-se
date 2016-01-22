@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -24,13 +25,13 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.indicator.ColumnFilter;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.utils.DrillDownUtils;
@@ -54,6 +55,7 @@ import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC zshen class global comment. Detailled comment
@@ -580,8 +582,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
                 columnElementList.add(ModelElementHelper.getName(indicator.getAnalyzedElement()));
             } else if (analysisElement instanceof TdColumn) {
-                for (TdColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
-                        .eContainer()))) {
+                for (TdColumn column : getColumnsByTdColumn((TdColumn) analysisElement)) {
                     columnElementList.add(column.getName());
                 }
 
@@ -615,8 +616,8 @@ public class DrillDownEditorInput implements IEditorInput {
         ModelElement analysisElement = indicator.getAnalyzedElement();
         int index = 0;
         if (analysisElement instanceof TdColumn) {
-            TdTable tdTable = ColumnHelper.getColumnOwnerAsTdTable((TdColumn) analysisElement);
-            for (TdColumn column : TableHelper.getColumns(tdTable)) {
+            List<TdColumn> columns = getColumnsByTdColumn((TdColumn) analysisElement);
+            for (TdColumn column : columns) {
                 if (column.getName().equals(analysisElement.getName())) {
                     indexArray.add(index);
                     // Note that One indicator only belong one column so that
@@ -640,6 +641,26 @@ public class DrillDownEditorInput implements IEditorInput {
         }
 
         return indexArray.toArray(new Integer[indexArray.size()]);
+    }
+
+    /**
+     * DOC talend Comment method "getColumnsByIndicator".
+     * 
+     * @param analysisElement
+     * @return
+     */
+    protected List<TdColumn> getColumnsByTdColumn(TdColumn analysisElement) {
+        EObject eContainer = analysisElement.eContainer();
+        if (eContainer == null) {
+            return new ArrayList<TdColumn>();
+        }
+
+        ColumnSet columSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eContainer);
+        if (columSet == null) {
+            return new ArrayList<TdColumn>();
+        }
+        List<TdColumn> columns = ColumnSetHelper.getColumns(columSet);
+        return columns;
     }
 
     public boolean isDataSpill() {
