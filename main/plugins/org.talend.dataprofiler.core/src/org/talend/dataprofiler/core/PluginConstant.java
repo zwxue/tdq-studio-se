@@ -28,6 +28,10 @@ public final class PluginConstant {
 
     public static final String GETTING_STARTED_CHEAT_SHEET_ID = "org.talend.dataprofiler.core.talenddataprofiler"; //$NON-NLS-1$
 
+    public static final String TOP_ACRONYM = "top"; //$NON-NLS-1$
+
+    public static final String START_HERE_CHEAT_SHEET_ID = "org.talend.datacleansing.core.ui.dqcheatsheet"; //$NON-NLS-1$
+
     public static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
 
     public static final String SQLEXPLORER_PERSPECTIVE_ID = "net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"; //$NON-NLS-1$
