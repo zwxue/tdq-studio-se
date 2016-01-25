@@ -32,6 +32,8 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
+import org.talend.dataprofiler.core.service.GlobalServiceRegister;
+import org.talend.dataprofiler.core.service.IBrandingService;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
@@ -124,7 +126,13 @@ public class CommonEditorPartListener extends PartListener {
             // The cheat sheet view has been open and max display then don't do it again
             if (CheatSheetUtils.getInstance().isFirstTime() && !PlatformUI.getWorkbench().isClosing() && firstTime) {
                 firstTime = false;
-                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet(PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID);
+                IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
+                        IBrandingService.class);
+                String cheatSheetID = PluginConstant.START_HERE_CHEAT_SHEET_ID;// tdq case
+                if (brandingService != null && PluginConstant.TOP_ACRONYM.equals(brandingService.getAcronym())) {
+                    cheatSheetID = PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID;// top case
+                }
+                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet(cheatSheetID);
             }
         }
     }
