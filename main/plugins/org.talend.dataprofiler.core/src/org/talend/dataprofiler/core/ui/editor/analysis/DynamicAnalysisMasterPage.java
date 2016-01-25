@@ -22,8 +22,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -111,40 +114,26 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
         Composite actionBarComp = toolkit.createComposite(sectionClient);
         GridLayout gdLayout = new GridLayout();
-        gdLayout.numColumns = 2;
+        gdLayout.numColumns = 3;
         actionBarComp.setLayout(gdLayout);
 
         createCollapseAllLink(actionBarComp);
 
         createExpandAllLink(actionBarComp);
 
-        ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
-        refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
-        refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
+        Button chartButton = new Button(actionBarComp, SWT.NONE);
+        chartButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
         final Label message = toolkit.createLabel(sectionClient,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         message.setVisible(false);
-
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
-
-        chartComposite = toolkit.createComposite(sectionClient);
-        chartComposite.setLayout(new GridLayout());
-        chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        addListenerToRefreshBtn(form1, refreshBtn, message);
-
-        previewSection.setClient(sectionClient);
-    }
-
-    private void addListenerToRefreshBtn(final ScrolledForm form1, ImageHyperlink refreshBtn, final Label message) {
-        final Analysis analysis = getAnalysisHandler().getAnalysis();
-
-        refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
+        chartButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void linkActivated(HyperlinkEvent e) {
+            public void widgetSelected(SelectionEvent e) {
                 disposeChartComposite();
+
+                Analysis analysis = getAnalysisHandler().getAnalysis();
 
                 boolean analysisStatue = analysis.getResults().getResultMetadata() != null
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
@@ -168,8 +157,15 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
                 reLayoutChartComposite();
             }
-
         });
+
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
+
+        chartComposite = toolkit.createComposite(sectionClient);
+        chartComposite.setLayout(new GridLayout());
+        chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        previewSection.setClient(sectionClient);
     }
 
     private void createExpandAllLink(Composite actionBarComp) {

@@ -62,8 +62,6 @@ public class UIPagination {
 
     protected ImageHyperlink pageFirstImgHypLnk = null;
 
-    protected ImageHyperlink goImgHypLnk = null;
-
     protected Text pageGoText;
 
     private FormToolkit toolkit;
@@ -214,13 +212,13 @@ public class UIPagination {
             }
 
         });
-        goImgHypLnk = toolkit.createImageHyperlink(pageNavComp, SWT.NONE);
+
+        Label go2PageLabel = toolkit.createLabel(pageNavComp, DefaultMessagesImpl.getString("UIPagination.Go"), SWT.NONE); //$NON-NLS-1$
         final FormData goImgFD = new FormData();
         goImgFD.right = new FormAttachment(pageGoText, -5, SWT.LEFT);
         goImgFD.bottom = new FormAttachment(pageGoText, 0, SWT.BOTTOM);
         goImgFD.top = new FormAttachment(pageGoText, 0, SWT.TOP);
-        goImgHypLnk.setLayoutData(goImgFD);
-        goImgHypLnk.setText(DefaultMessagesImpl.getString("UIPagination.Go")); //$NON-NLS-1$
+        go2PageLabel.setLayoutData(goImgFD);
 
         createExtContol(pageNavComp);
     }
@@ -314,18 +312,6 @@ public class UIPagination {
                 pageCache.get(currentPage).renderContents();
             }
         });
-        goImgHypLnk.addMouseListener(new MouseListener() {
-
-            public void mouseDoubleClick(MouseEvent e) {
-            }
-
-            public void mouseDown(MouseEvent e) {
-            }
-
-            public void mouseUp(MouseEvent e) {
-                go();
-            }
-        });
 
     }
 
@@ -388,7 +374,6 @@ public class UIPagination {
             setNavImgState(pagePreviouseImgHypLnk, IMG_LNK_NAV_PREV, false);
             setNavImgState(pageLastImgHypLnk, IMG_LNK_NAV_LAST, false);
             setNavImgState(pageNextImgHypLnk, IMG_LNK_NAV_NEXT, false);
-            goImgHypLnk.setEnabled(false);
             return;
         }
         if (currentPage > 0) {
@@ -405,7 +390,6 @@ public class UIPagination {
             setNavImgState(pageLastImgHypLnk, IMG_LNK_NAV_LAST, false);
             setNavImgState(pageNextImgHypLnk, IMG_LNK_NAV_NEXT, false);
         }
-        goImgHypLnk.setEnabled(true);
     }
 
     private void setNavImgState(ImageHyperlink imgHypLnk, Image img, Boolean isEnabled) {
