@@ -265,8 +265,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(buttonComposite);
         createConnectionButton(buttonComposite);
         createColumnSelectButton(buttonComposite);
-        createRefreshDataButtonComp(buttonComposite);
         createIndicatorSelectButton(buttonComposite);
+        createRefreshDataButtonComp(buttonComposite);
         // create the data table
         createDataTableComposite(dataPreviewTableCom);
         dataPreviewSection.setClient(dataPreviewTableCom);
@@ -305,30 +305,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         GridLayout dataQueryCompLayout = new GridLayout(4, Boolean.FALSE);
         dataQueryComp.setLayout(dataQueryCompLayout);
 
-        Button refreshDataBtn = toolkit.createButton(dataQueryComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.NONE);//$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
-
-        refreshDataBtn.addMouseListener(new MouseListener() {
-
-            public void mouseDoubleClick(MouseEvent e) {
-                // no need to implement
-            }
-
-            public void mouseDown(MouseEvent e) {
-                if (isValidateRowCount()) {
-                    refreshPreviewTable(true);
-                } else {
-                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-                }
-            }
-
-            public void mouseUp(MouseEvent e) {
-                // no need to implement
-            }
-        });
-
         // create the input to control how many rows will be loaded.
         Label rowLoadedLabel = toolkit.createLabel(dataQueryComp,
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.ControlRowsLabel"), SWT.NONE); //$NON-NLS-1$
@@ -363,6 +339,30 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
             }
         });
         // TDQ-8428~
+
+        Button refreshDataBtn = toolkit.createButton(dataQueryComp,
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.NONE);//$NON-NLS-1$
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
+
+        refreshDataBtn.addMouseListener(new MouseListener() {
+
+            public void mouseDoubleClick(MouseEvent e) {
+                // no need to implement
+            }
+
+            public void mouseDown(MouseEvent e) {
+                if (isValidateRowCount()) {
+                    refreshPreviewTable(true);
+                } else {
+                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+                }
+            }
+
+            public void mouseUp(MouseEvent e) {
+                // no need to implement
+            }
+        });
     }
 
     /*
@@ -445,8 +445,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotOpenSelectIndicatorDialog")); //$NON-NLS-1$
                         return;
                     }
-                    ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnAnalysisDetailsPage.this.getSite()
-                            .getShell());
+                    ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnAnalysisDetailsPage.this
+                            .getSite().getShell());
                     if (result != null) {
                         refreshCurrentTreeViewer(result);
                         refreshPreviewTable();
