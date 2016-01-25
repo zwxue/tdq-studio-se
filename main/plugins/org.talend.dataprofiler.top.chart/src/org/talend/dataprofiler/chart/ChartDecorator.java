@@ -143,6 +143,9 @@ public final class ChartDecorator {
      */
     public static void decorate(JFreeChart chart, PlotOrientation orientation) {
         if (chart != null) {
+            // TDQ-11522: Set white background on charts in the editors
+            chart.setBackgroundPaint(Color.white);
+            // TDQ-11522~
             Plot plot = chart.getPlot();
             if (plot instanceof CategoryPlot) {
                 decorateCategoryPlot(chart, orientation);
