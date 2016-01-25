@@ -50,7 +50,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Hyperlink;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -61,7 +60,6 @@ import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositor
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -397,9 +395,9 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
-        refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
-        refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
+        Button chartButton = new Button(sectionClient, SWT.NONE);
+        chartButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
+
         final Label message = toolkit.createLabel(sectionClient,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
@@ -412,11 +410,10 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
         final Analysis analysis = columnSetAnalysisHandler.getAnalysis();
 
-        refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
+        chartButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void linkActivated(HyperlinkEvent e) {
-
+            public void widgetSelected(SelectionEvent e) {
                 for (Control control : chartComposite.getChildren()) {
                     control.dispose();
                 }
@@ -443,6 +440,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
                 chartComposite.layout();
                 form.reflow(true);
+
             }
 
         });

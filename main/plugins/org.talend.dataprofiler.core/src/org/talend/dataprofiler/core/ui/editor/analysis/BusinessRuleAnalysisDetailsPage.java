@@ -432,7 +432,9 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
             });
 
+            getChartComposite().layout();
             form1.reflow(true);
+            composite.pack();
         }
         if (!previewChartList.isEmpty()) {
             this.previewChartCompsites = previewChartList.toArray(new Composite[previewChartList.size()]);
