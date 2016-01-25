@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -459,6 +460,36 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     }
 
     /**
+     * 
+     * DOC qiongli Comment method "createRunButton".
+     * 
+     * @param buttonComposite
+     */
+    private void createRunButton(Composite buttonComposite) {
+        String text = PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButton") //$NON-NLS-1$
+                + PluginConstant.SPACE_STRING;
+        Button runBtn = toolkit.createButton(buttonComposite, text, SWT.PUSH);
+        runBtn.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButtonTooltip")); //$NON-NLS-1$
+        runBtn.setImage(ImageLib.getImage(ImageLib.REFRESH_IMAGE));
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(runBtn);
+        runBtn.addMouseListener(new MouseAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+             */
+            @Override
+            public void mouseDown(MouseEvent e) {
+                Action runAnalysisAction = ((AnalysisEditor) currentEditor).getRunAnalysisAction();
+                if (runAnalysisAction != null) {
+                    runAnalysisAction.run();
+                }
+            }
+        });
+    }
+
+    /**
      * DOC talend Comment method "createColumnSelectButton".
      * 
      * @param buttonComposite
@@ -628,7 +659,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
 
         Composite actionBarComp = toolkit.createComposite(topComp1, SWT.NONE);
         GridLayout gdLayout = new GridLayout();
-        gdLayout.numColumns = 3;
+        gdLayout.numColumns = 5;
+        gdLayout.horizontalSpacing = 20;
         GridData data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.grabExcessHorizontalSpace = true;
@@ -660,6 +692,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                 packOtherColumns();
             }
         });
+        createIndicatorSelectButton(actionBarComp);
+        createRunButton(actionBarComp);
+
         navigationComposite = toolkit.createComposite(actionBarComp, SWT.NONE);
 
         navigationComposite.setLayoutData(data);
@@ -1508,4 +1543,5 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     public int getPreviewLimit() {
         return Integer.parseInt(rowLoadedText.getText());
     }
+
 }
