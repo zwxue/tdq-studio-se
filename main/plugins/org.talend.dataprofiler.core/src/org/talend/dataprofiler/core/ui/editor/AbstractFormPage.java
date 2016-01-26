@@ -89,10 +89,10 @@ public abstract class AbstractFormPage extends FormPage {
      * @return
      */
     public Section createSection(final ScrolledForm form, Composite parent, String title, String description) {
-        int style = Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR;
+        int style = Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR | Section.LEFT_TEXT_CLIENT_ALIGNMENT;
 
         if (description == null) {
-            style = Section.TWISTIE | Section.TITLE_BAR;
+            style = Section.TWISTIE | Section.TITLE_BAR | Section.LEFT_TEXT_CLIENT_ALIGNMENT;
         }
 
         Section section = toolkit.createSection(parent, style);

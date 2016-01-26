@@ -754,7 +754,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
             uiPagination = new UIPagination(toolkit);
             uiPagination.setComposite(navigationComposite);
         } else {
-            lastTimePageNumber = uiPagination.getCurrentPage();
+            lastTimePageNumber = uiPagination.getCurrentPageNumber();
             uiPagination.reset();
         }
 
@@ -1373,7 +1373,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      */
     public void refreshCurrentTreeViewer(ModelElementIndicator[] result) {
         if (result.length > 0) {
-            lastTimePageNumber = uiPagination.getCurrentPage();
+            lastTimePageNumber = uiPagination.getCurrentPageNumber();
             refreshTheTree(result);
             // the number of current page is from 0 to n so need to add one when we use it.
             uiPagination.goToPage(lastTimePageNumber + 1);

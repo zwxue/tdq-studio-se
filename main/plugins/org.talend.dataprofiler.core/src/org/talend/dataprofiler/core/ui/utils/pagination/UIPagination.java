@@ -116,7 +116,7 @@ public class UIPagination {
         notifyPageNavigator();
         // First show zero-indexed contents.
         if (pageCache.size() > currentPage && pageCache.size() > 0) {
-            pageCache.get(currentPage).renderContents();
+            getCurrentPage().renderContents();
         }
     }
 
@@ -263,9 +263,9 @@ public class UIPagination {
             }
 
             public void mouseUp(MouseEvent e) {
-                pageCache.get(currentPage).dispose();
+                getCurrentPage().dispose();
                 currentPage = 0;
-                pageCache.get(currentPage).renderContents();
+                getCurrentPage().renderContents();
             }
 
         });
@@ -278,9 +278,9 @@ public class UIPagination {
             }
 
             public void mouseUp(MouseEvent e) {
-                pageCache.get(currentPage).dispose();
+                getCurrentPage().dispose();
                 currentPage = currentPage - 1;
-                pageCache.get(currentPage).renderContents();
+                getCurrentPage().renderContents();
             }
         });
         pageNextImgHypLnk.addMouseListener(new MouseListener() {
@@ -292,9 +292,9 @@ public class UIPagination {
             }
 
             public void mouseUp(MouseEvent e) {
-                pageCache.get(currentPage).dispose();
+                getCurrentPage().dispose();
                 currentPage = currentPage + 1;
-                pageCache.get(currentPage).renderContents();
+                getCurrentPage().renderContents();
             }
 
         });
@@ -307,9 +307,9 @@ public class UIPagination {
             }
 
             public void mouseUp(MouseEvent e) {
-                pageCache.get(currentPage).dispose();
+                getCurrentPage().dispose();
                 currentPage = totalPages - 1;
-                pageCache.get(currentPage).renderContents();
+                getCurrentPage().renderContents();
             }
         });
 
@@ -350,9 +350,9 @@ public class UIPagination {
                     DefaultMessagesImpl.getString("UIPagination.NotInValidRange")); //$NON-NLS-1$
             return;
         }
-        pageCache.get(currentPage).dispose();
+        getCurrentPage().dispose();
         currentPage = pageNumber - 1;
-        pageCache.get(currentPage).renderContents();
+        getCurrentPage().renderContents();
     }
 
     /**
@@ -508,7 +508,7 @@ public class UIPagination {
      * 
      * @return the currentPage
      */
-    public int getCurrentPage() {
+    public int getCurrentPageNumber() {
         return this.currentPage;
     }
 
@@ -518,7 +518,7 @@ public class UIPagination {
      * @return
      */
     public List<DynamicIndicatorModel> getAllIndcatorAndDatasetOfCurrentPage() {
-        IPagination iPagination = pageCache.get(currentPage);
+        IPagination iPagination = getCurrentPage();
         if (iPagination instanceof IndicatorPaginationInfo) {
             return ((IndicatorPaginationInfo) iPagination).getDynamicIndicatorList();
         }
@@ -526,10 +526,19 @@ public class UIPagination {
     }
 
     /**
+     * DOC msjian Comment method "getCurrentPage".
+     * 
+     * @return
+     */
+    public IPagination getCurrentPage() {
+        return pageCache.get(currentPage);
+    }
+
+    /**
      * Added TDQ-8787 20140612: clear all related map (for dynamic chart), after executing the analysis
      */
     public void clearAllDynamicMapOfCurrentPage() {
-        IPagination iPagination = pageCache.get(currentPage);
+        IPagination iPagination = getCurrentPage();
         if (iPagination instanceof IndicatorPaginationInfo) {
             ((IndicatorPaginationInfo) iPagination).clearDynamicList();
         }
