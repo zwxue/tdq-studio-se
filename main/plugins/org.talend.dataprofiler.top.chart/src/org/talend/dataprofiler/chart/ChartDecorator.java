@@ -266,6 +266,19 @@ public final class ChartDecorator {
     }
 
     /**
+     * DOC msjian Comment method "decoratePatternMatching".
+     * 
+     * @param chart
+     */
+    public static void decoratePatternMatching(JFreeChart chart) {
+        if (chart != null) {
+            // TDQ-11522: Set white background on charts in the editors
+            chart.setBackgroundPaint(Color.white);
+            // TDQ-11522~
+        }
+    }
+
+    /**
      * DOC bZhou Comment method "decorateCategoryPlot".
      * 
      * @param chart

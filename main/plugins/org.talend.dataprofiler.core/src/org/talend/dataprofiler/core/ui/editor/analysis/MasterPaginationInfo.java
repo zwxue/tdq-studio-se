@@ -169,6 +169,8 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         }
         if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
             TOPChartUtils.getInstance().decorateChart(chart, false);
+        } else {
+            TOPChartUtils.getInstance().decoratePatternMatching(chart);
         }
         Object chartComp = TOPChartUtils.getInstance().createChartComposite(comp, SWT.NONE, chart, true);
         addListenerToChartComp(chartComp, chartTypeState);

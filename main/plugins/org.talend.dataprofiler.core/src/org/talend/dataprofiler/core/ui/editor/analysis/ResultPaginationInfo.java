@@ -250,6 +250,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             if (chart != null) {
                 if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
                     TOPChartUtils.getInstance().decorateChart(chart, false);
+                } else {
+                    TOPChartUtils.getInstance().decoratePatternMatching(chart);
                 }
                 Object chartComposite = TOPChartUtils.getInstance().createTalendChartComposite(composite, SWT.NONE, chart, true);
                 if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {

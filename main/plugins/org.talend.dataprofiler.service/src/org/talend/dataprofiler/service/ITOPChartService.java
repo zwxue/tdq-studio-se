@@ -87,6 +87,8 @@ public interface ITOPChartService {
 
     void decorateColumnDependency(Object chart);
 
+    void decoratePatternMatching(Object chart);
+
     void setOrientation(Object chart, boolean isHorizontal);
 
     void setDisplayDecimalFormatOfChart(Object chart);

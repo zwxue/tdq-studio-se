@@ -158,6 +158,11 @@ public class TOPChartService implements ITOPChartService {
     }
 
     @Override
+    public void decoratePatternMatching(Object chart) {
+        ChartDecorator.decoratePatternMatching((JFreeChart) chart);
+    }
+
+    @Override
     public Object createChartComposite(Object composite, int style, Object chart, boolean useBuffer) {
         return createChartCompositeWithSpecialSize(composite, style, chart, useBuffer, CHART_STANDARD_HEIGHT,
                 CHART_STANDARD_WIDHT);

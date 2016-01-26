@@ -171,6 +171,12 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         }
     }
 
+    public void decoratePatternMatching(Object chart) {
+        if (isTOPChartInstalled()) {
+            chartService.decoratePatternMatching(chart);
+        }
+    }
+
     public void setOrientation(Object chart, boolean isHorizontal) {
         if (isTOPChartInstalled()) {
             chartService.setOrientation(chart, isHorizontal);
