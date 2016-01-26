@@ -468,7 +468,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     private void createRunButton(Composite buttonComposite) {
         String text = PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButton") //$NON-NLS-1$
                 + PluginConstant.SPACE_STRING;
-        Button runBtn = toolkit.createButton(buttonComposite, text, SWT.PUSH);
+        Button runBtn = toolkit.createButton(buttonComposite, text, SWT.NONE);
         runBtn.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButtonTooltip")); //$NON-NLS-1$
         runBtn.setImage(ImageLib.getImage(ImageLib.REFRESH_IMAGE));
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(runBtn);
