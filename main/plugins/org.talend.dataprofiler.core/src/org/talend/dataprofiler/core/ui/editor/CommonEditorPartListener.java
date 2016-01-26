@@ -26,6 +26,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.utils.CheatSheetUtils;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -123,7 +124,12 @@ public class CommonEditorPartListener extends PartListener {
             // The cheat sheet view has been open and max display then don't do it again
             if (CheatSheetUtils.getInstance().isFirstTime() && !PlatformUI.getWorkbench().isClosing() && firstTime) {
                 firstTime = false;
-                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet(PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID);
+                String cheatSheetID = PluginConstant.START_HERE_CHEAT_SHEET_ID;// tdq case
+                if (PluginChecker.isOnlyTopLoaded()) {
+                    cheatSheetID = PluginConstant.GETTING_STARTED_CHEAT_SHEET_ID;// top case
+                }
+                CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet(cheatSheetID);
+
             }
         }
     }
