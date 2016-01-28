@@ -169,10 +169,9 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         setFormTitle(DefaultMessagesImpl.getString("DQRuleEditor.matchRuleSettings")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("DQRuleEditor.matchRuleMetadata")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("MatchRuleMasterDetailsPage.setProperties")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-
-        metadataSection.setText(DefaultMessagesImpl.getString("DQRuleEditor.matchRuleMetadata")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("MatchRuleMasterDetailsPage.setProperties")); //$NON-NLS-1$
 
         // resetJoinElements();
         createSelectRecordLinkageSection(topComp);

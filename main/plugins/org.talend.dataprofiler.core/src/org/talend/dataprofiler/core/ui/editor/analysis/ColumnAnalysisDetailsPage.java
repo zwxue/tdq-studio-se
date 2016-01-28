@@ -224,10 +224,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         topComp = toolkit.createComposite(sForm);
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
-        metadataSection = creatMetadataSection(form, topComp);
         form.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnAna")); //$NON-NLS-1$
-        metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
+        metadataSection = creatMetadataSection(form, topComp);
 
         createDataPreviewSection(form, topComp);
         createAnalysisColumnsSection(form, topComp);
@@ -272,6 +272,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         createDataTableComposite(dataPreviewTableCom);
         dataPreviewSection.setClient(dataPreviewTableCom);
         registerEvents();
+
     }
 
     private void registerEvents() {
@@ -1496,7 +1497,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         GridData data = (GridData) drillDownComposite.getLayoutData();
         data.heightHint = height;
         drillDownComposite.setLayoutData(data);
-        analysisParamSection.setExpanded(true);
+        // analysisParamSection.setExpanded(true);
     }
 
     private void addListenerToExecuteEngine(final CCombo execCombo1, final Composite javaEnginSection) {

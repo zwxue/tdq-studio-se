@@ -243,9 +243,10 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         topComp = toolkit.createComposite(sForm);
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
+
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
         metadataSection = creatMetadataSection(form, topComp);
-        metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
         // set title of form.
         if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {

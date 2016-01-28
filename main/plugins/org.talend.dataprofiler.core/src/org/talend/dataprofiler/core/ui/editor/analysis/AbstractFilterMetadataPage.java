@@ -320,11 +320,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
+        setFormTitle(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectionAnalysis")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.setAnalysisProp")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-        form = managedForm.getForm();
-        form.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectionAnalysis")); //$NON-NLS-1$
-        this.metadataSection.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        this.metadataSection.setDescription(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.setAnalysisProp")); //$NON-NLS-1$
+
         createAnalysisParamSection(topComp);
         createContextGroupSection(form, topComp);
         createAnalysisSummarySection(topComp);

@@ -245,10 +245,10 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         topComp = toolkit.createComposite(sForm);
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
-        metadataSection = creatMetadataSection(form, topComp);
-        metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
+        metadataSection = creatMetadataSection(form, topComp);
         form.setText(DefaultMessagesImpl.getString("ColumnSetMasterPage.title")); //$NON-NLS-1$
 
         createAnalysisColumnsSection(form, topComp);

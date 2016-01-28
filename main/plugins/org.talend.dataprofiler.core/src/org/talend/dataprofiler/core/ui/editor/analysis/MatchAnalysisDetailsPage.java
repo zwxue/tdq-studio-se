@@ -197,10 +197,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         setFormTitle(DefaultMessagesImpl.getString("MatchMasterDetailsPage.tableAna")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("TableMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-
-        metadataSection.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
         createDataSection();
         createSelectRecordLinkageSection();
@@ -221,7 +220,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         selectAlgorithmSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
-        selectAlgorithmSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        // selectAlgorithmSection.getSection().setExpanded(foldingState == null ? false : foldingState);
         registerSection(selectAlgorithmSection.getSection());
     }
 
@@ -237,7 +236,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         registerSection(matchAndSurvivorKeySection.getSection());
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
         matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        matchAndSurvivorKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        // matchAndSurvivorKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
         matchAndSurvivorKeySection.setIsNeedSubChart(true);
         selectAlgorithmSection.setAnaMatchSurvivorSection(matchAndSurvivorKeySection);
         if (selectAlgorithmSection.isVSRMode()) {
@@ -257,7 +256,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         registerSection(defaultSurvivorshipDefinitionSection.getSection());
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        defaultSurvivorshipDefinitionSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        // defaultSurvivorshipDefinitionSection.getSection().setExpanded(foldingState == null ? false : foldingState);
         selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
         if (selectAlgorithmSection.isVSRMode()) {
             // Hide the section in case of vsr.
@@ -276,7 +275,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             matchParameterSection.addPropertyChangeListener(this);
             matchParameterSection.createParameterCom();
             registerSection(matchParameterSection.getSection());
-            matchParameterSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+            // matchParameterSection.getSection().setExpanded(foldingState == null ? false : foldingState);
         }
     }
 
@@ -310,7 +309,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         blockingKeySection.createContent();
         registerSection(blockingKeySection.getSection());
         selectAlgorithmSection.setBlockkeySection(blockingKeySection);
-        blockingKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        // blockingKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
     }
 
     /**

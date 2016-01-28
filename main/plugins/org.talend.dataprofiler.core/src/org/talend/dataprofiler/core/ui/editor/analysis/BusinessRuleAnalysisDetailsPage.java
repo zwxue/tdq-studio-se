@@ -169,10 +169,10 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
         topComp = toolkit.createComposite(sForm);
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
-        metadataSection = creatMetadataSection(form, topComp);
         form.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.tableAna")); //$NON-NLS-1$
-        metadataSection.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("TableMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
+        metadataSection = creatMetadataSection(form, topComp);
 
         createAnalysisTablesSection(form, topComp);
 

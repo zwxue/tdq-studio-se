@@ -147,11 +147,11 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
+        setFormTitle(DefaultMessagesImpl.getString("ParserRuleMasterDetailsPage.ParserRuleSettings")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ParserRuleMasterDetailsPage.ParserRuleMetadata")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ParserRuleMasterDetailsPage.description")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-        form = managedForm.getForm();
-        form.setText("Parser Rule Settings"); //$NON-NLS-1$
-        metadataSection.setText("Parser Rule Metadata"); //$NON-NLS-1$
-        metadataSection.setDescription("Set Properties of Parser Rule."); //$NON-NLS-1$
+
         createParserRuleDefinitionSection(topComp);
     }
 

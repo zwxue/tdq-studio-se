@@ -27,6 +27,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dq.helper.PropertyHelper;
@@ -42,7 +43,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     protected CommonFormEditor currentEditor;
 
-    protected Boolean foldingState;
+    protected int foldingState;
 
     private int sectionCount = 0;
 
@@ -111,10 +112,32 @@ public abstract class AbstractFormPage extends FormPage {
         section.setText(title);
         section.setDescription(description);
 
-        if (foldingState == null) {
+        // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section,4:Select sections to fold
+        if (foldingState == 1) {
+            section.setExpanded(true);
+        } else if (foldingState == 2) {
+            section.setExpanded(false);
+        } else if (foldingState == 3) {
             section.setExpanded(sectionCount == 0);
+        } else if (foldingState == 4) {
+            if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta"))) { //$NON-NLS-1$
+                section.setExpanded(EditorPreferencePage.isUnfoldAnalysisMetadata());
+            } else if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview"))) { //$NON-NLS-1$
+                section.setExpanded(EditorPreferencePage.isUnfoldDataPreview());
+            } else if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analyzeColumn"))) { //$NON-NLS-1$
+                section.setExpanded(EditorPreferencePage.isUnfoldAnalyzedElement());
+            } else if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"))) { //$NON-NLS-1$
+                section.setExpanded(EditorPreferencePage.isUnfoldDataFilter());
+            } else if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"))) { //$NON-NLS-1$
+                section.setExpanded(EditorPreferencePage.isUnfoldAnalysisParameters());
+            } else if (title.equalsIgnoreCase(DefaultMessagesImpl
+                    .getString("AbstractMetadataFormPage.contextGroupSettingsSection"))) { //$NON-NLS-1$
+                section.setExpanded(EditorPreferencePage.isUnfoldContextGroupSettings());
+            } else {
+                section.setExpanded(true);
+            }
         } else {
-            section.setExpanded(foldingState);
+            section.setExpanded(true);
         }
 
         registerSection(section);
@@ -128,17 +151,7 @@ public abstract class AbstractFormPage extends FormPage {
      * DOC bZhou Comment method "initFoldingState".
      */
     private void initFoldingState() {
-        int foldType = EditorPreferencePage.getCurrentFolding();
-
-        switch (foldType) {
-        case EditorPreferencePage.FOLDING_1:
-            foldingState = true;
-            break;
-        case EditorPreferencePage.FOLDING_2:
-            foldingState = false;
-            break;
-        default:
-        }
+        foldingState = EditorPreferencePage.getCurrentFolding();
     }
 
     /**
