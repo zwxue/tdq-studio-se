@@ -112,39 +112,51 @@ public abstract class AbstractFormPage extends FormPage {
         section.setText(title);
         section.setDescription(description);
 
-        // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section,4:Select sections to fold
-        if (foldingState == 1) {
-            section.setExpanded(true);
-        } else if (foldingState == 2) {
-            section.setExpanded(false);
-        } else if (foldingState == 3) {
-            section.setExpanded(sectionCount == 0);
-        } else if (foldingState == 4) {
-            if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta"))) { //$NON-NLS-1$
-                section.setExpanded(EditorPreferencePage.isUnfoldAnalysisMetadata());
-            } else if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview"))) { //$NON-NLS-1$
-                section.setExpanded(EditorPreferencePage.isUnfoldDataPreview());
-            } else if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analyzeColumn"))) { //$NON-NLS-1$
-                section.setExpanded(EditorPreferencePage.isUnfoldAnalyzedElement());
-            } else if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"))) { //$NON-NLS-1$
-                section.setExpanded(EditorPreferencePage.isUnfoldDataFilter());
-            } else if (title.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"))) { //$NON-NLS-1$
-                section.setExpanded(EditorPreferencePage.isUnfoldAnalysisParameters());
-            } else if (title.equalsIgnoreCase(DefaultMessagesImpl
-                    .getString("AbstractMetadataFormPage.contextGroupSettingsSection"))) { //$NON-NLS-1$
-                section.setExpanded(EditorPreferencePage.isUnfoldContextGroupSettings());
-            } else {
-                section.setExpanded(true);
-            }
-        } else {
-            section.setExpanded(true);
-        }
+        section.setExpanded(getExpandedStatus(title));
 
         registerSection(section);
 
         sectionCount++;
 
         return section;
+    }
+
+    /**
+     * get the section's Expanded Status.
+     * 
+     * @param sectionTitle
+     * @return
+     */
+    public boolean getExpandedStatus(String sectionTitle) {
+        // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section,4:Select sections to fold
+        if (foldingState == 1) {
+            return true;
+        } else if (foldingState == 2) {
+            return false;
+        } else if (foldingState == 3) {
+            return sectionCount == 0;
+        } else if (foldingState == 4) {
+            if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldAnalysisMetadata();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldDataPreview();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analyzeColumn")) //$NON-NLS-1$
+                    || sectionTitle
+                            .equalsIgnoreCase(DefaultMessagesImpl.getString("FunctionalDependencyMasterDetailsPage.Title")) //$NON-NLS-1$
+                    || sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("TableMasterDetailsPage.analyzeTable")) //$NON-NLS-1$
+                    || sectionTitle.equalsIgnoreCase(DefaultMessagesImpl
+                            .getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldAnalyzedItems();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldDataFilter();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldAnalysisParameters();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl
+                    .getString("AbstractMetadataFormPage.contextGroupSettingsSection"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldContextGroupSettings();
+            }
+        }
+        return true;
     }
 
     /**

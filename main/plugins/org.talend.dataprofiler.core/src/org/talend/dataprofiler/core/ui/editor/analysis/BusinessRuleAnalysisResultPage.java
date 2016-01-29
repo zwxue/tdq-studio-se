@@ -158,7 +158,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             // MOD xqliu 2009-06-23 bug 7481
-            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelements());
+            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelementsResultPage());
             // ~
 
             final Composite comp = toolkit.createComposite(exComp);
@@ -400,7 +400,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
                                     | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
                             subComp.setText(chartType.getLiteral());
                             subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-                            subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicators());
+                            subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicatorsResultPage());
                             return subComp;
                         }
 

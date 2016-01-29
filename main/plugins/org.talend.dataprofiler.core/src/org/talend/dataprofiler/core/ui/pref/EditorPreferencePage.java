@@ -55,14 +55,26 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // ADD xqliu 2010-03-10 feature 10834
     public static final String DQ_RULES_PER_PAGE = "DQ_RULES_PER_PAGE"; //$NON-NLS-1$
 
-    // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section,4:Select sections to fold
-    public static final int FOLDING_1 = 1;
+    // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section,4:Select sections to unfold
+    public static final int UNFOLD_ALL_SECTIONS = 1;
 
-    public static final int FOLDING_2 = 2;
+    public static final int FOLD_ALL_SECTIONS = 2;
 
-    public static final int FOLDING_3 = 3;
+    public static final int UNFOLD_FIRST_SECTION = 3;
 
-    public static final int FOLDING_4 = 4;
+    public static final int SELECT_SECTION_TO_UNFOLD = 4;
+
+    private Button unfoldAllSectionsButton = null;
+
+    private Button foldAllSectionsButton = null;
+
+    private Button unfoldFirstSectionButton = null;
+
+    private Button selectSection2UnfoldButton = null;
+
+    private Button unfoldAllAnalyzedElementsResultPageButton = null;
+
+    private Button unfoldAllIndicatorResultPageButton = null;
 
     // default element count in per page
     public static final String DEFAULT_PAGE_SIZE = "5"; //$NON-NLS-1$
@@ -87,7 +99,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private static final boolean DEFAULT_UNFOLD_DATA_PREVIEW = true;
 
-    private static final boolean DEFAULT_UNFOLD_ANALYZED_ELEMENT = true;
+    private static final boolean DEFAULT_UNFOLD_ANALYZED_ITEMS = true;
 
     private static final boolean DEFAULT_UNFOLD_INDICATORS = true;
 
@@ -101,7 +113,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private static Boolean currentUnfoldDataPreview = DEFAULT_UNFOLD_DATA_PREVIEW;
 
-    private static Boolean currentUnfoldAnalyzedElement = DEFAULT_UNFOLD_ANALYZED_ELEMENT;
+    private static Boolean currentUnfoldAnalyzedItems = DEFAULT_UNFOLD_ANALYZED_ITEMS;
 
     private static Boolean currentUnfoldIndicators = DEFAULT_UNFOLD_INDICATORS;
 
@@ -109,13 +121,13 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private static Boolean currentUnfoldAnalysisParameters = DEFAULT_UNFOLD_ANALYSIS_PARAMETERS;
 
-    private static Boolean currentUnfoldContextGroupSettings = DEFAULT_UNFOLD_ANALYSIS_PARAMETERS;
+    private static Boolean currentUnfoldContextGroupSettings = DEFAULT_UNFOLD_CONTEXT_GROUP_SETTINGS;
 
     public static final String UNFOLD_ANALYSIS_METADATA = "UNFOLD_ANALYSIS_METADATA"; //$NON-NLS-1$
 
     public static final String UNFOLD_DATA_PREVIEW = "UNFOLD_DATA_PREVIEW"; //$NON-NLS-1$
 
-    public static final String UNFOLD_ANALYZED_ELEMENT = "UNFOLD_ANALYZED_ELEMENT"; //$NON-NLS-1$
+    public static final String UNFOLD_ANALYZED_ITEMS = "UNFOLD_ANALYZED_ITEMS"; //$NON-NLS-1$
 
     public static final String UNFOLD_INDICATORS = "UNFOLD_INDICATORS"; //$NON-NLS-1$
 
@@ -129,7 +141,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private Button unfoldDataPreviewButton;
 
-    private Button unfoldAnalyzedElementButton;
+    private Button unfoldAnalyzedItemsButton;
 
     private Button unfoldIndicatorsButton;
 
@@ -143,18 +155,6 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_INDICATORS = false;
 
-    private Button button1 = null;
-
-    private Button button2 = null;
-
-    private Button button3 = null;
-
-    private Button button31 = null;
-
-    private Button button4 = null;
-
-    private Button button5 = null;
-
     // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
     private BooleanFieldEditor hideGraphsField;
 
@@ -167,7 +167,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         }
 
         if (currentFolding == 0 && sectionFoldState == 0) {
-            currentFolding = FOLDING_1;
+            currentFolding = UNFOLD_ALL_SECTIONS;
         }
         return currentFolding;
     }
@@ -198,13 +198,13 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     }
 
     // MOD klliu bug TDQ-966-->TDQ-3970 2011-11-16
-    public static boolean isUnfoldingAnalyzedEelements() {
+    public static boolean isUnfoldingAnalyzedEelementsResultPage() {
         int prefValue = Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID, EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS, 0,
                 null);
         return prefValue == 0 ? true : false;
     }
 
-    public static boolean isUnfoldingIndicators() {
+    public static boolean isUnfoldingIndicatorsResultPage() {
         int prefValue = Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID, EDITOR_RESULT_PAGE_INDICATORS, 0, null);
         return prefValue == 0 ? true : false;
     }
@@ -219,9 +219,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
                 DEFAULT_UNFOLD_DATA_PREVIEW, null);
     }
 
-    public static boolean isUnfoldAnalyzedElement() {
-        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_ANALYZED_ELEMENT,
-                DEFAULT_UNFOLD_ANALYZED_ELEMENT, null);
+    public static boolean isUnfoldAnalyzedItems() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_ANALYZED_ITEMS,
+                DEFAULT_UNFOLD_ANALYZED_ITEMS, null);
     }
 
     public static boolean isUnfoldDataFilter() {
@@ -260,9 +260,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         Label label1 = new Label(group1, SWT.NONE);
         label1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.foldingText")); //$NON-NLS-1$
-        button1 = new Button(group1, SWT.RADIO);
-        button1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding1")); //$NON-NLS-1$
-        button1.addSelectionListener(new SelectionListener() {
+        unfoldAllSectionsButton = new Button(group1, SWT.RADIO);
+        unfoldAllSectionsButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding1")); //$NON-NLS-1$
+        unfoldAllSectionsButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 widgetSelected(arg0);
@@ -270,12 +270,12 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetSelected(SelectionEvent arg0) {
                 setFoldCompositeChildren(false);
-                setCurrentFolding(FOLDING_1);
+                setCurrentFolding(UNFOLD_ALL_SECTIONS);
             }
         });
-        button2 = new Button(group1, SWT.RADIO);
-        button2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding2")); //$NON-NLS-1$
-        button2.addSelectionListener(new SelectionListener() {
+        foldAllSectionsButton = new Button(group1, SWT.RADIO);
+        foldAllSectionsButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding2")); //$NON-NLS-1$
+        foldAllSectionsButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 widgetSelected(arg0);
@@ -283,12 +283,12 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetSelected(SelectionEvent arg0) {
                 setFoldCompositeChildren(false);
-                setCurrentFolding(FOLDING_2);
+                setCurrentFolding(FOLD_ALL_SECTIONS);
             }
         });
-        button3 = new Button(group1, SWT.RADIO);
-        button3.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding3")); //$NON-NLS-1$
-        button3.addSelectionListener(new SelectionListener() {
+        unfoldFirstSectionButton = new Button(group1, SWT.RADIO);
+        unfoldFirstSectionButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding3")); //$NON-NLS-1$
+        unfoldFirstSectionButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 widgetSelected(arg0);
@@ -296,13 +296,13 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetSelected(SelectionEvent arg0) {
                 setFoldCompositeChildren(false);
-                setCurrentFolding(FOLDING_3);
+                setCurrentFolding(UNFOLD_FIRST_SECTION);
             }
         });
 
-        button31 = new Button(group1, SWT.RADIO);
-        button31.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding4")); //$NON-NLS-1$
-        button31.addSelectionListener(new SelectionListener() {
+        selectSection2UnfoldButton = new Button(group1, SWT.RADIO);
+        selectSection2UnfoldButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding4")); //$NON-NLS-1$
+        selectSection2UnfoldButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 widgetSelected(arg0);
@@ -310,7 +310,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetSelected(SelectionEvent arg0) {
                 setFoldCompositeChildren(true);
-                setCurrentFolding(FOLDING_4);
+                setCurrentFolding(SELECT_SECTION_TO_UNFOLD);
             }
         });
 
@@ -350,14 +350,14 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        unfoldAnalyzedElementButton = new Button(selectUnfoldComposite, SWT.CHECK);
-        unfoldAnalyzedElementButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.foldAnalyzedElement")); //$NON-NLS-1$
-        setCurrentUnfoldAnalyzedElement(isUnfoldAnalyzedElement());
-        unfoldAnalyzedElementButton.setSelection(getCurrentUnfoldAnalyzedElement());
-        unfoldAnalyzedElementButton.addSelectionListener(new SelectionListener() {
+        unfoldAnalyzedItemsButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldAnalyzedItemsButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.foldAnalyzedElement")); //$NON-NLS-1$
+        setCurrentUnfoldAnalyzedItems(isUnfoldAnalyzedItems());
+        unfoldAnalyzedItemsButton.setSelection(getCurrentUnfoldAnalyzedElement());
+        unfoldAnalyzedItemsButton.addSelectionListener(new SelectionListener() {
 
             public void widgetSelected(SelectionEvent e) {
-                setCurrentUnfoldAnalyzedElement(unfoldAnalyzedElementButton.getSelection());
+                setCurrentUnfoldAnalyzedItems(unfoldAnalyzedItemsButton.getSelection());
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -431,23 +431,23 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        setFoldCompositeChildren(getCurrentFolding() == FOLDING_4);
+        setFoldCompositeChildren(getCurrentFolding() == SELECT_SECTION_TO_UNFOLD);
 
         switch (getCurrentFolding()) {
-        case FOLDING_1:
-            button1.setSelection(true);
+        case UNFOLD_ALL_SECTIONS:
+            unfoldAllSectionsButton.setSelection(true);
             break;
-        case FOLDING_2:
-            button2.setSelection(true);
+        case FOLD_ALL_SECTIONS:
+            foldAllSectionsButton.setSelection(true);
             break;
-        case FOLDING_3:
-            button3.setSelection(true);
+        case UNFOLD_FIRST_SECTION:
+            unfoldFirstSectionButton.setSelection(true);
             break;
-        case FOLDING_4:
-            button31.setSelection(true);
+        case SELECT_SECTION_TO_UNFOLD:
+            selectSection2UnfoldButton.setSelection(true);
             break;
         default:
-            button1.setSelection(true);
+            unfoldAllSectionsButton.setSelection(true);
         }
 
         Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
@@ -459,32 +459,32 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         Label label2 = new Label(group2, SWT.NONE);
         label2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFoldingText")); //$NON-NLS-1$
-        button4 = new Button(group2, SWT.CHECK);
-        button4.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding1")); //$NON-NLS-1$
-        setCurrentAnalyzedElements(isUnfoldingAnalyzedEelements());
-        button4.setSelection(isCurrentAnalyzedElements());
-        button4.addSelectionListener(new SelectionListener() {
+        unfoldAllAnalyzedElementsResultPageButton = new Button(group2, SWT.CHECK);
+        unfoldAllAnalyzedElementsResultPageButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding1")); //$NON-NLS-1$
+        setCurrentAnalyzedElements(isUnfoldingAnalyzedEelementsResultPage());
+        unfoldAllAnalyzedElementsResultPageButton.setSelection(isCurrentAnalyzedElements());
+        unfoldAllAnalyzedElementsResultPageButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 widgetSelected(arg0);
             }
 
             public void widgetSelected(SelectionEvent arg0) {
-                setCurrentAnalyzedElements(button4.getSelection());
+                setCurrentAnalyzedElements(unfoldAllAnalyzedElementsResultPageButton.getSelection());
             }
         });
-        button5 = new Button(group2, SWT.CHECK);
-        button5.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding2")); //$NON-NLS-1$
-        setCurrentIndicators(isUnfoldingIndicators());
-        button5.setSelection(isCurrentIndicators());
-        button5.addSelectionListener(new SelectionListener() {
+        unfoldAllIndicatorResultPageButton = new Button(group2, SWT.CHECK);
+        unfoldAllIndicatorResultPageButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding2")); //$NON-NLS-1$
+        setCurrentIndicators(isUnfoldingIndicatorsResultPage());
+        unfoldAllIndicatorResultPageButton.setSelection(isCurrentIndicators());
+        unfoldAllIndicatorResultPageButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 widgetSelected(arg0);
             }
 
             public void widgetSelected(SelectionEvent arg0) {
-                setCurrentIndicators(button5.getSelection());
+                setCurrentIndicators(unfoldAllIndicatorResultPageButton.getSelection());
             }
         });
 
@@ -561,32 +561,32 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // MOD mzhao bug 8318 2009-07-30
     @Override
     protected void performDefaults() {
-        button1.setSelection(true);
-        button2.setSelection(false);
-        button3.setSelection(false);
-        button31.setSelection(false);
-        button4.setSelection(true);
-        button5.setSelection(true);
+        unfoldAllSectionsButton.setSelection(true);
+        foldAllSectionsButton.setSelection(false);
+        unfoldFirstSectionButton.setSelection(false);
+        selectSection2UnfoldButton.setSelection(false);
+        unfoldAllAnalyzedElementsResultPageButton.setSelection(true);
+        unfoldAllIndicatorResultPageButton.setSelection(true);
 
         selectUnfoldComposite.setEnabled(false);
         unfoldAnalysisMetadataButton.setSelection(DEFAULT_UNFOLD_ANALYSIS_METADATA);
         unfoldDataPreviewButton.setSelection(DEFAULT_UNFOLD_DATA_PREVIEW);
-        unfoldAnalyzedElementButton.setSelection(DEFAULT_UNFOLD_ANALYZED_ELEMENT);
+        unfoldAnalyzedItemsButton.setSelection(DEFAULT_UNFOLD_ANALYZED_ITEMS);
         unfoldIndicatorsButton.setSelection(DEFAULT_UNFOLD_INDICATORS);
         unfoldDataFilterButton.setSelection(DEFAULT_UNFOLD_DATA_FILTER);
         unfoldAnalysisParametersButton.setSelection(DEFAULT_UNFOLD_ANALYSIS_PARAMETERS);
         unfoldContextGroupSettingsButton.setSelection(DEFAULT_UNFOLD_CONTEXT_GROUP_SETTINGS);
 
-        setCurrentFolding(FOLDING_1);
+        setCurrentFolding(UNFOLD_ALL_SECTIONS);
         setCurrentUnfoldAnalysisMetadata(unfoldAnalysisMetadataButton.getSelection());
         setCurrentUnfoldDataPreview(unfoldDataPreviewButton.getSelection());
-        setCurrentUnfoldAnalyzedElement(unfoldAnalyzedElementButton.getSelection());
+        setCurrentUnfoldAnalyzedItems(unfoldAnalyzedItemsButton.getSelection());
         setCurrentUnfoldIndicators(unfoldIndicatorsButton.getSelection());
         setCurrentUnfoldDataFilter(unfoldDataFilterButton.getSelection());
         setCurrentUnfoldAnalysisParameters(unfoldAnalysisParametersButton.getSelection());
         setCurrentUnfoldContextGroupSettings(unfoldContextGroupSettingsButton.getSelection());
-        setCurrentAnalyzedElements(button4.getSelection());
-        setCurrentIndicators(button5.getSelection());
+        setCurrentAnalyzedElements(unfoldAllAnalyzedElementsResultPageButton.getSelection());
+        setCurrentIndicators(unfoldAllIndicatorResultPageButton.getSelection());
         savePreferenceValues();
 
         // Analyzed Items Per Page
@@ -611,8 +611,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_ANALYSIS_METADATA,
                 getCurrentUnfoldAnalysisMetadata());
         InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_DATA_PREVIEW, getCurrentUnfoldDataPreview());
-        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_ANALYZED_ELEMENT,
-                getCurrentUnfoldAnalyzedElement());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_ANALYZED_ITEMS, getCurrentUnfoldAnalyzedElement());
         InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_INDICATORS, getCurrentUnfoldIndicators());
         InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_DATA_FILTER, getCurrentUnfoldDataFilter());
         InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_ANALYSIS_PARAMETERS,
@@ -715,11 +714,11 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     }
 
     private static Boolean getCurrentUnfoldAnalyzedElement() {
-        return currentUnfoldAnalyzedElement;
+        return currentUnfoldAnalyzedItems;
     }
 
-    private static void setCurrentUnfoldAnalyzedElement(Boolean currentUnfoldAnalyzedElement) {
-        EditorPreferencePage.currentUnfoldAnalyzedElement = currentUnfoldAnalyzedElement;
+    private static void setCurrentUnfoldAnalyzedItems(Boolean currentUnfoldAnalyzedItems) {
+        EditorPreferencePage.currentUnfoldAnalyzedItems = currentUnfoldAnalyzedItems;
     }
 
     private static Boolean getCurrentUnfoldIndicators() {

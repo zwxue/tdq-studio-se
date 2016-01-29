@@ -178,7 +178,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             // MOD xqliu 2009-06-23 bug 7481
-            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelements());
+            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelementsResultPage());
             // ~
 
             // TDQ-11525 msjian : Add "expand all" and "fold all" icon buttons in the "Analysis Results" section
@@ -273,7 +273,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         // MOD xqliu 2009-06-23 bug 7481
-        subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicators());
+        subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicatorsResultPage());
         // ~
 
         final Composite composite = uiPagination.getToolkit().createComposite(subComp, SWT.NULL);

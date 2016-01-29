@@ -220,7 +220,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         selectAlgorithmSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
-        // selectAlgorithmSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        selectAlgorithmSection.getSection().setExpanded(getExpandedStatus(selectAlgorithmSection.getSection().getText()));
         registerSection(selectAlgorithmSection.getSection());
     }
 
@@ -236,7 +236,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         registerSection(matchAndSurvivorKeySection.getSection());
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
         matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        // matchAndSurvivorKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        matchAndSurvivorKeySection.getSection().setExpanded(getExpandedStatus(matchAndSurvivorKeySection.getSection().getText()));
         matchAndSurvivorKeySection.setIsNeedSubChart(true);
         selectAlgorithmSection.setAnaMatchSurvivorSection(matchAndSurvivorKeySection);
         if (selectAlgorithmSection.isVSRMode()) {
@@ -256,7 +256,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         registerSection(defaultSurvivorshipDefinitionSection.getSection());
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        // defaultSurvivorshipDefinitionSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        defaultSurvivorshipDefinitionSection.getSection().setExpanded(
+                getExpandedStatus(defaultSurvivorshipDefinitionSection.getSection().getText()));
         selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
         if (selectAlgorithmSection.isVSRMode()) {
             // Hide the section in case of vsr.
@@ -275,7 +276,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             matchParameterSection.addPropertyChangeListener(this);
             matchParameterSection.createParameterCom();
             registerSection(matchParameterSection.getSection());
-            // matchParameterSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+            matchParameterSection.getSection().setExpanded(getExpandedStatus(matchParameterSection.getSection().getText()));
         }
     }
 
