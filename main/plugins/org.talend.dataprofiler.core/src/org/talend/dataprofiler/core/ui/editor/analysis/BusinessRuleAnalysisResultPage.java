@@ -221,7 +221,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                                     Composite chartTopComp = createTableComposite(composite);
 
-                                    if (canShowChart()) {
+                                    if (canShowChartForResultPage()) {
                                         createChartsForRules(tableIndicator, chartType, units, analysis, chartTopComp);
                                     }
 

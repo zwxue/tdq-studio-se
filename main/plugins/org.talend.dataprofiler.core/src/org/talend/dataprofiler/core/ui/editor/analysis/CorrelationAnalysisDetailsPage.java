@@ -274,7 +274,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         createContextGroupSection(form, topComp);
 
         // createAnalysisParamSection(form, topComp);
-        if (!EditorPreferencePage.isHideGraphics()) {
+        if (!EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             previewComp = toolkit.createComposite(sForm);
             previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             previewComp.setLayout(new GridLayout());
@@ -502,7 +502,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     @Override
     public void refresh() {
-        if (EditorPreferencePage.isHideGraphics()) {
+        if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();

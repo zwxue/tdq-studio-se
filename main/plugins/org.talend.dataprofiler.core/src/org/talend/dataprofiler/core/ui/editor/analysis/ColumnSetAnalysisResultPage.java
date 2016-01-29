@@ -226,7 +226,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
             ChartTableFactory.addMenuAndTip(tableviewer, tableTypeState.getDataExplorer(), masterPage.getAnalysis());
         }
 
-        if (canShowChart()) {
+        if (canShowChartForResultPage()) {
             IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(matchingType, units);
             Object chart = chartTypeState.getChart();
             TOPChartUtils.getInstance().decorateChart(chart, false);
@@ -281,7 +281,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
         ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
         // create chart
-        if (canShowChart()) {
+        if (canShowChartForResultPage()) {
             IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(simpleStatType, units);
             Object chart = chartTypeState.getChart();
             TOPChartUtils.getInstance().decorateChart(chart, false);

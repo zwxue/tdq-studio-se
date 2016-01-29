@@ -266,7 +266,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
         createContextGroupSection(form, topComp);
 
-        if (canShowChart()) {
+        if (canShowGraphicsSectionForSettingsPage()) {
             previewComp = toolkit.createComposite(sForm);
             previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             previewComp.setLayout(new GridLayout());
@@ -521,7 +521,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     @Override
     public void refresh() {
-        if (EditorPreferencePage.isHideGraphics()) {
+        if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();

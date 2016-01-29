@@ -141,7 +141,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            if (canShowChart()) {
+            if (canShowChartForResultPage()) {
                 this.createGraphicsSectionPart(sectionClient);
             }
         }
@@ -322,7 +322,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
         // create chart
-        if (canShowChart()) {
+        if (canShowChartForResultPage()) {
             // then create chart
             IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(simpleStatType, units);
             Object chart = chartTypeState.getChart();

@@ -212,11 +212,15 @@ public abstract class AbstractFormPage extends FormPage {
      */
     public abstract void setDirty(boolean isDirty);
 
+    protected boolean canShowGraphicsSectionForSettingsPage() {
+        return (!EditorPreferencePage.isHideGraphicsSectionForSettingsPage() && TOPChartUtils.getInstance().isTOPChartInstalled());
+    }
+
     /**
      * Added TDQ-9797 if show the chart or not
      */
-    protected boolean canShowChart() {
-        return (!EditorPreferencePage.isHideGraphics() && TOPChartUtils.getInstance().isTOPChartInstalled());
+    protected boolean canShowChartForResultPage() {
+        return (!EditorPreferencePage.isHideGraphicsForResultPage() && TOPChartUtils.getInstance().isTOPChartInstalled());
     }
 
 }

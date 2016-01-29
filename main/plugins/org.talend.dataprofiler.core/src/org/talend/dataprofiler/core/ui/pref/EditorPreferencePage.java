@@ -81,6 +81,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public static final String HIDE_GRAPHICS_FOR_RESULT_PAGE = "HIDE_GRAPHICS_FOR_RESULT_PAGE"; //$NON-NLS-1$
 
+    public static final String HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE = "HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE"; //$NON-NLS-1$
+
     private Text pageSizeText;
 
     // ADD xqliu 2010-03-10 feature 10834
@@ -156,7 +158,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_INDICATORS = false;
 
     // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
-    private BooleanFieldEditor hideGraphsField;
+    private BooleanFieldEditor hideGraphicsForAnaResultPage;
+
+    private BooleanFieldEditor hideGraphicsSectionForAnaSettingsPage;
 
     protected static Logger log = Logger.getLogger(EditorPreferencePage.class);
 
@@ -193,8 +197,13 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     }
 
     // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
-    public static boolean isHideGraphics() {
+    public static boolean isHideGraphicsForResultPage() {
         return CorePlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferencePage.HIDE_GRAPHICS_FOR_RESULT_PAGE);
+    }
+
+    public static boolean isHideGraphicsSectionForSettingsPage() {
+        return CorePlugin.getDefault().getPreferenceStore()
+                .getBoolean(EditorPreferencePage.HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE);
     }
 
     // MOD klliu bug TDQ-966-->TDQ-3970 2011-11-16
@@ -316,7 +325,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         selectUnfoldComposite = new Composite(group1, SWT.NONE | SWT.CENTER);
         selectUnfoldComposite.setLayout(new GridLayout());
-        selectUnfoldComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        selectUnfoldComposite.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.CENTER));
 
         unfoldAnalysisMetadataButton = new Button(selectUnfoldComposite, SWT.CHECK);
         unfoldAnalysisMetadataButton.setText(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
@@ -519,11 +528,17 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
         graphicGroup.setLayoutData(data);
 
-        hideGraphsField = new BooleanFieldEditor(HIDE_GRAPHICS_FOR_RESULT_PAGE,
+        hideGraphicsSectionForAnaSettingsPage = new BooleanFieldEditor(HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE,
+                DefaultMessagesImpl.getString("EditorPreferencePage.hideGraphicsSection"), graphicGroup); //$NON-NLS-1$
+        getPreferenceStore().setDefault(HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE, true);
+        hideGraphicsSectionForAnaSettingsPage.setPreferenceStore(getPreferenceStore());
+        hideGraphicsSectionForAnaSettingsPage.load();
+
+        hideGraphicsForAnaResultPage = new BooleanFieldEditor(HIDE_GRAPHICS_FOR_RESULT_PAGE,
                 DefaultMessagesImpl.getString("EditorPreferencePage.hideGraphics"), graphicGroup); //$NON-NLS-1$
         getPreferenceStore().setDefault(HIDE_GRAPHICS_FOR_RESULT_PAGE, false);
-        hideGraphsField.setPreferenceStore(getPreferenceStore());
-        hideGraphsField.load();
+        hideGraphicsForAnaResultPage.setPreferenceStore(getPreferenceStore());
+        hideGraphicsForAnaResultPage.load();
     }
 
     /**
@@ -599,7 +614,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             log.error(e);
         }
 
-        hideGraphsField.loadDefault();
+        hideGraphicsSectionForAnaSettingsPage.loadDefault();
+        hideGraphicsForAnaResultPage.loadDefault();
         super.performDefaults();
     }
 
@@ -639,7 +655,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         savePreferenceValues();
 
         // ADD yyi 2010-07-07 for 13964
-        hideGraphsField.store();
+        hideGraphicsSectionForAnaSettingsPage.store();
+        hideGraphicsForAnaResultPage.store();
         // ~ 13964
 
         // MOD xqliu 2010-03-10 feature 10834

@@ -90,7 +90,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         previewChartList.clear();
         clearDynamicList();
 
-        if (EditorPreferencePage.isHideGraphics() || !TOPChartUtils.getInstance().isTOPChartInstalled()) {
+        if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage() || !TOPChartUtils.getInstance().isTOPChartInstalled()) {
             return;
         }
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {

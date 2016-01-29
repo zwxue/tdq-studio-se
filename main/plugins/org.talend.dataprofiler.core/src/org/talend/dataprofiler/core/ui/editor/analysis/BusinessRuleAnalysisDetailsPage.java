@@ -184,7 +184,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
         createContextGroupSection(form, topComp);
 
         // MOD klliu Hide the setting pate graphics 2011-03-11
-        if (canShowChart()) {
+        if (canShowGraphicsSectionForSettingsPage()) {
             createPreviewComposite();
 
             createPreviewSection(form, previewComp);
@@ -551,7 +551,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
     @Override
     public void refresh() {
-        if (EditorPreferencePage.isHideGraphics()) {
+        if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();
