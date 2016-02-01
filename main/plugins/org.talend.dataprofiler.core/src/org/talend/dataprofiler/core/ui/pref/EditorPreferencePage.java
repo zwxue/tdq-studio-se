@@ -83,6 +83,10 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public static final String HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE = "HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE"; //$NON-NLS-1$
 
+    public static final boolean DEFAULT_HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE = true;
+
+    public static final boolean DEFAULT_HIDE_GRAPHICS_FOR_RESULT_PAGE = false;
+
     private Text pageSizeText;
 
     // ADD xqliu 2010-03-10 feature 10834
@@ -196,14 +200,15 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         EditorPreferencePage.currentIndicators = currentIndicators;
     }
 
-    // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
-    public static boolean isHideGraphicsForResultPage() {
-        return CorePlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferencePage.HIDE_GRAPHICS_FOR_RESULT_PAGE);
+    public static boolean isHideGraphicsSectionForSettingsPage() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE,
+                DEFAULT_HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE, null);
     }
 
-    public static boolean isHideGraphicsSectionForSettingsPage() {
-        return CorePlugin.getDefault().getPreferenceStore()
-                .getBoolean(EditorPreferencePage.HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE);
+    // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
+    public static boolean isHideGraphicsForResultPage() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, HIDE_GRAPHICS_FOR_RESULT_PAGE,
+                DEFAULT_HIDE_GRAPHICS_FOR_RESULT_PAGE, null);
     }
 
     // MOD klliu bug TDQ-966-->TDQ-3970 2011-11-16
@@ -530,13 +535,13 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         hideGraphicsSectionForAnaSettingsPage = new BooleanFieldEditor(HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE,
                 DefaultMessagesImpl.getString("EditorPreferencePage.hideGraphicsSection"), graphicGroup); //$NON-NLS-1$
-        getPreferenceStore().setDefault(HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE, true);
+        getPreferenceStore().setDefault(HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE, DEFAULT_HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE);
         hideGraphicsSectionForAnaSettingsPage.setPreferenceStore(getPreferenceStore());
         hideGraphicsSectionForAnaSettingsPage.load();
 
         hideGraphicsForAnaResultPage = new BooleanFieldEditor(HIDE_GRAPHICS_FOR_RESULT_PAGE,
                 DefaultMessagesImpl.getString("EditorPreferencePage.hideGraphics"), graphicGroup); //$NON-NLS-1$
-        getPreferenceStore().setDefault(HIDE_GRAPHICS_FOR_RESULT_PAGE, false);
+        getPreferenceStore().setDefault(HIDE_GRAPHICS_FOR_RESULT_PAGE, DEFAULT_HIDE_GRAPHICS_FOR_RESULT_PAGE);
         hideGraphicsForAnaResultPage.setPreferenceStore(getPreferenceStore());
         hideGraphicsForAnaResultPage.load();
     }
