@@ -550,7 +550,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
     }
 
     @Override
-    public void refresh() {
+    public void refreshGraphicsInSettingsPage() {
         if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {

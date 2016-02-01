@@ -526,7 +526,6 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
         if (graphicsAndTableComp != null && !graphicsAndTableComp.isDisposed()) {
             graphicsAndTableComp.dispose();
         }
-        mPage.refresh();
         createFormContent(getManagedForm());
     }
 

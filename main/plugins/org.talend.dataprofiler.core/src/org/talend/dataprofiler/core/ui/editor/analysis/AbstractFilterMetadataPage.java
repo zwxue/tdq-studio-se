@@ -1122,7 +1122,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
 
         if (status) {
-            refresh();
+            refreshGraphicsInSettingsPage();
         }
 
         statisticalSection.setExpanded(status);
@@ -1135,7 +1135,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     @Override
-    public void refresh() {
+    public void refreshGraphicsInSettingsPage() {
         doSetInput();
         refreshSumSection();
         // MOD klliu 2011-05-09 bug 20930

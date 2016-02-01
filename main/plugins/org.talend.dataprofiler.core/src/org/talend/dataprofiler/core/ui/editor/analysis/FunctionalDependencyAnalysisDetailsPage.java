@@ -174,8 +174,8 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refresh()
      */
     @Override
-    public void refresh() {
-        switchToResultPage();
+    public void refreshGraphicsInSettingsPage() {
+        // do nothing
     }
 
     public AnalysisHandler getAnalysisHandler() {

@@ -688,7 +688,6 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
         if (graphicsAndTableComp != null && !graphicsAndTableComp.isDisposed()) {
             graphicsAndTableComp.dispose();
         }
-        masterPage.refresh();
         createFormContent(getManagedForm());
     }
 

@@ -288,14 +288,8 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
     }
 
     @Override
-    public void fireRuningItemChanged(boolean status) {
-        super.fireRuningItemChanged(status);
-
-    }
-
-    @Override
-    public void refresh() {
-        switchToResultPage();
+    public void refreshGraphicsInSettingsPage() {
+        // do nothing
     }
 
     @Override

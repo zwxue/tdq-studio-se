@@ -252,7 +252,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected abstract ReturnCode canRun();
 
-    public abstract void refresh();
+    public abstract void refreshGraphicsInSettingsPage();
 
     protected abstract void saveAnalysis() throws DataprofilerCoreException;
 
@@ -268,7 +268,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
         ((AnalysisEditor) currentEditor).setRefreshResultPage(status);
         if (status) {
-            refresh();
+            switchToResultPage();
         }
     }
 

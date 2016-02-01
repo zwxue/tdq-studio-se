@@ -253,7 +253,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         this.masterPage = (ColumnAnalysisDetailsPage) masterPage1;
 
         disposeComposite();
-        masterPage1.refresh();
+
         createFormContent(getManagedForm());
     }
 
@@ -346,7 +346,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             public boolean handle(Object data) {
                 if (times == 0) {
                     times++;
-                    masterPage.refresh();
+                    masterPage.refreshGraphicsInSettingsPage();
                 }
                 return true;
             }

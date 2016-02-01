@@ -1486,13 +1486,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refresh()
-     */
     @Override
-    public void refresh() {
+    public void refreshGraphicsInSettingsPage() {
         // no need for refresh in match analysis now.
 
     }

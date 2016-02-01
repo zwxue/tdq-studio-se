@@ -34,7 +34,6 @@ import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
-import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
@@ -78,8 +77,6 @@ public class AnalysisEditor extends SupportContextEditor {
 
     private RunAnalysisAction runAction;
 
-    private RefreshChartAction refreshAction;
-
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
 
@@ -115,13 +112,7 @@ public class AnalysisEditor extends SupportContextEditor {
         if (toolbar != null) {
             saveAction = new DefaultSaveAction(this);
             runAction = new RunAnalysisAction();
-            // do not use the refresh on match analysis
-            if (analysisType.equals(AnalysisType.MATCH_ANALYSIS)) {
-                toolbar.addActions(saveAction, runAction);
-            } else {
-                refreshAction = new RefreshChartAction();
-                toolbar.addActions(saveAction, runAction, refreshAction);
-            }
+            toolbar.addActions(saveAction, runAction);
         }
 
         switch (analysisType) {
@@ -182,8 +173,6 @@ public class AnalysisEditor extends SupportContextEditor {
 
             if (resultPage != null) {
                 addPage(resultPage);
-            } else {
-                setRefreshActionButtonState(false);
             }
 
         } catch (PartInitException e) {
@@ -345,17 +334,6 @@ public class AnalysisEditor extends SupportContextEditor {
     }
 
     /**
-     * DOC bZhou Comment method "setRefreshActionButtonState".
-     * 
-     * @param state
-     */
-    public void setRefreshActionButtonState(boolean state) {
-        if (refreshAction != null) {
-            refreshAction.setEnabled(state);
-        }
-    }
-
-    /**
      * 
      * DOC mzhao Comment method "getRunAnalysisAction".
      * 
@@ -464,11 +442,10 @@ public class AnalysisEditor extends SupportContextEditor {
                 // enough;TDQ-8270 resultpage is null for overview type
                 if (resultPage != null && resultPage.getManagedForm() != null) {
                     resultPage.refresh(getMasterPage());
-                    return true;
                 } else {
-                    getMasterPage().refresh();
-                    return true;
+                    getMasterPage().refreshGraphicsInSettingsPage();
                 }
+                return true;
             }
         };
         EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
@@ -481,7 +458,6 @@ public class AnalysisEditor extends SupportContextEditor {
                 Display.getDefault().asyncExec(new Runnable() {
 
                     public void run() {
-
                         WorkbenchUtils.refreshCurrentAnalysisEditor(getMasterPage().getAnalysis().getName());
                     }
 

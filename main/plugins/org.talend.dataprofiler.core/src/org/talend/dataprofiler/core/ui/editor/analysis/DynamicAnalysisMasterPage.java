@@ -350,7 +350,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
     public void createDynamicChartsBeforeRun() {
         // call refresh to create all charts
-        refresh();
+        refreshGraphicsInSettingsPage();
 
     }
 

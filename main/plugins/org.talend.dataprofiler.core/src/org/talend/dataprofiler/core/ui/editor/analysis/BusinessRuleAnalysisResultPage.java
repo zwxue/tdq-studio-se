@@ -444,7 +444,6 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
         disposeComposite();
 
         createFormContent(getManagedForm());
-        masterPage1.refresh();
 
     }
 
@@ -526,7 +525,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
             public boolean handle(Object data) {
                 if (times == 0) {
                     times++;
-                    masterPage.refresh();
+                    masterPage.refreshGraphicsInSettingsPage();
                 }
                 return true;
             }
