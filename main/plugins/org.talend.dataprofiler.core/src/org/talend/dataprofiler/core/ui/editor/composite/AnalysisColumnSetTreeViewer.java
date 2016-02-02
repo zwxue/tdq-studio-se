@@ -250,12 +250,22 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         Tree currentTree = columnsElementViewer.getTree();
         Object[] selectItem = currentTree.getSelection();
         List<IRepositoryNode> columnList = columnsElementViewer.getColumnSetMultiValueList();
+
+        // get all the selected index list first which is used to check how to move
+        List<Object> allSelectedItemList = new ArrayList<Object>();
+        for (Object element : selectItem) {
+            allSelectedItemList.add(element);
+        }
+
         int index = 0;
         RepositoryNode moveElement = null;
         List<Integer> indexArray = new ArrayList<Integer>();
         for (Object element : selectItem) {
             index = currentTree.indexOf((TreeItem) element);
-            if (index + step > -1 && index + step < columnList.size()) {
+
+            int changeIndex = index + step;
+
+            if (changeIndex > -1 && changeIndex < columnList.size()) {
                 Object treeElement = ((TreeItem) element).getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                 // MOD by zshen for bug 15750 TODO 39 columnset analysis move up/down one column will get exception.
                 if (treeElement instanceof ModelElement) {
@@ -264,12 +274,18 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     moveElement = (RepositoryNode) treeElement;
                 }
                 columnList.remove(moveElement);
-                columnList.add((index + step), moveElement);
-                indexArray.add(index + step);
+                // when the changed one is the selected one too, get next one
+                while (allSelectedItemList.contains(currentTree.getItem(changeIndex))) {
+                    ++changeIndex;
+                }
+                columnList.add(changeIndex, moveElement);
+                indexArray.add(changeIndex);
 
-                ModelElementIndicator tmpElement = modelElementIndicators[index + step];
-                modelElementIndicators[index + step] = modelElementIndicators[index];
+                ModelElementIndicator tmpElement = modelElementIndicators[changeIndex];
+                modelElementIndicators[changeIndex] = modelElementIndicators[index];
                 modelElementIndicators[index] = tmpElement;
+
+                allSelectedItemList.remove(element);
 
             } else {
                 return;

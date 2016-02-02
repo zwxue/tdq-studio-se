@@ -878,16 +878,6 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
     }
 
     /**
-     * DOC yyin Comment method "removeItem".
-     * 
-     * @param indicatorUnit
-     */
-    public void removeItem(IndicatorUnit indicatorUnit) {
-        this.treeViewer.removeItemByUnit(indicatorUnit);
-
-    }
-
-    /**
      * set the Language To TreeViewer.
      * 
      * @param executionLanguage
