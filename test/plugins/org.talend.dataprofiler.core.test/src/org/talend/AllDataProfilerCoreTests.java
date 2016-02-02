@@ -45,6 +45,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.Patte
 import org.talend.dataprofiler.core.ui.imex.ExportWizardPageTest;
 import org.talend.dataprofiler.core.ui.imex.FileTreeLabelProviderTest;
 import org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriterTest;
+import org.talend.dataprofiler.core.ui.imex.model.ItemRecordTest;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactoryTest;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRuleTest;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtilsTest;
@@ -69,7 +70,8 @@ import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
         ResourceViewLabelProviderTest.class, MultiColAnalysisCreationTest.class, CorePluginTest.class,
         SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class, ModelElementIndicatorRuleTest.class,
         RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class, FileTreeLabelProviderTest.class,
-        TextIndicatorForNetezzaTest.class, USStateCodesPatternRegexTest.class, DrillDownEditorInputRealTest.class })
+        TextIndicatorForNetezzaTest.class, USStateCodesPatternRegexTest.class, DrillDownEditorInputRealTest.class,
+        ItemRecordTest.class })
 public class AllDataProfilerCoreTests {
 
 }

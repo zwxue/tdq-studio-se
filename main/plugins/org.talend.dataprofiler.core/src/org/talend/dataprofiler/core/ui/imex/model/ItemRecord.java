@@ -119,6 +119,8 @@ public class ItemRecord {
     }
 
     /**
+     * the resourceSet attribute is static so that notice call {@link #clear()} method when next time
+     * 
      * @param file the file which we want to import or export
      * @param rootFolder the location which file is come from
      */
@@ -127,6 +129,7 @@ public class ItemRecord {
         this.rootFolder = rootFolder;
 
         if (resourceSet == null) {
+            // the resourceSet attribute is static so that notice call {@link #clear()} method when next time
             resourceSet = new ResourceSetImpl();
         }
 
