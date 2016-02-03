@@ -109,10 +109,6 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
     private AllMatchIndicator allMatchIndicator;
 
-    private Composite chartComposite;
-
-    private Composite[] previewChartCompsites;
-
     private String executeData;
 
     private Section graphicsAndTableSection = null;
@@ -219,11 +215,13 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
         TableViewer tableviewer = tableTypeState.getTableForm(sectionClient);
         tableviewer.setInput(chartData);
-        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
         // MOD qiongli feature 19192.
         if (masterPage.getAnalysis().getParameters().isStoreData()) {
             ChartTableFactory.addMenuAndTip(tableviewer, tableTypeState.getDataExplorer(), masterPage.getAnalysis());
+        } else {
+            TableUtils.addTooltipForTable(tableviewer.getTable());
+            TableUtils.addActionTooltip(tableviewer.getTable());
         }
 
         if (canShowChartForResultPage()) {
@@ -274,7 +272,6 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
         TableViewer tableviewer = tableTypeState.getTableForm(composite);
         tableviewer.setInput(chartData);
-        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
         // MOD qiongli feature 19192.
         DataExplorer dataExplorer = tableTypeState.getDataExplorer();
         Analysis analysis = this.getAnalysisHandler().getAnalysis();
@@ -689,14 +686,6 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
             graphicsAndTableComp.dispose();
         }
         createFormContent(getManagedForm());
-    }
-
-    public Composite getChartComposite() {
-        return chartComposite;
-    }
-
-    public Composite[] getPreviewChartCompsites() {
-        return previewChartCompsites;
     }
 
     private boolean containAllMatchIndicator() {

@@ -319,7 +319,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
         TableViewer tableviewer = tableTypeState.getTableForm(composite);
         tableviewer.setInput(chartData);
-        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
+        TableUtils.addTooltipForTable(tableviewer.getTable());
 
         // create chart
         if (canShowChartForResultPage()) {

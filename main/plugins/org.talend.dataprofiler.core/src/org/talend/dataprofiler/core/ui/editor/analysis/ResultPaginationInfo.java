@@ -50,7 +50,6 @@ import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.IEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
-import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -291,12 +290,9 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         tableviewer.setInput(chartData);
         tableviewer.getTable().pack();
         dyModel.setTableViewer(tableviewer);
-        // TDQ-10785: when the data is too long, add a tooltip to show the first 200 characters.
-        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
         DataExplorer dataExplorer = tableTypeState.getDataExplorer();
         ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
-        // ~
 
         if (EIndicatorChartType.TEXT_STATISTICS.equals(chartType) && dataEntities != null && dataEntities.length > 0) {
             // only text indicator need
