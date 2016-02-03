@@ -20,6 +20,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -1019,6 +1022,35 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 treeViewer.setDirty(false);
             }
         }
+    }
+
+    protected void refreshPreviewData() {
+        // do nothing here.
+        // but the sub analysis must override this method
+    }
+
+    /**
+     * automatically Refresh Preview Data.
+     */
+    protected void autoRefreshPreviewData() {
+        // TDQ-11513 msjian 20160203: automatically refresh data when the analysis opens
+        Job job = new Job(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreviewLoadingData")) { //$NON-NLS-1$
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        refreshPreviewData();
+                    }
+                });
+                return Status.OK_STATUS;
+            }
+
+        };
+        job.setUser(true);
+        job.schedule();
+        // TDQ-11513~
     }
 
 }

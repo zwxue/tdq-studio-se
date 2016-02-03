@@ -209,6 +209,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         createDefaultSurvivorshipSection();
         createMatchParameterSection();
 
+        autoRefreshPreviewData();
         // TDQ-7781: we must do this, this will recompute the layout and scroll bars
         form.reflow(true);
     }
@@ -687,6 +688,21 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refreshPreviewData()
+     */
+    @Override
+    public void refreshPreviewData() {
+        if (isValidateRowCount()) {
+            refreshDataFromConnection(true);
+        } else {
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+        }
+    }
+
     /**
      * create "Refresh Button", and the row control input.
      * 
@@ -701,23 +717,11 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
 
-        refreshDataBtn.addMouseListener(new MouseListener() {
+        refreshDataBtn.addMouseListener(new MouseAdapter() {
 
-            public void mouseDoubleClick(MouseEvent e) {
-                // no need to implement
-            }
-
+            @Override
             public void mouseDown(MouseEvent e) {
-                if (isValidateRowCount()) {
-                    refreshDataFromConnection(true);
-                } else {
-                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-                }
-            }
-
-            public void mouseUp(MouseEvent e) {
-                // no need to implement
+                refreshPreviewData();
             }
         });
 

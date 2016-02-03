@@ -21,10 +21,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -251,24 +247,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
             createPreviewSection(form, previewComp);
         }
 
-        // TDQ-11513 msjian 20160203: automatically refresh data when the analysis opens
-        Job job = new Job(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreviewLoadingData")) { //$NON-NLS-1$
-
-            @Override
-            protected IStatus run(IProgressMonitor monitor) {
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    public void run() {
-                        refreshPreviewData();
-                    }
-                });
-                return Status.OK_STATUS;
-            }
-
-        };
-        job.setUser(true);
-        job.schedule();
-        // TDQ-11513~
+        autoRefreshPreviewData();
     }
 
     /**
@@ -378,6 +357,12 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         });
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refreshPreviewData()
+     */
+    @Override
     public void refreshPreviewData() {
         if (isValidateRowCount()) {
             refreshPreviewTable(true);
