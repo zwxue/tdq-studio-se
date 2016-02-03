@@ -1475,7 +1475,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
-        selectAlgorithmSection.setMatchRuleDef(matchRule);
         boolean isVSR = RecordMatcherType.simpleVSRMatcher.name().equals(matchRule.getRecordLinkageAlgorithm());
         selectAlgorithmSection.setSelection(isVSR);
         if (selectAlgorithmSection.isVSRMode()) {
