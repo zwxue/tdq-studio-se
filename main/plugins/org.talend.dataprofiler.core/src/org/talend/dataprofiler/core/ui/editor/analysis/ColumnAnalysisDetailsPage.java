@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -35,7 +39,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
@@ -247,6 +250,25 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
 
             createPreviewSection(form, previewComp);
         }
+
+        // TDQ-11513 msjian 20160203: automatically refresh data when the analysis opens
+        Job job = new Job(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreviewLoadingData")) { //$NON-NLS-1$
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        refreshPreviewData();
+                    }
+                });
+                return Status.OK_STATUS;
+            }
+
+        };
+        job.setUser(true);
+        job.schedule();
+        // TDQ-11513~
     }
 
     /**
@@ -346,25 +368,23 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
 
-        refreshDataBtn.addMouseListener(new MouseListener() {
+        refreshDataBtn.addMouseListener(new MouseAdapter() {
 
-            public void mouseDoubleClick(MouseEvent e) {
-                // no need to implement
-            }
-
+            @Override
             public void mouseDown(MouseEvent e) {
-                if (isValidateRowCount()) {
-                    refreshPreviewTable(true);
-                } else {
-                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-                }
+                refreshPreviewData();
             }
 
-            public void mouseUp(MouseEvent e) {
-                // no need to implement
-            }
         });
+    }
+
+    public void refreshPreviewData() {
+        if (isValidateRowCount()) {
+            refreshPreviewTable(true);
+        } else {
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+        }
     }
 
     /*
