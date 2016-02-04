@@ -230,11 +230,10 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
         // register dynamic event,for the indicator (for each column)
         for (DynamicIndicatorModel oneCategoryIndicatorModel : indiAndDatasets) {
-            Object categoryDataset = oneCategoryIndicatorModel.getDataset();
             if (EIndicatorChartType.SUMMARY_STATISTICS.equals(oneCategoryIndicatorModel.getChartType())) {
                 // when all summary indicators are selected
                 DynamicBAWChartEventReceiver bawReceiver = AnalysisUtils.createDynamicBAWChartEventReceiver(
-                        oneCategoryIndicatorModel, categoryDataset, eventReceivers);
+                        oneCategoryIndicatorModel, eventReceivers);
                 bawReceiver.setChartComposite(chartComposite);
                 // no need to register the parent baw receiver with one of summary indicator, no need to handle baw
                 // actually

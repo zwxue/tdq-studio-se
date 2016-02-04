@@ -284,12 +284,11 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
         // register dynamic event,for the indicator (for each column)
         for (DynamicIndicatorModel oneCategoryIndicatorModel : indiAndDatasets) {
-            Object categoryDataset = oneCategoryIndicatorModel.getDataset();
             TableViewer tableViewer = oneCategoryIndicatorModel.getTableViewer();
             if (EIndicatorChartType.SUMMARY_STATISTICS.equals(oneCategoryIndicatorModel.getChartType())) {
                 // when all/not-all summary indicators are selected
                 DynamicBAWChartEventReceiver bawReceiver = AnalysisUtils.createDynamicBAWChartEventReceiver(
-                        oneCategoryIndicatorModel, categoryDataset, eventReceivers);
+                        oneCategoryIndicatorModel, eventReceivers);
                 bawReceiver.setChartComposite(chartComposite);
                 bawReceiver.setTableViewer(tableViewer);
                 // no need to register the parent baw receiver with one of summary indicator, no need to handle baw

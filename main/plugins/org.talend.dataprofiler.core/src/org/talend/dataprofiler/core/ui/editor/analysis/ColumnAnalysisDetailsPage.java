@@ -246,8 +246,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
 
             createPreviewSection(form, previewComp);
         }
-
-        autoRefreshPreviewData();
     }
 
     /**

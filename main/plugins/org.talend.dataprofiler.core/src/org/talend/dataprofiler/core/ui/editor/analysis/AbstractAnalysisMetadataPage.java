@@ -1024,7 +1024,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
     }
 
-    protected void refreshPreviewData() {
+    public void refreshPreviewData() {
         // do nothing here.
         // but the sub analysis must override this method
     }
@@ -1032,7 +1032,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     /**
      * automatically Refresh Preview Data.
      */
-    protected void autoRefreshPreviewData() {
+    public void autoRefreshPreviewData() {
         // TDQ-11513 msjian 20160203: automatically refresh data when the analysis opens
         Job job = new Job(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreviewLoadingData")) { //$NON-NLS-1$
 

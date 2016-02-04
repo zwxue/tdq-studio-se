@@ -76,7 +76,6 @@ public class SimpleRuleStatisticsChartState extends AbstractChartTypeStatesTable
      * .CategoryDataset)
      */
     public Object getChart(Object dataset) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -86,7 +85,6 @@ public class SimpleRuleStatisticsChartState extends AbstractChartTypeStatesTable
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChartList(java.util.List)
      */
     public List<Object> getChartList(List<Object> datasets) {
-        // TODO Auto-generated method stub
         return null;
     }
 }

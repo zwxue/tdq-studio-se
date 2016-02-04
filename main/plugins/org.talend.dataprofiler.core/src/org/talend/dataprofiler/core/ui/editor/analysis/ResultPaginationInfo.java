@@ -317,12 +317,9 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     }
                 }
             } else {
-                chart = chartTypeState.getChart(((DynamicChartEventReceiver) event).getDataset());
+                chart = chartTypeState.getChart(dataset);
             }
 
-            // if (dataset == null) {
-            // dataset = chartTypeState.getDataset();
-            // }
             dyModel.setDataset(dataset);
             if (chart != null) {
                 if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)

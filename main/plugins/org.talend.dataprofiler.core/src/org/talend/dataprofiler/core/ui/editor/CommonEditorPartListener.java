@@ -33,6 +33,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
@@ -163,6 +164,10 @@ public class CommonEditorPartListener extends PartListener {
             return;
         }
         WorkspaceResourceHelper.refreshItem(item);
+
+        if (part instanceof AnalysisEditor) {
+            ((AnalysisEditor) part).getMasterPage().autoRefreshPreviewData();
+        }
         super.partOpened(part);
     }
 

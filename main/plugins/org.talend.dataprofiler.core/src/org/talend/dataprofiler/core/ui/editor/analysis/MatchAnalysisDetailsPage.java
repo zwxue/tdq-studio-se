@@ -209,7 +209,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         createDefaultSurvivorshipSection();
         createMatchParameterSection();
 
-        autoRefreshPreviewData();
         // TDQ-7781: we must do this, this will recompute the layout and scroll bars
         form.reflow(true);
     }
