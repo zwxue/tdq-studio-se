@@ -19,6 +19,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -150,7 +151,7 @@ public class MatchWizard extends ColumnWizard {
         // default loaded row count
         IPreferenceStore preferenceStore = CorePlugin.getDefault().getPreferenceStore();
         int maxRows = preferenceStore.getInt(PluginConstant.MAX_NB_ROWS_ANALYSIS_EDITOR);
-        analysis.getParameters().setMaxNumberRows(maxRows);
+        TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.PREVIEW_ROW_NUMBER, String.valueOf(maxRows));
 
         return analysis;
     }
