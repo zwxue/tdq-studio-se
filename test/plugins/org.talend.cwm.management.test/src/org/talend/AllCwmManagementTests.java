@@ -20,6 +20,7 @@ import org.talend.cwm.dependencies.DependenciesHandlerTest;
 import org.talend.cwm.management.api.SoftwareSystemManagerTest;
 import org.talend.cwm.management.i18n.MessagesTest;
 import org.talend.dq.CWMPluginTest;
+import org.talend.dq.analysis.AnalysisHandlerTest;
 import org.talend.dq.analysis.AnalysisRecordGroupingUtilsTest;
 import org.talend.dq.analysis.ColumnAnalysisExecutorTest;
 import org.talend.dq.analysis.ColumnAnalysisSqlExecutorTest;
@@ -80,7 +81,8 @@ import org.talend.dq.writer.AElementPersistanceRealTest;
         DelimitedFileIndicatorEvaluatorTest.class, SqlIndicatorHandlerTest.class, AElementPersistanceRealTest.class,
         CWMPluginTest.class, MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class,
         ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class, EObjectHelperTest.class,
-        TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class })
+        TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, FunctionFrequencyStatExplorerTest.class,
+        AnalysisHandlerTest.class })
 public class AllCwmManagementTests {
 
 }
