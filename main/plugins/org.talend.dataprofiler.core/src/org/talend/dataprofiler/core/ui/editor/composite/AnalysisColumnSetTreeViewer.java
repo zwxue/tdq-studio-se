@@ -23,7 +23,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -479,8 +478,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private boolean isSelectedColumn(TreeItem[] items) {
         for (TreeItem item : items) {
-            if (item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY) != null
-                    || item.getData(AbstractColumnDropTree.DATA_PARAM) != null) {
+            if (item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY) != null) {
                 return false;
             }
         }
@@ -563,17 +561,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                // boolean con = false;
-
                 if (e.item instanceof TreeItem) {
                     enabledButtons(true);
-                    TreeItem item = (TreeItem) e.item;
-                    if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
-                        tree.setMenu(null);
-                        return;
-                    } else {
-                        new AnalysisColumnSetMenuProvider(tree).createTreeMenu(Boolean.TRUE);
-                    }
+                    new AnalysisColumnSetMenuProvider(tree).createTreeMenu(Boolean.TRUE);
                 }
             }
         });
@@ -674,11 +664,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * .swt.widgets.Shell, org.eclipse.swt.widgets.TreeItem)
      */
     @Override
-    public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
+    public boolean openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
         // MOD msjian TDQ-8551 2014-4-15: columnset analysis can not set options for pattern types
-        MessageDialogWithToggle.openInformation(shell, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ 
+        openNoIndicatorOptionsMessageDialog(shell);
         // TDQ-8551~
+        return false;
     }
 
     /**

@@ -869,7 +869,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 TreeItem item = (TreeItem) e.item;
-                if (item == null || DATA_PARAM.equals(item.getData(DATA_PARAM))) {
+                if (item == null) {
                     Menu m = tree.getMenu();
                     if (m != null && !m.isDisposed()) {
                         m.dispose();
@@ -966,8 +966,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         ConnectionItem connItem = (ConnectionItem) metadataRepObject.getProperty().getItem();
         // MOD qiongli 2010-8-19,bug 14436:could not come from diffrent connection
         Connection tdProvider = connItem.getConnection();
-        // FIXME text is never used.
-        boolean text = metadataRepObject instanceof MetadataXmlElementTypeRepositoryObject;
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null
