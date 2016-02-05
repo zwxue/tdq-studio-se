@@ -15,7 +15,6 @@ package org.talend.cwm.db.connection;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -142,17 +141,26 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
             int analysedColumnIndex[] = new int[analysisElementList.size()];
             // need to find the analysed element position , and only get these analysed column's values.
+            MetadataColumn mColumn = (MetadataColumn) analysisElementList.get(0);
+            MetadataTable metadataTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
+            EList<MetadataColumn> columns = metadataTable.getColumns();
             List<String> columnLabels = new ArrayList<String>();
-            for (int i = 0; i < headValue && csvReader.readNext(); i++) {
-                Collections.addAll(columnLabels, csvReader.getValues());
+            for (MetadataColumn column : columns) {
+                columnLabels.add(column.getLabel());
             }
+            String[] analysedColumnName = new String[analysisElementList.size()];
             for (int j = 0; j < analysisElementList.size(); j++) {
-                analysedColumnIndex[j] = columnLabels.indexOf(analysisElementList.get(j).getName());
-            }// ~
+                analysedColumnName[j] = ((MetadataColumn) analysisElementList.get(j)).getLabel();
+                analysedColumnIndex[j] = columnLabels.indexOf(analysedColumnName[j]);
+            }
 
             long currentRecord = 0;
             while (csvReader.readNext()) {
                 currentRecord++;
+                // skip the head rows
+                if (currentRecord <= headValue) {
+                    continue;
+                }
                 if (limitValue != -1 && currentRecord > limitValue) {
                     break;
                 }
