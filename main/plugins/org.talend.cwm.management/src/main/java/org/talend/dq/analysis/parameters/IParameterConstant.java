@@ -34,5 +34,8 @@ public interface IParameterConstant {
     public static final String ANALYSIS_VERSION = "0.1"; //$NON-NLS-1$
     
     public static final String ANALYSIS_STATUS = "Status"; //$NON-NLS-1$
+
+    // preview parameter
+    public static final String ANALYSIS_PREVIEW_NUMBER_ROW = "50";                 //$NON-NLS-1$
     
 }
