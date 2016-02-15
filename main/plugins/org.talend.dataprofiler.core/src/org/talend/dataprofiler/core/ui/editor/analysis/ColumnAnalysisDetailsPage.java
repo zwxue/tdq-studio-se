@@ -454,7 +454,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                             .getSite().getShell());
                     if (result != null) {
                         refreshCurrentTreeViewer(result);
-                        refreshPreviewTable();
                     }
                 }
 

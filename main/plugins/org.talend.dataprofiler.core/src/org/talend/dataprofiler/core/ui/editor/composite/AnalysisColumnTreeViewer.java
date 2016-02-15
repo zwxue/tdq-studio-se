@@ -900,7 +900,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                                 .getEditorSite().getShell());
                         if (modelElementIndicator != null) {
                             masterPage.refreshCurrentTreeViewer(modelElementIndicator);
-                            masterPage.refreshPreviewTable();
                         }
                     } else if (meobj != null && indicatorobj != null) {
                         // open indicator option wizard
