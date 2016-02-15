@@ -852,6 +852,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         if (dialog.open() == Window.OK) {
             Object[] modelElements = dialog.getResult();
             setTreeViewInput(modelElements);
+            // TDQ-11590: automatically refresh the data table after we select column with the "select columns" dialog.
+            refreshPreviewData();
+            // TDQ-11590~
         }
     }
 
