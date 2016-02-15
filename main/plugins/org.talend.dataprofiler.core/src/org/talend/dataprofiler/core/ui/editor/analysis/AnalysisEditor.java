@@ -246,13 +246,15 @@ public class AnalysisEditor extends SupportContextEditor {
 
     @Override
     protected void pageChange(int newPageIndex) {
-        super.pageChange(newPageIndex);
+        // TDQ-11422 msjian: we should do save first when turn to result page
         if (newPageIndex == RESULT_PAGE_INDEX) {
             if (masterPage.isDirty()) {
                 masterPage.doSave(null);
             }
             setSaveActionButtonState(false);
         }
+        // TDQ-11422~
+        super.pageChange(newPageIndex);
 
         if (isRefreshResultPage) {
             resultPage.refresh(getMasterPage());
