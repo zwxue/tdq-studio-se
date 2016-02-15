@@ -140,6 +140,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
             @Override
             public void linkActivated(HyperlinkEvent e) {
+                if (!resultSection.isExpanded()) {
+                    resultSection.setExpanded(true);
+                }
                 List<ExpandableComposite> expandableCompositeList = getExpandableCompositeList();
                 if (expandableCompositeList != null && !expandableCompositeList.isEmpty()) {
                     for (ExpandableComposite comp : expandableCompositeList) {
