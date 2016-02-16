@@ -30,8 +30,11 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -45,7 +48,6 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -201,21 +203,10 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
         // ~ MOD mzhao 2009-05-05,Bug 6587.
         createConnBindWidget(topComp1);
         // ~
-        Hyperlink tblBtn = toolkit.createHyperlink(topComp1,
-                DefaultMessagesImpl.getString("TableMasterDetailsPage.selectTable"), SWT.NONE); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(tblBtn);
-        tblBtn.addHyperlinkListener(new HyperlinkAdapter() {
-
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-                openTableSelectionDialog();
-            }
-
-        });
 
         Composite actionBarComp = toolkit.createComposite(topComp1);
         GridLayout gdLayout = new GridLayout();
-        gdLayout.numColumns = 2;
+        gdLayout.numColumns = 3;
         actionBarComp.setLayout(gdLayout);
 
         ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
@@ -242,6 +233,16 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
                 expandTreeItems(items, true);
                 packOtherColumns();
 
+            }
+        });
+
+        Button clmnBtn = toolkit.createButton(actionBarComp, DefaultMessagesImpl.getString("TableMasterDetailsPage.selectTable"), //$NON-NLS-1$
+                SWT.NONE);
+        clmnBtn.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseDown(MouseEvent e) {
+                openTableSelectionDialog();
             }
         });
 

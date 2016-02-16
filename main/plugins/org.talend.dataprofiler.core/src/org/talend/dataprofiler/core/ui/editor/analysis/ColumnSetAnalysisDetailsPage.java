@@ -34,6 +34,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -46,10 +48,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -339,16 +338,15 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         // ~ MOD mzhao 2009-05-05,Bug 6587.
         createConnBindWidget(topComp);
         // ~
-        Hyperlink clmnBtn = toolkit.createHyperlink(topComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
-        clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
+
+        Button clmnBtn = toolkit.createButton(topComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumnBtn"), //$NON-NLS-1$
+                SWT.NONE);
+        clmnBtn.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void linkActivated(HyperlinkEvent e) {
+            public void mouseDown(MouseEvent e) {
                 openColumnsSelectionDialog();
             }
-
         });
 
         Composite tree = toolkit.createComposite(topComp, SWT.None);
