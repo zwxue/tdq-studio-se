@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -40,6 +41,8 @@ import org.talend.repository.model.RepositoryNode;
  * DOC bZhou class global comment. Detailled comment
  */
 public final class TableUtils {
+
+    public static final Color highlightBlue = new Color(Display.getCurrent(), 223, 232, 246);
 
     private TableUtils() {
 
@@ -194,7 +197,7 @@ public final class TableUtils {
                 case SWT.MouseHover:
                     if (item != null) {
                         // TDQ-11529: when hovering over table or charts, change background color
-                        item.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GREEN));
+                        item.setBackground(highlightBlue);
                         // show Range tooltip
                         ChartDataEntity entity = (ChartDataEntity) item.getData();
 

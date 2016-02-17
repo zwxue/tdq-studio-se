@@ -16,7 +16,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.nebula.widgets.grid.GridCellRenderer;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
@@ -47,8 +46,6 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
         Observerable<ObserverEvent> {
 
     private List<TDQObserver<ObserverEvent>> observers = null;
-
-    private Logger log = Logger.getLogger(ColumnPreviewGrid.class);
 
     /**
      * ColumnPreviewGrid constructor comment.

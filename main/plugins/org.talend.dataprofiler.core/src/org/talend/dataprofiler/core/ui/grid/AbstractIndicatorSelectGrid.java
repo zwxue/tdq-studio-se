@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.ScrollBar;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.IndicatorTreeModelBuilder;
@@ -59,7 +60,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     static final Color gray = new Color(Display.getCurrent(), 240, 240, 240);
 
-    static final Color highlightBlue = new Color(Display.getCurrent(), 223, 232, 246);
+    static final Color highlightBlue = TableUtils.highlightBlue;
 
     static final Color blue = new Color(Display.getCurrent(), 90, 184, 235);
 
