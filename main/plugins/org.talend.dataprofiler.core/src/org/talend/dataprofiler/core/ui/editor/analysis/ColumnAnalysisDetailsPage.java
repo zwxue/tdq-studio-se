@@ -265,12 +265,13 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         dataPreviewTableCom.setLayout(new GridLayout(1, true));
         createConnBindWidget(dataPreviewTableCom);
         Composite buttonComposite = toolkit.createComposite(dataPreviewTableCom, SWT.NONE);
-        buttonComposite.setLayout(new GridLayout(4, false));
+        buttonComposite.setLayout(new GridLayout(5, false));
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(buttonComposite);
         createConnectionButton(buttonComposite);
         createColumnSelectButton(buttonComposite);
         createIndicatorSelectButton(buttonComposite);
         createRefreshDataButtonComp(buttonComposite);
+        createRunButton(buttonComposite);
         // create the data table
         createDataTableComposite(dataPreviewTableCom);
         dataPreviewSection.setClient(dataPreviewTableCom);
