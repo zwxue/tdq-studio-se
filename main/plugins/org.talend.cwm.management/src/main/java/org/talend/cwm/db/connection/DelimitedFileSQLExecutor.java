@@ -177,12 +177,12 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements, String where)
             throws SQLException {
-        dataFromTable.clear();
+        getDataFromTable().clear();
         try {
             beginQuery();
         } catch (Exception e1) {
             log.error(e1.getMessage(), e1);
-            return dataFromTable;
+            return getDataFromTable();
         }
         DelimitedFileConnection delimitedFileconnection = (DelimitedFileConnection) connection;
         String path = JavaSqlFactory.getURL(delimitedFileconnection);
@@ -205,7 +205,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return dataFromTable;
+        return getDataFromTable();
     }
 
 }

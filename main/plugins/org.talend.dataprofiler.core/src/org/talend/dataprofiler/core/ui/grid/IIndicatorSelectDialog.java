@@ -51,14 +51,6 @@ public interface IIndicatorSelectDialog extends IShellProvider {
 
     /**
      * 
-     * Get the expression of where clause
-     * 
-     * @return The expression of where clause
-     */
-    public String getWhereExpression();
-
-    /**
-     * 
      * Judge whether currentIndicator can be checked for the column
      * 
      * @param currentIndicator current indicator

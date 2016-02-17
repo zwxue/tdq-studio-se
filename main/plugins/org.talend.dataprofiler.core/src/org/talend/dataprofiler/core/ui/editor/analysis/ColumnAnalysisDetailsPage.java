@@ -136,6 +136,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
 
     private static final int TREE_MAX_LENGTH = 400;
 
+    private static final int PREVIEW_MAX_ROW_COUNT = 999;
+
+    private static final int PREVIEW_SUGGEST_ROW_COUNT = 500;
+
     private ExpandableComposite[] previewChartCompsites;
 
     private Section analysisColumnSection = null;
@@ -311,12 +315,30 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.ControlRowsLabel"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedLabel);
         rowLoadedText = toolkit.createText(dataQueryComp, null, SWT.BORDER);
+        rowLoadedText.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.ControlRowsLabelTooltip")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedText);
         // fix the width of the text field
         GridData textData = new GridData();
         textData.widthHint = 100;
         rowLoadedText.setLayoutData(textData);
-        rowLoadedText.setText(analysisHandler.getDefaultLoadedRowCount());
+        int number = Integer.valueOf(analysisHandler.getDefaultLoadedRowCount()) > PREVIEW_MAX_ROW_COUNT ? PREVIEW_SUGGEST_ROW_COUNT
+                : Integer.valueOf(analysisHandler.getDefaultLoadedRowCount());
+        rowLoadedText.setText(String.valueOf(number));
+        rowLoadedText.setTextLimit(3);
+        rowLoadedText.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
+        });
+
         rowLoadedText.addModifyListener(new ModifyListener() {
 
             public void modifyText(final ModifyEvent e) {
@@ -367,6 +389,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         } else {
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+            rowLoadedText.setFocus();
         }
     }
 
@@ -409,14 +432,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     private boolean isValidateRowCount() {
         String text = rowLoadedText.getText();
         if (StringUtils.isEmpty(text)) {
-            return false;
-        }
-        try {
-            int parseInt = Integer.parseInt(text);
-            if (parseInt < 1) {
-                return false;
-            }
-        } catch (NumberFormatException e) {
             return false;
         }
         return true;
@@ -601,13 +616,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         createWarningLabel();
         redrawNatTableComposite();
         dataTableComp.layout(new Control[] { warningLabel });
-    }
-
-    public void refreshPreviewTable() {
-        initSampleTableParameter();
-        sampleTable.reDrawTable(getSelectedColumns());
-        redrawWarningLabel();
-
     }
 
     /**
@@ -903,15 +911,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      * 
      * @param modelElementIndicator
      */
-    public void refreshPreviewTable(ModelElementIndicator[] modelElements) {
-        refreshPreviewTable(modelElements, true);
-    }
-
-    /**
-     * Refresh the preview Table
-     * 
-     * @param modelElementIndicator
-     */
     public void refreshPreviewTable(ModelElementIndicator[] modelElements, boolean loadData) {
         this.currentModelElementIndicators = modelElements;
         this.refreshPreviewTable(loadData);
@@ -1152,6 +1151,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         // when the user didn't save, revert the connection combo value
         if (oldConn != null && isDirty()) {
             this.analysisItem.getAnalysis().getContext().setConnection(oldConn);
+        }
+
+        if (this.getSampleTable().getPreviewData() != null) {
+            this.getSampleTable().getPreviewData().clear();
         }
     }
 
@@ -1548,6 +1551,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      */
     public int getPreviewLimit() {
         return Integer.parseInt(rowLoadedText.getText());
+    }
+
+    public ColumnAnalysisDataSamTable getSampleTable() {
+        return this.sampleTable;
     }
 
 }
