@@ -48,8 +48,8 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
      * @param modelElementIndicators
      */
     public IndicatorSelectGrid(IndicatorSelectDialog dialog, Composite parent, int style,
-            ModelElementIndicator[] modelElementIndicators, int[] preferColumnsWidth) {
-        super(dialog, parent, style, modelElementIndicators);
+            ModelElementIndicator[] modelElementIndicators, int[] preferColumnsWidth, List<Object[]> previewData) {
+        super(dialog, parent, style, modelElementIndicators, previewData);
         this.preferColumnsWidth = preferColumnsWidth;
         initializeGrid();
         addVscrollBarListener();

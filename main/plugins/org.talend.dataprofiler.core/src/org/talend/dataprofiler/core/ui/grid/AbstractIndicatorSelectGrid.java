@@ -81,15 +81,15 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     private double tanRotation;
 
+    protected boolean isColumnMoved = false;
+
     protected ModelElementIndicator[] result;
-
-    // private HoverScrollThread thread;
-
-    private boolean isScrolling;
 
     protected int limitNumber = LIMIT_NUMBER_DEFAULT;
 
     private int lastHScrollSelectionLocation = 0;
+
+    protected List<Object[]> previewData;
 
     /**
      * IndicatorSelectionGrid constructor.
@@ -100,9 +100,10 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
      * @param modelElementIndicators
      */
     public AbstractIndicatorSelectGrid(IndicatorSelectDialog dialog, Composite parent, int style,
-            ModelElementIndicator[] modelElementIndicators, int limit) {
+            ModelElementIndicator[] modelElementIndicators, int limit, List<Object[]> previewData) {
         super(parent, style);
         limitNumber = limit;
+        this.previewData = previewData;
         _dialog = dialog;
         _modelElementIndicators = modelElementIndicators;
         addExtraListeners();
@@ -176,9 +177,8 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
      * @param modelElementIndicators
      */
     public AbstractIndicatorSelectGrid(IndicatorSelectDialog dialog, Composite parent, int style,
-            ModelElementIndicator[] modelElementIndicators) {
-        this(dialog, parent, style, modelElementIndicators, LIMIT_NUMBER_DEFAULT);
-
+            ModelElementIndicator[] modelElementIndicators, List<Object[]> previewData) {
+        this(dialog, parent, style, modelElementIndicators, LIMIT_NUMBER_DEFAULT, previewData);
     }
 
     protected void initializeGrid() {
@@ -219,6 +219,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
                 public void handleEvent(Event event) {
                     notifyObservers(event);
+                    isColumnMoved = true;
                 }
 
             });

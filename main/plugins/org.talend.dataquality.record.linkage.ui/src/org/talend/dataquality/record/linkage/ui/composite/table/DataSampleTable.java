@@ -159,6 +159,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     Map<String, Integer> ColumnIndexMap = null;
 
+    private List<Object[]> previewData;
+
     public DataSampleTable() {
     }
 
@@ -174,7 +176,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         initTableProperty(columns);
 
         // initial the data if it is empty
-        List<Object[]> results = listOfData == null ? new ArrayList<Object[]>() : listOfData;
+        previewData = listOfData == null ? new ArrayList<Object[]>() : listOfData;
+        List<Object[]> results = previewData;
         results = handleEmptyRow(columns, results);
         TControl handleGID = handleGID(parentContainer, results);
         if (handleGID != null) {
@@ -685,6 +688,10 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         return new ListObjectDataProvider(data, columnPropertyAccessor);
     }
 
+    public List<Object[]> getPreviewData() {
+        return this.previewData;
+    }
+
     private class ForegroundTextPainter extends TextPainter {
 
         private boolean changeForegroundColor = false;
@@ -1061,9 +1068,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
     private List<Object[]> getPreviewData(ModelElement[] columns, boolean withData) throws SQLException {
         if (withData && isSameTable) {
             return createPreviewData(columns);
-        } else {
-            return new ArrayList<Object[]>();
         }
+
+        return new ArrayList<Object[]>();
     }
 
     /**
@@ -1086,7 +1093,6 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      */
     public void createNatTable(List<Object[]> listOfData, Composite dataTableComp, ModelElement[] columns) throws SQLException {
         checkSameTableConstraint(columns);
-        List<Object[]> previewData = null;
         drawCanvas = dataTableComp;
         tablePanel = new Composite(drawCanvas, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(tablePanel);
@@ -1098,13 +1104,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         Composite subPanel = new Composite(tablePanel, SWT.NONE);
         subPanel.setLayoutData(layoutDataFillBoth);
         subPanel.setLayout(new GridLayout(1, true));
-        if (listOfData == null || listOfData.size() == 0) {
-            previewData = getPreviewData(columns, false);
-
-        } else {
-            previewData = listOfData;
-        }
-        DataSampleTable.TControl tControl = this.createTable(subPanel, columns, previewData);
+        DataSampleTable.TControl tControl = this.createTable(subPanel, columns, listOfData);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(tControl.getControl());
 
         // when refresh the data, the dataSampleSection's width is not 0

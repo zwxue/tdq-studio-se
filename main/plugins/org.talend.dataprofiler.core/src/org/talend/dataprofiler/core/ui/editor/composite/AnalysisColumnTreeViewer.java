@@ -82,7 +82,6 @@ import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
@@ -464,8 +463,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         masterPage.recomputeIndicators();
         modelElementIndicators = masterPage.getCurrentModelElementIndicators();
         masterPage.refreshTheTree(modelElementIndicators);
-        masterPage.refreshPreviewTable(modelElementIndicators);
-        // setElements(modelElementIndicators);
+        masterPage.refreshPreviewTable(modelElementIndicators, true);
     }
 
     @Override
@@ -481,7 +479,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
         masterPage.refreshTheTree(newsArray);
-        masterPage.refreshPreviewTable(newsArray);
+        masterPage.refreshPreviewTable(newsArray, true);
         masterPage.goLastPage();
         if (elements != null && elements.length > 0) {
             selectElement(tree.getItems(), elements[0]);
@@ -748,10 +746,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      * clicked then the size of return array will be zero. If have a Where Clause is error will return null
      */
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
-        String whereExpression = AnalysisHelper.getStringDataFilter(this.getAnalysis());
+        List<Object[]> previewData = masterPage.getSampleTable().getPreviewData();
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
                 shell,
-                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators(), whereExpression); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators(), previewData); //$NON-NLS-1$
         dialog.setLimitNumber(this.masterPage.getPreviewLimit());
         dialog.create();
         if (!DQPreferenceManager.isBlockWeb()) {
@@ -772,9 +770,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                     PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
                 }
             });
-        }
-        if (!dialog.checkWhereClause()) {
-            return null;
         }
         if (dialog.open() == Window.OK) {
             ModelElementIndicator[] result = dialog.getResult();

@@ -52,7 +52,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
     /**
      * List of rows obtained from data source.
      */
-    protected List<Object[]> dataFromTable = new ArrayList<Object[]>();
+    private List<Object[]> dataFromTable = new ArrayList<Object[]>();
 
     /*
      * (non-Javadoc)
@@ -161,5 +161,9 @@ public abstract class SQLExecutor implements ISQLExecutor {
      */
     public Object getStoreOnDiskHandler() {
         return this.storeOnDiskHandler;
+    }
+
+    public List<Object[]> getDataFromTable() {
+        return this.dataFromTable;
     }
 }

@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.grid;
 
+import java.util.List;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -50,10 +52,6 @@ import org.talend.dq.nodes.indicator.IIndicatorNode;
  */
 public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelectDialog {
 
-    private static final String DESCRIPTION = DefaultMessagesImpl.getString("IndicatorSelectDialog.description"); //$NON-NLS-1$
-
-    private static final String PURPOSE = DefaultMessagesImpl.getString("IndicatorSelectDialog.purpose"); //$NON-NLS-1$
-
     private ModelElementIndicator[] modelElementIndicators;
 
     private final String title;
@@ -71,9 +69,9 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
 
     private Composite redrewComp;
 
-    private String whereExpression;
-
     private int limitNumber = 20;
+
+    private List<Object[]> previewData;
 
     /**
      * IndicatorSelectDialog constructor.
@@ -83,10 +81,10 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
      * @param modelElementIndicators
      */
     public IndicatorSelectDialog(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators,
-            String whereExpression) {
+            List<Object[]> previewData) {
         super(parentShell);
-        this.whereExpression = whereExpression;
         this.title = title;
+        this.previewData = previewData;
         this.modelElementIndicators = modelElementIndicators;
         int shellStyle = getShellStyle();
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);// MOD zshen: obtain language.
@@ -124,8 +122,9 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
         style |= SWT.H_SCROLL;
         style |= SWT.BORDER;
         style |= SWT.SINGLE;
-        gridPrview = new ColumnPreviewGrid(this, redrewComp, style, modelElementIndicators, this.limitNumber);
-        gridIndicator = new IndicatorSelectGrid(this, redrewComp, style, modelElementIndicators, gridPrview.getColumnsWidth());
+        gridPrview = new ColumnPreviewGrid(this, redrewComp, style, modelElementIndicators, this.limitNumber, previewData);
+        gridIndicator = new IndicatorSelectGrid(this, redrewComp, style, modelElementIndicators, gridPrview.getColumnsWidth(),
+                previewData);
         gridIndicator.setHeaderVisible(false);
         gridIndicator.addObserver(gridPrview);
         gridPrview.addObserver(gridIndicator);
@@ -254,6 +253,8 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
     }
 
     public void updateIndicatorInfo(GridItem item) {
+        String DESCRIPTION = DefaultMessagesImpl.getString("IndicatorSelectDialog.description"); //$NON-NLS-1$
+        String PURPOSE = DefaultMessagesImpl.getString("IndicatorSelectDialog.purpose"); //$NON-NLS-1$
         IIndicatorNode indicatorNode = ((IIndicatorNode) item.getData());
         if (indicatorNode != null) {
             Indicator indicator = indicatorNode.getIndicatorInstance();
@@ -300,29 +301,15 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
         return redrewComp;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.grid.IIndicatorSelectDialog#getWhereExpression()
-     */
-    public String getWhereExpression() {
-        return this.whereExpression;
-    }
-
     public void setLimitNumber(int limit) {
         limitNumber = limit;
     }
 
-    /**
-     * DOC talend Comment method "checkPreviewData".
-     * 
-     * @return
-     */
-    public boolean checkWhereClause() {
-        return gridPrview.checkWhereClause();
-    }
-
     private boolean hasColumnSelected() {
         return this.modelElementIndicators != null && this.modelElementIndicators.length > 0;
+    }
+
+    public boolean isGridPreviewColumnMoved() {
+        return gridPrview.isColumnMoved;
     }
 }
