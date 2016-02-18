@@ -146,10 +146,6 @@ public final class ImageLib {
 
     public static final String WARN_OVR = "warn_ovr.gif"; //$NON-NLS-1$
 
-    public static final String EMOTICON_SMILE = "emoticon_smile.png"; //$NON-NLS-1$
-
-    public static final String EXCLAMATION = "exclamation.png"; //$NON-NLS-1$
-
     public static final String CATALOG = "catalog.png"; //$NON-NLS-1$
 
     public static final String ASC_SORT = "asc.gif"; //$NON-NLS-1$
