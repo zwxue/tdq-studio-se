@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.help.HelpSystem;
@@ -81,7 +82,6 @@ import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
@@ -145,7 +145,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      * @param parent
      */
     private Tree createTree(Composite parent) {
-        final Tree newTree = new TooltipTree(parent, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION) {
+        final Tree newTree = new TooltipTree(parent, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION) {
 
             @Override
             protected boolean isValidItem(TreeItem item) {
@@ -242,7 +242,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
             public void widgetSelected(SelectionEvent e) {
                 moveSelectedElements(tree, -1);
                 notifyObservers();
-                masterPage.redrawComposite();
             }
         });
 
@@ -278,41 +277,65 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      */
     protected void moveSelectedElements(Tree newTree, int step) {
         TreeItem[] selection = newTree.getSelection();
-        if (selection.length > 0) {
-            TreeItem item = selection[0];
-            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-            ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-            if (indicatorUnit != null) {
-                data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-                TypedReturnCode<IndicatorUnit[]> code = sortIndicatorUnits(data.getIndicatorUnits(), indicatorUnit, step);
-                if (code.isOk()) {
-                    if (null != code.getObject()) {
-                        Indicator[] inds = new Indicator[code.getObject().length];
-                        for (int i = 0; i < code.getObject().length; i++) {
-                            inds[i] = code.getObject()[i].getIndicator();
-                        }
-                        data.setIndicators(inds);
-                    }
-                    setElements(modelElementIndicators, true, false);
-                    selectElement(tree.getItems(), indicatorUnit);
-                }
-            } else {
-                data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-                int index = -1;
-                for (int i = 0; i < modelElementIndicators.length; i++) {
-                    if (data == modelElementIndicators[i]) {
-                        index = i;
-                        break;
-                    }
-                }
-                if (index + step > -1 && index + step < modelElementIndicators.length) {
-                    ModelElementIndicator tmpElement = modelElementIndicators[index + step];
-                    modelElementIndicators[index + step] = modelElementIndicators[index];
-                    modelElementIndicators[index] = tmpElement;
-                    setElements(modelElementIndicators, true, false);
-                    selectElement(tree.getItems(), data);
+        if (selection != null) {
+
+            // used to set the selected columns focus at last
+            List<Object> selectedDataList = new ArrayList<Object>();
+
+            // TDQ-11530 msjian: get all selected data's list first to check how to move
+            List<IndicatorUnit> indicatorUnitList = new ArrayList<IndicatorUnit>();
+            List<ModelElementIndicator> dataList = new ArrayList<ModelElementIndicator>();
+            for (TreeItem item : selection) {
+                IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                if (indicatorUnit != null) {
+                    indicatorUnitList.add(indicatorUnit);
+                } else {
+                    ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                    dataList.add(data);
                 }
             }
+
+            for (TreeItem item : selection) {
+                IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                if (indicatorUnit != null) {
+                    TypedReturnCode<IndicatorUnit[]> code = sortIndicatorUnits(data.getIndicatorUnits(), indicatorUnit, step,
+                            indicatorUnitList);
+                    if (code.isOk()) {
+                        if (null != code.getObject()) {
+                            Indicator[] inds = new Indicator[code.getObject().length];
+                            for (int i = 0; i < code.getObject().length; i++) {
+                                inds[i] = code.getObject()[i].getIndicator();
+                            }
+                            data.setIndicators(inds);
+                        }
+                        selectedDataList.add(indicatorUnit);
+                    }
+                } else {
+                    int index = ArrayUtils.indexOf(modelElementIndicators, data);
+
+                    int changeIndex = index + step;
+                    if (changeIndex > -1 && changeIndex < modelElementIndicators.length) {
+                        ModelElementIndicator tmpElement = modelElementIndicators[changeIndex];
+                        // when the changed one is the selected one too, get next one
+                        while (dataList.contains(tmpElement)) {
+                            tmpElement = modelElementIndicators[++changeIndex];
+                        }
+                        modelElementIndicators[changeIndex] = modelElementIndicators[index];
+                        modelElementIndicators[index] = tmpElement;
+                        // after the data changed successfully remove it from the selected list
+                        dataList.remove(data);
+
+                        selectedDataList.add(data);
+                    }
+                }
+            }
+
+            setElements(modelElementIndicators, true, false);
+            for (Object obj : selectedDataList) {
+                selectElement(tree.getItems(), obj);
+            }
+
             masterPage.synNagivatorStat();
         }
     }
@@ -354,7 +377,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      * @param step
      * @return
      */
-    private TypedReturnCode<IndicatorUnit[]> sortIndicatorUnits(IndicatorUnit[] units, IndicatorUnit targetUnit, int step) {
+    private TypedReturnCode<IndicatorUnit[]> sortIndicatorUnits(IndicatorUnit[] units, IndicatorUnit targetUnit, int step,
+            List<IndicatorUnit> indicatorUnitList) {
 
         TypedReturnCode<IndicatorUnit[]> code = new TypedReturnCode<IndicatorUnit[]>();
         int index = -1;
@@ -363,7 +387,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                 index = i;
                 break;
             } else if (null != units[i].getChildren()) {
-                TypedReturnCode<IndicatorUnit[]> code2 = sortIndicatorUnits(units[i].getChildren(), targetUnit, step);
+                TypedReturnCode<IndicatorUnit[]> code2 = sortIndicatorUnits(units[i].getChildren(), targetUnit, step,
+                        indicatorUnitList);
                 if (null != code2.getObject()) {
                     units[i].setChildren(code2.getObject());
                     code.setOk(true);
@@ -371,10 +396,18 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                 }
             }
         }
-        if (-1 != index && index + step > -1 && index + step < units.length) {
-            IndicatorUnit tmpUnit = units[index + step];
-            units[index + step] = units[index];
+
+        int changeIndex = index + step;
+        if (-1 != index && changeIndex > -1 && changeIndex < units.length) {
+            IndicatorUnit tmpUnit = units[changeIndex];
+            // when the changed one is the selected one too, get next one
+            while (indicatorUnitList.contains(tmpUnit)) {
+                tmpUnit = units[++changeIndex];
+            }
+            units[changeIndex] = units[index];
             units[index] = tmpUnit;
+            // after the data changed successfully remove it from the selected list
+            indicatorUnitList.remove(targetUnit);
             code.setReturnCode("", true, units);//$NON-NLS-1$
         }
         return code;
@@ -430,8 +463,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         masterPage.recomputeIndicators();
         modelElementIndicators = masterPage.getCurrentModelElementIndicators();
         masterPage.refreshTheTree(modelElementIndicators);
-        masterPage.refreshPreviewTable(modelElementIndicators);
-        // setElements(modelElementIndicators);
+        masterPage.refreshPreviewTable(modelElementIndicators, true);
     }
 
     @Override
@@ -447,7 +479,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
         masterPage.refreshTheTree(newsArray);
-        masterPage.refreshPreviewTable(newsArray);
+        masterPage.refreshPreviewTable(newsArray, true);
         masterPage.goLastPage();
         if (elements != null && elements.length > 0) {
             selectElement(tree.getItems(), elements[0]);
@@ -714,10 +746,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      * clicked then the size of return array will be zero. If have a Where Clause is error will return null
      */
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
-        String whereExpression = AnalysisHelper.getStringDataFilter(this.getAnalysis());
+        List<Object[]> previewData = masterPage.getSampleTable().getPreviewData();
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
                 shell,
-                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators(), whereExpression); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators(), previewData); //$NON-NLS-1$
         dialog.setLimitNumber(this.masterPage.getPreviewLimit());
         dialog.create();
         if (!DQPreferenceManager.isBlockWeb()) {
@@ -738,9 +770,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                     PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
                 }
             });
-        }
-        if (!dialog.checkWhereClause()) {
-            return null;
         }
         if (dialog.open() == Window.OK) {
             ModelElementIndicator[] result = dialog.getResult();
@@ -835,7 +864,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 TreeItem item = (TreeItem) e.item;
-                if (item == null || DATA_PARAM.equals(item.getData(DATA_PARAM))) {
+                if (item == null) {
                     Menu m = tree.getMenu();
                     if (m != null && !m.isDisposed()) {
                         m.dispose();
@@ -866,7 +895,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                                 .getEditorSite().getShell());
                         if (modelElementIndicator != null) {
                             masterPage.refreshCurrentTreeViewer(modelElementIndicator);
-                            masterPage.refreshPreviewTable();
                         }
                     } else if (meobj != null && indicatorobj != null) {
                         // open indicator option wizard
@@ -932,8 +960,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         ConnectionItem connItem = (ConnectionItem) metadataRepObject.getProperty().getItem();
         // MOD qiongli 2010-8-19,bug 14436:could not come from diffrent connection
         Connection tdProvider = connItem.getConnection();
-        // FIXME text is never used.
-        boolean text = metadataRepObject instanceof MetadataXmlElementTypeRepositoryObject;
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null

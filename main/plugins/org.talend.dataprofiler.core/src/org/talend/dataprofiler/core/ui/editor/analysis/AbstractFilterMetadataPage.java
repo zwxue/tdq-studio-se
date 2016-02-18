@@ -75,6 +75,7 @@ import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
@@ -320,11 +321,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
+        setFormTitle(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectionAnalysis")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.setAnalysisProp")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-        form = managedForm.getForm();
-        form.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectionAnalysis")); //$NON-NLS-1$
-        this.metadataSection.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        this.metadataSection.setDescription(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.setAnalysisProp")); //$NON-NLS-1$
+
         createAnalysisParamSection(topComp);
         createContextGroupSection(form, topComp);
         createAnalysisSummarySection(topComp);
@@ -599,11 +600,12 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         sectionClient.setLayout(new GridLayout());
 
         catalogTableViewer = new TableViewer(sectionClient, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-        Table table = catalogTableViewer.getTable();
-        table.setHeaderVisible(true);
-        table.setBackgroundMode(SWT.INHERIT_FORCE);
-        table.setLinesVisible(true);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(table);
+        Table catalogTable = catalogTableViewer.getTable();
+        TableUtils.addActionTooltip(catalogTable);
+        catalogTable.setHeaderVisible(true);
+        catalogTable.setBackgroundMode(SWT.INHERIT_FORCE);
+        catalogTable.setLinesVisible(true);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(catalogTable);
         List<Catalog> catalogs = getCatalogs();
         boolean containSubSchema = false;
         for (Catalog catalog : catalogs) {
@@ -615,10 +617,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         }
 
         if (catalogs.size() > 0 && containSubSchema) {
-            createCatalogSchemaColumns(table);
+            createCatalogSchemaColumns(catalogTable);
             provider = new CatalogSchemaViewerProvier();
-            addColumnSorters(catalogTableViewer, catalogTableViewer.getTable().getColumns(), catalogWithSchemaSorters);
-            schemaTableViewer = createSecondStatisticalTable(sectionClient);
+            addColumnSorters(catalogTableViewer, catalogTable.getColumns(), catalogWithSchemaSorters);
+            createSchemaTableViewer(sectionClient);
             schemaTableViewer.addSelectionChangedListener(new DisplayTableAndViewListener());
             catalogTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -655,13 +657,13 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             createContextMenuFor(schemaTableViewer);
         } else {
             if (catalogs.size() > 0) {
-                createCatalogTableColumns(table);
+                createCatalogTableColumns(catalogTable);
                 provider = new CatalogViewerProvier();
             } else {
-                createSchemaTableColumns(table);
+                createSchemaTableColumns(catalogTable);
                 provider = new SchemaViewerProvier();
             }
-            addColumnSorters(catalogTableViewer, catalogTableViewer.getTable().getColumns(), schemaSorters);
+            addColumnSorters(catalogTableViewer, catalogTable.getColumns(), schemaSorters);
             catalogTableViewer.addSelectionChangedListener(new DisplayTableAndViewListener());
         }
         catalogTableViewer.setLabelProvider(provider);
@@ -732,20 +734,20 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     protected abstract List<OverviewIndUIElement> getSchemaIndicators();
 
-    private TableViewer createSecondStatisticalTable(Composite parent) {
-        TableViewer secondTableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-        Table table = secondTableViewer.getTable();
-        table.setHeaderVisible(true);
-        table.setBackgroundMode(SWT.INHERIT_FORCE);
-        table.setLinesVisible(true);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(table);
-        ((GridData) table.getLayoutData()).heightHint = 60;
-        createSchemaTableColumns(table);
+    private void createSchemaTableViewer(Composite parent) {
+        schemaTableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+        Table schemaTable = schemaTableViewer.getTable();
+        schemaTable.setHeaderVisible(true);
+        schemaTable.setBackgroundMode(SWT.INHERIT_FORCE);
+        schemaTable.setLinesVisible(true);
+        TableUtils.addActionTooltip(schemaTable);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(schemaTable);
+        ((GridData) schemaTable.getLayoutData()).heightHint = 60;
+        createSchemaTableColumns(schemaTable);
         SchemaViewerProvier svProvider = new SchemaViewerProvier();
-        secondTableViewer.setLabelProvider(svProvider);
-        secondTableViewer.setContentProvider(svProvider);
-        table.setVisible(false);
-        return secondTableViewer;
+        schemaTableViewer.setLabelProvider(svProvider);
+        schemaTableViewer.setContentProvider(svProvider);
+        schemaTable.setVisible(false);
     }
 
     private void createCatalogTableColumns(Table table) {
@@ -892,6 +894,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
                     | SWT.FULL_SELECTION); // SWT.SINGLE);
             final Table catalogOrSchemaTable = tableOfCatalogOrSchemaViewer.getTable();
+            TableUtils.addActionTooltip(catalogOrSchemaTable);
             catalogOrSchemaTable.setHeaderVisible(true);
             catalogOrSchemaTable.setLinesVisible(true);
             GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -900,9 +903,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             String[] columnTexts = new String[] {
                     DefaultMessagesImpl.getString("AbstractFilterMetadataPage.Table"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.rows"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.keys"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.indexes") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             createSorterColumns(tableOfCatalogOrSchemaViewer, columnTexts, tableSorters, COLUMN_TABLE_WIDTH);
-            TableOfCatalogOrSchemaProvider providerTable = new TableOfCatalogOrSchemaProvider();
-            tableOfCatalogOrSchemaViewer.setLabelProvider(providerTable);
-            tableOfCatalogOrSchemaViewer.setContentProvider(providerTable);
+            TableOfCatalogOrSchemaProvider tableProvider = new TableOfCatalogOrSchemaProvider();
+            tableOfCatalogOrSchemaViewer.setLabelProvider(tableProvider);
+            tableOfCatalogOrSchemaViewer.setContentProvider(tableProvider);
 
             catalogOrSchemaTable.addMouseListener(new MouseAdapter() {
 
@@ -964,6 +967,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             viewOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
                     | SWT.FULL_SELECTION);
             final Table tableCatalogOrSchemaView = viewOfCatalogOrSchemaViewer.getTable();
+            TableUtils.addActionTooltip(tableCatalogOrSchemaView);
             tableCatalogOrSchemaView.setHeaderVisible(true);
             tableCatalogOrSchemaView.setLinesVisible(true);
             layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -1122,7 +1126,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
 
         if (status) {
-            refresh();
+            refreshGraphicsInSettingsPage();
         }
 
         statisticalSection.setExpanded(status);
@@ -1135,7 +1139,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     @Override
-    public void refresh() {
+    public void refreshGraphicsInSettingsPage() {
         doSetInput();
         refreshSumSection();
         // MOD klliu 2011-05-09 bug 20930

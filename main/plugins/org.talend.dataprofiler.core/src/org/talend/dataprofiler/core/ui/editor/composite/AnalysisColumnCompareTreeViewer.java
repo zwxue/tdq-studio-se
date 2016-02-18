@@ -32,6 +32,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,10 +48,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
@@ -245,7 +243,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         if (masterPage instanceof FunctionalDependencyAnalysisDetailsPage) {
             columnReverseButtion = new Button(compareToplevelComp, SWT.NONE);
             // GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(compareToplevelComp);
-            columnReverseButtion.setText("Reverse columns");
+            columnReverseButtion.setText("Reverse columns"); //$NON-NLS-1$
             columnReverseButtion.addMouseListener(new MouseListener() {
 
                 public void mouseDoubleClick(MouseEvent e) {
@@ -279,26 +277,33 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
         sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-        String hyperlinkTextLeft = null;
-        String hyperlinkTextRight = null;
+        String leftSelectButtonText = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForASet"); //$NON-NLS-1$
+        String rightSelectButtonText = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForBSet"); //$NON-NLS-1$
+        String leftSelectButtonTooltip;
+        String rightSelectButtonTooltip;
         if (masterPage instanceof FunctionalDependencyAnalysisDetailsPage) {
-            hyperlinkTextLeft = DefaultMessagesImpl.getString("AnalysisColumnCompareTreeViewer.DeterminantCol"); //$NON-NLS-1$
-            hyperlinkTextRight = DefaultMessagesImpl.getString("AnalysisColumnCompareTreeViewer.DependentCol"); //$NON-NLS-1$
+            leftSelectButtonTooltip = DefaultMessagesImpl.getString("AnalysisColumnCompareTreeViewer.DeterminantCol"); //$NON-NLS-1$
+            rightSelectButtonTooltip = DefaultMessagesImpl.getString("AnalysisColumnCompareTreeViewer.DependentCol"); //$NON-NLS-1$
         } else {
-            hyperlinkTextLeft = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForASet"); //$NON-NLS-1$
-            hyperlinkTextRight = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForBSet"); //$NON-NLS-1$
+            leftSelectButtonTooltip = DefaultMessagesImpl
+                    .getString("AnalysisColumnCompareTreeViewer.selectColumnsForASetTooltip"); //$NON-NLS-1$
+            rightSelectButtonTooltip = DefaultMessagesImpl
+                    .getString("AnalysisColumnCompareTreeViewer.selectColumnsForBSetTooltip"); //$NON-NLS-1$
         }
+
         Composite leftComp = toolkit.createComposite(sashForm);
         leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         leftComp.setLayout(new GridLayout());
-        leftTable = this.createSectionPart(leftComp, columnListA,
-                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.leftColumns"), hyperlinkTextLeft); //$NON-NLS-1$
+        String leftSectionTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.leftColumns"); //$NON-NLS-1$
+        leftTable = this
+                .createSectionPart(leftComp, columnListA, leftSectionTitle, leftSelectButtonText, leftSelectButtonTooltip);
 
         Composite rightComp = toolkit.createComposite(sashForm);
         rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         rightComp.setLayout(new GridLayout());
-        rightTable = this.createSectionPart(rightComp, columnListB,
-                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.rightColumns"), hyperlinkTextRight); //$NON-NLS-1$
+        String rightSectionTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.rightColumns"); //$NON-NLS-1$
+        rightTable = this.createSectionPart(rightComp, columnListB, rightSectionTitle, rightSelectButtonText,
+                rightSelectButtonTooltip);
         // MOD mzhao 2009-05-05 bug:6587.
         updateBindConnection(masterPage, tableViewerPosStack);
         columnsComparisonSection.setClient(sectionClient);
@@ -312,13 +317,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         leftTable.refresh();
     }
 
-    private TableViewer createSectionPart(Composite parentComp, final List<RepositoryNode> columnList, String title,
-            String hyperlinkText) {
-        Section columnSetElementSection = masterPage.createSection(form, parentComp, title, null);
+    private TableViewer createSectionPart(Composite parentComp, final List<RepositoryNode> columnList, String sectionTitle,
+            String buttonText, String buttonTooltipText) {
+        Section columnSetElementSection = masterPage.createSection(form, parentComp, sectionTitle, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
         sectionComp.setLayout(new GridLayout());
 
-        Hyperlink selectColumnBtn = toolkit.createHyperlink(sectionComp, hyperlinkText, SWT.NONE);
+        Button selectColumnBtn = toolkit.createButton(sectionComp, buttonText, SWT.NONE);
+        selectColumnBtn.setToolTipText(buttonTooltipText);
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(selectColumnBtn);
 
         Composite columsComp = toolkit.createComposite(sectionComp, SWT.NULL);
@@ -408,16 +414,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         });
         this.enabledButtons(new Button[] { delButton, moveUpButton, moveDownButton }, false);
         final List<RepositoryNode> columnsOfSectionPart = columnList;
-        selectColumnBtn.addHyperlinkListener(new HyperlinkAdapter() {
+
+        selectColumnBtn.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void linkActivated(HyperlinkEvent e) {
+            public void mouseDown(MouseEvent e) {
                 openColumnsSelectionDialog(columnsElementViewer, columnsOfSectionPart);
-                // Object input = columnsElementViewer.getInput();
-                // List<Object> columnSet = (List<Object>) input;
                 enabledButtons(buttons, false);
             }
-
         });
 
         columnSetElementSection.setClient(sectionComp);

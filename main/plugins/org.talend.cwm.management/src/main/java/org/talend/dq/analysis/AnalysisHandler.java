@@ -31,6 +31,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.analysis.SampleDataShowWay;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
+import org.talend.dq.analysis.parameters.IParameterConstant;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -333,7 +334,14 @@ public class AnalysisHandler {
      * @return
      */
     public String getDefaultLoadedRowCount() {
-        return String.valueOf(analysis.getParameters().getMaxNumberRows());
+        if (this.analysis != null) {
+            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PREVIEW_ROW_NUMBER,
+                    this.analysis.getTaggedValue());
+            if (taggedValue != null) {
+                return taggedValue.getValue();
+            }
+        }
+        return IParameterConstant.ANALYSIS_PREVIEW_NUMBER_ROW;
     }
 
     /**
@@ -342,7 +350,7 @@ public class AnalysisHandler {
      * @param text
      */
     public void changeDefaultRowLoaded(String text) {
-        analysis.getParameters().setMaxNumberRows(Integer.valueOf(text));
+        TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.PREVIEW_ROW_NUMBER, text);
     }
 
     /**

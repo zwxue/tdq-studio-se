@@ -55,17 +55,37 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // ADD xqliu 2010-03-10 feature 10834
     public static final String DQ_RULES_PER_PAGE = "DQ_RULES_PER_PAGE"; //$NON-NLS-1$
 
-    // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section
-    public static final int FOLDING_1 = 1;
+    // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section,4:Select sections to unfold
+    public static final int UNFOLD_ALL_SECTIONS = 1;
 
-    public static final int FOLDING_2 = 2;
+    public static final int FOLD_ALL_SECTIONS = 2;
 
-    public static final int FOLDING_3 = 3;
+    public static final int UNFOLD_FIRST_SECTION = 3;
+
+    public static final int SELECT_SECTION_TO_UNFOLD = 4;
+
+    private Button unfoldAllSectionsButton = null;
+
+    private Button foldAllSectionsButton = null;
+
+    private Button unfoldFirstSectionButton = null;
+
+    private Button selectSection2UnfoldButton = null;
+
+    private Button unfoldAllAnalyzedElementsResultPageButton = null;
+
+    private Button unfoldAllIndicatorResultPageButton = null;
 
     // default element count in per page
     public static final String DEFAULT_PAGE_SIZE = "5"; //$NON-NLS-1$
 
     public static final String HIDE_GRAPHICS_FOR_RESULT_PAGE = "HIDE_GRAPHICS_FOR_RESULT_PAGE"; //$NON-NLS-1$
+
+    public static final String HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE = "HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE"; //$NON-NLS-1$
+
+    public static final boolean DEFAULT_HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE = true;
+
+    public static final boolean DEFAULT_HIDE_GRAPHICS_FOR_RESULT_PAGE = false;
 
     private Text pageSizeText;
 
@@ -79,22 +99,72 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private static Boolean currentIndicators;
 
+    private Composite selectUnfoldComposite;
+
+    private static final boolean DEFAULT_UNFOLD_ANALYSIS_METADATA = false;
+
+    private static final boolean DEFAULT_UNFOLD_DATA_PREVIEW = true;
+
+    private static final boolean DEFAULT_UNFOLD_ANALYZED_ITEMS = true;
+
+    private static final boolean DEFAULT_UNFOLD_INDICATORS = true;
+
+    private static final boolean DEFAULT_UNFOLD_DATA_FILTER = false;
+
+    private static final boolean DEFAULT_UNFOLD_ANALYSIS_PARAMETERS = false;
+
+    private static final boolean DEFAULT_UNFOLD_CONTEXT_GROUP_SETTINGS = false;
+
+    private static Boolean currentUnfoldAnalysisMetadata = DEFAULT_UNFOLD_ANALYSIS_METADATA;
+
+    private static Boolean currentUnfoldDataPreview = DEFAULT_UNFOLD_DATA_PREVIEW;
+
+    private static Boolean currentUnfoldAnalyzedItems = DEFAULT_UNFOLD_ANALYZED_ITEMS;
+
+    private static Boolean currentUnfoldIndicators = DEFAULT_UNFOLD_INDICATORS;
+
+    private static Boolean currentUnfoldDataFilter = DEFAULT_UNFOLD_DATA_FILTER;
+
+    private static Boolean currentUnfoldAnalysisParameters = DEFAULT_UNFOLD_ANALYSIS_PARAMETERS;
+
+    private static Boolean currentUnfoldContextGroupSettings = DEFAULT_UNFOLD_CONTEXT_GROUP_SETTINGS;
+
+    public static final String UNFOLD_ANALYSIS_METADATA = "UNFOLD_ANALYSIS_METADATA"; //$NON-NLS-1$
+
+    public static final String UNFOLD_DATA_PREVIEW = "UNFOLD_DATA_PREVIEW"; //$NON-NLS-1$
+
+    public static final String UNFOLD_ANALYZED_ITEMS = "UNFOLD_ANALYZED_ITEMS"; //$NON-NLS-1$
+
+    public static final String UNFOLD_INDICATORS = "UNFOLD_INDICATORS"; //$NON-NLS-1$
+
+    public static final String UNFOLD_DATA_FILTER = "UNFOLD_DATA_FILTER"; //$NON-NLS-1$
+
+    public static final String UNFOLD_ANALYSIS_PARAMETERS = "UNFOLD_ANALYSIS_PARAMETERS"; //$NON-NLS-1$
+
+    public static final String UNFOLD_CONTEXT_GROUP_SETTINGS = "UNFOLD_CONTEXT_GROUP_SETTINGS"; //$NON-NLS-1$
+
+    private Button unfoldAnalysisMetadataButton;
+
+    private Button unfoldDataPreviewButton;
+
+    private Button unfoldAnalyzedItemsButton;
+
+    private Button unfoldIndicatorsButton;
+
+    private Button unfoldDataFilterButton;
+
+    private Button unfoldAnalysisParametersButton;
+
+    private Button unfoldContextGroupSettingsButton;
+
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS = true;
 
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_INDICATORS = false;
 
-    private Button button1 = null;
-
-    private Button button2 = null;
-
-    private Button button3 = null;
-
-    private Button button4 = null;
-
-    private Button button5 = null;
-
     // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
-    private BooleanFieldEditor hideGraphsField;
+    private BooleanFieldEditor hideGraphicsForAnaResultPage;
+
+    private BooleanFieldEditor hideGraphicsSectionForAnaSettingsPage;
 
     protected static Logger log = Logger.getLogger(EditorPreferencePage.class);
 
@@ -105,46 +175,87 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         }
 
         if (currentFolding == 0 && sectionFoldState == 0) {
-            currentFolding = FOLDING_1;
+            currentFolding = UNFOLD_ALL_SECTIONS;
         }
         return currentFolding;
     }
 
-    public static void setCurrentFolding(int currentFolding) {
+    private static void setCurrentFolding(int currentFolding) {
         EditorPreferencePage.currentFolding = currentFolding;
     }
 
-    public static Boolean isCurrentAnalyzedElements() {
+    private static Boolean isCurrentAnalyzedElements() {
         return currentAnalyzedElements == null ? true : currentAnalyzedElements;
     }
 
-    public static void setCurrentAnalyzedElements(Boolean currentAnalyzedElements) {
+    private static void setCurrentAnalyzedElements(Boolean currentAnalyzedElements) {
         EditorPreferencePage.currentAnalyzedElements = currentAnalyzedElements;
     }
 
-    public static Boolean isCurrentIndicators() {
+    private static Boolean isCurrentIndicators() {
         return currentIndicators == null ? true : currentIndicators;
     }
 
-    public static void setCurrentIndicators(Boolean currentIndicators) {
+    private static void setCurrentIndicators(Boolean currentIndicators) {
         EditorPreferencePage.currentIndicators = currentIndicators;
     }
 
+    public static boolean isHideGraphicsSectionForSettingsPage() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE,
+                DEFAULT_HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE, null);
+    }
+
     // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
-    public static boolean isHideGraphics() {
-        return CorePlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferencePage.HIDE_GRAPHICS_FOR_RESULT_PAGE);
+    public static boolean isHideGraphicsForResultPage() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, HIDE_GRAPHICS_FOR_RESULT_PAGE,
+                DEFAULT_HIDE_GRAPHICS_FOR_RESULT_PAGE, null);
     }
 
     // MOD klliu bug TDQ-966-->TDQ-3970 2011-11-16
-    public static boolean isUnfoldingAnalyzedEelements() {
+    public static boolean isUnfoldingAnalyzedEelementsResultPage() {
         int prefValue = Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID, EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS, 0,
                 null);
         return prefValue == 0 ? true : false;
     }
 
-    public static boolean isUnfoldingIndicators() {
+    public static boolean isUnfoldingIndicatorsResultPage() {
         int prefValue = Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID, EDITOR_RESULT_PAGE_INDICATORS, 0, null);
         return prefValue == 0 ? true : false;
+    }
+
+    public static boolean isUnfoldIndicators() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_INDICATORS, DEFAULT_UNFOLD_INDICATORS,
+                null);
+    }
+
+    public static boolean isUnfoldDataPreview() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_DATA_PREVIEW,
+                DEFAULT_UNFOLD_DATA_PREVIEW, null);
+    }
+
+    public static boolean isUnfoldAnalyzedItems() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_ANALYZED_ITEMS,
+                DEFAULT_UNFOLD_ANALYZED_ITEMS, null);
+    }
+
+    public static boolean isUnfoldDataFilter() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_DATA_FILTER, DEFAULT_UNFOLD_DATA_FILTER,
+                null);
+    }
+
+    public static boolean isUnfoldAnalysisParameters() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_ANALYSIS_PARAMETERS,
+                DEFAULT_UNFOLD_ANALYSIS_PARAMETERS, null);
+    }
+
+    public static boolean isUnfoldContextGroupSettings() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_CONTEXT_GROUP_SETTINGS,
+                DEFAULT_UNFOLD_CONTEXT_GROUP_SETTINGS, null);
+    }
+
+    public static boolean isUnfoldAnalysisMetadata() {
+        return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, UNFOLD_ANALYSIS_METADATA,
+                DEFAULT_UNFOLD_ANALYSIS_METADATA, null);
     }
 
     @Override
@@ -163,52 +274,194 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         Label label1 = new Label(group1, SWT.NONE);
         label1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.foldingText")); //$NON-NLS-1$
-        button1 = new Button(group1, SWT.RADIO);
-        button1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding1")); //$NON-NLS-1$
-        button1.addSelectionListener(new SelectionListener() {
+        unfoldAllSectionsButton = new Button(group1, SWT.RADIO);
+        unfoldAllSectionsButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding1")); //$NON-NLS-1$
+        unfoldAllSectionsButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
+                widgetSelected(arg0);
             }
 
             public void widgetSelected(SelectionEvent arg0) {
-                setCurrentFolding(FOLDING_1);
+                setFoldCompositeChildren(false);
+                setCurrentFolding(UNFOLD_ALL_SECTIONS);
             }
         });
-        button2 = new Button(group1, SWT.RADIO);
-        button2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding2")); //$NON-NLS-1$
-        button2.addSelectionListener(new SelectionListener() {
+        foldAllSectionsButton = new Button(group1, SWT.RADIO);
+        foldAllSectionsButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding2")); //$NON-NLS-1$
+        foldAllSectionsButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
+                widgetSelected(arg0);
             }
 
             public void widgetSelected(SelectionEvent arg0) {
-                setCurrentFolding(FOLDING_2);
+                setFoldCompositeChildren(false);
+                setCurrentFolding(FOLD_ALL_SECTIONS);
             }
         });
-        button3 = new Button(group1, SWT.RADIO);
-        button3.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding3")); //$NON-NLS-1$
-        button3.addSelectionListener(new SelectionListener() {
+        unfoldFirstSectionButton = new Button(group1, SWT.RADIO);
+        unfoldFirstSectionButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding3")); //$NON-NLS-1$
+        unfoldFirstSectionButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
+                widgetSelected(arg0);
             }
 
             public void widgetSelected(SelectionEvent arg0) {
-                setCurrentFolding(FOLDING_3);
+                setFoldCompositeChildren(false);
+                setCurrentFolding(UNFOLD_FIRST_SECTION);
             }
         });
+
+        selectSection2UnfoldButton = new Button(group1, SWT.RADIO);
+        selectSection2UnfoldButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding4")); //$NON-NLS-1$
+        selectSection2UnfoldButton.addSelectionListener(new SelectionListener() {
+
+            public void widgetDefaultSelected(SelectionEvent arg0) {
+                widgetSelected(arg0);
+            }
+
+            public void widgetSelected(SelectionEvent arg0) {
+                setFoldCompositeChildren(true);
+                setCurrentFolding(SELECT_SECTION_TO_UNFOLD);
+            }
+        });
+
+        selectUnfoldComposite = new Composite(group1, SWT.NONE | SWT.CENTER);
+        selectUnfoldComposite.setLayout(new GridLayout());
+        selectUnfoldComposite.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.CENTER));
+
+        unfoldAnalysisMetadataButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldAnalysisMetadataButton.setText(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setCurrentUnfoldAnalysisMetadata(isUnfoldAnalysisMetadata());
+        unfoldAnalysisMetadataButton.setSelection(getCurrentUnfoldAnalysisMetadata());
+        unfoldAnalysisMetadataButton.addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected(SelectionEvent e) {
+                setCurrentUnfoldAnalysisMetadata(unfoldAnalysisMetadataButton.getSelection());
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
+
+        unfoldDataPreviewButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldDataPreviewButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview")); //$NON-NLS-1$
+        setCurrentUnfoldDataPreview(isUnfoldDataPreview());
+        unfoldDataPreviewButton.setSelection(getCurrentUnfoldDataPreview());
+        unfoldDataPreviewButton.addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected(SelectionEvent e) {
+                setCurrentUnfoldDataPreview(unfoldDataPreviewButton.getSelection());
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
+
+        unfoldAnalyzedItemsButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldAnalyzedItemsButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.foldAnalyzedElement")); //$NON-NLS-1$
+        setCurrentUnfoldAnalyzedItems(isUnfoldAnalyzedItems());
+        unfoldAnalyzedItemsButton.setSelection(getCurrentUnfoldAnalyzedElement());
+        unfoldAnalyzedItemsButton.addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected(SelectionEvent e) {
+                setCurrentUnfoldAnalyzedItems(unfoldAnalyzedItemsButton.getSelection());
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
+
+        unfoldIndicatorsButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldIndicatorsButton.setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicators")); //$NON-NLS-1$
+        setCurrentUnfoldIndicators(isUnfoldIndicators());
+        unfoldIndicatorsButton.setSelection(getCurrentUnfoldIndicators());
+        unfoldIndicatorsButton.addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected(SelectionEvent e) {
+                setCurrentUnfoldIndicators(unfoldIndicatorsButton.getSelection());
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
+
+        unfoldDataFilterButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldDataFilterButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter")); //$NON-NLS-1$
+        setCurrentUnfoldDataFilter(isUnfoldDataFilter());
+        unfoldDataFilterButton.setSelection(getCurrentUnfoldDataFilter());
+        unfoldDataFilterButton.addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected(SelectionEvent e) {
+                setCurrentUnfoldDataFilter(unfoldDataFilterButton.getSelection());
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
+
+        unfoldAnalysisParametersButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldAnalysisParametersButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter")); //$NON-NLS-1$
+        setCurrentUnfoldAnalysisParameters(isUnfoldAnalysisParameters());
+        unfoldAnalysisParametersButton.setSelection(getCurrentUnfoldAnalysisParameters());
+        unfoldAnalysisParametersButton.addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected(SelectionEvent e) {
+                setCurrentUnfoldAnalysisParameters(unfoldAnalysisParametersButton.getSelection());
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
+
+        unfoldContextGroupSettingsButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldContextGroupSettingsButton.setText(DefaultMessagesImpl
+                .getString("AbstractMetadataFormPage.contextGroupSettingsSection")); //$NON-NLS-1$
+        setCurrentUnfoldContextGroupSettings(isUnfoldContextGroupSettings());
+        unfoldContextGroupSettingsButton.setSelection(getCurrentUnfoldContextGroupSettings());
+        unfoldContextGroupSettingsButton.addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected(SelectionEvent e) {
+                setCurrentUnfoldContextGroupSettings(unfoldContextGroupSettingsButton.getSelection());
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
+
+        setFoldCompositeChildren(getCurrentFolding() == SELECT_SECTION_TO_UNFOLD);
 
         switch (getCurrentFolding()) {
-        case FOLDING_1:
-            button1.setSelection(true);
+        case UNFOLD_ALL_SECTIONS:
+            unfoldAllSectionsButton.setSelection(true);
             break;
-        case FOLDING_2:
-            button2.setSelection(true);
+        case FOLD_ALL_SECTIONS:
+            foldAllSectionsButton.setSelection(true);
             break;
-        case FOLDING_3:
-            button3.setSelection(true);
+        case UNFOLD_FIRST_SECTION:
+            unfoldFirstSectionButton.setSelection(true);
+            break;
+        case SELECT_SECTION_TO_UNFOLD:
+            selectSection2UnfoldButton.setSelection(true);
             break;
         default:
-            button1.setSelection(true);
+            unfoldAllSectionsButton.setSelection(true);
         }
 
         Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
@@ -220,32 +473,32 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         Label label2 = new Label(group2, SWT.NONE);
         label2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFoldingText")); //$NON-NLS-1$
-        button4 = new Button(group2, SWT.CHECK);
-        button4.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding1")); //$NON-NLS-1$
-        setCurrentAnalyzedElements(Platform.getPreferencesService().getInt(CorePlugin.PLUGIN_ID,
-                EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS, 0, null) == 0 ? true : false);
-        button4.setSelection(isCurrentAnalyzedElements());
-        button4.addSelectionListener(new SelectionListener() {
+        unfoldAllAnalyzedElementsResultPageButton = new Button(group2, SWT.CHECK);
+        unfoldAllAnalyzedElementsResultPageButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding1")); //$NON-NLS-1$
+        setCurrentAnalyzedElements(isUnfoldingAnalyzedEelementsResultPage());
+        unfoldAllAnalyzedElementsResultPageButton.setSelection(isCurrentAnalyzedElements());
+        unfoldAllAnalyzedElementsResultPageButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
+                widgetSelected(arg0);
             }
 
             public void widgetSelected(SelectionEvent arg0) {
-                setCurrentAnalyzedElements(button4.getSelection());
+                setCurrentAnalyzedElements(unfoldAllAnalyzedElementsResultPageButton.getSelection());
             }
         });
-        button5 = new Button(group2, SWT.CHECK);
-        button5.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding2")); //$NON-NLS-1$
-        setCurrentIndicators(Platform.getPreferencesService()
-                .getInt(CorePlugin.PLUGIN_ID, EDITOR_RESULT_PAGE_INDICATORS, 0, null) == 0 ? true : false);
-        button5.setSelection(isCurrentIndicators());
-        button5.addSelectionListener(new SelectionListener() {
+        unfoldAllIndicatorResultPageButton = new Button(group2, SWT.CHECK);
+        unfoldAllIndicatorResultPageButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding2")); //$NON-NLS-1$
+        setCurrentIndicators(isUnfoldingIndicatorsResultPage());
+        unfoldAllIndicatorResultPageButton.setSelection(isCurrentIndicators());
+        unfoldAllIndicatorResultPageButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
+                widgetSelected(arg0);
             }
 
             public void widgetSelected(SelectionEvent arg0) {
-                setCurrentIndicators(button5.getSelection());
+                setCurrentIndicators(unfoldAllIndicatorResultPageButton.getSelection());
             }
         });
 
@@ -261,6 +514,15 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     }
 
     /**
+     * set FoldComposite Children's enable or not.
+     */
+    public void setFoldCompositeChildren(boolean isEnable) {
+        for (Control control : selectUnfoldComposite.getChildren()) {
+            control.setEnabled(isEnable);
+        }
+    }
+
+    /**
      * DOC yyi 2010-07-07 13964: Hide the Graphics in the Analysis results page.
      */
     private void createGraphicsGroup(Composite parent) {
@@ -271,11 +533,17 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
         graphicGroup.setLayoutData(data);
 
-        hideGraphsField = new BooleanFieldEditor(HIDE_GRAPHICS_FOR_RESULT_PAGE,
+        hideGraphicsSectionForAnaSettingsPage = new BooleanFieldEditor(HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE,
+                DefaultMessagesImpl.getString("EditorPreferencePage.hideGraphicsSection"), graphicGroup); //$NON-NLS-1$
+        getPreferenceStore().setDefault(HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE, DEFAULT_HIDE_GRAPHICS_SECTION_FOR_SETTINGS_PAGE);
+        hideGraphicsSectionForAnaSettingsPage.setPreferenceStore(getPreferenceStore());
+        hideGraphicsSectionForAnaSettingsPage.load();
+
+        hideGraphicsForAnaResultPage = new BooleanFieldEditor(HIDE_GRAPHICS_FOR_RESULT_PAGE,
                 DefaultMessagesImpl.getString("EditorPreferencePage.hideGraphics"), graphicGroup); //$NON-NLS-1$
-        getPreferenceStore().setDefault(HIDE_GRAPHICS_FOR_RESULT_PAGE, false);
-        hideGraphsField.setPreferenceStore(getPreferenceStore());
-        hideGraphsField.load();
+        getPreferenceStore().setDefault(HIDE_GRAPHICS_FOR_RESULT_PAGE, DEFAULT_HIDE_GRAPHICS_FOR_RESULT_PAGE);
+        hideGraphicsForAnaResultPage.setPreferenceStore(getPreferenceStore());
+        hideGraphicsForAnaResultPage.load();
     }
 
     /**
@@ -305,11 +573,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         drorLable.setText(DefaultMessagesImpl.getString("EditorPreferencePage.DQRulePerPage")); //$NON-NLS-1$
 
         dqruleSizeText = new Text(pageSizeComp, SWT.BORDER);
-        String dqruleSize = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID, DQ_RULES_PER_PAGE, null, null);
-        if (StringUtils.isBlank(dqruleSize)) {
-            dqruleSize = DEFAULT_PAGE_SIZE;
-        }
-        dqruleSizeText.setText(dqruleSize);
+        dqruleSizeText.setText(getDQRuleSize());
         dqruleSizeText.setLayoutData(new GridData());
         ((GridData) dqruleSizeText.getLayoutData()).widthHint = 50;
     }
@@ -317,20 +581,33 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // MOD mzhao bug 8318 2009-07-30
     @Override
     protected void performDefaults() {
-        button1.setSelection(true);
-        button2.setSelection(false);
-        button3.setSelection(false);
-        setCurrentFolding(FOLDING_1);
-        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
+        unfoldAllSectionsButton.setSelection(true);
+        foldAllSectionsButton.setSelection(false);
+        unfoldFirstSectionButton.setSelection(false);
+        selectSection2UnfoldButton.setSelection(false);
+        unfoldAllAnalyzedElementsResultPageButton.setSelection(true);
+        unfoldAllIndicatorResultPageButton.setSelection(true);
 
-        button4.setSelection(true);
-        setCurrentAnalyzedElements(button4.getSelection());
-        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
-                isCurrentAnalyzedElements() ? 0 : 1);
+        selectUnfoldComposite.setEnabled(false);
+        unfoldAnalysisMetadataButton.setSelection(DEFAULT_UNFOLD_ANALYSIS_METADATA);
+        unfoldDataPreviewButton.setSelection(DEFAULT_UNFOLD_DATA_PREVIEW);
+        unfoldAnalyzedItemsButton.setSelection(DEFAULT_UNFOLD_ANALYZED_ITEMS);
+        unfoldIndicatorsButton.setSelection(DEFAULT_UNFOLD_INDICATORS);
+        unfoldDataFilterButton.setSelection(DEFAULT_UNFOLD_DATA_FILTER);
+        unfoldAnalysisParametersButton.setSelection(DEFAULT_UNFOLD_ANALYSIS_PARAMETERS);
+        unfoldContextGroupSettingsButton.setSelection(DEFAULT_UNFOLD_CONTEXT_GROUP_SETTINGS);
 
-        button5.setSelection(true);
-        setCurrentIndicators(button5.getSelection());
-        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
+        setCurrentFolding(UNFOLD_ALL_SECTIONS);
+        setCurrentUnfoldAnalysisMetadata(unfoldAnalysisMetadataButton.getSelection());
+        setCurrentUnfoldDataPreview(unfoldDataPreviewButton.getSelection());
+        setCurrentUnfoldAnalyzedItems(unfoldAnalyzedItemsButton.getSelection());
+        setCurrentUnfoldIndicators(unfoldIndicatorsButton.getSelection());
+        setCurrentUnfoldDataFilter(unfoldDataFilterButton.getSelection());
+        setCurrentUnfoldAnalysisParameters(unfoldAnalysisParametersButton.getSelection());
+        setCurrentUnfoldContextGroupSettings(unfoldContextGroupSettingsButton.getSelection());
+        setCurrentAnalyzedElements(unfoldAllAnalyzedElementsResultPageButton.getSelection());
+        setCurrentIndicators(unfoldAllIndicatorResultPageButton.getSelection());
+        savePreferenceValues();
 
         // Analyzed Items Per Page
         pageSizeText.setText(DEFAULT_PAGE_SIZE);
@@ -342,12 +619,33 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             log.error(e);
         }
 
-        hideGraphsField.loadDefault();
+        hideGraphicsSectionForAnaSettingsPage.loadDefault();
+        hideGraphicsForAnaResultPage.loadDefault();
         super.performDefaults();
     }
 
-    public void init(IWorkbench workbench) {
+    /**
+     * DOC msjian Comment method "savePreferenceValues".
+     */
+    public void savePreferenceValues() {
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_ANALYSIS_METADATA,
+                getCurrentUnfoldAnalysisMetadata());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_DATA_PREVIEW, getCurrentUnfoldDataPreview());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_ANALYZED_ITEMS, getCurrentUnfoldAnalyzedElement());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_INDICATORS, getCurrentUnfoldIndicators());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_DATA_FILTER, getCurrentUnfoldDataFilter());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_ANALYSIS_PARAMETERS,
+                getCurrentUnfoldAnalysisParameters());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_CONTEXT_GROUP_SETTINGS,
+                getCurrentUnfoldContextGroupSettings());
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
+                isCurrentAnalyzedElements() ? 0 : 1);
+        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
+    }
 
+    public void init(IWorkbench workbench) {
+        // do nothing until now
     }
 
     public EditorPreferencePage() {
@@ -359,12 +657,11 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     @Override
     public boolean performOk() {
-        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
-        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
-                isCurrentAnalyzedElements() ? 0 : 1);
-        InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
+        savePreferenceValues();
+
         // ADD yyi 2010-07-07 for 13964
-        hideGraphsField.store();
+        hideGraphicsSectionForAnaSettingsPage.store();
+        hideGraphicsForAnaResultPage.store();
         // ~ 13964
 
         // MOD xqliu 2010-03-10 feature 10834
@@ -421,4 +718,61 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         }
         return result;
     }
+
+    public static Boolean getCurrentUnfoldAnalysisMetadata() {
+        return currentUnfoldAnalysisMetadata;
+    }
+
+    public static void setCurrentUnfoldAnalysisMetadata(Boolean currentUnfoldAnalysisMetadata) {
+        EditorPreferencePage.currentUnfoldAnalysisMetadata = currentUnfoldAnalysisMetadata;
+    }
+
+    private static Boolean getCurrentUnfoldDataPreview() {
+        return currentUnfoldDataPreview;
+    }
+
+    private static void setCurrentUnfoldDataPreview(Boolean currentUnfoldDataPreview) {
+        EditorPreferencePage.currentUnfoldDataPreview = currentUnfoldDataPreview;
+    }
+
+    private static Boolean getCurrentUnfoldAnalyzedElement() {
+        return currentUnfoldAnalyzedItems;
+    }
+
+    private static void setCurrentUnfoldAnalyzedItems(Boolean currentUnfoldAnalyzedItems) {
+        EditorPreferencePage.currentUnfoldAnalyzedItems = currentUnfoldAnalyzedItems;
+    }
+
+    private static Boolean getCurrentUnfoldIndicators() {
+        return currentUnfoldIndicators;
+    }
+
+    private static void setCurrentUnfoldIndicators(Boolean currentUnfoldIndicators) {
+        EditorPreferencePage.currentUnfoldIndicators = currentUnfoldIndicators;
+    }
+
+    private static Boolean getCurrentUnfoldDataFilter() {
+        return currentUnfoldDataFilter;
+    }
+
+    private static void setCurrentUnfoldDataFilter(Boolean currentUnfoldDataFilter) {
+        EditorPreferencePage.currentUnfoldDataFilter = currentUnfoldDataFilter;
+    }
+
+    private static Boolean getCurrentUnfoldAnalysisParameters() {
+        return currentUnfoldAnalysisParameters;
+    }
+
+    private static void setCurrentUnfoldAnalysisParameters(Boolean currentUnfoldAnalysisParameters) {
+        EditorPreferencePage.currentUnfoldAnalysisParameters = currentUnfoldAnalysisParameters;
+    }
+
+    private static Boolean getCurrentUnfoldContextGroupSettings() {
+        return currentUnfoldContextGroupSettings;
+    }
+
+    private static void setCurrentUnfoldContextGroupSettings(Boolean currentUnfoldContextGroupSettings) {
+        EditorPreferencePage.currentUnfoldContextGroupSettings = currentUnfoldContextGroupSettings;
+    }
+
 }

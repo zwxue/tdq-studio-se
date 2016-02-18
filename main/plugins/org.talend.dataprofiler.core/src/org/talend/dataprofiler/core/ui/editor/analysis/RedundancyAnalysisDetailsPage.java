@@ -136,12 +136,11 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
+        setFormTitle(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnSetComparisionAnalysis")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analysisMetadata")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-        form = managedForm.getForm();
-        form.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnSetComparisionAnalysis")); //$NON-NLS-1$
-        this.metadataSection.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analysisMetadata")); //$NON-NLS-1$
-        this.metadataSection.setDescription(DefaultMessagesImpl
-                .getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
+
         // MOD mzhao 2009-06-17 feature 5887.
         anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer(this, topComp, (Analysis) this.currentModelElement, false);
         columnsComparisonSection = anaColumnCompareViewer.getColumnsComparisonSection();
@@ -150,9 +149,7 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
         createDataFilterSection(form, topComp);
-
         createAnalysisParamSection(form, topComp);
-
         createContextGroupSection(form, topComp);
     }
 
@@ -291,14 +288,8 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
     }
 
     @Override
-    public void fireRuningItemChanged(boolean status) {
-        super.fireRuningItemChanged(status);
-
-    }
-
-    @Override
-    public void refresh() {
-        switchToResultPage();
+    public void refreshGraphicsInSettingsPage() {
+        // do nothing
     }
 
     @Override

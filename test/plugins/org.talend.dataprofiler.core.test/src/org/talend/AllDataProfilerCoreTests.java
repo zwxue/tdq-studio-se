@@ -45,12 +45,14 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.Patte
 import org.talend.dataprofiler.core.ui.imex.ExportWizardPageTest;
 import org.talend.dataprofiler.core.ui.imex.FileTreeLabelProviderTest;
 import org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriterTest;
+import org.talend.dataprofiler.core.ui.imex.model.ItemRecordTest;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactoryTest;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRuleTest;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtilsTest;
 import org.talend.dataprofiler.core.ui.utils.UDIUtilsTest;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtilsTest;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProviderTest;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.MatchWizardTest;
 import org.talend.dq.indicators.TextIndicatorForNetezzaTest;
 import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
 
@@ -69,7 +71,8 @@ import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
         ResourceViewLabelProviderTest.class, MultiColAnalysisCreationTest.class, CorePluginTest.class,
         SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class, ModelElementIndicatorRuleTest.class,
         RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class, FileTreeLabelProviderTest.class,
-        TextIndicatorForNetezzaTest.class, USStateCodesPatternRegexTest.class, DrillDownEditorInputRealTest.class })
+        TextIndicatorForNetezzaTest.class, USStateCodesPatternRegexTest.class, DrillDownEditorInputRealTest.class,
+        ItemRecordTest.class, MatchWizardTest.class })
 public class AllDataProfilerCoreTests {
 
 }

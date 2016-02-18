@@ -27,6 +27,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dq.helper.PropertyHelper;
@@ -42,7 +43,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     protected CommonFormEditor currentEditor;
 
-    protected Boolean foldingState;
+    protected int foldingState;
 
     private int sectionCount = 0;
 
@@ -89,10 +90,10 @@ public abstract class AbstractFormPage extends FormPage {
      * @return
      */
     public Section createSection(final ScrolledForm form, Composite parent, String title, String description) {
-        int style = Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR;
+        int style = Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR | Section.LEFT_TEXT_CLIENT_ALIGNMENT;
 
         if (description == null) {
-            style = Section.TWISTIE | Section.TITLE_BAR;
+            style = Section.TWISTIE | Section.TITLE_BAR | Section.LEFT_TEXT_CLIENT_ALIGNMENT;
         }
 
         Section section = toolkit.createSection(parent, style);
@@ -111,11 +112,7 @@ public abstract class AbstractFormPage extends FormPage {
         section.setText(title);
         section.setDescription(description);
 
-        if (foldingState == null) {
-            section.setExpanded(sectionCount == 0);
-        } else {
-            section.setExpanded(foldingState);
-        }
+        section.setExpanded(getExpandedStatus(title));
 
         registerSection(section);
 
@@ -125,20 +122,48 @@ public abstract class AbstractFormPage extends FormPage {
     }
 
     /**
+     * get the section's Expanded Status.
+     * 
+     * @param sectionTitle
+     * @return
+     */
+    public boolean getExpandedStatus(String sectionTitle) {
+        // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section,4:Select sections to fold
+        if (foldingState == 1) {
+            return true;
+        } else if (foldingState == 2) {
+            return false;
+        } else if (foldingState == 3) {
+            return sectionCount == 0;
+        } else if (foldingState == 4) {
+            if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldAnalysisMetadata();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldDataPreview();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analyzeColumn")) //$NON-NLS-1$
+                    || sectionTitle
+                            .equalsIgnoreCase(DefaultMessagesImpl.getString("FunctionalDependencyMasterDetailsPage.Title")) //$NON-NLS-1$
+                    || sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("TableMasterDetailsPage.analyzeTable")) //$NON-NLS-1$
+                    || sectionTitle.equalsIgnoreCase(DefaultMessagesImpl
+                            .getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldAnalyzedItems();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldDataFilter();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldAnalysisParameters();
+            } else if (sectionTitle.equalsIgnoreCase(DefaultMessagesImpl
+                    .getString("AbstractMetadataFormPage.contextGroupSettingsSection"))) { //$NON-NLS-1$
+                return EditorPreferencePage.isUnfoldContextGroupSettings();
+            }
+        }
+        return true;
+    }
+
+    /**
      * DOC bZhou Comment method "initFoldingState".
      */
     private void initFoldingState() {
-        int foldType = EditorPreferencePage.getCurrentFolding();
-
-        switch (foldType) {
-        case EditorPreferencePage.FOLDING_1:
-            foldingState = true;
-            break;
-        case EditorPreferencePage.FOLDING_2:
-            foldingState = false;
-            break;
-        default:
-        }
+        foldingState = EditorPreferencePage.getCurrentFolding();
     }
 
     /**
@@ -187,11 +212,15 @@ public abstract class AbstractFormPage extends FormPage {
      */
     public abstract void setDirty(boolean isDirty);
 
+    protected boolean canShowGraphicsSectionForSettingsPage() {
+        return (!EditorPreferencePage.isHideGraphicsSectionForSettingsPage() && TOPChartUtils.getInstance().isTOPChartInstalled());
+    }
+
     /**
      * Added TDQ-9797 if show the chart or not
      */
-    protected boolean canShowChart() {
-        return (!EditorPreferencePage.isHideGraphics() && TOPChartUtils.getInstance().isTOPChartInstalled());
+    protected boolean canShowChartForResultPage() {
+        return (!EditorPreferencePage.isHideGraphicsForResultPage() && TOPChartUtils.getInstance().isTOPChartInstalled());
     }
 
 }

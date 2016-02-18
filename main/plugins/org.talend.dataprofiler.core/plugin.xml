@@ -1932,7 +1932,7 @@
                 id="org.talend.dataprofiler.core.toolbar.importExportItem">
              <command
                    commandId="org.talend.dataprofiler.core.ExportItem"
-                   icon="icons/export.gif"
+                   icon="icons/export.png"
                    id="org.talend.dataprofiler.core.toolbar.ExportItem.id"
                    label="Export item"
                    style="push"
@@ -1948,7 +1948,7 @@
              </command>
              <command
                    commandId="org.talend.dataprofiler.core.importItem"
-                   icon="icons/import.gif"
+                   icon="icons/import.png"
                    id="org.talend.dataprofiler.core.toolbar.importItem.id"
                    label="Import item"
                    style="push"

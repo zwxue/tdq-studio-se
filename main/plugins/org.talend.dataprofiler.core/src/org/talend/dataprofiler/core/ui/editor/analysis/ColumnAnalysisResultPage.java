@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -27,7 +28,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -66,6 +72,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     private Composite chartComposite;
 
+    final private List<ExpandableComposite> previewChartList = new ArrayList<ExpandableComposite>();
+
     /**
      * DOC zqin ColumnAnalysisResultPage constructor comment.
      * 
@@ -95,16 +103,90 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         return this.masterPage.getAnalysisHandler();
     }
 
+    /**
+     * create CollapseAll Link for result section.
+     * 
+     * @param composite
+     */
+    private void createCollapseAllLink(Composite composite) {
+        ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(composite, SWT.NONE);
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns")); //$NON-NLS-1$
+        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                List<ExpandableComposite> expandableCompositeList = getExpandableCompositeList();
+                if (expandableCompositeList != null && !expandableCompositeList.isEmpty()) {
+                    for (ExpandableComposite comp : expandableCompositeList) {
+                        comp.setExpanded(false);
+                        comp.getParent().pack();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * create ExpandAll Link for result section.
+     * 
+     * @param composite
+     */
+    private void createExpandAllLink(Composite composite) {
+        ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(composite, SWT.NONE);
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns")); //$NON-NLS-1$
+        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                if (!resultSection.isExpanded()) {
+                    resultSection.setExpanded(true);
+                }
+                List<ExpandableComposite> expandableCompositeList = getExpandableCompositeList();
+                if (expandableCompositeList != null && !expandableCompositeList.isEmpty()) {
+                    for (ExpandableComposite comp : expandableCompositeList) {
+                        comp.setExpanded(true);
+                        comp.getParent().pack();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * DOC msjian Comment method "getExpandableCompositeList".
+     * 
+     * @return
+     */
+    protected List<ExpandableComposite> getExpandableCompositeList() {
+        List<ExpandableComposite> allExpandableCompositeList = new ArrayList<ExpandableComposite>();
+        if (uiPagination == null) {
+            return allExpandableCompositeList;
+        }
+        return ((IndicatorPaginationInfo) uiPagination.getCurrentPage()).getAllExpandableCompositeList();
+    }
+
     @Override
     protected void createResultSection(Composite parent) {
         resultSection = createSection(form, parent,
                 DefaultMessagesImpl.getString("ColumnAnalysisResultPage.analysisResult"), null); //$NON-NLS-1$
+
+        // TDQ-11525 msjian: Add "expand all" and "fold all" icon buttons in the "Analysis Results" section
+        Composite collapseExpandComposite = toolkit.createComposite(resultSection);
+        GridLayout gdLayout = new GridLayout();
+        gdLayout.numColumns = 2;
+        collapseExpandComposite.setLayout(gdLayout);
+        createCollapseAllLink(collapseExpandComposite);
+        createExpandAllLink(collapseExpandComposite);
+        resultSection.setTextClient(collapseExpandComposite);
+        // TDQ-11525
+
         chartTableComposite = toolkit.createComposite(resultSection);
         chartTableComposite.setLayout(new GridLayout());
         chartTableComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         final ModelElementIndicator[] modelElementIndicatores = masterPage.getCurrentModelElementIndicators();
-
         // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
         uiPagination = new UIPagination(toolkit, chartTableComposite);
         int pageSize = IndicatorPaginationInfo.getPageSize();
@@ -174,7 +256,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         this.masterPage = (ColumnAnalysisDetailsPage) masterPage1;
 
         disposeComposite();
-        masterPage1.refresh();
+
         createFormContent(getManagedForm());
     }
 
@@ -205,12 +287,11 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
         // register dynamic event,for the indicator (for each column)
         for (DynamicIndicatorModel oneCategoryIndicatorModel : indiAndDatasets) {
-            Object categoryDataset = oneCategoryIndicatorModel.getDataset();
             TableViewer tableViewer = oneCategoryIndicatorModel.getTableViewer();
             if (EIndicatorChartType.SUMMARY_STATISTICS.equals(oneCategoryIndicatorModel.getChartType())) {
                 // when all/not-all summary indicators are selected
                 DynamicBAWChartEventReceiver bawReceiver = AnalysisUtils.createDynamicBAWChartEventReceiver(
-                        oneCategoryIndicatorModel, categoryDataset, eventReceivers);
+                        oneCategoryIndicatorModel, eventReceivers);
                 bawReceiver.setChartComposite(chartComposite);
                 bawReceiver.setTableViewer(tableViewer);
                 // no need to register the parent baw receiver with one of summary indicator, no need to handle baw
@@ -267,7 +348,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             public boolean handle(Object data) {
                 if (times == 0) {
                     times++;
-                    masterPage.refresh();
+                    masterPage.refreshGraphicsInSettingsPage();
                 }
                 return true;
             }

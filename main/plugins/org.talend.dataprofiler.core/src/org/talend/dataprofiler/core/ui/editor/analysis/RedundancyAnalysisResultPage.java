@@ -245,7 +245,7 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
             }
             createTableItems(resultTable);
 
-            if (canShowChart()) {
+            if (canShowChartForResultPage()) {
                 creatChart(sectionClient, tableNameA, tableNameB);
             }
 

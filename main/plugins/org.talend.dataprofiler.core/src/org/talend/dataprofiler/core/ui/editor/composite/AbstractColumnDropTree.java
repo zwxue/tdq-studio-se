@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.window.Window;
@@ -57,8 +56,6 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -69,15 +66,11 @@ import org.talend.repository.model.IRepositoryNode;
  */
 public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
-    private static Logger log = Logger.getLogger(AbstractColumnDropTree.class);
-
     public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY"; //$NON-NLS-1$
 
     public static final String TABLE_INDICATOR_KEY = "TABLE_INDICATOR_KEY"; //$NON-NLS-1$
 
     public static final String COLUMNVIEWER_KEY = "COLUMNVIEWER_KEY"; //$NON-NLS-1$
-
-    public static final String DATA_PARAM = "DATA_PARAM"; //$NON-NLS-1$
 
     public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY"; //$NON-NLS-1$
 
@@ -176,7 +169,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         indicatorItem.setText(0, label);
 
         TreeEditor optionEditor = new TreeEditor(tree);
-        Label optionLabel = new Label(tree, SWT.NONE);
+        final Label optionLabel = new Label(tree, SWT.NONE);
         optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
         optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.options")); //$NON-NLS-1$
@@ -191,7 +184,10 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
              */
             @Override
             public void mouseDown(MouseEvent e) {
-                openIndicatorOptionDialog(Display.getCurrent().getActiveShell(), indicatorItem);
+                boolean hasIndicatorParameters = openIndicatorOptionDialog(Display.getCurrent().getActiveShell(), indicatorItem);
+                if (hasIndicatorParameters) {
+                    optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
+                }
             }
 
         });
@@ -241,7 +237,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             indicatorItem.setData(treeItem.getData(MODELELEMENT_INDICATOR_KEY));
             createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
         }
-        createIndicatorParameters(indicatorItem, indicatorUnit);
+        if (hasIndicatorParameters(indicatorUnit)) {
+            optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
+        }
     }
 
     protected abstract void setElements(ModelElementIndicator[] modelElementIndicator);
@@ -301,27 +299,41 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
     }
 
-    public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
-
+    /**
+     * open Indicator Option Dialog.
+     * 
+     * @param shell
+     * @param indicatorItem
+     * @return
+     */
+    public boolean openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
         if (isDirty()) {
             absMasterPage.doSave(null);
         }
 
         IndicatorUnit indicatorUnit = (IndicatorUnit) indicatorItem.getData(INDICATOR_UNIT_KEY);
-
         if (FormEnum.isExsitingForm(indicatorUnit)) {
             IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
             String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
             OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(shell, wizard, href);
-
             if (Window.OK == optionDialog.open()) {
                 setDirty(wizard.isDirty());
-                createIndicatorParameters(indicatorItem, indicatorUnit);
+                return hasIndicatorParameters(indicatorUnit);
             }
         } else {
-            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ 
+            openNoIndicatorOptionsMessageDialog(shell);
         }
+        return false;
+    }
+
+    /**
+     * DOC msjian Comment method "openNoIndicatorOptionsMessageDialog".
+     * 
+     * @param shell
+     */
+    public void openNoIndicatorOptionsMessageDialog(Shell shell) {
+        MessageDialogWithToggle.openInformation(shell, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ 
     }
 
     /**
@@ -335,16 +347,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
                 || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
             return ImageLib.getImage(ImageLib.PATTERN_REG);
-        } else if (indicatorType == IndicatorEnum.UserDefinedIndicatorEnum) {
-            if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory()
-                    .equals(UDIHelper.getUDICategory(indicatorUnit.getIndicator().getIndicatorDefinition()))) {
-                // MOD yyi 2010-04-21 12724,unify the UDI icon as "IndicatorDefinition.png"
-                // return ImageLib.getImage(ImageLib.PATTERN_REG);
-                return ImageLib.getImage(ImageLib.IND_DEFINITION);
-            } else {
-                return ImageLib.getImage(ImageLib.IND_DEFINITION);
-            }
-            // ~
         }
         return ImageLib.getImage(ImageLib.IND_DEFINITION);
     }
@@ -376,99 +378,48 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     }
 
     /**
-     * DOC qzhang Comment method "createIndicatorParameters".
+     * DOC msjian Comment method "hasIndicatorParameters".
      * 
-     * @param indicatorItem
-     * @param parameters
+     * @param indicatorUnit
+     * @return
      */
-    private void createIndicatorParameters(TreeItem indicatorItem, IndicatorUnit indicatorUnit) {
-        TreeItem[] items = indicatorItem.getItems();
-
-        if (indicatorItem != null && !indicatorItem.isDisposed()) {
-            for (TreeItem treeItem : items) {
-                if (DATA_PARAM.equals(treeItem.getData(DATA_PARAM))) {
-                    treeItem.dispose();
-                }
-            }
-        }
+    private boolean hasIndicatorParameters(IndicatorUnit indicatorUnit) {
         IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
         if (parameters == null) {
-            return;
+            return false;
         }
         if (hideParameters(indicatorUnit)) {
-            return;
+            return false;
         }
-        TreeItem iParamItem;
+
         if (indicatorUnit.getIndicator() instanceof FrequencyIndicator) {
             // MOD hcheng bug 7377,2009-05-18,when bins is null,parameters not
             // set on tree
             if (parameters.getBins() == null) {
-                return;
+                return false;
             }
             // ~
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.resultsShown") + parameters.getTopN()); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            return true;
         }
 
         TextParameters tParameter = parameters.getTextParameter();
         if (tParameter != null && !hideTextParameters(indicatorUnit)) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.textParameters")); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
-            TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useBlanks") + tParameter.isUseBlank()); //$NON-NLS-1$
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-
-            subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem
-                    .setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.ignoreCase") + tParameter.isIgnoreCase()); //$NON-NLS-1$
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-
-            subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useNulls") + tParameter.isUseNulls()); //$NON-NLS-1$
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-
-            subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem
-                    .setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.countryCode") + tParameter.getCountryCode()); //$NON-NLS-1$
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
+            return true;
         }
         DateParameters dParameters = parameters.getDateParameters();
         if (dParameters != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dateParameters")); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
-            TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString(
-                    "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ 
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
+            return true;
         }
         Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
         if (indicatorValidDomain != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0,
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.qualityThresholds") + (indicatorValidDomain != null)); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            return true;
         }
         Domain bins = parameters.getBins();
         if (bins != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.binsDefined") + (bins != null)); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            return true;
         }
+
+        return false;
     }
 
     public void dropModelElements(List<? extends IRepositoryNode> repositoryNode, int index) {

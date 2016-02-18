@@ -164,12 +164,11 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
+        setFormTitle(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternSettings")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternMetadata")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("PatternMasterDetailsPage.setProperties")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-        form = managedForm.getForm();
 
-        form.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternSettings")); //$NON-NLS-1$
-        metadataSection.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternMetadata")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("PatternMasterDetailsPage.setProperties")); //$NON-NLS-1$
         creatPatternDefinitionSection(topComp);
     }
 

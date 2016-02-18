@@ -159,7 +159,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
 
         createTable(sectionClient);
 
-        if (canShowChart()) {
+        if (canShowChartForResultPage()) {
             createChart(sectionClient, analysis);
         }
 
@@ -224,7 +224,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
         ChartDataEntity[] dataEntities = dataset.getDataEntities();
         if (dataEntities != null) {
             // MOD mzhao bug 8839 There might be duplicate dependencies on left and right columnSet.
-            if (canShowChart() && TOPChartUtils.getInstance().getColumnCount(dataset.getDataset()) < dataEntities.length) {
+            if (canShowChartForResultPage() && TOPChartUtils.getInstance().getColumnCount(dataset.getDataset()) < dataEntities.length) {
                 MessageDialog.openError(this.getEditor().getSite().getShell(), "Duplicate dependencies",//$NON-NLS-1$
                         "There might be duplicate dependencies on left and right columnSet.");//$NON-NLS-1$
             } else {

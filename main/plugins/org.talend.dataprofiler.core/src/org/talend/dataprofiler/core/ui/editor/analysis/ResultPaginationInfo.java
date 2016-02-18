@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +21,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
@@ -46,7 +50,6 @@ import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.IEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
-import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -65,9 +68,6 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     private ColumnAnalysisDetailsPage masterPage;
 
-    // Added TDQ-8787 20140617 yyin : store the temp indicator and its related table between one running
-    private Map<List<Indicator>, TableViewer> indicatorTableMap = new HashMap<List<Indicator>, TableViewer>();
-
     // Added TDQ-9272 20140806, only use the Dynamic model for SQL mode.
     private boolean isSQLMode = true;
 
@@ -83,15 +83,86 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         }
     }
 
+    /**
+     * create CollapseAll Link for column name.
+     * 
+     * @param composite
+     * @param label: column name
+     */
+    private void createCollapseAllLink(Composite composite, final String label) {
+        ImageHyperlink collapseAllImageLink = uiPagination.getToolkit().createImageHyperlink(composite, SWT.NONE);
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns")); //$NON-NLS-1$
+        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                Control[] expandableComposite = getIndicatorExpandableCompositeList(label);
+                for (Control control : expandableComposite) {
+                    if (control instanceof ExpandableComposite) {
+                        ((ExpandableComposite) control).setExpanded(false);
+                        ((ExpandableComposite) control).getParent().pack();
+                    }
+                }
+                form.reflow(true);
+            }
+        });
+    }
+
+    /**
+     * create ExpandAll Link for column name.
+     * 
+     * @param composite
+     * @param label: column name
+     */
+    private void createExpandAllLink(Composite composite, final String label) {
+        ImageHyperlink expandAllImageLink = uiPagination.getToolkit().createImageHyperlink(composite, SWT.NONE);
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns")); //$NON-NLS-1$
+        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                Control[] expandableComposite = getIndicatorExpandableCompositeList(label);
+                for (Control control : expandableComposite) {
+                    if (control instanceof ExpandableComposite) {
+                        ((ExpandableComposite) control).setExpanded(true);
+                        ((ExpandableComposite) control).getParent().pack();
+                    }
+                }
+
+                form.reflow(true);
+            }
+        });
+    }
+
+    /**
+     * get all indicator subsection under the column name.
+     * 
+     * @param label: column name
+     * @return
+     */
+    protected Control[] getIndicatorExpandableCompositeList(String label) {
+        Composite composite = columnCompositeMap.get(label);
+        Control[] children = composite.getChildren();
+        return children;
+    }
+
     @Override
     protected void render() {
         clearDynamicList();
-        indicatorTableMap.clear();
+        allExpandableCompositeList.clear();
+        columnCompositeMap.clear();
+
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
 
-            ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getChartComposite(),
-                    ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
+            ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(
+                    uiPagination.getChartComposite(),
+                    ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED
+                            | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
             needDispostWidgets.add(exComp);
+            allExpandableCompositeList.add(exComp);
+
             // MOD klliu add more information about the column belongs to which table/view.
             IRepositoryNode modelElementRepositoryNode = modelElementIndicator.getModelElementRepositoryNode();
             IRepositoryNode parentNodeForColumnNode = RepositoryNodeHelper.getParentNodeForColumnNode(modelElementRepositoryNode);
@@ -105,17 +176,26 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             exComp.setText(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.Column", label)); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-
             // MOD xqliu 2009-06-23 bug 7481
-            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelements());
+            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelementsResultPage());
             // ~
+
+            // TDQ-11525 msjian : Add "expand all" and "fold all" icon buttons in the "Analysis Results" section
+            Composite collapseExpandComposite = uiPagination.getToolkit().createComposite(exComp);
+            GridLayout gdLayout = new GridLayout();
+            gdLayout.numColumns = 2;
+            collapseExpandComposite.setLayout(gdLayout);
+            createCollapseAllLink(collapseExpandComposite, label);
+            createExpandAllLink(collapseExpandComposite, label);
+            exComp.setTextClient(collapseExpandComposite);
+            // TDQ-11525~
 
             final Composite comp = uiPagination.getToolkit().createComposite(exComp);
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
             exComp.setClient(comp);
-
             createResultDataComposite(comp, modelElementIndicator);
+            columnCompositeMap.put(label, comp);
 
             exComp.addExpansionListener(new ExpansionAdapter() {
 
@@ -192,7 +272,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         // MOD xqliu 2009-06-23 bug 7481
-        subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicators());
+        subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicatorsResultPage());
         // ~
 
         final Composite composite = uiPagination.getToolkit().createComposite(subComp, SWT.NULL);
@@ -210,12 +290,9 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         tableviewer.setInput(chartData);
         tableviewer.getTable().pack();
         dyModel.setTableViewer(tableviewer);
-        // TDQ-10785: when the data is too long, add a tooltip to show the first 200 characters.
-        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
         DataExplorer dataExplorer = tableTypeState.getDataExplorer();
         ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
-        // ~
 
         if (EIndicatorChartType.TEXT_STATISTICS.equals(chartType) && dataEntities != null && dataEntities.length > 0) {
             // only text indicator need
@@ -226,7 +303,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         dyModel.setIndicatorList(indicators);
 
         // create chart
-        if (!EditorPreferencePage.isHideGraphics() && TOPChartUtils.getInstance().isTOPChartInstalled()) {
+        if (!EditorPreferencePage.isHideGraphicsForResultPage() && TOPChartUtils.getInstance().isTOPChartInstalled()) {
             IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
             boolean isPattern = chartTypeState instanceof PatternStatisticsState;
             if (event == null) {
@@ -240,12 +317,9 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     }
                 }
             } else {
-                chart = chartTypeState.getChart(((DynamicChartEventReceiver) event).getDataset());
+                chart = chartTypeState.getChart(dataset);
             }
 
-            // if (dataset == null) {
-            // dataset = chartTypeState.getDataset();
-            // }
             dyModel.setDataset(dataset);
             if (chart != null) {
                 if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
@@ -298,10 +372,6 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         }
         return indicators;
 
-    }
-
-    public Map<List<Indicator>, TableViewer> getIndicatorTableMap() {
-        return this.indicatorTableMap;
     }
 
 }

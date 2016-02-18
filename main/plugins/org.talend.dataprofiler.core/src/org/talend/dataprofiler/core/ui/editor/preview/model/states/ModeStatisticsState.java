@@ -31,7 +31,6 @@ public class ModeStatisticsState extends AbstractChartTypeStates {
     }
 
     public Object getChart() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -45,17 +44,14 @@ public class ModeStatisticsState extends AbstractChartTypeStates {
     }
 
     public DataExplorer getDataExplorer() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public Object getExampleChart() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public String getReferenceLink() {
-        // TODO Auto-generated method stub
         return null;
     }
 }

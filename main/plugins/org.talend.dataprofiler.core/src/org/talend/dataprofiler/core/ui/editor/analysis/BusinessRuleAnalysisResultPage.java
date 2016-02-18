@@ -158,7 +158,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             // MOD xqliu 2009-06-23 bug 7481
-            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelements());
+            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelementsResultPage());
             // ~
 
             final Composite comp = toolkit.createComposite(exComp);
@@ -221,7 +221,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                                     Composite chartTopComp = createTableComposite(composite);
 
-                                    if (canShowChart()) {
+                                    if (canShowChartForResultPage()) {
                                         createChartsForRules(tableIndicator, chartType, units, analysis, chartTopComp);
                                     }
 
@@ -400,7 +400,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
                                     | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
                             subComp.setText(chartType.getLiteral());
                             subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-                            subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicators());
+                            subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicatorsResultPage());
                             return subComp;
                         }
 
@@ -444,7 +444,6 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
         disposeComposite();
 
         createFormContent(getManagedForm());
-        masterPage1.refresh();
 
     }
 
@@ -526,7 +525,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
             public boolean handle(Object data) {
                 if (times == 0) {
                     times++;
-                    masterPage.refresh();
+                    masterPage.refreshGraphicsInSettingsPage();
                 }
                 return true;
             }

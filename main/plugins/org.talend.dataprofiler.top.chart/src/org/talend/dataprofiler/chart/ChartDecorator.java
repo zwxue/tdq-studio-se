@@ -160,9 +160,7 @@ public final class ChartDecorator {
                     ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, COLOR_LIST.get(i));
                 }
 
-            }
-
-            if (plot instanceof XYPlot) {
+            } else if (plot instanceof XYPlot) {
                 decorateXYPlot(chart);
 
                 int count = chart.getXYPlot().getDataset().getSeriesCount();
@@ -174,9 +172,7 @@ public final class ChartDecorator {
                     // ~14173
                     ((XYPlot) plot).getRenderer().setSeriesPaint(i, COLOR_LIST.get(i));
                 }
-            }
-
-            if (plot instanceof PiePlot) {
+            } else if (plot instanceof PiePlot) {
                 decoratePiePlot(chart);
 
                 // ADD msjian TDQ-8046 2013-10-17: add the color's control for pie chart

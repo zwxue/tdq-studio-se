@@ -48,7 +48,6 @@ public class DateFrequencyStatisticsState extends FrequencyStatisticsState {
      */
     @Override
     public ICustomerDataset getCustomerDataset() {
-
         return DateFrequencyStateUtil.getCustomerDataset(units);
     }
 

@@ -222,12 +222,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                TreeItem item = (TreeItem) e.item;
-                if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
-                    tree.setMenu(null);
-                } else {
-                    new TableTreeMenuProvider(tree).createTreeMenu();
-                }
+                new TableTreeMenuProvider(tree).createTreeMenu();
             }
 
         });
@@ -543,7 +538,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         indicatorItem.setText(0, label);
 
         TreeEditor optionEditor = new TreeEditor(tree);
-        Label optionLabel = new Label(tree, SWT.NONE);
+        final Label optionLabel = new Label(tree, SWT.NONE);
         optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
         optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.options")); //$NON-NLS-1$
@@ -553,7 +548,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             @Override
             public void mouseDown(MouseEvent e) {
-                openIndicatorOptionDialog(null, indicatorItem);
+                boolean hasIndicatorParameters = openIndicatorOptionDialog(Display.getCurrent().getActiveShell(), indicatorItem);
+                if (hasIndicatorParameters) {
+                    optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
+                }
             }
 
         });
@@ -600,119 +598,79 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             indicatorItem.setData(treeItem.getData(TABLE_INDICATOR_KEY));
             createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
         }
-        createIndicatorParameters(indicatorItem, indicatorUnit);
+        if (hasIndicatorParameters(indicatorUnit)) {
+            optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
+        }
         // ADD xqliu 2009-04-30 bug 6808
         this.indicatorTreeItemMap.put(unit, indicatorItem);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#openIndicatorOptionDialog(org.eclipse
+     * .swt.widgets.Shell, org.eclipse.swt.widgets.TreeItem)
+     */
     @Override
-    public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
+    public boolean openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
         if (isDirty()) {
             masterPage.doSave(null);
         }
+
         TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) indicatorItem.getData(INDICATOR_UNIT_KEY);
-        TableIndicatorOptionsWizard wizard = new TableIndicatorOptionsWizard(indicatorUnit);
         if (FormEnum.isExsitingForm(indicatorUnit)) {
+            TableIndicatorOptionsWizard wizard = new TableIndicatorOptionsWizard(indicatorUnit);
             String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
             OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(shell, wizard, href);
             optionDialog.create();
             if (Window.OK == optionDialog.open()) {
                 setDirty(wizard.isDirty());
-                createIndicatorParameters(indicatorItem, indicatorUnit);
+                return hasIndicatorParameters(indicatorUnit);
             }
         } else {
-            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisTableTreeViewer.information"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("AnalysisTableTreeViewer.nooption")); //$NON-NLS-1$ 
+            openNoIndicatorOptionsMessageDialog(shell);
         }
+        return false;
     }
 
     /**
-     * DOC xqliu Comment method "createIndicatorParameters".
+     * DOC msjian Comment method "hasIndicatorParameters".
      * 
-     * @param indicatorItem
      * @param indicatorUnit
+     * @return
      */
-    private void createIndicatorParameters(TreeItem indicatorItem, TableIndicatorUnit indicatorUnit) {
-        TreeItem[] items = indicatorItem.getItems();
-        if (indicatorItem != null && !indicatorItem.isDisposed()) {
-            for (TreeItem treeItem : items) {
-                if (DATA_PARAM.equals(treeItem.getData(DATA_PARAM))) {
-                    treeItem.dispose();
-                }
-            }
-        }
+    private boolean hasIndicatorParameters(TableIndicatorUnit indicatorUnit) {
         IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
         if (parameters == null) {
-            return;
+            return false;
         }
-        TreeItem iParamItem;
         if (indicatorUnit.getIndicator() instanceof FrequencyIndicator) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.resultsShown") + parameters.getTopN()); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            return true;
         }
 
         TextParameters tParameter = parameters.getTextParameter();
         if (tParameter != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.textParameters")); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
-            TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useBlanks") + tParameter.isUseBlank()); //$NON-NLS-1$
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-
-            subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem
-                    .setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.ignoreCase") + tParameter.isIgnoreCase()); //$NON-NLS-1$
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-
-            subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useNulls") + tParameter.isUseNulls()); //$NON-NLS-1$
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
+            return true;
         }
         DateParameters dParameters = parameters.getDateParameters();
         if (dParameters != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dateParameters")); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
-            TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString(
-                    "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ 
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
+            return true;
         }
 
         Domain dataValidDomain = parameters.getDataValidDomain();
         if (dataValidDomain != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0,
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.validDomain") + (dataValidDomain != null)); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            return true;
         }
         Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
         if (indicatorValidDomain != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0,
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.qualityThresholds") + (indicatorValidDomain != null)); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            return true;
         }
         Domain bins = parameters.getBins();
         if (bins != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.binsDefined") + (bins != null)); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -1241,7 +1199,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
         private boolean isSelectedTable(TreeItem[] items) {
             for (TreeItem item : items) {
-                if (item.getData(INDICATOR_UNIT_KEY) != null || item.getData(DATA_PARAM) != null) {
+                if (item.getData(INDICATOR_UNIT_KEY) != null) {
                     return false;
                 }
             }
@@ -1253,12 +1211,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             if (isSelectedTable(items)) {
                 return false;
-            }
-
-            for (TreeItem item : items) {
-                if (item.getData(DATA_PARAM) != null) {
-                    return false;
-                }
             }
 
             return true;

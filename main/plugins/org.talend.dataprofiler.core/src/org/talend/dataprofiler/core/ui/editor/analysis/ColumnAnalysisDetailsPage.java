@@ -35,7 +35,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
@@ -137,6 +136,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
 
     private static final int TREE_MAX_LENGTH = 400;
 
+    private static final int PREVIEW_MAX_ROW_COUNT = 999;
+
+    private static final int PREVIEW_SUGGEST_ROW_COUNT = 500;
+
     private ExpandableComposite[] previewChartCompsites;
 
     private Section analysisColumnSection = null;
@@ -224,10 +227,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         topComp = toolkit.createComposite(sForm);
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
-        metadataSection = creatMetadataSection(form, topComp);
         form.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnAna")); //$NON-NLS-1$
-        metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
+        metadataSection = creatMetadataSection(form, topComp);
 
         createDataPreviewSection(form, topComp);
         createAnalysisColumnsSection(form, topComp);
@@ -242,7 +245,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
 
         createContextGroupSection(form, topComp);
 
-        if (!EditorPreferencePage.isHideGraphics()) {
+        if (!EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             createPreviewComposite();
 
             createPreviewSection(form, previewComp);
@@ -262,16 +265,18 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         dataPreviewTableCom.setLayout(new GridLayout(1, true));
         createConnBindWidget(dataPreviewTableCom);
         Composite buttonComposite = toolkit.createComposite(dataPreviewTableCom, SWT.NONE);
-        buttonComposite.setLayout(new GridLayout(4, false));
+        buttonComposite.setLayout(new GridLayout(5, false));
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(buttonComposite);
         createConnectionButton(buttonComposite);
         createColumnSelectButton(buttonComposite);
         createIndicatorSelectButton(buttonComposite);
         createRefreshDataButtonComp(buttonComposite);
+        createRunButton(buttonComposite);
         // create the data table
         createDataTableComposite(dataPreviewTableCom);
         dataPreviewSection.setClient(dataPreviewTableCom);
         registerEvents();
+
     }
 
     private void registerEvents() {
@@ -311,12 +316,30 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.ControlRowsLabel"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedLabel);
         rowLoadedText = toolkit.createText(dataQueryComp, null, SWT.BORDER);
+        rowLoadedText.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.ControlRowsLabelTooltip")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedText);
         // fix the width of the text field
         GridData textData = new GridData();
         textData.widthHint = 100;
         rowLoadedText.setLayoutData(textData);
-        rowLoadedText.setText(analysisHandler.getDefaultLoadedRowCount());
+        int number = Integer.valueOf(analysisHandler.getDefaultLoadedRowCount()) > PREVIEW_MAX_ROW_COUNT ? PREVIEW_SUGGEST_ROW_COUNT
+                : Integer.valueOf(analysisHandler.getDefaultLoadedRowCount());
+        rowLoadedText.setText(String.valueOf(number));
+        rowLoadedText.setTextLimit(3);
+        rowLoadedText.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
+        });
+
         rowLoadedText.addModifyListener(new ModifyListener() {
 
             public void modifyText(final ModifyEvent e) {
@@ -345,25 +368,30 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
 
-        refreshDataBtn.addMouseListener(new MouseListener() {
+        refreshDataBtn.addMouseListener(new MouseAdapter() {
 
-            public void mouseDoubleClick(MouseEvent e) {
-                // no need to implement
-            }
-
+            @Override
             public void mouseDown(MouseEvent e) {
-                if (isValidateRowCount()) {
-                    refreshPreviewTable(true);
-                } else {
-                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-                }
+                refreshPreviewData();
             }
 
-            public void mouseUp(MouseEvent e) {
-                // no need to implement
-            }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refreshPreviewData()
+     */
+    @Override
+    public void refreshPreviewData() {
+        if (isValidateRowCount()) {
+            refreshPreviewTable(true);
+        } else {
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+            rowLoadedText.setFocus();
+        }
     }
 
     /*
@@ -407,14 +435,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         if (StringUtils.isEmpty(text)) {
             return false;
         }
-        try {
-            int parseInt = Integer.parseInt(text);
-            if (parseInt < 1) {
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
         return true;
     }
 
@@ -450,7 +470,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                             .getSite().getShell());
                     if (result != null) {
                         refreshCurrentTreeViewer(result);
-                        refreshPreviewTable();
                     }
                 }
 
@@ -600,13 +619,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         dataTableComp.layout(new Control[] { warningLabel });
     }
 
-    public void refreshPreviewTable() {
-        initSampleTableParameter();
-        sampleTable.reDrawTable(getSelectedColumns());
-        redrawWarningLabel();
-
-    }
-
     /**
      * Init limitNumber and data filter
      */
@@ -754,7 +766,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
             uiPagination = new UIPagination(toolkit);
             uiPagination.setComposite(navigationComposite);
         } else {
-            lastTimePageNumber = uiPagination.getCurrentPage();
+            lastTimePageNumber = uiPagination.getCurrentPageNumber();
             uiPagination.reset();
         }
 
@@ -848,6 +860,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         if (dialog.open() == Window.OK) {
             Object[] modelElements = dialog.getResult();
             setTreeViewInput(modelElements);
+            // TDQ-11590: automatically refresh the data table after we select column with the "select columns" dialog.
+            refreshPreviewData();
+            // TDQ-11590~
         }
     }
 
@@ -897,15 +912,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      * 
      * @param modelElementIndicator
      */
-    public void refreshPreviewTable(ModelElementIndicator[] modelElements) {
-        refreshPreviewTable(modelElements, true);
-    }
-
-    /**
-     * Refresh the preview Table
-     * 
-     * @param modelElementIndicator
-     */
     public void refreshPreviewTable(ModelElementIndicator[] modelElements, boolean loadData) {
         this.currentModelElementIndicators = modelElements;
         this.refreshPreviewTable(loadData);
@@ -938,8 +944,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     }
 
     @Override
-    public void refresh() {
-        if (EditorPreferencePage.isHideGraphics()) {
+    public void refreshGraphicsInSettingsPage() {
+        if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();
@@ -1146,6 +1152,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         // when the user didn't save, revert the connection combo value
         if (oldConn != null && isDirty()) {
             this.analysisItem.getAnalysis().getContext().setConnection(oldConn);
+        }
+
+        if (this.getSampleTable().getPreviewData() != null) {
+            this.getSampleTable().getPreviewData().clear();
         }
     }
 
@@ -1373,7 +1383,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      */
     public void refreshCurrentTreeViewer(ModelElementIndicator[] result) {
         if (result.length > 0) {
-            lastTimePageNumber = uiPagination.getCurrentPage();
+            lastTimePageNumber = uiPagination.getCurrentPageNumber();
             refreshTheTree(result);
             // the number of current page is from 0 to n so need to add one when we use it.
             uiPagination.goToPage(lastTimePageNumber + 1);
@@ -1496,7 +1506,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         GridData data = (GridData) drillDownComposite.getLayoutData();
         data.heightHint = height;
         drillDownComposite.setLayoutData(data);
-        analysisParamSection.setExpanded(true);
+        // analysisParamSection.setExpanded(true);
     }
 
     private void addListenerToExecuteEngine(final CCombo execCombo1, final Composite javaEnginSection) {
@@ -1542,6 +1552,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      */
     public int getPreviewLimit() {
         return Integer.parseInt(rowLoadedText.getText());
+    }
+
+    public ColumnAnalysisDataSamTable getSampleTable() {
+        return this.sampleTable;
     }
 
 }

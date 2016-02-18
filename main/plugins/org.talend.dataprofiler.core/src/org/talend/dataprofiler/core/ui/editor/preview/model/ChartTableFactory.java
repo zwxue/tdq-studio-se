@@ -406,8 +406,9 @@ public final class ChartTableFactory {
 
         });
 
-        // add tool tip
-        TableUtils.addTooltipOnTableItem(table);
+        // add tooltip
+        TableUtils.addTooltipForTable(table);
+        TableUtils.addActionTooltip(table);
     }
 
     /**

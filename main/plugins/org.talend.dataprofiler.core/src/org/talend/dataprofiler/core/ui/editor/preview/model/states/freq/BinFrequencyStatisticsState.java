@@ -28,7 +28,6 @@ public class BinFrequencyStatisticsState extends FrequencyTypeStates {
 
     public BinFrequencyStatisticsState(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

@@ -267,7 +267,6 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      * .CategoryDataset)
      */
     public Object getChart(Object dataset) {
-        // TODO Auto-generated method stub
         return null;
     }
 

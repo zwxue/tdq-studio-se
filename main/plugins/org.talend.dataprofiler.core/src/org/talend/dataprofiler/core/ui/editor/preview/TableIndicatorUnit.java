@@ -96,8 +96,6 @@ public class TableIndicatorUnit extends IndicatorUnit {
         FormEnum[] forms = null;
         switch (this.getType()) {
         case RowCountIndicatorEnum:
-            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
-            break;
         case WhereRuleIndicatorEnum:
             forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
             break;
