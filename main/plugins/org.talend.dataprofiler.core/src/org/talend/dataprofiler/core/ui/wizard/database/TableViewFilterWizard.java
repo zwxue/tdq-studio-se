@@ -137,7 +137,7 @@ public class TableViewFilterWizard extends AbstractWizard {
     @Override
     public void addPages() {
         setWindowTitle(DefaultMessagesImpl.getString("TableViewFilterWizard.tableViewFilter")); //$NON-NLS-1$
-        setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
+        setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.RUN_IMAGE));
 
         tableViewFilterWizardPage = new TableViewFilterWizardPage(this);
         tableViewFilterWizardPage.setTitle(DefaultMessagesImpl.getString("TableViewFilterWizard.tableViewFilter")); //$NON-NLS-1$

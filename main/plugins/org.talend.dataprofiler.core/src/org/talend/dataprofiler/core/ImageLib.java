@@ -74,7 +74,7 @@ public final class ImageLib {
     // public static final String REFRESH_IMAGE = "refresh.gif"; //$NON-NLS-1$
     public static final String EXPLORE_IMAGE = "magnifier.png"; //$NON-NLS-1$
 
-    public static final String REFRESH_IMAGE = "run_exc.gif"; //$NON-NLS-1$
+    public static final String RUN_IMAGE = "run_exc.gif"; //$NON-NLS-1$
 
     /**
      * {@link IndicatorCategoryNode#getImageName()}
@@ -86,8 +86,6 @@ public final class ImageLib {
     public static final String FOLDER_NEW_IMAGE = "folder_new.png"; //$NON-NLS-1$
 
     public static final String PROJECT_ACTIVE = "prject_active.png"; //$NON-NLS-1$
-
-    public static final String REPORT_HISTORIZE = "report_go.png"; //$NON-NLS-1$
 
     public static final String NEW_CONNECTION = "new_alias.gif"; //$NON-NLS-1$
 

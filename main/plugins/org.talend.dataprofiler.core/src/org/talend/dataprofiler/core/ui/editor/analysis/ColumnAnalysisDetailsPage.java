@@ -489,7 +489,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                 + PluginConstant.SPACE_STRING;
         Button runBtn = toolkit.createButton(buttonComposite, text, SWT.NONE);
         runBtn.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButtonTooltip")); //$NON-NLS-1$
-        runBtn.setImage(ImageLib.getImage(ImageLib.REFRESH_IMAGE));
+        runBtn.setImage(ImageLib.getImage(ImageLib.RUN_IMAGE));
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(runBtn);
         runBtn.addMouseListener(new MouseAdapter() {
 

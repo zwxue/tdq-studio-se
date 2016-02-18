@@ -107,7 +107,7 @@ public class MetaDataFilterWizard extends AbstractWizard {
 
     private void initPackageFilterDescription() {
         setWindowTitle(DefaultMessagesImpl.getString("MetaDataFilterWizard.PackageFilter")); //$NON-NLS-1$
-        setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
+        setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.RUN_IMAGE));
         this.metaDataFilterWizardPage = new MetaDataFilterWizardPage(this);
         this.metaDataFilterWizardPage.setTitle(DefaultMessagesImpl.getString("MetaDataFilterWizard.PackageFilter")); //$NON-NLS-1$
         this.metaDataFilterWizardPage.setDescription(DefaultMessagesImpl.getString("MetaDataFilterWizard.PackageFilterDesc")); //$NON-NLS-1$
