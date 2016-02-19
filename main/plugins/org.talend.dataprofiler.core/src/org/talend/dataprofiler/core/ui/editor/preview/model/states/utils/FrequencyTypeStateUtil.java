@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -112,6 +112,11 @@ public class FrequencyTypeStateUtil {
         if ("".equals(keyLabel)) { //$NON-NLS-1$
             keyLabel = SpecialValueDisplay.EMPTY_FIELD;
         }
+        // TDQ-10785: when the data is too long we show the first 30 characters for table and chart
+        if (keyLabel.length() > 30) {
+            keyLabel = keyLabel.substring(0, 30) + "...(" + keyLabel.length() + " characters)"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        // TDQ-10785~
         return keyLabel;
     }
 

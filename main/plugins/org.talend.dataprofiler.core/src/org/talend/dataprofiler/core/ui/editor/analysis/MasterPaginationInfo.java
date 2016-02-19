@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -90,7 +90,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         previewChartList.clear();
         clearDynamicList();
 
-        if (EditorPreferencePage.isHideGraphics() || !TOPChartUtils.getInstance().isTOPChartInstalled()) {
+        if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage() || !TOPChartUtils.getInstance().isTOPChartInstalled()) {
             return;
         }
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
@@ -169,6 +169,8 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         }
         if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
             TOPChartUtils.getInstance().decorateChart(chart, false);
+        } else {
+            TOPChartUtils.getInstance().decoratePatternMatching(chart);
         }
         Object chartComp = TOPChartUtils.getInstance().createChartComposite(comp, SWT.NONE, chart, true);
         addListenerToChartComp(chartComp, chartTypeState);

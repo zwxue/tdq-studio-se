@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -309,7 +309,9 @@ public final class AnalysisExecutorHelper {
     }
 
     /**
-     * DOC yyin Comment method "copyWhereRule".
+     * When deep copy, if the where rule contains some joins, it will copy all related tables(extended in related db),
+     * but this is not what we want, so we use a temp list to store the joins, and then clear the joins before deep copy
+     * to avoid copy many useless things, and restore the joins after deep copy.
      * 
      * @param dependentDefinition
      */
@@ -328,9 +330,8 @@ public final class AnalysisExecutorHelper {
         IndicatorDefinition deepCopiedDefinition = EObjectHelper.deepCopy(dependentDefinition);
         // after deep copy, restore the joins.
         if (!copyJoins.isEmpty()) {
-            for (JoinElement element : copyJoins) {
-                ((WhereRule) deepCopiedDefinition).getJoins().add(element);
-            }
+            ((WhereRule) deepCopiedDefinition).getJoins().addAll(copyJoins);
+            dependentDefinition.getJoins().addAll(copyJoins);
         }
         return deepCopiedDefinition;
     }

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -65,19 +65,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     }
 
     public Object getChart() {
-        if (Java2SqlType.isDateInSQL(sqltype)) {
-            return null;
-        } else {
-            if (isIntact()) {
-                return TOPChartUtils.getInstance().createBoxAndWhiskerChart(
-                        DefaultMessagesImpl.getString("SummaryStatisticsState.SummaryStatistics"), getDataset()); //$NON-NLS-1$
-            } else {
-                Object barChart = TOPChartUtils.getInstance().createBarChart(
-                        DefaultMessagesImpl.getString("SummaryStatisticsState.Summary_Statistics"), getDataset(), false); //$NON-NLS-1$
-                TOPChartUtils.getInstance().setDisplayDecimalFormatOfChart(barChart);
-                return barChart;
-            }
-        }
+        return getChart(getDataset());
     }
 
     @Override

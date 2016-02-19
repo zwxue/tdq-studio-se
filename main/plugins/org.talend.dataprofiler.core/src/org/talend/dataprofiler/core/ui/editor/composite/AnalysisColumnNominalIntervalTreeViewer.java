@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -672,10 +672,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 if (e.item instanceof TreeItem) {
                     enabledButtons(true);
                     TreeItem item = (TreeItem) e.item;
-                    if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
-                        tree.setMenu(null);
-                        return;
-                    } else if (item.getData(INDICATOR_UNIT_KEY) != null) {
+                    if (item.getData(INDICATOR_UNIT_KEY) != null) {
                         IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
                         IndicatorEnum type = indicatorUnit.getType();
                         con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0

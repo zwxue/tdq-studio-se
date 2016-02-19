@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,6 +48,9 @@ public class ChartTableProviderClassSet {
             boolean isPercentThreshold = IndicatorHelper.hasPercentThreshold(entity.getIndicator());
             boolean isValueThreshold = IndicatorHelper.hasValueThreshold(entity.getIndicator());
             String currentText = getColumnText(element, columnIndex);
+            if (currentText == null) {
+                return null;
+            }
             boolean isCurrentCol = currentText.equals(entity.getValue()) || currentText.equals(entity.getPersent());
             if (isCurrentCol && entity.isOutOfRange(currentText)) {
                 if (2 == columnIndex && isPercentThreshold) {
@@ -161,7 +164,7 @@ public class ChartTableProviderClassSet {
         public Color getForeground(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
             String label = entity.getLabel();
-            // ADD msjian TDQ-6235 2012-10-19: when Benford law indicator, some values make the color as red 
+            // ADD msjian TDQ-6235 2012-10-19: when Benford law indicator, some values make the color as red
             if (entity.getIndicator() instanceof BenfordLawFrequencyIndicator) {
                 if (SpecialValueDisplay.ZREO_FIELD.equals(label) || SpecialValueDisplay.INVALID_FIELD.equals(label)) {
                     if (columnIndex == 2) {

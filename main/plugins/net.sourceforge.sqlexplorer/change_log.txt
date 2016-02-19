@@ -3,6 +3,9 @@ change logs from talend
 
 1. from https://github.com/Talend/tdq-studio-se/commits/master/main/plugins/net.sourceforge.sqlexplorer
 ======================================
+2016-1-25 qiongli  feature TDQ-11495 Redesign analysis editors. Replace the running guy by a green run icon.
+------------------------------------------------------------------------------------------------------------- 
+
 2014-11-26 qiongli bug TDQ-9533 Need to put a limit or limit by default the preview of tables in DQ respository
 append "limit x" in sql query for vertica database.
 ------------------------------------------------------------------------------------------------------------- 

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -238,6 +238,7 @@ public class UnitTestBuildHelper {
      * DOC talend Comment method "initProxyRepository".
      */
     public static void initProxyRepository(IProject rootProject) {
+
         Project project = null;
 
         ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
@@ -805,4 +806,19 @@ public class UnitTestBuildHelper {
         ModelElementIndicator modelElementIndicator = new ColumnIndicatorImpl(columnRepNode);
         return modelElementIndicator;
     }
+
+    public static TdColumn createRealTdColumn(String columnName, String tdSqlName, int javaType) {
+        TdTable table = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdTable();
+        table.setName("TDQ_CALENDAR"); //$NON-NLS-1$
+        TdColumn column = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdColumn();
+        column.setName(columnName);
+        TdSqlDataType tdsql = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdSqlDataType();
+        tdsql.setName(tdSqlName);
+        tdsql.setJavaDataType(javaType);
+        column.setSqlDataType(tdsql);
+        table.getOwnedElement().add(column);
+        column.setOwner(table);
+        return column;
+    }
+
 }

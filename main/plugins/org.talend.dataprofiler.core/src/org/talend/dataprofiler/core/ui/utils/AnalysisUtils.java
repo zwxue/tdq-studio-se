@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -162,8 +162,9 @@ public class AnalysisUtils {
      * @return
      */
     public static DynamicBAWChartEventReceiver createDynamicBAWChartEventReceiver(
-            DynamicIndicatorModel oneCategoryIndicatorModel, Object categoryDataset, Map<Indicator, EventReceiver> eventReceivers) {
+            DynamicIndicatorModel oneCategoryIndicatorModel, Map<Indicator, EventReceiver> eventReceivers) {
         DynamicBAWChartEventReceiver bawReceiver = new DynamicBAWChartEventReceiver();
+        Object categoryDataset = oneCategoryIndicatorModel.getDataset();
         if (categoryDataset instanceof CustomerDefaultBAWDataset) {
             // all summary selected
             bawReceiver.setBawDataset((CustomerDefaultBAWDataset) categoryDataset);

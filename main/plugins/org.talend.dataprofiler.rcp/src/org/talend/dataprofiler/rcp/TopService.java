@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,6 +35,8 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.utils.KeywordsValidator;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.designer.codegen.ISQLTemplateSynchronizer;
+import org.talend.designer.codegen.ITalendSynchronizer;
 import org.talend.designer.core.model.utils.emf.talendfile.NodeType;
 
 /**
@@ -458,6 +460,16 @@ public class TopService implements ICoreService {
 
     @Override
     public void syncLog4jSettings() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ITalendSynchronizer createCodesSynchronizer() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ISQLTemplateSynchronizer createSQLTemplateSynchronizer() {
         throw new UnsupportedOperationException();
     }
 }

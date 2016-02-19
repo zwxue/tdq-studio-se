@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -406,8 +406,9 @@ public final class ChartTableFactory {
 
         });
 
-        // add tool tip
-        TableUtils.addTooltipOnTableItem(table);
+        // add tooltip
+        TableUtils.addTooltipForTable(table);
+        TableUtils.addActionTooltip(table);
     }
 
     /**

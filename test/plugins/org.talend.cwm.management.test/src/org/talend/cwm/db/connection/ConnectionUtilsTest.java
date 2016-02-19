@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -15,10 +15,13 @@ package org.talend.cwm.db.connection;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;
 import org.talend.commons.utils.io.FilesUtils;
@@ -169,13 +172,28 @@ public class ConnectionUtilsTest {
 
     /**
      * Copy The jar file if it is not exist or not new one.
+     * 
+     * @throws URISyntaxException
      */
     private void CopyTheJarFile() {
         try {
             File sourceFile = null;
+            URL fileURL = null;
             try {
-                sourceFile = new File(FileLocator.toFileURL(
-                        CWMPlugin.getDefault().getBundle().getResource("jdbc/mysql-connector-java-5.1.12-bin.jar")).toURI()); //$NON-NLS-1$
+                URL resource = CWMPlugin.getDefault().getBundle()
+                        .getResource("jdbc" + Path.SEPARATOR + "mysql-connector-java-5.1.12-bin.jar"); //$NON-NLS-1$ //$NON-NLS-2$
+                System.out.println(resource.toString());
+                fileURL = FileLocator.toFileURL(resource);
+                System.out.println(fileURL.toString());
+                URI uri = fileURL.toURI();
+                System.out.println(uri.toString());
+                sourceFile = new File(uri);
+            } catch (IllegalArgumentException e) {
+                try {
+                    Assert.fail("url is: " + fileURL.toString() + "URI is: " + fileURL.toURI().toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                } catch (URISyntaxException e1) {
+                    Assert.fail(e1.getMessage());
+                }
             } catch (URISyntaxException e) {
                 Assert.fail(e.getMessage());
             }
@@ -209,5 +227,22 @@ public class ConnectionUtilsTest {
         ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(sqliteConn);
         Assert.assertFalse(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
         Assert.assertTrue(username.equals(sqliteConn.getUsername()));
+    }
+
+    @Test
+    public void testIsConnectionAvailable_generalJDBC_false() {
+        String driverClass = "om.mysql.jdbc.Driver"; //$NON-NLS-1$
+        String driverName = "mysql-connector-java-5.1.12-bin.jar"; //$NON-NLS-1$
+        CopyTheJarFile();
+        DatabaseConnection createDatabaseConnection = ConnectionFactoryImpl.eINSTANCE.createDatabaseConnection();
+        createDatabaseConnection.setDriverClass(driverClass);
+        createDatabaseConnection.setDriverJarPath(driverName);
+        createDatabaseConnection.setUsername("root"); //$NON-NLS-1$
+        createDatabaseConnection.setPassword("root"); //$NON-NLS-1$
+        createDatabaseConnection.setDatabaseType("General JDBC"); //$NON-NLS-1$
+
+        ReturnCode ret = ConnectionUtils.isConnectionAvailable(createDatabaseConnection);
+        Assert.assertFalse(ret.isOk());
+
     }
 }

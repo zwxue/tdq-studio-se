@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,7 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
-import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -44,21 +43,7 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
     }
 
     public Object getDataset() {
-        ICustomerDataset customerDataset = getCustomerDataset();
-        if (customerDataset != null) {
-            return customerDataset;
-        }
-
-        return null;
-    }
-
-    public ChartDataEntity[] getDataEntity() {
-        ICustomerDataset customerDataset = getCustomerDataset();
-        if (customerDataset != null) {
-            return customerDataset.getDataEntities();
-        }
-
-        return null;
+        return getCustomerDataset();
     }
 
     /**

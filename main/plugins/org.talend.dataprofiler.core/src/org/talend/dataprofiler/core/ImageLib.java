@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -85,7 +85,7 @@ public final class ImageLib {
 
     public static final String FOLDER_NEW_IMAGE = "folder_new.png"; //$NON-NLS-1$
 
-    public static final String PROJECT_ACTIVE = "prject_active.gif"; //$NON-NLS-1$
+    public static final String PROJECT_ACTIVE = "prject_active.png"; //$NON-NLS-1$
 
     public static final String REPORT_HISTORIZE = "report_go.png"; //$NON-NLS-1$
 
@@ -95,11 +95,11 @@ public final class ImageLib {
 
     public static final String ADD_ACTION = "add.gif"; //$NON-NLS-1$
 
-    public static final String UP_ACTION = "up.gif"; //$NON-NLS-1$
+    public static final String UP_ACTION = "up.png"; //$NON-NLS-1$
 
-    public static final String DOWN_ACTION = "down.gif"; //$NON-NLS-1$
+    public static final String DOWN_ACTION = "down.png"; //$NON-NLS-1$
 
-    public static final String PASTE_ACTION = "paste.gif"; //$NON-NLS-1$
+    public static final String PASTE_ACTION = "paste.png"; //$NON-NLS-1$
 
     public static final String COPY_ACTION = "copy.gif"; //$NON-NLS-1$
 
@@ -142,9 +142,9 @@ public final class ImageLib {
 
     public static final String DATA_PROFILING = "server_chart.png"; //$NON-NLS-1$
 
-    public static final String EXPORT_REPORT = "export_rep.gif"; //$NON-NLS-1$
+    public static final String EXPORT_REPORT = "export_rep.png"; //$NON-NLS-1$
 
-    public static final String LEVEL_WARNING = "level_warning.gif"; //$NON-NLS-1$
+    public static final String LEVEL_WARNING = "level_warning.png"; //$NON-NLS-1$
 
     public static final String WARN_OVR = "warn_ovr.gif"; //$NON-NLS-1$
 
@@ -152,7 +152,7 @@ public final class ImageLib {
 
     public static final String EXCLAMATION = "exclamation.png"; //$NON-NLS-1$
 
-    public static final String CATALOG = "catalog.jpg"; //$NON-NLS-1$
+    public static final String CATALOG = "catalog.png"; //$NON-NLS-1$
 
     public static final String ASC_SORT = "asc.gif"; //$NON-NLS-1$
 
@@ -172,9 +172,9 @@ public final class ImageLib {
 
     public static final String SAVE = "save.gif"; //$NON-NLS-1$
 
-    public static final String IMPORT = "import.gif"; //$NON-NLS-1$
+    public static final String IMPORT = "import.png"; //$NON-NLS-1$
 
-    public static final String EXPORT = "export.gif"; //$NON-NLS-1$
+    public static final String EXPORT = "export.png"; //$NON-NLS-1$
 
     /** PK icon from SQL Explorer. */
     public static final String PK_DECORATE = "pk_decorate.gif"; //$NON-NLS-1$
@@ -187,10 +187,10 @@ public final class ImageLib {
     public static final String INDEX_VIEW = "index.gif"; //$NON-NLS-1$
 
     /** Collapse all icon. */
-    public static final String COLLAPSE_ALL = "collapseall.gif"; //$NON-NLS-1$
+    public static final String COLLAPSE_ALL = "collapseall.png"; //$NON-NLS-1$
 
     /** Expand all icon. */
-    public static final String EXPAND_ALL = "expandall.gif"; //$NON-NLS-1$
+    public static final String EXPAND_ALL = "expandall.png"; //$NON-NLS-1$
 
     /** Icon for primary key. */
     public static final String PK_COLUMN = "pkColumn.gif"; //$NON-NLS-1$
@@ -234,7 +234,7 @@ public final class ImageLib {
 
     public static final String ICON_PROCESS_WIZARD = "process_wiz.png"; //$NON-NLS-1$
 
-    public static final String ICON_ERROR_INFO = "error.gif"; //$NON-NLS-1$
+    public static final String ICON_ERROR_INFO = "error.png"; //$NON-NLS-1$
 
     public static final String RECYCLEBIN_EMPTY = "recyclebinempty.png"; //$NON-NLS-1$
 
@@ -246,11 +246,11 @@ public final class ImageLib {
 
     public static final String ICON_ADD_VAR = "add_ovr.gif"; //$NON-NLS-1$
 
-    public static final String FILE_DELIMITED = "filedelimited.gif"; //$NON-NLS-1$
+    public static final String FILE_DELIMITED = "filedelimited.png"; //$NON-NLS-1$
 
     public static final String SOURCE_FILE = "editor.png"; //$NON-NLS-1$
 
-    public static final String JAR_FILE = "jar_obj.gif"; //$NON-NLS-1$
+    public static final String JAR_FILE = "jar_obj.png"; //$NON-NLS-1$
 
     public static final String ADD_SYN = "synonym/book_add.png"; //$NON-NLS-1$
 

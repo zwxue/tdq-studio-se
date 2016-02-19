@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -197,10 +197,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         setFormTitle(DefaultMessagesImpl.getString("MatchMasterDetailsPage.tableAna")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("TableMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-
-        metadataSection.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
         createDataSection();
         createSelectRecordLinkageSection();
@@ -221,7 +220,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         selectAlgorithmSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
-        selectAlgorithmSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        selectAlgorithmSection.getSection().setExpanded(getExpandedStatus(selectAlgorithmSection.getSection().getText()));
         registerSection(selectAlgorithmSection.getSection());
     }
 
@@ -237,7 +236,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         registerSection(matchAndSurvivorKeySection.getSection());
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
         matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        matchAndSurvivorKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        matchAndSurvivorKeySection.getSection().setExpanded(getExpandedStatus(matchAndSurvivorKeySection.getSection().getText()));
         matchAndSurvivorKeySection.setIsNeedSubChart(true);
         selectAlgorithmSection.setAnaMatchSurvivorSection(matchAndSurvivorKeySection);
         if (selectAlgorithmSection.isVSRMode()) {
@@ -257,7 +256,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         registerSection(defaultSurvivorshipDefinitionSection.getSection());
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        defaultSurvivorshipDefinitionSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        defaultSurvivorshipDefinitionSection.getSection().setExpanded(
+                getExpandedStatus(defaultSurvivorshipDefinitionSection.getSection().getText()));
         selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
         if (selectAlgorithmSection.isVSRMode()) {
             // Hide the section in case of vsr.
@@ -276,7 +276,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             matchParameterSection.addPropertyChangeListener(this);
             matchParameterSection.createParameterCom();
             registerSection(matchParameterSection.getSection());
-            matchParameterSection.getSection().setExpanded(foldingState == null ? false : foldingState);
+            matchParameterSection.getSection().setExpanded(getExpandedStatus(matchParameterSection.getSection().getText()));
         }
     }
 
@@ -310,7 +310,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         blockingKeySection.createContent();
         registerSection(blockingKeySection.getSection());
         selectAlgorithmSection.setBlockkeySection(blockingKeySection);
-        blockingKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        // blockingKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
     }
 
     /**
@@ -687,6 +687,21 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refreshPreviewData()
+     */
+    @Override
+    public void refreshPreviewData() {
+        if (isValidateRowCount()) {
+            refreshDataFromConnection(true);
+        } else {
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+        }
+    }
+
     /**
      * create "Refresh Button", and the row control input.
      * 
@@ -701,23 +716,11 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
 
-        refreshDataBtn.addMouseListener(new MouseListener() {
+        refreshDataBtn.addMouseListener(new MouseAdapter() {
 
-            public void mouseDoubleClick(MouseEvent e) {
-                // no need to implement
-            }
-
+            @Override
             public void mouseDown(MouseEvent e) {
-                if (isValidateRowCount()) {
-                    refreshDataFromConnection(true);
-                } else {
-                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-                }
-            }
-
-            public void mouseUp(MouseEvent e) {
-                // no need to implement
+                refreshPreviewData();
             }
         });
 
@@ -920,6 +923,10 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 }
                 blockingKeySection.clearChart();
                 setSampleDataShowWayStatus();
+                // TDQ-11590: automatically refresh the data table after we select column with the "select columns"
+                // dialog
+                refreshPreviewData();
+                // TDQ-11590~
             }
         }
     }
@@ -1486,13 +1493,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refresh()
-     */
     @Override
-    public void refresh() {
+    public void refreshGraphicsInSettingsPage() {
         // no need for refresh in match analysis now.
 
     }
@@ -1575,7 +1577,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     }
 
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
-        selectAlgorithmSection.setMatchRuleDef(matchRule);
         boolean isVSR = RecordMatcherType.simpleVSRMatcher.name().equals(matchRule.getRecordLinkageAlgorithm());
         selectAlgorithmSection.setSelection(isVSR);
         if (selectAlgorithmSection.isVSRMode()) {

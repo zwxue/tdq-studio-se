@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
@@ -68,8 +67,8 @@ public abstract class FrequencyTableState extends AbstractTableTypeStates {
                             withRowCountIndicator));
                 }
             } else {
-                dataEnities.add(FrequencyTypeStateUtil.createChartEntity(unit.getIndicator(), null,
-                        SpecialValueDisplay.EMPTY_FIELD, false));
+                // TDQ-11422: before analysis run turn to Analysis Results page, there should show nothing data
+                // dataEnities.add(FrequencyTypeStateUtil.createChartEntity(unit.getIndicator(), null, null, false));
             }
         }
 

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -140,12 +140,12 @@ public class DatabaseSQLExecutor extends SQLExecutor {
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements, String where)
             throws SQLException {
-        dataFromTable.clear();
+        getDataFromTable().clear();
         try {
             beginQuery();
         } catch (Exception e1) {
             log.error(e1.getMessage(), e1);
-            return dataFromTable;
+            return getDataFromTable();
         }
         int columnListSize = analysedElements.size();
 
@@ -189,6 +189,6 @@ public class DatabaseSQLExecutor extends SQLExecutor {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return dataFromTable;
+        return getDataFromTable();
     }
 }

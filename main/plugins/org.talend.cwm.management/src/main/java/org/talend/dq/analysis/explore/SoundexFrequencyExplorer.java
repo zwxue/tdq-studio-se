@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,9 +18,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC mzhao class global comment. Detailled comment
@@ -72,30 +71,32 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
     }
 
     private String getFunction() {
-        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
-        final String body = instantiatedExpression.getBody();
+        String instantiatedSQL = getIndicatorExpressionSQL();
+        if (instantiatedSQL == null) {
+            return instantiatedSQL;
+        }
+
         Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = p.matcher(body);
+        Matcher matcher = p.matcher(instantiatedSQL);
         matcher.find();
         String group = matcher.group(1);
         return group;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.FrequencyStatisticsExplorer#getQueryMap()
-     */
     @Override
-    public Map<String, String> getQueryMap() {
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
-        if (!isSqlEngine) {
-            return map;
-        }
         map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getFreqRowsStatement());
-
         return map;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
+     */
+    @Override
+    protected boolean NotShowMenu() {
+        return AnalysisHelper.isJavaExecutionEngine(this.analysis);
+    }
 }

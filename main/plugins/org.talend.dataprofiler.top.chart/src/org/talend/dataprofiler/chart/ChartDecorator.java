@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -143,6 +143,9 @@ public final class ChartDecorator {
      */
     public static void decorate(JFreeChart chart, PlotOrientation orientation) {
         if (chart != null) {
+            // TDQ-11522: Set white background on charts in the editors
+            chart.setBackgroundPaint(Color.white);
+            // TDQ-11522~
             Plot plot = chart.getPlot();
             if (plot instanceof CategoryPlot) {
                 decorateCategoryPlot(chart, orientation);
@@ -157,9 +160,7 @@ public final class ChartDecorator {
                     ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, COLOR_LIST.get(i));
                 }
 
-            }
-
-            if (plot instanceof XYPlot) {
+            } else if (plot instanceof XYPlot) {
                 decorateXYPlot(chart);
 
                 int count = chart.getXYPlot().getDataset().getSeriesCount();
@@ -171,9 +172,7 @@ public final class ChartDecorator {
                     // ~14173
                     ((XYPlot) plot).getRenderer().setSeriesPaint(i, COLOR_LIST.get(i));
                 }
-            }
-
-            if (plot instanceof PiePlot) {
+            } else if (plot instanceof PiePlot) {
                 decoratePiePlot(chart);
 
                 // ADD msjian TDQ-8046 2013-10-17: add the color's control for pie chart
@@ -260,6 +259,19 @@ public final class ChartDecorator {
         CategoryItemRenderer renderer = ((CategoryPlot) chart.getPlot()).getRenderer();
         renderer.setSeriesPaint(0, COLOR_LIST.get(1));
         renderer.setSeriesPaint(1, COLOR_LIST.get(2));
+    }
+
+    /**
+     * DOC msjian Comment method "decoratePatternMatching".
+     * 
+     * @param chart
+     */
+    public static void decoratePatternMatching(JFreeChart chart) {
+        if (chart != null) {
+            // TDQ-11522: Set white background on charts in the editors
+            chart.setBackgroundPaint(Color.white);
+            // TDQ-11522~
+        }
     }
 
     /**

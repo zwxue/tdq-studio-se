@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -76,7 +76,6 @@ public class SimpleRuleStatisticsChartState extends AbstractChartTypeStatesTable
      * .CategoryDataset)
      */
     public Object getChart(Object dataset) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -86,7 +85,6 @@ public class SimpleRuleStatisticsChartState extends AbstractChartTypeStatesTable
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChartList(java.util.List)
      */
     public List<Object> getChartList(List<Object> datasets) {
-        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,6 +38,8 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
     public static final String HANDLE_NULL = "HANDLE_NULL"; //$NON-NLS-1$
 
     public static final String THRESHOLD = "THRESHOLD"; //$NON-NLS-1$
+
+    public static final String ATTRIBUTE_THRESHOLD = "ATTRIBUTE_THRESHOLD"; //$NON-NLS-1$
 
     public static final String SURVIVORSHIP_FUNCTION = "SURVIVORSHIP_FUNCTION"; //$NON-NLS-1$
 

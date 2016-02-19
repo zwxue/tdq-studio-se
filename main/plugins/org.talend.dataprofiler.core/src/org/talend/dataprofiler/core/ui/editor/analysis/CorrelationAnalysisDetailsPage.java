@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,8 +31,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -42,11 +47,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.Hyperlink;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -56,7 +57,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
@@ -242,9 +242,10 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         topComp = toolkit.createComposite(sForm);
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
+
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
         metadataSection = creatMetadataSection(form, topComp);
-        metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
-        metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
         // set title of form.
         if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
@@ -272,7 +273,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         createContextGroupSection(form, topComp);
 
         // createAnalysisParamSection(form, topComp);
-        if (!EditorPreferencePage.isHideGraphics()) {
+        if (!EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             previewComp = toolkit.createComposite(sForm);
             previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             previewComp.setLayout(new GridLayout());
@@ -306,16 +307,16 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         // ~ MOD mzhao 2009-05-05,Bug 6587.
         createConnBindWidget(topComp);
         // ~
-        Hyperlink clmnBtn = toolkit.createHyperlink(topComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
-        clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
+
+        Button clmnBtn = toolkit.createButton(topComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumnBtn"), //$NON-NLS-1$
+                SWT.NONE);
+        clmnBtn.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void linkActivated(HyperlinkEvent e) {
+            public void mouseDown(MouseEvent e) {
                 openColumnsSelectionDialog();
-            }
 
+            }
         });
 
         Composite tree = toolkit.createComposite(topComp, SWT.NONE);
@@ -359,9 +360,9 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
-        refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
-        refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
+        Button chartButton = new Button(sectionClient, SWT.NONE);
+        chartButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
+
         final Label message = toolkit.createLabel(sectionClient,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
@@ -374,10 +375,10 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
         final Analysis analysis = correlationAnalysisHandler.getAnalysis();
 
-        refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
+        chartButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void linkActivated(HyperlinkEvent e) {
+            public void widgetSelected(SelectionEvent e) {
 
                 for (Control control : chartComposite.getChildren()) {
                     control.dispose();
@@ -499,8 +500,8 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
     }
 
     @Override
-    public void refresh() {
-        if (EditorPreferencePage.isHideGraphics()) {
+    public void refreshGraphicsInSettingsPage() {
+        if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();

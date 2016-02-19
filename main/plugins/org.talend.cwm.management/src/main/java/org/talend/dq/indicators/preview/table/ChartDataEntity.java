@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -332,7 +332,19 @@ public class ChartDataEntity {
         if (indicator != null) {
             IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
 
-            if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
+            // TDQ-10785: when the data is too long, add a tooltip to show the first 200 characters.
+            if (indicatorEnum == IndicatorEnum.PatternFreqIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.PatternLowFreqIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.FrequencyIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.LowFrequencyIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.SoundexIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.SoundexLowIndicatorEnum) {
+                if (key != null && key.toString().length() > 30) {
+                    msg.append("The original value is: " //$NON-NLS-1$
+                            + (key.toString().length() > 200 ? key.toString().substring(0, 200)
+                                    + "...(" + key.toString().length() + " characters)" : key.toString())); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+            } else if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
                 msg.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             } else if (indicatorEnum == IndicatorEnum.BoxIIndicatorEnum) {
                 if (isOutOfRange(getValue())) {

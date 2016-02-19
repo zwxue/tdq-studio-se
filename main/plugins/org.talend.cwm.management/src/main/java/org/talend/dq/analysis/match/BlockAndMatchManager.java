@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -161,18 +161,18 @@ public class BlockAndMatchManager {
      */
     class OneBlockMatching {
 
-        private AnalysisMatchRecordGrouping vsrGrouping;
+        private AnalysisMatchRecordGrouping matchRecordGrouping;
 
         private long blockSize = 0;
 
         public OneBlockMatching() throws BusinessException {
             if (recordMatchingIndicator.getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm()
                     .equals(RecordMatcherType.T_SwooshAlgorithm.name())) {
-                vsrGrouping = new AnalysisSwooshMatchRecordGrouping(matchResultConsumer);
+                matchRecordGrouping = new AnalysisSwooshMatchRecordGrouping(matchResultConsumer);
             } else {
-                vsrGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
+                matchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
             }
-            initGrouping(vsrGrouping);
+            initGrouping(matchRecordGrouping);
         }
 
         /**
@@ -200,7 +200,7 @@ public class BlockAndMatchManager {
          */
         public void run(RichRecord currentRecord) throws BusinessException {
             try {
-                vsrGrouping.doGroup(currentRecord);
+                matchRecordGrouping.doGroup(currentRecord);
                 blockSize++;
             } catch (IOException e) {
                 throw new BusinessException();
@@ -211,7 +211,7 @@ public class BlockAndMatchManager {
 
         public void end() throws BusinessException {
             try {
-                vsrGrouping.end();
+                matchRecordGrouping.end();
             } catch (IOException e) {
                 throw new BusinessException();
             } catch (InterruptedException e) {

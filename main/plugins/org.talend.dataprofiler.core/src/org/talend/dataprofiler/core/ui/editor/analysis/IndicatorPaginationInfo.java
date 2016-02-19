@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,8 +20,10 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -57,6 +59,13 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
     // Added TDQ-8787 20140617 yyin : store the temp indicator and its related dataset between one running
     protected List<DynamicIndicatorModel> dynamicList = new ArrayList<DynamicIndicatorModel>();
 
+    // Added TDQ-11525 20160126 msjian: this is used to expand or fold all column subsections under the result section
+    protected List<ExpandableComposite> allExpandableCompositeList = new ArrayList<ExpandableComposite>();
+
+    // Added TDQ-11525 20160126 msjian: this is used to expand or fold all indicator subsections under the result
+    // section
+    protected Map<String, Composite> columnCompositeMap = new HashMap<String, Composite>();
+
     public IndicatorPaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
             UIPagination uiPagination) {
         super(form, modelElementIndicators, uiPagination);
@@ -68,7 +77,6 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.what")); //$NON-NLS-1$
     }
 
-    @SuppressWarnings("deprecation")
     public static int getPageSize() {
         try {
             String defaultPageSize = Platform.getPreferencesService().getString(CorePlugin.PLUGIN_ID,
@@ -167,6 +175,15 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
         }
 
         return menuMap;
+    }
+
+    /**
+     * Getter for allExpandableCompositeList.
+     * 
+     * @return the allExpandableCompositeList
+     */
+    public List<ExpandableComposite> getAllExpandableCompositeList() {
+        return this.allExpandableCompositeList;
     }
 
 }

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.DBTableFolderRepNode;
@@ -40,16 +42,19 @@ import org.talend.repository.model.RepositoryNode;
  */
 public final class TableUtils {
 
+    public static final Color highlightBlue = new Color(Display.getCurrent(), 223, 232, 246);
+
     private TableUtils() {
 
     }
 
     /**
-     * DOC bZhou Comment method "addTooltipOnTableItem".
+     * add "Right-click for actions" Tooltip.
      * 
      * @param table
      */
-    public static void addTooltipOnTableItem(final Table table) {
+    public static void addActionTooltip(final Table table) {
+
         table.setToolTipText(""); //$NON-NLS-1$
 
         final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
@@ -59,7 +64,7 @@ public final class TableUtils {
 
             public void handleEvent(Event event) {
                 Label label = (Label) event.widget;
-                Shell shell = label.getShell();
+                Shell labelShell = label.getShell();
 
                 switch (event.type) {
                 case SWT.MouseDown:
@@ -67,9 +72,9 @@ public final class TableUtils {
                     e.item = (TableItem) label.getData("_TABLEITEM"); //$NON-NLS-1$
                     table.setSelection(new TableItem[] { (TableItem) e.item });
                     table.notifyListeners(SWT.Selection, e);
-                    // FIXME does here need a break?
+                    // no need a break
                 case SWT.MouseExit:
-                    shell.dispose();
+                    labelShell.dispose();
                     break;
                 default:
                     break;
@@ -79,36 +84,126 @@ public final class TableUtils {
 
         Listener tableListener = new Listener() {
 
-            Shell tip = null;
+            Shell actionTooltipShell = null;
 
-            Label label = null;
+            Label actionTooltipLabel = null;
 
             public void handleEvent(Event event) {
+                TableItem item = table.getItem(new Point(event.x, event.y));
                 switch (event.type) {
                 case SWT.Dispose:
                     shell.dispose();
-                    tip = null;
-                    label = null;
                     break;
                 case SWT.KeyDown:
                 case SWT.MouseMove:
-                    if (tip == null) {
-                        break;
+
+                    if (actionTooltipShell != null && !actionTooltipShell.isDisposed()) {
+                        actionTooltipShell.dispose();
                     }
-                    tip.dispose();
-                    tip = null;
-                    label = null;
                     break;
                 case SWT.MouseHover:
-                    TableItem item = table.getItem(new Point(event.x, event.y));
-
                     if (item != null) {
-                        // show tool tip
+                        // show action tooltip
+                        showActionTooltip(item);
+                    }
+                default:
+                    break;
+                }
+            }
+
+            private void showActionTooltip(TableItem item) {
+                actionTooltipShell = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
+                actionTooltipShell.setLayout(new FillLayout());
+                actionTooltipLabel = new Label(actionTooltipShell, SWT.NONE);
+
+                actionTooltipLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+                actionTooltipLabel.setData("_TABLEITEM", item); //$NON-NLS-1$
+                actionTooltipLabel.setText(DefaultMessagesImpl.getString("TableUtils.actionTooltipLabel")); //$NON-NLS-1$
+                actionTooltipLabel.addListener(SWT.MouseExit, labelListener);
+                actionTooltipLabel.addListener(SWT.MouseDown, labelListener);
+                Point size = actionTooltipShell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+                Rectangle rect = item.getBounds(1);
+                Point pt = table.toDisplay(rect.x, rect.y);
+                actionTooltipShell.setBounds(pt.x - 100, pt.y, size.x, size.y);
+                actionTooltipShell.setVisible(true);
+            }
+        };
+
+        table.addListener(SWT.Dispose, tableListener);
+        table.addListener(SWT.KeyDown, tableListener);
+        table.addListener(SWT.MouseMove, tableListener);
+        table.addListener(SWT.MouseHover, tableListener);
+
+    }
+
+    /**
+     * add threshold Tooltip etc for table.
+     * 
+     * @param table
+     */
+    public static void addTooltipForTable(final Table table) {
+        table.setToolTipText(""); //$NON-NLS-1$
+
+        final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
+        shell.setLayout(new FillLayout());
+
+        final Listener labelListener = new Listener() {
+
+            public void handleEvent(Event event) {
+                Label label = (Label) event.widget;
+                Shell labelShell = label.getShell();
+
+                switch (event.type) {
+                case SWT.MouseDown:
+                    Event e = new Event();
+                    e.item = (TableItem) label.getData("_TABLEITEM"); //$NON-NLS-1$
+                    table.setSelection(new TableItem[] { (TableItem) e.item });
+                    table.notifyListeners(SWT.Selection, e);
+                    // no need a break
+                case SWT.MouseExit:
+                    labelShell.dispose();
+                    break;
+                default:
+                    break;
+                }
+            }
+        };
+
+        Listener tableListener = new Listener() {
+
+            Shell rangeTooltipShell = null;
+
+            Label rangeTooltipLabel = null;
+
+            public void handleEvent(Event event) {
+                TableItem item = table.getItem(new Point(event.x, event.y));
+                switch (event.type) {
+                case SWT.Dispose:
+                    shell.dispose();
+                    if (item != null) {
+                        item.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                    }
+                    break;
+                case SWT.KeyDown:
+                case SWT.MouseMove:
+                    if (item != null) {
+                        item.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                    }
+                    if (rangeTooltipShell != null && !rangeTooltipShell.isDisposed()) {
+                        rangeTooltipShell.dispose();
+                    }
+
+                    break;
+                case SWT.MouseHover:
+                    if (item != null) {
+                        // TDQ-11529: when hovering over table or charts, change background color
+                        item.setBackground(highlightBlue);
+                        // show Range tooltip
                         ChartDataEntity entity = (ChartDataEntity) item.getData();
 
                         String rangeAsString = entity.getRangeAsString();
                         if (rangeAsString != null) {
-                            showTip(item, rangeAsString);
+                            showRangeTooltip(item, rangeAsString);
                         }
                     }
                 default:
@@ -116,26 +211,23 @@ public final class TableUtils {
                 }
             }
 
-            private void showTip(TableItem item, String msg) {
-                if (tip != null && !tip.isDisposed()) {
-                    tip.dispose();
-                }
+            private void showRangeTooltip(TableItem item, String msg) {
+                rangeTooltipShell = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
+                rangeTooltipShell.setLayout(new FillLayout());
+                rangeTooltipLabel = new Label(rangeTooltipShell, SWT.NONE);
 
-                tip = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
-                tip.setLayout(new FillLayout());
-                label = new Label(tip, SWT.NONE);
-
-                label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-                label.setData("_TABLEITEM", item); //$NON-NLS-1$
-                label.setText(msg);
-                label.addListener(SWT.MouseExit, labelListener);
-                label.addListener(SWT.MouseDown, labelListener);
-                Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+                rangeTooltipLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+                rangeTooltipLabel.setData("_TABLEITEM", item); //$NON-NLS-1$
+                rangeTooltipLabel.setText(msg);
+                rangeTooltipLabel.addListener(SWT.MouseExit, labelListener);
+                rangeTooltipLabel.addListener(SWT.MouseDown, labelListener);
+                Point size = rangeTooltipShell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
                 Rectangle rect = item.getBounds(1);
                 Point pt = table.toDisplay(rect.x, rect.y);
-                tip.setBounds(pt.x - 100, pt.y + 18, size.x, size.y);
-                tip.setVisible(true);
+                rangeTooltipShell.setBounds(pt.x - 100, pt.y + 18, size.x, size.y);
+                rangeTooltipShell.setVisible(true);
             }
+
         };
 
         table.addListener(SWT.Dispose, tableListener);

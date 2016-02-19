@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -86,6 +86,8 @@ public interface ITOPChartService {
     void decorateChart(Object chart, boolean withPlot);
 
     void decorateColumnDependency(Object chart);
+
+    void decoratePatternMatching(Object chart);
 
     void setOrientation(Object chart, boolean isHorizontal);
 

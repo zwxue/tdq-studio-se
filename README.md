@@ -27,7 +27,7 @@ All Talend Studio repositories follow the same file structure:
 
 ## Download
 
-You can download this product from the [Talend website](http://www.talend.com/download/data-quality).
+You can download this product from the [Talend website](http://www.talend.com/download/talend-open-studio?qt-product_tos_download_new=2&utm_source=github&utm_campaign=tosdq).
 
 
 ## Usage and Documentation

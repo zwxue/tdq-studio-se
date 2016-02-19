@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,12 +33,8 @@ import org.talend.dq.dbms.HiveDbmsLanguage;
  */
 public class SimpleStatisticsExplorer extends DataExplorer {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
-     */
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
@@ -115,8 +111,8 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         if (sql.indexOf(GenericSQLHandler.UDI_INDICATOR_VALUE) != -1) {
             if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
                 // replace <%=__INDICATOR_VALUE__%>
-                sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getRealValue().toString());
-
+                Double realValue = this.indicator.getRealValue();
+                sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, realValue == null ? "0" : realValue.toString()); //$NON-NLS-1$
             } else {
                 sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE,
                         (String.valueOf(this.indicator.getIntegerValue().intValue())));

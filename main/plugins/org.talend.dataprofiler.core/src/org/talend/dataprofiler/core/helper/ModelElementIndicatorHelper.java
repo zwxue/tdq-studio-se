@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -149,10 +149,17 @@ public final class ModelElementIndicatorHelper {
             return null;
         }
         ColumnIndicator switchColumnIndicator = switchColumnIndicator(modelElementIndicator);
-        if (switchColumnIndicator == null) {
-            return null;
+        if (switchColumnIndicator != null) {
+            return switchColumnIndicator.getTdColumn();
         }
-        return switchColumnIndicator.getTdColumn();
+
+        // TDQ-10198: support Delimited File connection column
+        DelimitedFileIndicator switchDelimitedFileIndicator = switchDelimitedFileIndicator(modelElementIndicator);
+        if (switchDelimitedFileIndicator != null) {
+            return switchDelimitedFileIndicator.getMetadataColumn();
+        }
+
+        return null;
     }
 
     /**

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -133,7 +133,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private String formTitle;
 
-    private String metadataTitle;
+    private String metadataSectionTitle;
+
+    private String metadataSectionDescription;
 
     public String oldDataproviderName;
 
@@ -182,7 +184,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm currentform, Composite parentCom) {
-        Section section = createSection(currentform, topComp, getMetadataTitle(), ""); //$NON-NLS-1$
+        Section section = createSection(currentform, topComp, getMetadataSectionTitle(), getMetadataSectionDescription());
         Composite parent = toolkit.createComposite(section);
         parent.setLayout(new GridLayout(2, false));
 
@@ -491,10 +493,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     /**
      * Sets the metadataTitle.
      * 
-     * @param metadataTitle the metadataTitle to set
+     * @param metadataSectionTitle the metadataTitle to set
      */
-    protected void setMetadataTitle(String metadataTitleParameter) {
-        this.metadataTitle = metadataTitleParameter;
+    protected void setMetadataSectionTitle(String metadataTitleParameter) {
+        this.metadataSectionTitle = metadataTitleParameter;
     }
 
     /**
@@ -502,8 +504,26 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * 
      * @return the metadataTitle
      */
-    protected String getMetadataTitle() {
-        return metadataTitle == null ? "" : metadataTitle; //$NON-NLS-1$
+    protected String getMetadataSectionTitle() {
+        return metadataSectionTitle == null ? "" : metadataSectionTitle; //$NON-NLS-1$
+    }
+
+    /**
+     * Getter for metadataSectionDescription.
+     * 
+     * @return the metadataSectionDescription
+     */
+    public String getMetadataSectionDescription() {
+        return metadataSectionDescription == null ? "" : metadataSectionDescription; //$NON-NLS-1$;
+    }
+
+    /**
+     * Sets the metadataSectionDescription.
+     * 
+     * @param metadataSectionDescription the metadataSectionDescription to set
+     */
+    public void setMetadataSectionDescription(String metadataSectionDescription) {
+        this.metadataSectionDescription = metadataSectionDescription;
     }
 
     public String getOldDataproviderName() {

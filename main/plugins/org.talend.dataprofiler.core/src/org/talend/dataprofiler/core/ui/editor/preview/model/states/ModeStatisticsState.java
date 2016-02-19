@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,6 @@ public class ModeStatisticsState extends AbstractChartTypeStates {
     }
 
     public Object getChart() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -45,17 +44,14 @@ public class ModeStatisticsState extends AbstractChartTypeStates {
     }
 
     public DataExplorer getDataExplorer() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public Object getExampleChart() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public String getReferenceLink() {
-        // TODO Auto-generated method stub
         return null;
     }
 }

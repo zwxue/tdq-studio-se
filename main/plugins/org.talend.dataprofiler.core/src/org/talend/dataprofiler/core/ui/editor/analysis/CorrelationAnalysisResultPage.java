@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -141,7 +141,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            if (canShowChart()) {
+            if (canShowChartForResultPage()) {
                 this.createGraphicsSectionPart(sectionClient);
             }
         }
@@ -319,10 +319,10 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
         TableViewer tableviewer = tableTypeState.getTableForm(composite);
         tableviewer.setInput(chartData);
-        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
+        TableUtils.addTooltipForTable(tableviewer.getTable());
 
         // create chart
-        if (canShowChart()) {
+        if (canShowChartForResultPage()) {
             // then create chart
             IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(simpleStatType, units);
             Object chart = chartTypeState.getChart();
@@ -526,7 +526,6 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
         if (graphicsAndTableComp != null && !graphicsAndTableComp.isDisposed()) {
             graphicsAndTableComp.dispose();
         }
-        mPage.refresh();
         createFormContent(getManagedForm());
     }
 

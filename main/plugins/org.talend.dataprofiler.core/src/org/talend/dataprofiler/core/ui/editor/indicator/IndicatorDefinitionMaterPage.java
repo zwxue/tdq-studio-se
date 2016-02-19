@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -130,13 +130,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private static final String CHARACTER_MAPPING_SECTION_TITLE = DefaultMessagesImpl
             .getString("IndicatorDefinitionMaterPage.CharactersMappingSectionTitle"); //$NON-NLS-1$
-
-    private static final String METADATA_SECTION_DESCRIPTION = DefaultMessagesImpl
-            .getString("IndicatorDefinitionMaterPage.formDescript"); //$NON-NLS-1$
-
-    private static final String METADATA_TITLE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formMedata"); //$NON-NLS-1$
-
-    private static final String FORM_TITLE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formTitle"); //$NON-NLS-1$
 
     private static final String DEFINITION_SECTION_DESCRIPTION = DefaultMessagesImpl
             .getString("IndicatorDefinitionMaterPage.definitionDecription"); //$NON-NLS-1$
@@ -416,10 +409,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        setFormTitle(FORM_TITLE);
-        setMetadataTitle(METADATA_TITLE);
+        setFormTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formTitle")); //$NON-NLS-1$
+        setMetadataSectionTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formMedata")); //$NON-NLS-1$
+        setMetadataSectionDescription(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formDescript")); //$NON-NLS-1$
         super.createFormContent(managedForm);
-        metadataSection.setDescription(METADATA_SECTION_DESCRIPTION);
+
         // MOD by zshen move CategorySection before of DefinitionSection on UDI Editor
         createIndicatorContent();
         form.reflow(true);

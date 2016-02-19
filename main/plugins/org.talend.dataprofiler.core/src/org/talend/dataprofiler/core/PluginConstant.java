@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,8 +25,10 @@ public final class PluginConstant {
     public static final String SE_ID = "net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"; //$NON-NLS-1$
 
     public static final String CHEAT_SHEET_VIEW = "org.eclipse.ui.cheatsheets.views.CheatSheetView"; //$NON-NLS-1$
-    
+
     public static final String GETTING_STARTED_CHEAT_SHEET_ID = "org.talend.dataprofiler.core.talenddataprofiler"; //$NON-NLS-1$
+
+    public static final String START_HERE_CHEAT_SHEET_ID = "org.talend.datacleansing.core.ui.dqcheatsheet"; //$NON-NLS-1$
 
     public static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
 

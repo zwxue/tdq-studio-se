@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -663,7 +663,8 @@ public final class IndicatorHelper {
                         return String.valueOf(userDefineIndicator.getRealValue());
                     }
                 }
-                return String.valueOf(object.getUserCount());
+                // TDQ-11485: fix the match udi get result value error
+                return String.valueOf(object.getIntegerValue());
             }
 
             @Override

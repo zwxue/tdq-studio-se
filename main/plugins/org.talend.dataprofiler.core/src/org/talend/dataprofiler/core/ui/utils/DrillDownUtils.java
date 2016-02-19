@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -64,8 +64,17 @@ public class DrillDownUtils {
 
         Indicator indicator = dataEntity.getIndicator();
         String selectValue = dataEntity.getLabel();
+        // TDQ-10785: fix the drill down menu for frequency table indicator and pattern frequency indicator can not use
+        // when the data is too long
+        String keyLabel = String.valueOf(dataEntity.getKey());
+        // the equals on the right is the same to FrequencyTypeStateUtil.getKeyLabel()
+        if (keyLabel.length() > 30 && selectValue.equals(keyLabel.substring(0, 30) + "...(" + keyLabel.length() + " characters)")) { //$NON-NLS-1$ //$NON-NLS-2$
+            selectValue = keyLabel;
+        }
+        // TDQ-10785~
+
         String dbMapName = getDBMapName(analysisType, indicator, selectValue, itemEntitie);
-        return MapDBUtils.getMapDB(dbMapName, indicator);
+        return MapDBUtils.getMapDB(dbMapName, dataEntity.getIndicator());
     }
 
     /**

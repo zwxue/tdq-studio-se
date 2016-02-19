@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,14 +48,6 @@ public interface IIndicatorSelectDialog extends IShellProvider {
      * @return The root composite of dialog
      */
     public Composite getDialogComposite();
-
-    /**
-     * 
-     * Get the expression of where clause
-     * 
-     * @return The expression of where clause
-     */
-    public String getWhereExpression();
 
     /**
      * 

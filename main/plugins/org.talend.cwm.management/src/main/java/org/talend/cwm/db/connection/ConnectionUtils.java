@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -234,16 +234,19 @@ public final class ConnectionUtils {
         String password = JavaSqlFactory.getPassword(analysisDataProvider);
         props.put(TaggedValueHelper.USER, userName);
         props.put(TaggedValueHelper.PASSWORD, password);
-        if (isGeneralJdbc(analysisDataProvider)) {
-            try {
-                ReturnCode rcJdbc = checkGeneralJdbcJarFilePathDriverClassName((DatabaseConnection) analysisDataProvider);
-                if (!rcJdbc.isOk()) {
-                    return rcJdbc;
+
+        if (analysisDataProvider instanceof DatabaseConnection) {
+            // MOD qiongli TDQ-11507,for GeneralJdbc,should check connection too after validation jar and jdbc driver .
+            if (isGeneralJdbc(analysisDataProvider)) {
+                try {
+                    ReturnCode rcJdbc = checkGeneralJdbcJarFilePathDriverClassName((DatabaseConnection) analysisDataProvider);
+                    if (!rcJdbc.isOk()) {
+                        return rcJdbc;
+                    }
+                } catch (MalformedURLException e) {
+                    return new ReturnCode(e.getMessage(), false);
                 }
-            } catch (MalformedURLException e) {
-                return new ReturnCode(e.getMessage(), false);
             }
-        } else if (analysisDataProvider instanceof DatabaseConnection) {
             // MOD qiongli 2014-5-14 in order to check and connect a dbConnection by a correct driver,replace
             // 'ConnectionUtils.checkConnection(...)' with 'managerConn.check(metadataConnection)'.
             ManagerConnection managerConn = new ManagerConnection();
@@ -252,7 +255,6 @@ public final class ConnectionUtils {
             if (!check) {
                 returnCode.setMessage(managerConn.getMessageException());
             }
-
         }
         return returnCode;
     }

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.dbms.HiveDbmsLanguage;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -25,20 +24,17 @@ import orgomg.cwm.objectmodel.core.Expression;
 public class TextStatisticsExplorer extends DataExplorer {
 
     private String getTextRowsStatement() {
-        String lang = dbmsLanguage.getDbmsName();
-        Expression instantiatedExpression = this.indicator.getInstantiatedExpressions(lang);
-        String instantiatedSQL = instantiatedExpression.getBody();
+        String instantiatedSQL = getIndicatorExpressionSQL();
+        if (instantiatedSQL == null) {
+            return instantiatedSQL;
+        }
 
         String clause = dbmsLanguage.charLength(this.columnName) + dbmsLanguage.equal() + "(" + instantiatedSQL + ")"; //$NON-NLS-1$ //$NON-NLS-2$
         return getRowsStatement(clause);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
-     */
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
         Map<String, String> map = new HashMap<String, String>();
         // MOD qiongli 2012-8-29 hive don't support the complex sql.

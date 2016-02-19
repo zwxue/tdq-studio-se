@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -519,7 +519,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
         if (hasCatalog && hasSchema && catalogIndic != null) {
             // add it to list of indicators
-            this.addToConnectionIndicator(catalogIndic);
+            this.addToConnectionIndicator(catalogIndic, schemaIndic);
 
             // add it to list of indicators
             catalogIndic.addSchemaIndicator(schemaIndic);
@@ -546,6 +546,13 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     }
 
     protected void addToConnectionIndicator(Indicator indicator) {
+        // does nothing: implemented only in ConnectionEvaluator
+    }
+
+    /*
+     * if it has catalog and schema, the table/view count of connectionIndicator is all tables from each schema.
+     */
+    protected void addToConnectionIndicator(CatalogIndicator catalogIndicator, SchemaIndicator schemaIndicator) {
         // does nothing: implemented only in ConnectionEvaluator
     }
 

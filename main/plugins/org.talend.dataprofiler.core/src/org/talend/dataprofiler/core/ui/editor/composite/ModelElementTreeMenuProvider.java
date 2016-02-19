@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -405,8 +405,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     private boolean isSelectedColumn(TreeItem[] items) {
         for (TreeItem item : items) {
-            if (item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY) != null
-                    || item.getData(AbstractColumnDropTree.DATA_PARAM) != null) {
+            if (item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY) != null) {
                 return false;
             }
         }
@@ -415,15 +414,8 @@ public abstract class ModelElementTreeMenuProvider {
     }
 
     private boolean isSelectedIndicator(TreeItem[] items) {
-
         if (isSelectedColumn(items)) {
             return false;
-        }
-
-        for (TreeItem item : items) {
-            if (item.getData(AbstractColumnDropTree.DATA_PARAM) != null) {
-                return false;
-            }
         }
 
         return true;

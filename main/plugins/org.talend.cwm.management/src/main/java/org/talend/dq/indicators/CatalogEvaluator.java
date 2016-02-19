@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -91,6 +91,7 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
                 evalCatalogIndic(catalogIndicator, catalog, ok);
             } else {
                 catalogIndicator.setAnalyzedElement(catalog);
+                catalogIndicator.setSchemaCount(schemas.size());
                 // --- create SchemaIndicator for each pair of catalog schema
                 for (Schema tdSchema : schemas) {
                     // --- create SchemaIndicator for each catalog
@@ -99,7 +100,6 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
                     DefinitionHandler.getInstance().setDefaultIndicatorDefinition(schemaIndic);
                     evalSchemaIndicLow(catalogIndicator, schemaIndic, catalog, tdSchema, ok);
                 }
-                catalogIndicator.setSchemaCount(schemas.size());
 
             }
         }

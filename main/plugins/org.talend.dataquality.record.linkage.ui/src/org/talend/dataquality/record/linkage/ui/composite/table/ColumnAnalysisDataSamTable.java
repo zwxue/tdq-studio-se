@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -69,7 +69,6 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
      */
     @Override
     protected boolean isContainGID(List<Object[]> results) {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -94,15 +93,15 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
      */
     @Override
     protected List<Object[]> createPreviewData(ModelElement[] columns) throws SQLException {
-        List<Object[]> previewData = new ArrayList<Object[]>();
-        DataManager connection = null;
-        boolean isDelimitedFile = false;
         // no columns be selected so that no data can be read
         if (columns == null || columns.length == 0) {
-            return previewData;
+            return new ArrayList<Object[]>();
         }
+
         // use ModelElement instead of node to get the data source type directly.
         // get connection from column[0]
+        DataManager connection = null;
+        boolean isDelimitedFile = false;
         ModelElement modelElement = columns[0];
         if (modelElement instanceof MetadataColumn && !(modelElement instanceof TdColumn)) {
             isDelimitedFile = true;
@@ -111,7 +110,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
             connection = ConnectionHelper.getTdDataProvider((TdColumn) modelElement);
         } else {// other case it is not support by now
             log.warn(DefaultMessagesImpl.getString("ColumnAnalysisDataSamTable.UnSupportType")); //$NON-NLS-1$
-            return previewData;
+            return new ArrayList<Object[]>();
         }
 
         ISQLExecutor sqlExecutor = null;
@@ -124,7 +123,6 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
         sqlExecutor.setLimit(getLimitNumber());
         sqlExecutor.setShowRandomData(isShowRandomData());
         return sqlExecutor.executeQuery(connection, Arrays.asList(columns), dataFilter);
-
     }
 
     /*
@@ -158,7 +156,6 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
      */
     public void setDataFilter(String dataFilterString) {
         dataFilter = dataFilterString;
-
     }
 
 }

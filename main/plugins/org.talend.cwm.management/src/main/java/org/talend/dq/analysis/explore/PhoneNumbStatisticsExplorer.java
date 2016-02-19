@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -15,7 +15,7 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.helpers.AnalysisHelper;
 
 /**
  * DOC qiongli class global comment. Detailled comment
@@ -25,32 +25,35 @@ public class PhoneNumbStatisticsExplorer extends DataExplorer {
     public PhoneNumbStatisticsExplorer() {
     }
 
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
-     */
-    public Map<String, String> getQueryMap() {
+    @Override
+    public Map<String, String> getSubClassQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
-        if (!isSqlEngine) {
-            switch (this.indicatorEnum) {
-            case ValidPhoneCountIndicatorEnum:
-            case PossiblePhoneCountIndicatorEnum:
-            case ValidRegCodeCountIndicatorEnum:
-            case InvalidRegCodeCountIndicatorEnum:
-            case WellFormE164PhoneCountIndicatorEnum:
-            case WellFormIntePhoneCountIndicatorEnum:
-            case WellFormNationalPhoneCountIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, null);
-                map.put(MENU_VIEW_VALUES, null);
-                break;
+        switch (this.indicatorEnum) {
+        case ValidPhoneCountIndicatorEnum:
+        case PossiblePhoneCountIndicatorEnum:
+        case ValidRegCodeCountIndicatorEnum:
+        case InvalidRegCodeCountIndicatorEnum:
+        case WellFormE164PhoneCountIndicatorEnum:
+        case WellFormIntePhoneCountIndicatorEnum:
+        case WellFormNationalPhoneCountIndicatorEnum:
+            map.put(MENU_VIEW_ROWS, null);
+            map.put(MENU_VIEW_VALUES, null);
+            break;
 
-            default:
-            }
+        default:
         }
 
         return map;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
+     */
+    @Override
+    protected boolean NotShowMenu() {
+        return !AnalysisHelper.isJavaExecutionEngine(this.analysis);
     }
 
 }

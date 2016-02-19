@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,8 +48,8 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
      * @param modelElementIndicators
      */
     public IndicatorSelectGrid(IndicatorSelectDialog dialog, Composite parent, int style,
-            ModelElementIndicator[] modelElementIndicators, int[] preferColumnsWidth) {
-        super(dialog, parent, style, modelElementIndicators);
+            ModelElementIndicator[] modelElementIndicators, int[] preferColumnsWidth, List<Object[]> previewData) {
+        super(dialog, parent, style, modelElementIndicators, previewData);
         this.preferColumnsWidth = preferColumnsWidth;
         initializeGrid();
         addVscrollBarListener();

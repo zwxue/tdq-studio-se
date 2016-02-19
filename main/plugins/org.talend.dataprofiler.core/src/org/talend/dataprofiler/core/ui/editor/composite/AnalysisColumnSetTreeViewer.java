@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,7 +23,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -250,12 +249,22 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         Tree currentTree = columnsElementViewer.getTree();
         Object[] selectItem = currentTree.getSelection();
         List<IRepositoryNode> columnList = columnsElementViewer.getColumnSetMultiValueList();
+
+        // get all the selected index list first which is used to check how to move
+        List<Object> allSelectedItemList = new ArrayList<Object>();
+        for (Object element : selectItem) {
+            allSelectedItemList.add(element);
+        }
+
         int index = 0;
         RepositoryNode moveElement = null;
         List<Integer> indexArray = new ArrayList<Integer>();
         for (Object element : selectItem) {
             index = currentTree.indexOf((TreeItem) element);
-            if (index + step > -1 && index + step < columnList.size()) {
+
+            int changeIndex = index + step;
+
+            if (changeIndex > -1 && changeIndex < columnList.size()) {
                 Object treeElement = ((TreeItem) element).getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                 // MOD by zshen for bug 15750 TODO 39 columnset analysis move up/down one column will get exception.
                 if (treeElement instanceof ModelElement) {
@@ -264,12 +273,18 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     moveElement = (RepositoryNode) treeElement;
                 }
                 columnList.remove(moveElement);
-                columnList.add((index + step), moveElement);
-                indexArray.add(index + step);
+                // when the changed one is the selected one too, get next one
+                while (allSelectedItemList.contains(currentTree.getItem(changeIndex))) {
+                    ++changeIndex;
+                }
+                columnList.add(changeIndex, moveElement);
+                indexArray.add(changeIndex);
 
-                ModelElementIndicator tmpElement = modelElementIndicators[index + step];
-                modelElementIndicators[index + step] = modelElementIndicators[index];
+                ModelElementIndicator tmpElement = modelElementIndicators[changeIndex];
+                modelElementIndicators[changeIndex] = modelElementIndicators[index];
                 modelElementIndicators[index] = tmpElement;
+
+                allSelectedItemList.remove(element);
 
             } else {
                 return;
@@ -463,8 +478,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private boolean isSelectedColumn(TreeItem[] items) {
         for (TreeItem item : items) {
-            if (item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY) != null
-                    || item.getData(AbstractColumnDropTree.DATA_PARAM) != null) {
+            if (item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY) != null) {
                 return false;
             }
         }
@@ -547,17 +561,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                // boolean con = false;
-
                 if (e.item instanceof TreeItem) {
                     enabledButtons(true);
-                    TreeItem item = (TreeItem) e.item;
-                    if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
-                        tree.setMenu(null);
-                        return;
-                    } else {
-                        new AnalysisColumnSetMenuProvider(tree).createTreeMenu(Boolean.TRUE);
-                    }
+                    new AnalysisColumnSetMenuProvider(tree).createTreeMenu(Boolean.TRUE);
                 }
             }
         });
@@ -658,11 +664,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * .swt.widgets.Shell, org.eclipse.swt.widgets.TreeItem)
      */
     @Override
-    public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
+    public boolean openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
         // MOD msjian TDQ-8551 2014-4-15: columnset analysis can not set options for pattern types
-        MessageDialogWithToggle.openInformation(shell, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ 
+        openNoIndicatorOptionsMessageDialog(shell);
         // TDQ-8551~
+        return false;
     }
 
     /**

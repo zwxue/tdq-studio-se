@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.metadata.MetadataToolHelper;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -35,7 +33,6 @@ import org.talend.dataquality.matchmerge.Record;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.FileUtils;
 import org.talend.fileprocess.FileInputDelimited;
-import org.talend.metadata.managment.ui.preview.ShadowProcessPreview;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -114,31 +111,26 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
             int analysedColumnIndex[] = new int[analysisElementList.size()];
             // need to find the analysed element position , and only get these analysed column's values.
+            MetadataColumn mColumn = (MetadataColumn) analysisElementList.get(0);
+            MetadataTable metadataTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
+            EList<MetadataColumn> columns = metadataTable.getColumns();
             List<String> columnLabels = new ArrayList<String>();
-            for (int i = 0; i < headValue && csvReader.readNext(); i++) {
-
-                String[] values = csvReader.getValues();
-                for (int index = 0; index < values.length; index++) {
-                    String tempLabel = values[index];
-                    if (tempLabel != null && !("").equals(tempLabel)) { //$NON-NLS-1$
-                        tempLabel = tempLabel.trim().replaceAll(" ", "_"); //$NON-NLS-1$ //$NON-NLS-2$
-                        tempLabel = MetadataToolHelper.validateColumnName(tempLabel, index);
-                    } else {
-                        tempLabel = "Column" + index; //$NON-NLS-1$
-                    }
-                    values[index] = tempLabel;
-                }
-                ShadowProcessPreview.fixDuplicateNames(values);
-                Collections.addAll(columnLabels, values);
+            for (MetadataColumn column : columns) {
+                columnLabels.add(column.getLabel());
             }
-
+            String[] analysedColumnName = new String[analysisElementList.size()];
             for (int j = 0; j < analysisElementList.size(); j++) {
-                analysedColumnIndex[j] = columnLabels.indexOf(analysisElementList.get(j).getName());
-            }// ~
+                analysedColumnName[j] = ((MetadataColumn) analysisElementList.get(j)).getLabel();
+                analysedColumnIndex[j] = columnLabels.indexOf(analysedColumnName[j]);
+            }
 
             long currentRecord = 0;
             while (csvReader.readNext()) {
                 currentRecord++;
+                // skip the head rows
+                if (currentRecord <= headValue) {
+                    continue;
+                }
                 if (limitValue != -1 && currentRecord > limitValue) {
                     break;
                 }
@@ -185,12 +177,12 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements, String where)
             throws SQLException {
-        dataFromTable.clear();
+        getDataFromTable().clear();
         try {
             beginQuery();
         } catch (Exception e1) {
             log.error(e1.getMessage(), e1);
-            return dataFromTable;
+            return getDataFromTable();
         }
         DelimitedFileConnection delimitedFileconnection = (DelimitedFileConnection) connection;
         String path = JavaSqlFactory.getURL(delimitedFileconnection);
@@ -213,7 +205,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return dataFromTable;
+        return getDataFromTable();
     }
 
 }

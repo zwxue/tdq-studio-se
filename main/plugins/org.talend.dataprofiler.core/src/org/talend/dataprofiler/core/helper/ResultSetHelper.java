@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,8 +21,6 @@ import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
@@ -33,24 +31,6 @@ import orgomg.cwm.objectmodel.core.Expression;
  * DOC talend class global comment. Detailled comment
  */
 public class ResultSetHelper {
-
-    public static ResultSet getResultSet(ColumnIndicator columnIndicator, String whereExpression, int limitNumber)
-            throws SQLException {
-        Connection tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(columnIndicator);
-        TdColumn tdColumn = columnIndicator.getTdColumn();
-        IMetadataConnection metadataBean = ConvertionHelper.convert(tdDataProvider);
-        TypedReturnCode<java.sql.Connection> createConnection = MetadataConnectionUtils.createConnection(metadataBean, false);
-        if (!createConnection.isOk()) {
-            return null;
-        }
-        java.sql.Connection sqlConn = createConnection.getObject();
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-        Statement createStatement = dbmsLanguage.createStatement(sqlConn);
-        createStatement.setMaxRows(limitNumber);
-
-        Expression columnQueryExpression = dbmsLanguage.getTableQueryExpression(tdColumn, whereExpression);
-        return createStatement.executeQuery(columnQueryExpression.getBody());
-    }
 
     public static ResultSet getResultSet(MetadataTable metadataTable, String whereExpression) throws SQLException {
         return getResultSet(metadataTable, whereExpression, 0);

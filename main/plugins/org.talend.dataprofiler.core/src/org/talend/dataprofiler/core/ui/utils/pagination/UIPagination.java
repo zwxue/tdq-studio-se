@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -62,8 +62,6 @@ public class UIPagination {
 
     protected ImageHyperlink pageFirstImgHypLnk = null;
 
-    protected ImageHyperlink goImgHypLnk = null;
-
     protected Text pageGoText;
 
     private FormToolkit toolkit;
@@ -118,7 +116,7 @@ public class UIPagination {
         notifyPageNavigator();
         // First show zero-indexed contents.
         if (pageCache.size() > currentPage && pageCache.size() > 0) {
-            pageCache.get(currentPage).renderContents();
+            getCurrentPage().renderContents();
         }
     }
 
@@ -214,13 +212,13 @@ public class UIPagination {
             }
 
         });
-        goImgHypLnk = toolkit.createImageHyperlink(pageNavComp, SWT.NONE);
+
+        Label go2PageLabel = toolkit.createLabel(pageNavComp, DefaultMessagesImpl.getString("UIPagination.Go"), SWT.NONE); //$NON-NLS-1$
         final FormData goImgFD = new FormData();
         goImgFD.right = new FormAttachment(pageGoText, -5, SWT.LEFT);
         goImgFD.bottom = new FormAttachment(pageGoText, 0, SWT.BOTTOM);
         goImgFD.top = new FormAttachment(pageGoText, 0, SWT.TOP);
-        goImgHypLnk.setLayoutData(goImgFD);
-        goImgHypLnk.setText(DefaultMessagesImpl.getString("UIPagination.Go")); //$NON-NLS-1$
+        go2PageLabel.setLayoutData(goImgFD);
 
         createExtContol(pageNavComp);
     }
@@ -265,9 +263,9 @@ public class UIPagination {
             }
 
             public void mouseUp(MouseEvent e) {
-                pageCache.get(currentPage).dispose();
+                getCurrentPage().dispose();
                 currentPage = 0;
-                pageCache.get(currentPage).renderContents();
+                getCurrentPage().renderContents();
             }
 
         });
@@ -280,9 +278,9 @@ public class UIPagination {
             }
 
             public void mouseUp(MouseEvent e) {
-                pageCache.get(currentPage).dispose();
+                getCurrentPage().dispose();
                 currentPage = currentPage - 1;
-                pageCache.get(currentPage).renderContents();
+                getCurrentPage().renderContents();
             }
         });
         pageNextImgHypLnk.addMouseListener(new MouseListener() {
@@ -294,9 +292,9 @@ public class UIPagination {
             }
 
             public void mouseUp(MouseEvent e) {
-                pageCache.get(currentPage).dispose();
+                getCurrentPage().dispose();
                 currentPage = currentPage + 1;
-                pageCache.get(currentPage).renderContents();
+                getCurrentPage().renderContents();
             }
 
         });
@@ -309,21 +307,9 @@ public class UIPagination {
             }
 
             public void mouseUp(MouseEvent e) {
-                pageCache.get(currentPage).dispose();
+                getCurrentPage().dispose();
                 currentPage = totalPages - 1;
-                pageCache.get(currentPage).renderContents();
-            }
-        });
-        goImgHypLnk.addMouseListener(new MouseListener() {
-
-            public void mouseDoubleClick(MouseEvent e) {
-            }
-
-            public void mouseDown(MouseEvent e) {
-            }
-
-            public void mouseUp(MouseEvent e) {
-                go();
+                getCurrentPage().renderContents();
             }
         });
 
@@ -364,9 +350,9 @@ public class UIPagination {
                     DefaultMessagesImpl.getString("UIPagination.NotInValidRange")); //$NON-NLS-1$
             return;
         }
-        pageCache.get(currentPage).dispose();
+        getCurrentPage().dispose();
         currentPage = pageNumber - 1;
-        pageCache.get(currentPage).renderContents();
+        getCurrentPage().renderContents();
     }
 
     /**
@@ -388,7 +374,6 @@ public class UIPagination {
             setNavImgState(pagePreviouseImgHypLnk, IMG_LNK_NAV_PREV, false);
             setNavImgState(pageLastImgHypLnk, IMG_LNK_NAV_LAST, false);
             setNavImgState(pageNextImgHypLnk, IMG_LNK_NAV_NEXT, false);
-            goImgHypLnk.setEnabled(false);
             return;
         }
         if (currentPage > 0) {
@@ -405,7 +390,6 @@ public class UIPagination {
             setNavImgState(pageLastImgHypLnk, IMG_LNK_NAV_LAST, false);
             setNavImgState(pageNextImgHypLnk, IMG_LNK_NAV_NEXT, false);
         }
-        goImgHypLnk.setEnabled(true);
     }
 
     private void setNavImgState(ImageHyperlink imgHypLnk, Image img, Boolean isEnabled) {
@@ -524,7 +508,7 @@ public class UIPagination {
      * 
      * @return the currentPage
      */
-    public int getCurrentPage() {
+    public int getCurrentPageNumber() {
         return this.currentPage;
     }
 
@@ -534,7 +518,7 @@ public class UIPagination {
      * @return
      */
     public List<DynamicIndicatorModel> getAllIndcatorAndDatasetOfCurrentPage() {
-        IPagination iPagination = pageCache.get(currentPage);
+        IPagination iPagination = getCurrentPage();
         if (iPagination instanceof IndicatorPaginationInfo) {
             return ((IndicatorPaginationInfo) iPagination).getDynamicIndicatorList();
         }
@@ -542,10 +526,19 @@ public class UIPagination {
     }
 
     /**
+     * DOC msjian Comment method "getCurrentPage".
+     * 
+     * @return
+     */
+    public IPagination getCurrentPage() {
+        return pageCache.get(currentPage);
+    }
+
+    /**
      * Added TDQ-8787 20140612: clear all related map (for dynamic chart), after executing the analysis
      */
     public void clearAllDynamicMapOfCurrentPage() {
-        IPagination iPagination = pageCache.get(currentPage);
+        IPagination iPagination = getCurrentPage();
         if (iPagination instanceof IndicatorPaginationInfo) {
             ((IndicatorPaginationInfo) iPagination).clearDynamicList();
         }

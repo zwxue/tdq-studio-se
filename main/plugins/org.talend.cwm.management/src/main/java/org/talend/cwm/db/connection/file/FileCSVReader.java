@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,12 +16,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
@@ -38,9 +41,9 @@ public class FileCSVReader implements IFileReader {
 
     private CSVReader csvReader = null;
 
-    private int analysedColumnIndex[];
+    private int[] analysedColumnIndex;
 
-    private String analysedColumnName[];
+    private String[] analysedColumnName;
 
     private long csvLimitValue = 0;
 
@@ -48,6 +51,7 @@ public class FileCSVReader implements IFileReader {
 
     private long index = 0;
 
+    private long currentRowIndex = -1;
     /*
      * (non-Javadoc)
      * 
@@ -74,12 +78,15 @@ public class FileCSVReader implements IFileReader {
      * @throws IOException
      */
     private void findElementPosition(List<ModelElement> analysisElementList) throws IOException {
+        MetadataColumn mColumn = (MetadataColumn) analysisElementList.get(0);
+        MetadataTable metadataTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
+        EList<MetadataColumn> columns = metadataTable.getColumns();
         List<String> columnLabels = new ArrayList<String>();
-        for (int i = 0; i < csvHeadValue && csvReader.readNext(); i++) {
-            Collections.addAll(columnLabels, csvReader.getValues());
+        for (MetadataColumn column : columns) {
+            columnLabels.add(column.getLabel());
         }
         for (int j = 0; j < analysisElementList.size(); j++) {
-            analysedColumnName[j] = analysisElementList.get(j).getName();
+            analysedColumnName[j] = ((MetadataColumn) analysisElementList.get(j)).getLabel();
             analysedColumnIndex[j] = columnLabels.indexOf(analysedColumnName[j]);
         }
     }
@@ -99,8 +106,15 @@ public class FileCSVReader implements IFileReader {
      * @see org.talend.cwm.db.connection.file.IFileReader#next()
      */
     public Record next() throws IOException {
-        long currentRecord = csvReader.getCurrentRecord();
-        if (csvLimitValue != -1 && currentRecord > csvLimitValue - 1) {
+        currentRowIndex++;
+        if (currentRowIndex < csvHeadValue) {
+            if (hasNext()) {
+                return next();
+            } else {
+                return null;
+            }
+        }
+        if (csvLimitValue != -1 && currentRowIndex > csvLimitValue - 1) {
             return null;
         }
         String[] values = csvReader.getValues();

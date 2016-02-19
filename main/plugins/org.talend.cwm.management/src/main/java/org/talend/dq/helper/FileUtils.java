@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2015 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -198,6 +198,18 @@ public final class FileUtils {
         csvReader.setQuoteChar(quoteChar);
         csvReader.setEscapeChar(escapeChar);
         return csvReader;
+    }
+
+    /**
+     * create a default CSVReader, the separator is \t
+     * 
+     * @param file
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
+     */
+    public static CSVReader createCSVReader(File file) throws UnsupportedEncodingException, FileNotFoundException {
+        return new CSVReader(new FileReader(file), CURRENT_SEPARATOR);
     }
 
     public static boolean isCSV(String fileExtName) {
