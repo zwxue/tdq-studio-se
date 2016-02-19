@@ -540,7 +540,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         TreeEditor optionEditor = new TreeEditor(tree);
         final Label optionLabel = new Label(tree, SWT.NONE);
         optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
+        optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION_CHECKED));
         optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.options")); //$NON-NLS-1$
         optionLabel.pack();
         optionLabel.setData(indicatorUnit);

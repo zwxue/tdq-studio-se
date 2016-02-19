@@ -107,7 +107,7 @@ public final class ImageLib {
 
     public static final String ACTION_NEW_ANALYSIS = "chart_bar_add.png"; //$NON-NLS-1$
 
-    public static final String INDICATOR_OPTION = "page_white_gear.png"; //$NON-NLS-1$
+    public static final String INDICATOR_OPTION_CHECKED = "option_checked.png"; //$NON-NLS-1$
 
     public static final String ANALYSIS_OBJECT = "chart_bar.png"; //$NON-NLS-1$
 
