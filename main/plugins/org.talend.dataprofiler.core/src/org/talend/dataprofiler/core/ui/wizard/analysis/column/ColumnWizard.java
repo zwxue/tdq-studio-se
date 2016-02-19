@@ -148,8 +148,8 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                                 .setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
                         ModelElementIndicator[] predefinedColumnIndicator = this.getPredefinedColumnIndicator();
                         if (predefinedColumnIndicator != null) {
-                            ((ColumnAnalysisDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
                             ((ColumnAnalysisDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
+                            ((ColumnAnalysisDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
                         }
                     } else {
                         masterPage.getTreeViewer().setInput(nodes.toArray(new RepositoryNode[nodes.size()]));

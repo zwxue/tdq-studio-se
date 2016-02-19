@@ -54,6 +54,9 @@ public class OpenIndicatorSelectorAction extends Action implements ICheatSheetAc
             ModelElementIndicator[] modelElementIndicator = columnTreeViewer.openIndicatorSelectDialog(null);
             if (modelElementIndicator != null) {
                 page.refreshCurrentTreeViewer(modelElementIndicator);
+                if (columnTreeViewer.isGridPreviewColumnMoved()) {
+                    page.refreshPreviewTable(true);
+                }
             }
         }
     }

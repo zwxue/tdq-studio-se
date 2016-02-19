@@ -36,7 +36,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -121,6 +120,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
     private Composite buttonsComp;
 
     private List<TDQObserver<ModelElement[]>> Observers = null;
+
+    private boolean isGridPreviewColumnMoved = false;
 
     public ExecutionLanguage getLanguage() {
         return language;
@@ -462,8 +463,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
     public void updateModelViewer() {
         masterPage.recomputeIndicators();
         modelElementIndicators = masterPage.getCurrentModelElementIndicators();
-        masterPage.refreshTheTree(modelElementIndicators);
         masterPage.refreshPreviewTable(modelElementIndicators, true);
+        masterPage.refreshTheTree(modelElementIndicators);
     }
 
     @Override
@@ -478,8 +479,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         initializedConnection(elements);
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
-        masterPage.refreshTheTree(newsArray);
         masterPage.refreshPreviewTable(newsArray, true);
+        masterPage.refreshTheTree(newsArray);
         masterPage.goLastPage();
         if (elements != null && elements.length > 0) {
             selectElement(tree.getItems(), elements[0]);
@@ -537,7 +538,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
     private void addItemElements(final ModelElementIndicator[] elements, boolean isExpandAll) {
         for (ModelElementIndicator element : elements) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
-            treeItem.setImage(getColumnElementImage());
+            treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
             final ModelElementIndicator meIndicator = element;
             treeItem.setText(0, ModelElementIndicatorHelper.getModelElementDisplayName(meIndicator));
@@ -615,16 +616,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
             treeItem.setExpanded(isExpandAll);
         }
 
-    }
-
-    /**
-     * DOC yyi 2010-04-29 12572 for MDM elements.
-     * 
-     * @param element
-     * @return
-     */
-    private Image getColumnElementImage() {
-        return ImageLib.getImage(ImageLib.TD_COLUMN);
     }
 
     /**
@@ -772,6 +763,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
             });
         }
         if (dialog.open() == Window.OK) {
+            isGridPreviewColumnMoved = dialog.isGridPreviewColumnMoved();
             ModelElementIndicator[] result = dialog.getResult();
             for (ModelElementIndicator modelElementIndicator : result) {
                 modelElementIndicator.storeTempIndicator();
@@ -895,6 +887,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                                 .getEditorSite().getShell());
                         if (modelElementIndicator != null) {
                             masterPage.refreshCurrentTreeViewer(modelElementIndicator);
+                            if (isGridPreviewColumnMoved()) {
+                                masterPage.refreshPreviewTable(true);
+                            }
                         }
                     } else if (meobj != null && indicatorobj != null) {
                         // open indicator option wizard
@@ -1128,7 +1123,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
      */
     public void update(Map<String, Integer> columnIndexMap) {
-
         ModelElementIndicator[] reorderModelElement = reorderModelElement(masterPage.getCurrentModelElementIndicators(),
                 columnIndexMap);
         masterPage.refreshTheTree(reorderModelElement);
@@ -1149,7 +1143,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
             sortedModelElements[columnIndexMap.get(columnName)] = currModelElement;
         }
         return sortedModelElements;
-
     }
 
     /*
@@ -1160,5 +1153,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
     public void update(int EventType) {
         // TODO Auto-generated method stub
 
+    }
+
+    public boolean isGridPreviewColumnMoved() {
+        return this.isGridPreviewColumnMoved;
     }
 }

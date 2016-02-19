@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -470,6 +469,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                             .getSite().getShell());
                     if (result != null) {
                         refreshCurrentTreeViewer(result);
+                        if (treeViewer.isGridPreviewColumnMoved()) {
+                            refreshPreviewTable(true);
+                        }
                     }
                 }
 
@@ -564,7 +566,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         // dataTableComp.setLayoutData(gridData);
         sampleTable = new ColumnAnalysisDataSamTable();
 
-        createNatTable();
+        // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
+        createNatTable(null);
         createWarningLabel();
         redrawNatTableComposite();
         sampleTable.addPropertyChangeListener(this);
@@ -628,7 +631,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         sampleTable.setDataFilter(dataFilterComp.getDataFilterString());
     }
 
-    private void refreshPreviewTable(boolean loadData) {
+    public void refreshPreviewTable(boolean loadData) {
         initSampleTableParameter();
         sampleTable.reDrawTable(getSelectedColumns(), loadData);
         redrawWarningLabel();
@@ -651,15 +654,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         return selectedColumns;
     }
 
-    // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
-    private void createNatTable() {
-        try {
-            sampleTable.createNatTable(null, dataTableComp, analysisHandler.getSelectedColumns());
-        } catch (SQLException e) {
-            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("ColumnAnalysisDataSamTable.InValidWhereClause"), //$NON-NLS-1$
-                    e.getMessage());
-        }
-
+    private void createNatTable(List<Object[]> listOfData) {
+        sampleTable.createNatTable(listOfData, dataTableComp, analysisHandler.getSelectedColumns());
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form1, Composite anasisDataComp) {
@@ -1389,7 +1385,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
             uiPagination.goToPage(lastTimePageNumber + 1);
             treeViewer.setElements(treeViewer.getModelElementIndicator(), true, true);
         }
-
     }
 
     @Override

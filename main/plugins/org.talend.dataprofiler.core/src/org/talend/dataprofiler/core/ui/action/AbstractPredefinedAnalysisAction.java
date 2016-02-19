@@ -230,8 +230,8 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 if (predefinedColumnIndicator != null) {
                     ColumnAnalysisDetailsPage masterPage = getMasterPage();
                     if (masterPage != null) {
-                        masterPage.refreshTheTree(predefinedColumnIndicator);
                         masterPage.refreshPreviewTable(predefinedColumnIndicator, false);
+                        masterPage.refreshTheTree(predefinedColumnIndicator);
                         masterPage.doSave(null);
                     }
                 }

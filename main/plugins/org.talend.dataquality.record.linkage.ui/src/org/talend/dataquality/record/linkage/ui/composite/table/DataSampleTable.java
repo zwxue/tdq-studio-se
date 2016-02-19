@@ -1054,7 +1054,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * @param dataTableComp
      * @throws SQLException
      */
-    public void createNatTable(ModelElement[] columns, boolean withData) throws SQLException {
+    private void createNatTable(ModelElement[] columns, boolean withData) throws SQLException {
         List<Object[]> listOfData = getPreviewData(columns, withData);
         createNatTable(listOfData, drawCanvas, columns);
     }
@@ -1081,7 +1081,6 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      */
     protected List<Object[]> createPreviewData(ModelElement[] columns) throws SQLException {
         return new ArrayList<Object[]>();
-
     }
 
     /**
@@ -1089,9 +1088,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * 
      * @param listOfData
      * @param dataTableComp
-     * @throws SQLException
      */
-    public void createNatTable(List<Object[]> listOfData, Composite dataTableComp, ModelElement[] columns) throws SQLException {
+    public void createNatTable(List<Object[]> listOfData, Composite dataTableComp, ModelElement[] columns) {
         checkSameTableConstraint(columns);
         drawCanvas = dataTableComp;
         tablePanel = new Composite(drawCanvas, SWT.NONE);
