@@ -540,7 +540,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         TreeEditor optionEditor = new TreeEditor(tree);
         final Label optionLabel = new Label(tree, SWT.NONE);
         optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION_CHECKED));
+        optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
         optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.options")); //$NON-NLS-1$
         optionLabel.pack();
         optionLabel.setData(indicatorUnit);
@@ -550,7 +550,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             public void mouseDown(MouseEvent e) {
                 boolean hasIndicatorParameters = openIndicatorOptionDialog(Display.getCurrent().getActiveShell(), indicatorItem);
                 if (hasIndicatorParameters) {
-                    optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
+                    optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION_CHECKED));
                 }
             }
 
@@ -599,7 +599,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
         }
         if (hasIndicatorParameters(indicatorUnit)) {
-            optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
+            optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION_CHECKED));
         }
         // ADD xqliu 2009-04-30 bug 6808
         this.indicatorTreeItemMap.put(unit, indicatorItem);
