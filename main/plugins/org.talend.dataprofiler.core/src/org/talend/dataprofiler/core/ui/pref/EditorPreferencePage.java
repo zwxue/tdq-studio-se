@@ -62,7 +62,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public static final int UNFOLD_FIRST_SECTION = 3;
 
-    public static final int SELECT_SECTION_TO_UNFOLD = 4;
+    public static final int UNFOLD_SELECT_SECTION = 4;
 
     private Button unfoldAllSectionsButton = null;
 
@@ -70,7 +70,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private Button unfoldFirstSectionButton = null;
 
-    private Button selectSection2UnfoldButton = null;
+    private Button unfoldSelectSectionsButton = null;
 
     private Button unfoldAllAnalyzedElementsResultPageButton = null;
 
@@ -99,7 +99,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private static Boolean currentIndicators;
 
-    private Composite selectUnfoldComposite;
+    private Composite unfoldSelectSectionsComposite;
 
     private static final boolean DEFAULT_UNFOLD_ANALYSIS_METADATA = false;
 
@@ -175,7 +175,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         }
 
         if (currentFolding == 0 && sectionFoldState == 0) {
-            currentFolding = UNFOLD_ALL_SECTIONS;
+            currentFolding = UNFOLD_SELECT_SECTION;
         }
         return currentFolding;
     }
@@ -284,7 +284,6 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetSelected(SelectionEvent arg0) {
                 setFoldCompositeChildren(false);
-                setCurrentFolding(UNFOLD_ALL_SECTIONS);
             }
         });
         foldAllSectionsButton = new Button(group1, SWT.RADIO);
@@ -297,7 +296,6 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetSelected(SelectionEvent arg0) {
                 setFoldCompositeChildren(false);
-                setCurrentFolding(FOLD_ALL_SECTIONS);
             }
         });
         unfoldFirstSectionButton = new Button(group1, SWT.RADIO);
@@ -310,13 +308,12 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetSelected(SelectionEvent arg0) {
                 setFoldCompositeChildren(false);
-                setCurrentFolding(UNFOLD_FIRST_SECTION);
             }
         });
 
-        selectSection2UnfoldButton = new Button(group1, SWT.RADIO);
-        selectSection2UnfoldButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding4")); //$NON-NLS-1$
-        selectSection2UnfoldButton.addSelectionListener(new SelectionListener() {
+        unfoldSelectSectionsButton = new Button(group1, SWT.RADIO);
+        unfoldSelectSectionsButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding4")); //$NON-NLS-1$
+        unfoldSelectSectionsButton.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 widgetSelected(arg0);
@@ -324,15 +321,14 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetSelected(SelectionEvent arg0) {
                 setFoldCompositeChildren(true);
-                setCurrentFolding(SELECT_SECTION_TO_UNFOLD);
             }
         });
 
-        selectUnfoldComposite = new Composite(group1, SWT.NONE | SWT.CENTER);
-        selectUnfoldComposite.setLayout(new GridLayout());
-        selectUnfoldComposite.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.CENTER));
+        unfoldSelectSectionsComposite = new Composite(group1, SWT.NONE | SWT.CENTER);
+        unfoldSelectSectionsComposite.setLayout(new GridLayout());
+        unfoldSelectSectionsComposite.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.CENTER));
 
-        unfoldAnalysisMetadataButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldAnalysisMetadataButton = new Button(unfoldSelectSectionsComposite, SWT.CHECK);
         unfoldAnalysisMetadataButton.setText(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         setCurrentUnfoldAnalysisMetadata(isUnfoldAnalysisMetadata());
         unfoldAnalysisMetadataButton.setSelection(getCurrentUnfoldAnalysisMetadata());
@@ -348,7 +344,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        unfoldDataPreviewButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldDataPreviewButton = new Button(unfoldSelectSectionsComposite, SWT.CHECK);
         unfoldDataPreviewButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview")); //$NON-NLS-1$
         setCurrentUnfoldDataPreview(isUnfoldDataPreview());
         unfoldDataPreviewButton.setSelection(getCurrentUnfoldDataPreview());
@@ -364,7 +360,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        unfoldAnalyzedItemsButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldAnalyzedItemsButton = new Button(unfoldSelectSectionsComposite, SWT.CHECK);
         unfoldAnalyzedItemsButton.setText(DefaultMessagesImpl.getString("EditorPreferencePage.foldAnalyzedElement")); //$NON-NLS-1$
         setCurrentUnfoldAnalyzedItems(isUnfoldAnalyzedItems());
         unfoldAnalyzedItemsButton.setSelection(getCurrentUnfoldAnalyzedElement());
@@ -380,7 +376,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        unfoldIndicatorsButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldIndicatorsButton = new Button(unfoldSelectSectionsComposite, SWT.CHECK);
         unfoldIndicatorsButton.setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicators")); //$NON-NLS-1$
         setCurrentUnfoldIndicators(isUnfoldIndicators());
         unfoldIndicatorsButton.setSelection(getCurrentUnfoldIndicators());
@@ -396,7 +392,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        unfoldDataFilterButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldDataFilterButton = new Button(unfoldSelectSectionsComposite, SWT.CHECK);
         unfoldDataFilterButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter")); //$NON-NLS-1$
         setCurrentUnfoldDataFilter(isUnfoldDataFilter());
         unfoldDataFilterButton.setSelection(getCurrentUnfoldDataFilter());
@@ -412,7 +408,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        unfoldAnalysisParametersButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldAnalysisParametersButton = new Button(unfoldSelectSectionsComposite, SWT.CHECK);
         unfoldAnalysisParametersButton.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter")); //$NON-NLS-1$
         setCurrentUnfoldAnalysisParameters(isUnfoldAnalysisParameters());
         unfoldAnalysisParametersButton.setSelection(getCurrentUnfoldAnalysisParameters());
@@ -428,7 +424,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        unfoldContextGroupSettingsButton = new Button(selectUnfoldComposite, SWT.CHECK);
+        unfoldContextGroupSettingsButton = new Button(unfoldSelectSectionsComposite, SWT.CHECK);
         unfoldContextGroupSettingsButton.setText(DefaultMessagesImpl
                 .getString("AbstractMetadataFormPage.contextGroupSettingsSection")); //$NON-NLS-1$
         setCurrentUnfoldContextGroupSettings(isUnfoldContextGroupSettings());
@@ -445,7 +441,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        setFoldCompositeChildren(getCurrentFolding() == SELECT_SECTION_TO_UNFOLD);
+        setFoldCompositeChildren(getCurrentFolding() == UNFOLD_SELECT_SECTION);
 
         switch (getCurrentFolding()) {
         case UNFOLD_ALL_SECTIONS:
@@ -457,11 +453,11 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         case UNFOLD_FIRST_SECTION:
             unfoldFirstSectionButton.setSelection(true);
             break;
-        case SELECT_SECTION_TO_UNFOLD:
-            selectSection2UnfoldButton.setSelection(true);
+        case UNFOLD_SELECT_SECTION:
+            unfoldSelectSectionsButton.setSelection(true);
             break;
         default:
-            unfoldAllSectionsButton.setSelection(true);
+            unfoldSelectSectionsButton.setSelection(true);
         }
 
         Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
@@ -517,7 +513,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
      * set FoldComposite Children's enable or not.
      */
     public void setFoldCompositeChildren(boolean isEnable) {
-        for (Control control : selectUnfoldComposite.getChildren()) {
+        for (Control control : unfoldSelectSectionsComposite.getChildren()) {
             control.setEnabled(isEnable);
         }
     }
@@ -581,14 +577,17 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // MOD mzhao bug 8318 2009-07-30
     @Override
     protected void performDefaults() {
-        unfoldAllSectionsButton.setSelection(true);
-        foldAllSectionsButton.setSelection(false);
-        unfoldFirstSectionButton.setSelection(false);
-        selectSection2UnfoldButton.setSelection(false);
+        setCurrentFolding(UNFOLD_SELECT_SECTION);
+        boolean isEnable = getCurrentFolding() == UNFOLD_SELECT_SECTION;
+        setFoldCompositeChildren(isEnable);
+
+        unfoldAllSectionsButton.setSelection(!isEnable);
+        foldAllSectionsButton.setSelection(!isEnable);
+        unfoldFirstSectionButton.setSelection(!isEnable);
+        unfoldSelectSectionsButton.setSelection(isEnable);
         unfoldAllAnalyzedElementsResultPageButton.setSelection(true);
         unfoldAllIndicatorResultPageButton.setSelection(true);
 
-        selectUnfoldComposite.setEnabled(false);
         unfoldAnalysisMetadataButton.setSelection(DEFAULT_UNFOLD_ANALYSIS_METADATA);
         unfoldDataPreviewButton.setSelection(DEFAULT_UNFOLD_DATA_PREVIEW);
         unfoldAnalyzedItemsButton.setSelection(DEFAULT_UNFOLD_ANALYZED_ITEMS);
@@ -597,7 +596,6 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         unfoldAnalysisParametersButton.setSelection(DEFAULT_UNFOLD_ANALYSIS_PARAMETERS);
         unfoldContextGroupSettingsButton.setSelection(DEFAULT_UNFOLD_CONTEXT_GROUP_SETTINGS);
 
-        setCurrentFolding(UNFOLD_ALL_SECTIONS);
         setCurrentUnfoldAnalysisMetadata(unfoldAnalysisMetadataButton.getSelection());
         setCurrentUnfoldDataPreview(unfoldDataPreviewButton.getSelection());
         setCurrentUnfoldAnalyzedItems(unfoldAnalyzedItemsButton.getSelection());
@@ -628,6 +626,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
      * DOC msjian Comment method "savePreferenceValues".
      */
     public void savePreferenceValues() {
+
         InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putInt(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
         InstanceScope.INSTANCE.getNode(CorePlugin.PLUGIN_ID).putBoolean(UNFOLD_ANALYSIS_METADATA,
                 getCurrentUnfoldAnalysisMetadata());
@@ -657,6 +656,16 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     @Override
     public boolean performOk() {
+        if (unfoldAllSectionsButton.getSelection()) {
+            setCurrentFolding(UNFOLD_ALL_SECTIONS);
+        } else if (foldAllSectionsButton.getSelection()) {
+            setCurrentFolding(FOLD_ALL_SECTIONS);
+        } else if (unfoldFirstSectionButton.getSelection()) {
+            setCurrentFolding(UNFOLD_FIRST_SECTION);
+        } else {
+            setCurrentFolding(UNFOLD_SELECT_SECTION);
+        }
+
         savePreferenceValues();
 
         // ADD yyi 2010-07-07 for 13964
