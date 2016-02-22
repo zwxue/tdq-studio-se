@@ -774,7 +774,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
             for (ModelElementIndicator modelElementIndicator : result) {
                 modelElementIndicator.getTempIndicator().clear();
             }
-            return new ModelElementIndicator[0];
+            return null;
         }
 
     }
