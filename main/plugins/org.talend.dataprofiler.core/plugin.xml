@@ -1271,6 +1271,10 @@
            id="org.talend.dataprofiler.core.importItem"
            name="Import item">
      </command>
+     <command
+           id="org.talend.dataprofiler.core.escapeDialog"
+           name="escape Dialog">
+     </command>
   </extension>
   <extension
         point="org.eclipse.ui.bindings">
@@ -1302,6 +1306,12 @@
            contextId="org.eclipse.ui.contexts.dialogAndWindow"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
            sequence="M1+M2+N">
+     </key>
+     <key
+           commandId="org.talend.dataprofiler.core.escapeDialog"
+           contextId="org.eclipse.ui.contexts.dialogAndWindow"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="ESC">
      </key>
   </extension>
   <extension

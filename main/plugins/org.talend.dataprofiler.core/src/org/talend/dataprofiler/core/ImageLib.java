@@ -74,7 +74,7 @@ public final class ImageLib {
     // public static final String REFRESH_IMAGE = "refresh.gif"; //$NON-NLS-1$
     public static final String EXPLORE_IMAGE = "magnifier.png"; //$NON-NLS-1$
 
-    public static final String REFRESH_IMAGE = "run_exc.gif"; //$NON-NLS-1$
+    public static final String RUN_IMAGE = "run_exc.gif"; //$NON-NLS-1$
 
     /**
      * {@link IndicatorCategoryNode#getImageName()}
@@ -86,8 +86,6 @@ public final class ImageLib {
     public static final String FOLDER_NEW_IMAGE = "folder_new.png"; //$NON-NLS-1$
 
     public static final String PROJECT_ACTIVE = "prject_active.png"; //$NON-NLS-1$
-
-    public static final String REPORT_HISTORIZE = "report_go.png"; //$NON-NLS-1$
 
     public static final String NEW_CONNECTION = "new_alias.gif"; //$NON-NLS-1$
 
@@ -109,7 +107,7 @@ public final class ImageLib {
 
     public static final String ACTION_NEW_ANALYSIS = "chart_bar_add.png"; //$NON-NLS-1$
 
-    public static final String INDICATOR_OPTION = "page_white_gear.png"; //$NON-NLS-1$
+    public static final String INDICATOR_OPTION_CHECKED = "option_checked.png"; //$NON-NLS-1$
 
     public static final String ANALYSIS_OBJECT = "chart_bar.png"; //$NON-NLS-1$
 
@@ -147,10 +145,6 @@ public final class ImageLib {
     public static final String LEVEL_WARNING = "level_warning.png"; //$NON-NLS-1$
 
     public static final String WARN_OVR = "warn_ovr.gif"; //$NON-NLS-1$
-
-    public static final String EMOTICON_SMILE = "emoticon_smile.png"; //$NON-NLS-1$
-
-    public static final String EXCLAMATION = "exclamation.png"; //$NON-NLS-1$
 
     public static final String CATALOG = "catalog.png"; //$NON-NLS-1$
 

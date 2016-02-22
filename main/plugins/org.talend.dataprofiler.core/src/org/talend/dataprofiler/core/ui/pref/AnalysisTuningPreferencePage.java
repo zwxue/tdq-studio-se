@@ -152,7 +152,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
         CLabel label2 = new CLabel(composite2, SWT.WRAP);
         label2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.JvmWarning")); //$NON-NLS-1$
-        label2.setImage(ImageLib.getImage(ImageLib.EXCLAMATION));
+        label2.setImage(ImageLib.getImage(ImageLib.RED_WARNING_PNG));
 
         return mainComposite;
     }
@@ -196,7 +196,6 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         autoComboField.store();
         super.performApply();
     }
-
 
     private void busyGC() {
         for (int i = 0; i < 2; ++i) {

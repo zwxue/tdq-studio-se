@@ -123,6 +123,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                         comp.getParent().pack();
                     }
                 }
+                form.reflow(true);
             }
         });
     }
@@ -150,6 +151,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                         comp.getParent().pack();
                     }
                 }
+                form.reflow(true);
             }
         });
     }

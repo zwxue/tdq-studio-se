@@ -123,6 +123,11 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
             @Override
             public void linkActivated(HyperlinkEvent e) {
+                Composite compositePar = columnCompositeMap.get(label);
+                if (compositePar.getParent() instanceof ExpandableComposite) {
+                    ((ExpandableComposite) compositePar.getParent()).setExpanded(true);
+                }
+
                 Control[] expandableComposite = getIndicatorExpandableCompositeList(label);
                 for (Control control : expandableComposite) {
                     if (control instanceof ExpandableComposite) {
@@ -130,7 +135,6 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                         ((ExpandableComposite) control).getParent().pack();
                     }
                 }
-
                 form.reflow(true);
             }
         });

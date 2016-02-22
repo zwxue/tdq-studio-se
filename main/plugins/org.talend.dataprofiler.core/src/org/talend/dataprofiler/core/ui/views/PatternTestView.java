@@ -453,11 +453,11 @@ public class PatternTestView extends ViewPart {
             }
             boolean flag = java.util.regex.Pattern.compile(regexStr).matcher(testText.getText()).find();
             if (flag) {
-                emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
+                emoticonLabel.setImage(ImageLib.getImage(ImageLib.CHECK_MARK_PNG));
                 resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
                 return;
             } else {
-                emoticonLabel.setImage(ImageLib.getImage(ImageLib.EXCLAMATION));
+                emoticonLabel.setImage(ImageLib.getImage(ImageLib.RED_WARNING_PNG));
                 resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.nonMatch")); //$NON-NLS-1$
                 return;
             }
@@ -500,12 +500,12 @@ public class PatternTestView extends ViewPart {
                                     || (createDbmsLanguage != null && (createDbmsLanguage.getDbmsName().equals(
                                             SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage()) && "t".equalsIgnoreCase(okString)))) { //$NON-NLS-1$
                                 // TDQ-3967 ~
-                                emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
+                                emoticonLabel.setImage(ImageLib.getImage(ImageLib.CHECK_MARK_PNG));
                                 resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
                                 return;
                             }
                         }
-                        emoticonLabel.setImage(ImageLib.getImage(ImageLib.EXCLAMATION));
+                        emoticonLabel.setImage(ImageLib.getImage(ImageLib.RED_WARNING_PNG));
                         resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.nonMatch")); //$NON-NLS-1$
                         return;
                     } catch (Exception exception) {

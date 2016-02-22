@@ -103,7 +103,7 @@ public class ColumnFilterWizard extends AbstractWizard {
 
     private void initColumnFilterDescription() {
         setWindowTitle(DefaultMessagesImpl.getString("MetaDataFilterWizard.columnFilter")); //$NON-NLS-1$
-        setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
+        setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.RUN_IMAGE));
         this.columnFilterWizardPage = new ColumnFilterWizardPage(this);
         this.columnFilterWizardPage.setTitle(DefaultMessagesImpl.getString("MetaDataFilterWizard.columnFilter")); //$NON-NLS-1$
         this.columnFilterWizardPage.setDescription(DefaultMessagesImpl.getString("MetaDataFilterWizard.columnFilterDesc")); //$NON-NLS-1$

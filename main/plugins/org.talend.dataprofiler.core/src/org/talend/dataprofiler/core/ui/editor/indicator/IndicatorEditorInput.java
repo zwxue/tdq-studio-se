@@ -35,7 +35,6 @@ public class IndicatorEditorInput implements IEditorInput {
      * @see org.eclipse.ui.IEditorInput#exists()
      */
     public boolean exists() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -63,7 +62,6 @@ public class IndicatorEditorInput implements IEditorInput {
      * @see org.eclipse.ui.IEditorInput#getPersistable()
      */
     public IPersistableElement getPersistable() {
-        // TODO Auto-generated method stub
         return null;
     }
 
