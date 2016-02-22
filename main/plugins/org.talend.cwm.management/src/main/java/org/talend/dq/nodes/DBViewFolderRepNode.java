@@ -139,6 +139,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();
         createRepositoryNodeViewFolderNode(repsNodes, object);
+        setHaveDoneGetChildren(true);
         // ADD msjian 2011-7-22 22206: fix the note 93101
         if (DQRepositoryNode.isUntilSchema()) {
             return repsNodes;
@@ -261,7 +262,10 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
      */
     @Override
     public String getLabel() {
-        return "Views (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        if (isHaveDoneGetChildren()) {
+            return "Views (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return "Views"; //$NON-NLS-1$
     }
 
     /*

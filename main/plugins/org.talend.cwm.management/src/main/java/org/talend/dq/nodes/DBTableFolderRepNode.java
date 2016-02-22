@@ -137,6 +137,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
         List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();
         createRepositoryNodeTableFolderNode(children, object);
+        setHaveDoneGetChildren(true);
         // ADD msjian 2011-7-22 22206: fix the note 93101
         if (DQRepositoryNode.isUntilSchema()) {
             return children;
@@ -255,7 +256,10 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
      */
     @Override
     public String getLabel() {
-        return "Tables (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        if (isHaveDoneGetChildren()) {
+            return "Tables (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return "Tables"; //$NON-NLS-1$
     }
 
     private int getChildrenCount() {
