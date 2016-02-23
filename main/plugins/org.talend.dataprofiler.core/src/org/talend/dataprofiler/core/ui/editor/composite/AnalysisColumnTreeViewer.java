@@ -137,7 +137,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         parentComp = parent;
         this.tree = createTree(parent);
         this.masterPage = masterPage;
-        // this.setElements(masterPage.getCurrentModelElementIndicators());
         this.createUpDownButtons(parent);
         this.setDirty(false);
     }
@@ -184,7 +183,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
 
         newTree.setHeaderVisible(true);
 
-        createTreeItem(newTree, 190, "AnalysisColumnTreeViewer.analyzedColumns"); //$NON-NLS-1$
+        createTreeItem(newTree, 300, "AnalysisColumnTreeViewer.analyzedColumns"); //$NON-NLS-1$
         createTreeDataminingItem(newTree);
         createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.pattern"); //$NON-NLS-1$
         createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.udi"); //$NON-NLS-1$
@@ -628,12 +627,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      */
     private TreeEditor addColumnUdi(final TreeItem treeItem, final ModelElementIndicator meIndicator, int columnIndex) {
         TreeEditor addUdiEditor = new TreeEditor(tree);
-        Label addUdiLabl = new Label(tree, SWT.NONE);
-        addUdiLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        addUdiLabl.setImage(ImageLib.getImage(ImageLib.ADD_IND_DEFINITION));
-        addUdiLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addUdi")); //$NON-NLS-1$
-        addUdiLabl.pack();
-
+        Label addUdiLabl = createTreeItemLabel(tree, ImageLib.ADD_IND_DEFINITION, "AnalysisColumnTreeViewer.addUdi"); //$NON-NLS-1$
         addUdiLabl.addMouseListener(new MouseAdapter() {
 
             @Override

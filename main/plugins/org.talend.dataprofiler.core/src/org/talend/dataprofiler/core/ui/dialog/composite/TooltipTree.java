@@ -50,6 +50,7 @@ public class TooltipTree extends Tree {
      * 
      * @see org.eclipse.swt.widgets.TreeItem#checkSubclass()
      */
+    @Override
     protected void checkSubclass() {
     }
 
@@ -143,10 +144,6 @@ public class TooltipTree extends Tree {
 
     protected String getItemTooltipText(TreeItem item) {
         return item.getText();
-    }
-
-    public static void main(String args[]) {
-
     }
 
 }

@@ -309,7 +309,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             treeItem.setData(TABLE_INDICATOR_KEY, tableIndicator);
 
             TreeEditor addDQRuleEditor = new TreeEditor(tree);
-
             Label addDQRuleLabl = createTreeItemLabel(tree, ImageLib.ADD_DQ, "AnalysisColumnTreeViewer.addDQRule"); //$NON-NLS-1$
             addDQRuleLabl.addMouseListener(new MouseAdapter() {
 
@@ -538,11 +537,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         indicatorItem.setText(0, label);
 
         TreeEditor optionEditor = new TreeEditor(tree);
-        final Label optionLabel = new Label(tree, SWT.NONE);
-        optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
-        optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.options")); //$NON-NLS-1$
-        optionLabel.pack();
+        final Label optionLabel = createTreeItemLabel(tree, ImageLib.OPTION, "AnalysisTableTreeViewer.options"); //$NON-NLS-1$
         optionLabel.setData(indicatorUnit);
         optionLabel.addMouseListener(new MouseAdapter() {
 
@@ -563,11 +558,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         TreeEditor delEditor = null;
         if (!(unit.getIndicator() instanceof RowCountIndicator)) {
             delEditor = new TreeEditor(tree);
-            Label delLabel = new Label(tree, SWT.NONE);
-            delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.delete")); //$NON-NLS-1$
-            delLabel.pack();
+            Label delLabel = createTreeItemLabel(tree, ImageLib.DELETE_ACTION, "AnalysisTableTreeViewer.delete"); //$NON-NLS-1$
             delLabel.addMouseListener(new MouseAdapter() {
 
                 @Override

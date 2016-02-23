@@ -169,11 +169,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         indicatorItem.setText(0, label);
 
         TreeEditor optionEditor = new TreeEditor(tree);
-        final Label optionLabel = new Label(tree, SWT.NONE);
-        optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
-        optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.options")); //$NON-NLS-1$
-        optionLabel.pack();
+        final Label optionLabel = createTreeItemLabel(tree, ImageLib.OPTION, "AnalysisColumnTreeViewer.options"); //$NON-NLS-1$
         optionLabel.setData(indicatorUnit);
         optionLabel.addMouseListener(new MouseAdapter() {
 
@@ -198,11 +194,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         // }
 
         TreeEditor delEditor = new TreeEditor(tree);
-        Label delLabel = new Label(tree, SWT.NONE);
-        delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
-        delLabel.pack();
+        Label delLabel = createTreeItemLabel(tree, ImageLib.DELETE_ACTION, "AnalysisColumnTreeViewer.delete"); //$NON-NLS-1$
         delLabel.addMouseListener(new MouseAdapter() {
 
             /*
@@ -572,16 +564,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         TreeColumn column = new TreeColumn(newTree, SWT.CENTER);
         column.setWidth(width);
         column.setText(DefaultMessagesImpl.getString(text));
-    }
-
-    // create the similar label for tree item
-    protected Label createTreeItemLabel(Tree parent, String image, String text) {
-        Label label = new Label(parent, SWT.NONE);
-        label.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        label.setImage(ImageLib.getImage(image));
-        label.setToolTipText(DefaultMessagesImpl.getString(text));
-        label.pack();
-        return label;
     }
 
 }

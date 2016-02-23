@@ -171,11 +171,7 @@ public class IndicatorsComp extends AbstractPagePart {
 
         TreeEditor optionEditor;
         optionEditor = new TreeEditor(tree);
-        final Label optionLabel = new Label(tree, SWT.NONE);
-        optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        optionLabel.setImage(ImageLib.getImage(ImageLib.OPTION));
-        optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.options")); //$NON-NLS-1$
-        optionLabel.pack();
+        final Label optionLabel = createTreeItemLabel(tree, ImageLib.OPTION, "AnalysisColumnTreeViewer.options"); //$NON-NLS-1$
         optionLabel.setData(indicatorUnit);
         optionLabel.addMouseListener(new MouseAdapter() {
 

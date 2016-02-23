@@ -354,6 +354,8 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         tree.setLayout(new GridLayout());
         ((GridData) tree.getLayoutData()).heightHint = TREE_MAX_LENGTH;
 
+        tree.setBackgroundMode(SWT.INHERIT_DEFAULT);
+
         treeViewer = new AnalysisColumnSetTreeViewer(tree, this);
         treeViewer.addPropertyChangeListener(this);
         treeViewer.setInput(analyzedColumns.toArray());

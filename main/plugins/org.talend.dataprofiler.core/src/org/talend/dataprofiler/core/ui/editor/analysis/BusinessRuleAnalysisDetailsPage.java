@@ -250,6 +250,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(treeComp);
         treeComp.setLayout(new GridLayout());
         ((GridData) treeComp.getLayoutData()).heightHint = TREE_MAX_LENGTH;
+        treeComp.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
         treeViewer = new AnalysisTableTreeViewer(treeComp, this);
         treeViewer.setDirty(false);

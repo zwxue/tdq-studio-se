@@ -719,6 +719,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      */
     private void createPaginationTree(Composite topComp1) {
         tree = toolkit.createComposite(topComp1, SWT.NONE);
+        tree.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tree);
         tree.setLayout(new GridLayout());

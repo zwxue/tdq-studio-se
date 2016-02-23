@@ -23,9 +23,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -37,6 +39,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -380,5 +383,22 @@ public abstract class AbstractPagePart {
             isEmpty = true;
         }
         return isEmpty;
+    }
+
+    /**
+     * create the similar label for tree item
+     * 
+     * @param parent
+     * @param imageName
+     * @param tooltipTextName
+     * @return Label
+     */
+    protected Label createTreeItemLabel(Tree parent, String imageName, String tooltipTextName) {
+        Label label = new Label(parent, SWT.NONE);
+        label.setBackground(parent.getBackground());
+        label.setImage(ImageLib.getImage(imageName));
+        label.setToolTipText(DefaultMessagesImpl.getString(tooltipTextName));
+        label.pack();
+        return label;
     }
 }

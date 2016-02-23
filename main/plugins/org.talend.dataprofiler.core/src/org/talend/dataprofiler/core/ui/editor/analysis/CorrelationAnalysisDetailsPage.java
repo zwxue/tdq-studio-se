@@ -323,13 +323,14 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tree);
         tree.setLayout(new GridLayout());
         ((GridData) tree.getLayoutData()).heightHint = TREE_MAX_LENGTH;
+        // TDQ-11622: msjian make the icons have a transparent background
+        tree.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
         treeViewer = new AnalysisColumnNominalIntervalTreeViewer(tree, this);
         treeViewer.addPropertyChangeListener(this);
         treeViewer.setInput(analyzedColumns.toArray());
         treeViewer.setDirty(false);
         analysisColSection.setClient(topComp);
-
     }
 
     public void openColumnsSelectionDialog() {
