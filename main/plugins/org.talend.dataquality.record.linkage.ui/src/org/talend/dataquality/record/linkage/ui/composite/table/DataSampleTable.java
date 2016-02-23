@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
@@ -81,7 +80,6 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
-import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -1040,8 +1038,6 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             createNatTable(columns, withData);
             drawCanvas.layout();
         } catch (SQLException e) {
-            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("ColumnAnalysisDataSamTable.InValidWhereClause"), //$NON-NLS-1$
-                    e.getMessage());
             needLoadData = false;
         }
 
