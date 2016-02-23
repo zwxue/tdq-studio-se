@@ -395,16 +395,19 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
 
         TextParameters tParameter = parameters.getTextParameter();
-        if (tParameter != null && !hideTextParameters(indicatorUnit)) {
+        if (tParameter != null) {
             return true;
         }
         DateParameters dParameters = parameters.getDateParameters();
         if (dParameters != null) {
             return true;
         }
+
         Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
         if (indicatorValidDomain != null) {
-            return true;
+            if (indicatorValidDomain.getRanges() != null && !indicatorValidDomain.getRanges().isEmpty()) {
+                return true;
+            }
         }
         Domain bins = parameters.getBins();
         if (bins != null) {

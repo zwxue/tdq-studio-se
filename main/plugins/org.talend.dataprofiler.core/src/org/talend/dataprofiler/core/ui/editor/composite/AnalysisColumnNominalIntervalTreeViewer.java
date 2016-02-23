@@ -133,7 +133,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newTree);
 
         newTree.setHeaderVisible(true);
-        createTreeItem(newTree, 190, "AnalysisColumnTreeViewer.analyzedColumns"); //$NON-NLS-1$
+        createTreeItem(newTree, 300, "AnalysisColumnTreeViewer.analyzedColumns"); //$NON-NLS-1$
         createTreeDataminingItem(newTree);
         createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.operation"); //$NON-NLS-1$
 
