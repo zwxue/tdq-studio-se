@@ -173,50 +173,51 @@ public class DQRespositoryView extends CommonNavigator {
 
         // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
         try {
-            manager = DQStructureManager.getInstance();
 
-            if (manager.isNeedCreateStructure()) {
-                RepositoryWorkUnit<Object> dQRepositoryWorkUnit = new RepositoryWorkUnit<Object>("Create DQ Repository structure") { //$NON-NLS-1$
+            RepositoryWorkUnit<Object> dQRepositoryWorkUnit = new RepositoryWorkUnit<Object>("Create DQ Repository structure") { //$NON-NLS-1$
 
-                    @Override
-                    protected void run() {
-                        final IWorkspaceRunnable op = new IWorkspaceRunnable() {
+                @Override
+                protected void run() {
+                    final IWorkspaceRunnable op = new IWorkspaceRunnable() {
 
-                            public void run(IProgressMonitor monitor) throws CoreException {
+                        public void run(IProgressMonitor monitor) throws CoreException {
+                            manager = DQStructureManager.getInstance();
+                            if (manager.isNeedCreateStructure()) {
                                 manager.createDQStructure();
                             }
-                        };
-                        IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
-
-                            public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-                                    InterruptedException {
-                                IWorkspace workspace = ResourcesPlugin.getWorkspace();
-                                try {
-                                    ISchedulingRule schedulingRule = workspace.getRoot();
-                                    // the update the project files need to be done in the workspace runnable to
-                                    // avoid all notification of changes before the end of the modifications.
-                                    workspace.run(op, schedulingRule, IWorkspace.AVOID_UPDATE, monitor);
-                                } catch (CoreException e) {
-                                    throw new InvocationTargetException(e);
-                                }
-
-                            }
-                        };
-
-                        try {
-                            // do not use the UI related
-                            iRunnableWithProgress.run(new NullProgressMonitor());
-                        } catch (Exception e) {
-                            ExceptionHandler.process(e);
                         }
+                    };
+                    IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
 
+                        public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                            IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                            try {
+                                ISchedulingRule schedulingRule = workspace.getRoot();
+                                // the update the project files need to be done in the workspace runnable to
+                                // avoid all notification of changes before the end of the modifications.
+                                workspace.run(op, schedulingRule, IWorkspace.AVOID_UPDATE, monitor);
+                            } catch (CoreException e) {
+                                throw new InvocationTargetException(e);
+                            }
+
+                        }
+                    };
+
+                    try {
+                        // do not use the UI related
+                        iRunnableWithProgress.run(new NullProgressMonitor());
+                    } catch (Exception e) {
+                        ExceptionHandler.process(e);
                     }
-                };
-                // TDQ-11267 by zshen ForceTransaction attribute make sure TDQ folder can be commite on the server
-                dQRepositoryWorkUnit.setForceTransaction(true);
-                ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(dQRepositoryWorkUnit);
 
-            }
+                }
+            };
+            // TDQ-11267 by zshen ForceTransaction attribute make sure TDQ folder can be commit on the server
+            dQRepositoryWorkUnit.setAvoidUnloadResources(true);
+            dQRepositoryWorkUnit.setUnloadResourcesAfterRun(true);
+            dQRepositoryWorkUnit.setFilesModifiedOutsideOfRWU(true);
+            dQRepositoryWorkUnit.setForceTransaction(true);
+            ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(dQRepositoryWorkUnit);
 
             if (manager.isNeedMigration()) {
                 IRunnableWithProgress op = new IRunnableWithProgress() {
