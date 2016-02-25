@@ -35,12 +35,6 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
     private static boolean isLoadDBFromDialog = true;
 
     /**
-     * this is used to distinguish whether the current folder node have done the getchildren() method to fix TDQ-11652
-     * msjian: make the folder node name label more clearly to user.
-     */
-    private boolean haveDoneGetChildren = false;
-
-    /**
      * DOC xqliu DQConnectionRepositoryNode constructor comment.
      * 
      * @param object
@@ -78,24 +72,6 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
 
     public static void setCallingFromColumnDialog(boolean isCallingFromColumnDialog) {
         DQDBFolderRepositoryNode.isCallingFromColumnDialog = isCallingFromColumnDialog;
-    }
-
-    /**
-     * Getter for haveDoneGetChildren.
-     * 
-     * @return the haveDoneGetChildren
-     */
-    public boolean isHaveDoneGetChildren() {
-        return haveDoneGetChildren;
-    }
-
-    /**
-     * Sets the haveDoneGetChildren.
-     * 
-     * @param haveDoneGetChildren the haveDoneGetChildren to set
-     */
-    public void setHaveDoneGetChildren(boolean haveDoneGetChildren) {
-        this.haveDoneGetChildren = haveDoneGetChildren;
     }
 
 }

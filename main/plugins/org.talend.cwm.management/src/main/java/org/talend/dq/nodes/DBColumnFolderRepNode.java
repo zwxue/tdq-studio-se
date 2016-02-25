@@ -205,7 +205,6 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
         }
         createTdcolumnsNode(tdcolumns, children);
         this.setReload(false);
-        setHaveDoneGetChildren(true);
         // MOD gdbu 2011-6-28 bug : 22204
         return filterResultsIfAny(children);
         // return children;
@@ -269,10 +268,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
      */
     @Override
     public String getLabel() {
-        if (isHaveDoneGetChildren()) {
-            return "Columns (" + getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return "Columns"; //$NON-NLS-1$
+        return "Columns (" + getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
