@@ -47,6 +47,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
+import org.talend.dq.nodes.DQDBFolderRepositoryNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -142,8 +143,8 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
 
     @Override
     public Connection reloadCurrentLevelElement() throws ReloadCompareException {
-        if (selectedObj instanceof DBColumnFolderRepNode) {
-            DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
+        if (selectedObj instanceof DQDBFolderRepositoryNode) {
+            DQDBFolderRepositoryNode columnFolderRepNode = (DQDBFolderRepositoryNode) selectedObj;
             columnFolderRepNode.setReload(true);
         }
         return super.reloadCurrentLevelElement();

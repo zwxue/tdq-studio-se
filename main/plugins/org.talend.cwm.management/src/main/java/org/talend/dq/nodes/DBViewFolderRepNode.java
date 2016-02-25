@@ -16,14 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
@@ -37,7 +33,6 @@ import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
 import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.utils.exceptions.MissingDriverException;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -53,25 +48,10 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     private Catalog catalog;
 
-    private ConnectionItem item;
-
-    private Connection connection;
-
     private Schema schema;
 
     public Catalog getCatalog() {
         return this.catalog;
-    }
-
-    public ConnectionItem getItem() {
-        return this.item;
-    }
-
-    public Connection getConnection() {
-        if (this.connection == null) {
-            getConnectionFromViewObject();
-        }
-        return this.connection;
     }
 
     public Schema getSchema() {
@@ -79,7 +59,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
     }
 
     /**
-     * DOC klliu ViewFolderRepNode constructor comment.
+     * DBViewFolderRepNode constructor comment.
      * 
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
@@ -97,28 +77,8 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
     }
 
     /**
-     * DOC talend Comment method "setConnection".
-     * 
-     * @param object
-     */
-    private void getConnectionFromViewObject() {
-        IRepositoryViewObject object = this.getObject() == null ? this.getParent().getObject() : this.getObject();
-        if (object != null && object instanceof ISubRepositoryObject) {
-            Property property = ((ISubRepositoryObject) object).getProperty();
-            if (property == null) {
-                return;
-            }
-            Item theItem = property.getItem();
-            if (theItem != null && theItem instanceof ConnectionItem) {
-                connection = ((ConnectionItem) theItem).getConnection();
-            }
-        }
-    }
-
-    /**
      * create the node of parent.
      * 
-     * @param object
      * @return
      */
     private RepositoryNode createParentNode() {
@@ -135,66 +95,67 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        // MOD gdbu 2011-7-1 bug : 22204
-        List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
+        if (!this.isReload() && !children.isEmpty()) {
+            // MOD gdbu 2011-6-29 bug : 22204
+            return filterResultsIfAny(children);
+        }
+        children.clear();
         IRepositoryViewObject object = this.getParent().getObject();
-        createRepositoryNodeViewFolderNode(repsNodes, object);
+        createRepositoryNodeViewFolderNode(object);
         // ADD msjian 2011-7-22 22206: fix the note 93101
         if (DQRepositoryNode.isUntilSchema()) {
-            return repsNodes;
+            return children;
         }
         // ~22206
-        return filterResultsIfAny(repsNodes);
+        this.setReload(false);
+        return filterResultsIfAny(children);
         // ~22204
     }
 
     /**
-     * Create TableFolderNodeRepositoryNode.
+     * Create ViewFolderNodeRepositoryNode.
      * 
-     * @param node parent RepositoryNode
      * @param metadataObject parent CatalogViewObject or SchemaViewObject
      */
-    private void createRepositoryNodeViewFolderNode(List<IRepositoryNode> node, IRepositoryViewObject metadataObject) {
+    private void createRepositoryNodeViewFolderNode(IRepositoryViewObject metadataObject) {
         List<TdView> views = new ArrayList<TdView>();
         String filterCharacter = null;
         try {
             if (metadataObject instanceof MetadataCatalogRepositoryObject) {
                 viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
+                item = (ConnectionItem) viewObject.getProperty().getItem();
+                setConnection(item.getConnection());
                 if (((MetadataCatalogRepositoryObject) metadataObject).getCatalog().eIsProxy()) {
                     // reload the connection to make sure the connection(and all it's owned elements) is not proxy
                     reloadConnectionViewObject();
                 }
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
-                item = (ConnectionItem) viewObject.getProperty().getItem();
                 views = PackageHelper.getViews(catalog);
                 filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
 
-                // MOD gdbu 2011-6-29 bug : 22204
                 // MOD TDQ-8718 20140505 yyin --the repository view cares about if use the filter or not, the column
                 // select dialog cares about if connect to DB or not.
                 if (views.isEmpty()) {
-                    connection = item.getConnection();
                     if (isCallingFromColumnDialog()) {
-                        views = DqRepositoryViewService.getViews(connection, catalog, null, isLoadDBFromDialog(), true);
+                        views = DqRepositoryViewService.getViews(getConnection(), catalog, null, isLoadDBFromDialog(), true);
                     } else if (!isOnFilterring()) {
                         // MOD gdbu 2011-7-21 bug 23220
-                        views = DqRepositoryViewService.getViews(connection, catalog, null, true, true);
+                        views = DqRepositoryViewService.getViews(getConnection(), catalog, null, true, true);
                     }
                     if (views != null && views.size() > 0) {
                         ProxyRepositoryFactory.getInstance().save(item, false);
                     }
                 }
 
-                ConnectionUtils.retrieveColumn(views);
-                // ~22204
-            } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
+            } else {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
+                item = (ConnectionItem) viewObject.getProperty().getItem();
+                setConnection(item.getConnection());
                 if (((MetadataSchemaRepositoryObject) metadataObject).getSchema().eIsProxy()) {
                     // reload the connection to make sure the connection(and all it's owned elements) is not proxy
                     reloadConnectionViewObject();
                 }
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
-                item = (ConnectionItem) viewObject.getProperty().getItem();
                 views = PackageHelper.getViews(schema);
                 filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
                 RepositoryNode parent = metadataObject.getRepositoryNode().getParent();
@@ -205,21 +166,19 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
                 }
                 // MOD gdbu 2011-6-29 bug : 22204
                 if (views.isEmpty()) {
-                    connection = item.getConnection();
                     if (isCallingFromColumnDialog()) {
-                        views = DqRepositoryViewService.getViews(connection, schema, null, isLoadDBFromDialog(), true);
+                        views = DqRepositoryViewService.getViews(getConnection(), schema, null, isLoadDBFromDialog(), true);
                     } else if (!isOnFilterring()) {
                         // MOD gdbu 2011-7-21 bug 23220
-                        views = DqRepositoryViewService.getViews(connection, schema, null, true, true);
+                        views = DqRepositoryViewService.getViews(getConnection(), schema, null, true, true);
                     }
                     if (views != null && views.size() > 0) {
                         ProxyRepositoryFactory.getInstance().save(item, false);
                     }
-                } else {
-                    ConnectionUtils.retrieveColumn(views);
                 }
                 // ~22204
             }
+            ConnectionUtils.retrieveColumn(views);
 
         } catch (Exception e) {
             log.error(e, e);
@@ -227,7 +186,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
         if (filterCharacter != null && !filterCharacter.equals(PluginConstant.EMPTY_STRING)) {
             views = RepositoryNodeHelper.filterViews(views, filterCharacter);
         }
-        createViewRepositoryNode(views, node);
+        createViewRepositoryNode(views, children);
     }
 
     /**
@@ -261,7 +220,10 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
      */
     @Override
     public String getLabel() {
-        return "Views (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        if (hasChildren()) {
+            return "Views (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return "Views"; //$NON-NLS-1$
     }
 
     /*
@@ -280,84 +242,6 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
             tables = PackageHelper.getViews(schema);
         }
         return tables.size();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.repository.model.RepositoryNode#hasChildren()
-     */
-    @Override
-    public boolean hasChildren() {
-        // MOD gdbu 2011-9-1 TDQ-3457
-        if (!hasChildrenInFile()) {
-            if (isOnFilterring()) {
-                return false;
-            } else {
-                if (!hasChildrenInDataBase()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-        // ~ TDQ-3457
-    }
-
-    private boolean hasChildrenInFile() {
-        IRepositoryViewObject object = this.getParent().getObject();
-        if (object instanceof MetadataCatalogRepositoryObject) {
-            Catalog catalogInFile = ((MetadataCatalogRepositoryObject) object).getCatalog();
-            List<TdView> views = PackageHelper.getViews(catalogInFile);
-            if (views.isEmpty()) {
-                return false;
-            } else {
-                return true;
-            }
-        } else if (object instanceof MetadataSchemaRepositoryObject) {
-            Schema schemaInFile = ((MetadataSchemaRepositoryObject) object).getSchema();
-            List<TdView> views = PackageHelper.getViews(schemaInFile);
-            if (views.isEmpty()) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean hasChildrenInDataBase() {
-
-        boolean hasChildrenInDB = false;
-
-        IRepositoryViewObject object = this.getParent().getObject();
-        if (object instanceof MetadataCatalogRepositoryObject) {
-            viewObject = ((MetadataCatalogRepositoryObject) object).getViewObject();
-            item = (ConnectionItem) viewObject.getProperty().getItem();
-            connection = item.getConnection();
-            catalog = ((MetadataCatalogRepositoryObject) object).getCatalog();
-            try {
-                hasChildrenInDB = DqRepositoryViewService.isCatalogHasChildren(connection, catalog, null,
-                        DqRepositoryViewService.VIEW_TYPES);
-            } catch (Exception e) {
-                log.error(e.toString());
-            }
-
-        } else {
-            viewObject = ((MetadataSchemaRepositoryObject) object).getViewObject();
-            item = (ConnectionItem) viewObject.getProperty().getItem();
-            connection = item.getConnection();
-            schema = ((MetadataSchemaRepositoryObject) object).getSchema();
-            try {
-                hasChildrenInDB = DqRepositoryViewService.isSchemaHasChildren(connection, schema, null,
-                        DqRepositoryViewService.VIEW_TYPES);
-            } catch (MissingDriverException e) {
-                throw e;
-            } catch (Exception e) {
-                log.error(e.toString());
-            }
-        }
-
-        return hasChildrenInDB;
     }
 
     /**

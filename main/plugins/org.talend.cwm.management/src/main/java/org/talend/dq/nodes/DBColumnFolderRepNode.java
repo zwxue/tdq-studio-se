@@ -17,15 +17,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
@@ -50,42 +46,9 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     private static Logger log = Logger.getLogger(DBColumnFolderRepNode.class);
 
-    private ConnectionItem item;
-
-    private Connection connection;
-
-    private EList<MetadataColumn> columns;
-
     private TdTable tdTable;
 
     private TdView tdView;
-
-    private List<IRepositoryNode> children;
-
-    private boolean reload = false;
-
-    public boolean isReload() {
-        return this.reload;
-    }
-
-    public void setReload(boolean reload) {
-        this.reload = reload;
-    }
-
-    public ConnectionItem getItem() {
-        return this.item;
-    }
-
-    public Connection getConnection() {
-        if (this.connection == null) {
-            getConnectionFromViewObject();
-        }
-        return this.connection;
-    }
-
-    public EList<MetadataColumn> getColumns() {
-        return this.columns;
-    }
 
     public TdTable getTdTable() {
         return this.tdTable;
@@ -113,25 +76,6 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
     }
 
     /**
-     * DOC talend Comment method "setConnection".
-     * 
-     * @param object
-     */
-    private void getConnectionFromViewObject() {
-        IRepositoryViewObject object = this.getObject() == null ? this.getParent().getObject() : this.getObject();
-        if (object != null && object instanceof ISubRepositoryObject) {
-            Property property = ((ISubRepositoryObject) object).getProperty();
-            if (property == null) {
-                return;
-            }
-            Item theItem = property.getItem();
-            if (theItem != null && theItem instanceof ConnectionItem) {
-                connection = ((ConnectionItem) theItem).getConnection();
-            }
-        }
-    }
-
-    /**
      * create the node of parent.
      * 
      * @param object
@@ -151,19 +95,18 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     @Override
     public List<IRepositoryNode> getChildren() {
-
         if (!this.isReload() && !children.isEmpty()) {
             // MOD gdbu 2011-6-29 bug : 22204
             return filterResultsIfAny(children);
-            // return children;
         }
         children.clear();
         String filterCharater = null;
         IRepositoryViewObject meataColumnSetObject = this.getParent().getObject();
+        EList<MetadataColumn> columns = null;
         if (meataColumnSetObject instanceof TdTableRepositoryObject) {
             TdTableRepositoryObject tdTableRepositoryObject = (TdTableRepositoryObject) meataColumnSetObject;
             // MOD klliu 2011-09-06 bug TDQ-3414
-            item = (ConnectionItem) tdTableRepositoryObject.getViewObject().getProperty().getItem();
+            setItem((ConnectionItem) tdTableRepositoryObject.getViewObject().getProperty().getItem());
             if (tdTableRepositoryObject.getTdTable().eIsProxy()) {
                 // reload the connection to make sure the connection(and all it's owned elements) is not proxy
                 reloadConnectionViewObject();
@@ -174,7 +117,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
         } else if (meataColumnSetObject instanceof TdViewRepositoryObject) {
             TdViewRepositoryObject tdViewRepositoryObject = (TdViewRepositoryObject) meataColumnSetObject;
             // MOD klliu 2011-09-06 bug TDQ-3414
-            item = (ConnectionItem) tdViewRepositoryObject.getViewObject().getProperty().getItem();
+            setItem((ConnectionItem) tdViewRepositoryObject.getViewObject().getProperty().getItem());
             if (tdViewRepositoryObject.getTdView().eIsProxy()) {
                 // reload the connection to make sure the connection(and all it's owned elements) is not proxy
                 reloadConnectionViewObject();
@@ -183,7 +126,8 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
             columns = tdView.getColumns();
             filterCharater = ColumnHelper.getColumnFilter(tdView);
         }
-        connection = item.getConnection();
+
+        setConnection(getItem().getConnection());
         // MOD TDQ-8718 20140430 the repository view cares about if use the filter or not, the column select dialog
         // cares about if connect to DB or not.
         List<TdColumn> tdcolumns = null;
@@ -214,12 +158,12 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
         List<TdColumn> tdcolumns = null;
         try {
             if (tdTable != null) {
-                tdcolumns = DqRepositoryViewService.getColumns(connection, tdTable, isLoadDB);
+                tdcolumns = DqRepositoryViewService.getColumns(getConnection(), tdTable, isLoadDB);
             } else if (tdView != null) {
-                tdcolumns = DqRepositoryViewService.getColumns(connection, tdView, isLoadDB);
+                tdcolumns = DqRepositoryViewService.getColumns(getConnection(), tdView, isLoadDB);
             }
             if (tdcolumns != null && tdcolumns.size() > 0) {
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(getItem(), false);
             }
         } catch (MissingDriverException e) {
             throw e;

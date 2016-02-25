@@ -12,8 +12,16 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.ISubRepositoryObject;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -33,6 +41,47 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
      * connect to database, – false: will not connect to database
      */
     private static boolean isLoadDBFromDialog = true;
+
+    protected ConnectionItem item;
+
+    private Connection connection;
+
+    protected List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
+
+    private boolean reload = false;
+
+    public boolean isReload() {
+        return this.reload;
+    }
+
+    public void setReload(boolean reload) {
+        this.reload = reload;
+    }
+
+    public void setConnection(Connection con) {
+        this.connection = con;
+    }
+
+    public Connection getConnection() {
+        if (this.connection == null) {
+            getConnectionFromViewObject();
+        }
+        return this.connection;
+    }
+
+    protected void getConnectionFromViewObject() {
+        IRepositoryViewObject object = this.getObject() == null ? this.getParent().getObject() : this.getObject();
+        if (object != null && object instanceof ISubRepositoryObject) {
+            Property property = ((ISubRepositoryObject) object).getProperty();
+            if (property == null) {
+                return;
+            }
+            Item theItem = property.getItem();
+            if (theItem != null && theItem instanceof ConnectionItem) {
+                connection = ((ConnectionItem) theItem).getConnection();
+            }
+        }
+    }
 
     /**
      * DOC xqliu DQConnectionRepositoryNode constructor comment.
@@ -72,6 +121,24 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
 
     public static void setCallingFromColumnDialog(boolean isCallingFromColumnDialog) {
         DQDBFolderRepositoryNode.isCallingFromColumnDialog = isCallingFromColumnDialog;
+    }
+
+    /**
+     * Getter for item.
+     * 
+     * @return the item
+     */
+    public ConnectionItem getItem() {
+        return item;
+    }
+
+    /**
+     * Sets the item.
+     * 
+     * @param item the item to set
+     */
+    public void setItem(ConnectionItem item) {
+        this.item = item;
     }
 
 }
