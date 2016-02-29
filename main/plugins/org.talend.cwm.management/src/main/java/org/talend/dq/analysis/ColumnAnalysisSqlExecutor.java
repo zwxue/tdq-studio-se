@@ -130,7 +130,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             for (Indicator indicator : leafIndicators) {
                 if (this.continueRun()) {
                     if (!createSqlQuery(stringDataFilter, indicator)) {
-                        log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName());//$NON-NLS-1$
+                        log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR", indicator.getName()));//$NON-NLS-1$
                         // return null;
                     }
                 }
@@ -192,7 +192,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
              // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
              // expressions.
             if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
-                traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
+                traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN"));//$NON-NLS-1$
                 return Boolean.FALSE;
             }
             // MOD klliu 2011-06-28 bug 22555

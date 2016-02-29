@@ -126,6 +126,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             if ("EXCEL".equals(dbms().getDbmsName())) { //$NON-NLS-1$
                 return getReturnCode(true);
             }
+            return getReturnCode(false);
         }
         // ~
 

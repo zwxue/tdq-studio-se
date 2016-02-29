@@ -123,8 +123,11 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
     }
 
     private String getErrorMessageForQuery(Expression query) {
-        return Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryNotExecute", indicator.getName()) + "\" "//$NON-NLS-1$
-                + ((query == null) ? Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryIsNull") : Messages.getString(
-                        "ColumnAnalysisSqlParallelExecutor.SQLQuery", query.getBody()));
+        if (query == null) {
+            return Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryIsNull", indicator.getName()); //$NON-NLS-1$
+        } else {
+            return Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryNotExecute", indicator.getName()) //$NON-NLS-1$
+                    + Messages.getString("ColumnAnalysisSqlParallelExecutor.SQLQuery", query.getBody()); //$NON-NLS-1$
+        }
     }
 }
