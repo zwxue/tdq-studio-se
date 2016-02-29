@@ -93,7 +93,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
                 if (!createSqlQuery(stringDataFilter, indicator, false)) {
-                    log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName()); //$NON-NLS-1$
+                    log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR", indicator.getName())); //$NON-NLS-1$
                     return null;
                 }
             }
