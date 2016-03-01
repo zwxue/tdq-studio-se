@@ -153,72 +153,36 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws ParseException
      * @throws AnalysisExecutionException
      */
-    private boolean createSqlQuery(String dataFilterAsString,
-			Indicator indicator) throws AnalysisExecutionException {
-		TypedReturnCode<TdColumn> checkResult = getTdColumn(indicator);
-		if (!checkResult.isOk()) {
-			return false;
-		}
-		TdColumn tdColumn = checkResult.getObject();
-		if (tdColumn.eIsProxy()) {
-			tdColumn = (TdColumn) EObjectHelper.resolveObject(tdColumn);
-		}
+    private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws AnalysisExecutionException {
+        TypedReturnCode<TdColumn> checkResult = getTdColumn(indicator);
+        if (!checkResult.isOk()) {
+            return false;
+        }
+        TdColumn tdColumn = checkResult.getObject();
+        if (tdColumn.eIsProxy()) {
+            tdColumn = (TdColumn) EObjectHelper.resolveObject(tdColumn);
+        }
 
-		TypedReturnCode<String> columnName = getColumnName(indicator, tdColumn);
-		if (!columnName.isOk()) {
-			return false;
-		}
-		String colName = columnName.getObject();
+        TypedReturnCode<String> columnName = getColumnName(indicator, tdColumn);
+        if (!columnName.isOk()) {
+            return false;
+        }
+        String colName = columnName.getObject();
 
-		TypedReturnCode<IndicatorDefinition> id = getIndicatorDefinition(indicator);
-		if (!id.isOk()) {
-			return false;
-		}
-		IndicatorDefinition indicatorDefinition = id.getObject();
+        TypedReturnCode<IndicatorDefinition> id = getIndicatorDefinition(indicator);
+        if (!id.isOk()) {
+            return false;
+        }
+        IndicatorDefinition indicatorDefinition = id.getObject();
 
-		// get correct language for current database
-		String language = dbms().getDbmsName();
+        // get correct language for current database
+        String language = dbms().getDbmsName();
 
-		// --- create select statement
-		// get indicator's sql columnS (generate the real SQL statement from its
-		// definition)
-		Expression sqlGenericExpression = dbms().getSqlExpression(
-				indicatorDefinition);
+        // --- create select statement
+        // get indicator's sql columnS (generate the real SQL statement from its
+        // definition)
+        Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
-<<<<<<< maintenance/6.1
-		final EClass indicatorEclass = indicator.eClass();
-		if (sqlGenericExpression == null
-				|| sqlGenericExpression.getBody() == null) {
-			// Added TDQ-8468 yyin 20131227 : if the used UDI already has its
-			// correct expression instance in the
-			// analysis, will not check the sql expression and create again(from
-			// the definition).
-			if (UDIHelper.isUDI(indicator)
-					&& indicator.getInstantiatedExpressions().size() > 0) {
-				return Boolean.TRUE;
-			}// ~
-				// when the indicator is a pattern indicator, a possible cause
-				// is that the DB does not support regular
-				// expressions.
-			if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator()
-					.equals(indicatorEclass)) {
-				traceError(Messages
-						.getString(
-								"ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
-				return Boolean.FALSE;
-			}
-			// MOD klliu 2011-06-28 bug 22555
-			Object[] args = new Object[] {
-					(indicator.getName() != null ? indicator.getName()
-							: indicatorEclass.getName()),
-					ResourceHelper.getUUID(indicatorDefinition) };
-			String warnInfo = Messages.getString(
-					"ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", args) + Messages.getString("ColumnAnalysisSqlExecutor.ADDEXPREEIONINFOMATION", language);//$NON-NLS-1$ ////$NON-NLS-2$
-			traceError(warnInfo);
-			return Boolean.FALSE;
-			// ~
-		}
-=======
         final EClass indicatorEclass = indicator.eClass();
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
             // Added TDQ-8468 yyin 20131227 : if the used UDI already has its correct expression instance in the
@@ -240,67 +204,60 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return Boolean.FALSE;
             // ~
         }
->>>>>>> cc9d17c TDQ-11636: fix the Unclear error message when analysis fails to run
 
-		// --- get indicator parameters and convert them into sql expression
-		List<String> whereExpression = new ArrayList<String>();
-		if (StringUtils.isNotBlank(dataFilterAsString)) {
-			whereExpression.add(dataFilterAsString);
-		}
-		List<String> rangeStrings = null;
-		DateGrain dateAggregationType = null;
-		IndicatorParameters parameters = indicator.getParameters();
-		if (parameters != null) {
-			// handle bins
-			Domain bins = parameters.getBins();
-			if (bins != null) {
-				rangeStrings = getBinsAsGenericString(bins.getRanges(), colName);
-			}
+        // --- get indicator parameters and convert them into sql expression
+        List<String> whereExpression = new ArrayList<String>();
+        if (StringUtils.isNotBlank(dataFilterAsString)) {
+            whereExpression.add(dataFilterAsString);
+        }
+        List<String> rangeStrings = null;
+        DateGrain dateAggregationType = null;
+        IndicatorParameters parameters = indicator.getParameters();
+        if (parameters != null) {
+            // handle bins
+            Domain bins = parameters.getBins();
+            if (bins != null) {
+                rangeStrings = getBinsAsGenericString(bins.getRanges(), colName);
+            }
 
-			DateParameters dateParameters = parameters.getDateParameters();
-			if (dateParameters != null) {
-				dateAggregationType = dateParameters.getDateAggregationType();
-			}
+            DateParameters dateParameters = parameters.getDateParameters();
+            if (dateParameters != null) {
+                dateAggregationType = dateParameters.getDateAggregationType();
+            }
 
-			TextParameters textParameter = parameters.getTextParameter();
-			if (textParameter != null) {
-				if (textParameter.isIgnoreCase()) {
-					colName = dbms().toUpperCase(colName);
-				}
-				if (!textParameter.isUseBlank()
-						&& IndicatorsPackage.eINSTANCE.getLengthIndicator()
-								.isSuperTypeOf(indicatorEclass)) {
+            TextParameters textParameter = parameters.getTextParameter();
+            if (textParameter != null) {
+                if (textParameter.isIgnoreCase()) {
+                    colName = dbms().toUpperCase(colName);
+                }
+                if (!textParameter.isUseBlank()
+                        && IndicatorsPackage.eINSTANCE.getLengthIndicator().isSuperTypeOf(indicatorEclass)) {
 
-					String tdColName = getQuotedColumnName(tdColumn);
-					tdColName = dbms().replaceNullsWithString(tdColName,
-							"'NULL TALEND'");//$NON-NLS-1$
+                    String tdColName = getQuotedColumnName(tdColumn);
+                    tdColName = dbms().replaceNullsWithString(tdColName, "'NULL TALEND'");//$NON-NLS-1$
 
-				} else if (textParameter.isUseBlank()
-						&& IndicatorsPackage.eINSTANCE.getFrequencyIndicator()
-								.isSuperTypeOf(indicatorEclass)) {
-					colName = dbms().trim(colName);
-				}
-			}
-		}
+                } else if (textParameter.isUseBlank()
+                        && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {
+                    colName = dbms().trim(colName);
+                }
+            }
+        }
 
-		TypedReturnCode<String> completedQuery = getCompletedQuery(indicator,
-				tdColumn, colName, indicatorDefinition, language,
-				sqlGenericExpression, indicatorEclass, whereExpression,
-				rangeStrings, dateAggregationType);
-		if (!completedQuery.isOk()) {
-			return false;
-		}
-		String finalQuery = completedQuery.getObject();
+        TypedReturnCode<String> completedQuery = getCompletedQuery(indicator, tdColumn, colName, indicatorDefinition, language,
+                sqlGenericExpression, indicatorEclass, whereExpression, rangeStrings, dateAggregationType);
+        if (!completedQuery.isOk()) {
+            return false;
+        }
+        String finalQuery = completedQuery.getObject();
 
-		if (finalQuery != null) {
-			TdExpression instantiateSqlExpression = BooleanExpressionHelper
-					.createTdExpression(language, finalQuery);
-			indicator.setInstantiatedExpression(instantiateSqlExpression);
-			return true;
-		}
+        if (finalQuery != null) {
+            TdExpression instantiateSqlExpression = BooleanExpressionHelper.createTdExpression(language, finalQuery);
+            indicator.setInstantiatedExpression(instantiateSqlExpression);
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
     /**
      * DOC talend Comment method "getCompletedQuery".
