@@ -68,6 +68,7 @@ import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog;
 import org.talend.dataprofiler.core.ui.dialog.JavaUdiJarSelectDialog;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
+import org.talend.dataquality.common.classloader.TalendURLClassLoader;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
@@ -78,7 +79,6 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.classloader.TalendURLClassLoader;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
