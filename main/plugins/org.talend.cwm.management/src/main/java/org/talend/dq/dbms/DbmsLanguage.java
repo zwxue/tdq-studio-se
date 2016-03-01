@@ -121,6 +121,8 @@ public class DbmsLanguage {
 
     static final String IMPALA = SupportDBUrlType.IMPALA.getLanguage();
 
+    static final String PARACCEL = SupportDBUrlType.PARACCEL.getLanguage();
+
     /**
      * Ansi SQL.
      */
