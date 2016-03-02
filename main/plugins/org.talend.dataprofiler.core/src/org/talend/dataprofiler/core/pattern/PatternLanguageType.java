@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -98,16 +99,18 @@ public enum PatternLanguageType {
           SupportDBUrlType.AS400DEFAULTURL.getLanguage(),
           SupportDBUrlType.AS400DEFAULTURL.getLanguage(),
           PatternToExcelEnum.AS400),
-    HIVE(
-         13,
-         SupportDBUrlType.HIVEDEFAULTURL.getLanguage(),
+    HIVE(13, SupportDBUrlType.HIVEDEFAULTURL.getLanguage() + " | " + SupportDBUrlType.IMPALA.getLanguage(), //$NON-NLS-1$
          SupportDBUrlType.HIVEDEFAULTURL.getLanguage(),
          PatternToExcelEnum.Hive),
-    VERTICA(13, SupportDBUrlType.VERTICA.getLanguage(), SupportDBUrlType.VERTICA.getLanguage(), PatternToExcelEnum.Vertica);
+
+    VERTICA(13, SupportDBUrlType.VERTICA.getLanguage(), SupportDBUrlType.VERTICA.getLanguage(), PatternToExcelEnum.Vertica),
+    PARACCEL(14, SupportDBUrlType.PARACCEL.getLanguage() + " | " + SupportDBUrlType.REDSHIFT.getLanguage(), //$NON-NLS-1$
+             SupportDBUrlType.PARACCEL.getLanguage(),
+             PatternToExcelEnum.PARACCEL);
 
     private int index;
 
-    private String literal;
+    private String language;
 
     private String name;
 
@@ -122,23 +125,23 @@ public enum PatternLanguageType {
     }
 
     public String getLiteral() {
-        return literal;
+        return language;
     }
 
     public String getName() {
         return name;
     }
 
-    PatternLanguageType(int index, String name, String literal, PatternToExcelEnum excelEnum) {
+    PatternLanguageType(int index, String name, String language, PatternToExcelEnum excelEnum) {
         this.index = index;
         this.name = name;
-        this.literal = literal;
+        this.language = language;
         this.excelEnum = excelEnum;
     }
 
     public static String findLanguageByName(String name) {
         for (PatternLanguageType oneType : values()) {
-            if (name != null && name.equalsIgnoreCase(oneType.getName())) {
+            if (name != null && StringUtils.startsWithIgnoreCase(name, oneType.getName())) {
                 return oneType.getLiteral();
             }
         }
@@ -148,7 +151,7 @@ public enum PatternLanguageType {
 
     public static String findNameByLanguage(String language) {
         for (PatternLanguageType oneType : values()) {
-            if (language != null && language.equalsIgnoreCase(oneType.getLiteral())) {
+            if (language != null && StringUtils.startsWithIgnoreCase(language, oneType.getLiteral())) {
                 return oneType.getName();
             }
         }

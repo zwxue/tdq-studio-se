@@ -42,7 +42,8 @@ public enum PatternToExcelEnum {
     JavaJarPath(21, "JAR_FILE_PATH"), //$NON-NLS-1$
     Hive(22, "Hive"), //$NON-NLS-1$
     Vertica(23, "Vertica"), //$NON-NLS-1$
-    IndicatorDefinitionParameter(23, "IndicatorDefinitionParameter");//$NON-NLS-1$
+    IndicatorDefinitionParameter(23, "IndicatorDefinitionParameter"), //$NON-NLS-1$
+    PARACCEL(24, "ParAccel"); //$NON-NLS-1$
 
     private String literal;
 

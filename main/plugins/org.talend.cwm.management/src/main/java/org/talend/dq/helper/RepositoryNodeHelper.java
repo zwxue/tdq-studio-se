@@ -3842,11 +3842,7 @@ public final class RepositoryNodeHelper {
                 log.warn(e);
                 return false;
             }
-            if (connectionItem.getConnection() instanceof DatabaseConnection) {
-                String databaseType = ((DatabaseConnection) connectionItem.getConnection()).getDatabaseType();
-                List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
-                return tdqSupportDBType.contains(databaseType);
-            }
+            return MetadataConnectionUtils.isTDQSupportDBTemplate(connectionItem.getConnection());
         }
 
         return false;

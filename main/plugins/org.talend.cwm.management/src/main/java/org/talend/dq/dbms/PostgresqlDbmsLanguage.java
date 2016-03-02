@@ -48,6 +48,10 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
         super(DbmsLanguage.POSTGRESQL);
     }
 
+    PostgresqlDbmsLanguage(String dbmsType) {
+        super(dbmsType);
+    }
+
     /**
      * DOC scorreia PostgresqlDbmsLanguage constructor comment.
      * 

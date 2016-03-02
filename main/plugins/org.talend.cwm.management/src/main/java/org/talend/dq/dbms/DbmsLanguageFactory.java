@@ -124,8 +124,10 @@ public final class DbmsLanguageFactory {
             dbmsLanguage = new AS400DbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isMSSQL(dbmsSubtype)) {
             dbmsLanguage = new MSSqlDbmsLanguage(dbmsSubtype, dbVersion);
-        } else if (isPostgresql(dbmsSubtype) || isParAccel(dbmsSubtype)) {
-            dbmsLanguage = new PostgresqlDbmsLanguage(DbmsLanguage.POSTGRESQL, dbVersion);
+        } else if (isPostgresql(dbmsSubtype)) {
+            dbmsLanguage = new PostgresqlDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isParAccel(dbmsSubtype)) {
+            dbmsLanguage = new ParAccelDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isSybase(dbmsSubtype)) {
             dbmsLanguage = new SybaseASEDbmsLanguage(dbVersion);
         } else if (isSQLite(dbmsSubtype)) {

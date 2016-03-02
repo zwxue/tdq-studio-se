@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -279,6 +280,12 @@ public final class SoftwareSystemManager {
                     }
                 }
                 if (!isExist) {
+                    if (subtype.equalsIgnoreCase(SupportDBUrlType.PARACCEL.getLanguage())
+                            || subtype.equalsIgnoreCase(SupportDBUrlType.REDSHIFT.getLanguage())
+                            || subtype.equalsIgnoreCase(SupportDBUrlType.IMPALA.getLanguage())
+                            || subtype.equalsIgnoreCase(SupportDBUrlType.HIVEDEFAULTURL.getLanguage())) {
+                        continue;
+                    }
                     newDBTypes.add(subtype);
                 }
             }

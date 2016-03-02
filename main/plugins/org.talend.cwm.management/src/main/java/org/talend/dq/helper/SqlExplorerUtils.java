@@ -141,9 +141,7 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
     public void runInDQViewer(Connection tdDataProvider, String query, String editorName) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(tdDataProvider);
         if (dbConn != null) { // open in sqlexplorer editor if it is database connection
-            String dbType = dbConn.getDatabaseType();
-            List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
-            if (!tdqSupportDBType.contains(dbType)) {
+            if (!MetadataConnectionUtils.isTDQSupportDBTemplate(dbConn)) {
                 // the dbtype is unsupported, show warning dialog
                 MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         Messages.getString("SqlExplorerUtils.Warning"), Messages.getString("SqlExplorerUtils.cantPreview")); //$NON-NLS-1$ //$NON-NLS-2$

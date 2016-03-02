@@ -1104,6 +1104,12 @@ public class DbmsLanguage {
             return defaultExpression;
         }
 
+        // TDQ-11558: added by msjian when there is no PARACCEL definition, use postgresql first
+        if (language.equals(SupportDBUrlType.PARACCEL.getLanguage())) {
+            return getSqlExpression(indicatorDefinition, SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage(),
+                    sqlGenericExpression, dbVersion);
+        }
+
         // else try with default language (ANSI SQL)
         String defaultLanguage = getDefaultLanguage();
 
