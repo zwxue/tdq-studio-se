@@ -45,7 +45,7 @@ public final class ViewerDataFactory {
                     // the Semantic analysis must not appear in TOS DQ.
                     String label = subCategory.getLabel();
                     if (org.talend.commons.utils.platform.PluginChecker.isOnlyTopLoaded()) {
-                        if (label.equals("Semantic Discovery Analysis")) { //$NON-NLS-1$
+                        if (label.equals("Semantic-aware Analysis")) { //$NON-NLS-1$
                             continue;
                         }
                     }

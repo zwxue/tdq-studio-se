@@ -36,7 +36,7 @@ public class AnalysisLabelParameter extends AnalysisParameter {
 
     public static final String SCHEMA_OVERVIEW_ANALYSIS = "Schema Overview Analysis"; //$NON-NLS-1$
 
-    public static final String SEMANTIC_DISCOVERY_ANALYSIS = "Semantic Discovery Analysis"; //$NON-NLS-1$
+    public static final String SEMANTIC_DISCOVERY_ANALYSIS = "Semantic-aware Analysis"; //$NON-NLS-1$
 
     public static final String BASIC_COLUMN_ANALYSIS = "Basic Column Analysis"; //$NON-NLS-1$
 
