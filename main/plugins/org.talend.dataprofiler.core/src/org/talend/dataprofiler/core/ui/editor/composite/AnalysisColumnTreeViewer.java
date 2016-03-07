@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
@@ -188,6 +189,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.pattern"); //$NON-NLS-1$
         createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.udi"); //$NON-NLS-1$
         createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.operation"); //$NON-NLS-1$
+        // TDQ-11622 : add a column here, let the width = 1 and text = EMPTY_STRING TODO need to find a better solution!
+        TreeColumn blankColumn = new TreeColumn(newTree, SWT.CENTER);
+        blankColumn.setWidth(1);
+        // ~ TDQ-11622
 
         parent.layout();
 
