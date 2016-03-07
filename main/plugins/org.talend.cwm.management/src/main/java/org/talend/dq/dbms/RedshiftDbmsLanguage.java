@@ -20,17 +20,17 @@ import org.talend.utils.ProductVersion;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-public class ParAccelDbmsLanguage extends PostgresqlDbmsLanguage {
+public class RedshiftDbmsLanguage extends PostgresqlDbmsLanguage {
 
-    public ParAccelDbmsLanguage() {
-        super(DbmsLanguage.PARACCEL);
+    public RedshiftDbmsLanguage() {
+        super(DbmsLanguage.REDSHIFT);
     }
 
-    public ParAccelDbmsLanguage(String dbmsType) {
+    public RedshiftDbmsLanguage(String dbmsType) {
         super(dbmsType);
     }
 
-    public ParAccelDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    public RedshiftDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
     }
 

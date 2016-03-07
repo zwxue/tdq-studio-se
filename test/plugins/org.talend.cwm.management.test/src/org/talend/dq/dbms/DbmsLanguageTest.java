@@ -35,7 +35,6 @@ import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -52,7 +51,6 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.dates.DateUtils;
-
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Catalog;
@@ -159,12 +157,12 @@ public class DbmsLanguageTest {
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         pattern.setName("My Pattern"); //$NON-NLS-1$
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression expression = createExpression("SQL");
+        TdExpression expression = createExpression("SQL"); //$NON-NLS-1$
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
 
         RegularExpression regularExpr2 = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression expression2 = createExpression("MySql");
+        TdExpression expression2 = createExpression("MySql"); //$NON-NLS-1$
         regularExpr2.setExpression(expression2);
         pattern.getComponents().add(regularExpr2);
 
@@ -757,11 +755,11 @@ public class DbmsLanguageTest {
                     "SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " + GenericSQLHandler.TABLE_NAME, dbms.getTopNQuery(QUERY_STR, TOP_N)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             dbms = getSybaseDbmsLanguage();
-            Assert.assertEquals("SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " //$NON-NLS-1$ //$NON-NLS-2$
+            Assert.assertEquals("SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     + GenericSQLHandler.TABLE_NAME, dbms.getTopNQuery(QUERY_STR, TOP_N)); // $NON
 
             dbms = getTeradataDbmsLanguage();
-            Assert.assertEquals("SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " //$NON-NLS-1$ //$NON-NLS-2$
+            Assert.assertEquals("SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     + GenericSQLHandler.TABLE_NAME, dbms.getTopNQuery(QUERY_STR, TOP_N)); // $NON
 
         } catch (Exception e) {
@@ -915,8 +913,8 @@ public class DbmsLanguageTest {
     @Test
     public void testAddWhereToSqlStringStatement() {
         try {
-            String w1 = "a=a";
-            String w2 = "1>0";
+            String w1 = "a=a"; //$NON-NLS-1$
+            String w2 = "1>0"; //$NON-NLS-1$
             List<String> whereExpressions = new ArrayList<String>();
             whereExpressions.add(w1);
             whereExpressions.add(w2);
@@ -936,7 +934,7 @@ public class DbmsLanguageTest {
     @Test
     public void testAddWhereToStatement() {
         try {
-            String w1 = "a=a";
+            String w1 = "a=a"; //$NON-NLS-1$
 
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             String addWhereToStatement = dbms.addWhereToStatement(QUERY_WHERE_STR, w1);
@@ -966,8 +964,8 @@ public class DbmsLanguageTest {
     @Test
     public void testBuildWhereExpression() {
         try {
-            String w1 = "a=a";
-            String w2 = "1>0";
+            String w1 = "a=a"; //$NON-NLS-1$
+            String w2 = "1>0"; //$NON-NLS-1$
             List<String> whereExpressions = new ArrayList<String>();
             whereExpressions.add(w1);
             whereExpressions.add(w2);
@@ -1381,7 +1379,7 @@ public class DbmsLanguageTest {
     @Test
     public void testIsApplicable() {
         try {
-            Expression createExpression = createExpression("Mysql");
+            Expression createExpression = createExpression("Mysql"); //$NON-NLS-1$
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             Assert.assertTrue(dbms.isApplicable(createExpression));
         } catch (Exception e) {
@@ -1397,7 +1395,7 @@ public class DbmsLanguageTest {
     @Test
     public void testGetSelectRegexpTestStringStringExpression() {
         try {
-            Expression createExpression = createExpression("Mysql");
+            Expression createExpression = createExpression("Mysql"); //$NON-NLS-1$
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             Assert.assertNotNull(dbms.getSelectRegexpTestString(REGEXP_STR, createExpression));
         } catch (Exception e) {
@@ -2642,13 +2640,13 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testSetFunctionReturnValueCase6() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("sql", "1.0"); //$NON-NLS-1$ 
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("sql", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$ 
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
         dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
         String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
-        Assert.assertEquals("RETURNVALUE", regularfunctionReturnValue);
+        Assert.assertEquals("RETURNVALUE", regularfunctionReturnValue); //$NON-NLS-1$
     }
 
     /**
@@ -2888,6 +2886,114 @@ public class DbmsLanguageTest {
                 .getSqlExpression(indicatorDefinition, language, sqlGenericExpression, dbVersion);
         Assert.assertEquals(null, sqlExpression);
     }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression_redshift_1() {
+        // TDQ-11558 msjian: test for get sql expresstion for redshift database
+        String sqlLang = "SQL"; //$NON-NLS-1$
+        String sqlBody = "SQL body"; //$NON-NLS-1$
+
+        String redshiftLang = SupportDBUrlType.REDSHIFT.getLanguage();
+        String redshiftBody = "Amazon redshift body"; //$NON-NLS-1$
+
+        String postgresqlLang = SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage();
+        String postgresqlBody = "PostgreSQL body"; //$NON-NLS-1$
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression1 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression1.setLanguage(sqlLang);
+        tdExpression1.setBody(sqlBody);
+        sqlGenericExpression.add(tdExpression1);
+
+        TdExpression tdExpression3 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression3.setLanguage(postgresqlLang);
+        tdExpression3.setBody(postgresqlBody);
+        sqlGenericExpression.add(tdExpression3);
+
+        TdExpression tdExpression4 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression4.setLanguage(redshiftLang);
+        tdExpression4.setBody(redshiftBody);
+        sqlGenericExpression.add(tdExpression4);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage.getSqlExpression(indicatorDefinition, redshiftLang, sqlGenericExpression,
+                dbVersion);
+        Assert.assertEquals(tdExpression4, sqlExpression);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression_redshift_2() {
+        // TDQ-11558 msjian: test for get sql expresstion for redshift database when there is no redshift defined
+        String sqlLang = "SQL"; //$NON-NLS-1$
+        String sqlBody = "SQL body"; //$NON-NLS-1$
+
+        String redshiftLang = SupportDBUrlType.REDSHIFT.getLanguage();
+
+        String postgresqlLang = SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage();
+        String postgresqlBody = "PostgreSQL body"; //$NON-NLS-1$
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression1 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression1.setLanguage(sqlLang);
+        tdExpression1.setBody(sqlBody);
+        sqlGenericExpression.add(tdExpression1);
+
+        TdExpression tdExpression3 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression3.setLanguage(postgresqlLang);
+        tdExpression3.setBody(postgresqlBody);
+        sqlGenericExpression.add(tdExpression3);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage.getSqlExpression(indicatorDefinition, redshiftLang, sqlGenericExpression,
+                dbVersion);
+        Assert.assertEquals(tdExpression3, sqlExpression);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression_redshift_3() {
+        // TDQ-11558 msjian: test for get sql expresstion for redshift database when there is no redshift and ParAccel
+        // and PostgreSQL defined
+        String sqlLang = "SQL"; //$NON-NLS-1$
+        String sqlBody = "SQL body"; //$NON-NLS-1$
+
+        String redshiftLang = SupportDBUrlType.REDSHIFT.getLanguage();
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression1 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression1.setLanguage(sqlLang);
+        tdExpression1.setBody(sqlBody);
+        sqlGenericExpression.add(tdExpression1);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage.getSqlExpression(indicatorDefinition, redshiftLang, sqlGenericExpression,
+                dbVersion);
+        Assert.assertEquals(tdExpression1, sqlExpression);
+    }
+
     /**
      * Test method for
      * {@link org.talend.dq.dbms.DbmsLanguage#getSelectColumnsStr(org.talend.core.model.metadata.builder.connection.MetadataTable)
@@ -2896,19 +3002,20 @@ public class DbmsLanguageTest {
     @Test
     public void testGetSelectColumnsStrCase1() {
         DbmsLanguage dbms = getMysqlDbmsLanguage();
-        //create metadata table
+        // create metadata table
         MetadataTable createMetadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
-        //~create metadata table
-        
-        //create metadata column
-        String[] columnNames=new String[]{"id","name","number","date"};
-        createMetadataColumns(createMetadataTable,columnNames);
-        //~create metadata column
+        // ~create metadata table
+
+        // create metadata column
+        String[] columnNames = new String[] { "id", "name", "number", "date" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        createMetadataColumns(createMetadataTable, columnNames);
+        // ~create metadata column
         String selectColumnsStr = dbms.getSelectColumnsStr(createMetadataTable);
-        
-        Assert.assertEquals("`id`,`name`,`number`,`date`", selectColumnsStr);
-        
+
+        Assert.assertEquals("`id`,`name`,`number`,`date`", selectColumnsStr); //$NON-NLS-1$
+
     }
+
     /**
      * Test method for
      * {@link org.talend.dq.dbms.DbmsLanguage#getSelectColumnsStr(org.talend.core.model.metadata.builder.connection.MetadataTable)
@@ -2917,19 +3024,20 @@ public class DbmsLanguageTest {
     @Test
     public void testGetSelectColumnsStrCase2() {
         DbmsLanguage dbms = getMysqlDbmsLanguage();
-        //create metadata table
+        // create metadata table
         MetadataTable createMetadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
-        //~create metadata table
-        
-        //create metadata column
-        String[] columnNames=new String[]{};
-        createMetadataColumns(createMetadataTable,columnNames);
-        //~create metadata column
+        // ~create metadata table
+
+        // create metadata column
+        String[] columnNames = new String[] {};
+        createMetadataColumns(createMetadataTable, columnNames);
+        // ~create metadata column
         String selectColumnsStr = dbms.getSelectColumnsStr(createMetadataTable);
-        
-        Assert.assertEquals("*", selectColumnsStr);
-        
+
+        Assert.assertEquals("*", selectColumnsStr); //$NON-NLS-1$
+
     }
+
     /**
      * Test method for
      * {@link org.talend.dq.dbms.DbmsLanguage#getSelectColumnsStr(org.talend.core.model.metadata.builder.connection.MetadataTable)
@@ -2938,27 +3046,26 @@ public class DbmsLanguageTest {
     @Test
     public void testGetSelectColumnsStrCase3() {
         DbmsLanguage dbms = getMysqlDbmsLanguage();
-        //create metadata table
+        // create metadata table
         MetadataTable createMetadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
-        //~create metadata table
-        
-        //create metadata column
-        String[] columnNames=new String[]{"id"};
-        createMetadataColumns(createMetadataTable,columnNames);
-        //~create metadata column
+        // ~create metadata table
+
+        // create metadata column
+        String[] columnNames = new String[] { "id" }; //$NON-NLS-1$
+        createMetadataColumns(createMetadataTable, columnNames);
+        // ~create metadata column
         String selectColumnsStr = dbms.getSelectColumnsStr(createMetadataTable);
-        
-        Assert.assertEquals("`id`", selectColumnsStr);
-        
+
+        Assert.assertEquals("`id`", selectColumnsStr); //$NON-NLS-1$
+
     }
 
-    private void createMetadataColumns(MetadataTable parentTable,String[] columnNames) {
-        for(String name:columnNames){
+    private void createMetadataColumns(MetadataTable parentTable, String[] columnNames) {
+        for (String name : columnNames) {
             MetadataColumn createMetadataColumn = ConnectionFactory.eINSTANCE.createMetadataColumn();
             createMetadataColumn.setName(name);
             parentTable.getColumns().add(createMetadataColumn);
         }
     }
-    
-    
+
 }

@@ -1815,6 +1815,12 @@
            name="Rename Pattern Finder to Pattern Frequency Statistics"
            version="6.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateBenfordLaw4PostgreSQLTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateBenfordLaw4PostgreSQLTask"
+           name="Update Benford Law Indicator for PostgreSQL Task"
+           version="6.2.0">
+     </workspacetask>
   </extension>
   
   <extension

@@ -104,9 +104,7 @@ public enum PatternLanguageType {
          PatternToExcelEnum.Hive),
 
     VERTICA(13, SupportDBUrlType.VERTICA.getLanguage(), SupportDBUrlType.VERTICA.getLanguage(), PatternToExcelEnum.Vertica),
-    PARACCEL(14, SupportDBUrlType.PARACCEL.getLanguage() + " | " + SupportDBUrlType.REDSHIFT.getLanguage(), //$NON-NLS-1$
-             SupportDBUrlType.PARACCEL.getLanguage(),
-             PatternToExcelEnum.PARACCEL);
+    REDSHIFT(14, SupportDBUrlType.REDSHIFT.getDBKey(), SupportDBUrlType.REDSHIFT.getLanguage(), PatternToExcelEnum.REDSHIFT);
 
     private int index;
 
@@ -140,7 +138,12 @@ public enum PatternLanguageType {
     }
 
     public static String findLanguageByName(String name) {
+        if (name.equalsIgnoreCase(SupportDBUrlType.REDSHIFT.getDBKey())) {
+            return SupportDBUrlType.REDSHIFT.getLanguage();
+        }
+
         for (PatternLanguageType oneType : values()) {
+            // we should consider the name like "Hive | Impala"
             if (name != null && StringUtils.startsWithIgnoreCase(name, oneType.getName())) {
                 return oneType.getLiteral();
             }
@@ -150,8 +153,11 @@ public enum PatternLanguageType {
     }
 
     public static String findNameByLanguage(String language) {
+        if (language.equalsIgnoreCase(SupportDBUrlType.REDSHIFT.getLanguage())) {
+            return SupportDBUrlType.REDSHIFT.getDBKey();
+        }
         for (PatternLanguageType oneType : values()) {
-            if (language != null && StringUtils.startsWithIgnoreCase(language, oneType.getLiteral())) {
+            if (language != null && StringUtils.equalsIgnoreCase(language, oneType.getLiteral())) {
                 return oneType.getName();
             }
         }

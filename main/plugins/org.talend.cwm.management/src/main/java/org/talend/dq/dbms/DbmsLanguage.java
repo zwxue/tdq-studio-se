@@ -121,7 +121,7 @@ public class DbmsLanguage {
 
     static final String IMPALA = SupportDBUrlType.IMPALA.getLanguage();
 
-    static final String PARACCEL = SupportDBUrlType.PARACCEL.getLanguage();
+    static final String REDSHIFT = SupportDBUrlType.REDSHIFT.getLanguage();
 
     /**
      * Ansi SQL.
@@ -1104,11 +1104,12 @@ public class DbmsLanguage {
             return defaultExpression;
         }
 
-        // TDQ-11558: added by msjian when there is no PARACCEL definition, use postgresql first
-        if (language.equals(SupportDBUrlType.PARACCEL.getLanguage())) {
+        // TDQ-11558: added by msjian when there is no REDSHIFT definition, we use postgresql first
+        if (language.equals(SupportDBUrlType.REDSHIFT.getLanguage())) {
             return getSqlExpression(indicatorDefinition, SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage(),
                     sqlGenericExpression, dbVersion);
         }
+        // TDQ-11558~
 
         // else try with default language (ANSI SQL)
         String defaultLanguage = getDefaultLanguage();

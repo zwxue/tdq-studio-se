@@ -280,12 +280,13 @@ public final class SoftwareSystemManager {
                     }
                 }
                 if (!isExist) {
-                    if (subtype.equalsIgnoreCase(SupportDBUrlType.PARACCEL.getLanguage())
-                            || subtype.equalsIgnoreCase(SupportDBUrlType.REDSHIFT.getLanguage())
+                    // TDQ-11558 msjian: because we have "Redshift" and "Hive | Impala" types, so ignore these
+                    if (subtype.equalsIgnoreCase(SupportDBUrlType.REDSHIFT.getLanguage())
                             || subtype.equalsIgnoreCase(SupportDBUrlType.IMPALA.getLanguage())
-                            || subtype.equalsIgnoreCase(SupportDBUrlType.HIVEDEFAULTURL.getLanguage())) {
+                            || subtype.contains(SupportDBUrlType.HIVEDEFAULTURL.getLanguage())) {
                         continue;
                     }
+                    // TDQ-11558~
                     newDBTypes.add(subtype);
                 }
             }
