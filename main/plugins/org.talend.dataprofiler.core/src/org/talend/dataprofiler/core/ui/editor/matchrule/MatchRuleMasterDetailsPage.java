@@ -153,9 +153,10 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     @Override
     public void setDirty(boolean isDirty) {
-        this.isDirty = isDirty;
-        if (isDirty) {
-            ((DQRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+        if (this.isDirty != isDirty) {
+            this.isDirty = isDirty;
+            ((DQRuleEditor) getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+            firePropertyChange(IEditorPart.PROP_DIRTY);
         }
     }
 
