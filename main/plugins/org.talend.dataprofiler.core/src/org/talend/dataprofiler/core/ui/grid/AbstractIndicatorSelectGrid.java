@@ -21,6 +21,7 @@ import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.nebula.widgets.grid.TalendGrid;
 import org.eclipse.nebula.widgets.grid.TalendGridColumn;
 import org.eclipse.nebula.widgets.grid.TalendGridItem;
+import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -78,6 +79,9 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
     static final int COLUMN_HEADER_ROTATION = 35;
 
     static final int LIMIT_NUMBER_DEFAULT = 20;
+
+    // TDQ-9725: make the height dynamically, because the user can change the default font size in windows system.
+    static final int itemHeight = GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? 25 : 21;
 
     private double tanRotation;
 
@@ -249,7 +253,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
         setCellSelectionEnabled(false);
 
         setRowsResizeable(false);
-        setItemHeight(21);
+        setItemHeight(itemHeight);
         setLineColor(lineColor);
         setFocusRenderer(null);
 
