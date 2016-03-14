@@ -50,11 +50,11 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
@@ -550,15 +550,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
         // set all key's column into red/green columns
         // set all not selected columns into black color
+        String keyName = isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY;
         for (ModelElement column : analysisHandler.getSelectedColumns()) {
             if (currentKeyColumn.contains(column.getName())) {
                 sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? DataSampleTable.COLOR_RED
-                        : DataSampleTable.COLOR_GREEN, isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY);
+                        : DataSampleTable.COLOR_GREEN, keyName);
             } else {
-                sampleTable.changeColumnHeaderLabelColor(column.getName(), DataSampleTable.COLOR_BLACK,
-                        isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY);
+                sampleTable.changeColumnHeaderLabelColor(column.getName(), DataSampleTable.COLOR_BLACK, keyName);
             }
         }
+        sampleTable.setNatTableFont(sampleTable.getNatTable());
         sampleTable.refresh();
     }
 
@@ -566,6 +567,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         for (ModelElement column : analysisHandler.getSelectedColumns()) {
             sampleTable.changeColumnHeaderLabelColor(column.getName(), DataSampleTable.COLOR_BLACK, PluginConstant.EMPTY_STRING);
         }
+        sampleTable.setNatTableFont(sampleTable.getNatTable());
         sampleTable.refresh();
     }
 
@@ -1100,6 +1102,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (!isBlockingKeyButtonPushed && !isMatchingKeyButtonPushed) {
             // sort by column
             sampleTable.sortByColumn(Arrays.asList(analysisHandler.getSelectedColumns()));
+            sampleTable.setNatTableFont(sampleTable.getNatTable());
             return;
         }
         sampleTable.resetSortSelection();
@@ -1112,6 +1115,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         } else if (isMatchingKeyButtonPushed) {
             handleMatchKeySelection(columnName);
         }
+        sampleTable.setNatTableFont(sampleTable.getNatTable());
         this.setDirty(Boolean.TRUE);
     }
 

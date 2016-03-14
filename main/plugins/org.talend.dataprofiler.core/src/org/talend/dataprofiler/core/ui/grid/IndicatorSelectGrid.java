@@ -73,6 +73,11 @@ public class IndicatorSelectGrid extends Grid {
 
     static final int COLUMN_HEADER_ROTATION = 35;
 
+    // TDQ-9725: set the item font with a fixed size. the same to DataSampleTable.font
+    static final Font itemFont = new Font(Display.getCurrent(), Display.getDefault().getSystemFont().getFontData()[0].getName(),
+            Display.getDefault().getSystemFont().getFontData()[0].getHeight() > 8 ? 8 : Display.getDefault().getSystemFont()
+                    .getFontData()[0].getHeight(), SWT.NONE);
+
     private double tanRotation;
 
     private ModelElementIndicator[] result;
@@ -173,6 +178,7 @@ public class IndicatorSelectGrid extends Grid {
         setRowsResizeable(false);
         setItemHeight(21);
         setLineColor(IndicatorSelectGrid.lightBlue);
+        setFont(itemFont);
         setFocusRenderer(null);
 
         for (GridItem gridItem : getItems()) {
