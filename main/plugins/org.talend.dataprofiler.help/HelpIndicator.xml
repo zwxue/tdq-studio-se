@@ -11,6 +11,7 @@ The groups of indicators are:</description>
         <topic label="Advanced statistics" href="$nl$/html/wizard/indicator_select/advanced_statistics.html"/>
         <topic label="Pattern frequency statistics" href="$nl$/html/wizard/indicator_select/pattern_statistics.html"/>
         <topic label="Soundex frequency statistics" href="$nl$/html/wizard/indicator_select/soundex_statistics.html"/>
-        <topic label="Phone Number statistics" href="$nl$/html/wizard/indicator_select/phonenumber_statistics.html"/>
+        <topic label="Phone number statistics" href="$nl$/html/wizard/indicator_select/phonenumber_statistics.html"/>
+        <topic label="Fraud detection" href="$nl$/html/wizard/indicator_select/fraud_detection.html"/>
     </context>
 </contexts>
