@@ -35,6 +35,7 @@ import org.eclipse.nebula.widgets.nattable.data.IColumnPropertyAccessor;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.ReflectiveColumnPropertyAccessor;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
+import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultColumnHeaderDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultRowHeaderDataProvider;
@@ -66,6 +67,7 @@ import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -105,6 +107,10 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     private NatTable natTable;
 
+    public NatTable getNatTable() {
+        return this.natTable;
+    }
+
     public static final String MATCH_EKY = "MATCH"; //$NON-NLS-1$
 
     public static final String BLOCK_EKY = "BLOCK"; //$NON-NLS-1$
@@ -116,6 +122,14 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
     public static final Color COLOR_GREEN = Display.getDefault().getSystemColor(SWT.COLOR_GREEN);
 
     private static final Color SYSTEM_COLOR = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+
+    /**
+     * the font used for nattable. for the font size, when the system font size is normal(normal and 125% all is 8), it
+     * can show well;when the system font size is bigger(150% is 9), we set the size smaller to make it show well.
+     */
+    public static final Font font = new Font(Display.getCurrent(), GUIHelper.DEFAULT_FONT.getFontData()[0].getName(),
+            GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? 8 : GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight(),
+            SWT.NONE);
 
     protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
@@ -548,6 +562,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
         Style cellStyle = new Style();
         cellStyle.setAttributeValue(CellStyleAttributes.FOREGROUND_COLOR, color);
+        cellStyle.setAttributeValue(CellStyleAttributes.FONT, font);
 
         natTable.getConfigRegistry().registerConfigAttribute(CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL,
                 columnName);
@@ -651,6 +666,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         });
 
         natTable.configure();
+
+        setNatTableFont(natTable);
 
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
                 IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "ODD_BODY"); //$NON-NLS-1$
@@ -1251,6 +1268,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Getter for isShowRandomData.
+     * 
      * @return the isShowRandomData
      */
     public Boolean isShowRandomData() {
@@ -1259,10 +1277,40 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Sets the isShowRandomData.
+     * 
      * @param isShowRandomData the isShowRandomData to set
      */
     public void setShowRandomData(Boolean isShowRandomData) {
         this.isShowRandomData = isShowRandomData;
     }
 
+    /**
+     * set the NatTable Font with a fixed size.
+     */
+    public void setNatTableFont(NatTable natTable) {
+        // TDQ-9725: we use the fixed font size to make it show well even the user changed the default font size
+        IStyle rowHeaderNormalStyle = natTable.getConfigRegistry().getConfigAttribute(CellConfigAttributes.CELL_STYLE,
+                DisplayMode.NORMAL, GridRegion.ROW_HEADER);
+        if (rowHeaderNormalStyle != null) {
+            rowHeaderNormalStyle.setAttributeValue(CellStyleAttributes.FONT, font);
+        }
+
+        IStyle columnHeaderNormalStyle = natTable.getConfigRegistry().getConfigAttribute(CellConfigAttributes.CELL_STYLE,
+                DisplayMode.NORMAL, GridRegion.COLUMN_HEADER);
+        if (columnHeaderNormalStyle != null) {
+            columnHeaderNormalStyle.setAttributeValue(CellStyleAttributes.FONT, font);
+        }
+
+        IStyle dataNormalStyle = natTable.getConfigRegistry().getConfigAttribute(CellConfigAttributes.CELL_STYLE,
+                DisplayMode.NORMAL, GridRegion.DATAGRID);
+        if (dataNormalStyle != null) {
+            dataNormalStyle.setAttributeValue(CellStyleAttributes.FONT, font);
+        }
+
+        IStyle selectionStyle = natTable.getConfigRegistry().getConfigAttribute(CellConfigAttributes.CELL_STYLE,
+                DisplayMode.SELECT, GridRegion.ROW_HEADER);
+        if (selectionStyle != null) {
+            selectionStyle.setAttributeValue(CellStyleAttributes.FONT, font);
+        }
+    }
 }
