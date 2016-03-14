@@ -81,8 +81,10 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     static final int LIMIT_NUMBER_DEFAULT = 20;
 
-    // TDQ-9725: make the height dynamically, because the user can change the default font size in windows system.
-    static final int itemHeight = GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? 25 : 21;
+    // TDQ-9725: set the item font with a fixed size. the same to DataSampleTable.font
+    static final Font itemFont = new Font(Display.getCurrent(), GUIHelper.DEFAULT_FONT.getFontData()[0].getName(),
+            GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? 8 : GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight(),
+            SWT.NONE);
 
     private double tanRotation;
 
@@ -255,8 +257,9 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
         setCellSelectionEnabled(false);
 
         setRowsResizeable(false);
-        setItemHeight(itemHeight);
+        setItemHeight(21);
         setLineColor(lineColor);
+        setFont(itemFont);
         setFocusRenderer(null);
 
         for (GridItem gridItem : getItems()) {

@@ -126,7 +126,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * can show well;when the system font size is bigger(150% is 9), we set the size smaller to make it show well.
      */
     public static final Font font = new Font(Display.getCurrent(), GUIHelper.DEFAULT_FONT.getFontData()[0].getName(),
-            GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? 7 : GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight(),
+            GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? 8 : GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight(),
             SWT.NONE);
 
     protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
