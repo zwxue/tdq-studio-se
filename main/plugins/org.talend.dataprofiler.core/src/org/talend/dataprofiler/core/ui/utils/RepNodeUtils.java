@@ -351,8 +351,7 @@ public final class RepNodeUtils {
             // MOD klliu 2011-02-16 feature 15387
             if (obj instanceof DBColumnRepNode || obj instanceof DFColumnRepNode) {
                 reposList.add((RepositoryNode) obj);
-            }
-            if (obj instanceof DBTableRepNode || obj instanceof DBViewRepNode || obj instanceof DFTableRepNode) {
+            } else if (obj instanceof DBTableRepNode || obj instanceof DBViewRepNode || obj instanceof DFTableRepNode) {
                 List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren().get(0).getChildren();
                 reposList.addAll(children);
 

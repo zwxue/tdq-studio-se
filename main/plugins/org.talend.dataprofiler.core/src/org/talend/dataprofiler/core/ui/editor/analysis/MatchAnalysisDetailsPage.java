@@ -925,10 +925,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 }
                 blockingKeySection.clearChart();
                 setSampleDataShowWayStatus();
-                // TDQ-11590: automatically refresh the data table after we select column with the "select columns"
-                // dialog
-                refreshPreviewData();
-                // TDQ-11590~
             }
         }
     }
@@ -1103,7 +1099,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         analyzedElements.clear();
         analyzedElements.addAll(Arrays.asList(modelElements));
         updateAllColumnsToKeySection();
-        refreshDataFromConnection(true);
+        refreshPreviewData();
 
         this.setDirty(Boolean.TRUE);
     }
