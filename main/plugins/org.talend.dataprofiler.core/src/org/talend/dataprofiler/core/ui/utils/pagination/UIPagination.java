@@ -198,6 +198,7 @@ public class UIPagination {
         tdText.top = new FormAttachment(pageFirstImgHypLnk, 0, SWT.TOP);
         tdText.width = 50;
         pageGoText.setLayoutData(tdText);
+        pageGoText.setToolTipText(DefaultMessagesImpl.getString("UIPagination.GoHint")); //$NON-NLS-1$
         pageGoText.addKeyListener(new KeyListener() {
 
             public void keyPressed(KeyEvent e) {
@@ -208,7 +209,7 @@ public class UIPagination {
             }
 
             public void keyReleased(KeyEvent e) {
-
+                // do nothing until now
             }
 
         });
