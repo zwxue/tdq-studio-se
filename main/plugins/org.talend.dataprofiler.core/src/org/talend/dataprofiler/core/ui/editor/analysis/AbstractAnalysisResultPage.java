@@ -79,13 +79,15 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         this.form = managedForm.getForm();
-        this.form.setText(DefaultMessagesImpl.getString("AbstractAnalysisResultPage.analysisResult")); //$NON-NLS-1$
-        topComposite = form.getBody();
-        topComposite.setLayout(new GridLayout());
-        summaryComp = toolkit.createComposite(topComposite);
-        summaryComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        summaryComp.setLayout(new GridLayout());
-        createSummarySection(form, summaryComp, getAnalysisHandler());
+        if (this.form != null && !this.form.isDisposed()) {
+            this.form.setText(DefaultMessagesImpl.getString("AbstractAnalysisResultPage.analysisResult")); //$NON-NLS-1$
+            topComposite = form.getBody();
+            topComposite.setLayout(new GridLayout());
+            summaryComp = toolkit.createComposite(topComposite);
+            summaryComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+            summaryComp.setLayout(new GridLayout());
+            createSummarySection(form, summaryComp, getAnalysisHandler());
+        }
     }
 
     protected abstract AnalysisHandler getAnalysisHandler();

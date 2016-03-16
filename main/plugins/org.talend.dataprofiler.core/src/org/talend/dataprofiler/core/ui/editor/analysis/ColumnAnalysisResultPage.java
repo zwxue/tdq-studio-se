@@ -91,11 +91,13 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
 
-        resultComp = toolkit.createComposite(topComposite);
-        resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        resultComp.setLayout(new GridLayout());
-        createResultSection(resultComp);
-        form.reflow(true);
+        if (topComposite != null && !topComposite.isDisposed()) {
+            resultComp = toolkit.createComposite(topComposite);
+            resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+            resultComp.setLayout(new GridLayout());
+            createResultSection(resultComp);
+            form.reflow(true);
+        }
     }
 
     @Override
