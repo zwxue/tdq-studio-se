@@ -71,14 +71,17 @@ public class ConnectionEditor extends CommonFormEditor {
 
     // if the node is a hive connection, need to check its related link in hadoop cluster: added TDQ-10600
     private void refreshHadoopCluster() {
-        Item item = ((AbstractItemEditorInput) getEditorInput()).getItem();
-        if (item instanceof DatabaseConnectionItem) {
-            String hadoopClusterId = ((DatabaseConnection) ((DatabaseConnectionItem) item).getConnection()).getParameters().get(
-                    ConnParameterKeys.CONN_PARA_KEY_HADOOP_CLUSTER_ID);
-            if (hadoopClusterId != null) {
-                IRepositoryNode rootNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.HADOOP_CLUSTER);
-                if (rootNode != null) {
-                    CorePlugin.getDefault().refreshDQView(rootNode);
+        // TDQ-10717: fix a ClassCastException: the editor input can be org.eclipse.ui.part.FileEditorInput type
+        if (getEditorInput() instanceof AbstractItemEditorInput) {
+            Item item = ((AbstractItemEditorInput) getEditorInput()).getItem();
+            if (item instanceof DatabaseConnectionItem) {
+                String hadoopClusterId = ((DatabaseConnection) ((DatabaseConnectionItem) item).getConnection()).getParameters()
+                        .get(ConnParameterKeys.CONN_PARA_KEY_HADOOP_CLUSTER_ID);
+                if (hadoopClusterId != null) {
+                    IRepositoryNode rootNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.HADOOP_CLUSTER);
+                    if (rootNode != null) {
+                        CorePlugin.getDefault().refreshDQView(rootNode);
+                    }
                 }
             }
         }
