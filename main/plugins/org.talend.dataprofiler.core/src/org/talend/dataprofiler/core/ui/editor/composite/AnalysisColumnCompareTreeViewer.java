@@ -658,7 +658,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     private void showSelectedElements(TableViewer tableView) {
         TableItem[] selection = tableView.getTable().getSelection();
 
-        if (selection.length == 1) {
+        if (selection.length > 0) {
             try {
                 // if DqRepository view is not openning we will not do anything
                 DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();

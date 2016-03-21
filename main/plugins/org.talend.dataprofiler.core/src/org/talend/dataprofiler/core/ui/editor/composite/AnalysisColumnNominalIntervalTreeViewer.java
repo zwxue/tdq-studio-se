@@ -395,7 +395,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             public void widgetSelected(SelectionEvent e) {
                 TreeItem[] selection = newTree.getSelection();
 
-                if (selection.length == 1) {
+                if (selection.length > 0) {
                     // if DqRepository view is not openning we will not do anything
                     DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
                     if (dqview == null) {

@@ -231,7 +231,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     protected void showSelectedElements(Table table, String ab) {
         TableItem[] selection = table.getSelection();
 
-        if (selection.length == 1) {
+        if (selection.length > 0) {
             try {
                 JoinElement join = (JoinElement) selection[0].getData();
                 ModelElement column = join.getColA();
