@@ -542,26 +542,20 @@ public class AnalysisEditor extends SupportContextEditor {
      */
     @Override
     public void dispose() {
-        EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
-                checkBeforeRunReceiver);
-        EventManager.getInstance()
-                .unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
-        EventManager.getInstance().unRegister(getMasterPage().getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
-                reopenEditor);
+        EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN);
+        EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU);
+        EventManager.getInstance().clearEvent(getMasterPage().getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR);
 
         // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show
         // all match indicator in the Indicators section.
         if (analysisType.equals(AnalysisType.COLUMN_SET)) {
-            EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
-                    refresh2ShowMatchIndicator);
+            EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS);
         }
         // TDQ-8860~
         // Added TDQ8787 2014-06-16 yyin: for dynamic chart, unregister the create all chart event
         if (masterPage instanceof DynamicAnalysisMasterPage) {
-            EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
-                    registerDynamicEvent);
-            EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
-                    unRegisterDynamicEvent);
+            EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART);
+            EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART);
         }// ~
 
         super.dispose();
