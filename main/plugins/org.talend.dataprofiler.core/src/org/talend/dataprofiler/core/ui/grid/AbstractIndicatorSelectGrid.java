@@ -84,8 +84,8 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     // TDQ-9725: set the item font with a fixed size. the same to DataSampleTable.font
     static final Font itemFont = new Font(Display.getCurrent(), GUIHelper.DEFAULT_FONT.getFontData()[0].getName(),
-            GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? 8 : GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight(),
-            SWT.NONE);
+            GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? (org.apache.commons.lang3.SystemUtils.IS_OS_MAC ? 12 : 8)
+                    : GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight(), SWT.NONE);
 
     private double tanRotation;
 
