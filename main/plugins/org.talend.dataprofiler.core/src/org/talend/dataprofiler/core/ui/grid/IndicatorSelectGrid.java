@@ -47,11 +47,17 @@ import org.talend.repository.model.IRepositoryNode;
  */
 public class IndicatorSelectGrid extends Grid {
 
+    private static final int FONT_HEIGHT = Display.getDefault().getSystemFont().getFontData()[0].getHeight() > 8 ? (org.apache.commons.lang3.SystemUtils.IS_OS_MAC ? 12
+            : 8)
+            : Display.getDefault().getSystemFont().getFontData()[0].getHeight();
+
     private ModelElementIndicator[] _modelElementIndicators;
 
     private IndicatorSelectDialog2 _dialog;
 
-    static final Font font = new Font(Display.getCurrent(), "tahoma", 10, SWT.NONE); //$NON-NLS-1$
+    // the header(column label) font, its size is a little bigger than itemFont
+    static final Font headerFont = new Font(Display.getCurrent(), Display.getDefault().getSystemFont().getFontData()[0].getName(),
+            FONT_HEIGHT + 1, SWT.NONE);
 
     static final Color gray = new Color(Display.getCurrent(), 240, 240, 240);
 
@@ -74,12 +80,8 @@ public class IndicatorSelectGrid extends Grid {
     static final int COLUMN_HEADER_ROTATION = 35;
 
     // TDQ-9725: set the item font with a fixed size. the same to DataSampleTable.font
-    static final Font itemFont = new Font(
-            Display.getCurrent(),
-            Display.getDefault().getSystemFont().getFontData()[0].getName(),
-            Display.getDefault().getSystemFont().getFontData()[0].getHeight() > 8 ? (org.apache.commons.lang3.SystemUtils.IS_OS_MAC ? 12
-                    : 8)
-                    : Display.getDefault().getSystemFont().getFontData()[0].getHeight(), SWT.NONE);
+    static final Font itemFont = new Font(Display.getCurrent(), Display.getDefault().getSystemFont().getFontData()[0].getName(),
+            FONT_HEIGHT, SWT.NONE);
 
     private double tanRotation;
 
@@ -139,7 +141,7 @@ public class IndicatorSelectGrid extends Grid {
             newCol.setData(_modelElementIndicator);
             newCol.setMoveable(true);
             newCol.setResizeable(false);
-            newCol.setHeaderFont(font);
+            newCol.setHeaderFont(headerFont);
             IRepositoryNode repNode = _modelElementIndicator.getModelElementRepositoryNode();
             if (repNode instanceof DBColumnRepNode && ((DBColumnRepNode) repNode).isKey()) {
                 newCol.setImage(pkImage);
