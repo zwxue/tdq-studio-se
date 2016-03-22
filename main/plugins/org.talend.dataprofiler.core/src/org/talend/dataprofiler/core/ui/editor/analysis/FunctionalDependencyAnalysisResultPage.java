@@ -131,15 +131,17 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
 
-        analyzedColumnSetsComp = toolkit.createComposite(topComposite);
-        analyzedColumnSetsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        analyzedColumnSetsComp.setLayout(new GridLayout());
+        if (topComposite != null && !topComposite.isDisposed()) {
+            analyzedColumnSetsComp = toolkit.createComposite(topComposite);
+            analyzedColumnSetsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+            analyzedColumnSetsComp.setLayout(new GridLayout());
 
-        analysisResultsComp = toolkit.createComposite(topComposite);
-        analysisResultsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        analysisResultsComp.setLayout(new GridLayout());
-        createResultSection(analysisResultsComp);
-        form.reflow(true);
+            analysisResultsComp = toolkit.createComposite(topComposite);
+            analysisResultsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+            analysisResultsComp.setLayout(new GridLayout());
+            createResultSection(analysisResultsComp);
+            form.reflow(true);
+        }
     }
 
     @Override
@@ -224,7 +226,8 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
         ChartDataEntity[] dataEntities = dataset.getDataEntities();
         if (dataEntities != null) {
             // MOD mzhao bug 8839 There might be duplicate dependencies on left and right columnSet.
-            if (canShowChartForResultPage() && TOPChartUtils.getInstance().getColumnCount(dataset.getDataset()) < dataEntities.length) {
+            if (canShowChartForResultPage()
+                    && TOPChartUtils.getInstance().getColumnCount(dataset.getDataset()) < dataEntities.length) {
                 MessageDialog.openError(this.getEditor().getSite().getShell(), "Duplicate dependencies",//$NON-NLS-1$
                         "There might be duplicate dependencies on left and right columnSet.");//$NON-NLS-1$
             } else {

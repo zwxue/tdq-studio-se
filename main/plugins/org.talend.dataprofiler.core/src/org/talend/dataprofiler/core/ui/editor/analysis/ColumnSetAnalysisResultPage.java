@@ -136,11 +136,13 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
 
-        graphicsAndTableComp = toolkit.createComposite(topComposite);
-        graphicsAndTableComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        graphicsAndTableComp.setLayout(new GridLayout());
-        createResultSection(graphicsAndTableComp);
-        form.reflow(true);
+        if (topComposite != null && !topComposite.isDisposed()) {
+            graphicsAndTableComp = toolkit.createComposite(topComposite);
+            graphicsAndTableComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+            graphicsAndTableComp.setLayout(new GridLayout());
+            createResultSection(graphicsAndTableComp);
+            form.reflow(true);
+        }
     }
 
     @Override

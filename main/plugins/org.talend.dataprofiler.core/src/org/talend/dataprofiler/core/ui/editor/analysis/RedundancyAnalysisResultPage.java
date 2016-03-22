@@ -113,20 +113,22 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
-        analyzedColumnSetsComp = toolkit.createComposite(topComposite);
-        analyzedColumnSetsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        analyzedColumnSetsComp.setLayout(new GridLayout());
-        createAnalyzedColumnSetsSection(analyzedColumnSetsComp);
-        analysisResultsComp = toolkit.createComposite(topComposite);
-        analysisResultsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        analysisResultsComp.setLayout(new GridLayout());
-        createResultSection(analysisResultsComp);
+        if (topComposite != null && !topComposite.isDisposed()) {
+            analyzedColumnSetsComp = toolkit.createComposite(topComposite);
+            analyzedColumnSetsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+            analyzedColumnSetsComp.setLayout(new GridLayout());
+            createAnalyzedColumnSetsSection(analyzedColumnSetsComp);
+            analysisResultsComp = toolkit.createComposite(topComposite);
+            analysisResultsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+            analysisResultsComp.setLayout(new GridLayout());
+            createResultSection(analysisResultsComp);
 
-        // resultComp = toolkit.createComposite(topComposite);
-        // resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        // resultComp.setLayout(new GridLayout());
-        // createResultSection(resultComp);
-        form.reflow(true);
+            // resultComp = toolkit.createComposite(topComposite);
+            // resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+            // resultComp.setLayout(new GridLayout());
+            // createResultSection(resultComp);
+            form.reflow(true);
+        }
     }
 
     @Override
