@@ -1535,6 +1535,10 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                 setDirty(true);
                 setLanguageToTreeViewer(currentLanguage);
                 // ~
+
+                // TDQ-11694 msjian : column analysis change from sql to java engine, can not show java parameters
+                // correctly(UI)
+                form.reflow(true);
             }
 
         });
