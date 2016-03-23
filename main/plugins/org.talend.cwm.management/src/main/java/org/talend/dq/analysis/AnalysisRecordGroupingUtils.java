@@ -32,6 +32,7 @@ import org.talend.dataquality.record.linkage.grouping.AnalysisMatchRecordGroupin
 import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams.SurvivorshipFunction;
+import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorshipUtils;
 import org.talend.dataquality.record.linkage.record.CombinedRecordMatcher;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
@@ -477,7 +478,8 @@ public class AnalysisRecordGroupingUtils {
                         // Use CONCATENATE by default if not specified .
                         surFuncsInMatcher[idx] = survivorShipAlgorithmParams.new SurvivorshipFunction();
                         surFuncsInMatcher[idx].setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.CONCATENATE);
-                        surFuncsInMatcher[idx].setParameter(StringUtils.EMPTY);
+                        // MOD TDQ-11774 set a default parameter
+                        surFuncsInMatcher[idx].setParameter(SurvivorshipUtils.DEFAULT_CONCATENATE_PARAMETER);
                     }
                 } else {
                     // Find the func from existing survivorship rule list.

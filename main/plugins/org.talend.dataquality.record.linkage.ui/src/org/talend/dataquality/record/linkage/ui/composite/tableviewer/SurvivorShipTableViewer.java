@@ -14,7 +14,6 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -26,6 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorshipUtils;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.SurvivorshipLabelProvider;
@@ -150,7 +150,8 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
         skd.setColumn(columnName);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(SurvivorShipAlgorithmEnum.getTypeByIndex(0).getValue());
-        createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
+        // MOD TDQ-11774 set a default value for parameter
+        createAlgorithmDefinition.setAlgorithmParameters(SurvivorshipUtils.DEFAULT_CONCATENATE_PARAMETER);
         skd.setFunction(createAlgorithmDefinition);
         skd.setAllowManualResolution(true);
         return skd;

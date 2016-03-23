@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorshipUtils;
 import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.MatchKeyAndSurvivorTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorDefinition;
@@ -185,7 +186,8 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
         skd.setName(matchKeyName);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(SurvivorShipAlgorithmEnum.getTypeByIndex(0).getValue());
-        createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
+        // MOD TDQ-11774 set a default value for parameter
+        createAlgorithmDefinition.setAlgorithmParameters(SurvivorshipUtils.DEFAULT_CONCATENATE_PARAMETER);
         skd.setFunction(createAlgorithmDefinition);
         skd.setAllowManualResolution(true);
         return skd;
