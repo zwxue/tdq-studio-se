@@ -13,7 +13,7 @@
 package org.talend.dq.analysis.explore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,14 +34,14 @@ public class ColumnDependencyExplorer extends DataExplorer {
 
     @Override
     public Map<String, String> getSubClassQueryMap() {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put(MENU_VIEW_VALID_ROWS, getComment(MENU_VIEW_VALID_ROWS) + getValidRowsStatement());
         map.put(MENU_VIEW_VALID_VALUES, getComment(MENU_VIEW_VALID_VALUES) + getValidValuesStatement());
+        map.put(MENU_VIEW_DETAILED_VALID_VALUES, getComment(MENU_VIEW_DETAILED_VALID_VALUES) + getDetailedValidValuesStatement());
+        map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement());
         map.put(MENU_VIEW_INVALID_VALUES, getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement());
         map.put(MENU_VIEW_DETAILED_INVALID_VALUES, getComment(MENU_VIEW_DETAILED_INVALID_VALUES)
                 + getDetailedInvalidValuesStatement());
-        map.put(MENU_VIEW_DETAILED_VALID_VALUES, getComment(MENU_VIEW_DETAILED_VALID_VALUES) + getDetailedValidValuesStatement());
-        map.put(MENU_VIEW_VALID_ROWS, getComment(MENU_VIEW_VALID_ROWS) + getValidRowsStatement());
-        map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement());
         return map;
     }
 

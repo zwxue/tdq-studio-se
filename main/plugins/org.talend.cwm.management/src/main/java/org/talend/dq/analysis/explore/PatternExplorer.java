@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
@@ -42,18 +42,17 @@ public abstract class PatternExplorer extends DataExplorer {
 
     @Override
     public Map<String, String> getSubClassQueryMap() {
-        Map<String, String> map = new HashMap<String, String>();// MOD zshen feature 12919 adapt to pop-menu for Jave
+        Map<String, String> map = new LinkedHashMap<String, String>();
         // engin on result page
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(analysis.getParameters().getExecutionLanguage());
         initRegularExpressionParameter();
-        // ~TDQ-4087
 
         // MOD zshen 10448 Add menus "view invalid values" and "view valid values" on pattern matching indicator
-        map.put(MENU_VIEW_INVALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement() : null);
-        map.put(MENU_VIEW_VALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALID_VALUES) + getValidValuesStatement() : null);
-        // ~10448
-        map.put(MENU_VIEW_INVALID_ROWS, isSqlEngine ? getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement() : null);
         map.put(MENU_VIEW_VALID_ROWS, isSqlEngine ? getComment(MENU_VIEW_VALID_ROWS) + getValidRowsStatement() : null);
+        map.put(MENU_VIEW_VALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALID_VALUES) + getValidValuesStatement() : null);
+        map.put(MENU_VIEW_INVALID_ROWS, isSqlEngine ? getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement() : null);
+        map.put(MENU_VIEW_INVALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement() : null);
+        // ~10448
 
         return map;
     }
