@@ -96,10 +96,6 @@ public class DataSampleTable {
 
     private NatTable natTable;
 
-    public NatTable getNatTable() {
-        return this.natTable;
-    }
-
     public static final String MATCH_EKY = "MATCH"; //$NON-NLS-1$
 
     public static final String BLOCK_EKY = "BLOCK"; //$NON-NLS-1$
@@ -117,7 +113,7 @@ public class DataSampleTable {
      * can show well;when the system font size is bigger(150% is 9), we set the size smaller to make it show well.
      */
     public static final Font font = new Font(Display.getCurrent(), GUIHelper.DEFAULT_FONT.getFontData()[0].getName(),
-            GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? (org.apache.commons.lang3.SystemUtils.IS_OS_MAC ? 12 : 8)
+            GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight() > 8 ? (org.apache.commons.lang.SystemUtils.IS_OS_MAC ? 12 : 8)
                     : GUIHelper.DEFAULT_FONT.getFontData()[0].getHeight(), SWT.NONE);
 
     protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
@@ -470,7 +466,7 @@ public class DataSampleTable {
 
         natTable.configure();
 
-        setNatTableFont(natTable);
+        setNatTableFont();
 
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
                 IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "ODD_BODY"); //$NON-NLS-1$
@@ -830,7 +826,10 @@ public class DataSampleTable {
     /**
      * set the NatTable Font with a fixed size.
      */
-    public void setNatTableFont(NatTable natTable) {
+    public void setNatTableFont() {
+        if (natTable == null) {
+            return;
+        }
         // TDQ-9725: we use the fixed font size to make it show well even the user changed the default font size
         IStyle rowHeaderNormalStyle = natTable.getConfigRegistry().getConfigAttribute(CellConfigAttributes.CELL_STYLE,
                 DisplayMode.NORMAL, GridRegion.ROW_HEADER);

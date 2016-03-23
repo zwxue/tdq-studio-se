@@ -47,7 +47,7 @@ import org.talend.repository.model.IRepositoryNode;
  */
 public class IndicatorSelectGrid extends Grid {
 
-    private static final int FONT_HEIGHT = Display.getDefault().getSystemFont().getFontData()[0].getHeight() > 8 ? (org.apache.commons.lang3.SystemUtils.IS_OS_MAC ? 12
+    private static final int FONT_HEIGHT = Display.getDefault().getSystemFont().getFontData()[0].getHeight() > 8 ? (org.apache.commons.lang.SystemUtils.IS_OS_MAC ? 12
             : 8)
             : Display.getDefault().getSystemFont().getFontData()[0].getHeight();
 
@@ -56,8 +56,8 @@ public class IndicatorSelectGrid extends Grid {
     private IndicatorSelectDialog2 _dialog;
 
     // the header(column label) font, its size is a little bigger than itemFont
-    static final Font headerFont = new Font(Display.getCurrent(), Display.getDefault().getSystemFont().getFontData()[0].getName(),
-            FONT_HEIGHT + 1, SWT.NONE);
+    static final Font headerFont = new Font(Display.getCurrent(),
+            Display.getDefault().getSystemFont().getFontData()[0].getName(), FONT_HEIGHT + 1, SWT.NONE);
 
     static final Color gray = new Color(Display.getCurrent(), 240, 240, 240);
 
