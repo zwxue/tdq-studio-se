@@ -1051,13 +1051,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             tablePanel.dispose();
         }
         needLoadData = withData;
-        try {
-            createNatTable(columns, withData);
-            drawCanvas.layout();
-        } catch (SQLException e) {
-            needLoadData = false;
-        }
-
+        createNatTable(columns, withData);
+        drawCanvas.layout();
     }
 
     /**
@@ -1067,8 +1062,13 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * @param dataTableComp
      * @throws SQLException
      */
-    private void createNatTable(ModelElement[] columns, boolean withData) throws SQLException {
-        List<Object[]> listOfData = getPreviewData(columns, withData);
+    private void createNatTable(ModelElement[] columns, boolean withData) {
+        List<Object[]> listOfData = null;
+        try {
+            listOfData = getPreviewData(columns, withData);
+        } catch (SQLException e) {
+            needLoadData = false;
+        }
         createNatTable(listOfData, drawCanvas, columns);
     }
 
