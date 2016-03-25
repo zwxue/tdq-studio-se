@@ -28,8 +28,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 import org.talend.core.ITDQRepositoryService;
-import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -473,23 +471,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             }
         }
         return schema.getName();
-    }
-
-    protected boolean changeCatalog(String catalogName, Connection connection) {
-        try {
-            if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
-                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ExtractMetaDataUtils
-                    .getInstance().isHiveConnection(connection))) {
-                connection.setCatalog(catalogName);
-            }
-            return true;
-        } catch (RuntimeException e) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$
-            return Boolean.FALSE;
-        } catch (SQLException e) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
-            return Boolean.FALSE;
-        }
     }
 
     protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
