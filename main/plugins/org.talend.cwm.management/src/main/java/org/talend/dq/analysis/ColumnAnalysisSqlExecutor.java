@@ -1305,33 +1305,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * Method "changeCatalog".
-     * 
-     * @param catalogName unquoted catalog's name
-     * @param connection
-     * @throws SQLException
-     */
-    protected boolean changeCatalog(String catalogName, Connection connection) {
-        try {
-            // MOD xqliu 2009-12-09 bug 9822
-            if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
-                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ExtractMetaDataUtils
-                    .getInstance().isHiveConnection(connection))) {
-                // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
-                connection.setCatalog(catalogName);
-            }
-            // ~
-            return true;
-        } catch (RuntimeException e) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$  
-            return Boolean.FALSE;
-        } catch (SQLException e) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
-            return Boolean.FALSE;
-        }
-    }
-
-    /**
      * DOC xqliu Comment method "canParallel".
      * 
      * @return
