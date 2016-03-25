@@ -13,6 +13,7 @@
 package org.talend.dq.analysis;
 
 import java.lang.management.ManagementFactory;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -585,6 +587,25 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // else when the user do generate report directly, will can not load udi jars
         UDIHelper.updateJUDIsForAnalysis(analysis);
         // TDQ-8202~
+    }
+
+    protected boolean changeCatalog(String catalogName, java.sql.Connection connection) {
+        try {
+            DatabaseMetaData metadata = ExtractMetaDataUtils.getInstance().getConnectionMetadata(connection);
+            if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
+                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection)
+                    || org.talend.utils.sql.ConnectionUtils.isExasol(metadata) || ExtractMetaDataUtils.getInstance()
+                    .isHiveConnection(connection))) {
+                connection.setCatalog(catalogName);
+            }
+            return true;
+        } catch (RuntimeException e) {
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
+        } catch (SQLException e) {
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
+        }
     }
 
 }
