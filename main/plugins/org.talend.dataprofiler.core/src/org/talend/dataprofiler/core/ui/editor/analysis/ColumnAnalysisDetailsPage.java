@@ -233,7 +233,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
 
         createDataPreviewSection(form, topComp);
         createAnalysisColumnsSection(form, topComp);
-        redrawNatTableComposite();
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
 
@@ -430,8 +429,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      * @return
      */
     private boolean isValidateRowCount() {
-        String text = rowLoadedText.getText();
-        if (StringUtils.isEmpty(text)) {
+        if (StringUtils.isEmpty(rowLoadedText.getText())) {
             return false;
         }
         return true;
@@ -561,39 +559,16 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         dataTableComp.setLayout(new GridLayout(1, Boolean.TRUE));
         GridDataFactory.fillDefaults().span(4, 1).align(SWT.FILL, SWT.CENTER).hint(SWT.DEFAULT, 250).grab(true, false)
                 .applyTo(dataTableComp);
-        // GridData gridData = new GridData(GridData.FILL_BOTH);
-        // gridData.heightHint = 250;
-        // dataTableComp.setLayoutData(gridData);
-        sampleTable = new ColumnAnalysisDataSamTable();
 
+        sampleTable = new ColumnAnalysisDataSamTable();
         // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
         createNatTable(null);
-        createWarningLabel();
-        redrawNatTableComposite();
+        setDataTableCompVisible();
         sampleTable.addPropertyChangeListener(this);
-
     }
 
-    /**
-     * create DataTable Composite.
-     * 
-     * @param dataparent
-     */
-    public void redrawComposite() {
-        Composite parent = dataTableComp.getParent();
-        dataTableComp.redraw();
-
-    }
-
-    /**
-     * DOC talend Comment method "HiddenNatTable".
-     */
-    private void redrawNatTableComposite() {
-        boolean shouldDisplay = false;
-        if (this.currentModelElementIndicators != null && this.currentModelElementIndicators.length > 0) {
-            shouldDisplay = true;
-        }
-        dataTableComp.setVisible(shouldDisplay);
+    private void setDataTableCompVisible() {
+        dataTableComp.setVisible(this.currentModelElementIndicators != null && this.currentModelElementIndicators.length > 0);
     }
 
     /**
@@ -602,15 +577,21 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
      * @param dataTableComp2
      */
     private void createWarningLabel() {
-        warningLabel = toolkit.createLabel(dataTableComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.ENTER_STRING), //$NON-NLS-1$
-                SWT.BORDER | SWT.WRAP);
-        warningLabel.setVisible(!sampleTable.isSameTable());
+        String message = PluginConstant.EMPTY_STRING;
+        boolean isVisible;
+        if (!sampleTable.isDataAvailable()) {
+            message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noDataAvailableWarning"); //$NON-NLS-1$
+            isVisible = true;
+        } else {
+            message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.ENTER_STRING); //$NON-NLS-1$
+            isVisible = !sampleTable.isSameTable();
+        }
+        warningLabel = toolkit.createLabel(dataTableComp, message, SWT.BORDER | SWT.WRAP);
+        warningLabel.setVisible(isVisible);
 
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!warningLabel.isVisible())
                 .applyTo(warningLabel);
         warningLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-
     }
 
     private void redrawWarningLabel() {
@@ -618,21 +599,16 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
             warningLabel.dispose();
         }
         createWarningLabel();
-        redrawNatTableComposite();
+        setDataTableCompVisible();
         dataTableComp.layout(new Control[] { warningLabel });
     }
 
-    /**
-     * Init limitNumber and data filter
-     */
-    private void initSampleTableParameter() {
+    public void refreshPreviewTable(boolean loadData) {
+        // set sample table parameters
         sampleTable.setLimitNumber(Integer.parseInt(rowLoadedText.getText()));
         sampleTable.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
         sampleTable.setDataFilter(dataFilterComp.getDataFilterString());
-    }
 
-    public void refreshPreviewTable(boolean loadData) {
-        initSampleTableParameter();
         sampleTable.reDrawTable(getSelectedColumns(), loadData);
         redrawWarningLabel();
     }
@@ -1369,7 +1345,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     @Override
     protected void setLanguageToTreeViewer(ExecutionLanguage executionLanguage) {
         treeViewer.setLanguage(executionLanguage);
-
     }
 
     /**

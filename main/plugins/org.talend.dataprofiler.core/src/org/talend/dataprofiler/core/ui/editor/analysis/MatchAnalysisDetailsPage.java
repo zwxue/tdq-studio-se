@@ -169,6 +169,10 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private EventReceiver refreshDataProiverLabel = null;
 
+    private Label warningLabel = null;
+
+    private boolean isDataAvailable = true;
+
     /**
      * MatchMasterDetailsPage constructor.
      * 
@@ -1105,6 +1109,34 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     }
 
     /**
+     * Create warning label
+     * 
+     * @param dataTableComp2
+     */
+    private void createWarningLabel() {
+        String message = PluginConstant.EMPTY_STRING;
+        boolean isVisible = false;
+        if (!isDataAvailable) {
+            message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noDataAvailableWarning"); //$NON-NLS-1$
+            isVisible = true;
+        }
+        warningLabel = toolkit.createLabel(dataTableComp, message, SWT.BORDER | SWT.WRAP);
+        warningLabel.setVisible(isVisible);
+
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!warningLabel.isVisible())
+                .applyTo(warningLabel);
+        warningLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+    }
+
+    private void redrawWarningLabel() {
+        if (warningLabel != null && !warningLabel.isDisposed()) {
+            warningLabel.dispose();
+        }
+        createWarningLabel();
+        dataTableComp.layout(new Control[] { warningLabel });
+    }
+
+    /**
      * Refresh the table with new data
      * 
      * @param listOfData
@@ -1119,7 +1151,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         disposeDataTable();
         // create the data table composite
         createNatTable(listOfData);
-
+        redrawWarningLabel();
         dataTableComp.getParent().layout();
         dataTableComp.layout();
     }
@@ -1340,12 +1372,14 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         }
         try {
             // set limit
+            isDataAvailable = true;
             sqlExecutor.setLimit(Integer.valueOf(rowLoadedText.getText()));
             sqlExecutor.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
             return sqlExecutor.executeQuery(this.analysisHandler.getConnection(),
                     Arrays.asList(analysisHandler.getSelectedColumns()));
         } catch (SQLException e) {
             log.error(e, e);
+            isDataAvailable = false;
             return new ArrayList<Object[]>();
         }
     }

@@ -167,6 +167,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     private boolean isSameTable = true;
 
+    private boolean isDataAvailable = true;
+
     private List<TDQObserver<Map<String, Integer>>> Observers = null;
 
     Map<String, Integer> ColumnIndexMap = null;
@@ -1031,16 +1033,6 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * 
-     * Redraw the table by special columns
-     * 
-     * @param columns
-     */
-    public void reDrawTable(ModelElement[] columns) {
-        reDrawTable(columns, needLoadData);
-    }
-
-    /**
-     * 
      * Redraw the table by special columns and reload the data if needed
      * 
      * @param columns New input columns
@@ -1066,7 +1058,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         List<Object[]> listOfData = null;
         try {
             listOfData = getPreviewData(columns, withData);
+            setDataAvailable(true);
         } catch (SQLException e) {
+            setDataAvailable(false);
             needLoadData = false;
         }
         createNatTable(listOfData, drawCanvas, columns);
@@ -1192,7 +1186,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      */
     @Override
     public void update(ModelElement[] columns) {
-        this.reDrawTable(columns);
+        reDrawTable(columns, needLoadData);
     }
 
     /*
@@ -1306,5 +1300,23 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         if (selectionStyle != null) {
             selectionStyle.setAttributeValue(CellStyleAttributes.FONT, font);
         }
+    }
+
+    /**
+     * Getter for isDataAvailable.
+     * 
+     * @return the isDataAvailable
+     */
+    public boolean isDataAvailable() {
+        return isDataAvailable;
+    }
+
+    /**
+     * Sets the isDataAvailable.
+     * 
+     * @param isDataAvailable the isDataAvailable to set
+     */
+    public void setDataAvailable(boolean isDataAvailable) {
+        this.isDataAvailable = isDataAvailable;
     }
 }
