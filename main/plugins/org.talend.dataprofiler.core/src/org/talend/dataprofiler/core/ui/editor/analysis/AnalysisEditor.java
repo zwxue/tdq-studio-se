@@ -127,12 +127,15 @@ public class AnalysisEditor extends SupportContextEditor {
             break;
         case CONNECTION:
             masterPage = new ConnectionAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new OverviewResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case CATALOG:
             masterPage = new CatalogAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new OverviewResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case SCHEMA:
             masterPage = new SchemaAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new OverviewResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
         case COLUMNS_COMPARISON:
             masterPage = new RedundancyAnalysisDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
