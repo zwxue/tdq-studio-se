@@ -73,6 +73,7 @@ public final class TableUtils {
                     table.setSelection(new TableItem[] { (TableItem) e.item });
                     table.notifyListeners(SWT.Selection, e);
                     // no need a break
+                    //$FALL-THROUGH$
                 case SWT.MouseExit:
                     labelShell.dispose();
                     break;
@@ -95,10 +96,17 @@ public final class TableUtils {
                     shell.dispose();
                     break;
                 case SWT.KeyDown:
+                case SWT.KeyUp:
+                case SWT.MouseExit:
                 case SWT.MouseMove:
-
+                case SWT.Selection:
+                case SWT.MenuDetect:
+                case SWT.MouseDoubleClick:
                     if (actionTooltipShell != null && !actionTooltipShell.isDisposed()) {
                         actionTooltipShell.dispose();
+                    }
+                    if (actionTooltipLabel != null && !actionTooltipLabel.isDisposed()) {
+                        actionTooltipLabel.dispose();
                     }
                     break;
                 case SWT.MouseHover:
@@ -106,6 +114,7 @@ public final class TableUtils {
                         // show action tooltip
                         showActionTooltip(item);
                     }
+                    break;
                 default:
                     break;
                 }
@@ -131,9 +140,13 @@ public final class TableUtils {
 
         table.addListener(SWT.Dispose, tableListener);
         table.addListener(SWT.KeyDown, tableListener);
-        table.addListener(SWT.MouseMove, tableListener);
         table.addListener(SWT.MouseHover, tableListener);
-
+        table.addListener(SWT.MouseMove, tableListener);
+        table.addListener(SWT.MouseExit, tableListener);
+        table.addListener(SWT.MouseDoubleClick, tableListener);
+        table.addListener(SWT.MenuDetect, tableListener);
+        table.addListener(SWT.Selection, tableListener);
+        table.addListener(SWT.KeyUp, tableListener);
     }
 
     /**
