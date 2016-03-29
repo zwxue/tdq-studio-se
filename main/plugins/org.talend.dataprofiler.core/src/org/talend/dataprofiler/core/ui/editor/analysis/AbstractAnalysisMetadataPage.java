@@ -349,9 +349,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         connCombo.addDisposeListener(new DisposeListener() {
 
             public void widgetDisposed(DisposeEvent e) {
-                EventManager.getInstance().unRegister(getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
-                        refreshDataProvider);
-
+                EventManager.getInstance().clearEvent(getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST);
             }
         });
 

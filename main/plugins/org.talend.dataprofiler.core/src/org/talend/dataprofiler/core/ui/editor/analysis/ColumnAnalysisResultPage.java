@@ -367,8 +367,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
      * @param eventReceivers
      */
     public void unRegisterDynamicEvent() {
-        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
-                switchBetweenPageEvent);
+        EventManager.getInstance().clearEvent(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
 
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);
@@ -376,8 +375,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             EventManager.getInstance().clearEvent(oneIndicator, EventEnum.DQ_DYMANIC_CHART);
         }
         eventReceivers.clear();
-        EventManager.getInstance().unRegister(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,
-                registerDynamicRefreshEvent);
+        EventManager.getInstance().clearEvent(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART);
 
         if (uiPagination != null) {
             uiPagination.clearAllDynamicMapOfCurrentPage();

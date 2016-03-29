@@ -543,8 +543,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
      */
     public void unRegisterDynamicEvent() {
         // Added TDQ-9241
-        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
-                switchBetweenPageEvent);
+        EventManager.getInstance().clearEvent(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
 
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);
@@ -552,8 +551,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
             EventManager.getInstance().clearEvent(oneIndicator, EventEnum.DQ_DYMANIC_CHART);
         }
         eventReceivers.clear();
-        EventManager.getInstance().unRegister(sectionClient, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,
-                registerDynamicRefreshEvent);
+        EventManager.getInstance().clearEvent(sectionClient, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART);
 
         for (DynamicIndicatorModel dyModel : dynamicList) {
             dyModel.clear();

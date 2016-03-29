@@ -1118,8 +1118,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         if (dataFilterComp != null) {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
-        EventManager.getInstance().unRegister(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
-                afterCreateConnectionReceiver);
+        EventManager.getInstance().clearEvent(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION);
         MapDBManager.getInstance().closeDB(getAnalysis());
 
         // when the user didn't save, revert the connection combo value

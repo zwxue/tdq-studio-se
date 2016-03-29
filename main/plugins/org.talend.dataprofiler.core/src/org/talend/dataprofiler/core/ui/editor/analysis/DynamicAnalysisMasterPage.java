@@ -321,8 +321,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
      * @param eventReceivers
      */
     public void unRegisterDynamicEvent() {
-        EventManager.getInstance().unRegister(this.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
-                switchBetweenPageEvent);
+        EventManager.getInstance().clearEvent(this.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
 
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);
@@ -330,8 +329,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
             EventManager.getInstance().clearEvent(oneIndicator, EventEnum.DQ_DYMANIC_CHART);
         }
         eventReceivers.clear();
-        EventManager.getInstance().unRegister(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,
-                registerDynamicRefreshEvent);
+        EventManager.getInstance().clearEvent(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART);
 
         clearDynamicDatasets();
     }

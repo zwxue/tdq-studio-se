@@ -1583,12 +1583,11 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     @Override
     public void dispose() {
         // unregister the event after create the connection
-        EventManager.getInstance().unRegister(this.dataSampleparentComposite,
-                EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION, afterCreateConnectionReceiver);
-        EventManager.getInstance().unRegister(analysisHandler.getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
-                refreshTableDataReceiver);
-        EventManager.getInstance().unRegister(analysisHandler.getAnalysis(),
-                EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL, refreshDataProiverLabel);
+        EventManager.getInstance()
+                .clearEvent(this.dataSampleparentComposite, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION);
+        EventManager.getInstance().clearEvent(analysisHandler.getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT);
+        EventManager.getInstance().clearEvent(analysisHandler.getAnalysis(),
+                EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL);
 
         this.getCurrentModelElement(this.getEditor()).eResource().unload();
         super.dispose();
