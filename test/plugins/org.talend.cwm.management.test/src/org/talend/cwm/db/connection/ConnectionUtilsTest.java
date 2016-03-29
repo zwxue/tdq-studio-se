@@ -157,9 +157,11 @@ public class ConnectionUtilsTest {
      * Test method for
      * {@link org.talend.cwm.db.connection.ConnectionUtils#checkGeneralJdbcJarFilePathDriverClassName(org.talend.core.model.metadata.builder.connection.DatabaseConnection)}
      * .
+     * 
+     * @throws MalformedURLException
      */
     @Test
-    public void testCheckGeneralJdbcJarFilePathDriverClassName() {
+    public void testCheckGeneralJdbcJarFilePathDriverClassName() throws MalformedURLException {
         String driverClass = "DriverClassName"; //$NON-NLS-1$
         String driverJarPath = "DriverJarFilePath"; //$NON-NLS-1$
         String msg = "msg"; //$NON-NLS-1$

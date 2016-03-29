@@ -14,6 +14,7 @@ package net.sourceforge.sqlexplorer.util;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +23,6 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Path;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ILibraryManagerService;
@@ -173,21 +173,20 @@ public class AliasAndManaDriverHelper {
      * @throws MalformedURLException
      */
     public void addJars(Connection connection, ManagedDriver manDr) throws MalformedURLException {
+        List<String> driverJarNameList = new ArrayList<String>();
         DatabaseConnection dbConnnection = (DatabaseConnection) connection;
         String driverJarPath = JavaSqlFactory.getDriverJarPath(dbConnnection);
         if (ConnectionHelper.isJDBC(dbConnnection) && driverJarPath != null) {
             String[] pathArray = driverJarPath.split(";"); //$NON-NLS-1$
             for (String path : pathArray) {
-                path = new Path(path).toPortableString();
-                if (!manDr.getJars().contains(path)) {
-                    manDr.getJars().add(path);
-                }
+                driverJarNameList.add(path);
             }
         } else {
-            List<String> driverJarNameList = EDatabaseVersion4Drivers.getDrivers(dbConnnection.getDatabaseType(),
+            driverJarNameList = EDatabaseVersion4Drivers.getDrivers(dbConnnection.getDatabaseType(),
                     dbConnnection.getDbVersionString());
             manDr.setJars(getDriverJarRealPaths(driverJarNameList));
         }
+        manDr.setJars(getDriverJarRealPaths(driverJarNameList));
     }
 
     /**
