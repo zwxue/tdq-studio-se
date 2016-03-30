@@ -57,13 +57,4 @@ To filter the data, write an SQL &quot;WHERE&quot; clause in the <b>Data Filter<
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
-   <item
-         skip="false"
-         title="Refresh the graphics">
-      <description>
-         To view the analysis graphics, click the <b>Refresh the graphics</b>  hyperlink (or click the link below). <b>Refresh the graphics</b> means that the graphics displayed will reflect the most recent data computed.
-      </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false">
-      </action>
-   </item>
 </cheatsheet>

@@ -36,11 +36,4 @@
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
-      <item title="Refresh the graphics" dialog="true" skip="false">
-      <description>
-          To generate the analysis graphics, click the <b>Refresh the graphics</b> hyperlink (or click the link below). <b>Refresh the graphics</b> means that the graphics displayed are based on the most recently computed data.
-      </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
-      </action>
-   </item>
 </cheatsheet>
