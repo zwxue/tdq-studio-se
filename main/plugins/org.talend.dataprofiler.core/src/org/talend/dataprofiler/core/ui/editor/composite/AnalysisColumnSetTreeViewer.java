@@ -563,7 +563,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             public void widgetSelected(SelectionEvent e) {
                 if (e.item instanceof TreeItem) {
                     enabledButtons(true);
-                    new AnalysisColumnSetMenuProvider(tree).createTreeMenu(Boolean.TRUE);
+                    AnalysisColumnSetMenuProvider analysisColumnSetMenuProvider = new AnalysisColumnSetMenuProvider(tree);
+                    analysisColumnSetMenuProvider.createTreeMenu(Boolean.TRUE);
+                    analysisColumnSetMenuProvider.showDetailView(tree);
                 }
             }
         });

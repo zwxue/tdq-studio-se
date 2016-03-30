@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.window.Window;
@@ -74,6 +75,7 @@ import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.RespositoryDetailView;
 import org.talend.dataprofiler.core.ui.views.TableViewerDND;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
@@ -222,7 +224,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                new TableTreeMenuProvider(tree).createTreeMenu();
+                TableTreeMenuProvider tableTreeMenuProvider = new TableTreeMenuProvider(tree);
+                tableTreeMenuProvider.createTreeMenu();
+                tableTreeMenuProvider.showDetailView(tree);
             }
 
         });
@@ -1161,6 +1165,20 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             }
         }
 
+        private void showDetailView(Tree newTree) {
+            TreeItem[] selection = newTree.getSelection();
+            if (selection.length > 0) {
+                RespositoryDetailView detailView = CorePlugin.getDefault().getRespositoryDetailView();
+                if (detailView == null) {
+                    return;
+                }
+
+                DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+                RepositoryNode node = getSelectedNode(selection);
+                detailView.selectionChanged(dqview, new StructuredSelection(node));
+            }
+        }
+
         private void showSelectedElements(Tree newTree) {
             TreeItem[] selection = newTree.getSelection();
 
@@ -1170,22 +1188,26 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 if (dqview == null) {
                     return;
                 }
-                try {
-                    TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
-                    NamedColumnSet set = tableIndicator.getColumnSet();
-                    // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(set);
-                    if (recursiveFind == null) {
-                        recursiveFind = RepositoryNodeHelper.createRepositoryNode(set);
-                    }
-                    RepositoryNode node = recursiveFind;
-                    dqview.showSelectedElements(node);
-                    CorePlugin.getDefault().refreshWorkSpace();
-                    CorePlugin.getDefault().refreshDQView(node);
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
+                RepositoryNode node = getSelectedNode(selection);
+                dqview.showSelectedElements(node);
             }
+        }
+
+        /**
+         * DOC msjian Comment method "getSelectedNode".
+         * 
+         * @param selection
+         * @return
+         */
+        private RepositoryNode getSelectedNode(TreeItem[] selection) {
+            TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
+            NamedColumnSet set = tableIndicator.getColumnSet();
+            // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(set);
+            if (recursiveFind == null) {
+                recursiveFind = RepositoryNodeHelper.createRepositoryNode(set);
+            }
+            return recursiveFind;
         }
 
         private boolean isSelectedTable(TreeItem[] items) {

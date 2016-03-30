@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
@@ -51,6 +52,7 @@ import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.RespositoryDetailView;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -375,32 +377,54 @@ public abstract class ModelElementTreeMenuProvider {
      * 
      * @param newTree
      */
+    public void showDetailView(Tree newTree) {
+        TreeItem[] selection = newTree.getSelection();
+        if (selection.length > 0) {
+            RespositoryDetailView detailView = CorePlugin.getDefault().getRespositoryDetailView();
+            if (detailView == null) {
+                return;
+            }
+
+            DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+            RepositoryNode node = getSelectedNode(selection);
+            detailView.selectionChanged(dqview, new StructuredSelection(node));
+        }
+    }
+
+    /**
+     * DOC Zqin Comment method "showSelectedElements".MOD 2009-01-07 mzhao.
+     * 
+     * @param newTree
+     */
     private void showSelectedElements(Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
-
         if (selection.length > 0) {
             DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
             // if DqRepository view is not openning we will not do anything
             if (dqview == null) {
                 return;
             }
-            try {
-                ModelElementIndicator meIndicator = (ModelElementIndicator) selection[0]
-                        .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
-                ModelElement me = ((ISubRepositoryObject) meIndicator.getModelElementRepositoryNode().getObject())
-                        .getModelElement();
-
-                // dqview.showSelectedElements(me);
-                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(me);
-                if (recursiveFind == null) {
-                    recursiveFind = RepositoryNodeHelper.createRepositoryNode(me);
-                }
-                RepositoryNode node = recursiveFind;
-                dqview.showSelectedElements(node);
-            } catch (Exception e) {
-                log.error(e, e);
-            }
+            RepositoryNode node = getSelectedNode(selection);
+            dqview.showSelectedElements(node);
         }
+    }
+
+    /**
+     * DOC msjian Comment method "getSelectedNode".
+     * 
+     * @param selection
+     * @return
+     */
+    protected RepositoryNode getSelectedNode(TreeItem[] selection) {
+        ModelElementIndicator meIndicator = (ModelElementIndicator) selection[0]
+                .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
+        ModelElement me = ((ISubRepositoryObject) meIndicator.getModelElementRepositoryNode().getObject()).getModelElement();
+
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(me);
+        if (recursiveFind == null) {
+            recursiveFind = RepositoryNodeHelper.createRepositoryNode(me);
+        }
+        return recursiveFind;
     }
 
     private boolean isSelectedColumn(TreeItem[] items) {

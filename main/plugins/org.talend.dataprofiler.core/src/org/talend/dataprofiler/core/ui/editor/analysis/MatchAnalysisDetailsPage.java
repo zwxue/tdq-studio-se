@@ -414,17 +414,13 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                     if (dqview == null) {
                         return;
                     }
-                    try {
-                        ModelElement column = RepositoryNodeHelper.getModelElementFromRepositoryNode(analysedElements.get(0));
-                        ModelElement container = (ModelElement) (column.eContainer());
-                        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(container);
-                        if (recursiveFind == null) {
-                            recursiveFind = RepositoryNodeHelper.createRepositoryNode(container);
-                        }
-                        dqview.showSelectedElements(recursiveFind);
-                    } catch (Exception ex) {
-                        log.error(ex, ex);
+                    ModelElement column = RepositoryNodeHelper.getModelElementFromRepositoryNode(analysedElements.get(0));
+                    ModelElement container = (ModelElement) (column.eContainer());
+                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(container);
+                    if (recursiveFind == null) {
+                        recursiveFind = RepositoryNodeHelper.createRepositoryNode(container);
                     }
+                    dqview.showSelectedElements(recursiveFind);
                 }
 
             }

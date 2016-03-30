@@ -124,6 +124,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private Composite composite = null;
 
+    public static final String ID = "org.talend.dataprofiler.core.ui.views.RespositoryDetailView"; //$NON-NLS-1$
+
     Logger log = Logger.getLogger(RespositoryDetailView.class);
 
     /**
@@ -422,6 +424,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         for (int i = 1; i < foreignNameArray.length; i++) {
             newLabelAndText(gContainer, "", foreignNameArray[i] + "(" + foreignInfo.get(foreignNameArray[i]) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
+
+        if (PluginChecker.isTDQLoaded()) {
+            String conceptName = TaggedValueHelper.getValueString(TaggedValueHelper.CONCEPT_NAME, table);
+            newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.semanticName"), conceptName); //$NON-NLS-1$
+        }
     }
 
     private boolean createFileDetail(boolean is, IFile fe2) {
@@ -587,6 +594,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.DefaultValue"), defValueText); //$NON-NLS-1$
         newLabelAndText(gContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.Size"), String.valueOf(column.getLength())); //$NON-NLS-1$
+
+        if (PluginChecker.isTDQLoaded()) {
+            String semanticName = TaggedValueHelper.getValueString(TaggedValueHelper.SEMANTIC_NAME, column);
+            newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.semanticName"), semanticName); //$NON-NLS-1$
+        }
     }
 
     private void createNameCommentDetail(ModelElement element) {

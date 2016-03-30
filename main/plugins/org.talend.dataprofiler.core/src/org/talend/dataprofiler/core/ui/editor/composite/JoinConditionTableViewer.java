@@ -232,23 +232,19 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         TableItem[] selection = table.getSelection();
 
         if (selection.length > 0) {
-            try {
-                JoinElement join = (JoinElement) selection[0].getData();
-                ModelElement column = join.getColA();
-                if (COLUMN_B.equals(ab)) {
-                    column = join.getColB();
+            JoinElement join = (JoinElement) selection[0].getData();
+            ModelElement column = join.getColA();
+            if (COLUMN_B.equals(ab)) {
+                column = join.getColB();
+            }
+            DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
+            // if DqRepository view is not openning will don'st should show the element immediately
+            if (dqview != null) {
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(column);
+                if (recursiveFind == null) {
+                    recursiveFind = RepositoryNodeHelper.createRepositoryNode(column);
                 }
-                DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
-                // if DqRepository view is not openning will don'st should show the element immediately
-                if (dqview != null) {
-                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(column);
-                    if (recursiveFind == null) {
-                        recursiveFind = RepositoryNodeHelper.createRepositoryNode(column);
-                    }
-                    dqview.showSelectedElements(recursiveFind);
-                }
-            } catch (Exception e) {
-                log.error(e, e);
+                dqview.showSelectedElements(recursiveFind);
             }
         }
     }

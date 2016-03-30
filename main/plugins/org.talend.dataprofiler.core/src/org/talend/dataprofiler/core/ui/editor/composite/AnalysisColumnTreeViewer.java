@@ -862,7 +862,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
                     }
                     tree.setMenu(null);
                 } else {
-                    new AnalysisColumnColumnMenuProvider(tree).createTreeMenu(Boolean.FALSE);
+                    AnalysisColumnColumnMenuProvider analysisColumnColumnMenuProvider = new AnalysisColumnColumnMenuProvider(tree);
+                    analysisColumnColumnMenuProvider.createTreeMenu(Boolean.FALSE);
+                    analysisColumnColumnMenuProvider.showDetailView(tree);
                 }
             }
 

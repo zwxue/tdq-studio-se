@@ -896,6 +896,7 @@ public class DQRespositoryView extends CommonNavigator {
                 }
                 getCommonViewer().setSelection(structSel);
             }
+            this.setFocus();
         } catch (Exception e) {
             log.error(e, e);
         }

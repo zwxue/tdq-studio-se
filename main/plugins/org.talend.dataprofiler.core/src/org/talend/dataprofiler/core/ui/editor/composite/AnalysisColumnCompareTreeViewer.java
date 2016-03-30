@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
@@ -62,6 +63,7 @@ import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.FunctionalDependencyAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.RespositoryDetailView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
@@ -363,7 +365,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
             public void selectionChanged(SelectionChangedEvent event) {
                 enabledButtons(buttons, event.getSelection() != null);
-
+                showDetailView(columnsElementViewer);
             }
         });
 
@@ -649,6 +651,19 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         table.setMenu(menu);
     }
 
+    public void showDetailView(TableViewer tableView) {
+        TableItem[] selection = tableView.getTable().getSelection();
+        if (selection.length > 0) {
+            RespositoryDetailView detailView = CorePlugin.getDefault().getRespositoryDetailView();
+            if (detailView == null) {
+                return;
+            }
+
+            DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+            detailView.selectionChanged(dqview, new StructuredSelection(selection[0].getData()));
+        }
+    }
+
     /**
      * 
      * DOC mzhao Comment method "showSelectedElements".
@@ -659,14 +674,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         TableItem[] selection = tableView.getTable().getSelection();
 
         if (selection.length > 0) {
-            try {
-                // if DqRepository view is not openning we will not do anything
-                DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
-                if (dqview != null) {
-                    dqview.showSelectedElements(selection[0].getData());
-                }
-            } catch (Exception e) {
-                log.error(e, e);
+            // if DqRepository view is not openning we will not do anything
+            DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
+            if (dqview != null) {
+                dqview.showSelectedElements(selection[0].getData());
             }
         }
     }

@@ -65,6 +65,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.CorrelationAnalysisDetail
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.RespositoryDetailView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -401,12 +402,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                     if (dqview == null) {
                         return;
                     }
-                    try {
-                        // TdColumn tdColumn = (TdColumn) selection[0].getData(COLUMN_INDICATOR_KEY);
-                        dqview.showSelectedElements(selection[0].getData(COLUMN_INDICATOR_KEY));
-                    } catch (Exception ex) {
-                        log.error(ex, ex);
-                    }
+                    // TdColumn tdColumn = (TdColumn) selection[0].getData(COLUMN_INDICATOR_KEY);
+                    dqview.showSelectedElements(selection[0].getData(COLUMN_INDICATOR_KEY));
                 }
             }
 
@@ -680,12 +677,27 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                     }
                 }
                 createTreeMenu(tree, con);
+                showDetailView(tree);
             }
 
         });
 
         tree.addTreeListener(treeAdapter);
 
+    }
+
+    private void showDetailView(Tree newTree) {
+        TreeItem[] selection = newTree.getSelection();
+
+        if (selection.length > 0) {
+            RespositoryDetailView detailView = CorePlugin.getDefault().getRespositoryDetailView();
+            if (detailView == null) {
+                return;
+            }
+
+            DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+            detailView.selectionChanged(dqview, new StructuredSelection(selection[0].getData(COLUMN_INDICATOR_KEY)));
+        }
     }
 
     /*

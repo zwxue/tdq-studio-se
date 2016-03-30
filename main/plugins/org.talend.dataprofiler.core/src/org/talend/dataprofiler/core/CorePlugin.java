@@ -78,6 +78,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
+import org.talend.dataprofiler.core.ui.views.RespositoryDetailView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dataprofiler.service.ISemanticStudioService;
 import org.talend.dataquality.analysis.impl.AnalysisImpl;
@@ -295,6 +296,11 @@ public class CorePlugin extends AbstractUIPlugin {
     public PatternTestView getPatternTestView() {
         IViewPart view = WorkbenchUtils.getAndOpenView(PatternTestView.ID);
         return view != null ? (PatternTestView) view : null;
+    }
+
+    public RespositoryDetailView getRespositoryDetailView() {
+        IViewPart view = WorkbenchUtils.getAndOpenView(RespositoryDetailView.ID);
+        return view != null ? (RespositoryDetailView) view : null;
     }
 
     public void refreshWorkSpace() {
