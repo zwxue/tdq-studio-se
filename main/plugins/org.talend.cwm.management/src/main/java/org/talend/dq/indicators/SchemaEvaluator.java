@@ -87,15 +87,15 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
                 Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);
                 if (catalog != null) {
                     catName = catalog.getName();
+                    // MOD gdbu 2011-4-21 bug : 20578
+                    if (!ConnectionUtils.isOdbcProgress(connection) && !ConnectionUtils.isOdbcOracle(connection)
+                            && StringUtils.isNotEmpty(catName) && dbms().supportCatalogSelection()) {
+                        connection.setCatalog(catName);
+                    }
+                    // ~20578
                 }
             }
             // ~
-            // MOD gdbu 2011-4-21 bug : 20578
-            if (!ConnectionUtils.isOdbcProgress(connection) && !ConnectionUtils.isOdbcOracle(connection)
-                    && StringUtils.isNotEmpty(catName) && dbms().supportCatalogSelection()) {
-                connection.setCatalog(catName);
-            }
-            // ~20578
             evalSchemaIndicLow(null, schemaIndicator, null, schema, ok);
         }
         return ok;
