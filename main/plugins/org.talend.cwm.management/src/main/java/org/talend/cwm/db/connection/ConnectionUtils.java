@@ -55,7 +55,7 @@ import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
+import org.talend.core.model.metadata.connection.hive.HiveModeInfo;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -289,7 +289,7 @@ public final class ConnectionUtils {
         String dbType = metadataConnection.getDbType();
         String dbVersionString = metadataConnection.getDbVersionString();
         if (EDatabaseTypeName.HIVE.getDisplayName().equalsIgnoreCase(dbType)
-                && HiveConnVersionInfo.MODE_EMBEDDED.getKey().equalsIgnoreCase(dbVersionString)) {
+                && HiveModeInfo.get(dbVersionString) == HiveModeInfo.EMBEDDED) {
             return true;
         }
         return false;
