@@ -123,6 +123,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private MatchAnalysisHandler analysisHandler;
 
+    @Override
     public MatchAnalysisHandler getAnalysisHandler() {
         return analysisHandler;
     }
@@ -701,6 +702,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         } else {
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+            rowLoadedText.setFocus();
         }
     }
 
@@ -776,27 +778,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 && (connection instanceof DelimitedFileConnection || ConnectionHelper.isInformix((Connection) connection) || ConnectionHelper
                         .isSybase((Connection) connection));
         sampleDataShowWayCombo.setEnabled(!isNotSupportRandom);
-    }
-
-    /**
-     * check if the row loaded value is valid or not
-     * 
-     * @return
-     */
-    private boolean isValidateRowCount() {
-        String text = rowLoadedText.getText();
-        if (StringUtils.isEmpty(text)) {
-            return false;
-        }
-        try {
-            int parseInt = Integer.parseInt(text);
-            if (parseInt < 1) {
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
     }
 
     /**

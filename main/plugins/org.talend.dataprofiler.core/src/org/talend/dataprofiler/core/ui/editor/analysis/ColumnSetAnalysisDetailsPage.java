@@ -34,8 +34,6 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -90,6 +88,7 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
+import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -135,8 +134,6 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
     private Section previewSection;
 
     private Section indicatorsSection;
-
-    private ModelElementIndicator[] currentModelElementIndicators;
 
     private Button storeDataCheck;
 
@@ -250,6 +247,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         metadataSection = creatMetadataSection(form, topComp);
         form.setText(DefaultMessagesImpl.getString("ColumnSetMasterPage.title")); //$NON-NLS-1$
 
+        createDataPreviewSection(form, topComp, false);
         createAnalysisColumnsSection(form, topComp);
 
         createIndicatorsSection(form, topComp);
@@ -335,19 +333,6 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
         Composite topComp = toolkit.createComposite(analysisColSection);
         topComp.setLayout(new GridLayout());
-        // ~ MOD mzhao 2009-05-05,Bug 6587.
-        createConnBindWidget(topComp);
-        // ~
-
-        Button clmnBtn = toolkit.createButton(topComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumnBtn"), //$NON-NLS-1$
-                SWT.NONE);
-        clmnBtn.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseDown(MouseEvent e) {
-                openColumnsSelectionDialog();
-            }
-        });
 
         Composite tree = toolkit.createComposite(topComp, SWT.None);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tree);
@@ -357,6 +342,8 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         tree.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
         treeViewer = new AnalysisColumnSetTreeViewer(tree, this);
+        treeViewer.addObserver(sampleTable);
+        sampleTable.addObserver(treeViewer);
         treeViewer.addPropertyChangeListener(this);
         treeViewer.setInput(analyzedColumns.toArray());
         treeViewer.setDirty(false);
@@ -364,6 +351,12 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#openColumnsSelectionDialog()
+     */
+    @Override
     public void openColumnsSelectionDialog() {
         List<IRepositoryNode> columnList = treeViewer.getColumnSetMultiValueList();
         if (columnList == null) {
@@ -376,7 +369,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, connNode, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
-            treeViewer.setInput(columns);
+            setTreeViewInput(columns);
             // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java
             // engine,show all match indicator in the Indicators section.
             EventManager.getInstance().publish(getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
@@ -414,9 +407,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                for (Control control : chartComposite.getChildren()) {
-                    control.dispose();
-                }
+                disposeChartComposite();
 
                 boolean analysisStatue = analysis.getResults().getResultMetadata() != null
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
@@ -907,4 +898,66 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         }
         indicatorsViewer.setInput(simpleStatIndicator);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getAnalysisHandler()
+     */
+    @Override
+    public AnalysisHandler getAnalysisHandler() {
+        return columnSetAnalysisHandler;
+    }
+
+    /**
+     * 
+     * Refresh the column tree
+     * 
+     * @param modelElements
+     */
+    public void refreshTheTree(ModelElementIndicator[] modelElements) {
+        this.currentModelElementIndicators = modelElements;
+        disposeChartComposite();
+        treeViewer.setElements(currentModelElementIndicators);
+    }
+
+    public void disposeChartComposite() {
+        if (chartComposite != null && !chartComposite.isDisposed()) {
+            for (Control control : chartComposite.getChildren()) {
+                control.dispose();
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#setTreeViewInput(java.lang.Object[])
+     */
+    @Override
+    public void setTreeViewInput(Object[] modelElements) {
+        // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
+        treeViewer.filterInputData(modelElements);
+        refreshPreviewTable(treeViewer.getModelElementIndicator(), true);
+        refreshTheTree(treeViewer.getModelElementIndicator());
+        this.setDirty(true);
+    }
+
+    /**
+     * Refresh the preview Table
+     * 
+     * @param modelElementIndicator
+     */
+    public void refreshPreviewTable(ModelElementIndicator[] modelElements, boolean loadData) {
+        this.currentModelElementIndicators = modelElements;
+        this.refreshPreviewTable(loadData);
+    }
+
+    protected ModelElementIndicator[] getAllTheElementIndicator() {
+        List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
+        return (ModelElementIndicator[]) columnSetMultiValueList.toArray();
+
+    }
+
 }

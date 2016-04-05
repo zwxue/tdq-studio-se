@@ -184,6 +184,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelectedElements();
+                notifyObservers();
             }
         });
         final Button moveUpButton = new Button(buttonsComp, SWT.NULL);
@@ -194,6 +195,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(setTreeViewer, -1);
+                notifyObservers();
             }
 
         });
@@ -205,6 +207,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(setTreeViewer, 1);
+                notifyObservers();
             }
 
         });
@@ -455,6 +458,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                         removeItemBranch(treeItem);
                         enabledButtons(false);
                     }
+                    notifyObservers();
                 }
 
             });
@@ -710,6 +714,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         // MOD klliu check the item is column or pattern
         if (item.getData(COLUMN_INDICATOR_KEY) != null) {
             deleteColumnItems(meIndicator.getModelElementRepositoryNode());
+            deleteModelElementItems(meIndicator);
         }
         if (null != unit) {
             meIndicator.removeIndicatorUnit(unit);
@@ -752,6 +757,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         @Override
         protected void removeSelectedElements2(Tree theTree) {
             removeSelectedElements(theTree);
+            notifyObservers();
         }
 
         @Override
@@ -778,4 +784,18 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             removeItemBranch(treeItem);
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
+     */
+    @Override
+    public void update(Map<String, Integer> columnIndexMap) {
+        ModelElementIndicator[] reorderModelElement = reorderModelElement(masterPage.getCurrentModelElementIndicators(),
+                columnIndexMap);
+        masterPage.refreshTheTree(reorderModelElement);
+        masterPage.setDirty(true);
+    }
+
 }

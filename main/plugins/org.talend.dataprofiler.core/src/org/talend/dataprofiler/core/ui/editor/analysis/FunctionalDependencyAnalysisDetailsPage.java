@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -28,26 +29,33 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
-import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
+import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -57,6 +65,7 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -85,6 +94,8 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
 
+    ModelElementAnalysisHandler analysisHandler;
+
     /*
      * (non-Javadoc)
      * 
@@ -95,7 +106,46 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        stringDataFilter = AnalysisHelper.getStringDataFilter(analysisItem.getAnalysis());
+        recomputeIndicators();
+    }
+
+    public void recomputeIndicators() {
+        analysisHandler = new ModelElementAnalysisHandler();
+        analysisHandler.setAnalysis((Analysis) this.currentModelElement);
+        stringDataFilter = analysisHandler.getStringDataFilterwithContext();
+
+        EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
+        List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
+        ModelElementIndicator currentIndicator = null;
+        for (ModelElement element : analyzedColumns) {
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+
+            // MOD qiongli 2011-1-10,16796:delimitefile
+            MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
+            if (tdColumn == null && mdColumn == null) {
+                continue;
+            }
+            // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
+            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(element);
+            if (repNode == null) {
+                repNode = RepositoryNodeHelper.createRepositoryNode(element);
+            }
+            // MOD mzhao feature 15750, The column is recompute from the file, here create a new repository view object.
+            if (tdColumn == null && mdColumn != null) {
+                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(repNode);
+            } else if (tdColumn != null) {
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(repNode);
+            }
+
+            DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
+            MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
+            Collection<Indicator> indicatorList = analysisHandler.getIndicators(element);
+            if (currentIndicator != null) {
+                currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
+                meIndicatorList.add(currentIndicator);
+            }
+        }
+        currentModelElementIndicators = meIndicatorList.toArray(new ModelElementIndicator[meIndicatorList.size()]);
     }
 
     @Override
@@ -104,6 +154,8 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         setMetadataSectionTitle(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
         super.createFormContent(managedForm);
+
+        createDataPreviewSection(form, topComp, false);
 
         anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer(this, topComp, getColumnLeftSet(), getColumnRightSet(),
                 DefaultMessagesImpl.getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$
@@ -178,9 +230,8 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         // do nothing
     }
 
+    @Override
     public AnalysisHandler getAnalysisHandler() {
-        ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
-        analysisHandler.setAnalysis(this.analysisItem.getAnalysis());
         return analysisHandler;
     }
 

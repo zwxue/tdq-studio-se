@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -43,10 +45,14 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.grid.utils.Observerable;
+import org.talend.dataprofiler.core.ui.grid.utils.TDQObserver;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.DateParameters;
@@ -60,11 +66,15 @@ import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * The interface class to handle the change when drop columns. MOD mzhao, refactor codes for feature:13040, 2010-05-21
  */
-public abstract class AbstractColumnDropTree extends AbstractPagePart {
+public abstract class AbstractColumnDropTree extends AbstractPagePart implements Observerable<ModelElement[]>,
+        TDQObserver<Map<String, Integer>> {
 
     public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY"; //$NON-NLS-1$
 
@@ -87,6 +97,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     protected ModelElementIndicator[] modelElementIndicators;
 
     protected AbstractAnalysisMetadataPage absMasterPage = null;
+
+    private List<TDQObserver<ModelElement[]>> Observers = null;
 
     protected TreeAdapter treeAdapter = new TreeAdapter() {
 
@@ -567,6 +579,172 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         TreeColumn column = new TreeColumn(newTree, SWT.CENTER);
         column.setWidth(width);
         column.setText(DefaultMessagesImpl.getString(text));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
+     * .TalendObserver)
+     */
+    public boolean addObserver(TDQObserver<ModelElement[]> observer) {
+        initObserverable();
+        return Observers.add(observer);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
+     * .TalendObserver)
+     */
+    public boolean removeObserver(TDQObserver<ModelElement[]> observer) {
+        if (Observers == null) {
+            return false;
+        }
+        return Observers.remove(observer);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
+     */
+    public void clearObserver() {
+        if (Observers == null) {
+            return;
+        }
+        Observers.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
+     */
+    public void notifyObservers() {
+        if (Observers == null) {
+            return;
+        }
+        for (TDQObserver<ModelElement[]> observer : Observers) {
+            observer.update(ModelElementIndicatorHelper.getModelElementFromMEIndicator(getAllTheElementIndicator()));
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#initObserverable()
+     */
+    private void initObserverable() {
+        if (Observers == null) {
+            Observers = new ArrayList<TDQObserver<ModelElement[]>>();
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
+     */
+    public void update(Map<String, Integer> columnIndexMap) {
+        // the sub class must implement this
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(int)
+     */
+    public void update(int EventType) {
+        // do nothing until now
+    }
+
+    /**
+     * DOC talend Comment method "reorderModelElement".
+     * 
+     * @param currentModelElementIndicators
+     */
+    public ModelElementIndicator[] reorderModelElement(ModelElementIndicator[] currentModelElementIndicators,
+            Map<String, Integer> columnIndexMap) {
+        ModelElementIndicator[] sortedModelElements = new ModelElementIndicator[currentModelElementIndicators.length];
+        for (ModelElementIndicator currModelElement : currentModelElementIndicators) {
+            String columnName = currModelElement.getElementName();
+            sortedModelElements[columnIndexMap.get(columnName)] = currModelElement;
+        }
+        return sortedModelElements;
+    }
+
+    /**
+     * DOC rli Comment method "deleteTreeElements".
+     * 
+     * @param deleteModelElementIndiciator
+     */
+    public void deleteModelElementItems(ModelElementIndicator deleteModelElementIndiciator) {
+        ModelElementIndicator[] remainIndicators = new ModelElementIndicator[modelElementIndicators.length - 1];
+        int i = 0;
+        for (ModelElementIndicator indicator : modelElementIndicators) {
+            if (deleteModelElementIndiciator.equals(indicator)) {
+                continue;
+            } else {
+                remainIndicators[i] = indicator;
+                i++;
+            }
+        }
+        this.modelElementIndicators = remainIndicators;
+
+        initializedConnection(this.modelElementIndicators);
+    }
+
+    /**
+     * DOC msjian Comment method "initializedConnection". for 6560
+     * 
+     * @param indicators
+     */
+    void initializedConnection(ModelElementIndicator[] indicators) {
+        Analysis analysis = getMasterPage().getAnalysisHandler().getAnalysis();
+        DataManager connection = analysis.getContext().getConnection();
+        // Connection tdDataProvider = null;
+
+        boolean enableWhereClauseFlag = true;
+        boolean enableExecuteLanguageFlag = false;
+        // ~
+        if (indicators != null && indicators.length > 0) {
+            if (connection == null) {
+                connection = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
+                analysis.getContext().setConnection(connection);
+            }
+            if (connection != null && getMasterPage().getExecCombo() != null) {
+                if (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection)) {
+                    getMasterPage().setWhereClauseDisabled();
+                    // when the selected column is not DB type,will disable the execute engine combobox.
+                    getMasterPage().changeExecuteLanguageToJava(true);
+
+                    enableWhereClauseFlag = false;
+                    enableExecuteLanguageFlag = false;
+                } else {// when the selected column is back to DB type, should enable the execute engine combobox again.
+                    getMasterPage().enableExecuteLanguage();
+                }
+            }
+        }
+        // MOD klliu if default ExecutionLanguage is java,it is not changed to SQL.2011-11-21
+        String execLang = analysis.getParameters().getExecutionLanguage().getLiteral();
+        if (execLang != null && ExecutionLanguage.JAVA.getLiteral().equals(execLang)
+                && (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection))) {
+            enableExecuteLanguageFlag = false;
+        }
+
+        if (enableWhereClauseFlag) {
+            getMasterPage().setWhereClauseEnable();
+        }
+
+        if (enableExecuteLanguageFlag) {
+            getMasterPage().changeExecuteLanguageToSql(true);
+        }
     }
 
 }

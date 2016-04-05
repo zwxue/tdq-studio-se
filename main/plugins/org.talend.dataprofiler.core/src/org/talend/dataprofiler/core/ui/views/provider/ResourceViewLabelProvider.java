@@ -37,7 +37,7 @@ import org.talend.dataprofiler.core.manager.DQStructureMessage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
+import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -97,7 +97,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                     // ADD qiongli 2010-8-9,feature 14252
                     Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
                     if (analysis != null) {
-                        ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
+                        AnalysisHandler analysisHandler = new AnalysisHandler();
                         analysisHandler.setAnalysis(analysis);
                         if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
                             if (!analysisHandler.getResultMetadata().isLastRunOk()) {

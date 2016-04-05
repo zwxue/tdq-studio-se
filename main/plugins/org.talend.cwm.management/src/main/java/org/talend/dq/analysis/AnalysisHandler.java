@@ -61,12 +61,12 @@ public class AnalysisHandler {
     /**
      * DOC xqliu Comment method "createHandler".
      * 
-     * @param pAnalysis
+     * @param analysis
      * @return
      */
-    public static AnalysisHandler createHandler(Analysis pAnalysis) {
+    public static AnalysisHandler createHandler(Analysis analysis) {
         AnalysisHandler handler = new AnalysisHandler();
-        handler.setAnalysis(pAnalysis);
+        handler.setAnalysis(analysis);
         return handler;
     }
 

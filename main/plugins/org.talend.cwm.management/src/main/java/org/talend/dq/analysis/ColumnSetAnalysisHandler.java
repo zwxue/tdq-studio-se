@@ -212,9 +212,4 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
         return AnalysisHelper.getStringDataFilter(analysis);
     }
 
-    // public boolean saveModifiedResources() {
-    // EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-    // util.getResourceSet().getResources().addAll(this.modifiedResources);
-    // return util.save();
-    // }
 }
