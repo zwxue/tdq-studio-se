@@ -57,13 +57,4 @@ Afin de filtrer les données, saisissez une clause &quot;WHERE&quot; SQL dans le
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
-   <item
-         skip="false"
-         title="Rafraîchir les graphiques">
-      <description>
-         Pour voir les graphiques de l'analyse, cliquez sur le lien hypertexte <b>Rafraîchir les graphiques</b> (ou cliquez sur le lien ci-dessous). <b>Rafraîchir les graphiques</b> signifie que les graphiques affichés reflèteront les données calculées les plus récentes.
-      </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false">
-      </action>
-   </item>
 </cheatsheet>

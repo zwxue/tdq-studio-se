@@ -36,11 +36,4 @@
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
-      <item title="Rafraîchir les graphiques" dialog="true" skip="false">
-      <description>
-         Pour générer les graphiques de l'analyse, cliquez sur le lien hypertexte <b>Rafraîchir les graphiques</b> (ou cliquez sur le lien ci-dessous). <b>Rafraîchir les graphiques</b> signifie que les graphiques affichés sont basés sur les données calculées les plus récentes.  
-      </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
-      </action>
-   </item>
 </cheatsheet>
