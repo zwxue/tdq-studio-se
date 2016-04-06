@@ -118,6 +118,11 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                                 "DownloadSqlexplorerPluginJarFactory.description", getContainPluginNames()), true) { //$NON-NLS-1$
 
                             @Override
+                            public boolean needRestart() {
+                                return true;
+                            }
+
+                            @Override
                             public IStatus install(IProgressMonitor progress, List<URI> allRepoUris) throws Exception {
                                 IStatus installStatus = super.install(progress, allRepoUris);
                                 // move the jar to plugins folder
