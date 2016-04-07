@@ -214,10 +214,6 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     }
 
-    public ModelElementIndicator[] getCurrentModelElementIndicators() {
-        return this.currentModelElementIndicators;
-    }
-
     private void initializeIndicator(Indicator indicator) {
         if (indicator.getIndicatorDefinition() == null || indicator.getIndicatorDefinition().eIsProxy()) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
@@ -247,7 +243,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         metadataSection = creatMetadataSection(form, topComp);
         form.setText(DefaultMessagesImpl.getString("ColumnSetMasterPage.title")); //$NON-NLS-1$
 
-        createDataPreviewSection(form, topComp, false);
+        createDataPreviewSection(form, topComp, true, false);
         createAnalysisColumnsSection(form, topComp);
 
         createIndicatorsSection(form, topComp);
@@ -333,6 +329,9 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
         Composite topComp = toolkit.createComposite(analysisColSection);
         topComp.setLayout(new GridLayout());
+        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(topComp);
+
+        createRunButton(topComp);
 
         Composite tree = toolkit.createComposite(topComp, SWT.None);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tree);

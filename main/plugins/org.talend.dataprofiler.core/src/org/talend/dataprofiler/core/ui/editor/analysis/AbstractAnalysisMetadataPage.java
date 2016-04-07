@@ -168,6 +168,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected CCombo sampleDataShowWayCombo;
 
+    protected Label warningImage = null;
+
     protected Label warningLabel = null;
 
     protected static final int PREVIEW_MAX_ROW_COUNT = 999;
@@ -180,6 +182,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * the temp value used to store the old connection value, when the user didn't save this page, use to revert
      */
     protected DataManager oldConn = null;
+
+    public ModelElementIndicator[] getCurrentModelElementIndicators() {
+        return this.currentModelElementIndicators;
+    }
 
     public AbstractAnalysisMetadataPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -974,7 +980,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @param form
      * @param topComp
      */
-    protected void createDataPreviewSection(ScrolledForm form1, Composite anasisDataComp, boolean hasSelectIndicatorButton) {
+    protected void createDataPreviewSection(ScrolledForm form1, Composite anasisDataComp, boolean hasSelectColumnsButton,
+            boolean hasSelectIndicatorButton) {
         dataPreviewSection = createSection(form1, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview"), null); //$NON-NLS-1$
         Composite dataPreviewTableCom = toolkit.createComposite(dataPreviewSection, SWT.NONE);
@@ -984,7 +991,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         buttonComposite.setLayout(new GridLayout(5, false));
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(buttonComposite);
         createConnectionButton(buttonComposite, dataPreviewSection);
-        createColumnSelectButton(buttonComposite);
+        if (hasSelectColumnsButton) {
+            createColumnSelectButton(buttonComposite);
+        }
         if (hasSelectIndicatorButton) {
             createIndicatorSelectButton(buttonComposite);
         }
@@ -1068,12 +1077,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         redrawWarningLabel();
     }
 
-    /**
-     * Create warning label
-     * 
-     * @param dataTableComp2
-     */
-    private void createWarningLabel() {
+    private void redrawWarningLabel() {
+        if (warningImage != null && !warningImage.isDisposed()) {
+            warningImage.dispose();
+        }
+        if (warningLabel != null && !warningLabel.isDisposed()) {
+            warningLabel.dispose();
+        }
+
         String message = PluginConstant.EMPTY_STRING;
         boolean isVisible;
         if (!sampleTable.isDataAvailable()) {
@@ -1081,24 +1092,23 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             isVisible = true;
         } else {
             message = DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.noSameTableWarning", org.talend.dataprofiler.core.PluginConstant.ENTER_STRING); //$NON-NLS-1$
+                    "ColumnMasterDetailsPage.noSameTableWarning", org.talend.dataprofiler.core.PluginConstant.EMPTY_STRING); //$NON-NLS-1$
             isVisible = !sampleTable.isSameTable();
         }
-        warningLabel = toolkit.createLabel(dataTableComp, message, SWT.BORDER | SWT.WRAP);
+
+        warningImage = toolkit.createLabel(dataTableComp, ""); //$NON-NLS-1$
+        warningImage.setImage(ImageLib.getImage(ImageLib.WARNING_PNG));
+        warningImage.setVisible(isVisible);
+
+        warningLabel = toolkit.createLabel(dataTableComp, message);
         warningLabel.setVisible(isVisible);
-
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!warningLabel.isVisible())
-                .applyTo(warningLabel);
         warningLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-    }
 
-    private void redrawWarningLabel() {
-        if (warningLabel != null && !warningLabel.isDisposed()) {
-            warningLabel.dispose();
-        }
-        createWarningLabel();
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningImage);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningLabel);
+
         setDataTableCompVisible();
-        dataTableComp.layout(new Control[] { warningLabel });
+        dataTableComp.layout(new Control[] { warningImage, warningLabel });
     }
 
     /**
@@ -1180,13 +1190,17 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * open the column selection dialog.
+     * 
+     * @param dataManager
      */
-    public void openColumnsSelectionDialog(Connection conn) {
-        reloadDataproviderAndFillConnCombo();
+    public void openColumnsSelectionDialog(DataManager dataManager) {
+        if (connCombo != null) {
+            reloadDataproviderAndFillConnCombo();
+        }
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
         RepositoryNode connNode = getConnComboSelectNode();
         int connIndex = getConnCombo().getSelectionIndex();
-        String connName = conn.getName();
+        String connName = dataManager.getName();
         for (int index = 0; index < getConnCombo().getItemCount(); index++) {
             if (connName.equalsIgnoreCase(getConnCombo().getItem(index))) {
                 connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(index));
@@ -1204,7 +1218,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             // save the old first, need to use this to revert
             oldConn = this.analysisItem.getAnalysis().getContext().getConnection();
 
-            this.analysisItem.getAnalysis().getContext().setConnection(conn);
+            this.analysisItem.getAnalysis().getContext().setConnection(dataManager);
             Object[] modelElements = dialog.getResult();
             setTreeViewInput(modelElements);
         }
@@ -1226,7 +1240,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @return
      */
     protected boolean isValidateRowCount() {
-        if (StringUtils.isEmpty(rowLoadedText.getText())) {
+        if (rowLoadedText != null && StringUtils.isEmpty(rowLoadedText.getText())) {
             return false;
         }
         return true;
@@ -1238,14 +1252,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * 
      * @param buttonComposite
      */
-    protected void createRunButton(Composite buttonComposite) {
+    public void createRunButton(Composite buttonComposite) {
         String text = org.talend.dataprofiler.core.PluginConstant.SPACE_STRING
                 + DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButton") //$NON-NLS-1$
                 + org.talend.dataprofiler.core.PluginConstant.SPACE_STRING;
         Button runBtn = toolkit.createButton(buttonComposite, text, SWT.NONE);
         runBtn.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButtonTooltip")); //$NON-NLS-1$
         runBtn.setImage(ImageLib.getImage(ImageLib.RUN_IMAGE));
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(runBtn);
+        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(runBtn);
         runBtn.addMouseListener(new MouseAdapter() {
 
             /*
@@ -1286,7 +1300,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * open the column selection dialog.
      */
     public void openColumnsSelectionDialog() {
-        reloadDataproviderAndFillConnCombo();
+        if (connCombo != null) {
+            reloadDataproviderAndFillConnCombo();
+        }
         RepositoryNode connNode = getConnComboSelectNode();
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
         for (ModelElementIndicator modelElementIndicator : currentModelElementIndicators) {
@@ -1422,7 +1438,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                     public void run() {
                         // for the analysis didn't have the preview section, no need to do refresh. like the overview
                         // analysis
-                        if (rowLoadedText == null || sampleTable == null) {
+                        if (rowLoadedText == null) {
                             return;
                         }
 
@@ -1512,5 +1528,19 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
 
         execCombo.setEnabled(enabled);
+    }
+
+    /**
+     * 
+     * Get the limit of preivew table
+     * 
+     * @return
+     */
+    public int getPreviewLimit() {
+        return Integer.parseInt(rowLoadedText.getText());
+    }
+
+    public ColumnAnalysisDataSamTable getSampleTable() {
+        return this.sampleTable;
     }
 }

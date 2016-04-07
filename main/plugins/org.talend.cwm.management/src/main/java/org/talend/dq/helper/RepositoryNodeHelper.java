@@ -162,6 +162,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -3937,5 +3938,15 @@ public final class RepositoryNodeHelper {
             return list.toArray(new IRepositoryNode[list.size()]);
         } // ~
         return null;
+    }
+
+    public static ColumnSet getColumnOwner(RepositoryNode node) {
+        MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
+        TdColumn column = ((TdColumn) columnObject.getTdColumn());
+
+        if (column != null && column.eIsProxy()) {
+            column = (TdColumn) EObjectHelper.resolveObject(column);
+        }
+        return ColumnHelper.getColumnOwnerAsColumnSet(column);
     }
 }

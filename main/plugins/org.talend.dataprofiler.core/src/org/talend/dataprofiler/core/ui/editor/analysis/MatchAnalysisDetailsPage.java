@@ -30,7 +30,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -44,7 +43,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -150,27 +148,17 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private boolean isMatchingKeyButtonPushed = Boolean.FALSE;
 
-    private SashForm sForm;
-
     private IRepositoryNode[] selectedNodes;
 
     private boolean isDelimitedFile = false;
 
     private Composite dataSampleparentComposite;
 
-    private Composite dataTableComp;
-
-    private Text rowLoadedText = null;
-
-    private CCombo sampleDataShowWayCombo;
-
     private Label analyzeDataLabel;
 
     private String analyzeDataDefaultInfo;
 
     private EventReceiver refreshDataProiverLabel = null;
-
-    private Label warningLabel = null;
 
     private boolean isDataAvailable = true;
 
@@ -861,9 +849,14 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 refreshTableDataReceiver);
     }
 
-    /**
-     * open the column selection dialog.
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#openColumnsSelectionDialog(orgomg
+     * .cwm.foundation.softwaredeployment.DataManager)
      */
+    @Override
     public void openColumnsSelectionDialog(DataManager dataManager) {
         MetadataAndColumnSelectionDialog dialog = null;
         List<IRepositoryNode> oldSelectedColumns = findAllSelectedRepositoryNode();
@@ -1085,32 +1078,32 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         this.setDirty(Boolean.TRUE);
     }
 
-    /**
-     * Create warning label
-     * 
-     * @param dataTableComp2
-     */
-    private void createWarningLabel() {
+    private void redrawWarningLabel() {
+        if (warningImage != null && !warningImage.isDisposed()) {
+            warningImage.dispose();
+        }
+        if (warningLabel != null && !warningLabel.isDisposed()) {
+            warningLabel.dispose();
+        }
         String message = PluginConstant.EMPTY_STRING;
         boolean isVisible = false;
         if (!isDataAvailable) {
             message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noDataAvailableWarning"); //$NON-NLS-1$
             isVisible = true;
         }
-        warningLabel = toolkit.createLabel(dataTableComp, message, SWT.BORDER | SWT.WRAP);
+
+        warningImage = toolkit.createLabel(dataTableComp, ""); //$NON-NLS-1$
+        warningImage.setImage(ImageLib.getImage(ImageLib.WARNING_PNG));
+        warningImage.setVisible(isVisible);
+
+        warningLabel = toolkit.createLabel(dataTableComp, message);
         warningLabel.setVisible(isVisible);
-
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!warningLabel.isVisible())
-                .applyTo(warningLabel);
         warningLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-    }
 
-    private void redrawWarningLabel() {
-        if (warningLabel != null && !warningLabel.isDisposed()) {
-            warningLabel.dispose();
-        }
-        createWarningLabel();
-        dataTableComp.layout(new Control[] { warningLabel });
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningImage);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningLabel);
+
+        dataTableComp.layout(new Control[] { warningImage, warningLabel });
     }
 
     /**

@@ -83,7 +83,6 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
-import org.talend.dataquality.record.linkage.ui.composite.table.ColumnAnalysisDataSamTable;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -190,7 +189,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
         setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
         metadataSection = creatMetadataSection(form, topComp);
 
-        createDataPreviewSection(form, topComp, true);
+        createDataPreviewSection(form, topComp, true, true);
         createAnalysisColumnsSection(form, topComp);
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
@@ -686,10 +685,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
         return analysisHandler;
     }
 
-    public ModelElementIndicator[] getCurrentModelElementIndicators() {
-        return this.currentModelElementIndicators;
-    }
-
     public ExpandableComposite[] getPreviewChartCompsites() {
         if (previewChartList != null && !previewChartList.isEmpty()) {
             // ADD msjian TDQ-6213 2012-12-18: filter the disposed composite
@@ -1051,20 +1046,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
             }
 
         });
-    }
-
-    /**
-     * 
-     * Get the limit of preivew table
-     * 
-     * @return
-     */
-    public int getPreviewLimit() {
-        return Integer.parseInt(rowLoadedText.getText());
-    }
-
-    public ColumnAnalysisDataSamTable getSampleTable() {
-        return this.sampleTable;
     }
 
 }

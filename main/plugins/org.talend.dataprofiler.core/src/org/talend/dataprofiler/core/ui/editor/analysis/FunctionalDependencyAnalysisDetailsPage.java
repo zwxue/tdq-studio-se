@@ -29,14 +29,13 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -116,35 +115,34 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
         List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
-        ModelElementIndicator currentIndicator = null;
-        for (ModelElement element : analyzedColumns) {
-            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
 
-            // MOD qiongli 2011-1-10,16796:delimitefile
-            MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
-            if (tdColumn == null && mdColumn == null) {
-                continue;
-            }
+        if (analyzedColumns != null && analyzedColumns.size() > 0) {
+            ModelElement element = analyzedColumns.get(0);
             // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
             RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(element);
             if (repNode == null) {
                 repNode = RepositoryNodeHelper.createRepositoryNode(element);
             }
-            // MOD mzhao feature 15750, The column is recompute from the file, here create a new repository view object.
-            if (tdColumn == null && mdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(repNode);
-            } else if (tdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(repNode);
-            }
+            ColumnSet columnOwner = RepositoryNodeHelper.getColumnOwner(repNode);
+            List<TdColumn> columns = ColumnSetHelper.getColumns(columnOwner);
 
-            DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
-            MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
-            Collection<Indicator> indicatorList = analysisHandler.getIndicators(element);
-            if (currentIndicator != null) {
-                currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
-                meIndicatorList.add(currentIndicator);
+            for (TdColumn column : columns) {
+                RepositoryNode repNode1 = RepositoryNodeHelper.recursiveFind(column);
+                if (repNode1 == null) {
+                    repNode1 = RepositoryNodeHelper.createRepositoryNode(column);
+                }
+                ModelElementIndicator currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(repNode1);
+
+                DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(column));
+                MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, column);
+                Collection<Indicator> indicatorList = analysisHandler.getIndicators(column);
+                if (currentIndicator != null) {
+                    currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
+                    meIndicatorList.add(currentIndicator);
+                }
             }
         }
+
         currentModelElementIndicators = meIndicatorList.toArray(new ModelElementIndicator[meIndicatorList.size()]);
     }
 
@@ -155,13 +153,15 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
         super.createFormContent(managedForm);
 
-        createDataPreviewSection(form, topComp, false);
+        createDataPreviewSection(form, topComp, false, false);
 
         anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer(this, topComp, getColumnLeftSet(), getColumnRightSet(),
                 DefaultMessagesImpl.getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$
                         .getString("FunctionalDependencyMasterDetailsPage.Description"), false, true); //$NON-NLS-1$
 
         anaColumnCompareViewer.addPropertyChangeListener(this);
+        anaColumnCompareViewer.addObserver(sampleTable);
+        sampleTable.addObserver(anaColumnCompareViewer);
 
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
