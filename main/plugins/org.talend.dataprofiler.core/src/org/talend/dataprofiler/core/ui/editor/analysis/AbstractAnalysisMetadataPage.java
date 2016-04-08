@@ -158,6 +158,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     // Added 20140411 TDQ-8360 yyin
     private EventReceiver refreshDataProvider = null;
 
+    // Added datapreview section part TDQ-11606 msjian
     protected Section dataPreviewSection = null;
 
     protected Composite dataTableComp = null;
@@ -185,6 +186,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     public ModelElementIndicator[] getCurrentModelElementIndicators() {
         return this.currentModelElementIndicators;
+    }
+
+    public void setCurrentModelElementIndicators(ModelElementIndicator[] modelElementIndicator) {
+        this.currentModelElementIndicators = modelElementIndicator;
     }
 
     public AbstractAnalysisMetadataPage(FormEditor editor, String id, String title) {
@@ -1033,14 +1038,22 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 .applyTo(dataTableComp);
 
         sampleTable = new ColumnAnalysisDataSamTable();
+
         // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
-        createNatTable(null);
-        setDataTableCompVisible();
+        ModelElement[] analyzedColumns = (ModelElement[]) getAnalysisHandler().getAnalyzedColumns().toArray();
+        sampleTable.createNatTable(null, dataTableComp, analyzedColumns);
+
+        dataTableComp.setVisible(isDataTableCompVisible());
         sampleTable.addPropertyChangeListener(this);
     }
 
-    private void setDataTableCompVisible() {
-        dataTableComp.setVisible(this.currentModelElementIndicators != null && this.currentModelElementIndicators.length > 0);
+    /**
+     * DOC msjian Comment method "isDataTableCompVisible".
+     * 
+     * @return
+     */
+    protected boolean isDataTableCompVisible() {
+        return this.currentModelElementIndicators != null && this.currentModelElementIndicators.length > 0;
     }
 
     /**
@@ -1048,7 +1061,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * 
      * @return
      */
-    private ModelElement[] getSelectedColumns() {
+    protected ModelElement[] getSelectedColumns() {
         ModelElement[] selectedColumns = new ModelElement[this.currentModelElementIndicators.length];
         int index = 0;
         for (ModelElementIndicator modelElemIndi : this.currentModelElementIndicators) {
@@ -1061,11 +1074,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     public abstract AnalysisHandler getAnalysisHandler();
-
-    private void createNatTable(List<Object[]> listOfData) {
-        ModelElement[] analyzedColumns = (ModelElement[]) getAnalysisHandler().getAnalyzedColumns().toArray();
-        sampleTable.createNatTable(listOfData, dataTableComp, analyzedColumns);
-    }
 
     public void refreshPreviewTable(boolean loadData) {
         // set sample table parameters
@@ -1107,8 +1115,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningImage);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningLabel);
 
-        setDataTableCompVisible();
         dataTableComp.layout(new Control[] { warningImage, warningLabel });
+        dataTableComp.setVisible(isDataTableCompVisible());
     }
 
     /**

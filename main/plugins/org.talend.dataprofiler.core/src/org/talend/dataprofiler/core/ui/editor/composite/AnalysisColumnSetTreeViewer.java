@@ -715,6 +715,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         if (item.getData(COLUMN_INDICATOR_KEY) != null) {
             deleteColumnItems(meIndicator.getModelElementRepositoryNode());
             deleteModelElementItems(meIndicator);
+            masterPage.setCurrentModelElementIndicators(modelElementIndicators);
         }
         if (null != unit) {
             meIndicator.removeIndicatorUnit(unit);
@@ -796,6 +797,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 columnIndexMap);
         masterPage.refreshTheTree(reorderModelElement);
         masterPage.setDirty(true);
+    }
+
+    @Override
+    protected ModelElementIndicator[] getAllTheElementIndicator() {
+        return masterPage.getCurrentModelElementIndicators();
     }
 
 }

@@ -665,8 +665,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
             this.analysisItem.getAnalysis().getContext().setConnection(oldConn);
         }
 
-        if (this.getSampleTable().getPreviewData() != null) {
-            this.getSampleTable().getPreviewData().clear();
+        if (this.getSampleTable().getExistPreviewData() != null) {
+            this.getSampleTable().getExistPreviewData().clear();
         }
     }
 

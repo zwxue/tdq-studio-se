@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -92,14 +93,6 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     // MOD mzhao 2009-06-17 feature 5887
     private SelectionListener selectionListener = null;
 
-    public SelectionListener getSelectionListener() {
-        return this.selectionListener;
-    }
-
-    public void setSelectionListener(SelectionListener selectionListener) {
-        this.selectionListener = selectionListener;
-    }
-
     // ADD mzhao 2009-02-03 Tableviewer creation stack that remember left or
     // right position.
     private List<TableViewer> tableViewerPosStack = null;
@@ -125,6 +118,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     private boolean allowColumnDupcation = false;
 
     private Button columnReverseButtion;
+
+    private ColumnSet previewDataColumnOwner = null;
+
+    private List<TDQObserver<ModelElement[]>> Observers = null;
 
     /**
      * AnalysisColumnCompareTreeViewer constructor used for FunctionalDependencyAnalysisDetailsPage.
@@ -156,6 +153,11 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
         columnListA.addAll(columnSetA);
         columnListB.addAll(columnSetB);
+
+        if (columnListA != null && columnListA.size() > 0) {
+            previewDataColumnOwner = RepositoryNodeHelper.getColumnOwner(columnListA.get(0));
+        }
+
         createAnalyzedColumnSetsSection(mainTitle, description);
     }
 
@@ -303,16 +305,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
         leftComp.setLayout(new GridLayout());
         String leftSectionTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.leftColumns"); //$NON-NLS-1$
         leftTableViewer = this.createSectionPart(leftComp, columnListA, leftSectionTitle, leftSelectButtonText,
-                leftSelectButtonTooltip);
-        // leftTableViewer.addObserver(masterPage.getSampleTable());
-        // masterPage.getSampleTable().addObserver(leftTableViewer);
+                leftSelectButtonTooltip, true);
 
         Composite rightComp = toolkit.createComposite(sashForm);
         rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         rightComp.setLayout(new GridLayout());
         String rightSectionTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.rightColumns"); //$NON-NLS-1$
         rightTableViewer = this.createSectionPart(rightComp, columnListB, rightSectionTitle, rightSelectButtonText,
-                rightSelectButtonTooltip);
+                rightSelectButtonTooltip, false);
         // MOD mzhao 2009-05-05 bug:6587.
         updateBindConnection(masterPage, tableViewerPosStack);
         columnsComparisonSection.setClient(sectionClient);
@@ -327,7 +327,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     }
 
     private TableViewer createSectionPart(Composite parentComp, final List<RepositoryNode> columnList, String sectionTitle,
-            String buttonText, String buttonTooltipText) {
+            String buttonText, String buttonTooltipText, final boolean isLeftPart) {
         Section columnSetElementSection = masterPage.createSection(form, parentComp, sectionTitle, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
         sectionComp.setLayout(new GridLayout());
@@ -386,9 +386,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
                 columnsElementViewer.setInput(columnList);
                 enabledButtons(buttons, false);
                 masterPage.setDirty(true);
-                // MOD mzhao 2009-05-05 bug:6587.
-                // MOD mzhao feature 5887 2009-06-17
-                // updateBindConnection(masterPage);
+                computeRefreshDataPreviewPart(isLeftPart, columnList);
             }
 
         });
@@ -398,7 +396,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(columnList, columnsElementViewer, false);
-
+                computeRefreshDataPreviewPart(isLeftPart, columnList);
             }
 
         });
@@ -407,6 +405,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(columnList, columnsElementViewer, true);
+                computeRefreshDataPreviewPart(isLeftPart, columnList);
 
             }
 
@@ -418,6 +417,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
                 // MOD xqliu 2009-01-17, bug 5940: achieve the function of sort
                 // button
                 sortElement(columnList, columnsElementViewer);
+                computeRefreshDataPreviewPart(isLeftPart, columnList);
             }
 
         });
@@ -428,7 +428,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
             @Override
             public void mouseDown(MouseEvent e) {
-                openColumnsSelectionDialog(columnsElementViewer, columnsOfSectionPart);
+                openColumnsSelectionDialog(columnsElementViewer, columnsOfSectionPart, isLeftPart);
                 enabledButtons(buttons, false);
             }
         });
@@ -442,7 +442,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * MOD mzhao 2009-02-03,remove the first parameter, extract it to class property filed for the convenience of
      * invoking this method from cheat sheets.
      */
-    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<RepositoryNode> columnsOfSectionPart) {
+    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<RepositoryNode> columnsOfSectionPart,
+            boolean isLeftPart) {
         RepositoryNode connNode = masterPage.getConnComboSelectNode();
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(masterPage, null,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, connNode,//$NON-NLS-1$
@@ -459,13 +460,32 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
             columnsOfSectionPart.clear();
             columnsOfSectionPart.addAll(columnSet);
             if (columnSet.size() != 0 && columnSet.get(0).getObject() instanceof MetadataColumnRepositoryObject) {
-                RepositoryNode node = columnSet.get(0);
-                String tableName = RepositoryNodeHelper.getColumnOwner(node).getName();
+                ColumnSet columnOwner = computeRefreshDataPreviewPart(isLeftPart, columnSet);
+                String tableName = columnOwner.getName();
                 columnsElementViewer.getTable().getColumn(0)
                         .setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
             }
             updateBindConnection(masterPage, tableViewerPosStack);
         }
+    }
+
+    /**
+     * DOC msjian Comment method "computeRefreshDataPreviewPart".
+     * 
+     * @param isLeftPart
+     * @param columnSet
+     * @return
+     */
+    protected ColumnSet computeRefreshDataPreviewPart(boolean isLeftPart, List<RepositoryNode> columnSet) {
+        RepositoryNode node = columnSet.get(0);
+        ColumnSet columnOwner = RepositoryNodeHelper.getColumnOwner(node);
+        if (isLeftPart) {
+            if ((previewDataColumnOwner == null && columnOwner != null) || (!previewDataColumnOwner.equals(columnOwner))) {
+                previewDataColumnOwner = columnOwner;
+                notifyObservers();
+            }
+        }
+        return columnOwner;
     }
 
     /**
@@ -738,7 +758,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetASelectionDialog() {
-        openColumnsSelectionDialog(tableViewerPosStack.get(0), columnListA);
+        openColumnsSelectionDialog(tableViewerPosStack.get(0), columnListA, true);
     }
 
     /**
@@ -746,7 +766,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetBSelectionDialog() {
-        openColumnsSelectionDialog(tableViewerPosStack.get(1), columnListB);
+        openColumnsSelectionDialog(tableViewerPosStack.get(1), columnListB, false);
     }
 
     @Override
@@ -855,14 +875,12 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
-     */
-    public void update(Map<String, Integer> observerable) {
-        // TODO Auto-generated method stub
+    public SelectionListener getSelectionListener() {
+        return this.selectionListener;
+    }
 
+    public void setSelectionListener(SelectionListener selectionListener) {
+        this.selectionListener = selectionListener;
     }
 
     /*
@@ -870,11 +888,11 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * 
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
-     * .TDQObserver)
+     * .TalendObserver)
      */
     public boolean addObserver(TDQObserver<ModelElement[]> observer) {
-        // TODO Auto-generated method stub
-        return false;
+        initObserverable();
+        return Observers.add(observer);
     }
 
     /*
@@ -882,11 +900,13 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * 
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
-     * .TDQObserver)
+     * .TalendObserver)
      */
     public boolean removeObserver(TDQObserver<ModelElement[]> observer) {
-        // TODO Auto-generated method stub
-        return false;
+        if (Observers == null) {
+            return false;
+        }
+        return Observers.remove(observer);
     }
 
     /*
@@ -895,8 +915,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
      */
     public void clearObserver() {
-        // TODO Auto-generated method stub
-
+        if (Observers == null) {
+            return;
+        }
+        Observers.clear();
     }
 
     /*
@@ -905,7 +927,48 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
      */
     public void notifyObservers() {
-        // TODO Auto-generated method stub
+        if (Observers == null) {
+            return;
+        }
+        for (TDQObserver<ModelElement[]> observer : Observers) {
+            List<TdColumn> columns = ColumnSetHelper.getColumns(previewDataColumnOwner);
+            ModelElement[] modelElements = columns.toArray(new TdColumn[columns.size()]);
+            observer.update(modelElements);
+        }
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#initObserverable()
+     */
+    private void initObserverable() {
+        if (Observers == null) {
+            Observers = new ArrayList<TDQObserver<ModelElement[]>>();
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
+     */
+    public void update(Map<String, Integer> columnIndexMap) {
+        // do nothing until now
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(int)
+     */
+    public void update(int EventType) {
+        // do nothing until now
+    }
+
+    public ColumnSet getPreviewDataColumnOwner() {
+        return this.previewDataColumnOwner;
     }
 }

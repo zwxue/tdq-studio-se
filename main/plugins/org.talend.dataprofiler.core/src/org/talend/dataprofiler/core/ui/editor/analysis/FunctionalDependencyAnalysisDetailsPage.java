@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -38,16 +37,12 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.AnalysisHelper;
-import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
@@ -105,45 +100,9 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        recomputeIndicators();
-    }
-
-    public void recomputeIndicators() {
         analysisHandler = new ModelElementAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = analysisHandler.getStringDataFilterwithContext();
-
-        EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
-        List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
-
-        if (analyzedColumns != null && analyzedColumns.size() > 0) {
-            ModelElement element = analyzedColumns.get(0);
-            // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
-            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(element);
-            if (repNode == null) {
-                repNode = RepositoryNodeHelper.createRepositoryNode(element);
-            }
-            ColumnSet columnOwner = RepositoryNodeHelper.getColumnOwner(repNode);
-            List<TdColumn> columns = ColumnSetHelper.getColumns(columnOwner);
-
-            for (TdColumn column : columns) {
-                RepositoryNode repNode1 = RepositoryNodeHelper.recursiveFind(column);
-                if (repNode1 == null) {
-                    repNode1 = RepositoryNodeHelper.createRepositoryNode(column);
-                }
-                ModelElementIndicator currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(repNode1);
-
-                DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(column));
-                MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, column);
-                Collection<Indicator> indicatorList = analysisHandler.getIndicators(column);
-                if (currentIndicator != null) {
-                    currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
-                    meIndicatorList.add(currentIndicator);
-                }
-            }
-        }
-
-        currentModelElementIndicators = meIndicatorList.toArray(new ModelElementIndicator[meIndicatorList.size()]);
     }
 
     @Override
@@ -160,8 +119,8 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
                         .getString("FunctionalDependencyMasterDetailsPage.Description"), false, true); //$NON-NLS-1$
 
         anaColumnCompareViewer.addPropertyChangeListener(this);
+        // the sampletable only observer the viewer
         anaColumnCompareViewer.addObserver(sampleTable);
-        sampleTable.addObserver(anaColumnCompareViewer);
 
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
@@ -437,4 +396,29 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         return RepositoryNodeHelper.getConnectionRepositoryNodes(false, false);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getSelectedColumns()
+     */
+    @Override
+    protected ModelElement[] getSelectedColumns() {
+        ColumnSet previewDataColumnOwner = anaColumnCompareViewer.getPreviewDataColumnOwner();
+        if (previewDataColumnOwner == null) {
+            return null;
+        }
+        List<TdColumn> columns = ColumnSetHelper.getColumns(previewDataColumnOwner);
+        ModelElement[] modelElements = columns.toArray(new TdColumn[columns.size()]);
+        return modelElements;
+    }
+
+    @Override
+    protected boolean isDataTableCompVisible() {
+        if (anaColumnCompareViewer == null) {
+            EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
+            return analyzedColumns != null && analyzedColumns.size() > 0;
+        } else {
+            return anaColumnCompareViewer.getPreviewDataColumnOwner() != null;
+        }
+    }
 }

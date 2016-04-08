@@ -173,7 +173,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     Map<String, Integer> ColumnIndexMap = null;
 
-    private List<Object[]> previewData;
+    private List<Object[]> existPreviewData;
 
     public DataSampleTable() {
     }
@@ -190,8 +190,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         initTableProperty(columns);
 
         // initial the data if it is empty
-        previewData = listOfData == null ? new ArrayList<Object[]>() : listOfData;
-        List<Object[]> results = previewData;
+        existPreviewData = listOfData == null ? new ArrayList<Object[]>() : listOfData;
+        List<Object[]> results = existPreviewData;
         results = handleEmptyRow(columns, results);
         TControl handleGID = handleGID(parentContainer, results);
         if (handleGID != null) {
@@ -705,8 +705,8 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         return new ListObjectDataProvider(data, columnPropertyAccessor);
     }
 
-    public List<Object[]> getPreviewData() {
-        return this.previewData;
+    public List<Object[]> getExistPreviewData() {
+        return this.existPreviewData;
     }
 
     private class ForegroundTextPainter extends TextPainter {
@@ -1043,18 +1043,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             tablePanel.dispose();
         }
         needLoadData = withData;
-        createNatTable(columns, withData);
-        drawCanvas.layout();
-    }
 
-    /**
-     * DOC talend Comment method "createNatTable".
-     * 
-     * @param listOfData
-     * @param dataTableComp
-     * @throws SQLException
-     */
-    private void createNatTable(ModelElement[] columns, boolean withData) {
         List<Object[]> listOfData = null;
         try {
             listOfData = getPreviewData(columns, withData);
@@ -1064,6 +1053,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             needLoadData = false;
         }
         createNatTable(listOfData, drawCanvas, columns);
+
+        drawCanvas.setVisible(columns != null && columns.length > 0);
+        drawCanvas.layout();
     }
 
     /**
@@ -1097,13 +1089,12 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
      * @param dataTableComp
      */
     public void createNatTable(List<Object[]> listOfData, Composite dataTableComp, ModelElement[] columns) {
-        checkSameTableConstraint(columns);
+        isSameTable = ColumnHelper.checkSameTable(columns);
+
         drawCanvas = dataTableComp;
         tablePanel = new Composite(drawCanvas, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(tablePanel);
         tablePanel.setLayout(new GridLayout(1, Boolean.FALSE));
-        // tablePanel.setExpandHorizontal(true);
-        // tablePanel.setExpandVertical(true);
 
         GridData layoutDataFillBoth = new GridData(GridData.FILL_BOTH);
         Composite subPanel = new Composite(tablePanel, SWT.NONE);
@@ -1115,17 +1106,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         // when refresh the data, the dataSampleSection's width is not 0
         initTablePanelLayoutPanel(drawCanvas, layoutDataFillBoth, tControl);
 
-        // tablePanel.setContent(subPanel);
         tablePanel.layout();
-    }
-
-    /**
-     * DOC talend Comment method "checkSameTableConstraint".
-     * 
-     * @param columns
-     */
-    private void checkSameTableConstraint(ModelElement[] columns) {
-        isSameTable = ColumnHelper.checkSameTable(columns);
     }
 
     /**
@@ -1228,7 +1209,6 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             return;
         }
         Observers.clear();
-
     }
 
     /*
@@ -1244,14 +1224,12 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         for (TDQObserver<Map<String, Integer>> observer : Observers) {
             observer.update(ColumnIndexMap);
         }
-
     }
 
     private void initObserverable() {
         if (Observers == null) {
             Observers = new ArrayList<TDQObserver<Map<String, Integer>>>();
         }
-
     }
 
     /**

@@ -660,7 +660,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * clicked then the size of return array will be zero. If have a Where Clause is error will return null
      */
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
-        List<Object[]> previewData = masterPage.getSampleTable().getPreviewData();
+        List<Object[]> previewData = masterPage.getSampleTable().getExistPreviewData();
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
                 shell,
                 DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators(), previewData); //$NON-NLS-1$
