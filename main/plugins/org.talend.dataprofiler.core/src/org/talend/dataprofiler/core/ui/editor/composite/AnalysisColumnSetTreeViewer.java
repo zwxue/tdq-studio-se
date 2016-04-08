@@ -505,6 +505,15 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         setInput(oriColumns.toArray());
         // MOD qiongli 2010-6-4,bug 0012766,after drag and drop a column from left view,update the connection state
         updateBindConnection(masterPage, tree);
+
+        // ADD msjian TDQ-11606: refresh the datapreview part after add a new element
+        ModelElementIndicator[] newsArray = new ModelElementIndicator[getAllTheElementIndicator().length + elements.length];
+        System.arraycopy(getAllTheElementIndicator(), 0, newsArray, 0, getAllTheElementIndicator().length);
+        for (int i = 0; i < elements.length; i++) {
+            newsArray[getAllTheElementIndicator().length + i] = elements[i];
+        }
+        masterPage.refreshPreviewTable(newsArray, true);
+        // ADD msjian TDQ-11606~
     }
 
     /**

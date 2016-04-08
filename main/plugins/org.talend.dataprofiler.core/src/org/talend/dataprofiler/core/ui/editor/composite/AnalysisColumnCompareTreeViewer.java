@@ -105,9 +105,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     private Button checkComputeButton;
 
-    private TableViewer rightTableViewer = null;
-
     private TableViewer leftTableViewer = null;
+
+    private TableViewer rightTableViewer = null;
 
     private Analysis analysis = null;
 
@@ -119,6 +119,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     private Button columnReverseButtion;
 
+    /**
+     * ADD msjian TDQ-11606: the preview data table, we will show all the columns of it. this table is the
+     * leftTableViewer's first column's owner.
+     */
     private ColumnSet previewDataColumnOwner = null;
 
     private List<TDQObserver<ModelElement[]>> Observers = null;
@@ -347,7 +351,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
         // decorate.toDecorateDragAndDrop(columnsElementViewer);
         ComparisonTableViewerDNDDecorate dndDecorate = new ComparisonTableViewerDNDDecorate(this, masterPage,
                 tableViewerPosStack, allowColumnDupcation);
-        dndDecorate.installDND(columnsElementViewer, true, ComparisonTableViewerDNDDecorate.COLUMN_VALIDATETYPE);
+        dndDecorate.installDND(columnsElementViewer, true, ComparisonTableViewerDNDDecorate.COLUMN_VALIDATETYPE, isLeftPart);
 
         Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);
         buttonsComp.setLayout(new GridLayout(4, true));
@@ -386,7 +390,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
                 columnsElementViewer.setInput(columnList);
                 enabledButtons(buttons, false);
                 masterPage.setDirty(true);
-                computeRefreshDataPreviewPart(isLeftPart, columnList);
+                computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
             }
 
         });
@@ -396,7 +400,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(columnList, columnsElementViewer, false);
-                computeRefreshDataPreviewPart(isLeftPart, columnList);
+                computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
             }
 
         });
@@ -405,7 +409,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(columnList, columnsElementViewer, true);
-                computeRefreshDataPreviewPart(isLeftPart, columnList);
+                computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
 
             }
 
@@ -417,7 +421,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
                 // MOD xqliu 2009-01-17, bug 5940: achieve the function of sort
                 // button
                 sortElement(columnList, columnsElementViewer);
-                computeRefreshDataPreviewPart(isLeftPart, columnList);
+                computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
             }
 
         });
@@ -459,12 +463,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
             columnsElementViewer.setInput(columnSet);
             columnsOfSectionPart.clear();
             columnsOfSectionPart.addAll(columnSet);
-            if (columnSet.size() != 0 && columnSet.get(0).getObject() instanceof MetadataColumnRepositoryObject) {
-                ColumnSet columnOwner = computeRefreshDataPreviewPart(isLeftPart, columnSet);
-                String tableName = columnOwner.getName();
-                columnsElementViewer.getTable().getColumn(0)
-                        .setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
-            }
+            computeRefreshDataPreviewPart(isLeftPart, columnSet, columnsElementViewer);
             updateBindConnection(masterPage, tableViewerPosStack);
         }
     }
@@ -476,7 +475,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * @param columnSet
      * @return
      */
-    protected ColumnSet computeRefreshDataPreviewPart(boolean isLeftPart, List<RepositoryNode> columnSet) {
+    protected ColumnSet computeRefreshDataPreviewPart(boolean isLeftPart, List<RepositoryNode> columnSet,
+            TableViewer columnsElementViewer) {
         ColumnSet columnOwner = null;
         if (columnSet != null && columnSet.size() > 0) {
             RepositoryNode node = columnSet.get(0);
@@ -490,6 +490,12 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
                 notifyObservers();
             }
         }
+
+        // set the columnsElementViewer's table name show
+        String tableName = columnOwner == null ? "" : columnOwner.getName();
+        columnsElementViewer.getTable().getColumn(0)
+                .setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
+
         return columnOwner;
     }
 
@@ -648,7 +654,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
                     columnsElementViewer.setInput(columnList);
                     enabledButtons(buttons, false);
                     masterPage.setDirty(true);
-                    computeRefreshDataPreviewPart(isLeftPart, columnList);
+                    computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
                 }
             }
         });
