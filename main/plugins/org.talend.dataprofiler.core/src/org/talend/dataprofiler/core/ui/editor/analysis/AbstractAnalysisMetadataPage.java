@@ -169,10 +169,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected CCombo sampleDataShowWayCombo;
 
-    protected Label warningImage = null;
-
-    protected Label warningLabel = null;
-
     protected static final int PREVIEW_MAX_ROW_COUNT = 999;
 
     protected static final int PREVIEW_SUGGEST_ROW_COUNT = 500;
@@ -1085,14 +1081,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         redrawWarningLabel();
     }
 
-    private void redrawWarningLabel() {
-        if (warningImage != null && !warningImage.isDisposed()) {
-            warningImage.dispose();
-        }
-        if (warningLabel != null && !warningLabel.isDisposed()) {
-            warningLabel.dispose();
-        }
-
+    public void redrawWarningLabel() {
         String message = PluginConstant.EMPTY_STRING;
         boolean isVisible;
         if (!sampleTable.isDataAvailable()) {
@@ -1104,19 +1093,31 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             isVisible = !sampleTable.isSameTable();
         }
 
-        warningImage = toolkit.createLabel(dataTableComp, ""); //$NON-NLS-1$
-        warningImage.setImage(ImageLib.getImage(ImageLib.WARNING_PNG));
-        warningImage.setVisible(isVisible);
+        createWarningComposite(message, isVisible);
+        dataTableComp.setVisible(isDataTableCompVisible());
+    }
 
-        warningLabel = toolkit.createLabel(dataTableComp, message);
-        warningLabel.setVisible(isVisible);
+    /**
+     * DOC msjian Comment method "createWarningComposite".
+     * @param message
+     * @param isVisible
+     */
+    protected void createWarningComposite(String message, boolean isVisible) {
+        Composite warningComposite = toolkit.createComposite(dataTableComp);
+        warningComposite.setLayout(new GridLayout(2, false));
+
+        Label warningImage = toolkit.createLabel(warningComposite, PluginConstant.EMPTY_STRING);
+        warningImage.setImage(ImageLib.getImage(ImageLib.WARNING_PNG));
+
+        Label warningLabel = toolkit.createLabel(warningComposite, message);
         warningLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
 
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningImage);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningLabel);
+        warningComposite.setVisible(isVisible);
 
-        dataTableComp.layout(new Control[] { warningImage, warningLabel });
-        dataTableComp.setVisible(isDataTableCompVisible());
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible)
+                .applyTo(warningComposite);
+
+        dataTableComp.layout(new Control[] { warningComposite });
     }
 
     /**

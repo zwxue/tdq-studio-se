@@ -1078,13 +1078,13 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         this.setDirty(Boolean.TRUE);
     }
 
-    private void redrawWarningLabel() {
-        if (warningImage != null && !warningImage.isDisposed()) {
-            warningImage.dispose();
-        }
-        if (warningLabel != null && !warningLabel.isDisposed()) {
-            warningLabel.dispose();
-        }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#redrawWarningLabel()
+     */
+    @Override
+    public void redrawWarningLabel() {
         String message = PluginConstant.EMPTY_STRING;
         boolean isVisible = false;
         if (!isDataAvailable) {
@@ -1092,18 +1092,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             isVisible = true;
         }
 
-        warningImage = toolkit.createLabel(dataTableComp, ""); //$NON-NLS-1$
-        warningImage.setImage(ImageLib.getImage(ImageLib.WARNING_PNG));
-        warningImage.setVisible(isVisible);
-
-        warningLabel = toolkit.createLabel(dataTableComp, message);
-        warningLabel.setVisible(isVisible);
-        warningLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningImage);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!isVisible).applyTo(warningLabel);
-
-        dataTableComp.layout(new Control[] { warningImage, warningLabel });
+        createWarningComposite(message, isVisible);
     }
 
     /**
@@ -1128,7 +1117,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
     private void createNatTable(List<Object[]> listOfData) {
-
         ScrolledComposite panel = new ScrolledComposite(dataTableComp, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(panel);
         panel.setLayout(new GridLayout(1, Boolean.FALSE));

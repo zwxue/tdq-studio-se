@@ -377,7 +377,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
         });
 
         // ADD 2009-01-07 mzhao for feature:0005664
-        createTableViewerMenu(columnsElementViewer, columnList, buttons);
+        createTableViewerMenu(columnsElementViewer, columnList, buttons, isLeftPart);
         delButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -477,10 +477,15 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
      * @return
      */
     protected ColumnSet computeRefreshDataPreviewPart(boolean isLeftPart, List<RepositoryNode> columnSet) {
-        RepositoryNode node = columnSet.get(0);
-        ColumnSet columnOwner = RepositoryNodeHelper.getColumnOwner(node);
+        ColumnSet columnOwner = null;
+        if (columnSet != null && columnSet.size() > 0) {
+            RepositoryNode node = columnSet.get(0);
+            columnOwner = RepositoryNodeHelper.getColumnOwner(node);
+        }
+
         if (isLeftPart) {
-            if ((previewDataColumnOwner == null && columnOwner != null) || (!previewDataColumnOwner.equals(columnOwner))) {
+            if ((previewDataColumnOwner == null && columnOwner != null)
+                    || (previewDataColumnOwner != null && columnOwner == null) || (!previewDataColumnOwner.equals(columnOwner))) {
                 previewDataColumnOwner = columnOwner;
                 notifyObservers();
             }
@@ -627,7 +632,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     }
 
     private void createTableViewerMenu(final TableViewer columnsElementViewer, final List<RepositoryNode> columnList,
-            final Button[] buttons) {
+            final Button[] buttons, final boolean isLeftPart) {
         Table table = columnsElementViewer.getTable();
 
         Menu menu = new Menu(table);
@@ -643,10 +648,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
                     columnsElementViewer.setInput(columnList);
                     enabledButtons(buttons, false);
                     masterPage.setDirty(true);
-                    // MOD mzhao 2009-05-05 bug:6587.
-                    // MOD mzhao 2009-06-17 remove the connection bind here feature
-                    // 5887
-                    // updateBindConnection();
+                    computeRefreshDataPreviewPart(isLeftPart, columnList);
                 }
             }
         });
@@ -931,9 +933,13 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
             return;
         }
         for (TDQObserver<ModelElement[]> observer : Observers) {
-            List<TdColumn> columns = ColumnSetHelper.getColumns(previewDataColumnOwner);
-            ModelElement[] modelElements = columns.toArray(new TdColumn[columns.size()]);
-            observer.update(modelElements);
+            if (previewDataColumnOwner != null) {
+                List<TdColumn> columns = ColumnSetHelper.getColumns(previewDataColumnOwner);
+                ModelElement[] modelElements = columns.toArray(new TdColumn[columns.size()]);
+                observer.update(modelElements);
+            } else {
+                observer.update(new ModelElement[0]);
+            }
         }
 
     }
