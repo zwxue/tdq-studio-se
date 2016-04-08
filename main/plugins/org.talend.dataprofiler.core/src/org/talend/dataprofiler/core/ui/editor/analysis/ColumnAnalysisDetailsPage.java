@@ -13,20 +13,15 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
@@ -42,15 +37,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -62,7 +53,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.ISubRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ModelElementHelper;
@@ -74,8 +64,6 @@ import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
-import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectWithConstraintDialog;
-import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
@@ -85,11 +73,9 @@ import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
-import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.analysis.SampleDataShowWay;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -97,31 +83,20 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.mapdb.MapDBManager;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
-import org.talend.dataquality.record.linkage.ui.composite.table.ColumnAnalysisDataSamTable;
-import org.talend.dq.analysis.ColumnAnalysisHandler;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
  */
-public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage implements PropertyChangeListener {
-
-    /**
-     * the temp value used to store the old connection value, when the user didn't save this page, use to revert
-     */
-    private DataManager oldConn = null;
+public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     private Composite tree;
 
@@ -129,35 +104,17 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
 
     AnalysisColumnTreeViewer treeViewer;
 
-    ColumnAnalysisHandler analysisHandler;
-
-    private ModelElementIndicator[] currentModelElementIndicators;
+    ModelElementAnalysisHandler analysisHandler;
 
     private static final int TREE_MAX_LENGTH = 400;
-
-    private static final int PREVIEW_MAX_ROW_COUNT = 999;
-
-    private static final int PREVIEW_SUGGEST_ROW_COUNT = 500;
 
     private ExpandableComposite[] previewChartCompsites;
 
     private Section analysisColumnSection = null;
 
-    private Section dataPreviewSection = null;
-
-    private Composite dataTableComp = null;
-
-    private ColumnAnalysisDataSamTable sampleTable = null;
-
     final private List<ExpandableComposite> previewChartList = new ArrayList<ExpandableComposite>();
 
     private UIPagination uiPagination;
-
-    private Text rowLoadedText = null;
-
-    private CCombo sampleDataShowWayCombo;
-
-    private Label warningLabel = null;
 
     private int lastTimePageNumber = 1;
 
@@ -175,7 +132,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     }
 
     public void recomputeIndicators() {
-        analysisHandler = new ColumnAnalysisHandler();
+        analysisHandler = new ModelElementAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
         // Handle JUDIs
         UDIHelper.updateJUDIsForAnalysis(analysisItem.getAnalysis());
@@ -226,12 +183,13 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         topComp = toolkit.createComposite(sForm);
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
+
         form.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnAna")); //$NON-NLS-1$
         setMetadataSectionTitle(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
         metadataSection = creatMetadataSection(form, topComp);
 
-        createDataPreviewSection(form, topComp);
+        createDataPreviewSection(form, topComp, true, true);
         createAnalysisColumnsSection(form, topComp);
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
@@ -250,34 +208,13 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         }
     }
 
-    /**
-     * DOC talend Comment method "createDataPreviewSection".
+    /*
+     * (non-Javadoc)
      * 
-     * @param form
-     * @param topComp
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#registerEvents()
      */
-    private void createDataPreviewSection(ScrolledForm form1, Composite anasisDataComp) {
-        dataPreviewSection = createSection(form1, anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview"), null); //$NON-NLS-1$
-        Composite dataPreviewTableCom = toolkit.createComposite(dataPreviewSection, SWT.NONE);
-        dataPreviewTableCom.setLayout(new GridLayout(1, true));
-        createConnBindWidget(dataPreviewTableCom);
-        Composite buttonComposite = toolkit.createComposite(dataPreviewTableCom, SWT.NONE);
-        buttonComposite.setLayout(new GridLayout(5, false));
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(buttonComposite);
-        createConnectionButton(buttonComposite);
-        createColumnSelectButton(buttonComposite);
-        createIndicatorSelectButton(buttonComposite);
-        createRefreshDataButtonComp(buttonComposite);
-        createRunButton(buttonComposite);
-        // create the data table
-        createDataTableComposite(dataPreviewTableCom);
-        dataPreviewSection.setClient(dataPreviewTableCom);
-        registerEvents();
-
-    }
-
-    private void registerEvents() {
+    @Override
+    protected void registerEvents() {
         // register: refresh the result page after running it from menu
         afterCreateConnectionReceiver = new EventReceiver() {
 
@@ -297,341 +234,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         EventManager.getInstance().register(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
                 afterCreateConnectionReceiver);
 
-    }
-
-    /**
-     * create "Refresh Button", and the row control input.
-     * 
-     * @param buttonComposite
-     */
-    private void createRefreshDataButtonComp(Composite parent) {
-        Composite dataQueryComp = toolkit.createComposite(parent, SWT.NONE);
-        GridLayout dataQueryCompLayout = new GridLayout(4, Boolean.FALSE);
-        dataQueryComp.setLayout(dataQueryCompLayout);
-
-        // create the input to control how many rows will be loaded.
-        Label rowLoadedLabel = toolkit.createLabel(dataQueryComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.ControlRowsLabel"), SWT.NONE); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedLabel);
-        rowLoadedText = toolkit.createText(dataQueryComp, null, SWT.BORDER);
-        rowLoadedText.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.ControlRowsLabelTooltip")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedText);
-        // fix the width of the text field
-        GridData textData = new GridData();
-        textData.widthHint = 100;
-        rowLoadedText.setLayoutData(textData);
-        int number = Integer.valueOf(analysisHandler.getDefaultLoadedRowCount()) > PREVIEW_MAX_ROW_COUNT ? PREVIEW_SUGGEST_ROW_COUNT
-                : Integer.valueOf(analysisHandler.getDefaultLoadedRowCount());
-        rowLoadedText.setText(String.valueOf(number));
-        rowLoadedText.setTextLimit(3);
-        rowLoadedText.addVerifyListener(new VerifyListener() {
-
-            public void verifyText(VerifyEvent e) {
-                String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
-                char[] charArray = inputValue.toCharArray();
-                for (char c : charArray) {
-                    if (!pattern.matcher(String.valueOf(c)).matches()) {
-                        e.doit = false;
-                    }
-                }
-            }
-        });
-
-        rowLoadedText.addModifyListener(new ModifyListener() {
-
-            public void modifyText(final ModifyEvent e) {
-                setDirty(true);
-            }
-        });
-
-        // ADD msjian TDQ-8428: add random way to show data
-        sampleDataShowWayCombo = new CCombo(dataQueryComp, SWT.BORDER);
-        sampleDataShowWayCombo.setEditable(false);
-        for (SampleDataShowWay value : SampleDataShowWay.VALUES) {
-            sampleDataShowWayCombo.add(value.getLiteral());
-        }
-
-        SampleDataShowWay sampleDataShowWay = analysisItem.getAnalysis().getParameters().getSampleDataShowWay();
-        sampleDataShowWayCombo.setText(sampleDataShowWay.getLiteral());
-        sampleDataShowWayCombo.addModifyListener(new ModifyListener() {
-
-            public void modifyText(final ModifyEvent e) {
-                setDirty(true);
-            }
-        });
-        // TDQ-8428~
-
-        Button refreshDataBtn = toolkit.createButton(dataQueryComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.NONE);//$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
-
-        refreshDataBtn.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseDown(MouseEvent e) {
-                refreshPreviewData();
-            }
-
-        });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refreshPreviewData()
-     */
-    @Override
-    public void refreshPreviewData() {
-        if (isValidateRowCount()) {
-            refreshPreviewTable(true);
-        } else {
-            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-            rowLoadedText.setFocus();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#setSampleDataShowWayStatus()
-     */
-    @Override
-    protected void setSampleDataShowWayStatus() {
-        if (sampleDataShowWayCombo != null) {
-            sampleDataShowWayCombo.setEnabled(true);
-
-            Object data = getConnComboSelectNode();
-            if (data != null) {
-                if (data instanceof DBConnectionRepNode) {
-                    DBConnectionRepNode dbConnRepNode = (DBConnectionRepNode) data;
-                    String databaseType = dbConnRepNode.getDatabaseConnection().getDatabaseType() == null ? "" : dbConnRepNode.getDatabaseConnection().getDatabaseType(); //$NON-NLS-1$
-                    if (databaseType.toLowerCase().contains("informix") || databaseType.toLowerCase().contains("sybase")) { //$NON-NLS-1$ //$NON-NLS-2$
-                        sampleDataShowWayCombo.select(0);
-                        sampleDataShowWayCombo.setEnabled(false);
-                    }
-
-                } else if (data instanceof DFConnectionRepNode) {
-                    sampleDataShowWayCombo.select(0);
-                    sampleDataShowWayCombo.setEnabled(false);
-                }
-            } else {
-                sampleDataShowWayCombo.select(0);
-                sampleDataShowWayCombo.setEnabled(false);
-            }
-        }
-    }
-
-    /**
-     * check if the row loaded value is valid or not
-     * 
-     * @return
-     */
-    private boolean isValidateRowCount() {
-        if (StringUtils.isEmpty(rowLoadedText.getText())) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * DOC talend Comment method "createIndicatorSelectButton".
-     * 
-     * @param buttonComposite
-     */
-    private void createIndicatorSelectButton(Composite buttonComposite) {
-        Button indcBtn = toolkit.createButton(buttonComposite,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectIndicatorBtn"), SWT.NONE); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(indcBtn);
-        indcBtn.addMouseListener(new MouseAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-             */
-            @Override
-            public void mouseDown(MouseEvent e) {
-                if (!isValidateRowCount()) {
-                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-                } else {
-                    if (currentModelElementIndicators == null || currentModelElementIndicators.length == 0) {
-                        MessageDialog.openWarning(null,
-                                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), //$NON-NLS-1$
-                                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotOpenSelectIndicatorDialog")); //$NON-NLS-1$
-                        return;
-                    }
-                    ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnAnalysisDetailsPage.this
-                            .getSite().getShell());
-                    if (result != null) {
-                        refreshCurrentTreeViewer(result);
-                        if (treeViewer.isGridPreviewColumnMoved()) {
-                            refreshPreviewTable(true);
-                        }
-                    }
-                }
-
-            }
-
-        });
-    }
-
-    /**
-     * 
-     * DOC qiongli Comment method "createRunButton".
-     * 
-     * @param buttonComposite
-     */
-    private void createRunButton(Composite buttonComposite) {
-        String text = PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButton") //$NON-NLS-1$
-                + PluginConstant.SPACE_STRING;
-        Button runBtn = toolkit.createButton(buttonComposite, text, SWT.NONE);
-        runBtn.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisDetailsPage.runButtonTooltip")); //$NON-NLS-1$
-        runBtn.setImage(ImageLib.getImage(ImageLib.RUN_IMAGE));
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(runBtn);
-        runBtn.addMouseListener(new MouseAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-             */
-            @Override
-            public void mouseDown(MouseEvent e) {
-                Action runAnalysisAction = ((AnalysisEditor) currentEditor).getRunAnalysisAction();
-                if (runAnalysisAction != null) {
-                    runAnalysisAction.run();
-                }
-            }
-        });
-    }
-
-    /**
-     * DOC talend Comment method "createColumnSelectButton".
-     * 
-     * @param buttonComposite
-     */
-    private void createColumnSelectButton(Composite buttonComposite) {
-        Button clmnBtn = toolkit.createButton(buttonComposite,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumnBtn"), //$NON-NLS-1$
-                SWT.NONE);
-        clmnBtn.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseDown(MouseEvent e) {
-                openColumnsSelectionDialog();
-
-            }
-        });
-    }
-
-    /**
-     * DOC talend Comment method "createConnectionButton".
-     * 
-     * @param dataPreviewTableCom
-     */
-    private void createConnectionButton(final Composite dataPreviewTableCom) {
-        Button createConnectionButton = toolkit.createButton(dataPreviewTableCom,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createConnectionBtn"), SWT.NONE); //$NON-NLS-1$
-        createConnectionButton.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseDown(MouseEvent e) {
-                ConnectionWizard connectionWizard = new ConnectionWizard(PlatformUI.getWorkbench(), dataPreviewSection);
-                connectionWizard.setForcePreviousAndNextButtons(true);
-                WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), connectionWizard);
-                dialog.setPageSize(500, 200);
-                dialog.open();
-
-            }
-        });
-    }
-
-    /**
-     * create DataTable Composite.
-     * 
-     * @param dataparent
-     */
-    private void createDataTableComposite(Composite dataparent) {
-        dataTableComp = toolkit.createComposite(dataparent, SWT.NONE);
-        dataTableComp.setLayout(new GridLayout(1, Boolean.TRUE));
-        GridDataFactory.fillDefaults().span(4, 1).align(SWT.FILL, SWT.CENTER).hint(SWT.DEFAULT, 250).grab(true, false)
-                .applyTo(dataTableComp);
-
-        sampleTable = new ColumnAnalysisDataSamTable();
-        // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
-        createNatTable(null);
-        setDataTableCompVisible();
-        sampleTable.addPropertyChangeListener(this);
-    }
-
-    private void setDataTableCompVisible() {
-        dataTableComp.setVisible(this.currentModelElementIndicators != null && this.currentModelElementIndicators.length > 0);
-    }
-
-    /**
-     * Create warning label
-     * 
-     * @param dataTableComp2
-     */
-    private void createWarningLabel() {
-        String message = PluginConstant.EMPTY_STRING;
-        boolean isVisible;
-        if (!sampleTable.isDataAvailable()) {
-            message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noDataAvailableWarning"); //$NON-NLS-1$
-            isVisible = true;
-        } else {
-            message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.ENTER_STRING); //$NON-NLS-1$
-            isVisible = !sampleTable.isSameTable();
-        }
-        warningLabel = toolkit.createLabel(dataTableComp, message, SWT.BORDER | SWT.WRAP);
-        warningLabel.setVisible(isVisible);
-
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!warningLabel.isVisible())
-                .applyTo(warningLabel);
-        warningLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-    }
-
-    private void redrawWarningLabel() {
-        if (warningLabel != null && !warningLabel.isDisposed()) {
-            warningLabel.dispose();
-        }
-        createWarningLabel();
-        setDataTableCompVisible();
-        dataTableComp.layout(new Control[] { warningLabel });
-    }
-
-    public void refreshPreviewTable(boolean loadData) {
-        // set sample table parameters
-        sampleTable.setLimitNumber(Integer.parseInt(rowLoadedText.getText()));
-        sampleTable.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
-        sampleTable.setDataFilter(dataFilterComp.getDataFilterString());
-
-        sampleTable.reDrawTable(getSelectedColumns(), loadData);
-        redrawWarningLabel();
-    }
-
-    /**
-     * DOC talend Comment method "getSelectedColumns".
-     * 
-     * @return
-     */
-    private ModelElement[] getSelectedColumns() {
-        ModelElement[] selectedColumns = new ModelElement[this.currentModelElementIndicators.length];
-        int index = 0;
-        for (ModelElementIndicator modelElemIndi : this.currentModelElementIndicators) {
-            IRepositoryViewObject currentObject = modelElemIndi.getModelElementRepositoryNode().getObject();
-            if (ISubRepositoryObject.class.isInstance(currentObject)) {
-                selectedColumns[index++] = ((ISubRepositoryObject) currentObject).getModelElement();
-            }
-        }
-        return selectedColumns;
-    }
-
-    private void createNatTable(List<Object[]> listOfData) {
-        sampleTable.createNatTable(listOfData, dataTableComp, analysisHandler.getSelectedColumns());
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form1, Composite anasisDataComp) {
@@ -774,18 +376,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     }
 
     /**
-     * dispose ChartComposite.
-     */
-    @Override
-    public void disposeChartComposite() {
-        if (chartComposite != null && !chartComposite.isDisposed()) {
-            for (Control control : chartComposite.getChildren()) {
-                control.dispose();
-            }
-        }
-    }
-
-    /**
      * DOC mzhao Comment method "packOtherColumns".
      */
     private void packOtherColumns() {
@@ -814,63 +404,13 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         }
     }
 
-    /**
-     * open the column selection dialog.
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#setTreeViewInput(java.lang.Object[])
      */
-    public void openColumnsSelectionDialog() {
-        reloadDataproviderAndFillConnCombo();
-        RepositoryNode connNode = getConnComboSelectNode();
-        ModelElementIndicator[] modelElementIndicators = this.getCurrentModelElementIndicators();
-        List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
-        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-            reposViewObjList.add(modelElementIndicator.getModelElementRepositoryNode());
-        }
-        ColumnsSelectionDialog dialog = new ColumnsSelectWithConstraintDialog(
-                this,
-                null,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), reposViewObjList, connNode, DefaultMessagesImpl //$NON-NLS-1$
-                        .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
-        if (dialog.open() == Window.OK) {
-            Object[] modelElements = dialog.getResult();
-            setTreeViewInput(modelElements);
-            // TDQ-11590: automatically refresh the data table after we select column with the "select columns" dialog.
-            refreshPreviewData();
-            // TDQ-11590~
-        }
-    }
-
-    /**
-     * open the column selection dialog.
-     */
-    public void openColumnsSelectionDialog(Connection conn) {
-        reloadDataproviderAndFillConnCombo();
-        List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
-        RepositoryNode connNode = getConnComboSelectNode();
-        int connIndex = getConnCombo().getSelectionIndex();
-        String connName = conn.getName();
-        for (int index = 0; index < getConnCombo().getItemCount(); index++) {
-            if (connName.equalsIgnoreCase(getConnCombo().getItem(index))) {
-                connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(index));
-                connIndex = index;
-                break;
-            }
-        }
-        ColumnsSelectionDialog dialog = new ColumnsSelectWithConstraintDialog(
-                this,
-                null,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), reposViewObjList, connNode, DefaultMessagesImpl //$NON-NLS-1$
-                        .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
-        if (dialog.open() == Window.OK) {
-            getConnCombo().select(connIndex);
-            // save the old first, need to use this to revert
-            oldConn = this.analysisItem.getAnalysis().getContext().getConnection();
-
-            this.analysisItem.getAnalysis().getContext().setConnection(conn);
-            Object[] modelElements = dialog.getResult();
-            setTreeViewInput(modelElements);
-        }
-    }
-
+    @Override
     public void setTreeViewInput(Object[] modelElements) {
         // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
         treeViewer.filterInputData(modelElements);
@@ -899,7 +439,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     public void refreshTheTree(ModelElementIndicator[] modelElements) {
         this.currentModelElementIndicators = modelElements;
         this.computePagination();
-
     }
 
     @Override
@@ -1126,8 +665,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
             this.analysisItem.getAnalysis().getContext().setConnection(oldConn);
         }
 
-        if (this.getSampleTable().getPreviewData() != null) {
-            this.getSampleTable().getPreviewData().clear();
+        if (this.getSampleTable().getExistPreviewData() != null) {
+            this.getSampleTable().getExistPreviewData().clear();
         }
     }
 
@@ -1144,10 +683,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     @Override
     public ModelElementAnalysisHandler getAnalysisHandler() {
         return analysisHandler;
-    }
-
-    public ModelElementIndicator[] getCurrentModelElementIndicators() {
-        return this.currentModelElementIndicators;
     }
 
     public ExpandableComposite[] getPreviewChartCompsites() {
@@ -1257,15 +792,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     }
 
     /**
-     * DOC zshen Comment method "getExecCombo".
-     * 
-     * @return the Combo for executeLanguage
-     */
-    public CCombo getExecCombo() {
-        return execCombo;
-    }
-
-    /**
      * DOC zshen Comment method "includeDatePatternFreqIndicator".
      * 
      * @return whether have a datePatternFreqIndicator in the "analyzed Columns"
@@ -1281,54 +807,12 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     }
 
     /**
-     * DOC xqliu Comment method "changeExecuteLanguageToSql".
-     * 
-     * @param enabled
-     */
-    public void changeExecuteLanguageToSql(boolean enabled) {
-        if (this.execCombo == null) {
-            return;
-        }
-
-        if (!(ExecutionLanguage.SQL.getLiteral().equals(this.execLang))) {
-            int i = 0;
-            for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
-                if (language.compareTo(ExecutionLanguage.SQL) == 0) {
-                    this.execCombo.select(i);
-                } else {
-                    i++;
-                }
-            }
-        }
-
-        execCombo.setEnabled(enabled);
-    }
-
-    /**
      * DOC qiongli Comment method "getDataFilterComp".
      * 
      * @return
      */
     public DataFilterComp getDataFilterComp() {
         return this.dataFilterComp;
-    }
-
-    /**
-     * DOC qiongli Comment method "setWhereClauseDisabled".
-     */
-    public void setWhereClauseDisabled() {
-        if (dataFilterComp != null) {
-            dataFilterComp.getDataFilterText().setEnabled(false);
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "setWhereClauseEnable".
-     */
-    public void setWhereClauseEnable() {
-        if (dataFilterComp != null) {
-            dataFilterComp.getDataFilterText().setEnabled(true);
-        }
     }
 
     @Override
@@ -1518,18 +1002,50 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
         });
     }
 
-    /**
+    /*
+     * (non-Javadoc)
      * 
-     * Get the limit of preivew table
-     * 
-     * @return
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#createIndicatorSelectButton(org.
+     * eclipse.swt.widgets.Composite)
      */
-    public int getPreviewLimit() {
-        return Integer.parseInt(rowLoadedText.getText());
-    }
+    @Override
+    protected void createIndicatorSelectButton(Composite buttonComposite) {
+        Button indcBtn = toolkit.createButton(buttonComposite,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectIndicatorBtn"), SWT.NONE); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(indcBtn);
+        indcBtn.addMouseListener(new MouseAdapter() {
 
-    public ColumnAnalysisDataSamTable getSampleTable() {
-        return this.sampleTable;
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+             */
+            @Override
+            public void mouseDown(MouseEvent e) {
+                if (!isValidateRowCount()) {
+                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+                } else {
+                    if (currentModelElementIndicators == null || currentModelElementIndicators.length == 0) {
+                        MessageDialog.openWarning(null,
+                                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), //$NON-NLS-1$
+                                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotOpenSelectIndicatorDialog")); //$NON-NLS-1$
+                        return;
+                    }
+                    ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnAnalysisDetailsPage.this
+                            .getSite().getShell());
+                    if (result != null) {
+                        refreshCurrentTreeViewer(result);
+                        if (treeViewer.isGridPreviewColumnMoved()) {
+                            refreshPreviewTable(true);
+                        }
+                    }
+                }
+
+            }
+
+        });
     }
 
 }

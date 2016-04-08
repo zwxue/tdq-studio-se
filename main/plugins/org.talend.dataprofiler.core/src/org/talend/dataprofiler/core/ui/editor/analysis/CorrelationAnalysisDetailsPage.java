@@ -79,6 +79,7 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
+import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -333,6 +334,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         analysisColSection.setClient(topComp);
     }
 
+    @Override
     public void openColumnsSelectionDialog() {
         List<RepositoryNode> columnList = treeViewer.getColumnSetMultiValueList();
         if (columnList == null) {
@@ -823,5 +825,15 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
     @Override
     protected List<IRepositoryNode> getConnectionsWithoutDeleted() {
         return RepositoryNodeHelper.getConnectionRepositoryNodes(false, false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getAnalysisHandler()
+     */
+    @Override
+    public AnalysisHandler getAnalysisHandler() {
+        return correlationAnalysisHandler;
     }
 }

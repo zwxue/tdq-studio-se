@@ -61,8 +61,8 @@ public class ComparisonTableViewerDNDDecorate {
 
     private AnalysisColumnCompareTreeViewer compareTreeViewer;
 
-    public ComparisonTableViewerDNDDecorate(AnalysisColumnCompareTreeViewer compareTreeViewer, AbstractAnalysisMetadataPage masterPage,
-            List<TableViewer> tableViewerPosStack, boolean allowDuplication) {
+    public ComparisonTableViewerDNDDecorate(AnalysisColumnCompareTreeViewer compareTreeViewer,
+            AbstractAnalysisMetadataPage masterPage, List<TableViewer> tableViewerPosStack, boolean allowDuplication) {
         final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
         transferTypes = new Transfer[] { transfer, TextTransfer.getInstance() };
         this.allowDuplication = allowDuplication;
@@ -82,7 +82,8 @@ public class ComparisonTableViewerDNDDecorate {
      * @see ComparisonTableViewerDNDDecorate#NON_VALIDATETYPE
      * @see ComparisonTableViewerDNDDecorate#COLUMN_VALIDATETYPE
      */
-    public void installDND(final TableViewer targetViewer, final boolean installDragListener, final int validateType) {
+    public void installDND(final TableViewer targetViewer, final boolean installDragListener, final int validateType,
+            final boolean isLeftPart) {
         int operations = DND.DROP_COPY | DND.DROP_MOVE;
         if (installDragListener) {
             installDragListener(targetViewer, operations);
@@ -91,6 +92,7 @@ public class ComparisonTableViewerDNDDecorate {
         dropTarget.setTransfer(transferTypes);
         DropTargetListener dndListener = new AbstractSelectionReceiver(targetViewer.getTable(), null) {
 
+            @Override
             @SuppressWarnings("unchecked")
             public void drop(DropTargetEvent event, LocalSelectionTransfer transfer) {
                 List inputElements = (List) targetViewer.getInput();
@@ -120,8 +122,11 @@ public class ComparisonTableViewerDNDDecorate {
                 // Update connection widget.
                 compareTreeViewer.updateBindConnection(masterPage, tableViewerPosStack);
                 compareTreeViewer.setDirty(true);
+                // TDQ-11606 msjian: when add a column, will update the datapreview part
+                compareTreeViewer.computeRefreshDataPreviewPart(isLeftPart, inputElements, targetViewer);
             }
 
+            @Override
             public boolean doDropValidation(DropTargetEvent event, LocalSelectionTransfer transfer) {
                 StructuredSelection selection = (StructuredSelection) transfer.getSelection();
 

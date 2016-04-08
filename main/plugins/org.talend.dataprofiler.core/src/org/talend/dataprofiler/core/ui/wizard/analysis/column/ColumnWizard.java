@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
@@ -151,6 +152,9 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                             ((ColumnAnalysisDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
                             ((ColumnAnalysisDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
                         }
+                    } else if (masterPage instanceof ColumnSetAnalysisDetailsPage) {
+                        ((ColumnSetAnalysisDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes
+                                .size()]));
                     } else {
                         masterPage.getTreeViewer().setInput(nodes.toArray(new RepositoryNode[nodes.size()]));
                     }

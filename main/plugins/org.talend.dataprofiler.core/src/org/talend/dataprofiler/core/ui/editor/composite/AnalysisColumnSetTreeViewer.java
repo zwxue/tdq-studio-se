@@ -184,6 +184,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelectedElements();
+                notifyObservers();
             }
         });
         final Button moveUpButton = new Button(buttonsComp, SWT.NULL);
@@ -194,6 +195,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(setTreeViewer, -1);
+                notifyObservers();
             }
 
         });
@@ -205,6 +207,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(setTreeViewer, 1);
+                notifyObservers();
             }
 
         });
@@ -455,6 +458,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                         removeItemBranch(treeItem);
                         enabledButtons(false);
                     }
+                    notifyObservers();
                 }
 
             });
@@ -501,6 +505,15 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         setInput(oriColumns.toArray());
         // MOD qiongli 2010-6-4,bug 0012766,after drag and drop a column from left view,update the connection state
         updateBindConnection(masterPage, tree);
+
+        // ADD msjian TDQ-11606: refresh the datapreview part after add a new element
+        ModelElementIndicator[] newsArray = new ModelElementIndicator[getAllTheElementIndicator().length + elements.length];
+        System.arraycopy(getAllTheElementIndicator(), 0, newsArray, 0, getAllTheElementIndicator().length);
+        for (int i = 0; i < elements.length; i++) {
+            newsArray[getAllTheElementIndicator().length + i] = elements[i];
+        }
+        masterPage.refreshPreviewTable(newsArray, true);
+        // ADD msjian TDQ-11606~
     }
 
     /**
@@ -710,6 +723,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         // MOD klliu check the item is column or pattern
         if (item.getData(COLUMN_INDICATOR_KEY) != null) {
             deleteColumnItems(meIndicator.getModelElementRepositoryNode());
+            deleteModelElementItems(meIndicator);
+            masterPage.setCurrentModelElementIndicators(modelElementIndicators);
         }
         if (null != unit) {
             meIndicator.removeIndicatorUnit(unit);
@@ -752,6 +767,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         @Override
         protected void removeSelectedElements2(Tree theTree) {
             removeSelectedElements(theTree);
+            notifyObservers();
         }
 
         @Override
@@ -778,4 +794,23 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             removeItemBranch(treeItem);
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
+     */
+    @Override
+    public void update(Map<String, Integer> columnIndexMap) {
+        ModelElementIndicator[] reorderModelElement = reorderModelElement(masterPage.getCurrentModelElementIndicators(),
+                columnIndexMap);
+        masterPage.refreshTheTree(reorderModelElement);
+        masterPage.setDirty(true);
+    }
+
+    @Override
+    protected ModelElementIndicator[] getAllTheElementIndicator() {
+        return masterPage.getCurrentModelElementIndicators();
+    }
+
 }

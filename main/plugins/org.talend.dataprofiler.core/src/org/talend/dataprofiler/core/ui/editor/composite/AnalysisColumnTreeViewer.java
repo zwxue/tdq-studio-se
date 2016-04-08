@@ -57,7 +57,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
@@ -75,8 +74,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog;
-import org.talend.dataprofiler.core.ui.grid.utils.Observerable;
-import org.talend.dataprofiler.core.ui.grid.utils.TDQObserver;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -96,7 +93,6 @@ import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -104,8 +100,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements Observerable<ModelElement[]>,
-        TDQObserver<Map<String, Integer>> {
+public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     protected static Logger log = Logger.getLogger(AnalysisColumnTreeViewer.class);
 
@@ -119,8 +114,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
     private ExecutionLanguage language;
 
     private Composite buttonsComp;
-
-    private List<TDQObserver<ModelElement[]>> Observers = null;
 
     private boolean isGridPreviewColumnMoved = false;
 
@@ -491,54 +484,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         }
     }
 
-    /**
-     * DOC Administrator Comment method "initializedConnection". for 6560
-     * 
-     * @param indicators
-     * 
-     */
-    private void initializedConnection(ModelElementIndicator[] indicators) {
-        Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
-        DataManager connection = analysis.getContext().getConnection();
-        // Connection tdDataProvider = null;
-
-        boolean enableWhereClauseFlag = true;
-        boolean enableExecuteLanguageFlag = false;
-        // ~
-        if (indicators != null && indicators.length > 0) {
-            if (connection == null) {
-                connection = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
-                analysis.getContext().setConnection(connection);
-            }
-            if (connection != null && masterPage.getExecCombo() != null) {
-                if (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection)) {
-                    masterPage.setWhereClauseDisabled();
-                    // when the selected column is not DB type,will disable the execute engine combobox.
-                    masterPage.changeExecuteLanguageToJava(true);
-
-                    enableWhereClauseFlag = false;
-                    enableExecuteLanguageFlag = false;
-                } else {// when the selected column is back to DB type, should enable the execute engine combobox again.
-                    masterPage.enableExecuteLanguage();
-                }
-            }
-        }
-        // MOD klliu if default ExecutionLanguage is java,it is not changed to SQL.2011-11-21
-        String execLang = analysis.getParameters().getExecutionLanguage().getLiteral();
-        if (execLang != null && ExecutionLanguage.JAVA.getLiteral().equals(execLang)
-                && (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection))) {
-            enableExecuteLanguageFlag = false;
-        }
-
-        if (enableWhereClauseFlag) {
-            masterPage.setWhereClauseEnable();
-        }
-
-        if (enableExecuteLanguageFlag) {
-            masterPage.changeExecuteLanguageToSql(true);
-        }
-    }
-
     private void addItemElements(final ModelElementIndicator[] elements, boolean isExpandAll) {
         for (ModelElementIndicator element : elements) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
@@ -708,27 +653,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
     }
 
     /**
-     * DOC rli Comment method "deleteTreeElements".
-     * 
-     * @param deleteModelElementIndiciator
-     */
-    private void deleteModelElementItems(ModelElementIndicator deleteModelElementIndiciator) {
-        ModelElementIndicator[] remainIndicators = new ModelElementIndicator[modelElementIndicators.length - 1];
-        int i = 0;
-        for (ModelElementIndicator indicator : modelElementIndicators) {
-            if (deleteModelElementIndiciator.equals(indicator)) {
-                continue;
-            } else {
-                remainIndicators[i] = indicator;
-                i++;
-            }
-        }
-        this.modelElementIndicators = remainIndicators;
-
-        initializedConnection(this.modelElementIndicators);
-    }
-
-    /**
      * Open the dialog for select indicator
      * 
      * @param shell
@@ -736,7 +660,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      * clicked then the size of return array will be zero. If have a Where Clause is error will return null
      */
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
-        List<Object[]> previewData = masterPage.getSampleTable().getPreviewData();
+        List<Object[]> previewData = masterPage.getSampleTable().getExistPreviewData();
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
                 shell,
                 DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators(), previewData); //$NON-NLS-1$
@@ -1053,69 +977,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
         return masterPage.getCurrentModelElementIndicators();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
-     * .TalendObserver)
-     */
-    public boolean addObserver(TDQObserver<ModelElement[]> observer) {
-        initObserverable();
-        return Observers.add(observer);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
-     * .TalendObserver)
-     */
-    public boolean removeObserver(TDQObserver<ModelElement[]> observer) {
-        if (Observers == null) {
-            return false;
-        }
-        return Observers.remove(observer);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
-     */
-    public void clearObserver() {
-        if (Observers == null) {
-            return;
-        }
-        Observers.clear();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
-     */
-    public void notifyObservers() {
-        if (Observers == null) {
-            return;
-        }
-        for (TDQObserver<ModelElement[]> observer : Observers) {
-            observer.update(ModelElementIndicatorHelper.getModelElementFromMEIndicator(getAllTheElementIndicator()));
-        }
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#initObserverable()
-     */
-    private void initObserverable() {
-        if (Observers == null) {
-            Observers = new ArrayList<TDQObserver<ModelElement[]>>();
-        }
-
+    public boolean isGridPreviewColumnMoved() {
+        return this.isGridPreviewColumnMoved;
     }
 
     /*
@@ -1123,40 +986,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      * 
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
      */
+    @Override
     public void update(Map<String, Integer> columnIndexMap) {
         ModelElementIndicator[] reorderModelElement = reorderModelElement(masterPage.getCurrentModelElementIndicators(),
                 columnIndexMap);
         masterPage.refreshTheTree(reorderModelElement);
         masterPage.restorePage();
         masterPage.setDirty(true);
-    }
-
-    /**
-     * DOC talend Comment method "reorderModelElement".
-     * 
-     * @param currentModelElementIndicators
-     */
-    private ModelElementIndicator[] reorderModelElement(ModelElementIndicator[] currentModelElementIndicators,
-            Map<String, Integer> columnIndexMap) {
-        ModelElementIndicator[] sortedModelElements = new ModelElementIndicator[currentModelElementIndicators.length];
-        for (ModelElementIndicator currModelElement : currentModelElementIndicators) {
-            String columnName = currModelElement.getElementName();
-            sortedModelElements[columnIndexMap.get(columnName)] = currModelElement;
-        }
-        return sortedModelElements;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(int)
-     */
-    public void update(int EventType) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public boolean isGridPreviewColumnMoved() {
-        return this.isGridPreviewColumnMoved;
     }
 }

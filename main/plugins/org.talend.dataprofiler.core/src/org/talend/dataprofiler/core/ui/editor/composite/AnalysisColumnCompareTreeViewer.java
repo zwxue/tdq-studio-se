@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -31,11 +31,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -54,6 +53,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -62,24 +62,25 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.FunctionalDependencyAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.grid.utils.Observerable;
+import org.talend.dataprofiler.core.ui.grid.utils.TDQObserver;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.RespositoryDetailView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC mzhao 2009-06-17 feature 5887.
  */
-public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
-
-    private static Logger log = Logger.getLogger(AnalysisColumnCompareTreeViewer.class);
+public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements Observerable<ModelElement[]>,
+        TDQObserver<Map<String, Integer>> {
 
     private AbstractAnalysisMetadataPage masterPage;
 
@@ -91,14 +92,6 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     // MOD mzhao 2009-06-17 feature 5887
     private SelectionListener selectionListener = null;
-
-    public SelectionListener getSelectionListener() {
-        return this.selectionListener;
-    }
-
-    public void setSelectionListener(SelectionListener selectionListener) {
-        this.selectionListener = selectionListener;
-    }
 
     // ADD mzhao 2009-02-03 Tableviewer creation stack that remember left or
     // right position.
@@ -112,13 +105,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private Button checkComputeButton;
 
-    private TableViewer rightTable = null;
+    private TableViewer leftTableViewer = null;
 
-    private TableViewer leftTable = null;
-
-    private String mainTitle;
-
-    // private String titleDescription;
+    private TableViewer rightTableViewer = null;
 
     private Analysis analysis = null;
 
@@ -130,29 +119,60 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private Button columnReverseButtion;
 
+    /**
+     * ADD msjian TDQ-11606: the preview data table, we will show all the columns of it. this table is the
+     * leftTableViewer's first column's owner.
+     */
+    private ColumnSet previewDataColumnOwner = null;
+
+    private List<TDQObserver<ModelElement[]>> Observers = null;
+
+    /**
+     * AnalysisColumnCompareTreeViewer constructor used for FunctionalDependencyAnalysisDetailsPage.
+     * 
+     * @param masterPage
+     * @param topComp
+     * @param columnSetA
+     * @param columnSetB
+     * @param mainTitle
+     * @param description
+     * @param showCheckButton
+     * @param allowColumnDupcation
+     */
     public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp,
             List<RepositoryNode> columnSetA, List<RepositoryNode> columnSetB, String mainTitle, String description,
             boolean showCheckButton, boolean allowColumnDupcation) {
         this.masterPage = masterPage;
-        this.analysis = masterPage.getAnalysis();
         form = masterPage.getScrolledForm();
-        this.analysis = masterPage.getAnalysis();
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
 
+        this.analysis = masterPage.getAnalysis();
         columnListA = new ArrayList<RepositoryNode>();
         columnListB = new ArrayList<RepositoryNode>();
+
         tableViewerPosStack = new ArrayList<TableViewer>();
+        this.showCheckButton = showCheckButton;
+        this.allowColumnDupcation = allowColumnDupcation;
 
         columnListA.addAll(columnSetA);
         columnListB.addAll(columnSetB);
 
-        this.showCheckButton = showCheckButton;
-        this.allowColumnDupcation = allowColumnDupcation;
-        createAnalyzedColumnSetsSection(mainTitle, description);
+        if (columnListA != null && columnListA.size() > 0) {
+            previewDataColumnOwner = RepositoryNodeHelper.getColumnOwner(columnListA.get(0));
+        }
 
+        createAnalyzedColumnSetsSection(mainTitle, description);
     }
 
+    /**
+     * AnalysisColumnCompareTreeViewer constructor used for RedundancyAnalysisDetailsPage.
+     * 
+     * @param masterPage
+     * @param topComp
+     * @param analysis
+     * @param allowColumnDupcation
+     */
     public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, Analysis analysis,
             boolean allowColumnDupcation) {
         // MOD mzhao bug:12766 2010-04-27. Initialize the coloumnListA and columnListB.
@@ -160,13 +180,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         form = masterPage.getScrolledForm();
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
+
         columnListA = new ArrayList<RepositoryNode>();
         columnListB = new ArrayList<RepositoryNode>();
+
         tableViewerPosStack = new ArrayList<TableViewer>();
         this.showCheckButton = true;
         this.allowColumnDupcation = allowColumnDupcation;
-        mainTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets");//$NON-NLS-1$
-        String description = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare");//$NON-NLS-1$
+
         if (analysis.getResults().getIndicators().size() > 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
@@ -185,15 +206,16 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 }
                 columnListB.add(recursiveFind);
             }
-            // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
-
         }
+
+        String mainTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets");//$NON-NLS-1$
+        String description = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare");//$NON-NLS-1$
         createAnalyzedColumnSetsSection(mainTitle, description);
         // ~
 
         this.analysis = analysis;
-        checkComputButton = analysis.getParameters().getDeactivatedIndicators().size() != 0;
 
+        checkComputButton = analysis.getParameters().getDeactivatedIndicators().size() != 0;
         // ADD by msjian 2011-5-6 21022: the checkbox to "compute only number of A rows not in B" value is not saved
         if (null != checkComputeButton) {
             checkComputeButton.setSelection(checkComputButton);
@@ -235,45 +257,34 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         GridLayout compareToplevelLayout = new GridLayout();
         compareToplevelLayout.numColumns = 2;
         compareToplevelComp.setLayout(compareToplevelLayout);
-        // ~ MOD mzhao 2009-05-05,Bug 6587.
-        masterPage.createConnBindWidget(compareToplevelComp);
-        // ~
         // !MOD mzhao 2010-03-08,Feature 11387. Add reverse action to make it easy for columns comparing on opposite
         // way.
         // MOD qiongli 2010-6-10,bug 13600:remove "reverse columns" button for
-        // ColumnSet comparison analysis.
+        // ColumnSet comparison analysis.s
         if (masterPage instanceof FunctionalDependencyAnalysisDetailsPage) {
-            columnReverseButtion = new Button(compareToplevelComp, SWT.NONE);
-            // GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(compareToplevelComp);
-            columnReverseButtion.setText("Reverse columns"); //$NON-NLS-1$
-            columnReverseButtion.addMouseListener(new MouseListener() {
+            columnReverseButtion = toolkit.createButton(compareToplevelComp, "Reverse columns", SWT.NONE); //$NON-NLS-1$
+            columnReverseButtion.addMouseListener(new MouseAdapter() {
 
-                public void mouseDoubleClick(MouseEvent e) {
-
-                }
-
+                @Override
                 public void mouseDown(MouseEvent e) {
                     handleColumnReverseAction();
                 }
 
-                public void mouseUp(MouseEvent e) {
-
-                }
-
             });
-            columnReverseButtion.addKeyListener(new KeyListener() {
+            columnReverseButtion.addKeyListener(new KeyAdapter() {
 
+                @Override
                 public void keyPressed(KeyEvent e) {
                     if (e.keyCode == 13) {
                         handleColumnReverseAction();
                     }
                 }
 
-                public void keyReleased(KeyEvent e) {
-
-                }
-
             });
+
+            masterPage.createRunButton(compareToplevelComp);
+        } else {
+            masterPage.createConnBindWidget(compareToplevelComp);
         }
         // ~
 
@@ -297,15 +308,15 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         leftComp.setLayout(new GridLayout());
         String leftSectionTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.leftColumns"); //$NON-NLS-1$
-        leftTable = this
-                .createSectionPart(leftComp, columnListA, leftSectionTitle, leftSelectButtonText, leftSelectButtonTooltip);
+        leftTableViewer = this.createSectionPart(leftComp, columnListA, leftSectionTitle, leftSelectButtonText,
+                leftSelectButtonTooltip, true);
 
         Composite rightComp = toolkit.createComposite(sashForm);
         rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         rightComp.setLayout(new GridLayout());
         String rightSectionTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.rightColumns"); //$NON-NLS-1$
-        rightTable = this.createSectionPart(rightComp, columnListB, rightSectionTitle, rightSelectButtonText,
-                rightSelectButtonTooltip);
+        rightTableViewer = this.createSectionPart(rightComp, columnListB, rightSectionTitle, rightSelectButtonText,
+                rightSelectButtonTooltip, false);
         // MOD mzhao 2009-05-05 bug:6587.
         updateBindConnection(masterPage, tableViewerPosStack);
         columnsComparisonSection.setClient(sectionClient);
@@ -315,12 +326,12 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * DOC jet Comment method "refreash". redraw selected content.
      */
     public void refreash() {
-        rightTable.refresh();
-        leftTable.refresh();
+        rightTableViewer.refresh();
+        leftTableViewer.refresh();
     }
 
     private TableViewer createSectionPart(Composite parentComp, final List<RepositoryNode> columnList, String sectionTitle,
-            String buttonText, String buttonTooltipText) {
+            String buttonText, String buttonTooltipText, final boolean isLeftPart) {
         Section columnSetElementSection = masterPage.createSection(form, parentComp, sectionTitle, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
         sectionComp.setLayout(new GridLayout());
@@ -340,7 +351,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         // decorate.toDecorateDragAndDrop(columnsElementViewer);
         ComparisonTableViewerDNDDecorate dndDecorate = new ComparisonTableViewerDNDDecorate(this, masterPage,
                 tableViewerPosStack, allowColumnDupcation);
-        dndDecorate.installDND(columnsElementViewer, true, ComparisonTableViewerDNDDecorate.COLUMN_VALIDATETYPE);
+        dndDecorate.installDND(columnsElementViewer, true, ComparisonTableViewerDNDDecorate.COLUMN_VALIDATETYPE, isLeftPart);
 
         Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);
         buttonsComp.setLayout(new GridLayout(4, true));
@@ -370,7 +381,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         });
 
         // ADD 2009-01-07 mzhao for feature:0005664
-        createTableViewerMenu(columnsElementViewer, columnList, buttons);
+        createTableViewerMenu(columnsElementViewer, columnList, buttons, isLeftPart);
         delButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -379,9 +390,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 columnsElementViewer.setInput(columnList);
                 enabledButtons(buttons, false);
                 masterPage.setDirty(true);
-                // MOD mzhao 2009-05-05 bug:6587.
-                // MOD mzhao feature 5887 2009-06-17
-                // updateBindConnection(masterPage);
+                computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
             }
 
         });
@@ -391,7 +400,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(columnList, columnsElementViewer, false);
-
+                computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
             }
 
         });
@@ -400,6 +409,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(columnList, columnsElementViewer, true);
+                computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
 
             }
 
@@ -411,6 +421,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 // MOD xqliu 2009-01-17, bug 5940: achieve the function of sort
                 // button
                 sortElement(columnList, columnsElementViewer);
+                computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
             }
 
         });
@@ -421,7 +432,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
             @Override
             public void mouseDown(MouseEvent e) {
-                openColumnsSelectionDialog(columnsElementViewer, columnsOfSectionPart);
+                openColumnsSelectionDialog(columnsElementViewer, columnsOfSectionPart, isLeftPart);
                 enabledButtons(buttons, false);
             }
         });
@@ -435,7 +446,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * MOD mzhao 2009-02-03,remove the first parameter, extract it to class property filed for the convenience of
      * invoking this method from cheat sheets.
      */
-    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<RepositoryNode> columnsOfSectionPart) {
+    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<RepositoryNode> columnsOfSectionPart,
+            boolean isLeftPart) {
         RepositoryNode connNode = masterPage.getConnComboSelectNode();
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(masterPage, null,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, connNode,//$NON-NLS-1$
@@ -451,21 +463,40 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             columnsElementViewer.setInput(columnSet);
             columnsOfSectionPart.clear();
             columnsOfSectionPart.addAll(columnSet);
-            if (columnSet.size() != 0 && columnSet.get(0).getObject() instanceof MetadataColumnRepositoryObject) {
-                RepositoryNode node = columnSet.get(0);
-
-                MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
-                TdColumn column = ((TdColumn) columnObject.getTdColumn());
-
-                if (column != null && column.eIsProxy()) {
-                    column = (TdColumn) EObjectHelper.resolveObject(column);
-                }
-                String tableName = ColumnHelper.getColumnOwnerAsColumnSet(column).getName();
-                columnsElementViewer.getTable().getColumn(0)
-                        .setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
-            }
+            computeRefreshDataPreviewPart(isLeftPart, columnSet, columnsElementViewer);
             updateBindConnection(masterPage, tableViewerPosStack);
         }
+    }
+
+    /**
+     * DOC msjian Comment method "computeRefreshDataPreviewPart".
+     * 
+     * @param isLeftPart
+     * @param columnSet
+     * @return
+     */
+    protected ColumnSet computeRefreshDataPreviewPart(boolean isLeftPart, List<RepositoryNode> columnSet,
+            TableViewer columnsElementViewer) {
+        ColumnSet columnOwner = null;
+        if (columnSet != null && columnSet.size() > 0) {
+            RepositoryNode node = columnSet.get(0);
+            columnOwner = RepositoryNodeHelper.getColumnOwner(node);
+        }
+
+        if (isLeftPart) {
+            if ((previewDataColumnOwner == null && columnOwner != null)
+                    || (previewDataColumnOwner != null && columnOwner == null) || (!previewDataColumnOwner.equals(columnOwner))) {
+                previewDataColumnOwner = columnOwner;
+                notifyObservers();
+            }
+        }
+
+        // set the columnsElementViewer's table name show
+        String tableName = columnOwner == null ? "" : columnOwner.getName();
+        columnsElementViewer.getTable().getColumn(0)
+                .setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
+
+        return columnOwner;
     }
 
     /**
@@ -607,7 +638,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     private void createTableViewerMenu(final TableViewer columnsElementViewer, final List<RepositoryNode> columnList,
-            final Button[] buttons) {
+            final Button[] buttons, final boolean isLeftPart) {
         Table table = columnsElementViewer.getTable();
 
         Menu menu = new Menu(table);
@@ -623,10 +654,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                     columnsElementViewer.setInput(columnList);
                     enabledButtons(buttons, false);
                     masterPage.setDirty(true);
-                    // MOD mzhao 2009-05-05 bug:6587.
-                    // MOD mzhao 2009-06-17 remove the connection bind here feature
-                    // 5887
-                    // updateBindConnection();
+                    computeRefreshDataPreviewPart(isLeftPart, columnList, columnsElementViewer);
                 }
             }
         });
@@ -699,7 +727,6 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             return columnSet.toArray();
         }
 
-        @SuppressWarnings("unchecked")
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             // MOD yyi 2012-02-29 TDQ-3605 Dirty editor if selection changes.
             if (newInput instanceof List && oldInput != null) {
@@ -739,7 +766,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetASelectionDialog() {
-        openColumnsSelectionDialog(tableViewerPosStack.get(0), columnListA);
+        openColumnsSelectionDialog(tableViewerPosStack.get(0), columnListA, true);
     }
 
     /**
@@ -747,7 +774,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetBSelectionDialog() {
-        openColumnsSelectionDialog(tableViewerPosStack.get(1), columnListB);
+        openColumnsSelectionDialog(tableViewerPosStack.get(1), columnListB, false);
     }
 
     @Override
@@ -835,8 +862,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             for (Integer index : needToReverseIndex) {
                 columnListB.add(columnListA.get(index));
                 columnListA.add(columnListB.get(index));
-                leftTable.add(columnListB.get(index));
-                rightTable.add(columnListA.get(index));
+                leftTableViewer.add(columnListB.get(index));
+                rightTableViewer.add(columnListA.get(index));
                 // Show on tree view
                 masterPage.setDirty(true);
             }
@@ -854,5 +881,106 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             idx++;
         }
         return true;
+    }
+
+    public SelectionListener getSelectionListener() {
+        return this.selectionListener;
+    }
+
+    public void setSelectionListener(SelectionListener selectionListener) {
+        this.selectionListener = selectionListener;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
+     * .TalendObserver)
+     */
+    public boolean addObserver(TDQObserver<ModelElement[]> observer) {
+        initObserverable();
+        return Observers.add(observer);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
+     * .TalendObserver)
+     */
+    public boolean removeObserver(TDQObserver<ModelElement[]> observer) {
+        if (Observers == null) {
+            return false;
+        }
+        return Observers.remove(observer);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
+     */
+    public void clearObserver() {
+        if (Observers == null) {
+            return;
+        }
+        Observers.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
+     */
+    public void notifyObservers() {
+        if (Observers == null) {
+            return;
+        }
+        for (TDQObserver<ModelElement[]> observer : Observers) {
+            if (previewDataColumnOwner != null) {
+                List<TdColumn> columns = ColumnSetHelper.getColumns(previewDataColumnOwner);
+                ModelElement[] modelElements = columns.toArray(new TdColumn[columns.size()]);
+                observer.update(modelElements);
+            } else {
+                observer.update(new ModelElement[0]);
+            }
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#initObserverable()
+     */
+    private void initObserverable() {
+        if (Observers == null) {
+            Observers = new ArrayList<TDQObserver<ModelElement[]>>();
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
+     */
+    public void update(Map<String, Integer> columnIndexMap) {
+        // do nothing until now
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(int)
+     */
+    public void update(int EventType) {
+        // do nothing until now
+    }
+
+    public ColumnSet getPreviewDataColumnOwner() {
+        return this.previewDataColumnOwner;
     }
 }

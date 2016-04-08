@@ -33,11 +33,13 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -47,7 +49,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
-import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
+import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -57,6 +59,7 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -85,6 +88,8 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
 
+    ModelElementAnalysisHandler analysisHandler;
+
     /*
      * (non-Javadoc)
      * 
@@ -95,7 +100,9 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        stringDataFilter = AnalysisHelper.getStringDataFilter(analysisItem.getAnalysis());
+        analysisHandler = new ModelElementAnalysisHandler();
+        analysisHandler.setAnalysis((Analysis) this.currentModelElement);
+        stringDataFilter = analysisHandler.getStringDataFilterwithContext();
     }
 
     @Override
@@ -105,11 +112,15 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
         super.createFormContent(managedForm);
 
+        createDataPreviewSection(form, topComp, false, false);
+
         anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer(this, topComp, getColumnLeftSet(), getColumnRightSet(),
                 DefaultMessagesImpl.getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$
                         .getString("FunctionalDependencyMasterDetailsPage.Description"), false, true); //$NON-NLS-1$
 
         anaColumnCompareViewer.addPropertyChangeListener(this);
+        // the sampletable only observer the viewer
+        anaColumnCompareViewer.addObserver(sampleTable);
 
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
@@ -178,9 +189,8 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         // do nothing
     }
 
+    @Override
     public AnalysisHandler getAnalysisHandler() {
-        ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
-        analysisHandler.setAnalysis(this.analysisItem.getAnalysis());
         return analysisHandler;
     }
 
@@ -386,4 +396,29 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         return RepositoryNodeHelper.getConnectionRepositoryNodes(false, false);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getSelectedColumns()
+     */
+    @Override
+    protected ModelElement[] getSelectedColumns() {
+        ColumnSet previewDataColumnOwner = anaColumnCompareViewer.getPreviewDataColumnOwner();
+        if (previewDataColumnOwner == null) {
+            return null;
+        }
+        List<TdColumn> columns = ColumnSetHelper.getColumns(previewDataColumnOwner);
+        ModelElement[] modelElements = columns.toArray(new TdColumn[columns.size()]);
+        return modelElements;
+    }
+
+    @Override
+    protected boolean isDataTableCompVisible() {
+        if (anaColumnCompareViewer == null) {
+            EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
+            return analyzedColumns != null && analyzedColumns.size() > 0;
+        } else {
+            return anaColumnCompareViewer.getPreviewDataColumnOwner() != null;
+        }
+    }
 }

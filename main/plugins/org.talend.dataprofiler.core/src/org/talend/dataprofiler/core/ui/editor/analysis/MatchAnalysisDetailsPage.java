@@ -30,7 +30,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -44,7 +43,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -123,6 +121,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private MatchAnalysisHandler analysisHandler;
 
+    @Override
     public MatchAnalysisHandler getAnalysisHandler() {
         return analysisHandler;
     }
@@ -149,27 +148,17 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private boolean isMatchingKeyButtonPushed = Boolean.FALSE;
 
-    private SashForm sForm;
-
     private IRepositoryNode[] selectedNodes;
 
     private boolean isDelimitedFile = false;
 
     private Composite dataSampleparentComposite;
 
-    private Composite dataTableComp;
-
-    private Text rowLoadedText = null;
-
-    private CCombo sampleDataShowWayCombo;
-
     private Label analyzeDataLabel;
 
     private String analyzeDataDefaultInfo;
 
     private EventReceiver refreshDataProiverLabel = null;
-
-    private Label warningLabel = null;
 
     private boolean isDataAvailable = true;
 
@@ -701,6 +690,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         } else {
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+            rowLoadedText.setFocus();
         }
     }
 
@@ -776,27 +766,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 && (connection instanceof DelimitedFileConnection || ConnectionHelper.isInformix((Connection) connection) || ConnectionHelper
                         .isSybase((Connection) connection));
         sampleDataShowWayCombo.setEnabled(!isNotSupportRandom);
-    }
-
-    /**
-     * check if the row loaded value is valid or not
-     * 
-     * @return
-     */
-    private boolean isValidateRowCount() {
-        String text = rowLoadedText.getText();
-        if (StringUtils.isEmpty(text)) {
-            return false;
-        }
-        try {
-            int parseInt = Integer.parseInt(text);
-            if (parseInt < 1) {
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -880,9 +849,14 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 refreshTableDataReceiver);
     }
 
-    /**
-     * open the column selection dialog.
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#openColumnsSelectionDialog(orgomg
+     * .cwm.foundation.softwaredeployment.DataManager)
      */
+    @Override
     public void openColumnsSelectionDialog(DataManager dataManager) {
         MetadataAndColumnSelectionDialog dialog = null;
         List<IRepositoryNode> oldSelectedColumns = findAllSelectedRepositoryNode();
@@ -1104,32 +1078,21 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         this.setDirty(Boolean.TRUE);
     }
 
-    /**
-     * Create warning label
+    /*
+     * (non-Javadoc)
      * 
-     * @param dataTableComp2
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#redrawWarningLabel()
      */
-    private void createWarningLabel() {
+    @Override
+    public void redrawWarningLabel() {
         String message = PluginConstant.EMPTY_STRING;
         boolean isVisible = false;
         if (!isDataAvailable) {
             message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noDataAvailableWarning"); //$NON-NLS-1$
             isVisible = true;
         }
-        warningLabel = toolkit.createLabel(dataTableComp, message, SWT.BORDER | SWT.WRAP);
-        warningLabel.setVisible(isVisible);
 
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).exclude(!warningLabel.isVisible())
-                .applyTo(warningLabel);
-        warningLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-    }
-
-    private void redrawWarningLabel() {
-        if (warningLabel != null && !warningLabel.isDisposed()) {
-            warningLabel.dispose();
-        }
-        createWarningLabel();
-        dataTableComp.layout(new Control[] { warningLabel });
+        createWarningComposite(message, isVisible);
     }
 
     /**
@@ -1154,7 +1117,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
     private void createNatTable(List<Object[]> listOfData) {
-
         ScrolledComposite panel = new ScrolledComposite(dataTableComp, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(panel);
         panel.setLayout(new GridLayout(1, Boolean.FALSE));

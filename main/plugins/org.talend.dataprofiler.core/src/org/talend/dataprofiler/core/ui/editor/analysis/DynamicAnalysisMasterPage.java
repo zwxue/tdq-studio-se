@@ -50,7 +50,6 @@ import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
@@ -191,8 +190,6 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
     }
 
     public abstract void createPreviewCharts(final ScrolledForm form1, final Composite composite);
-
-    abstract AnalysisHandler getAnalysisHandler();
 
     abstract String getExpandString();
 
