@@ -31,6 +31,8 @@ import org.talend.cwm.xml.XmlFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisPackage;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.expressions.ExpressionsFactory;
@@ -158,7 +160,14 @@ public class AnalysisItemProvider
     public String getText(Object object) {
         Analysis analysis = ((Analysis)object);
         String label = analysis.getName();
-        Date executionDate = analysis.getResults().getResultMetadata().getExecutionDate();
+        Date executionDate = null;
+        AnalysisResult analysisResult = analysis.getResults();
+        if (analysisResult != null) {
+            ExecutionInformations exeInformations = analysisResult.getResultMetadata();
+            if (exeInformations != null) {
+                executionDate = exeInformations.getExecutionDate();
+            }
+        }
         String prefixDateString=null;
         if (executionDate!=null) {
             prefixDateString = DateFormatUtils.getSimpleDateString(executionDate);
