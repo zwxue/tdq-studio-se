@@ -15,12 +15,14 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
@@ -34,6 +36,7 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.ContextHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -118,10 +121,10 @@ public abstract class DataExplorer implements IDataExplorer {
         }
         StringBuffer sb = new StringBuffer();
         if (this.analysis != null) {
-            String anaName = this.analysis.getName() == null ? PluginConstant.EMPTY_STRING : this.analysis.getName();
+            String anaName = StringUtils.defaultString(this.analysis.getName());
             AnalysisType analysisType = AnalysisHelper.getAnalysisType(this.analysis);
-            String anaType = analysisType == null ? PluginConstant.EMPTY_STRING
-                    : analysisType.getLiteral() == null ? PluginConstant.EMPTY_STRING : analysisType.getLiteral();
+            String anaType = analysisType == null ? PluginConstant.EMPTY_STRING : StringUtils.defaultString(analysisType
+                    .getLiteral());
             String anaPurpose = AnalysisHelper.getPurpose(this.analysis);
             String anaDescription = AnalysisHelper.getDescription(this.analysis);
             String aeName = PluginConstant.EMPTY_STRING;
@@ -129,11 +132,13 @@ public abstract class DataExplorer implements IDataExplorer {
             if (this.indicator != null) {
                 ModelElement analyzedElement = this.indicator.getAnalyzedElement();
                 if (analyzedElement != null) {
-                    aeName = analyzedElement.getName() == null ? PluginConstant.EMPTY_STRING : analyzedElement.getName();
+                    aeName = StringUtils.defaultString(analyzedElement.getName());
                 }
-                indName = this.indicator.getName() == null ? PluginConstant.EMPTY_STRING : this.indicator.getName();
+                indName = InternationalizationUtil.getDefinitionInternationalizationLabel(PropertyHelper.getProperty(indicator
+                        .getIndicatorDefinition()));
             }
-            showing = showing == null ? PluginConstant.EMPTY_STRING : showing;
+
+            showing = StringUtils.defaultString(showing);
             //            sb.append("/*\n"); //$NON-NLS-1$
             //            sb.append("Analysis: " + anaName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
             //            sb.append("Type of Analysis: " + anaType + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
@@ -144,13 +149,13 @@ public abstract class DataExplorer implements IDataExplorer {
             //            sb.append("Showing: " + showing + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
             //            sb.append("*/\n"); //$NON-NLS-1$
 
-            sb.append("-- " + Messages.getString("DataExplorer.AnalysisLabel") + " " + anaName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("-- " + Messages.getString("DataExplorer.TypeAnalysisLabel") + " " + anaType + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("-- " + Messages.getString("DataExplorer.PurposeLabel") + " " + anaPurpose + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("-- " + Messages.getString("DataExplorer.DescriptionLabel") + " " + anaDescription.replace("\n", "\n--     ") + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("-- " + Messages.getString("DataExplorer.AnalyzedElementLabel") + " " + aeName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("-- " + Messages.getString("DataExplorer.IndicatorLabel") + " " + indName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("-- " + Messages.getString("DataExplorer.ShowingLabel") + " " + showing + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("-- " + Messages.getString("DataExplorer.AnalysisLabel") + " " + anaName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            sb.append("-- " + Messages.getString("DataExplorer.TypeAnalysisLabel") + " " + anaType + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            sb.append("-- " + Messages.getString("DataExplorer.PurposeLabel") + " " + anaPurpose + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            sb.append("-- " + Messages.getString("DataExplorer.DescriptionLabel") + " " + anaDescription.replace("\n", "\n--     ") + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+            sb.append("-- " + Messages.getString("DataExplorer.AnalyzedElementLabel") + " " + aeName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            sb.append("-- " + Messages.getString("DataExplorer.IndicatorLabel") + " " + indName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            sb.append("-- " + Messages.getString("DataExplorer.ShowingLabel") + " " + showing + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         }
         return sb.toString();
