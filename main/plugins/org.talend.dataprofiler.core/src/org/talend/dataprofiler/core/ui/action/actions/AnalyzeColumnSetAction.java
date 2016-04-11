@@ -128,26 +128,25 @@ public class AnalyzeColumnSetAction extends Action {
         if (opencolumnSetAnalysisDialog(packaFilterParameter) == Window.OK) {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
-            List<IRepositoryNode> column = new ArrayList<IRepositoryNode>();
             if (editor != null) {
                 ColumnSetAnalysisDetailsPage page = (ColumnSetAnalysisDetailsPage) editor.getMasterPage();
                 if (this.needselection && !this.selection.isEmpty()) {
                     IRepositoryNode[] nodeArray = new IRepositoryNode[selection.size()];
                     Iterator it = this.selection.iterator();
-
                     int i = 0;
                     while (it.hasNext()) {
                         nodeArray[i] = (IRepositoryNode) it.next();
                         i++;
                     }
-                    page.getTreeViewer().setInput(nodeArray);
+                    page.setTreeViewInput(nodeArray);
                 } else if (!this.needselection && null != this.nodeColumns) {
+                    List<IRepositoryNode> column = new ArrayList<IRepositoryNode>();
                     for (IRepositoryNode columnFolder : nodeColumns.getChildren()) {
                         if (columnFolder instanceof DBColumnFolderRepNode) {
                             column.addAll(columnFolder.getChildren());
                         }
                     }
-                    page.getTreeViewer().setInput(column.toArray());
+                    page.setTreeViewInput(column.toArray());
                 }
                 page.doSave(null);
             }
