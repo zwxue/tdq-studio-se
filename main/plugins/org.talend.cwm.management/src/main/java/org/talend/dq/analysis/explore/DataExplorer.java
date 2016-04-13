@@ -31,8 +31,10 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.ContextHelper;
@@ -134,8 +136,14 @@ public abstract class DataExplorer implements IDataExplorer {
                 if (analyzedElement != null) {
                     aeName = StringUtils.defaultString(analyzedElement.getName());
                 }
-                indName = InternationalizationUtil.getDefinitionInternationalizationLabel(PropertyHelper.getProperty(indicator
-                        .getIndicatorDefinition()));
+                // TDQ-11831: fix the indicator drill down open sql editor to use the correct indicator name.after we
+                // change "Frenquency table" to "Value frenquency"
+                if (indicator instanceof PatternMatchingIndicator || indicator instanceof UserDefIndicator) {
+                    indName = StringUtils.defaultString(this.indicator.getName());
+                } else {
+                    indName = InternationalizationUtil.getDefinitionInternationalizationLabel(PropertyHelper
+                            .getProperty(indicator.getIndicatorDefinition()));
+                }
             }
 
             showing = StringUtils.defaultString(showing);
