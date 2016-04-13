@@ -165,6 +165,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected ColumnAnalysisDataSamTable sampleTable = null;
 
+    protected Composite warningComposite = null;
+
     protected Text rowLoadedText = null;
 
     protected CCombo sampleDataShowWayCombo;
@@ -1099,11 +1101,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC msjian Comment method "createWarningComposite".
+     * 
      * @param message
      * @param isVisible
      */
     protected void createWarningComposite(String message, boolean isVisible) {
-        Composite warningComposite = toolkit.createComposite(dataTableComp);
+        if (warningComposite != null && !warningComposite.isDisposed()) {
+            warningComposite.dispose();
+        }
+
+        warningComposite = toolkit.createComposite(dataTableComp);
         warningComposite.setLayout(new GridLayout(2, false));
 
         Label warningImage = toolkit.createLabel(warningComposite, PluginConstant.EMPTY_STRING);

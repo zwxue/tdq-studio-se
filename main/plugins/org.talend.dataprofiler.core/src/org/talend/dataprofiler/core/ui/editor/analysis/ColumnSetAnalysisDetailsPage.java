@@ -62,6 +62,7 @@ import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
+import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectWithConstraintDialog;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
@@ -362,7 +363,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
             columnList = new ArrayList<IRepositoryNode>();
         }
         RepositoryNode connNode = getConnComboSelectNode();
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
+        ColumnsSelectionDialog dialog = new ColumnsSelectWithConstraintDialog(
                 this,
                 null,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, connNode, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
