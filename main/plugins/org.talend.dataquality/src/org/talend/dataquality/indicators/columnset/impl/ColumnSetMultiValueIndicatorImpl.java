@@ -1224,7 +1224,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     @Override
     public boolean finalizeComputation() {
-        if (isUsedMapDBMode()) {
+        if (isUsedMapDBMode() && checkAllowDrillDown()) {
             // MapDB mode will come here
             storeSqlResults(valueByGroupMapForMapDB);
             // valueByGroupMapForMapDB.close();
@@ -1271,7 +1271,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     @Override
     public boolean handle(EList<Object> datas) {
-        if (isUsedMapDBMode()) {
+        if (isUsedMapDBMode() && checkAllowDrillDown()) {
             handleDataOnFile(datas);
         } else {
             handleDataOnMemory(datas);
