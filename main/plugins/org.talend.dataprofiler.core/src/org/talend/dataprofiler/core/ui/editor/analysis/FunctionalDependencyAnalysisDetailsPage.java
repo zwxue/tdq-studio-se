@@ -201,6 +201,10 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
      */
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
+        analysisHandler.changeDefaultRowLoaded(rowLoadedText.getText());
+
+        analysisHandler.changeSampleDataShowWay(sampleDataShowWayCombo.getText());
+
         // ADD gdbu 2011-3-3 bug 19179
         // remove the space from analysis name
         //        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
