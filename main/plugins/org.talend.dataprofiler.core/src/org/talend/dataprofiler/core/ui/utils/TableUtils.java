@@ -18,7 +18,6 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -90,7 +89,8 @@ public final class TableUtils {
             Label actionTooltipLabel = null;
 
             public void handleEvent(Event event) {
-                TableItem item = table.getItem(new Point(event.x, event.y));
+                Point mousePoint = new Point(event.x, event.y);
+                TableItem item = table.getItem(mousePoint);
                 switch (event.type) {
                 case SWT.Dispose:
                     shell.dispose();
@@ -112,7 +112,7 @@ public final class TableUtils {
                 case SWT.MouseHover:
                     if (item != null) {
                         // show action tooltip
-                        showActionTooltip(item);
+                        showActionTooltip(item, mousePoint);
                     }
                     break;
                 default:
@@ -120,7 +120,7 @@ public final class TableUtils {
                 }
             }
 
-            private void showActionTooltip(TableItem item) {
+            private void showActionTooltip(TableItem item, Point mousePoint) {
                 actionTooltipShell = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
                 actionTooltipShell.setLayout(new FillLayout());
                 actionTooltipLabel = new Label(actionTooltipShell, SWT.NONE);
@@ -131,9 +131,8 @@ public final class TableUtils {
                 actionTooltipLabel.addListener(SWT.MouseExit, labelListener);
                 actionTooltipLabel.addListener(SWT.MouseDown, labelListener);
                 Point size = actionTooltipShell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-                Rectangle rect = item.getBounds(1);
-                Point pt = table.toDisplay(rect.x, rect.y);
-                actionTooltipShell.setBounds(pt.x - 100, pt.y, size.x, size.y);
+                Point pt = table.toDisplay(mousePoint.x, mousePoint.y);
+                actionTooltipShell.setBounds(pt.x + 10, pt.y - 9, size.x, size.y);
                 actionTooltipShell.setVisible(true);
             }
         };
@@ -189,7 +188,8 @@ public final class TableUtils {
             Label rangeTooltipLabel = null;
 
             public void handleEvent(Event event) {
-                TableItem item = table.getItem(new Point(event.x, event.y));
+                Point mousePoint = new Point(event.x, event.y);
+                TableItem item = table.getItem(mousePoint);
                 switch (event.type) {
                 case SWT.Dispose:
                     shell.dispose();
@@ -216,7 +216,7 @@ public final class TableUtils {
 
                         String rangeAsString = entity.getRangeAsString();
                         if (rangeAsString != null) {
-                            showRangeTooltip(item, rangeAsString);
+                            showRangeTooltip(item, rangeAsString, mousePoint);
                         }
                     }
                 default:
@@ -224,7 +224,7 @@ public final class TableUtils {
                 }
             }
 
-            private void showRangeTooltip(TableItem item, String msg) {
+            private void showRangeTooltip(TableItem item, String msg, Point mousePoint) {
                 rangeTooltipShell = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
                 rangeTooltipShell.setLayout(new FillLayout());
                 rangeTooltipLabel = new Label(rangeTooltipShell, SWT.NONE);
@@ -235,9 +235,8 @@ public final class TableUtils {
                 rangeTooltipLabel.addListener(SWT.MouseExit, labelListener);
                 rangeTooltipLabel.addListener(SWT.MouseDown, labelListener);
                 Point size = rangeTooltipShell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-                Rectangle rect = item.getBounds(1);
-                Point pt = table.toDisplay(rect.x, rect.y);
-                rangeTooltipShell.setBounds(pt.x - 100, pt.y + 18, size.x, size.y);
+                Point pt = table.toDisplay(mousePoint.x, mousePoint.y);
+                rangeTooltipShell.setBounds(pt.x + 10, pt.y + 9, size.x, size.y);
                 rangeTooltipShell.setVisible(true);
             }
 

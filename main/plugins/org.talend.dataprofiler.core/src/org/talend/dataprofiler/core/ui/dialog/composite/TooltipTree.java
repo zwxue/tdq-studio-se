@@ -124,7 +124,7 @@ public class TooltipTree extends Tree {
                         }
                         Point size = tip.computeSize(widthHit, SWT.DEFAULT);
                         Rectangle rect = item.getBounds(0);
-                        Point pt = toDisplay(rect.x, rect.y);
+                        Point pt = toDisplay(rect.x + 80, rect.y);
                         tip.setBounds(pt.x, pt.y, size.x, size.y);
                         tip.setVisible(true);
                     }
