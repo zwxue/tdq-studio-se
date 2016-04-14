@@ -602,7 +602,9 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     @Override
     public void saveAnalysis() throws DataprofilerCoreException {
-        // ADD gdbu 2011-3-3 bug 19179
+        columnSetAnalysisHandler.changeDefaultRowLoaded(rowLoadedText.getText());
+
+        columnSetAnalysisHandler.changeSampleDataShowWay(sampleDataShowWayCombo.getText());
 
         // remove the space from analysis name
         // columnSetAnalysisHandler.setName(columnSetAnalysisHandler.getName().replace(" ", ""));
@@ -612,7 +614,6 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         }
         // ~
 
-        IRepositoryViewObject reposObject = null;
         columnSetAnalysisHandler.clearAnalysis();
         simpleStatIndicator.getAnalyzedColumns().clear();
         allMatchIndicator.getAnalyzedColumns().clear();
@@ -627,6 +628,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         List<IRepositoryNode> repositoryNodes = treeViewer.getColumnSetMultiValueList();
 
         Connection tdProvider = null;
+        IRepositoryViewObject reposObject = null;
         if (repositoryNodes != null && repositoryNodes.size() != 0) {
             ConnectionItem item = (ConnectionItem) repositoryNodes.get(0).getObject().getProperty().getItem();
             tdProvider = item.getConnection();
