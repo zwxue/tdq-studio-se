@@ -72,6 +72,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.ISubRepositoryObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -176,6 +177,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected static final int PREVIEW_SUGGEST_ROW_COUNT = 500;
 
     protected ModelElementIndicator[] currentModelElementIndicators;
+
+    protected EventReceiver afterCreateConnectionReceiver = null;
 
     /**
      * the temp value used to store the old connection value, when the user didn't save this page, use to revert
@@ -984,7 +987,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @param topComp
      */
     protected void createDataPreviewSection(ScrolledForm form1, Composite anasisDataComp, boolean hasSelectColumnsButton,
-            boolean hasSelectIndicatorButton) {
+            boolean hasSelectIndicatorButton, boolean hasAfterCreateConnectionReceiver) {
         dataPreviewSection = createSection(form1, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataPreview"), null); //$NON-NLS-1$
         Composite dataPreviewTableCom = toolkit.createComposite(dataPreviewSection, SWT.NONE);
@@ -1005,7 +1008,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // create the data table
         createDataTableComposite(dataPreviewTableCom);
         dataPreviewSection.setClient(dataPreviewTableCom);
-        registerEvents();
+        if (hasAfterCreateConnectionReceiver) {
+            registerEvents();
+        }
     }
 
     /**
@@ -1021,7 +1026,25 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * DOC msjian Comment method "registerEvents".
      */
     protected void registerEvents() {
-        // do nothing here
+        // register: refresh the result page after running it from menu
+        afterCreateConnectionReceiver = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                // check if the connection is unavailable, give a warning dialog to user without opening the columns
+                // select dialog
+                Connection conn = (Connection) data;
+                if (ConnectionUtils.checkConnection(conn)) {
+                    // need to give the new connection to the dialog to show only this new one in the dialog.
+                    openColumnsSelectionDialog(conn);
+                }
+
+                return true;
+            }
+        };
+        EventManager.getInstance().register(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
+                afterCreateConnectionReceiver);
+
     }
 
     /**
@@ -1558,5 +1581,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     public ColumnAnalysisDataSamTable getSampleTable() {
         return this.sampleTable;
+    }
+
+    public DataFilterComp getDataFilterComp() {
+        return this.dataFilterComp;
     }
 }

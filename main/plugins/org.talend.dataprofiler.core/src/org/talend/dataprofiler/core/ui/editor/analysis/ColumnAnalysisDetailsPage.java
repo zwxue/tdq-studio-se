@@ -54,7 +54,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -66,10 +65,8 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
-import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
-import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
@@ -117,8 +114,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
     private UIPagination uiPagination;
 
     private int lastTimePageNumber = 1;
-
-    private EventReceiver afterCreateConnectionReceiver = null;
 
     public ColumnAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -189,7 +184,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
         setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
         metadataSection = creatMetadataSection(form, topComp);
 
-        createDataPreviewSection(form, topComp, true, true);
+        createDataPreviewSection(form, topComp, true, true, true);
         createAnalysisColumnsSection(form, topComp);
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
@@ -206,34 +201,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
             createPreviewSection(form, previewComp);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#registerEvents()
-     */
-    @Override
-    protected void registerEvents() {
-        // register: refresh the result page after running it from menu
-        afterCreateConnectionReceiver = new EventReceiver() {
-
-            @Override
-            public boolean handle(Object data) {
-                // check if the connection is unavailable, give a warning dialog to user without opening the columns
-                // select dialog
-                Connection conn = (Connection) data;
-                if (ConnectionUtils.checkConnection(conn)) {
-                    // need to give the new connection to the dialog to show only this new one in the dialog.
-                    openColumnsSelectionDialog(conn);
-                }
-
-                return true;
-            }
-        };
-        EventManager.getInstance().register(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION,
-                afterCreateConnectionReceiver);
-
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form1, Composite anasisDataComp) {
@@ -804,15 +771,6 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
             }
         }
         return false;
-    }
-
-    /**
-     * DOC qiongli Comment method "getDataFilterComp".
-     * 
-     * @return
-     */
-    public DataFilterComp getDataFilterComp() {
-        return this.dataFilterComp;
     }
 
     @Override

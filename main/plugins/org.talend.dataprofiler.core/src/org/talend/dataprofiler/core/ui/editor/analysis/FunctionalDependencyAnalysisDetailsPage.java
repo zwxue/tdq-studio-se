@@ -112,7 +112,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         setMetadataSectionDescription(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
         super.createFormContent(managedForm);
 
-        createDataPreviewSection(form, topComp, false, false);
+        createDataPreviewSection(form, topComp, false, false, false);
 
         anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer(this, topComp, getColumnLeftSet(), getColumnRightSet(),
                 DefaultMessagesImpl.getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$

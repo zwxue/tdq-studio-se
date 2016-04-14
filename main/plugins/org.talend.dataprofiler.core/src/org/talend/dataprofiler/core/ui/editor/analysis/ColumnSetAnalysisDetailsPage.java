@@ -66,7 +66,6 @@ import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectWithConstraintDialog;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
-import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -244,7 +243,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         metadataSection = creatMetadataSection(form, topComp);
         form.setText(DefaultMessagesImpl.getString("ColumnSetMasterPage.title")); //$NON-NLS-1$
 
-        createDataPreviewSection(form, topComp, true, false);
+        createDataPreviewSection(form, topComp, true, false, true);
         createAnalysisColumnsSection(form, topComp);
 
         createIndicatorsSection(form, topComp);
@@ -717,6 +716,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         if (dataFilterComp != null) {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
+        EventManager.getInstance().clearEvent(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION);
     }
 
     /*
@@ -854,15 +854,6 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
             }
         }
         return false;
-    }
-
-    /**
-     * DOC qiongli Comment method "getDataFilterComp".
-     * 
-     * @return
-     */
-    public DataFilterComp getDataFilterComp() {
-        return this.dataFilterComp;
     }
 
     @Override
