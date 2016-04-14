@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
+import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -127,7 +128,17 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * @param parent
      */
     private Tree createTree(Composite parent) {
-        final Tree newTree = new Tree(parent, SWT.MULTI | SWT.BORDER);
+        final Tree newTree = new TooltipTree(parent, SWT.MULTI | SWT.BORDER) {
+
+            @Override
+            protected String getItemTooltipText(TreeItem item) {
+                ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                IRepositoryNode parentNodeForColumnNode = RepositoryNodeHelper.getParentNodeForColumnNode(meIndicator
+                        .getModelElementRepositoryNode());
+                return DefaultMessagesImpl.getString(
+                        "AnalysisColumnTreeViewer.columnParent", parentNodeForColumnNode.getObject().getLabel()); //$NON-NLS-1$ //;
+            }
+        };
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newTree);
 
         newTree.setHeaderVisible(true);
