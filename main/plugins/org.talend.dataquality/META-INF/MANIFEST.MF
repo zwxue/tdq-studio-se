@@ -74,3 +74,4 @@ Require-Bundle: org.talend.utils;visibility:=reexport,
  org.talend.dataquality.common
 Eclipse-RegisterBuddy: org.apache.log4j,org.talend.testutils,org.talend.libraries.mapdb
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
