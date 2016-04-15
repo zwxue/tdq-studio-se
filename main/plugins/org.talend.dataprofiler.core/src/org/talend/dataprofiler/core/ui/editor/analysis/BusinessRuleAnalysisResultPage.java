@@ -130,7 +130,6 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
     @Override
     protected void createResultSection(Composite parent) {
-
         // ADD gdbu 2011-3-4 bug 19242
         AbstractPagePart treeViewer = masterPage.getTreeViewer();
         if (treeViewer != null && treeViewer instanceof AnalysisTableTreeViewer) {
@@ -466,8 +465,6 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
      * Added TDQ-8787 20140613 yyin: create all charts before running, register each chart with its related indicator.
      */
     public void registerDynamicEvent() {
-        disposeComposite();
-        createFormContent(getManagedForm());
         // register dynamic event,for the indicator (for each column)
         for (DynamicIndicatorModel oneCategoryIndicatorModel : dynamicList) {
             Object categoryDataset = oneCategoryIndicatorModel.getDataset();

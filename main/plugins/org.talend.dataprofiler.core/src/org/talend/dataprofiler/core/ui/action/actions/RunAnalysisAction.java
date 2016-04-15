@@ -205,6 +205,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 @Override
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
+                    final boolean isSupportDynamicChart = isSupportDynamicChart();
                     monitor.beginTask(DefaultMessagesImpl.getString("RunAnalysisAction.running", item.getAnalysis().getName()), 5); //$NON-NLS-1$ 
                     Display.getDefault().syncExec(new Runnable() {
 
@@ -213,7 +214,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                 listener.fireRuningItemChanged(false);
                             }
                             // register dynamic event for who supported dynamic chart
-                            if (isSupportDynamicChart()) {
+                            if (isSupportDynamicChart) {
                                 EventManager.getInstance().publish(item.getAnalysis(),
                                         EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
                             }
@@ -244,7 +245,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             public void run() {
                                 // Added TDQ-8787 20140616 yyin: unregister all dynamic chart events after executing
                                 // the analysis
-                                if (isSupportDynamicChart()) {
+                                if (isSupportDynamicChart) {
                                     EventManager.getInstance().publish(item.getAnalysis(),
                                             EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
                                 }

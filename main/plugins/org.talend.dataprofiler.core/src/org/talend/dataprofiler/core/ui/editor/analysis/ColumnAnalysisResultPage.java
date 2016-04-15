@@ -224,7 +224,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         uiPagination.init();
         chartComposite.layout();
         chartComposite.pack();
-        form.reflow(true);
     }
 
     /*
@@ -258,9 +257,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage1) {
         this.masterPage = (ColumnAnalysisDetailsPage) masterPage1;
-
         disposeComposite();
-
         createFormContent(getManagedForm());
     }
 
@@ -268,7 +265,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         if (summaryComp != null && !summaryComp.isDisposed()) {
             summaryComp.dispose();
         }
-
         if (resultComp != null && !resultComp.isDisposed()) {
             resultComp.dispose();
         }
@@ -283,9 +279,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
      * Added TDQ-8787 20140613 yyin: create all charts before running, register each chart with its related indicator.
      */
     public void registerDynamicEvent() {
-        disposeComposite();
-        createFormContent(getManagedForm());
-
         // get all indicators and datasets
         List<DynamicIndicatorModel> indiAndDatasets = uiPagination.getAllIndcatorAndDatasetOfCurrentPage();
 
@@ -382,7 +375,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         }
 
         masterPage.clearDynamicDatasets();
-
     }
 
 }

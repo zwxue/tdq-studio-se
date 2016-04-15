@@ -1552,21 +1552,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#fireRuningItemChanged(boolean)
-     */
-    @Override
-    public void fireRuningItemChanged(boolean status) {
-        if (status) {
-            currentEditor.setActivePage(AnalysisEditor.RESULT_PAGE);
-            ((AnalysisEditor) currentEditor).getResultPage().refresh(this);
-            // after running the analysis, reset the select keys button
-            resetSelectKeyButton();
-        }
-    }
-
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
         boolean isVSR = RecordMatcherType.simpleVSRMatcher.name().equals(matchRule.getRecordLinkageAlgorithm());
         selectAlgorithmSection.setSelection(isVSR);

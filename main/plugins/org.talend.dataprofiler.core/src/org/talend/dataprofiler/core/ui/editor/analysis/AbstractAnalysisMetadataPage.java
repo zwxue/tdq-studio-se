@@ -323,14 +323,12 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public void fireRuningItemChanged(boolean status) {
         ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
         ((AnalysisEditor) currentEditor).setRefreshResultPage(status);
-        if (status) {
+        // switch to result page at the beginning of running analysis, the status is false at the time
+        if (!status) {
             switchToResultPage();
         }
     }
 
-    /**
-     * DOC bZhou Comment method "switchToResultPage".
-     */
     protected void switchToResultPage() {
         IFormPage resultPage = currentEditor.findPage(AnalysisEditor.RESULT_PAGE);
         if (resultPage != null && !resultPage.isActive()) {

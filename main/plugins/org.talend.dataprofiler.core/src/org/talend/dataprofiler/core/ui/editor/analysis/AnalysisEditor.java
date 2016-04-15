@@ -257,6 +257,9 @@ public class AnalysisEditor extends SupportContextEditor {
             setSaveActionButtonState(false);
         }
         // TDQ-11422~
+
+        changeListener();
+
         super.pageChange(newPageIndex);
 
         if (isRefreshResultPage) {
