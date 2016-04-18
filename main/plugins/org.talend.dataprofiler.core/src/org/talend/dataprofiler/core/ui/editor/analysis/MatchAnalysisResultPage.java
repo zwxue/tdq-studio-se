@@ -113,10 +113,13 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
         duplicateRecordStatisticsSection = new DuplicateRecordStatisticsSection(form, parent, Section.TWISTIE | Section.TITLE_BAR
                 | Section.EXPANDED, toolkit, getAnalysisHandler().getAnalysis());
         duplicateRecordStatisticsSection.createContent();
+        duplicateRecordStatisticsSection.getSection().setExpanded(
+                getExpandedStatus(duplicateRecordStatisticsSection.getSection().getText()));
 
         groupStatisticsSection = new GroupStatisticsSection(form, parent, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
                 toolkit, getAnalysisHandler().getAnalysis());
         groupStatisticsSection.createContent();
+        groupStatisticsSection.getSection().setExpanded(getExpandedStatus(groupStatisticsSection.getSection().getText()));
     }
 
     /*

@@ -285,6 +285,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         matchingKeySection.createContent();
         registerSection(matchingKeySection.getSection());
         selectAlgorithmSection.setMatchKeySection(matchingKeySection);
+        matchingKeySection.getSection().setExpanded(getExpandedStatus(matchingKeySection.getSection().getText()));
         if (!selectAlgorithmSection.isVSRMode()) {
             // Hide the section in case of t-swoosh.
             matchingKeySection.changeSectionDisStatus(false);
@@ -303,7 +304,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         blockingKeySection.createContent();
         registerSection(blockingKeySection.getSection());
         selectAlgorithmSection.setBlockkeySection(blockingKeySection);
-        // blockingKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
+        blockingKeySection.getSection().setExpanded(getExpandedStatus(blockingKeySection.getSection().getText()));
     }
 
     /**
