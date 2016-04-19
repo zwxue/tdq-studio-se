@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.indicators.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class ValidPhoneCountIndicatorImplTest {
         validPhoneCountIndicatorImpl = new ValidPhoneCountIndicatorImpl();
         IndicatorParameters createIndicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         TextParameters textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-        textParameters.setCountryCode(java.util.Locale.getDefault().getCountry());
+        textParameters.setCountryCode(java.util.Locale.SIMPLIFIED_CHINESE.getCountry());
         createIndicatorParameters.setTextParameter(textParameters);
         validPhoneCountIndicatorImpl.setParameters(createIndicatorParameters);
     }
