@@ -930,8 +930,10 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
      */
     @Override
     public void setTreeViewInput(Object[] modelElements) {
-        // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
-        treeViewer.filterInputData(modelElements);
+        // TDQ-11878: fix the new created column set analysis about file connection should be java engine and not
+        // editable, the setInput method contains the filterInputData method
+        treeViewer.setInput(modelElements);
+        // TDQ-11878~
         refreshPreviewTable(treeViewer.getModelElementIndicator(), true);
         refreshTheTree(treeViewer.getModelElementIndicator());
         this.setDirty(true);
