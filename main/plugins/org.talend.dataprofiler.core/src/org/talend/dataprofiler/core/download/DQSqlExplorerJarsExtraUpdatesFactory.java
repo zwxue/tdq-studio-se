@@ -15,8 +15,6 @@ package org.talend.dataprofiler.core.download;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dq.helper.SqlExplorerUtils;
 
 public class DQSqlExplorerJarsExtraUpdatesFactory extends AbstractDQMissingJarsExtraUpdatesFactory {
@@ -79,7 +77,7 @@ public class DQSqlExplorerJarsExtraUpdatesFactory extends AbstractDQMissingJarsE
      */
     @Override
     protected String getCurrentVersion() {
-        return StringUtils.removeStart(SqlExplorerUtils.SQL_EXPLORER_VERSION, PluginConstant.UNDER_LINE);
+        return SqlExplorerUtils.PLUGIN_VERSION;
     }
 
 }

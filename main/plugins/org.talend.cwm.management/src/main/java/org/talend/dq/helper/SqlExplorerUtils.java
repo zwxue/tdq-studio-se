@@ -24,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -58,19 +59,17 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
 
     public static final String PLUGIN_NAME = "net.sourceforge.sqlexplorer"; //$NON-NLS-1$
 
-    public static final String SQL_EXPLORER_VERSION = "_6.1.1"; //$NON-NLS-1$
+    public static final String PLUGIN_VERSION = VersionUtils.getTalendVersion();; //$NON-NLS-1$
 
-    private static final String SQL_EXPLORER_MAVEN_VERSION = "-6.1.1"; //$NON-NLS-1$ 
+    private static final String VERSION_IN_FILENAME = "-" + PLUGIN_VERSION; //$NON-NLS-1$ 
 
-    public static final String JAR_FILE_NAME = PLUGIN_NAME + SQL_EXPLORER_VERSION + ".jar"; //$NON-NLS-1$ 
+    public static final String JAR_FILE_NAME = PLUGIN_NAME + ".jar"; //$NON-NLS-1$ 
 
-    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + SQL_EXPLORER_VERSION + SQL_EXPLORER_MAVEN_VERSION
-            + ".jar"; //$NON-NLS-1$ 
+    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ 
 
-    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + SQL_EXPLORER_VERSION + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
 
-    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME
-            + ".nl" + SQL_EXPLORER_VERSION + SQL_EXPLORER_MAVEN_VERSION + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME + ".nl" + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
 
     public static final String TALENDDATASET_CLASS_NAME = "net.sourceforge.sqlexplorer.dataset.mapdb.TalendDataSet"; //$NON-NLS-1$
 
