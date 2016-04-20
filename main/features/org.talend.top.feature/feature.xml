@@ -28,6 +28,10 @@
    <includes
          id="org.talend.model.migration.feature"
          version="0.0.0"/>
+         
+    <includes
+         id="org.talend.hadoop.distribution.feature"
+         version="0.0.0"/>
 
    <includes
          id="org.eclipse.help"
