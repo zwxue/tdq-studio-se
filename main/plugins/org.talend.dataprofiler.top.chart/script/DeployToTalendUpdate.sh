@@ -26,14 +26,15 @@
 #		</server>
 #		...
 #	</servers>
-# 2. copy this bundle jar files to deploy into the current folder.
+# 2. copy the 4 bundle files from the enterprise studio build into the current folder
+#    and overwrite the version and revision_suffix variable.
 # 3. run the script form shell. (Not supported on windows unless a shell environment
 #	 is installed, such as Cygwin, MinGW, Git Bash)
 
 list="net.sourceforge.sqlexplorer net.sourceforge.sqlexplorer.nl \
  org.talend.dataprofiler.top.chart org.talend.dataprofiler.top.chart.nl"
-version="6.1.1"
-revision_suffix="20151204_1535"
+version="6.2.0" # overwrite this variable
+revision_suffix="20160419_1937-SNAPSHOT" # overwrite this variable
 repo_id="talend-update"
 repo_url="https://talend-update.talend.com/nexus/content/repositories/libraries"
 
@@ -42,7 +43,7 @@ do
 	echo "----------------------------------------------------"
 	echo "|     " ${element}_${version} "     |"
 	echo "----------------------------------------------------"
-	mvn deploy:deploy-file -DpomFile=${element}_${version}.pom \
+	mvn deploy:deploy-file -DpomFile=${element}.pom \
       -Dfile=${element}_${version}.${revision_suffix}.jar \
       -DrepositoryId=$repo_id \
       -Durl=$repo_url
