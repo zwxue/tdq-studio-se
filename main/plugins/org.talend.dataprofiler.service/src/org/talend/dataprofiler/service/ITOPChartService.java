@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.talend.commons.utils.VersionUtils;
 import org.talend.dataprofiler.service.utils.ValueAggregator;
 
 /**
@@ -26,18 +27,17 @@ public interface ITOPChartService {
 
     public static final String PLUGIN_NAME = "org.talend.dataprofiler.top.chart"; //$NON-NLS-1$
 
-    static final String SERVICE_VERSION = "_6.1.1"; //$NON-NLS-1$
+    static final String PLUGIN_VERSION = VersionUtils.getTalendVersion();; //$NON-NLS-1$
 
-    static final String SERVICE_MAVEN_VERSION = "-6.1.1"; //$NON-NLS-1$ 
+    static final String VERSION_IN_FILENAME = "-" + PLUGIN_VERSION; //$NON-NLS-1$ 
 
-    public static final String JAR_FILE_NAME = PLUGIN_NAME + SERVICE_VERSION + ".jar"; //$NON-NLS-1$ 
+    public static final String JAR_FILE_NAME = PLUGIN_NAME + ".jar"; //$NON-NLS-1$ 
 
-    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + SERVICE_VERSION + SERVICE_MAVEN_VERSION + ".jar"; //$NON-NLS-1$ 
+    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ 
 
-    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + SERVICE_VERSION + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
 
-    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME
-            + ".nl" + SERVICE_VERSION + SERVICE_MAVEN_VERSION + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME + ".nl" + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
 
     Object getDatasetFromChart(Object chart, int datasetIndex);
 

@@ -168,7 +168,7 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
 
                                 for (File jarFile : jarFiles) {
                                     String pluginPath = Platform.getInstallLocation().getURL().getFile() + "plugins"; //$NON-NLS-1$
-                                    File movedfile = new File(pluginPath, jarFile.getName());
+                                    File movedfile = new File(pluginPath, jarFile.getName().replace(MavenConstants.SNAPSHOT, ""));
                                     if (!movedfile.exists()) {
                                         File target = new File(StringUtils.trimToEmpty(pluginPath));
                                         if (!target.exists()) {
