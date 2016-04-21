@@ -331,7 +331,10 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         topComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(topComp);
 
-        createRunButton(topComp);
+        Composite buttonComp = toolkit.createComposite(topComp);
+        buttonComp.setLayout(new GridLayout(2, false));
+        createColumnSelectButton(buttonComp);
+        createRunButton(buttonComp);
 
         Composite tree = toolkit.createComposite(topComp, SWT.None);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tree);
