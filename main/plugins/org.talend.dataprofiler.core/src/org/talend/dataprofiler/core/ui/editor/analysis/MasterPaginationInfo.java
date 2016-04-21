@@ -154,41 +154,48 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         final IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
         boolean isPattern = chartTypeState instanceof PatternStatisticsState;
         Object chart = null;
-        // MOD TDQ-8787 20140722 yyin:(when first switch from master to result) if there is some dynamic event for the
-        // current indicator, use its dataset directly (TDQ-9241)
-        IEventReceiver event = EventManager.getInstance().findRegisteredEvent(units.get(0).getIndicator(),
-                EventEnum.DQ_DYMANIC_CHART, 0);
-        if (event == null) {
-            chart = chartTypeState.getChart();
-        } else {
-            chart = chartTypeState.getChart(((DynamicChartEventReceiver) event).getDataset());
-        }// ~
+        try {
+            // MOD TDQ-8787 20140722 yyin:(when first switch from master to result) if there is some dynamic event for
+            // the
+            // current indicator, use its dataset directly (TDQ-9241)
+            IEventReceiver event = EventManager.getInstance().findRegisteredEvent(units.get(0).getIndicator(),
+                    EventEnum.DQ_DYMANIC_CHART, 0);
+            if (event == null) {
+                chart = chartTypeState.getChart();
+            } else {
+                chart = chartTypeState.getChart(((DynamicChartEventReceiver) event).getDataset());
+            }// ~
 
-        if (chart == null) {
-            return;
-        }
-        if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
-            TOPChartUtils.getInstance().decorateChart(chart, false);
-        } else {
-            TOPChartUtils.getInstance().decoratePatternMatching(chart);
-        }
-        Object chartComp = TOPChartUtils.getInstance().createChartComposite(comp, SWT.NONE, chart, true);
-        addListenerToChartComp(chartComp, chartTypeState);
+            if (chart == null) {
+                return;
+            }
+            if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
+                TOPChartUtils.getInstance().decorateChart(chart, false);
+            } else {
+                TOPChartUtils.getInstance().decoratePatternMatching(chart);
+            }
+            Object chartComp = TOPChartUtils.getInstance().createChartComposite(comp, SWT.NONE, chart, true);
+            addListenerToChartComp(chartComp, chartTypeState);
 
-        List<Indicator> indicators = getIndicators(units);
-        if (isSQLMode) {// use the dynamic model for SQL mode only.
-            DynamicIndicatorModel dyModel = AnalysisUtils.createDynamicModel(chartType, indicators, chart);
-            if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
-                if (units.size() == SummaryStatisticsState.FULL_FLAG) {
-                    indicators = getIndicatorsForTable(units, false);
+            List<Indicator> indicators = getIndicators(units);
+            if (isSQLMode) {// use the dynamic model for SQL mode only.
+                DynamicIndicatorModel dyModel = AnalysisUtils.createDynamicModel(chartType, indicators, chart);
+                if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+                    if (units.size() == SummaryStatisticsState.FULL_FLAG) {
+                        indicators = getIndicatorsForTable(units, false);
+                    }
+                    dyModel.setSummaryIndicators(indicators);
                 }
-                dyModel.setSummaryIndicators(indicators);
+                this.dynamicList.add(dyModel);
+                if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+                    // for summary indicators: need to record the chart composite, which is used for create BAW chart
+                    dyModel.setBawParentChartComp(chartComp);
+                }
             }
-            this.dynamicList.add(dyModel);
-            if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
-                // for summary indicators: need to record the chart composite, which is used for create BAW chart
-                dyModel.setBawParentChartComp(chartComp);
-            }
+        } catch (Error e) {
+            log.error(DefaultMessagesImpl.getString("IndicatorPaginationInfo.FailToCreateChart"), e); //$NON-NLS-1$
+        } catch (Exception exp) {
+            log.error(DefaultMessagesImpl.getString("IndicatorPaginationInfo.FailToCreateChart"), exp); //$NON-NLS-1$
         }
 
     }

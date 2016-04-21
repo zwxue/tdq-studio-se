@@ -50,7 +50,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  */
 public abstract class IndicatorPaginationInfo extends PaginationInfo {
 
-    private static Logger log = Logger.getLogger(IndicatorPaginationInfo.class);
+    protected static Logger log = Logger.getLogger(IndicatorPaginationInfo.class);
 
     private static final int PAGE_SIZE = 5;
 

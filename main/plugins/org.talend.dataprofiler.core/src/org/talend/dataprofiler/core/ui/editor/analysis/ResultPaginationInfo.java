@@ -307,46 +307,55 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         dyModel.setIndicatorList(indicators);
 
         // create chart
-        if (!EditorPreferencePage.isHideGraphicsForResultPage() && TOPChartUtils.getInstance().isTOPChartInstalled()) {
-            IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
-            boolean isPattern = chartTypeState instanceof PatternStatisticsState;
-            if (event == null) {
-                chart = chartTypeState.getChart();
-                if (chart != null && isSQLMode) {// chart is null for MODE. Get the dataset by this way for SQL mode
-                    if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)) {
-                        dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, 1);
-                        dyModel.setSecondDataset(TOPChartUtils.getInstance().getDatasetFromChart(chart, 0));
+        try {
+            if (!EditorPreferencePage.isHideGraphicsForResultPage() && TOPChartUtils.getInstance().isTOPChartInstalled()) {
+                IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
+                boolean isPattern = chartTypeState instanceof PatternStatisticsState;
+                if (event == null) {
+                    chart = chartTypeState.getChart();
+                    if (chart != null && isSQLMode) {// chart is null for MODE. Get the dataset by this way for SQL mode
+                        if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)) {
+                            dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, 1);
+                            dyModel.setSecondDataset(TOPChartUtils.getInstance().getDatasetFromChart(chart, 0));
+                        } else {
+                            dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, -1);
+                        }
+                    }
+                } else {
+                    chart = chartTypeState.getChart(dataset);
+                }
+
+                dyModel.setDataset(dataset);
+                if (chart != null) {
+                    if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
+                        TOPChartUtils.getInstance().decorateChart(chart, false);
                     } else {
-                        dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, -1);
+                        TOPChartUtils.getInstance().decoratePatternMatching(chart);
+                    }
+                    Object chartComposite = TOPChartUtils.getInstance().createTalendChartComposite(composite, SWT.NONE, chart,
+                            true);
+                    if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+                        // for summary indicators: need to record the chart composite, which is used for create BAW
+                        // chart
+                        dyModel.setBawParentChartComp(chartComposite);
+                    }
+
+                    Map<String, Object> menuMap = createMenuForAllDataEntity(((Composite) chartComposite).getShell(),
+                            dataExplorer, analysis, ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
+                    // call chart service to create related mouse listener
+                    if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)
+                            || EIndicatorChartType.FREQUENCE_STATISTICS.equals(chartType)) {
+                        TOPChartUtils.getInstance().addMouseListenerForChart(chartComposite, menuMap, false);
+                    } else {
+                        TOPChartUtils.getInstance().addMouseListenerForChart(chartComposite, menuMap, true);
                     }
                 }
-            } else {
-                chart = chartTypeState.getChart(dataset);
             }
-
-            dyModel.setDataset(dataset);
-            if (chart != null) {
-                if (!isPattern) { // need not to decorate the chart of Pattern(Regex/Sql/UdiMatch)
-                    TOPChartUtils.getInstance().decorateChart(chart, false);
-                } else {
-                    TOPChartUtils.getInstance().decoratePatternMatching(chart);
-                }
-                Object chartComposite = TOPChartUtils.getInstance().createTalendChartComposite(composite, SWT.NONE, chart, true);
-                if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
-                    // for summary indicators: need to record the chart composite, which is used for create BAW chart
-                    dyModel.setBawParentChartComp(chartComposite);
-                }
-
-                Map<String, Object> menuMap = createMenuForAllDataEntity(((Composite) chartComposite).getShell(), dataExplorer,
-                        analysis, ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
-                // call chart service to create related mouse listener
-                if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)
-                        || EIndicatorChartType.FREQUENCE_STATISTICS.equals(chartType)) {
-                    TOPChartUtils.getInstance().addMouseListenerForChart(chartComposite, menuMap, false);
-                } else {
-                    TOPChartUtils.getInstance().addMouseListenerForChart(chartComposite, menuMap, true);
-                }
-            }
+            // TDQ-11886 add these 2 catches.make it continue to work even if encounter some problems.
+        } catch (Error e) {
+            log.error(DefaultMessagesImpl.getString("IndicatorPaginationInfo.FailToCreateChart"), e); //$NON-NLS-1$
+        } catch (Exception exp) {
+            log.error(DefaultMessagesImpl.getString("IndicatorPaginationInfo.FailToCreateChart"), exp); //$NON-NLS-1$
         }
 
         subComp.setClient(composite);
