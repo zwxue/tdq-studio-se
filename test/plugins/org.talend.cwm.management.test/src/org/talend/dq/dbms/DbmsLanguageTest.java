@@ -1023,7 +1023,7 @@ public class DbmsLanguageTest {
      * .
      */
     @Test
-    public void testGetSqlExpression_1() {
+    public void testGetSqlExpressionUserDefineCase1() {
         // create indicator
         UserDefIndicator userDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
         UDIndicatorDefinition indicatorDefinition = UserdefineFactory.eINSTANCE.createUDIndicatorDefinition();
@@ -1052,7 +1052,7 @@ public class DbmsLanguageTest {
      * .
      */
     @Test
-    public void testGetSqlExpression_2() {
+    public void testGetSqlExpressionUserDefineCase2() {
         // test for can not get sql expression(means: both database type and default type don't exist)
         // create indicator
         UserDefIndicator userDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
@@ -2654,7 +2654,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression2_1() {
+    public void testGetSqlExpressionDB2Case1() {
         String sqlLang = "SQL"; //$NON-NLS-1$
         String sqlBody = "SQL body"; //$NON-NLS-1$
 
@@ -2697,7 +2697,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression2_2() {
+    public void testGetSqlExpressionDB2Case2() {
         String sqlLang = "SQL"; //$NON-NLS-1$
         String sqlBody = "SQL body"; //$NON-NLS-1$
 
@@ -2740,7 +2740,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression2_3() {
+    public void testGetSqlExpressionDB2Case3() {
         String sqlLang = "SQL"; //$NON-NLS-1$
         String sqlBody = "SQL body"; //$NON-NLS-1$
 
@@ -2777,7 +2777,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression2_4() {
+    public void testGetSqlExpressionDB2Case4() {
         String sqlLang = "SQL"; //$NON-NLS-1$
         String sqlBody = "SQL body"; //$NON-NLS-1$
 
@@ -2814,7 +2814,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression2_5() {
+    public void testGetSqlExpressionDB2Case5() {
         String sqlLang = "SQL"; //$NON-NLS-1$
         String sqlBody = "SQL body"; //$NON-NLS-1$
 
@@ -2857,7 +2857,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression2_6() {
+    public void testGetSqlExpressionDB2Case6() {
         String db2Lang = "DB2"; //$NON-NLS-1$
         String db2Body = "DB2 body"; //$NON-NLS-1$
 
@@ -2892,7 +2892,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression_redshift_1() {
+    public void testGetSqlExpressionRedshiftCase1() {
         // TDQ-11558 msjian: test for get sql expresstion for redshift database
         String sqlLang = "SQL"; //$NON-NLS-1$
         String sqlBody = "SQL body"; //$NON-NLS-1$
@@ -2934,7 +2934,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression_redshift_2() {
+    public void testGetSqlExpressionRedshiftCase2() {
         // TDQ-11558 msjian: test for get sql expresstion for redshift database when there is no redshift defined
         String sqlLang = "SQL"; //$NON-NLS-1$
         String sqlBody = "SQL body"; //$NON-NLS-1$
@@ -2970,7 +2970,7 @@ public class DbmsLanguageTest {
      * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
      */
     @Test
-    public void testGetSqlExpression_redshift_3() {
+    public void testGetSqlExpressionRedshiftCase3() {
         // TDQ-11558 msjian: test for get sql expresstion for redshift database when there is no redshift and ParAccel
         // and PostgreSQL defined
         String sqlLang = "SQL"; //$NON-NLS-1$
