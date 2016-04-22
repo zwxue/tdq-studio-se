@@ -61,6 +61,9 @@ public class DuplicateRecordPieChart {
     }
 
     public void refreshChart(List<DuplicateStatisticsRow> dupStatistics) {
+        if (chartComposite == null) {
+            return;
+        }
         ((Composite) chartComposite).dispose();
         createPieChart(dupStatistics);
         ((Composite) chartComposite).getParent().layout();
