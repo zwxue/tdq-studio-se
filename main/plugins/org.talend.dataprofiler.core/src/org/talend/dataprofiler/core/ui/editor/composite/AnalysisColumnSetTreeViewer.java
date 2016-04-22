@@ -642,19 +642,18 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         return this.masterPage.getAnalysisRepNode();
     }
 
-    // public List<String> getComboString() {
-    // return comboTextList;
-    // }
-
     public Tree getTree() {
         return tree;
     }
 
     @Override
     public void updateModelViewer() {
+        // TDQ-11927 msjian: fix for column set analysis, when the connection is changed, refresh the data preview part
         masterPage.recomputeIndicators();
         columnSetMultiValueList.clear();
-        this.setElements(masterPage.getCurrentModelElementIndicators());
+        modelElementIndicators = masterPage.getCurrentModelElementIndicators();
+        masterPage.refreshPreviewTable(modelElementIndicators, true);
+        masterPage.refreshTheTree(modelElementIndicators);
     }
 
     @Override
