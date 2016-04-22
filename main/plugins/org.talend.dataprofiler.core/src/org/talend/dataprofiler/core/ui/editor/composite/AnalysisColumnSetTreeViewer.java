@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,7 +68,10 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.ColumnSetRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.TalendTypeConvert;
@@ -298,7 +302,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         if (objs != null && objs.length != 0) {
             List<DBColumnRepNode> columnList = new ArrayList<DBColumnRepNode>();
             for (Object obj : objs) {
-                if (obj instanceof DBColumnRepNode) {
+                // TDQ-11926: create column set analysis by right click "Analyses" in wizard select db table node,
+                // default is should be sql engine.
+                if (obj instanceof DBTableRepNode || obj instanceof DBViewRepNode) {
+                    columnList.addAll((Collection<? extends DBColumnRepNode>) ((ColumnSetRepNode) obj).getAllColumns());
+                } else if (obj instanceof DBColumnRepNode) {
                     columnList.add((DBColumnRepNode) obj);
                 }
             }
