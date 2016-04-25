@@ -1428,7 +1428,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected void saveContext() {
         // save contexts
         Analysis analysis = getAnalysis();
-        analysis.getContextType().clear();
         IContextManager contextManager = currentEditor.getContextManager();
         contextManager.saveToEmf(analysis.getContextType());
         analysis.setDefaultContext(getDefaultContextGroupName((SupportContextEditor) currentEditor));
