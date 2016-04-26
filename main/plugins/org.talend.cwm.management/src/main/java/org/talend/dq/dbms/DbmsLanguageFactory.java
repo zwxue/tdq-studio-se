@@ -128,6 +128,8 @@ public final class DbmsLanguageFactory {
             dbmsLanguage = new PostgresqlDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isParAccel(dbmsSubtype)) {
             dbmsLanguage = new RedshiftDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isExasol(dbmsSubtype)) {
+            dbmsLanguage = new ExasolDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isSybase(dbmsSubtype)) {
             dbmsLanguage = new SybaseASEDbmsLanguage(dbVersion);
         } else if (isSQLite(dbmsSubtype)) {
@@ -283,17 +285,13 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.REDSHIFT, dbms);
     }
 
-    /**
-     * judge whether the dmbs is Netezza
-     * 
-     * @param dbmsSubtype
-     * @return
-     */
+    public static boolean isExasol(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.EXASOLUTION, dbms);
+    }
+
     private static boolean isNetezza(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.NETEZZA, dbms);
     }
-
-    // ~11005
 
     public static boolean isAllDatabaseType(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.SQL, dbms);

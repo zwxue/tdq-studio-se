@@ -104,7 +104,8 @@ public enum PatternLanguageType {
          PatternToExcelEnum.Hive),
 
     VERTICA(13, SupportDBUrlType.VERTICA.getLanguage(), SupportDBUrlType.VERTICA.getLanguage(), PatternToExcelEnum.Vertica),
-    REDSHIFT(14, SupportDBUrlType.REDSHIFT.getDBKey(), SupportDBUrlType.REDSHIFT.getLanguage(), PatternToExcelEnum.REDSHIFT);
+    REDSHIFT(14, SupportDBUrlType.REDSHIFT.getDBKey(), SupportDBUrlType.REDSHIFT.getLanguage(), PatternToExcelEnum.REDSHIFT),
+    EXASOL(15, SupportDBUrlType.EXASOL.getDBKey(), SupportDBUrlType.EXASOL.getLanguage(), PatternToExcelEnum.EXASOL);
 
     private int index;
 
@@ -141,7 +142,9 @@ public enum PatternLanguageType {
         if (name.equalsIgnoreCase(SupportDBUrlType.REDSHIFT.getDBKey())) {
             return SupportDBUrlType.REDSHIFT.getLanguage();
         }
-
+        if (name.equalsIgnoreCase(SupportDBUrlType.EXASOL.getDBKey())) {
+            return SupportDBUrlType.EXASOL.getLanguage();
+        }
         for (PatternLanguageType oneType : values()) {
             // we should consider the name like "Hive | Impala"
             if (name != null && StringUtils.startsWithIgnoreCase(name, oneType.getName())) {
@@ -155,6 +158,9 @@ public enum PatternLanguageType {
     public static String findNameByLanguage(String language) {
         if (language.equalsIgnoreCase(SupportDBUrlType.REDSHIFT.getLanguage())) {
             return SupportDBUrlType.REDSHIFT.getDBKey();
+        }
+        if (language.equalsIgnoreCase(SupportDBUrlType.EXASOL.getLanguage())) {
+            return SupportDBUrlType.EXASOL.getDBKey();
         }
         for (PatternLanguageType oneType : values()) {
             if (language != null && StringUtils.equalsIgnoreCase(language, oneType.getLiteral())) {

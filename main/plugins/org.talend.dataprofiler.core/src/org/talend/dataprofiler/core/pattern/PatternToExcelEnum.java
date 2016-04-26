@@ -43,7 +43,8 @@ public enum PatternToExcelEnum {
     Hive(22, "Hive"), //$NON-NLS-1$
     Vertica(23, "Vertica"), //$NON-NLS-1$
     IndicatorDefinitionParameter(23, "IndicatorDefinitionParameter"), //$NON-NLS-1$
-    REDSHIFT(24, "RedShift"); //$NON-NLS-1$
+    REDSHIFT(24, "RedShift"), //$NON-NLS-1$
+    EXASOL(25, "Exasol"); //$NON-NLS-1$
 
     private String literal;
 

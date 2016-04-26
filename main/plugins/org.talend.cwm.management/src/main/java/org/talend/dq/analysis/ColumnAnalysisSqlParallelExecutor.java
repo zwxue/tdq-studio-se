@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
@@ -127,6 +128,7 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
             return Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryIsNull", indicator.getName()); //$NON-NLS-1$
         } else {
             return Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryNotExecute", indicator.getName()) //$NON-NLS-1$
+                    + PluginConstant.SPACE_STRING
                     + Messages.getString("ColumnAnalysisSqlParallelExecutor.SQLQuery", query.getBody()); //$NON-NLS-1$
         }
     }

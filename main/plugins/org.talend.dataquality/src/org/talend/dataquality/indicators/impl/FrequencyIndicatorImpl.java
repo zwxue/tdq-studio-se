@@ -809,7 +809,8 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         }
         // else
         String str = String.valueOf(month);
-        return F2_DIGIT.format(Integer.valueOf(str));
+        // MOD msjian for exasol, the str value can be "1.0"
+        return F2_DIGIT.format(Double.valueOf(str));
     }
 
     /**
@@ -824,7 +825,8 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         }
         // else
         String str = String.valueOf(year);
-        return F4_DIGIT.format(Integer.valueOf(str));
+        // MOD msjian for exasol, the str value can be "2008.0"
+        return F4_DIGIT.format(Double.valueOf(str));
     }
 
     /*

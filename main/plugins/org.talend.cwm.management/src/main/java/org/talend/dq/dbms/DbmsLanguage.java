@@ -123,6 +123,8 @@ public class DbmsLanguage {
 
     static final String REDSHIFT = SupportDBUrlType.REDSHIFT.getLanguage();
 
+    static final String EXASOLUTION = SupportDBUrlType.EXASOL.getLanguage();
+
     /**
      * Ansi SQL.
      */
