@@ -33,7 +33,9 @@ public class RegexExpeHelpUrlTest {
 
     private final String mysqlUrl = "http://dev.mysql.com/doc/refman/5.0/en/regexp.html"; //$NON-NLS-1$
 
-    private final String sqlserverlUrl = "http://msdn.microsoft.com/en-us/magazine/cc163473.aspx"; //$NON-NLS-1$
+    //    private final String oldSqlserverlUrl = "http://msdn.microsoft.com/en-us/magazine/cc163473.aspx"; //$NON-NLS-1$
+
+    private final String sqlserverlUrl = "https://blogs.msdn.microsoft.com/sqlclr/2005/06/29/working-with-regular-expressions/"; //$NON-NLS-1$
 
     private final String oracleUrl = "http://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_regexp.htm"; //$NON-NLS-1$
 
@@ -54,55 +56,48 @@ public class RegexExpeHelpUrlTest {
 
     @Test
     public void testOracleHelpUrl() throws ClientProtocolException, IOException {
-        StatusLine statusLine = execute(oracleUrl);
-        assertNotNull(statusLine);
-        assertEquals(200, statusLine.getStatusCode());
+        assertSatus(oracleUrl);
 
     }
 
     @Test
     public void testPostgreSqlHelpUrl() throws ClientProtocolException, IOException {
-
-        StatusLine statusLine = execute(postgreSqlUrl);
-        assertNotNull(statusLine);
-        assertEquals(200, statusLine.getStatusCode());
+        assertSatus(postgreSqlUrl);
     }
 
     @Test
     public void testDB2HelpUrl() throws ClientProtocolException, IOException {
-
-        StatusLine statusLine = execute(db2Url);
-        assertNotNull(statusLine);
-        assertEquals(200, statusLine.getStatusCode());
+        assertSatus(db2Url);
     }
 
     @Test
     public void testInformixHelpUrl() throws ClientProtocolException, IOException {
-
-        StatusLine statusLine = execute(informixUrl);
-        assertNotNull(statusLine);
-        assertEquals(200, statusLine.getStatusCode());
+        assertSatus(informixUrl);
     }
 
     @Test
     public void testSQLServerHelpUrl() throws ClientProtocolException, IOException {
-
-        StatusLine statusLine = execute(sqlserverlUrl);
-        assertNotNull(statusLine);
-        assertEquals(200, statusLine.getStatusCode());
+        assertSatus(sqlserverlUrl);
+        // StatusLine statusLine = execute(oldSqlserverlUrl);
+        // assertNotNull(statusLine);
+        // assertFalse(statusLine.getStatusCode() == 200);
     }
 
     @Test
     public void testSQLLiteelpUrl() throws ClientProtocolException, IOException {
+        assertSatus(sqlLiteUrl);
+    }
 
-        StatusLine statusLine = execute(sqlLiteUrl);
-        assertNotNull(statusLine);
-        assertEquals(200, statusLine.getStatusCode());
+    private void assertSatus(String helpUrl) throws ClientProtocolException, IOException {
+        StatusLine statusLine = execute(helpUrl);
+        assertNotNull(helpUrl + "is null!" + statusLine); //$NON-NLS-1$
+        assertEquals(helpUrl + "has an unexpected http status code: statusLine.getStatusCode()" + 200, 200, //$NON-NLS-1$
+                statusLine.getStatusCode());
     }
 
     private StatusLine execute(String helpUrl) throws ClientProtocolException, IOException {
         StatusLine statusLine = null;
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpClient httpclient = HttpClients.createMinimal();
         try {
             HttpGet httpget = new HttpGet(helpUrl);
             CloseableHttpResponse execute = httpclient.execute(httpget);
