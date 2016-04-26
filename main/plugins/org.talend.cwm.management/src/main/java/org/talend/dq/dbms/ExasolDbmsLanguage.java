@@ -99,4 +99,25 @@ public class ExasolDbmsLanguage extends DbmsLanguage {
         }
 
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String regexLike(String element, String regex) {
+        return surroundWithSpaces(element + surroundWithSpaces(getRegularExpressionFunction()) + regex);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String regexNotLike(String element, String regex) {
+        return surroundWithSpaces(element + surroundWithSpaces(this.not() + getRegularExpressionFunction()) + regex);
+    }
+
 }
