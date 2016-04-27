@@ -49,9 +49,7 @@ public class RegexExpeHelpUrlTest {
 
     @Test
     public void testMysqlHelpUrl() throws ClientProtocolException, IOException {
-        StatusLine statusLine = execute(mysqlUrl);
-        assertNotNull(statusLine);
-        assertEquals(200, statusLine.getStatusCode());
+        assertSatus(mysqlUrl);
     }
 
     @Test
@@ -90,7 +88,7 @@ public class RegexExpeHelpUrlTest {
 
     private void assertSatus(String helpUrl) throws ClientProtocolException, IOException {
         StatusLine statusLine = execute(helpUrl);
-        assertNotNull(helpUrl + "is null!" + statusLine); //$NON-NLS-1$
+        assertNotNull(helpUrl + "status is null!" + statusLine); //$NON-NLS-1$
         assertEquals(helpUrl + "has an unexpected http status code: statusLine.getStatusCode()" + 200, 200, //$NON-NLS-1$
                 statusLine.getStatusCode());
     }
