@@ -2249,7 +2249,7 @@ public class DbmsLanguage {
      * @return query with random method
      */
     public String getRandomQuery(String query) {
-        // this method can be used for as400, db2, hive, ingres, mysql
+        // this method can be used for as400, db2, hive, ingres, mysql, exasol
         return query + orderBy() + "RAND() "; //$NON-NLS-1$
     }
 
