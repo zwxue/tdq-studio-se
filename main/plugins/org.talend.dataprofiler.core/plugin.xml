@@ -1821,6 +1821,12 @@
            name="Update Benford Law Indicator for PostgreSQL Task"
            version="6.2.0">
      </workspacetask>
+      <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.AddExasolRegularExpressionMatchingTask"
+           id="org.talend.dataprofiler.core.migration.impl.AddExasolRegularExpressionMatchingTask"
+           name="Add Exasol type expresstion to Regular Expression Matching indicator Task"
+           version="6.2.0">
+     </workspacetask>
   </extension>
   
   <extension
