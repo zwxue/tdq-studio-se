@@ -1107,8 +1107,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public void redrawWarningLabel() {
         String message = PluginConstant.EMPTY_STRING;
         boolean isVisible;
-        if (!sampleTable.isDataAvailable()) {
-            message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noDataAvailableWarning"); //$NON-NLS-1$
+        if (!sampleTable.isDataAvailable().isOk()) {
+            message = sampleTable.isDataAvailable().getMessage();
             isVisible = true;
         } else {
             message = DefaultMessagesImpl.getString(

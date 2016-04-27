@@ -160,7 +160,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private EventReceiver refreshDataProiverLabel = null;
 
-    private boolean isDataAvailable = true;
+    private ReturnCode isDataAvailable = new ReturnCode();
 
     /**
      * MatchMasterDetailsPage constructor.
@@ -1088,8 +1088,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     public void redrawWarningLabel() {
         String message = PluginConstant.EMPTY_STRING;
         boolean isVisible = false;
-        if (!isDataAvailable) {
-            message = DefaultMessagesImpl.getString("ColumnMasterDetailsPage.noDataAvailableWarning"); //$NON-NLS-1$
+        if (!isDataAvailable.isOk()) {
+            message = isDataAvailable.getMessage();
             isVisible = true;
         }
 
@@ -1331,14 +1331,13 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         }
         try {
             // set limit
-            isDataAvailable = true;
             sqlExecutor.setLimit(Integer.valueOf(rowLoadedText.getText()));
             sqlExecutor.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
             return sqlExecutor.executeQuery(this.analysisHandler.getConnection(),
                     Arrays.asList(analysisHandler.getSelectedColumns()));
         } catch (SQLException e) {
-            log.error(e, e);
-            isDataAvailable = false;
+            isDataAvailable.setMessage(e.getMessage());
+            isDataAvailable.setOk(false);
             return new ArrayList<Object[]>();
         }
     }

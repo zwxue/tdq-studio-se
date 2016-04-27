@@ -83,6 +83,7 @@ import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -167,7 +168,11 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     private boolean isSameTable = true;
 
-    private boolean isDataAvailable = true;
+    private ReturnCode isDataAvailable = new ReturnCode();
+
+    public ReturnCode isDataAvailable() {
+        return this.isDataAvailable;
+    }
 
     private List<TDQObserver<Map<String, Integer>>> Observers = null;
 
@@ -1047,9 +1052,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         List<Object[]> listOfData = null;
         try {
             listOfData = getPreviewData(columns, withData);
-            setDataAvailable(true);
         } catch (SQLException e) {
-            setDataAvailable(false);
+            isDataAvailable.setMessage(e.getMessage());
+            isDataAvailable.setOk(false);
             needLoadData = false;
         }
         createNatTable(listOfData, drawCanvas, columns);
@@ -1280,21 +1285,4 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         }
     }
 
-    /**
-     * Getter for isDataAvailable.
-     * 
-     * @return the isDataAvailable
-     */
-    public boolean isDataAvailable() {
-        return isDataAvailable;
-    }
-
-    /**
-     * Sets the isDataAvailable.
-     * 
-     * @param isDataAvailable the isDataAvailable to set
-     */
-    public void setDataAvailable(boolean isDataAvailable) {
-        this.isDataAvailable = isDataAvailable;
-    }
 }
