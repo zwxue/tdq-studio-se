@@ -1816,9 +1816,9 @@
            version="6.1.0">
      </workspacetask>
      <workspacetask
-           class="org.talend.dataprofiler.core.migration.impl.UpdateBenfordLaw4PostgreSQLTask"
-           id="org.talend.dataprofiler.core.migration.impl.UpdateBenfordLaw4PostgreSQLTask"
-           name="Update Benford Law Indicator for PostgreSQL Task"
+           class="org.talend.dataprofiler.core.migration.impl.AddBenfordLaw4RedshiftTask"
+           id="org.talend.dataprofiler.core.migration.impl.AddBenfordLaw4RedshiftTask"
+           name="add Benford Law Indicator for Redshift Task"
            version="6.2.0">
      </workspacetask>
       <workspacetask

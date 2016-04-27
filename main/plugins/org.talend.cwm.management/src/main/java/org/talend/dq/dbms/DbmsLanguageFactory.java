@@ -127,7 +127,7 @@ public final class DbmsLanguageFactory {
         } else if (isPostgresql(dbmsSubtype)) {
             dbmsLanguage = new PostgresqlDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isParAccel(dbmsSubtype)) {
-            dbmsLanguage = new RedshiftDbmsLanguage(dbmsSubtype, dbVersion);
+            dbmsLanguage = new RedshiftDbmsLanguage(SupportDBUrlType.REDSHIFT.getDBKey(), dbVersion);
         } else if (isExasol(dbmsSubtype)) {
             dbmsLanguage = new ExasolDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isSybase(dbmsSubtype)) {

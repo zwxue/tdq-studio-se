@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -23,7 +24,7 @@ import org.talend.utils.ProductVersion;
 public class RedshiftDbmsLanguage extends PostgresqlDbmsLanguage {
 
     public RedshiftDbmsLanguage() {
-        super(DbmsLanguage.REDSHIFT);
+        super(SupportDBUrlType.REDSHIFT.getDBKey());
     }
 
     public RedshiftDbmsLanguage(String dbmsType) {

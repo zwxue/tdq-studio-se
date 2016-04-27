@@ -64,6 +64,7 @@ public class AddExasolRegularExpressionMatchingTask extends AbstractWorksapceUpd
                             EXASolution,
                             "SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> REGEXP_LIKE <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
             IndicatorDefinitionFileHelper.save(regexPatternDefinition);
+            DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
         }
         return true;
     }

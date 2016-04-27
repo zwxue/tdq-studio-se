@@ -14,23 +14,23 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
- * created by msjian on 2016,3,3 for TDQ-11558: fix the expression can be used for redshift
+ * for TDQ-11558 TDQ-11853 msjian: add the expression can be used for redshift for the benford law.
  *
  */
-public class UpdateBenfordLaw4PostgreSQLTask extends AbstractWorksapceUpdateTask {
+public class AddBenfordLaw4RedshiftTask extends AbstractWorksapceUpdateTask {
 
-    private String indicatorLabel = "Benford Law Frequency"; //$NON-NLS-1$
+    private static final String BENFORD_LAW_UUID = "_yRkFIezIEeG0fbygDv6UrQ"; //$NON-NLS-1$
 
-    private String expressionBody = "SELECT SUBSTRING(cast(<%=__COLUMN_NAMES__%> as char),1,2), COUNT(*)  FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY SUBSTRING(cast(<%=__COLUMN_NAMES__%> as char),1,2) order by SUBSTRING(cast(<%=__COLUMN_NAMES__%> as char),1,2)"; //$NON-NLS-1$
+    private final String Redshift = SupportDBUrlType.REDSHIFT.getDBKey();
+
+    private DefinitionHandler definitionHandler;
 
     public Date getOrder() {
         return createDate(2016, 3, 3);
@@ -42,19 +42,19 @@ public class UpdateBenfordLaw4PostgreSQLTask extends AbstractWorksapceUpdateTask
 
     @Override
     protected boolean doExecute() throws Exception {
-        boolean result = false;
-        IndicatorDefinition indiDefinition = IndicatorDefinitionFileHelper.getSystemIndicatorByName(indicatorLabel);
-        String sybaseLanguage = SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage();
-        if (indiDefinition != null) {
-            EList<TdExpression> sqlGenericExpression = indiDefinition.getSqlGenericExpression();
-            for (TdExpression exp : sqlGenericExpression) {
-                if (sybaseLanguage.equals(exp.getLanguage())) {
-                    exp.setBody(expressionBody);
-                }
-            }
-            result = IndicatorDefinitionFileHelper.save(indiDefinition);
+        definitionHandler = DefinitionHandler.getInstance();
+        IndicatorDefinition regexPatternDefinition = definitionHandler.getDefinitionById(BENFORD_LAW_UUID);
+        if (regexPatternDefinition != null
+                && !IndicatorDefinitionFileHelper.isExistSqlExprWithLanguage(regexPatternDefinition, Redshift)) {
+            IndicatorDefinitionFileHelper
+                    .addSqlExpression(
+                            regexPatternDefinition,
+                            Redshift,
+                            "SELECT SUBSTRING(<%=__COLUMN_NAMES__%>,1,2), COUNT(*)  FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY SUBSTRING(<%=__COLUMN_NAMES__%>,1,2) order by SUBSTRING(<%=__COLUMN_NAMES__%>,1,2)"); //$NON-NLS-1$
+            IndicatorDefinitionFileHelper.save(regexPatternDefinition);
             DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
         }
-        return result;
+
+        return true;
     }
 }
