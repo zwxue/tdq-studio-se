@@ -22,6 +22,6 @@ public interface ISemanticStudioService {
 
     int openSemanticDiscoveryWizard(MetadataTable metadataTable);
 
-    Wizard getSemanticDiscoveryWizard(MetadataTable metadataTable);
+    Wizard getSemanticDiscoveryWizard(MetadataTable metadataTable, Object parameter);
 
 }

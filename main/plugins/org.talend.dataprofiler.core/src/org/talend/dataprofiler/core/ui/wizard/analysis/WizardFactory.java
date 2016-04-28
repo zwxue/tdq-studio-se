@@ -19,10 +19,10 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.pattern.CreatePatternWizard;
 import org.talend.dataprofiler.core.sql.CreateSqlFileWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.catalog.CatalogAnalysisWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.BasicColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnSetWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.DiscreteDataWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.column.BasicColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.MatchWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.NominalCorrelationWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.NominalValuesWizard;
@@ -93,7 +93,7 @@ public final class WizardFactory {
                 if (((AnalysisLabelParameter) parameter).isSemanticDiscoveryAnalysis()) {
                     ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
                     if (service != null) {
-                        return service.getSemanticDiscoveryWizard(null);
+                        return service.getSemanticDiscoveryWizard(null, parameter);
                     }
                 }
 
