@@ -538,7 +538,6 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             return;
         }
         listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA, true, false);
-        RecordMatchingIndicator recordMatchingIndicator;
         List<Object[]> results;
         // MOD TDQ-9741: "chart" button will compute, "hide group" will not compute
         if (needCompute) {
@@ -551,7 +550,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 }
                 return;
             }
-            recordMatchingIndicator = computeMatchResult.getObject();
+            RecordMatchingIndicator recordMatchingIndicator = computeMatchResult.getObject();
             matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
 
             // sort the result before refresh

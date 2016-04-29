@@ -352,10 +352,10 @@ public class AnalysisRecordGroupingUtils {
         // Column index list store all the indices.
         List<String> allColumnIndice = new ArrayList<String>();
         for (MatchRule matcher : matchRules) {
-            List<Map<String, String>> currentRuleMatcher = new ArrayList<Map<String, String>>();
             if (matcher == null) {
                 continue;
             }
+            List<Map<String, String>> currentRuleMatcher = new ArrayList<Map<String, String>>();
             List<String> currentColumnIndice = new ArrayList<String>();
             for (MatchKeyDefinition matchDef : matcher.getMatchKeys()) {
                 // check if the current match key does not contain any
