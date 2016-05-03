@@ -1695,6 +1695,12 @@
            name="Update the ReportEditor analysis execute Begin and End type from Date to string Task"
            version="5.6.0">
      </workspacetask>
+      <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDBConnectionDriverJarPathTask.java"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDBConnectionDriverJarPathTask.java"
+           name="Update DBConnection DriverJarPath Task"
+           version="5.6.4">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
