@@ -1821,10 +1821,16 @@
            name="add Benford Law Indicator for Redshift Task"
            version="6.2.0">
      </workspacetask>
-      <workspacetask
+     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.AddExasolRegularExpressionMatchingTask"
            id="org.talend.dataprofiler.core.migration.impl.AddExasolRegularExpressionMatchingTask"
            name="Add Exasol type expresstion to Regular Expression Matching indicator Task"
+           version="6.2.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDBConnectionDriverJarPathTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDBConnectionDriverJarPathTask"
+           name="Update DBConnection DriverJarPath Task"
            version="6.2.0">
      </workspacetask>
   </extension>
