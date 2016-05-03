@@ -1790,6 +1790,12 @@
            name="Add pattern ISBN_13 and update IPV6"
            version="6.0.2">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDBConnectionDriverJarPathTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDBConnectionDriverJarPathTask"
+           name="Update DBConnection DriverJarPath Task"
+           version="6.0.2">
+     </workspacetask>
   </extension>
   
   <extension
