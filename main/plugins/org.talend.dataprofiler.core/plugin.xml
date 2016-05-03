@@ -1805,6 +1805,12 @@
            name="Rename Pattern Finder to Pattern Frequency Statistics"
            version="6.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDBConnectionDriverJarPathTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDBConnectionDriverJarPathTask"
+           name="Update DBConnection DriverJarPath Task"
+           version="6.1.2">
+     </workspacetask>
   </extension>
   
   <extension
