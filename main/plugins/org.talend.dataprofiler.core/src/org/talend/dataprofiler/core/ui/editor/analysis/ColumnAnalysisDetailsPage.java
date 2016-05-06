@@ -101,6 +101,7 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.table.ColumnAnalysisDataSamTable;
 import org.talend.dq.analysis.ColumnAnalysisHandler;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
@@ -445,8 +446,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotOpenSelectIndicatorDialog")); //$NON-NLS-1$
                         return;
                     }
-                    ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnAnalysisDetailsPage.this.getSite()
-                            .getShell());
+                    ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnAnalysisDetailsPage.this
+                            .getSite().getShell());
                     if (result != null) {
                         refreshCurrentTreeViewer(result);
                         refreshPreviewTable();
@@ -582,7 +583,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
     private void initSampleTableParameter() {
         sampleTable.setLimitNumber(Integer.parseInt(rowLoadedText.getText()));
         sampleTable.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
-        sampleTable.setDataFilter(dataFilterComp.getDataFilterString());
+        // TDQ-11981: when get the preview data use the data filter real value when set a context value
+        sampleTable.setDataFilter(ContextHelper.getAnalysisContextValue(getAnalysis(), dataFilterComp.getDataFilterString()));
     }
 
     private void refreshPreviewTable(boolean loadData) {
