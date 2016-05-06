@@ -117,16 +117,6 @@
          <param name="path" value="UDI_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une connexion MDM" skip="false">
-         <intro>
-            Ce tutorial vous guide à travers la création d&apos;une connexion MDM.
-         </intro>
-         <onCompletion>
-            <b>Conclusion</b>
-         </onCompletion>
-         <param name="path" value="MdmConnection_cheat.xml">
-         </param>
-      </task>
       <task kind="cheatsheet" name="Créer une analyse d&apos;un ensemble de colonnes" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une analyse de contenu d&apos;un ensemble de colonnes. L&apos;analyse calcule le nombre de lignes, le nombre de valeurs distinctes, le nombre de valeurs uniques et le nombre de valeurs en doublon.
