@@ -1098,7 +1098,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // set sample table parameters
         sampleTable.setLimitNumber(Integer.parseInt(rowLoadedText.getText()));
         sampleTable.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
-        sampleTable.setDataFilter(dataFilterComp.getDataFilterString());
+        // TDQ-11981: when get the preview data use the data filter real value when set a context value
+        sampleTable.setDataFilter(ContextHelper.getAnalysisContextValue(getAnalysis(), dataFilterComp.getDataFilterString()));
 
         sampleTable.reDrawTable(getSelectedColumns(), loadData);
         redrawWarningLabel();
