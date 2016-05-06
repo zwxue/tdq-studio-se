@@ -115,8 +115,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private static Logger log = Logger.getLogger(MatchAnalysisDetailsPage.class);
 
-    private EventReceiver afterCreateConnectionReceiver = null;
-
     private EventReceiver refreshTableDataReceiver = null;
 
     private MatchAnalysisHandler analysisHandler;
@@ -1333,6 +1331,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             // set limit
             sqlExecutor.setLimit(Integer.valueOf(rowLoadedText.getText()));
             sqlExecutor.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
+            isDataAvailable = new ReturnCode();
             return sqlExecutor.executeQuery(this.analysisHandler.getConnection(),
                     Arrays.asList(analysisHandler.getSelectedColumns()));
         } catch (SQLException e) {

@@ -1052,6 +1052,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         List<Object[]> listOfData = null;
         try {
             listOfData = getPreviewData(columns, withData);
+            isDataAvailable = new ReturnCode();
         } catch (SQLException e) {
             isDataAvailable.setMessage(e.getMessage());
             isDataAvailable.setOk(false);
