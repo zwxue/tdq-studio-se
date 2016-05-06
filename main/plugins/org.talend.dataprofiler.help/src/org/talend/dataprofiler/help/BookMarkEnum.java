@@ -21,8 +21,8 @@ import java.util.List;
  */
 public enum BookMarkEnum {
     MySQLRegular("http://dev.mysql.com/doc/refman/5.0/en/regexp.html", "MySQL Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
-    OracleRegular("http://www.oracle.com/technology/obe/obe10gdb/develop/regexp/regexp.htm", "Oracle Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
-    SQLServer2005Regular("http://msdn.microsoft.com/en-us/magazine/cc163473.aspx", "SQL Server 2005 Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
+    OracleRegular("http://docs.oracle.com/cd/E11882_01/appdev.112/e41502/adfns_regexp.htm", "Oracle Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
+    SQLServer2005Regular("https://blogs.msdn.microsoft.com/sqlclr/2005/06/29/working-with-regular-expressions/", "SQL Server 2005 Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
     PostgreSQLRegular("http://www.postgresql.org/docs/current/static/functions-matching.html", "PostgreSQL Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
     BoxPlot("http://en.wikipedia.org/wiki/Box_plot", "Box Plot Graphic"), //$NON-NLS-1$ //$NON-NLS-2$
     EclipseSQLExplorer("http://eclipsesql.sourceforge.net/index.php", "Eclipse SQL Explorer"), //$NON-NLS-1$ //$NON-NLS-2$
