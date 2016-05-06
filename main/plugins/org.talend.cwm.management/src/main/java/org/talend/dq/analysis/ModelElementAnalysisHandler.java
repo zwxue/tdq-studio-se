@@ -15,6 +15,7 @@ package org.talend.dq.analysis;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -23,6 +24,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -30,10 +32,13 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -163,6 +168,19 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
                     child.setAnalyzedElement(indicator.getAnalyzedElement());
                 }
                 initializeIndicator(child); // recurse
+            }
+        }
+        // Added TDQ-11736, check the pattern and udi name.
+        if (indicator instanceof PatternMatchingIndicator) {
+            Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
+            if (!StringUtils.equals(indicator.getName(), pattern.getName())) {
+                indicator.setName(pattern.getName());
+            }
+        }
+        if (indicator instanceof UserDefIndicator) {
+            String defName = indicator.getIndicatorDefinition().getName();
+            if (!StringUtils.equals(indicator.getName(), defName)) {
+                indicator.setName(defName);
             }
         }
     }
