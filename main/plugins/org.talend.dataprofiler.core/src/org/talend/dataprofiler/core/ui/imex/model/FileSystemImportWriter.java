@@ -1258,7 +1258,7 @@ public class FileSystemImportWriter implements IImportWriter {
         if (modelElement != null) {
             removeInvalidDependency(modelElement);
         } else {
-            log.error("the ModelElemnt of property is null!"); //$NON-NLS-1$
+            log.info(DefaultMessagesImpl.getString("FileSystemImproWriter.modelElementIsNull")); //$NON-NLS-1$
         }
     }
 
