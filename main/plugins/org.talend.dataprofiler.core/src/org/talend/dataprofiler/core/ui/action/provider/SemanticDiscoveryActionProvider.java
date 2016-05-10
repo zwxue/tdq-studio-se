@@ -21,17 +21,20 @@ import java.util.Set;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.relational.RelationalFactory;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.model.MetadataTableWithFilter;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.SemanticDiscoveryAction;
+import org.talend.dq.nodes.ColumnRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
 
 public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvider {
 
@@ -65,39 +68,51 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
         Object firstElement = currentSelection.getFirstElement();
-        // when the selection is valid, only two possible status: only one columnset is select.
-        if (firstElement instanceof DBTableRepNode) {
-            DBTableRepNode node = (DBTableRepNode) firstElement;
-            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
-        } else if (firstElement instanceof DBViewRepNode) {
-            DBViewRepNode node = (DBViewRepNode) firstElement;
-            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdView());
-            // otherwise is some columns in the same columnset are selected.
-        } else {
+        boolean selectedMoreThanOne = currentSelection.size() > 1;
+
+        // when the selection is valid, only two possible status: some columns in the same columnset are selected.
+        // keep all of columns belong to same one table and create SemanticDiscoveryAction.
+        if (selectedMoreThanOne || firstElement instanceof ColumnRepNode) {
             Set<String> currentTableSet = new HashSet<String>();
-            MetadataTable createTdTable = RelationalFactory.eINSTANCE.createTdTable();
+            MetadataTable createTable = ConnectionFactory.eINSTANCE.createMetadataTable();
+
             List<String> filterNames = new ArrayList<String>();
             Iterator<Object> columnIterator = currentSelection.iterator();
             while (columnIterator.hasNext()) {
                 Object columnNode = columnIterator.next();
+                MetadataColumn metadataColumn = null;
                 if (DBColumnRepNode.class.isInstance(columnNode)) {
-                    TdColumn tdColumn = ((DBColumnRepNode) columnNode).getTdColumn();
-                    MetadataTable columnOwnerAsTdTable = ColumnHelper.getColumnOwnerAsMetadataTable(tdColumn);
-                    currentTableSet.add(ResourceHelper.getUUID(columnOwnerAsTdTable));
-                    // all of columns should come from same table
-                    if (currentTableSet.size() > 1) {
-                        return;
-                    } else if (currentTableSet.size() == 1) {
-                        createTdTable = columnOwnerAsTdTable;
-                    }
-                    filterNames.add(tdColumn.getName());
+                    metadataColumn = ((DBColumnRepNode) columnNode).getTdColumn();
+                    createTable = ColumnHelper.getColumnOwnerAsMetadataTable(metadataColumn);
+                } else if (DFColumnRepNode.class.isInstance(columnNode)) {
+                    metadataColumn = ((DFColumnRepNode) columnNode).getMetadataColumn();
+                    createTable = ColumnHelper.getColumnOwnerAsMetadataTable(metadataColumn);
                 } else {
                     // If not all of elements which be selected is columns
                     return;
                 }
+
+                currentTableSet.add(ResourceHelper.getUUID(createTable));
+                // all of columns should come from same table
+                if (currentTableSet.size() > 1) {
+                    return;
+                }
+                filterNames.add(metadataColumn.getName());
             }
-            MetadataTable metadataTableWithFilter = new MetadataTableWithFilter(filterNames, createTdTable);
+            MetadataTable metadataTableWithFilter = new MetadataTableWithFilter(filterNames, createTable);
             semanticDiscoveryAction = new SemanticDiscoveryAction(metadataTableWithFilter);
+        } else {
+            // otherwise the selection is valid, only two possible status: only one columnset is select.
+            if (firstElement instanceof DBTableRepNode) {
+                DBTableRepNode node = (DBTableRepNode) firstElement;
+                semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
+            } else if (firstElement instanceof DBViewRepNode) {
+                DBViewRepNode node = (DBViewRepNode) firstElement;
+                semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdView());
+            } else if (firstElement instanceof DFTableRepNode) {
+                DFTableRepNode node = (DFTableRepNode) firstElement;
+                semanticDiscoveryAction = new SemanticDiscoveryAction(node.getMetadataTable());
+            }
         }
         menu.add(semanticDiscoveryAction);
     }
