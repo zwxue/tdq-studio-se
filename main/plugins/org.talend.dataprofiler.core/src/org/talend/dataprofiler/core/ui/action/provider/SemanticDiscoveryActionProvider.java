@@ -29,6 +29,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.model.MetadataTableWithFilter;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.SemanticDiscoveryAction;
+import org.talend.dq.nodes.ColumnRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
@@ -67,18 +68,11 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
         Object firstElement = currentSelection.getFirstElement();
-        // when the selection is valid, only two possible status: only one columnset is select.
-        if (firstElement instanceof DBTableRepNode) {
-            DBTableRepNode node = (DBTableRepNode) firstElement;
-            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
-        } else if (firstElement instanceof DBViewRepNode) {
-            DBViewRepNode node = (DBViewRepNode) firstElement;
-            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdView());
-        } else if (firstElement instanceof DFTableRepNode) {
-            DFTableRepNode node = (DFTableRepNode) firstElement;
-            semanticDiscoveryAction = new SemanticDiscoveryAction(node.getMetadataTable());
-            // otherwise is some columns in the same columnset are selected.
-        } else {// keep all of columns belong to same one table and create SemanticDiscoveryAction.
+        boolean selectedMoreThanOne = currentSelection.size() > 1;
+
+        // when the selection is valid, only two possible status: some columns in the same columnset are selected.
+        // keep all of columns belong to same one table and create SemanticDiscoveryAction.
+        if (selectedMoreThanOne || firstElement instanceof ColumnRepNode) {
             Set<String> currentTableSet = new HashSet<String>();
             MetadataTable createTable = ConnectionFactory.eINSTANCE.createMetadataTable();
 
@@ -107,6 +101,18 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
             }
             MetadataTable metadataTableWithFilter = new MetadataTableWithFilter(filterNames, createTable);
             semanticDiscoveryAction = new SemanticDiscoveryAction(metadataTableWithFilter);
+        } else {
+            // otherwise the selection is valid, only two possible status: only one columnset is select.
+            if (firstElement instanceof DBTableRepNode) {
+                DBTableRepNode node = (DBTableRepNode) firstElement;
+                semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdTable());
+            } else if (firstElement instanceof DBViewRepNode) {
+                DBViewRepNode node = (DBViewRepNode) firstElement;
+                semanticDiscoveryAction = new SemanticDiscoveryAction(node.getTdView());
+            } else if (firstElement instanceof DFTableRepNode) {
+                DFTableRepNode node = (DFTableRepNode) firstElement;
+                semanticDiscoveryAction = new SemanticDiscoveryAction(node.getMetadataTable());
+            }
         }
         menu.add(semanticDiscoveryAction);
     }
