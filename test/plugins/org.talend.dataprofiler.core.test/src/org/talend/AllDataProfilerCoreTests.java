@@ -35,6 +35,7 @@ import org.talend.dataprofiler.core.ui.action.actions.handle.AnalysisHandleTest;
 import org.talend.dataprofiler.core.ui.action.actions.handle.DBConnectionDuplicateHandleTest;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProviderRealProjectTest;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProviderTest;
+import org.talend.dataprofiler.core.ui.action.provider.SemanticDiscoveryActionProviderTest;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInputRealTest;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInputTest;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewerTest;
@@ -72,7 +73,7 @@ import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
         SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class, ModelElementIndicatorRuleTest.class,
         RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class, FileTreeLabelProviderTest.class,
         TextIndicatorForNetezzaTest.class, USStateCodesPatternRegexTest.class, DrillDownEditorInputRealTest.class,
-        ItemRecordTest.class, MatchWizardTest.class })
+        ItemRecordTest.class, MatchWizardTest.class, SemanticDiscoveryActionProviderTest.class })
 public class AllDataProfilerCoreTests {
 
 }
