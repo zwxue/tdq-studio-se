@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -103,15 +105,10 @@ public class HideSeriesChartComposite {
             TOPChartUtils.getInstance().decorateChart(jchart, false);
         } else {
             if (isMinMax) {
-                final int nbNominalColumns = indicator.getNominalColumns().size();
-                final int nbDateFunctions = indicator.getDateFunctions().size();
                 final int indexOfDateCol = indicator.getDateColumns().indexOf(column);
                 assert indexOfDateCol != -1;
 
                 jchart = createGanttChart();
-
-                TOPChartUtils.getInstance().createAnnotOnGantt(jchart, indicator.getListRows(),
-                        nbNominalColumns + nbDateFunctions * indexOfDateCol + 3, nbNominalColumns);
 
                 TOPChartUtils.getInstance().decorateChart(jchart, false);
             }
@@ -139,7 +136,31 @@ public class HideSeriesChartComposite {
 
         String chartAxies = DefaultMessagesImpl.getString("TopChartFactory.chartAxies", column.getName()); //$NON-NLS-1$
 
-        return TOPChartUtils.getInstance().createGanttChart(chartAxies, ganttDataset);
+        Object jchart = TOPChartUtils.getInstance().createGanttChart(chartAxies, ganttDataset);
+
+        final int nbNominalColumns = indicator.getNominalColumns().size();
+        final int nbDateFunctions = indicator.getDateFunctions().size();
+        final int indexOfDateCol = indicator.getDateColumns().indexOf(column);
+
+        List<Object[]> shownRows = new ArrayList<Object[]>();
+        if (createGannttDatasets.size() != indicator.getListRows().size()) {// TDQ-6450 some null values
+            final int firstDateColumnIdx = nbNominalColumns + nbDateFunctions * indexOfDateCol;
+            for (Object[] row : indicator.getListRows()) {
+                final Object minObj = row[firstDateColumnIdx];
+                final Object maxobj = row[firstDateColumnIdx + 1];
+                if (minObj == null || maxobj == null) {
+                    continue;
+                } else {
+                    shownRows.add(row);
+                }
+            }
+        } else {
+            shownRows = indicator.getListRows();
+        }// ~end TDQ-6450
+
+        TOPChartUtils.getInstance().createAnnotOnGantt(jchart, shownRows,
+                nbNominalColumns + nbDateFunctions * indexOfDateCol + 3, nbNominalColumns);
+        return jchart;
     }
 
     /**
