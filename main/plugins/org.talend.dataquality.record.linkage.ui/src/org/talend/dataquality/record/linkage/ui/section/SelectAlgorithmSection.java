@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
@@ -182,6 +183,8 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         } else {
             matchKeySection.redrawnContent();
         }
+        // TDQ-9757
+        listeners.firePropertyChange(MatchAnalysisConstant.HIDE_GROUPS, 1, PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT);
     }
 
     /**
