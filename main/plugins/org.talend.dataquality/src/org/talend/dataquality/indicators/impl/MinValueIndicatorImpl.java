@@ -22,10 +22,11 @@ import org.talend.dataquality.indicators.MinValueIndicator;
  */
 public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValueIndicator {
 
-
     boolean isDateType = false;
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MinValueIndicatorImpl() {
@@ -34,6 +35,7 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -61,6 +63,9 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
     @Override
     public boolean handle(Object data) {
         boolean ok = super.handle(data);
+        if (data == null) {
+            return ok;
+        }
         if (isLess(data) || null == this.value) {
             this.value = String.valueOf(data);
             if (isDateType) {
