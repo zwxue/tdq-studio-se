@@ -195,7 +195,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                     folderNode.setParent(parentNode);
                 }
                 if (childrenList.isEmpty()) {
-                    initChildForRemoteProject((FolderItem) item, itemType);
+                    initChildren((FolderItem) item, itemType);
                 }
                 for (Item curItem : new ArrayList<Item>(((FolderItem) item).getChildren())) {
                     addItemToRecycleBin(folderNode, curItem, foldersList, project);
@@ -205,7 +205,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                 // TDQ-6184,When user A delete an item from FolderItem,user B should initialize(get) all children from
                 // the FolderItem in some cases.
                 if (childrenList.isEmpty()) {
-                    initChildForRemoteProject((FolderItem) item, itemType);
+                    initChildren((FolderItem) item, itemType);
                 }
                 for (Item curItem : new ArrayList<Item>(((FolderItem) item).getChildren())) {
                     addItemToRecycleBin(parentNode, curItem, foldersList, project);
@@ -279,14 +279,13 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /**
      * 
-     * init the children for remote FolderItem.
+     * init the children for local/remote FolderItem.
      * 
      * @param folderItem
      * @param itemType
      */
-    private void initChildForRemoteProject(FolderItem folderItem, ERepositoryObjectType itemType) {
-        boolean isLocalProject = ProxyRepositoryManager.getInstance().isLocalProject();
-        if (!isLocalProject && folderItem.getChildren().isEmpty()) {
+    private void initChildren(FolderItem folderItem, ERepositoryObjectType itemType) {
+        if (folderItem.getChildren().isEmpty()) {
             try {
                 String path = getFullFolderPath(folderItem, PluginConstant.EMPTY_STRING);
                 ProxyRepositoryFactory.getInstance().getTdqRepositoryViewObjects(itemType, path);
