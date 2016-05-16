@@ -97,7 +97,7 @@ public abstract class AbstractAnalysisResultPageWithChart extends AbstractAnalys
         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
         for (final MenuItemEntity itemEntity : itemEntities) {
             MenuItem item = new MenuItem(menu, SWT.PUSH);
-            item.setText(itemEntity.getLabel());
+            item.setText(itemEntity.geti18nLabel());
             item.setImage(itemEntity.getIcon());
             item.addSelectionListener(createSelectionAdapter(analysis, editorName1, itemEntity));
 

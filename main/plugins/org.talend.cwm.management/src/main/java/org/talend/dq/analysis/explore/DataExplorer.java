@@ -57,29 +57,29 @@ public abstract class DataExplorer implements IDataExplorer {
 
     private static Logger log = Logger.getLogger(DataExplorer.class);
 
-    public static final String MENU_VIEW_VALUES = Messages.getString("DataExplorer.ViewValues"); //$NON-NLS-1$
+    public static final String MENU_VIEW_VALUES = "View values"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_ROWS = Messages.getString("DataExplorer.ViewRows"); //$NON-NLS-1$
+    public static final String MENU_VIEW_ROWS = "View rows"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_INVALID_ROWS = Messages.getString("DataExplorer.ViewInvalidRows"); //$NON-NLS-1$
+    public static final String MENU_VIEW_INVALID_ROWS = "View invalid rows"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_VALID_ROWS = Messages.getString("DataExplorer.ViewValidRows"); //$NON-NLS-1$
+    public static final String MENU_VIEW_VALID_ROWS = "View valid rows"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_VALID_VALUES = Messages.getString("DataExplorer.ViewValidValues"); //$NON-NLS-1$
+    public static final String MENU_VIEW_VALID_VALUES = "View valid values"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_DETAILED_VALID_VALUES = Messages.getString("DataExplorer.ViewDetailedValidValues"); //$NON-NLS-1$
+    public static final String MENU_VIEW_DETAILED_VALID_VALUES = "View detailed valid values"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_DETAILED_INVALID_VALUES = Messages.getString("DataExplorer.ViewDetailedInvalidValues"); //$NON-NLS-1$
+    public static final String MENU_VIEW_DETAILED_INVALID_VALUES = "View detailed invalid values"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_INVALID_VALUES = Messages.getString("DataExplorer.ViewInvalidValues"); //$NON-NLS-1$
+    public static final String MENU_VIEW_INVALID_VALUES = "View invalid values"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_MATCH_ROWS = Messages.getString("DataExplorer.ViewMatchRows"); //$NON-NLS-1$
+    public static final String MENU_VIEW_MATCH_ROWS = "View match rows"; //$NON-NLS-1$
 
-    public static final String MENU_VIEW_NOT_MATCH_ROWS = Messages.getString("DataExplorer.ViewNotMatchRows"); //$NON-NLS-1$
+    public static final String MENU_VIEW_NOT_MATCH_ROWS = "View not match rows"; //$NON-NLS-1$
 
-    public static final String MENU_ROWS_IN_RANGE = Messages.getString("DataExplorer.RowsInRange"); //$NON-NLS-1$
+    public static final String MENU_ROWS_IN_RANGE = "View rows in range"; //$NON-NLS-1$
 
-    public static final String MENU_ROWS_OUTSIDE_RANGE = Messages.getString("DataExplorer.RowsOutsideRange"); //$NON-NLS-1$
+    public static final String MENU_ROWS_OUTSIDE_RANGE = "View rows outside of the range"; //$NON-NLS-1$
 
     protected static final String SELECT_ALL = "SELECT * "; //$NON-NLS-1$
 
