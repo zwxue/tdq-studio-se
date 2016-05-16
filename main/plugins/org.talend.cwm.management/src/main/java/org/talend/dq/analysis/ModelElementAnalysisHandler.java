@@ -171,7 +171,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
             }
         }
         // Added TDQ-11736, check the pattern and udi name.
-        if (indicator instanceof PatternMatchingIndicator) {
+        if (indicator instanceof PatternMatchingIndicator && indicator.getParameters() != null) {
             Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
             if (!StringUtils.equals(indicator.getName(), pattern.getName())) {
                 indicator.setName(pattern.getName());
