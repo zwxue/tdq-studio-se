@@ -245,7 +245,7 @@ public class DrillDownUtils {
             final Analysis analysis) {
         for (final MenuItemEntity itemEntity : itemEntities) {
             MenuItem item = new MenuItem(menu, SWT.PUSH);
-            item.setText(itemEntity.getLabel());
+            item.setText(itemEntity.geti18nLabel());
             item.setImage(itemEntity.getIcon());
             item.setEnabled(isMenuItemEnable(dataEntity, itemEntity, analysis));
             item.addSelectionListener(new SelectionAdapter() {

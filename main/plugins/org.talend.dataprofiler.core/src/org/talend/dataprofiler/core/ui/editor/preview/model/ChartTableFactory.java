@@ -188,7 +188,7 @@ public final class ChartTableFactory {
                             boolean showExtraMenu = false;
                             for (final MenuItemEntity itemEntity : itemEntities) {
                                 MenuItem item = new MenuItem(menu, SWT.PUSH);
-                                item.setText(itemEntity.getLabel());
+                                item.setText(itemEntity.geti18nLabel());
                                 item.setImage(itemEntity.getIcon());
                                 item.addSelectionListener(new SelectionAdapter() {
 
