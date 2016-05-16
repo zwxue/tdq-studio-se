@@ -241,7 +241,7 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
         for (final MenuItemEntity itemEntity : itemEntities) {
             MenuItem item = new MenuItem(menu, SWT.PUSH);
-            item.setText(itemEntity.getLabel());
+            item.setText(itemEntity.geti18nLabel());
             item.setImage(itemEntity.getIcon());
             item.setEnabled(DrillDownUtils.isMenuItemEnable(currentDataEntity, itemEntity, analysis));
             item.addSelectionListener(createSelectionAdapter(analysis, currentEngine, currentDataEntity, currentIndicator,

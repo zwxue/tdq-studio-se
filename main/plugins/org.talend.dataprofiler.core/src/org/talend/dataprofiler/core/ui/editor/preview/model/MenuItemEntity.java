@@ -13,7 +13,10 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import org.eclipse.swt.graphics.Image;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dq.analysis.explore.DataExplorer;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -54,5 +57,52 @@ public class MenuItemEntity {
         this.label = label;
         this.icon = icon;
         this.query = query;
+    }
+
+    /**
+     * 
+     * it is only used to display on UI(like as drill down menu).
+     * 
+     * @return
+     */
+    public String geti18nLabel() {
+        if (DataExplorer.MENU_VIEW_VALUES.equals(label)) {
+            return Messages.getString("DataExplorer.ViewValues"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_ROWS.equals(label)) {
+            return Messages.getString("DataExplorer.ViewRows"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_INVALID_ROWS.equals(label)) {
+            return Messages.getString("DataExplorer.ViewInvalidRows"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_VALID_ROWS.equals(label)) {
+            return Messages.getString("DataExplorer.ViewValidRows"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_VALID_VALUES.equals(label)) {
+            return Messages.getString("DataExplorer.ViewValidValues"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_DETAILED_VALID_VALUES.equals(label)) {
+            return Messages.getString("DataExplorer.ViewDetailedValidValues"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_DETAILED_INVALID_VALUES.equals(label)) {
+            return Messages.getString("DataExplorer.ViewDetailedInvalidValues"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_INVALID_VALUES.equals(label)) {
+            return Messages.getString("DataExplorer.ViewInvalidValues"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_MATCH_ROWS.equals(label)) {
+            return Messages.getString("DataExplorer.ViewMatchRows"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_VIEW_NOT_MATCH_ROWS.equals(label)) {
+            return Messages.getString("DataExplorer.ViewNotMatchRows"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_ROWS_IN_RANGE.equals(label)) {
+            return Messages.getString("DataExplorer.RowsInRange"); //$NON-NLS-1$
+        }
+        if (DataExplorer.MENU_ROWS_OUTSIDE_RANGE.equals(label)) {
+            return Messages.getString("DataExplorer.RowsOutsideRange"); //$NON-NLS-1$
+        }
+
+        return PluginConstant.EMPTY_STRING;
     }
 }
