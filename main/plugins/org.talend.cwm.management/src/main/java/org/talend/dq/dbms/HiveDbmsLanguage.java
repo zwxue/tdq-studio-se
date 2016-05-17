@@ -218,4 +218,17 @@ public class HiveDbmsLanguage extends DbmsLanguage {
     public String getCatalogNameFromContext(DatabaseConnection dbConn) {
         return null;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getPatternFinderFunction(java.lang.String, java.lang.String,
+     * java.lang.String)
+     */
+    @Override
+    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
+        // TDQ-12042: fix hive can not run well for indicator "Pattern Low Frequency".
+        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
+        return translateUsingPattern(expression, charsToReplace, replacementChars);
+    }
 }

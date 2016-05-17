@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SchemaHelper;
-import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
@@ -31,14 +30,12 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
-import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.ContextHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -130,19 +127,11 @@ public abstract class DataExplorer implements IDataExplorer {
             String anaPurpose = AnalysisHelper.getPurpose(this.analysis);
             String anaDescription = AnalysisHelper.getDescription(this.analysis);
             String aeName = PluginConstant.EMPTY_STRING;
-            String indName = PluginConstant.EMPTY_STRING;
+            String indName = AnalysisExecutorHelper.getIndicatorName(indicator);
             if (this.indicator != null) {
                 ModelElement analyzedElement = this.indicator.getAnalyzedElement();
                 if (analyzedElement != null) {
                     aeName = StringUtils.defaultString(analyzedElement.getName());
-                }
-                // TDQ-11831: fix the indicator drill down open sql editor to use the correct indicator name.after we
-                // change "Frenquency table" to "Value frenquency"
-                if (indicator instanceof PatternMatchingIndicator || indicator instanceof UserDefIndicator) {
-                    indName = StringUtils.defaultString(this.indicator.getName());
-                } else {
-                    indName = InternationalizationUtil.getDefinitionInternationalizationLabel(PropertyHelper
-                            .getProperty(indicator.getIndicatorDefinition()));
                 }
             }
 

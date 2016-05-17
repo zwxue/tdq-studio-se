@@ -34,6 +34,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
@@ -49,6 +50,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -454,5 +456,26 @@ public final class AnalysisExecutorHelper {
 
     public static void setExecuteErrorMessage(Analysis analysis, String errorMessage) {
         analysis.getResults().getResultMetadata().setMessage(errorMessage);
+    }
+
+    /**
+     * get the correct indicator name.
+     * 
+     * @param indicator
+     * @return
+     */
+    public static String getIndicatorName(Indicator indicator) {
+        String indName = PluginConstant.EMPTY_STRING;
+        if (indicator != null) {
+            // TDQ-11831: fix the indicator drill down open sql editor to use the correct indicator name.after we
+            // change "Frenquency table" to "Value frenquency"
+            if (indicator instanceof PatternMatchingIndicator || indicator instanceof UserDefIndicator) {
+                indName = org.apache.commons.lang.StringUtils.defaultString(indicator.getName());
+            } else {
+                indName = InternationalizationUtil.getDefinitionInternationalizationLabel(PropertyHelper.getProperty(indicator
+                        .getIndicatorDefinition()));
+            }
+        }
+        return indName;
     }
 }

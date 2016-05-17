@@ -34,6 +34,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
@@ -158,7 +159,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             // MOD qiongli 2012-3-14 TDQ-4433 in this case(import by "button" from low veresion and no import
             // SystemIndicator),the IndicatorDefinition maybe a proxy,should reset it.
             if (indicatorDefinition == null || indicatorDefinition.eIsProxy()) {
-                indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition("Functional Dependency");
+                indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition("Functional Dependency"); //$NON-NLS-1$
                 indicator.setIndicatorDefinition(indicatorDefinition);
             }
             Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
@@ -168,7 +169,8 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
-        traceError(Messages.getString("FunctionalDependencyExecutor.UNHANDLEDGIVENINDICATOR", indicator.getName()));//$NON-NLS-1$
+        traceError(Messages.getString(
+                "FunctionalDependencyExecutor.UNHANDLEDGIVENINDICATOR", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
         return Boolean.FALSE;
     }
 
