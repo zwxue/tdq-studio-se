@@ -19,18 +19,14 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.talend.commons.ui.utils.CheatSheetUtils;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.ui.branding.IBrandingService;
-import org.talend.core.utils.ProductUtils;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
@@ -93,6 +89,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         }
 
         // hide run menu
+        // hide Help->Install New Software and Help->Check For Updates
+        // hide File->Open File...
         IMenuManager menuManager = actionBarConfigurer.getMenuManager();
         IContributionItem[] menuItems = menuManager.getItems();
         for (IContributionItem menuItem : menuItems) {
@@ -102,6 +100,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             if ("org.eclipse.ui.run".equals(menuItem.getId()) || "navigate".equals(menuItem.getId())) { //$NON-NLS-1$//$NON-NLS-2$
                 menuManager.remove(menuItem);
             }
+            if ("file".equals(menuItem.getId())) { //$NON-NLS-1$
+                hideFileActions(menuItem);
+            }
+            if ("help".equals(menuItem.getId())) { //$NON-NLS-1$
+                hideHelpActions(menuItem);
+            }
         }
         ITDQRepositoryService tdqRepositoryService = (ITDQRepositoryService) org.talend.core.GlobalServiceRegister.getDefault()
                 .getService(ITDQRepositoryService.class);
@@ -110,5 +114,31 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             tdqRepositoryService.addSoftwareSystemUpdateListener();
         }
 
+    }
+
+    private void hideHelpActions(IContributionItem menuItem) {
+        if (!(menuItem instanceof IMenuManager)) {
+            return;
+        }
+        IMenuManager menuManager = (IMenuManager) menuItem;
+        // 'removeIds' refer to DI side(ActionBarBuildHelper.java).
+        String[] removeIds = { "org.eclipse.equinox.p2.ui.sdk.update", "group.assist", //$NON-NLS-1$ //$NON-NLS-2$
+                "org.eclipse.ui.actions.showKeyAssistHandler", "additions", "group.tutorials", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                "subversive", "subversive.help", "org.eclipse.equinox.p2.ui.sdk.install" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        for (String id : removeIds) {
+            menuManager.remove(id);
+        }
+    }
+
+    private void hideFileActions(IContributionItem menuItem) {
+        if (!(menuItem instanceof IMenuManager)) {
+            return;
+        }
+        IMenuManager menuManager = (IMenuManager) menuItem;
+        // 'removeIds' refer to DI side(ActionBarBuildHelper.java).
+        String[] removeIds = { "org.eclipse.ui.openLocalFile" }; //$NON-NLS-1$
+        for (String id : removeIds) {
+            menuManager.remove(id);
+        }
     }
 }
