@@ -69,8 +69,6 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.repository.ProjectManager;
 import org.talend.resource.ResourceManager;
@@ -569,8 +567,7 @@ public abstract class AElementPersistance {
                 continue;
             }
             // only do save when the dependency is not reference project node, and do not do resolve
-            DQRepositoryNode node = RepositoryNodeHelper.recursiveFind((ModelElement) object);
-            if (node != null && !node.getProject().isMainProject()) {
+            if (ProjectManager.getInstance().getCurrentProject().isMainProject()) {
                 continue;
             }
             if (!re.getURI().segment(1).equals(ProjectManager.getInstance().getCurrentProject().getTechnicalLabel())) {
@@ -594,8 +591,7 @@ public abstract class AElementPersistance {
         if (resChangeService != null) {
             for (EObject toSave : needSaves) {
                 // only do save when the dependency is not reference project node
-                DQRepositoryNode node = RepositoryNodeHelper.recursiveFind((ModelElement) toSave);
-                if (node != null && !node.getProject().isMainProject()) {
+                if (ProjectManager.getInstance().getCurrentProject().isMainProject()) {
                     continue;
                 }
 
