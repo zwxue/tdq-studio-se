@@ -79,6 +79,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -350,7 +351,7 @@ public class PatternTestView extends ViewPart {
                 // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
                 // project.
                 // MOD mzhao TDQ-4734 set relative customer pattern folder, same level to the pattern to be replicated.
-                IFolder customizedPattFolder = null;
+                IFolder customizedPattFolder = ResourceManager.getPatternRegexFolder();
                 if (pattern != null && pattern.eResource() != null) {
                     IContainer oriPattContainer = WorkspaceUtils.getModelElementResource(pattern).getParent();
                     if (oriPattContainer instanceof IFolder) {
