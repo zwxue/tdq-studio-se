@@ -18,6 +18,7 @@ import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.util.DateFrequencyStateUtil;
+import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
@@ -48,8 +49,7 @@ public class DateFrequencyStatisticsState extends FrequencyStatisticsState {
      */
     @Override
     public ICustomerDataset getCustomerDataset() {
-
-        return DateFrequencyStateUtil.getCustomerDataset(units);
+        return DateFrequencyStateUtil.getCustomerDataset(units, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
     }
 
     @Override
