@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.util.DateFrequencyStateUtil;
+import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
@@ -30,6 +31,6 @@ public class DateFrequencyStatisticsTableState extends FrequencyStatisticsTableS
 
     @Override
     public ChartDataEntity[] getDataEntity() {
-        return DateFrequencyStateUtil.getDataEntity(units);
+        return DateFrequencyStateUtil.getDataEntity(units, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
     }
 }

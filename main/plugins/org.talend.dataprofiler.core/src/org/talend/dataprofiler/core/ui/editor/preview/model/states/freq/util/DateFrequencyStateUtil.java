@@ -30,14 +30,14 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  */
 public class DateFrequencyStateUtil {
 
-    public static ICustomerDataset getCustomerDataset(List<IndicatorUnit> units) {
+    public static ICustomerDataset getCustomerDataset(List<IndicatorUnit> units, int sortType) {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
 
         for (IndicatorUnit unit : units) {
             if (unit.isExcuted()) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
 
-                ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
+                ComparatorsFactory.sort(frequencyExt, sortType);
 
                 int numOfShown = FrequencyTypeStateUtil.getNumberOfShown(unit, frequencyExt);
 
@@ -72,14 +72,13 @@ public class DateFrequencyStateUtil {
         return entity;
     }
 
-    public static ChartDataEntity[] getDataEntity(List<IndicatorUnit> units) {
+    public static ChartDataEntity[] getDataEntity(List<IndicatorUnit> units, int sortType) {
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
         for (IndicatorUnit unit : units) {
             if (unit.isExcuted()) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
 
-                ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
-                ;
+                ComparatorsFactory.sort(frequencyExt, sortType);
 
                 int numOfShown = FrequencyTypeStateUtil.getNumberOfShown(unit, frequencyExt);
 
