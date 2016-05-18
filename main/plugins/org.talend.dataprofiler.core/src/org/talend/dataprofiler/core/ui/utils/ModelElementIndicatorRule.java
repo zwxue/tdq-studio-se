@@ -198,17 +198,6 @@ public final class ModelElementIndicatorRule {
         case FrequencyIndicatorEnum:
         case LowFrequencyIndicatorEnum:
             if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL) {
-                if (isHiveSQL
-                        && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {// ||
-                                                                                                                                                     // indicatorType
-                                                                                                                                                     // ==
-                                                                                                                                                     // IndicatorEnum.EastAsiaPatternFreqIndicatorEnum
-                                                                                                                                                     // ||
-                                                                                                                                                     // indicatorType
-                                                                                                                                                     // ==
-                                                                                                                                                     // IndicatorEnum.EastAsiaPatternLowFreqIndicatorEnum
-                    return false;
-                }
                 return true;
             }
             break;
