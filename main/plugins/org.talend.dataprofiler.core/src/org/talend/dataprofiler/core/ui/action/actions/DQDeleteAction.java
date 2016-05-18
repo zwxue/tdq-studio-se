@@ -502,6 +502,11 @@ public class DQDeleteAction extends DeleteAction {
         RepositoryNode parent = selectedNodes.get(0).getParent();
         // only need to run one time, because in the super.run() can handle all selected node.
         excuteSuperRun(null, parent);
+
+        // TDQ-7298: refresh all the selected node' parent node when delete different items.
+        for (IRepositoryNode node : selectedNodes) {
+            refreshParentNode(node.getParent());
+        }
     }
 
     /**
