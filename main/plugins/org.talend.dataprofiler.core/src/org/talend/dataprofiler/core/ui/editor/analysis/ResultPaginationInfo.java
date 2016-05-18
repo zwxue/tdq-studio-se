@@ -91,7 +91,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
      */
     private void createCollapseAllLink(Composite composite, final String label) {
         ImageHyperlink collapseAllImageLink = uiPagination.getToolkit().createImageHyperlink(composite, SWT.NONE);
-        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns")); //$NON-NLS-1$
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseColumn")); //$NON-NLS-1$
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -117,7 +117,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
      */
     private void createExpandAllLink(Composite composite, final String label) {
         ImageHyperlink expandAllImageLink = uiPagination.getToolkit().createImageHyperlink(composite, SWT.NONE);
-        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns")); //$NON-NLS-1$
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandColumn")); //$NON-NLS-1$
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
