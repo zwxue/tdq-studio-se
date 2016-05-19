@@ -151,8 +151,7 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
                                         .getDefault().getService(ILibraryManagerService.class);
                                 if (librariesService != null) {
                                     for (ModuleToInstall module : modules) {
-                                        String snapshotUri = MavenUrlHelper.generateSnapshotMavenUri(module.getMavenUri());
-                                        String jarPathFromMaven = librariesService.getJarPathFromMaven(snapshotUri);
+                                        String jarPathFromMaven = librariesService.getJarPathFromMaven(module.getMavenUri());
                                         if (jarPathFromMaven == null) {
                                             continue;
                                         }
