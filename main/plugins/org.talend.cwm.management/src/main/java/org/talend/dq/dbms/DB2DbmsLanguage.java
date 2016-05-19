@@ -52,7 +52,7 @@ public class DB2DbmsLanguage extends DbmsLanguage {
 
     @Override
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
-        return "TRANSLATE(CHAR(" + expression + ") ,VARCHAR('" + replacementChars + "'),'" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return "TRANSLATE(" + expression + " ,VARCHAR('" + replacementChars + "'),'" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 + charsToReplace + "')"; //$NON-NLS-1$
     }
 
