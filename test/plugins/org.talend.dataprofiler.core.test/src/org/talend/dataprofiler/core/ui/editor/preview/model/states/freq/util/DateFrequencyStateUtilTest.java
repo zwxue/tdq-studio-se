@@ -69,10 +69,11 @@ public class DateFrequencyStateUtilTest {
         ChartDataEntity[] dataEntity = DateFrequencyStateUtil
                 .getDataEntity(units, ComparatorsFactory.LOW_FREQUENCY_COMPARATOR_ID);
         Assert.assertTrue(dataEntity.length == 4);
-        Assert.assertTrue("1993".equals(dataEntity[0].getKey().toString())); //$NON-NLS-1$
-        Assert.assertTrue("1999".equals(dataEntity[1].getKey().toString())); //$NON-NLS-1$
-        Assert.assertTrue("1996".equals(dataEntity[2].getKey().toString())); //$NON-NLS-1$
-        Assert.assertTrue("1994".equals(dataEntity[3].getKey().toString())); //$NON-NLS-1$
+
+        Assert.assertTrue(4d == Double.parseDouble(dataEntity[0].getValue()));
+        Assert.assertTrue(11d == Double.parseDouble(dataEntity[1].getValue()));
+        Assert.assertTrue(15d == Double.parseDouble(dataEntity[2].getValue()));
+        Assert.assertTrue(23d == Double.parseDouble(dataEntity[3].getValue()));
 
     }
 
@@ -81,10 +82,11 @@ public class DateFrequencyStateUtilTest {
 
         ChartDataEntity[] dataEntity = DateFrequencyStateUtil.getDataEntity(units, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
         Assert.assertTrue(dataEntity.length == 4);
-        Assert.assertTrue("1994".equals(dataEntity[0].getKey().toString())); //$NON-NLS-1$
-        Assert.assertTrue("1996".equals(dataEntity[1].getKey().toString())); //$NON-NLS-1$
-        Assert.assertTrue("1999".equals(dataEntity[2].getKey().toString())); //$NON-NLS-1$
-        Assert.assertTrue("1993".equals(dataEntity[3].getKey().toString())); //$NON-NLS-1$
+        Double.parseDouble(dataEntity[0].getValue());
+        Assert.assertTrue(23d == Double.parseDouble(dataEntity[0].getValue()));
+        Assert.assertTrue(15d == Double.parseDouble(dataEntity[1].getValue()));
+        Assert.assertTrue(11d == Double.parseDouble(dataEntity[2].getValue()));
+        Assert.assertTrue(4d == Double.parseDouble(dataEntity[3].getValue()));
 
     }
 
