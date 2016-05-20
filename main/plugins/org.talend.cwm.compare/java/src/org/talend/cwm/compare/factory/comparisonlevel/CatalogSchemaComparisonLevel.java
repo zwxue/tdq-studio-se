@@ -50,7 +50,6 @@ import org.talend.cwm.relational.TdView;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
-import org.talend.dq.nodes.DQDBFolderRepositoryNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -397,15 +396,6 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
                 }
             }
         }
-    }
-
-    @Override
-    public Connection reloadCurrentLevelElement() throws ReloadCompareException {
-        if (selectedObj instanceof DQDBFolderRepositoryNode) {
-            DQDBFolderRepositoryNode columnFolderRepNode = (DQDBFolderRepositoryNode) selectedObj;
-            columnFolderRepNode.setReload(true);
-        }
-        return super.reloadCurrentLevelElement();
     }
 
 }

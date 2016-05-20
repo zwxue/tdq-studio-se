@@ -89,7 +89,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
             }
             if (diff instanceof ReferenceChange) {
                 EObject value = ((ReferenceChange) diff).getValue();
-                if (isCatalogOrSchema(value)) {
+                if (isAloneCatalogOrSchema(value)) {
                     copyRightToLeft(diff);
                 }
             }
@@ -104,14 +104,17 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
      * @param obj
      * @return
      */
-    private boolean isCatalogOrSchema(EObject obj) {
+    private boolean isAloneCatalogOrSchema(EObject obj) {
         Catalog cat = SwitchHelpers.CATALOG_SWITCH.doSwitch(obj);
         if (cat != null) {
             return true;
         }
         Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(obj);
         if (schema != null) {
-            return true;
+            EObject eContainer = schema.eContainer();
+            if (eContainer == null) {
+                return true;
+            }
         }
         return false;
     }
