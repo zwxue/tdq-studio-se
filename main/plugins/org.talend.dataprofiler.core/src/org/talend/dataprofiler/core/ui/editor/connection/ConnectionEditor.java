@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.database.conn.ConnParameterKeys;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -108,6 +109,10 @@ public class ConnectionEditor extends CommonFormEditor {
                 WorkbenchUtils.nodifyDependedAnalysis((ConnectionItem) connectionRepNode.getObject().getProperty().getItem());
                 // WorkbenchUtils.refreshCurrentAnalysisEditor();
                 masterPage.setModify(false);
+                // TDQ-11312
+                if (this.getEditorInput() instanceof FileEditorInput) {
+                    this.setInput(masterPage.getEditorInput());
+                }
             }
         }
         setEditorObject(((ConnectionInfoPage) getMasterPage()).getConnectionRepNode());

@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -39,6 +41,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.runtime.model.emf.EmfHelper;
 import org.talend.commons.ui.swt.proposal.ProposalUtils;
@@ -176,7 +179,22 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         if (currentModelElement == null) {
             currentModelElement = getCurrentModelElement(getEditor());
         }
-        return DqRepositoryViewService.buildElementName(getProperty());
+        Property property = getProperty();
+        // Added TDQ-11312, when open from the tasks, and name changed, can not get the property. 20160517 yyin
+        // TDQ-11312
+        if (property == null) {
+            IFile file = ((FileEditorInput) this.getEditorInput()).getFile();
+            IPath fullPath = file.getFullPath();
+            String replace = fullPath.lastSegment().replace(this.oldDataproviderName, nameText.getText().trim());
+            IPath removeLastSegments = fullPath.removeLastSegments(1);
+            IPath newPath = removeLastSegments.append(replace);
+            IFile file2 = ResourcesPlugin.getWorkspace().getRoot().getFile(newPath);
+
+            FileEditorInput fileEditorInput = new FileEditorInput(file2);
+            this.setInput(fileEditorInput);
+            property = PropertyHelper.getProperty(fileEditorInput.getFile());
+        }
+        return DqRepositoryViewService.buildElementName(property);
     }
 
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
@@ -385,11 +403,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         MetadataHelper.setPurpose(purposeText.getText(), currentModelElement);
         MetadataHelper.setDescription(descriptionText.getText(), currentModelElement);
         MetadataHelper.setAuthor(currentModelElement, authorText.getText());
-        // MetadataHelper.setVersion(versionText.getText(), currentModelElement);
         MetadataHelper.setDevStatus(currentModelElement, statusCombo.getText());
 
-        // if (currentModelElement instanceof Connection) {
-        // Property property = PropertyHelper.getProperty(currentModelElement);
         Property property = getProperty();
         if (property != null) {
             // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
@@ -401,9 +416,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             property.setDescription(descriptionText.getText());
             property.setStatusCode(statusCombo.getText());
             property.getAuthor().setLogin(authorText.getText());
-            // property.setVersion(versionText.getText());
         }
-        // }
 
         // ADD msjian 2011-7-18 23216: when there is no error for name, do set
         if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) {

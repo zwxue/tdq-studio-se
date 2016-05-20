@@ -16,6 +16,9 @@ import java.util.Properties;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -119,9 +122,23 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (editorInput instanceof ConnectionItemEditorInput) {
             ConnectionItemEditorInput input = (ConnectionItemEditorInput) editorInput;
             connection = ((ConnectionItem) input.getItem()).getConnection();
-        } else if (editorInput instanceof FileEditorInput) {
+        } else if (editorInput instanceof FileEditorInput) {// open from task
             Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
             // String fileLabel = proty.getLabel();
+            // TDQ-11312
+            if (proty == null) {
+                IFile file = ((FileEditorInput) editorInput).getFile();
+                IPath fullPath = file.getFullPath();
+                String replace = fullPath.lastSegment().replace(this.oldDataproviderName, nameText.getText().trim());
+                IPath removeLastSegments = fullPath.removeLastSegments(1);
+                IPath newPath = removeLastSegments.append(replace);
+                IFile file2 = ResourcesPlugin.getWorkspace().getRoot().getFile(newPath);
+
+                editorInput = new FileEditorInput(file2);
+                this.setInput(editorInput);
+                proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
+            }
+
             Item item = proty.getItem();
             if (item instanceof ConnectionItem) {
                 connection = ((ConnectionItem) item).getConnection();
@@ -335,6 +352,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (!canSave().isOk()) {
             return;
         }
+        if (editorInput instanceof FileEditorInput) {
+            editorInput = this.getEditorInput();
+        }
 
         // MOD qiongi 2013-5-17 delete some code of checkconnection.no need to check connection at here
         if (!impactAnalyses().isOk()) {
@@ -433,7 +453,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(connection);
 
             ReturnCode returnCode = ElementWriterFactory.getInstance().createDataProviderWriter().save(connItem, true);
-
+            if (editorInput instanceof FileEditorInput) {
+                this.currentModelElement = connection;
+            }
             if (returnCode.isOk()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
