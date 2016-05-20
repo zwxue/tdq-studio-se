@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
@@ -25,7 +26,9 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 public class CommonStateUtil {
 
     public static double getUnitValue(Object unitValue) {
-        return unitValue != null ? Double.parseDouble(unitValue.toString()) : Double.NaN;
+        // TDQ-11643: msjian make the chart value format like "X.XX" the same to table values.
+        return unitValue != null ? Double.parseDouble(StringFormatUtil.format(unitValue, StringFormatUtil.NUMBER).toString())
+                : Double.NaN;
     }
 
     /**
@@ -49,8 +52,8 @@ public class CommonStateUtil {
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
 
         for (IndicatorUnit unit : units) {
-            double value = CommonStateUtil.getUnitValue(unit.getValue());
-            ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, unit.getIndicatorName());
+            double value = getUnitValue(unit.getValue());
+            ChartDataEntity entity = createDataEntity(unit, value, unit.getIndicatorName());
             dataEnities.add(entity);
         }
 
