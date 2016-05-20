@@ -200,11 +200,16 @@ public class AnalysisEditor extends SupportContextEditor {
         if (masterPage != null && masterPage.isDirty()) {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
+            // TDQ-11312
+            if (this.getEditorInput() instanceof FileEditorInput) {
+                this.setInput(masterPage.getEditorInput());
+            }
             // reset the modified status of ContextManager according to the masterPage
             if (contextManager instanceof JobContextManager) {
                 JobContextManager jobContextManager = (JobContextManager) contextManager;
                 jobContextManager.setModified(masterPage.isDirty());
             }
+
         }
         setEditorObject(getMasterPage().getAnalysisRepNode());
         super.doSave(monitor);
