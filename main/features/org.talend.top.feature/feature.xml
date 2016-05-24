@@ -28,8 +28,8 @@
    <includes
          id="org.talend.model.migration.feature"
          version="0.0.0"/>
-         
-    <includes
+
+   <includes
          id="org.talend.hadoop.distribution.feature"
          version="0.0.0"/>
 
@@ -693,6 +693,13 @@
 
    <plugin
          id="com.thoughtworks.paranamer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.lang3"
          download-size="0"
          install-size="0"
          version="0.0.0"
