@@ -30,6 +30,8 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  */
 public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
+    private boolean isSupportDynamicChart = false;
+
     public FrequencyTypeStates(List<IndicatorUnit> units) {
         super(units);
     }
@@ -40,7 +42,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
     @Override
     public Object getChart(Object dataset) {
-        return TOPChartUtils.getInstance().createBarChart(DefaultMessagesImpl.getString("TopChartFactory.count"), dataset); //$NON-NLS-1$
+        return TOPChartUtils.getInstance().createBarChartByKCD(DefaultMessagesImpl.getString("TopChartFactory.count"), dataset); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -48,7 +50,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
         boolean withRowCountIndicator = isWithRowCountIndicator();
 
         for (IndicatorUnit unit : units) {
-            if (unit.isExcuted()) {
+            if (unit.isExcuted() && !this.isSupportDynamicChart) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
 
                 sortIndicator(frequencyExt);
@@ -99,8 +101,20 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
         return FrequencyTypeStateUtil.isWithRowCountIndicator(units);
     }
 
+
+    
+    /**
+     * Sets the isSupportDynamicChart.
+     * 
+     * @param isSupportDynamicChart the isSupportDynamicChart to set
+     */
+    public void setSupportDynamicChart(boolean isSupportDynamicChart) {
+        this.isSupportDynamicChart = isSupportDynamicChart;
+    }
+
     protected abstract void sortIndicator(FrequencyExt[] frequencyExt);
 
     protected abstract String getTitle();
+
 
 }

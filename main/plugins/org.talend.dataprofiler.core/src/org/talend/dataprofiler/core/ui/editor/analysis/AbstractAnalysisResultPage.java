@@ -173,8 +173,17 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
      * @see org.talend.dataprofiler.core.ui.IRuningStatusListener#fireRuningItemChanged(boolean)
      */
     public void fireRuningItemChanged(boolean status) {
+        fireRuningItemChanged(status, status);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.IRuningStatusListener#fireRuningItemChanged(boolean)
+     */
+    public void fireRuningItemChanged(boolean status, boolean isSupportDynamicChart) {
         ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
-        ((AnalysisEditor) currentEditor).setRefreshResultPage(status);
+        ((AnalysisEditor) currentEditor).setRefreshResultPage(isSupportDynamicChart);
         IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
         if (editor instanceof AnalysisEditor && status) {
             refresh(((AnalysisEditor) editor).getMasterPage());

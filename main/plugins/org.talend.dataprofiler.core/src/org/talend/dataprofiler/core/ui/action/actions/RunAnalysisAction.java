@@ -211,7 +211,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                         public void run() {
                             if (listener != null) {
-                                listener.fireRuningItemChanged(false);
+                                listener.fireRuningItemChanged(false, isSupportDynamicChart);
                             }
                             // register dynamic event for who supported dynamic chart
                             if (isSupportDynamicChart) {

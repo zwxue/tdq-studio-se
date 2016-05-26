@@ -27,7 +27,7 @@ public interface ITOPChartService {
 
     public static final String PLUGIN_NAME = "org.talend.dataprofiler.top.chart"; //$NON-NLS-1$
 
-    static final String PLUGIN_VERSION = VersionUtils.getTalendVersion();; //$NON-NLS-1$
+    static final String PLUGIN_VERSION = VersionUtils.getTalendVersion();
 
     static final String VERSION_IN_FILENAME = "-" + PLUGIN_VERSION; //$NON-NLS-1$ 
 
@@ -49,6 +49,8 @@ public interface ITOPChartService {
 
     Object createChartCompositeWithFull(Object composite, Object chart);
 
+    Object getChartFromChartComposite(Object chartComposite);
+
     Object createChartCompositeWithoutGrid(Object composite, int style, Object chart, boolean useBuffer);
 
     Object createBarChart(String title, Object dataset, boolean showLegend);
@@ -66,10 +68,15 @@ public interface ITOPChartService {
 
     Object createBarChart(String title, Object dataset);
 
+    Object createBarChartByKCD(String title, Object dataset, Object customerDataset);
+
     Object createPieChart(String title, Object dataset, boolean showLegend, boolean toolTips, boolean urls);
 
     Object createBenfordChart(String axisXLabel, String categoryAxisLabel, Object dataset, List<String> dotChartLabels,
             double[] formalValues, String title);
+
+    Object createBenfordChartByKCD(String axisXLabel, String categoryAxisLabel, Object dataset, Object customerDataset,
+            List<String> dotChartLabels, double[] formalValues, String title);
 
     Object createStackedBarChart(String title, Object dataset, boolean showLegend);
 
@@ -180,4 +187,6 @@ public interface ITOPChartService {
     String getSeriestKeyOfGanttChart(Object chart, int index);
 
     Object createChartCompositeForCorrelationAna(Object parent, Object chart, int height);
+
+    Object getCustomerDataset(Object dataset);
 }

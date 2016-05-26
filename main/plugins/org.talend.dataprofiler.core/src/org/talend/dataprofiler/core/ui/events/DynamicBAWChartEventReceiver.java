@@ -55,14 +55,15 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
 
             @Override
             public boolean handle(Object value) {
+                super.handle(value);
+                addToSummaryMap(getIndicatorType(), value);
                 if (isIntact()) {
-                    addToSummaryMap(getIndicatorType(), value);
                     if (this.getTableViewer() != null) {
                         String str = value == null ? String.valueOf(Double.NaN) : String.valueOf(value);
                         this.refreshTable(str);
                     }
                 } else {
-                    super.handle(value);
+
                     updateValueOfIRQAndRange();
                 }
                 return true;
@@ -96,35 +97,36 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
         return indicators.size() == SummaryStatisticsState.FULL_FLAG;
     }
 
-    // judge if all summary indicator has its result, if yes, create a item and refresh the BAW chart
-    private void refreshChart() {
-        // when the user didnot select all summary indicators
-        if (isIntact()) {
-            updateValueOfIRQAndRange();
-        } else {
+    @Override
+    public void refreshChart() {
+        Map<IndicatorUnit, String> indicators2ValueMap = converIndicatorListToMap();
+        SummaryStatisticsState state = new SummaryStatisticsState(indicators, indicators2ValueMap);
+        state.setSupportDynamicChart(true);
+        state.setSqltype(Types.DOUBLE);
+        Object chart = state.getChart();
+        TOPChartUtils.getInstance().decorateChart(chart, false);
+        if (BAWparentComposite != null) {
+            TOPChartUtils.getInstance().refrechChart(BAWparentComposite, chart);
+        }
+        EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
+    }
 
-            // when the user select all summary indicators
-            if (summaryValues.size() == SummaryStatisticsState.FULL_CHART) {
-                // The BAW chart doesnot support dynamic, so only can create a new one after all finished.
-                SummaryStatisticsState state = new SummaryStatisticsState(indicators);
-                state.setSqltype(Types.DOUBLE);
-                Object chart = state.getChart();
-                TOPChartUtils.getInstance().decorateChart(chart, false);
-                if (BAWparentComposite != null) {
-                    TOPChartUtils.getInstance().refrechChart(BAWparentComposite, chart);
-                }
-
-                EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
-
-                // 6 indicators will refresh the chart, IQR and range indicator need to refresh their values in the
-                // table viewer
-                updateValueOfIRQAndRange();
-
-                // reset the values
-                summaryValues.clear();
-                indicators.clear();
+    /**
+     * DOC zshen Comment method "copyIndicatorUnit".
+     * 
+     * @param indicators2
+     * @return
+     */
+    private Map<IndicatorUnit, String> converIndicatorListToMap() {
+        Map<IndicatorUnit, String> returnIndicators = new HashMap<IndicatorUnit, String>();
+        for (IndicatorUnit indUnit : indicators) {
+            if (summaryValues.containsKey(indUnit.getType())) {
+                returnIndicators.put(indUnit, indUnit.getValue() == null ? "0.0" : String.valueOf(indUnit.getValue())); //$NON-NLS-1$
+            } else {
+                returnIndicators.put(indUnit, "0.0"); //$NON-NLS-1$
             }
         }
+        return returnIndicators;
     }
 
     /**
@@ -188,4 +190,5 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
     public void setBAWparentComposite(Object bAWparentComposite) {
         this.BAWparentComposite = bAWparentComposite;
     }
+
 }

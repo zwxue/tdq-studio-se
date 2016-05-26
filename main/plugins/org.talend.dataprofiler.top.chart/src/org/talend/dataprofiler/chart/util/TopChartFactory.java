@@ -375,6 +375,17 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createBarChart(String title, CategoryDataset dataset) {
+        return createBarChartByKCD(title, dataset, null);
+    }
+
+    /**
+     * create bar chart.
+     * 
+     * @param titile
+     * @param dataset
+     * @return
+     */
+    public static JFreeChart createBarChartByKCD(String title, CategoryDataset dataset, Object cusmomerDataset) {
         // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         // TDQ-5112~
@@ -382,6 +393,9 @@ public final class TopChartFactory {
                 Messages.getString("TopChartFactory.Value"), title, dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
 
         CategoryPlot plot = createBarChart.getCategoryPlot();
+        if (cusmomerDataset != null) {
+            plot.setDataset(1, new EncapsulationCumstomerDataset(dataset, cusmomerDataset));
+        }
 
         CategoryAxis domainAxis = plot.getDomainAxis();
         domainAxis.setTickLabelPaint(NULL_FIELD, Color.RED);
@@ -573,6 +587,7 @@ public final class TopChartFactory {
 
         return chart;
     }
+
 
     /**
      * DOC Zqin Comment method "createStackedBarChart".

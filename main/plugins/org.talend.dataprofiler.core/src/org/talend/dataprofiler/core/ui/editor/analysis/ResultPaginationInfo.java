@@ -315,10 +315,16 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     chart = chartTypeState.getChart();
                     if (chart != null && isSQLMode) {// chart is null for MODE. Get the dataset by this way for SQL mode
                         if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)) {
-                            dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, 1);
+                            dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, 2);
+                            if (dataset == null) {
+                                dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, 1);
+                            }
                             dyModel.setSecondDataset(TOPChartUtils.getInstance().getDatasetFromChart(chart, 0));
                         } else {
-                            dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, -1);
+                            dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, 1);
+                            if (dataset == null) {
+                                dataset = TOPChartUtils.getInstance().getDatasetFromChart(chart, -1);
+                            }
                         }
                     }
                 } else {
@@ -334,12 +340,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     }
                     Object chartComposite = TOPChartUtils.getInstance().createTalendChartComposite(composite, SWT.NONE, chart,
                             true);
-                    if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
-                        // for summary indicators: need to record the chart composite, which is used for create BAW
-                        // chart
-                        dyModel.setBawParentChartComp(chartComposite);
-                    }
-
+                    dyModel.setBawParentChartComp(chartComposite);
                     Map<String, Object> menuMap = createMenuForAllDataEntity(((Composite) chartComposite).getShell(),
                             dataExplorer, analysis, ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
                     // call chart service to create related mouse listener

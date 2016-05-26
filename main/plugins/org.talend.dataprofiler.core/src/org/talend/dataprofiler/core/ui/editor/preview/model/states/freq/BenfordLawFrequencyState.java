@@ -93,7 +93,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
     private Object createChart(Object dataset) {
         String categoryAxisLabel = DefaultMessagesImpl.getString("BenfordLawFrequencyState.AxisY"); //$NON-NLS-1$
         String axisXLabel = DefaultMessagesImpl.getString("BenfordLawFrequencyState.value"); //$NON-NLS-1$
-        return TOPChartUtils.getInstance().createBenfordChart(axisXLabel, categoryAxisLabel, dataset, dotChartLabels,
+        return TOPChartUtils.getInstance().createBenfordChartByKCD(axisXLabel, categoryAxisLabel, dataset, dotChartLabels,
                 formalValues, axisXLabel);
     }
 

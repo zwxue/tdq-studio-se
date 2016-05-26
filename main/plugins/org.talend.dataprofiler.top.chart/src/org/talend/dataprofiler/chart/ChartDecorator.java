@@ -53,6 +53,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.ui.TextAnchor;
+import org.talend.dataprofiler.chart.util.EncapsulationCumstomerDataset;
 import org.talend.dataprofiler.chart.util.PluginConstant;
 
 /**
@@ -501,6 +502,23 @@ public final class ChartDecorator {
     @SuppressWarnings("deprecation")
     public static JFreeChart decorateBenfordLawChart(CategoryDataset dataset, JFreeChart barChart, String title,
             String categoryAxisLabel, List<String> dotChartLabels, double[] formalValues) {
+        return decorateBenfordLawChartByKCD(dataset, null, barChart, title, categoryAxisLabel, dotChartLabels, formalValues);
+    }
+
+    /**
+     * Decorate the benford law chart. in this method the line chart will be overlay on top of bar chart.
+     * 
+     * @param dataset
+     * @param barChart
+     * @param title
+     * @param categoryAxisLabel
+     * @param dotChartLabels
+     * @param formalValues
+     * @return JFreeChart
+     */
+    @SuppressWarnings("deprecation")
+    public static JFreeChart decorateBenfordLawChartByKCD(CategoryDataset dataset, Object customerDataset, JFreeChart barChart,
+            String title, String categoryAxisLabel, List<String> dotChartLabels, double[] formalValues) {
         CategoryPlot barplot = barChart.getCategoryPlot();
         decorateBarChart(barChart, new BenfordLawLineAndShapeRenderer());
         // display percentage on top of the bar
@@ -516,6 +534,9 @@ public final class ChartDecorator {
         JFreeChart lineChart = ChartFactory.createLineChart(null, title, categoryAxisLabel, lineDataset,
                 PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot plot = lineChart.getCategoryPlot();
+        if (customerDataset != null) {
+            barplot.setDataset(2, new EncapsulationCumstomerDataset(dataset, customerDataset));
+        }
         // show the value on the right axis of the chart(keep the comment)
         // NumberAxis numberaxis = new NumberAxis(DefaultMessagesImpl.getString("TopChartFactory.Value"));
         // plot.setRangeAxis(10, numberaxis);

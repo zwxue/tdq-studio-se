@@ -72,8 +72,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     private Composite chartComposite;
 
-    final private List<ExpandableComposite> previewChartList = new ArrayList<ExpandableComposite>();
-
     /**
      * DOC zqin ColumnAnalysisResultPage constructor comment.
      * 
@@ -290,6 +288,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                 DynamicBAWChartEventReceiver bawReceiver = AnalysisUtils.createDynamicBAWChartEventReceiver(
                         oneCategoryIndicatorModel, eventReceivers);
                 bawReceiver.setChartComposite(chartComposite);
+                bawReceiver.refreshChart();
                 bawReceiver.setTableViewer(tableViewer);
                 // no need to register the parent baw receiver with one of summary indicator, no need to handle baw
                 // actually
@@ -299,7 +298,10 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                     DynamicChartEventReceiver eReceiver = AnalysisUtils.createDynamicChartEventReceiver(
                             oneCategoryIndicatorModel, index++, oneIndicator);
                     eReceiver.setChartComposite(chartComposite);
+                    eReceiver.setParentChartComposite((Composite) oneCategoryIndicatorModel.getBawParentChartComp());
+                    eReceiver.refreshChart();
                     eReceiver.setTableViewer(tableViewer);
+
                     // clear data
                     eReceiver.clearValue();
                     registerIndicatorEvent(oneIndicator, eReceiver);

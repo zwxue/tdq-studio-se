@@ -18,4 +18,6 @@ package org.talend.dataprofiler.core.ui;
 public interface IRuningStatusListener {
 
     public void fireRuningItemChanged(boolean status);
+
+    public void fireRuningItemChanged(boolean status, boolean isSupportDynamicChart);
 }

@@ -39,6 +39,8 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     private int entityIndex;
 
+    protected Object registerChart;
+
     protected String indicatorName;
 
     // mainly used for the summary indicators
@@ -47,6 +49,9 @@ public class DynamicChartEventReceiver extends EventReceiver {
     protected TableViewer tableViewer = null;
 
     protected Composite chartComposite;
+
+    protected Composite parentChartComposite;
+
 
     public int getIndexInDataset() {
         return this.entityIndex;
@@ -136,7 +141,6 @@ public class DynamicChartEventReceiver extends EventReceiver {
         if (tableViewer != null) {
             refreshTable(value == null ? NAN_STRING : String.valueOf(indValue));
         }
-
         // need to refresh the parent composite of the chart to show the changes
         EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
 
@@ -151,6 +155,13 @@ public class DynamicChartEventReceiver extends EventReceiver {
             refreshTable(NAN_STRING);
         }
     }
+    
+    // frequency and summary need this method
+    public void refreshChart() {
+        // no need to implements
+    }
+
+
 
     public void refreshTable(String value) {
         TableWithData input = (TableWithData) tableViewer.getInput();
@@ -204,4 +215,15 @@ public class DynamicChartEventReceiver extends EventReceiver {
         this.indicatorType = null;
         this.indicator = null;
     }
+
+    /**
+     * Sets the parentChartComposite.
+     * 
+     * @param parentChartComposite the parentChartComposite to set
+     */
+    public void setParentChartComposite(Composite parentChartComposite) {
+        this.parentChartComposite = parentChartComposite;
+        registerChart = TOPChartUtils.getInstance().getChartFromChartComposite(parentChartComposite);
+    }
+
 }

@@ -45,6 +45,10 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
     private SummaryStatisticsStateUtil summaryUtil;
 
+    private boolean isSupportDynamicChart = false;
+
+    private Map<IndicatorUnit, String> indicators2ValueMap = new HashMap<IndicatorUnit, String>();;
+
     /**
      * Sets the sqltype.
      * 
@@ -64,6 +68,12 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
     }
 
+    public SummaryStatisticsState(List<IndicatorUnit> units, Map<IndicatorUnit, String> indicators2ValueMap) {
+        this(units);
+        this.indicators2ValueMap = indicators2ValueMap;
+
+    }
+
     public Object getChart() {
         return getChart(getDataset());
     }
@@ -73,7 +83,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
         if (Java2SqlType.isDateInSQL(sqltype)) {
             return null;
         } else {
-            if (isIntact()) {
+            if (isIntact() && !isSupportDynamicChart) {
                 return TOPChartUtils.getInstance().createBoxAndWhiskerChart(
                         DefaultMessagesImpl.getString("SummaryStatisticsState.SummaryStatistics"), getDataset()); //$NON-NLS-1$
             } else {
@@ -90,7 +100,12 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
             // MOD xqliu 2009-06-29 bug 7068
-            String value = summaryUtil.getUnitValue(unit);
+            String value = null;
+            if (indicators2ValueMap.containsKey(unit)) {
+                value = indicators2ValueMap.get(unit);
+            } else {
+                value = summaryUtil.getUnitValue(unit);
+            }
             if (Java2SqlType.isNumbericInSQL(sqltype)) {
                 try {
                     map.put(unit.getType(), Double.parseDouble(value));
@@ -104,20 +119,21 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
             customerdataset.addDataEntity(entity);
         }
 
-        if (isIntact()) {
+        if (isIntact() && !isSupportDynamicChart) {
 
             CustomerDefaultBAWDataset dataset = new CustomerDefaultBAWDataset(map.get(IndicatorEnum.MeanIndicatorEnum),
                     map.get(IndicatorEnum.MedianIndicatorEnum), map.get(IndicatorEnum.LowerQuartileIndicatorEnum),
                     map.get(IndicatorEnum.UpperQuartileIndicatorEnum), map.get(IndicatorEnum.MinValueIndicatorEnum),
-                    map.get(IndicatorEnum.MaxValueIndicatorEnum));
+                    map.get(IndicatorEnum.MaxValueIndicatorEnum), customerdataset);
 
             dataset.addDataEntity(customerdataset.getDataEntities());
             return dataset;
         } else {
             // MOD hcheng,Range indicator value should not appear in bar chart
-            map.remove(IndicatorEnum.RangeIndicatorEnum);
-            map.remove(IndicatorEnum.IQRIndicatorEnum);
-
+            if (!isIntact()) {
+                map.remove(IndicatorEnum.RangeIndicatorEnum);
+                map.remove(IndicatorEnum.IQRIndicatorEnum);
+            }
             for (IndicatorEnum indicatorEnum : map.keySet()) {
                 customerdataset.addValue(map.get(indicatorEnum), indicatorEnum.getLabel(), indicatorEnum.getLabel());
             }
@@ -159,4 +175,14 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     public Object getChart(ICustomerDataset dataset) {
         return null;
     }
+
+    /**
+     * Sets the isSupportDynamicChart.
+     * 
+     * @param isSupportDynamicChart the isSupportDynamicChart to set
+     */
+    public void setSupportDynamicChart(boolean isSupportDynamicChart) {
+        this.isSupportDynamicChart = isSupportDynamicChart;
+    }
+
 }

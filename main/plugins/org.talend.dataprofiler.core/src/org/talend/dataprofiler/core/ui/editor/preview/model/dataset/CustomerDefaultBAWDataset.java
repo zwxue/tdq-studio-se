@@ -26,6 +26,8 @@ public class CustomerDefaultBAWDataset implements ICustomerDataset {
 
     private Object bawDataset;
 
+    private Object defaultCategoryDataset;
+
     private static final long serialVersionUID = 1L;
 
     private List<ChartDataEntity> dataEnities;
@@ -35,6 +37,24 @@ public class CustomerDefaultBAWDataset implements ICustomerDataset {
         dataEnities = new ArrayList<ChartDataEntity>();
         bawDataset = TOPChartUtils.getInstance().createDefaultBoxAndWhiskerCategoryDataset(mean, median, q1, q3, minRegularValue,
                 maxRegularValue);
+    }
+
+    /**
+     * 
+     * DOC zshen CustomerDefaultBAWDataset constructor comment.
+     * 
+     * @param mean
+     * @param median
+     * @param q1
+     * @param q3
+     * @param minRegularValue
+     * @param maxRegularValue
+     * @param defaultCategoryDataset should be DefaultCategoryDataset type
+     */
+    public CustomerDefaultBAWDataset(Double mean, Double median, Double q1, Double q3, Double minRegularValue,
+            Double maxRegularValue, Object defaultCategoryDataset) {
+        this(mean, median, q1, q3, minRegularValue, maxRegularValue);
+        this.defaultCategoryDataset = defaultCategoryDataset;
     }
 
     public void addDataEntity(ChartDataEntity dataEntity) {
@@ -58,6 +78,15 @@ public class CustomerDefaultBAWDataset implements ICustomerDataset {
 
     public Object getDataset() {
         return this.bawDataset;
+    }
+
+    /**
+     * Getter for defaultCategoryDataset.
+     * 
+     * @return the defaultCategoryDataset
+     */
+    public Object getDefaultCategoryDataset() {
+        return this.defaultCategoryDataset;
     }
 
     public void clear() {

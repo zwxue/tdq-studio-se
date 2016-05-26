@@ -12,10 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.FrequencyTypeStateUtil;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataquality.indicators.Indicator;
@@ -23,6 +29,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dq.indicators.ext.FrequencyExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * created by yyin on 2014-7-11 Detailled comment
@@ -51,15 +58,25 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
                     entity.setIndicator(indicator);
                     entity.setLabel(this.indicatorName);
                     entity.setValue(String.valueOf(indValue));
-
-                    ((CustomerDefaultCategoryDataset) dataset).addDataEntity(entity);
+                    // mode indicator has not a chart so that no dataset too
+                    input.setEntities(new ChartDataEntity[] { entity });
+                } else {
+                    ICustomerDataset customerDataset = TOPChartUtils.getInstance().getCustomerDataset(dataset);
+                    if (customerDataset != null) {
+                        input.setEntities((customerDataset).getDataEntities());
+                    } else {
+                        input.setEntities(((ICustomerDataset) dataset).getDataEntities());
+                    }
                 }
-                input.setEntities(((ICustomerDataset) dataset).getDataEntities());
             }
             if (!tableViewer.getTable().isDisposed()) {
                 tableViewer.getTable().clearAll();
                 tableViewer.setInput(input);
             }
+        }
+
+        if (registerChart != TOPChartUtils.getInstance().getChartFromChartComposite(parentChartComposite)) {
+            restoreChart();
         }
 
         // need to refresh the parent composite of the chart to show the changes
@@ -100,6 +117,38 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
                 ((CustomerDefaultCategoryDataset) customerdataset).addDataEntity(entity);
             }
         }
+    }
+
+    private void restoreChart() {
+        if (registerChart == null) {
+            return;
+        }
+
+        // TOPChartUtils.getInstance().decorateChart(registerChart, false);
+        if (this.parentChartComposite != null) {
+            TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, registerChart);
+        }
+
+        EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
+
+    }
+
+    @Override
+    public void refreshChart() {
+        List<IndicatorUnit> indicatorUnits = new ArrayList<IndicatorUnit>();
+        indicatorUnits.add(new ColumnIndicatorUnit(IndicatorEnum.findIndicatorEnum(this.getIndicator().eClass()), this
+                .getIndicator(), null));
+        // indicators
+        FrequencyStatisticsState state = new FrequencyStatisticsState(indicatorUnits);
+        state.setSupportDynamicChart(true);
+        Object chart = state.getChart();
+        TOPChartUtils.getInstance().decorateChart(chart, false);
+        if (this.parentChartComposite != null) {
+            TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, chart);
+        }
+
+        EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
+
     }
 
     @Override

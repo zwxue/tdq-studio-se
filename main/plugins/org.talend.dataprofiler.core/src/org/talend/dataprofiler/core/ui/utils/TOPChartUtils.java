@@ -33,6 +33,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
@@ -114,11 +115,50 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         return null;
     }
 
+    /**
+     * 
+     * zshen Create bar chart and keep customer dataset
+     * 
+     * @param title
+     * @param dataset
+     * @return
+     */
+    public Object createBarChartByKCD(String title, Object dataset) {
+        if (isTOPChartInstalled()) {
+            CustomerDefaultCategoryDataset customerDataset = ((CustomerDefaultCategoryDataset) dataset);
+            return chartService.createBarChartByKCD(title, customerDataset.getDataset(), customerDataset);
+        }
+        return null;
+    }
+
     public Object createBenfordChart(String axisXLabel, String categoryAxisLabel, Object dataset, List<String> dotChartLabels,
             double[] formalValues, String title) {
         if (isTOPChartInstalled()) {
             return chartService.createBenfordChart(axisXLabel, categoryAxisLabel,
                     ((CustomerDefaultCategoryDataset) dataset).getDataset(), dotChartLabels, formalValues, title);
+        }
+        return null;
+    }
+
+
+    /**
+     * 
+     * zshen Create Benford chart and keep customer dataset
+     * 
+     * @param axisXLabel
+     * @param categoryAxisLabel
+     * @param dataset
+     * @param dotChartLabels
+     * @param formalValues
+     * @param title
+     * @return
+     */
+    public Object createBenfordChartByKCD(String axisXLabel, String categoryAxisLabel, Object dataset,
+            List<String> dotChartLabels, double[] formalValues, String title) {
+        if (isTOPChartInstalled()) {
+            CustomerDefaultCategoryDataset customerDataset = ((CustomerDefaultCategoryDataset) dataset);
+            return chartService.createBenfordChartByKCD(axisXLabel, categoryAxisLabel, customerDataset.getDataset(),
+                    customerDataset, dotChartLabels, formalValues, title);
         }
         return null;
     }
@@ -148,6 +188,13 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     public Object createChartCompositeWithFull(Object composite, Object chart) {
         if (isTOPChartInstalled()) {
             return chartService.createChartCompositeWithFull(composite, chart);
+        }
+        return null;
+    }
+
+    public Object getChartFromChartComposite(Object chartComposite) {
+        if (isTOPChartInstalled()) {
+            return chartService.getChartFromChartComposite(chartComposite);
         }
         return null;
     }
@@ -535,6 +582,23 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
 
     public ITOPChartService getChartService() {
         return chartService;
+    }
+
+    /**
+     * 
+     * Get CustomerDataset from EncapsulationCumstomerDataset
+     * 
+     * @param dataset
+     * @return Get CustomerDataset when dataset is EncapsulationCumstomerDataset else return null
+     */
+    public ICustomerDataset getCustomerDataset(Object dataset) {
+        if (isTOPChartInstalled()) {
+            Object customerDataset = chartService.getCustomerDataset(dataset);
+            if(customerDataset!=null&&customerDataset instanceof ICustomerDataset){
+                return (ICustomerDataset) customerDataset;
+            }
+        }
+        return null;
     }
 
 }

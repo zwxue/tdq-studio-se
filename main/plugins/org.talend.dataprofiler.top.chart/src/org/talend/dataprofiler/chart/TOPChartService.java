@@ -75,6 +75,7 @@ import org.talend.dataprofiler.chart.preview.CustomHideSeriesGanttRender;
 import org.talend.dataprofiler.chart.preview.RowColumPair;
 import org.talend.dataprofiler.chart.util.ChartDatasetUtils;
 import org.talend.dataprofiler.chart.util.ChartUtils;
+import org.talend.dataprofiler.chart.util.EncapsulationCumstomerDataset;
 import org.talend.dataprofiler.chart.util.HideSeriesChartDialog;
 import org.talend.dataprofiler.chart.util.PluginConstant;
 import org.talend.dataprofiler.chart.util.TalendChartComposite;
@@ -130,13 +131,24 @@ public class TOPChartService implements ITOPChartService {
     }
 
     @Override
+    public Object createBarChartByKCD(String title, Object dataset, Object customerDataset) {
+        return TopChartFactory.createBarChartByKCD(title, (CategoryDataset) dataset, customerDataset);
+    }
+
+    @Override
     public Object createBenfordChart(String axisXLabel, String categoryAxisLabel, Object dataset, List<String> dotChartLabels,
             double[] formalValues, String title) {
+        return createBenfordChartByKCD(axisXLabel, categoryAxisLabel, dataset, null, dotChartLabels, formalValues, title);
+    }
+
+    @Override
+    public Object createBenfordChartByKCD(String axisXLabel, String categoryAxisLabel, Object dataset, Object customerDataset,
+            List<String> dotChartLabels, double[] formalValues, String title) {
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         Object barChart = ChartFactory.createBarChart(null, axisXLabel, categoryAxisLabel, (CategoryDataset) dataset,
                 PlotOrientation.VERTICAL, false, true, false);
-
-        Object lineChart = ChartDecorator.decorateBenfordLawChart((CategoryDataset) dataset, (JFreeChart) barChart, title,
+        Object lineChart = ChartDecorator.decorateBenfordLawChartByKCD((CategoryDataset) dataset, customerDataset,
+                (JFreeChart) barChart, title,
                 categoryAxisLabel, dotChartLabels, formalValues);
         return lineChart;
 
@@ -1076,6 +1088,38 @@ public class TOPChartService implements ITOPChartService {
 
         // ~14173
         return chartComposite;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.service.ITOPChartService#getCustomerDataset(java.lang.Object)
+     */
+    @Override
+    public Object getCustomerDataset(Object dataset) {
+        if(dataset==null){
+            return null;
+        }
+        if (dataset instanceof EncapsulationCumstomerDataset) {
+            return ((EncapsulationCumstomerDataset) dataset).getCusmomerDataset();
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.service.ITOPChartService#getChartFromChartComposite(java.lang.Object)
+     */
+    @Override
+    public Object getChartFromChartComposite(Object chartComposite) {
+        if (chartComposite == null) {
+            return null;
+        }
+        if (chartComposite instanceof ChartComposite) {
+            return ((ChartComposite) chartComposite).getChart();
+        }
+        return null;
     }
 
 }

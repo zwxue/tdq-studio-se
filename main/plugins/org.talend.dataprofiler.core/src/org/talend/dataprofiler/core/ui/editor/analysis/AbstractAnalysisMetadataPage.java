@@ -321,8 +321,12 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     public void fireRuningItemChanged(boolean status) {
+        fireRuningItemChanged(status, status);
+    }
+
+    public void fireRuningItemChanged(boolean status, boolean isSupportDynamicChart) {
         ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
-        ((AnalysisEditor) currentEditor).setRefreshResultPage(status);
+        ((AnalysisEditor) currentEditor).setRefreshResultPage(isSupportDynamicChart);
         // switch to result page at the beginning of running analysis, the status is false at the time
         if (!status) {
             switchToResultPage();
