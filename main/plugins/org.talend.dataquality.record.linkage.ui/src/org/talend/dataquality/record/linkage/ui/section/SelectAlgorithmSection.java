@@ -184,7 +184,9 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
             matchKeySection.redrawnContent();
         }
         // TDQ-9757
-        listeners.firePropertyChange(MatchAnalysisConstant.HIDE_GROUPS, 1, PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT);
+        if (matchKeySection.hasMatchKey(true)) {
+            listeners.firePropertyChange(MatchAnalysisConstant.HIDE_GROUPS, 1, PluginConstant.HIDDEN_GROUP_LESS_THAN_DEFAULT);
+        }
     }
 
     /**
