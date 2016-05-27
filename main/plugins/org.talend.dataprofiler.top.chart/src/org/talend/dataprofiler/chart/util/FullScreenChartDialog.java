@@ -55,9 +55,4 @@ public class FullScreenChartDialog extends TrayDialog {
         return chartComp;
     }
 
-    @Override
-    public boolean close() {
-        chart = null;
-        return super.close();
-    }
 }
