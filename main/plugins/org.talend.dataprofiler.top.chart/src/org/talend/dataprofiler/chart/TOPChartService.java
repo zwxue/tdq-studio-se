@@ -900,7 +900,11 @@ public class TOPChartService implements ITOPChartService {
 
     @Override
     public void showChartInFillScreen(Object chart, boolean isCountAvgNull, boolean isMinMaxDate) {
-        new HideSeriesChartDialog(null, (JFreeChart) chart, isCountAvgNull, isMinMaxDate).open();
+        try {
+            new HideSeriesChartDialog(null, (JFreeChart) ((JFreeChart) chart).clone(), isCountAvgNull, isMinMaxDate).open();
+        } catch (CloneNotSupportedException e) {
+            log.error(e, e);
+        }
     }
 
     /*
