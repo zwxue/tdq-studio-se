@@ -61,6 +61,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -424,9 +425,13 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     private IFile getPropertyFile(ModelElement modelElement) {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        String platformString = modelElement.eResource().getURI().toPlatformString(true);
-        IPath propPath = new Path(platformString).removeFileExtension().addFileExtension(PROPERTIES_EXTENSION);
-        return root.getFile(propPath);
+        Resource eResource = modelElement.eResource();
+        if (eResource != null) {
+            String platformString = eResource.getURI().toPlatformString(true);
+            IPath propPath = new Path(platformString).removeFileExtension().addFileExtension(PROPERTIES_EXTENSION);
+            return root.getFile(propPath);
+        }
+        return null;
     }
 
     /*

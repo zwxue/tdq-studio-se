@@ -37,7 +37,6 @@ public class CWMPluginTest extends TestCase {
     @Override
     @Before
     public void setUp() throws Exception {
-
         dbConn.setURL(""); //$NON-NLS-1$
         dbConn.setName(dbName);
         dbConn.setUsername("root"); //$NON-NLS-1$
@@ -51,20 +50,18 @@ public class CWMPluginTest extends TestCase {
      */
     @Test
     public void testAddConnetionAliasToSQLPlugin_notSupportDB() {
-        String allNoSupportedType[] = new String[] { EDatabaseTypeName.EXASOL.getXmlName(),
-                EDatabaseTypeName.FIREBIRD.getXmlName(), EDatabaseTypeName.JAVADB.getXmlName(),
-                EDatabaseTypeName.JAVADB_DERBYCLIENT.getXmlName(), EDatabaseTypeName.JAVADB_EMBEDED.getXmlName(),
-                EDatabaseTypeName.JAVADB_JCCJDBC.getXmlName(), EDatabaseTypeName.GREENPLUM.getXmlName(),
-                EDatabaseTypeName.HBASE.getXmlName(), EDatabaseTypeName.H2.getXmlName(),
-                EDatabaseTypeName.INTERBASE.getXmlName(), EDatabaseTypeName.MAXDB.getXmlName(),
-                EDatabaseTypeName.PARACCEL.getXmlName(), EDatabaseTypeName.REDSHIFT.getXmlName(),
+        String allNoSupportedType[] = new String[] { EDatabaseTypeName.FIREBIRD.getXmlName(),
+                EDatabaseTypeName.JAVADB.getXmlName(), EDatabaseTypeName.JAVADB_DERBYCLIENT.getXmlName(),
+                EDatabaseTypeName.JAVADB_EMBEDED.getXmlName(), EDatabaseTypeName.JAVADB_JCCJDBC.getXmlName(),
+                EDatabaseTypeName.GREENPLUM.getXmlName(), EDatabaseTypeName.HBASE.getXmlName(),
+                EDatabaseTypeName.H2.getXmlName(), EDatabaseTypeName.INTERBASE.getXmlName(),
+                EDatabaseTypeName.MAXDB.getXmlName(), EDatabaseTypeName.PARACCEL.getXmlName(),
                 EDatabaseTypeName.SAPHana.getXmlName(), EDatabaseTypeName.SAS.getXmlName(),
                 EDatabaseTypeName.VECTORWISE.getXmlName() };
         for (String dbType : allNoSupportedType) {
             dbConn.setDatabaseType(dbType);
             runAddConnetionAliasToSQLPlugin(false);
         }
-
     }
 
     /**
