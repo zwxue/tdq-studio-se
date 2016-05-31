@@ -610,8 +610,6 @@ public abstract class AElementPersistance {
     protected ReturnCode saveWithoutDependencies(Item item, ModelElement element) throws PersistenceException {
         ReturnCode rc = new ReturnCode();
 
-        addDependencies(element);
-        addResourceContent(element.eResource(), element);
         // Set the TDQ item file name.
         if (item instanceof TDQItem) {
             setTDQItemFileName(element, item);
