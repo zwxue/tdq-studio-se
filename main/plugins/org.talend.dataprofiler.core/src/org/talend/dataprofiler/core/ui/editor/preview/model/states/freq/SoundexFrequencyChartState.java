@@ -53,9 +53,7 @@ public class SoundexFrequencyChartState extends FrequencyTypeStates {
 
     @Override
     public Object getChart(Object dataset) {
-        return TOPChartUtils.getInstance()
-                .createBarChart(DefaultMessagesImpl.getString("TopChartFactory.distinctCount"), dataset); //$NON-NLS-1$
-
+        return TOPChartUtils.getInstance().createBarChartByKCD(DefaultMessagesImpl.getString("TopChartFactory.count"), dataset); //$NON-NLS-1$
     }
 
 }

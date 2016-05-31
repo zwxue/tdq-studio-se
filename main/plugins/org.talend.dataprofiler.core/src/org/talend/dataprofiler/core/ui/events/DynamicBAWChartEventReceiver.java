@@ -88,8 +88,11 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
         if (value == null || "null".equals(value)) { //$NON-NLS-1$
             indValue = 0;
         }
-        summaryValues.put(indicatorType, Double.parseDouble(String.valueOf(indValue)));
-
+        try {
+            summaryValues.put(indicatorType, Double.parseDouble(String.valueOf(indValue)));
+        } catch (NumberFormatException e) {
+            // nothing to do, when the value is a date, will throw NumberFormatException.
+        }
         refreshChart();
     }
 
