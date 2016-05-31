@@ -57,7 +57,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage imple
     public ColumnAnalysisDOSelectionPage(ResourceViewContentProvider contentProvider) {
         super(DefaultMessagesImpl.getString("ColumnAnalysisPageStep0.newAnalysis"), chooseConnStr, DefaultMessagesImpl //$NON-NLS-1$
                 .getString("ColumnAnalysisPageStep0.Columns"), contentProvider, true); //$NON-NLS-1$
-        setPageComplete(true);
+        setPageComplete(false);
     }
 
     /*
