@@ -65,6 +65,7 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
@@ -566,9 +567,6 @@ public abstract class AElementPersistance {
                 continue;
             }
             // only do save when the dependency is not reference project node, and do not do resolve
-            if (ProjectManager.getInstance().getCurrentProject().isMainProject()) {
-                continue;
-            }
             if (!re.getURI().segment(1).equals(ProjectManager.getInstance().getCurrentProject().getTechnicalLabel())) {
                 continue;
             }
@@ -590,9 +588,7 @@ public abstract class AElementPersistance {
         if (resChangeService != null) {
             for (EObject toSave : needSaves) {
                 // only do save when the dependency is not reference project node
-                if (ProjectManager.getInstance().getCurrentProject().isMainProject()) {
-                    continue;
-                }
+                toSave = EObjectHelper.resolveObject(toSave);
                 if (!toSave.eResource().getURI().segment(1)
                         .equals(ProjectManager.getInstance().getCurrentProject().getTechnicalLabel())) {
                     continue;
