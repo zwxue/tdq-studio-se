@@ -567,9 +567,6 @@ public abstract class AElementPersistance {
                 continue;
             }
             // only do save when the dependency is not reference project node, and do not do resolve
-            if (ProjectManager.getInstance().getCurrentProject().isMainProject()) {
-                continue;
-            }
             if (!re.getURI().segment(1).equals(ProjectManager.getInstance().getCurrentProject().getTechnicalLabel())) {
                 continue;
             }
@@ -591,11 +588,6 @@ public abstract class AElementPersistance {
         if (resChangeService != null) {
             for (EObject toSave : needSaves) {
                 // only do save when the dependency is not reference project node
-                if (ProjectManager.getInstance().getCurrentProject().isMainProject()) {
-                    continue;
-                }
-
-                // fix another NPE issue.
                 toSave = EObjectHelper.resolveObject(toSave);
                 if (!toSave.eResource().getURI().segment(1)
                         .equals(ProjectManager.getInstance().getCurrentProject().getTechnicalLabel())) {
