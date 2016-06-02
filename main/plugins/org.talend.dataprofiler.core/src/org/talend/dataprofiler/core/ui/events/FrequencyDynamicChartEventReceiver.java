@@ -50,7 +50,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
                 setFrequecyToDataset(dataset, frequencyExt, indicator);
             }
         }
-        if (tableViewer != null) {
+        if (tableViewer != null && dataset != null) {
             TableWithData input = (TableWithData) tableViewer.getInput();
             if (input != null) {
                 if (this.indicator instanceof ModeIndicator) {
