@@ -1333,12 +1333,6 @@
            name="Web Browser">
      </page>
      <page
-           category="org.talend.core.prefs"
-           class="org.talend.dataprofiler.core.ui.pref.I18nPreferencePage"
-           id="org.talend.dataprofiler.core.ui.pref.I18nPreferencePage"
-           name="%page.name.internationalization">
-     </page>
-     <page
            category="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            class="org.talend.dataprofiler.core.ui.pref.AnalysisTuningPreferencePage"
            id="org.talend.dataprofiler.core.ui.pref.AnalysisTuningPreferencePage"

@@ -861,4 +861,13 @@
             uripath="platform:/plugin/org.talend.libraries.zookeeper/lib/zookeeper-3.4.6.2.3.2.0-2950.jar">
       </libraryNeeded>      
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.talend.core.prefs"
+            class="org.talend.dataprofiler.rcp.i18n.I18nPreferencePage"
+            id="org.talend.dataprofiler.core.ui.pref.I18nPreferencePage"
+            name="%page.name.internationalization">
+      </page>
+   </extension>
 </plugin>
