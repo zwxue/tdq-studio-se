@@ -12,9 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.grid;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.nebula.widgets.grid.GridCellRenderer;
 import org.eclipse.nebula.widgets.grid.GridItem;
-import org.eclipse.nebula.widgets.grid.internal.TextUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.core.PluginConstant;
 
 /**
  * Abstract class for TdCellRenderer this renderer is fouse on cell of item
@@ -83,7 +84,7 @@ public class AbstractTdCellRenderer extends GridCellRenderer {
         // draw text
         int x = 0;
         int width = getBounds().width;
-        String text = TextUtils.getShortString(gc, item.getText(getColumn()), width);
+        String text = getShortString(gc, item.getText(getColumn()), width);
 
         if (getAlignment() == SWT.RIGHT) {
             int len = gc.stringExtent(text).x;
@@ -172,6 +173,53 @@ public class AbstractTdCellRenderer extends GridCellRenderer {
         gc.dispose();
 
         return bounds;
+    }
+
+    /**
+     * Shortens a supplied string so that it fits within the area specified by the width argument. Strings that have
+     * been shorted have an "..." attached to the middle of the string. The width is computed using the
+     * {@link GC#stringExtent(String)}. .e.g, "abcde...uvwx"
+     * 
+     * @param gc GC used to perform calculation.
+     * @param t text to modify.
+     * @param width Pixels to display.
+     * @return shortened string that fits in area specified.
+     */
+    protected String getShortString(GC gc, String t, int width) {
+
+        if (StringUtils.isEmpty(t)) {
+            return PluginConstant.EMPTY_STRING;
+        }
+
+        if (width >= gc.stringExtent(t).x) {
+            return t;
+        }
+
+        String ellipsis = "...";//$NON-NLS-1$
+        int w = gc.stringExtent(ellipsis).x;
+        String text = t;
+        int length = text.length();
+        int pivot = length / 2;
+        int s = 1;
+        int e = length - 1;
+        while (s >= 0 && s <= pivot && e > pivot && e < length) {
+            String s1 = text.substring(0, s);
+            String s2 = text.substring(e, length);
+            int l1 = gc.stringExtent(s1).x;
+            int l2 = gc.stringExtent(s2).x;
+            if (l1 + w + l2 > width) {
+                text = s1 + ellipsis + s2;
+                break;
+            }
+            s++;
+            e--;
+        }
+
+        if (s == 0 || e == length) {
+            text = text.substring(0, 1) + ellipsis + text.substring(length - 1, length);
+        }
+
+        return text;
     }
 
 }
