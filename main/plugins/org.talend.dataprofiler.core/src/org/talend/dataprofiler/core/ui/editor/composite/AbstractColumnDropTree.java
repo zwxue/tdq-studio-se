@@ -407,7 +407,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
         }
 
         TextParameters tParameter = parameters.getTextParameter();
-        if (tParameter != null) {
+        if (tParameter != null && !hideTextParameters(indicatorUnit)) {
             return true;
         }
         DateParameters dParameters = parameters.getDateParameters();
