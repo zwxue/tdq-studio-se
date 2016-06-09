@@ -16,8 +16,8 @@ import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.talend.datascience.common.regex.ChainResponsibilityHandler;
-import org.talend.datascience.common.regex.HandlerFactory;
+import org.talend.dataquality.common.regex.ChainResponsibilityHandler;
+import org.talend.dataquality.common.regex.HandlerFactory;
 import org.talend.utils.dates.DateUtils;
 
 /**
