@@ -54,6 +54,7 @@ import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.utils.HadoopClusterUtils;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.MatchRuleDefinition;
@@ -296,8 +297,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         if (modEle != null) {
             if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT == objectType) {
                 Analysis analysis = (Analysis) modEle;
-                EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
-                DataManager connection = analysis.getContext().getConnection();
+                AnalysisContext context = analysis.getContext();
+                if (context == null) {
+                    return ImageLib.createInvalidIcon(originalImageName);
+                }
+                EList<ModelElement> analysedElements = context.getAnalysedElements();
+                DataManager connection = context.getConnection();
                 if (analysedElements.isEmpty() || connection instanceof MDMConnection) {
                     return ImageLib.createInvalidIcon(originalImageName);
                 }

@@ -23,24 +23,18 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
-import org.talend.dataquality.analysis.impl.AnalysisImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dataquality.reports.impl.TdReportImpl;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.dq.nodes.DQRepositoryNode;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -52,8 +46,16 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
 
     protected ModelElement modelElement = null;
 
+    protected boolean isDoingPerformFinish = false;
+
     @Override
     public boolean performFinish() {
+        // TDQ-12153: add a flag to avoid this method run twice when the user quickly click the finish button on the
+        // wizard. TODO: consider other better solution.
+        if (isDoingPerformFinish) {
+            return true;
+        }
+        isDoingPerformFinish = true;
 
         // MOD mzhao feature 15750 Use repository object represent ModelElement.
         modelElement = initCWMResourceBuilder();
@@ -68,13 +70,14 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                 }
 
                 CorePlugin.getDefault().refresh(modelElement);
-
+                isDoingPerformFinish = false;
                 return true;
             } else {
                 MessageUI.openError(csResult.getMessage());
             }
         }
 
+        isDoingPerformFinish = false;
         return false;
     }
 
