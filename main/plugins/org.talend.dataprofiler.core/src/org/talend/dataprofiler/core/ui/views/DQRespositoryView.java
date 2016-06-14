@@ -220,16 +220,49 @@ public class DQRespositoryView extends CommonNavigator {
             ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(dQRepositoryWorkUnit);
 
             if (manager.isNeedMigration()) {
-                IRunnableWithProgress op = new IRunnableWithProgress() {
 
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
-                        new MigrationTaskManager(wVersion).doMigrationTask(monitor);
+                // TDQ-12154 commit all once after all migrations done.
+                RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Migration for DQ Repository") { //$NON-NLS-1$
+
+                    @Override
+                    protected void run() {
+                        final IWorkspaceRunnable op = new IWorkspaceRunnable() {
+
+                            public void run(IProgressMonitor monitor) throws CoreException {
+                                ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
+                                new MigrationTaskManager(wVersion).doMigrationTask(monitor);
+                            }
+                        };
+                        IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
+
+                            public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+                                    InterruptedException {
+                                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                                try {
+                                    ISchedulingRule schedulingRule = workspace.getRoot();
+                                    // the update the project files need to be done in the workspace runnable to
+                                    // avoid all notification of changes before the end of the modifications.
+                                    workspace.run(op, schedulingRule, IWorkspace.AVOID_UPDATE, monitor);
+                                } catch (CoreException e) {
+                                    throw new InvocationTargetException(e);
+                                }
+
+                            }
+                        };
+
+                        try {
+                            // need to display the progress on UI
+                            ProgressUI.popProgressDialog(iRunnableWithProgress);
+                        } catch (Exception e) {
+                            ExceptionHandler.process(e);
+                        }
+
                     }
-
                 };
 
-                ProgressUI.popProgressDialog(op);
+                workUnit.setAvoidUnloadResources(true);
+                ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+
             }
         } catch (Exception e) {
             log.error(e, e);

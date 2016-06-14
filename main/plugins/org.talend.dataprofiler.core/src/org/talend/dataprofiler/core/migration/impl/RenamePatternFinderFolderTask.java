@@ -23,6 +23,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -67,7 +70,12 @@ public class RenamePatternFinderFolderTask extends AbstractWorksapceUpdateTask {
             File analysisFolder = WorkspaceUtils.ifolderToFile(ResourceManager.getAnalysisFolder());
             String[] analysisFileExtentionName = { FactoriesUtil.ANA };
             result &= FilesUtils.migrateFolder(analysisFolder, analysisFileExtentionName, initIndicatorReplaceMap(), log);
-
+            if (isWorksapcePath()) {
+                for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
+                        ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT)) {
+                    ProxyRepositoryFactory.getInstance().reload(viewObject.getProperty());
+                }
+            }
             ResourceService.refreshStructure();
         } catch (Exception e) {
             result = false;
