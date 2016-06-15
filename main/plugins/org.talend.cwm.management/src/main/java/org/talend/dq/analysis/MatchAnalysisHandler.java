@@ -84,6 +84,8 @@ public class MatchAnalysisHandler extends AnalysisHandler {
                 log.info("fail to save dependency analysis:" + analysisItem.getAnalysis().getFileName());//$NON-NLS-1$
             }// ~
         }
+        // TDQ-11710 after update, should set this back to false.
+        isChangeConnection = Boolean.FALSE;
     }
 
     /**
