@@ -44,10 +44,11 @@ public class SimpleRuleStatisticsChartState extends AbstractChartTypeStatesTable
     public ICustomerDataset getCustomerDataset() {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (TableIndicatorUnit unit : units) {
-            double value = Double.parseDouble(unit.getValue().toString());
+            // double value = Double.parseDouble(unit.getValue().toString());
+            String value = CommonStateUtil.getUnitValue(unit.getValue());
             String label = unit.getIndicatorName();
 
-            customerdataset.addValue(value, label, ""); //$NON-NLS-1$
+            customerdataset.addValue(Double.parseDouble(value), label, ""); //$NON-NLS-1$
 
             ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label);
 

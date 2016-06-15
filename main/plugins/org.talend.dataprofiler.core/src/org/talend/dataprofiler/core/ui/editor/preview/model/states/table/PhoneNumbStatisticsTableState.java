@@ -51,9 +51,10 @@ public class PhoneNumbStatisticsTableState extends AbstractTableTypeStates {
     public ChartDataEntity[] getDataEntity() {
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
         for (IndicatorUnit unit : units) {
-            double value = CommonStateUtil.getUnitValue(unit.getValue());
+            String value = CommonStateUtil.getUnitValue(unit.getValue());
             String label = unit.getIndicatorName();
-            ChartDataEntity entity = PhoneNumbStatisticsStateUtil.createDataEntity(unit.getIndicator(), value, label);
+            ChartDataEntity entity = PhoneNumbStatisticsStateUtil.createDataEntity(unit.getIndicator(),
+                    Double.parseDouble(value), label);
 
             dataEnities.add(entity);
         }

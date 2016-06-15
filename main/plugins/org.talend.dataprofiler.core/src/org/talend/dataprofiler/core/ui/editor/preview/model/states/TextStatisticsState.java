@@ -53,10 +53,10 @@ public class TextStatisticsState extends AbstractChartTypeStates {
 
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
-            double value = CommonStateUtil.getUnitValue(unit.getValue());
+            String value = CommonStateUtil.getUnitValue(unit.getValue());
             String label = unit.getIndicatorName();
 
-            customerdataset.addValue(value, label, label);
+            customerdataset.addValue(Double.parseDouble(value), label, label);
 
             ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label);
 

@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.TextSta
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
@@ -51,7 +52,7 @@ public class TextStatisticsTableState extends AbstractTableTypeStates {
     public ChartDataEntity[] getDataEntity() {
         // sort these indicators.
         ComparatorsFactory.sort(units, ComparatorsFactory.TEXT_STATISTICS_COMPARATOR_ID);
-        return CommonStateUtil.getDataEntity(units);
+        return CommonStateUtil.getDataEntity(units, StringFormatUtil.DOUBLE_NUMBER);
     }
 
     /*

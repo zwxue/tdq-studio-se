@@ -53,11 +53,10 @@ public class SimpleRuleStatisticsTableState extends AbstractRuleStatisticsTableS
         TableIndicatorUnit rownCountUnit = WhereRuleStatisticsStateUtil.getRownCountUnit(tableunits);
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
         if (rownCountUnit != null) {
-            final Object unitValue = rownCountUnit.getValue();
-            double valueCount = unitValue != null ? Double.parseDouble(unitValue.toString()) : Double.NaN;
+            String value = CommonStateUtil.getUnitValue(rownCountUnit.getValue());
             String label = rownCountUnit.getIndicatorName();
-
-            dataEnities.add(CommonStateUtil.createDataEntity(rownCountUnit, valueCount, label));
+            ChartDataEntity createDataEntity = CommonStateUtil.createDataEntity(rownCountUnit, value, label);
+            dataEnities.add(createDataEntity);
         }
         return dataEnities.toArray(new ChartDataEntity[dataEnities.size()]);
     }
