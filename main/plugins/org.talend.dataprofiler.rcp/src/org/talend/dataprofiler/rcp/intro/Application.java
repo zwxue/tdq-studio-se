@@ -20,14 +20,16 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-//import org.eclipse.ui.internal.tweaklets.Tweaklets;
-//import org.eclipse.ui.internal.tweaklets.WorkbenchImplementation;
+// import org.eclipse.ui.internal.tweaklets.Tweaklets;
+// import org.eclipse.ui.internal.tweaklets.WorkbenchImplementation;
 import org.talend.commons.exception.BusinessException;
 import org.talend.core.GlobalServiceRegister;
+import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.core.ui.branding.IBrandingService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -35,7 +37,7 @@ import org.talend.dataprofiler.core.license.LicenseManagement;
 import org.talend.dataprofiler.core.license.LicenseWizard;
 import org.talend.dataprofiler.core.license.LicenseWizardDialog;
 import org.talend.dataprofiler.rcp.i18n.Messages;
-//import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4CoolBar;
+// import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4CoolBar;
 import org.talend.registration.wizards.register.TalendForgeDialog;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -64,6 +66,9 @@ public class Application implements IApplication {
         } catch (BusinessException e) {
             log.error(e.getMessage());
         }
+
+        checkBrowserSupport();
+
         try {
             if (!CorePlugin.getDefault().isRepositoryInitialized()) {
                 ReturnCode rc = CorePlugin.getDefault().initProxyRepository();
@@ -73,7 +78,7 @@ public class Application implements IApplication {
                 }
             }
 
-            //Tweaklets.setDefault(WorkbenchImplementation.KEY, new Workbench3xImplementation4CoolBar());
+            // Tweaklets.setDefault(WorkbenchImplementation.KEY, new Workbench3xImplementation4CoolBar());
 
             int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
             if (returnCode == PlatformUI.RETURN_RESTART) {
@@ -82,6 +87,25 @@ public class Application implements IApplication {
             return IApplication.EXIT_OK;
         } finally {
             display.dispose();
+        }
+    }
+
+    /**
+     * 
+     * DOC ggu Comment method "checkForBrowser".
+     */
+    private void checkBrowserSupport() {
+        Shell shell = new Shell();
+        try {
+            Browser browser = new Browser(shell, SWT.BORDER);
+            System.setProperty("USE_BROWSER", Boolean.TRUE.toString()); //$NON-NLS-1$ 
+            browser.dispose();
+        } catch (Throwable t) {
+            System.setProperty("USE_BROWSER", Boolean.FALSE.toString()); //$NON-NLS-1$ 
+            log.warn(DefaultMessagesImpl.getString("Application.browser"));
+        } finally {
+            shell.dispose();
+
         }
     }
 
@@ -107,9 +131,11 @@ public class Application implements IApplication {
             if (brandingService.isPoweredbyTalend()) {
                 int count = prefStore.getInt(TalendForgeDialog.LOGINCOUNT);
                 if (count < 10 && StringUtils.isEmpty(prefStore.getString("test@talend.com"))) { //$NON-NLS-1$
-                    TalendForgeDialog tfDialog = new TalendForgeDialog(shell, null);
-                    tfDialog.setBlockOnOpen(true);
-                    tfDialog.open();
+                    if (TalendPropertiesUtil.isEnabledUseBrowser()) {
+                        TalendForgeDialog tfDialog = new TalendForgeDialog(shell, null);
+                        tfDialog.setBlockOnOpen(true);
+                        tfDialog.open();
+                    }
                 }
             }
         }
