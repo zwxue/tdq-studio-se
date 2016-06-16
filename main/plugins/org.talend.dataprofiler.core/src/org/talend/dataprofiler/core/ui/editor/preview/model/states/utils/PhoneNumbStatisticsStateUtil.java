@@ -35,12 +35,12 @@ public class PhoneNumbStatisticsStateUtil {
      * @param label
      * @return
      */
-    public static ChartDataEntity createDataEntity(Indicator indicator, double value, String label) {
+    public static ChartDataEntity createDataEntity(Indicator indicator, String value, String label) {
         ChartDataEntity entity = new ChartDataEntity();
         entity.setIndicator(indicator);
         entity.setLabel(label);
-        entity.setValue(String.valueOf(value));
-        entity.setPercent(value / indicator.getCount());
+        entity.setValue(value);
+        entity.setPercent(Double.parseDouble(value) / indicator.getCount());
         return entity;
     }
 

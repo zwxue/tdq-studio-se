@@ -68,8 +68,8 @@ public class PatternStatisticsTableState extends AbstractTableTypeStates {
 
         for (IndicatorUnit unit : units) {
             PatternMatchingExt patternExt = (PatternMatchingExt) unit.getValue();
-            double notMathCount = PatternStatisticeStateUtil.getNotMatchCount(patternExt);
-            double machCount = PatternStatisticeStateUtil.getMatchCount(patternExt);
+            String notMathCount = PatternStatisticeStateUtil.getNotMatchCount(patternExt);
+            String machCount = PatternStatisticeStateUtil.getMatchCount(patternExt);
             PatternChartDataEntity patternEntity = PatternStatisticeStateUtil.createDataEntity(unit, unit.getIndicator()
                     .getName(), notMathCount, machCount);
             dataEnities.add(patternEntity);

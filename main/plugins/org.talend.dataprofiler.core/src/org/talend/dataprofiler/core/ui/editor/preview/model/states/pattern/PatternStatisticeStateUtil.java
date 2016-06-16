@@ -13,11 +13,12 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern;
 
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonStateUtil;
 import org.talend.dq.analysis.explore.DataExplorer;
-import org.talend.dq.analysis.explore.PatternExplorer;
 import org.talend.dq.analysis.explore.RegexPatternExplorer;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-3 Detailled comment
@@ -34,12 +35,12 @@ public class PatternStatisticeStateUtil {
      * @param machCount
      * @return
      */
-    public static PatternChartDataEntity createDataEntity(IndicatorUnit unit, String label, double notMathCount, double machCount) {
+    public static PatternChartDataEntity createDataEntity(IndicatorUnit unit, String label, String notMathCount, String machCount) {
         PatternChartDataEntity patternEntity = new PatternChartDataEntity();
         patternEntity.setIndicator(unit.getIndicator());
         patternEntity.setLabel(label);
-        patternEntity.setNumMatch(String.valueOf(machCount));
-        patternEntity.setNumNoMatch(String.valueOf(notMathCount));
+        patternEntity.setNumMatch(machCount);
+        patternEntity.setNumNoMatch(notMathCount);
         return patternEntity;
     }
 
@@ -49,9 +50,8 @@ public class PatternStatisticeStateUtil {
      * @param patternExt
      * @return
      */
-    public static double getMatchCount(PatternMatchingExt patternExt) {
-        double machCount = patternExt == null ? Double.NaN : patternExt.getMatchingValueCount();
-        return machCount;
+    public static String getMatchCount(PatternMatchingExt patternExt) {
+        return CommonStateUtil.getUnitValue(patternExt.getMatchingValueCount(), StringFormatUtil.INT_NUMBER);
     }
 
     /**
@@ -60,9 +60,8 @@ public class PatternStatisticeStateUtil {
      * @param patternExt
      * @return
      */
-    public static double getNotMatchCount(PatternMatchingExt patternExt) {
-        double notMathCount = patternExt == null ? Double.NaN : patternExt.getNotMatchingValueCount();
-        return notMathCount;
+    public static String getNotMatchCount(PatternMatchingExt patternExt) {
+        return CommonStateUtil.getUnitValue(patternExt.getNotMatchingValueCount(), StringFormatUtil.INT_NUMBER);
     }
 
     public static DataExplorer getDataExplorer() {

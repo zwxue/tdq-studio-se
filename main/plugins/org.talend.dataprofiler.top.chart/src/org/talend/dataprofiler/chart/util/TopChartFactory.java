@@ -88,6 +88,8 @@ public final class TopChartFactory {
 
     public static final String NULL_FIELD = "<null>"; //$NON-NLS-1$
 
+    public static final String NULL_FIELD2 = "Null field"; //$NON-NLS-1$
+
     public static final String EMPTY_FIELD = "Empty field"; //$NON-NLS-1$
 
     public static final Logger log = Logger.getLogger(TopChartFactory.class);
@@ -96,9 +98,8 @@ public final class TopChartFactory {
     }
 
     /**
-     * Creates a bubble chart with default settings. The chart is composed of an {@link XYPlot}, with a
-     * {@link NumberAxis} for the domain axis, a {@link NumberAxis} for the range axis, and an {@link XYBubbleRenderer}
-     * to draw the data items.
+     * Creates a bubble chart with default settings. The chart is composed of an {@link XYPlot}, with a {@link NumberAxis} for the
+     * domain axis, a {@link NumberAxis} for the range axis, and an {@link XYBubbleRenderer} to draw the data items.
      * 
      * This method is copied from
      * {@link org.jfree.chart.ChartFactory#createBubbleChart(String, String, String, XYZDataset, PlotOrientation, boolean, boolean, boolean)}
@@ -399,6 +400,7 @@ public final class TopChartFactory {
 
         CategoryAxis domainAxis = plot.getDomainAxis();
         domainAxis.setTickLabelPaint(NULL_FIELD, Color.RED);
+        domainAxis.setTickLabelPaint(NULL_FIELD2, Color.RED);
         domainAxis.setTickLabelPaint(EMPTY_FIELD, Color.RED);
 
         // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
@@ -587,7 +589,6 @@ public final class TopChartFactory {
 
         return chart;
     }
-
 
     /**
      * DOC Zqin Comment method "createStackedBarChart".

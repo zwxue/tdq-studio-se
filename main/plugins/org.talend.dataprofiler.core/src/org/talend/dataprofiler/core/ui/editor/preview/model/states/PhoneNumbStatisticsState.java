@@ -52,8 +52,7 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
 
             customerdataset.addValue(Double.parseDouble(value), label, label);
 
-            ChartDataEntity entity = PhoneNumbStatisticsStateUtil.createDataEntity(unit.getIndicator(),
-                    Double.parseDouble(value), label);
+            ChartDataEntity entity = PhoneNumbStatisticsStateUtil.createDataEntity(unit.getIndicator(), value, label);
 
             customerdataset.addDataEntity(entity);
         }

@@ -34,7 +34,6 @@ public class BinFrequencyStatisticsTableState extends FrequencyTableState {
      */
     public BinFrequencyStatisticsTableState(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
     }
 
     /*
