@@ -52,7 +52,6 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     protected Composite parentChartComposite;
 
-
     public int getIndexInDataset() {
         return this.entityIndex;
     }
@@ -135,7 +134,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
                         DefaultMessagesImpl.getString("PatternStatisticsState.Matching"), this.indicatorName);//$NON-NLS-1$
             } else {
                 TOPChartUtils.getInstance().setValue(dataset,
-                        (Number) StringFormatUtil.format(indValue, StringFormatUtil.NUMBER), indicatorName, indicatorName);
+                        (Number) StringFormatUtil.format(indValue, StringFormatUtil.DOUBLE_NUMBER), indicatorName, indicatorName);
             }
         }
         if (tableViewer != null) {
@@ -155,13 +154,11 @@ public class DynamicChartEventReceiver extends EventReceiver {
             refreshTable(NAN_STRING);
         }
     }
-    
+
     // frequency and summary need this method
     public void refreshChart() {
         // no need to implements
     }
-
-
 
     public void refreshTable(String value) {
         TableWithData input = (TableWithData) tableViewer.getInput();

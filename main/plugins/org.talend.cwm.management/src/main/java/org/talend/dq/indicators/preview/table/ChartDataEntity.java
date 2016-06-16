@@ -101,11 +101,7 @@ public class ChartDataEntity {
     }
 
     public String getValue() {
-        if (value != null) {
-            return StringFormatUtil.format(value, StringFormatUtil.NUMBER).toString();
-        } else {
-            return null;
-        }
+        return value;
     }
 
     public void setValue(String value) {

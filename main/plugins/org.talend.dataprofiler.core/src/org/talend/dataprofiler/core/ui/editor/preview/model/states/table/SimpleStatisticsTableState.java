@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonS
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.SimpleStatisticsStateUtil;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
@@ -43,7 +44,6 @@ public class SimpleStatisticsTableState extends AbstractTableTypeStates {
 
     @Override
     protected TableStructureEntity getTableStructure() {
-
         TableStructureEntity entity = new TableStructureEntity();
         entity.setFieldNames(new String[] {
                 DefaultMessagesImpl.getString("SimpleStatisticsState.Label"), DefaultMessagesImpl.getString("SimpleStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -53,13 +53,11 @@ public class SimpleStatisticsTableState extends AbstractTableTypeStates {
 
     @Override
     protected ITableLabelProvider getLabelProvider() {
-
         return new BaseChartTableLabelProvider();
     }
 
     @Override
     protected IStructuredContentProvider getContentProvider() {
-
         return new CommonContenteProvider();
     }
 
@@ -80,7 +78,7 @@ public class SimpleStatisticsTableState extends AbstractTableTypeStates {
      */
     @Override
     public ChartDataEntity[] getDataEntity() {
-        return CommonStateUtil.getDataEntity(units);
+        return CommonStateUtil.getDataEntity(units, StringFormatUtil.INT_NUMBER);
     }
 
 }

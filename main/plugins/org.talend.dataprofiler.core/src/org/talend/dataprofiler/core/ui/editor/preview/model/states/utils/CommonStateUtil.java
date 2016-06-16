@@ -25,34 +25,41 @@ import org.talend.utils.format.StringFormatUtil;
  */
 public class CommonStateUtil {
 
-    public static double getUnitValue(Object unitValue) {
+    public static String getUnitValue(Object unitValue, int style) {
+        String defaultValue = String.valueOf(Double.NaN);
+        if (style == StringFormatUtil.INT_NUMBER) {
+            defaultValue = "0"; //$NON-NLS-1$
+        }
+        return unitValue != null ? StringFormatUtil.format(unitValue, style).toString() : defaultValue;
+    }
+
+    public static String getUnitValue(Object unitValue) {
         // TDQ-11643: msjian make the chart value format like "X.XX" the same to table values.
-        return unitValue != null ? Double.parseDouble(StringFormatUtil.format(unitValue, StringFormatUtil.NUMBER).toString())
-                : Double.NaN;
+        return getUnitValue(unitValue, StringFormatUtil.DOUBLE_NUMBER);
     }
 
     /**
      * create the data entity
      * 
      * @param unit
-     * @param value
+     * @param value: String type: maybe Double or integer
      * @param label
      * @return
      */
-    public static ChartDataEntity createDataEntity(IndicatorUnit unit, double value, String label) {
+    public static ChartDataEntity createDataEntity(IndicatorUnit unit, String value, String label) {
         ChartDataEntity entity = new ChartDataEntity();
         entity.setIndicator(unit.getIndicator());
         entity.setLabel(label);
-        entity.setValue(String.valueOf(value));
-        entity.setPercent(value / unit.getIndicator().getCount());
+        entity.setValue(value);
+        entity.setPercent(Double.valueOf(value) / unit.getIndicator().getCount());
         return entity;
     }
 
-    public static ChartDataEntity[] getDataEntity(List<IndicatorUnit> units) {
+    public static ChartDataEntity[] getDataEntity(List<IndicatorUnit> units, int style) {
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
 
         for (IndicatorUnit unit : units) {
-            double value = getUnitValue(unit.getValue());
+            String value = getUnitValue(unit.getValue(), style);
             ChartDataEntity entity = createDataEntity(unit, value, unit.getIndicatorName());
             dataEnities.add(entity);
         }

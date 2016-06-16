@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonS
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.PhoneNumbStatisticsStateUtil;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
@@ -51,10 +52,9 @@ public class PhoneNumbStatisticsTableState extends AbstractTableTypeStates {
     public ChartDataEntity[] getDataEntity() {
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
         for (IndicatorUnit unit : units) {
-            double value = CommonStateUtil.getUnitValue(unit.getValue());
+            String value = CommonStateUtil.getUnitValue(unit.getValue(), StringFormatUtil.INT_NUMBER);
             String label = unit.getIndicatorName();
             ChartDataEntity entity = PhoneNumbStatisticsStateUtil.createDataEntity(unit.getIndicator(), value, label);
-
             dataEnities.add(entity);
         }
         return dataEnities.toArray(new ChartDataEntity[dataEnities.size()]);
@@ -79,7 +79,7 @@ public class PhoneNumbStatisticsTableState extends AbstractTableTypeStates {
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
         entity.setFieldNames(new String[] {
-                DefaultMessagesImpl.getString("PhoneNumbStatisticsState.Count"), DefaultMessagesImpl.getString("PhoneNumbStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                DefaultMessagesImpl.getString("PhoneNumbStatisticsState.Label"), DefaultMessagesImpl.getString("PhoneNumbStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         entity.setFieldWidths(new Integer[] { 200, 150, 150 });
         return entity;
     }
