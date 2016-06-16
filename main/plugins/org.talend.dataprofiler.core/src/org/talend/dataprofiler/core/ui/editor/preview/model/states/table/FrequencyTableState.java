@@ -82,7 +82,6 @@ public abstract class FrequencyTableState extends AbstractTableTypeStates {
      */
     @Override
     public DataExplorer getDataExplorer() {
-        // TODO Auto-generated method stub
         return null;
     }
 
