@@ -247,17 +247,10 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      */
     private void addRownCountDataEntity2CustomerDataset(CustomerDefaultCategoryDataset customerDataset, TableIndicatorUnit unit) {
         if (IndicatorEnum.RowCountIndicatorEnum.equals(unit.getType())) {
-            // final Object unitValue = unit.getValue();
-            //
-            // double valueCount = unitValue != null ? Double.parseDouble(unit.getValue().toString()) : Double.NaN;
             String value = CommonStateUtil.getUnitValue(unit.getValue());
-
             String label = unit.getIndicatorName();
-
             customerDataset.addValue(Double.parseDouble(value), label, label);
-
             ChartDataEntity entityCount = CommonStateUtil.createDataEntity(unit, value, label);
-
             customerDataset.addDataEntity(entityCount);
         }
     }

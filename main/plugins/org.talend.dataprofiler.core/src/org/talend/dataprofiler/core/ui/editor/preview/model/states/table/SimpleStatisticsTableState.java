@@ -44,7 +44,6 @@ public class SimpleStatisticsTableState extends AbstractTableTypeStates {
 
     @Override
     protected TableStructureEntity getTableStructure() {
-
         TableStructureEntity entity = new TableStructureEntity();
         entity.setFieldNames(new String[] {
                 DefaultMessagesImpl.getString("SimpleStatisticsState.Label"), DefaultMessagesImpl.getString("SimpleStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -54,13 +53,11 @@ public class SimpleStatisticsTableState extends AbstractTableTypeStates {
 
     @Override
     protected ITableLabelProvider getLabelProvider() {
-
         return new BaseChartTableLabelProvider();
     }
 
     @Override
     protected IStructuredContentProvider getContentProvider() {
-
         return new CommonContenteProvider();
     }
 

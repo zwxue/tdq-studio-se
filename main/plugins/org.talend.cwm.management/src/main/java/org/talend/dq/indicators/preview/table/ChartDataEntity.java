@@ -100,22 +100,8 @@ public class ChartDataEntity {
         this.label = label;
     }
 
-    /**
-     * DOC msjian Comment method "getValue".
-     * 
-     * @param style the style of formated, it should be 0, 1,2,99999.
-     * @return
-     */
-    public String getValue(int style) {
-        if (value != null) {
-            return StringFormatUtil.format(value, style).toString();
-        } else {
-            return null;
-        }
-    }
-
     public String getValue() {
-        return value;// getValue(StringFormatUtil.DOUBLE_NUMBER);
+        return value;
     }
 
     public void setValue(String value) {

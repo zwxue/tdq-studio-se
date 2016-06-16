@@ -47,7 +47,6 @@ public class TextStatisticsState extends AbstractChartTypeStates {
     }
 
     public ICustomerDataset getCustomerDataset() {
-
         // sort these indicators.
         ComparatorsFactory.sort(units, ComparatorsFactory.TEXT_STATISTICS_COMPARATOR_ID);
 
@@ -55,11 +54,8 @@ public class TextStatisticsState extends AbstractChartTypeStates {
         for (IndicatorUnit unit : units) {
             String value = CommonStateUtil.getUnitValue(unit.getValue());
             String label = unit.getIndicatorName();
-
             customerdataset.addValue(Double.parseDouble(value), label, label);
-
             ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label);
-
             customerdataset.addDataEntity(entity);
         }
         return customerdataset;
