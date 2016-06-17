@@ -34,6 +34,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -119,7 +120,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
-        traceError("Unhandled given indicator: " + indicator.getName());//$NON-NLS-1$
+        traceError("Unhandled given indicator: " + AnalysisExecutorHelper.getIndicatorName(indicator));//$NON-NLS-1$
         return Boolean.FALSE;
     }
 
@@ -336,7 +337,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 Expression query = dbms().getInstantiatedExpression(indicator);
 
                 if (query == null) {
-                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                    traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                             + "query is null");//$NON-NLS-1$
                     isSuccess = Boolean.FALSE;
                     continue;
@@ -346,7 +347,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     Boolean isExecSuccess = executeQuery(indicator, connection, query);
                     indicator.setComputed(true);
                     if (!isExecSuccess) {
-                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                                 + "SQL query: " + query.getBody());//$NON-NLS-1$
                         isSuccess = Boolean.FALSE;
                         continue;
@@ -431,7 +432,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String analyzedTableName = null;
         ColumnSet columnSetOwner = (ColumnSet) indicator.getAnalyzedElement();
         if (columnSetOwner == null) {
-            log.error(Messages.getString("RowMatchingAnalysisExecutor.COLUMNSETOWNERISNULL", indicator.getName()));//$NON-NLS-1$
+            log.error(Messages.getString(
+                    "RowMatchingAnalysisExecutor.COLUMNSETOWNERISNULL", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
         } else {
             if (columnSetOwner.eIsProxy()) {
                 columnSetOwner = (ColumnSet) EObjectHelper.resolveObject(columnSetOwner);

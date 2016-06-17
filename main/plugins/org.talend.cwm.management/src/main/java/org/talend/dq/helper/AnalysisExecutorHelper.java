@@ -30,10 +30,12 @@ import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
@@ -49,6 +51,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -457,4 +460,29 @@ public final class AnalysisExecutorHelper {
         }
     }
 
+
+    /**
+     * get the correct indicator name.
+     * 
+     * @param indicator
+     * @return
+     */
+    public static String getIndicatorName(Indicator indicator) {
+        String indName = PluginConstant.EMPTY_STRING;
+        if (indicator != null) {
+            // set the default indicator name.
+            indName = org.apache.commons.lang.StringUtils.defaultString(indicator.getName());
+            // TDQ-11831: fix the indicator drill down open sql editor to use the correct indicator name.after we
+            // change "Frenquency table" to "Value frenquency"
+            if (indicator instanceof PatternMatchingIndicator || indicator instanceof UserDefIndicator) {
+                // do nothing here, just use the default indicator name.
+            } else {
+                Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
+                if (property != null) {
+                    indName = InternationalizationUtil.getDefinitionInternationalizationLabel(property);
+                }
+            }
+        }
+        return indName;
+    }
 }

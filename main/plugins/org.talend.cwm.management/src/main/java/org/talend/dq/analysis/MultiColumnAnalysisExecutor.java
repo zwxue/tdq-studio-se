@@ -36,6 +36,7 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -255,7 +256,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 Expression query = dbms().getInstantiatedExpression(indicator);
 
                 if (query == null) {
-                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                    traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                             + "query is null");//$NON-NLS-1$
                     isSuccess = Boolean.FALSE;
                     continue;
@@ -263,7 +264,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 try {
                     Boolean isExeSuccess = executeQuery(indicator, connection, query);
                     if (!isExeSuccess) {
-                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                                 + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
                         isSuccess = Boolean.FALSE;
                         continue;

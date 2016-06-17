@@ -130,7 +130,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             for (Indicator indicator : leafIndicators) {
                 if (this.continueRun()) {
                     if (!createSqlQuery(stringDataFilter, indicator)) {
-                        log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR", indicator.getName()));//$NON-NLS-1$
+                        log.error(Messages.getString(
+                                "ColumnAnalysisSqlExecutor.CREATEQUERYERROR", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
                         // return null;
                     }
                 }
@@ -197,7 +198,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 return Boolean.FALSE;
             }
             // MOD klliu 2011-06-28 bug 22555
-            Object[] args = new Object[] { (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
+            Object[] args = new Object[] {
+                    (indicator.getName() != null ? AnalysisExecutorHelper.getIndicatorName(indicator) : indicatorEclass.getName()),
                     ResourceHelper.getUUID(indicatorDefinition) };
             String warnInfo = Messages.getString("ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", args) + Messages.getString("ColumnAnalysisSqlExecutor.ADDEXPREEIONINFOMATION", language);//$NON-NLS-1$ ////$NON-NLS-2$
             traceError(warnInfo);
@@ -1271,7 +1273,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     if (conn != null) {
                         ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn,
                                 elementToIndicator, indicator);
-                        eaj.setName(indicator.getName());
+                        eaj.setName(AnalysisExecutorHelper.getIndicatorName(indicator));
                         eaj.schedule();
                         jobs.add(eaj);
                     }
@@ -1395,7 +1397,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     protected boolean executeQuery(final Indicator indicator, Connection connection, String queryStmt) throws SQLException {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()) //$NON-NLS-1$ 
+            log.info(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", AnalysisExecutorHelper.getIndicatorName(indicator)) //$NON-NLS-1$ 
                     + "\t" + Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$ //$NON-NLS-2$ 
         }
         // give result to indicator so that it handles the results

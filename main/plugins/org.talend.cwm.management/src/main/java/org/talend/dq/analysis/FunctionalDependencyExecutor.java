@@ -85,7 +85,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
                 Expression query = dbms().getInstantiatedExpression(indicator);
                 if (query == null) {
                     // TODO internationalize the string.
-                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                    traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                             + "query is null");//$NON-NLS-1$
                     runStatus = Boolean.FALSE;
                     continue;
@@ -95,7 +95,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
                     boolean exeStatus = executeQuery(indicator, connection, query);
                     if (!exeStatus) {
                         // TODO internationalize the string.
-                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                                 + "SQL query: " + query.getBody());//$NON-NLS-1$
                         runStatus = Boolean.FALSE;
                         continue;

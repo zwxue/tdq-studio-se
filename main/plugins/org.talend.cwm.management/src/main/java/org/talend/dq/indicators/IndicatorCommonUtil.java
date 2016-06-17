@@ -95,7 +95,8 @@ public final class IndicatorCommonUtil {
                     ((RangeIndicator) indicator).setComputed(true);
                 } else if (indicator.isComputed()) {
 
-                    // log.warn("now getting the value of indicator [" + indicator.getName() + "]");
+                    // log.warn("now getting the value of indicator [" + AnalysisExecutorHelper.getIndicatorName(indicator) +
+                    // "]");
 
                     switch (type) {
                     case RowCountIndicatorEnum:
