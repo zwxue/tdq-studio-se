@@ -23,6 +23,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.utils.collections.MultiMapHelper;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -125,9 +126,11 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
 
     private String getErrorMessageForQuery(Expression query) {
         if (query == null) {
-            return Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryIsNull", indicator.getName()); //$NON-NLS-1$
+            return Messages.getString(
+                    "ColumnAnalysisSqlParallelExecutor.QueryIsNull", AnalysisExecutorHelper.getIndicatorName(indicator)); //$NON-NLS-1$
         } else {
-            return Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryNotExecute", indicator.getName()) //$NON-NLS-1$
+            return Messages.getString(
+                    "ColumnAnalysisSqlParallelExecutor.QueryNotExecute", AnalysisExecutorHelper.getIndicatorName(indicator)) //$NON-NLS-1$
                     + PluginConstant.SPACE_STRING
                     + Messages.getString("ColumnAnalysisSqlParallelExecutor.SQLQuery", query.getBody()); //$NON-NLS-1$
         }
