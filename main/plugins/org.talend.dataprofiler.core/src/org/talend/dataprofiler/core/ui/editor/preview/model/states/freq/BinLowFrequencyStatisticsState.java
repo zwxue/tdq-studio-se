@@ -32,7 +32,7 @@ public class BinLowFrequencyStatisticsState extends FrequencyTypeStates {
 
     @Override
     protected void sortIndicator(FrequencyExt[] frequencyExt) {
-        ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
+        ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.LOW_FREQUENCY_COMPARATOR_ID);
     }
 
     @Override
