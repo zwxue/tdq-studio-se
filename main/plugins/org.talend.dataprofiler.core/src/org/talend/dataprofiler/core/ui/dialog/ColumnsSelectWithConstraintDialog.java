@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.dialog;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -56,7 +57,20 @@ public class ColumnsSelectWithConstraintDialog extends ColumnsSelectionDialog {
         Status fCurrStatus;
         // the table node all stored in the map as key, so when the key's number >1, means there are more than one
         // table's column selected. then make the ok status disable
-        if (super.modelElementCheckedMap.keySet().size() > 1) {
+
+        // TDQ-12215: filter the tableNodes when it has set column filter, because they are duplicate in the map.
+        Set<?> keySet = modelElementCheckedMap.keySet();
+        RepositoryNode[] repNodeArray = keySet.toArray(new RepositoryNode[keySet.size()]);
+        int tableCount = 0;
+        for (RepositoryNode node : repNodeArray) {
+            if (node.getId() == null) {
+                continue;
+            }
+            tableCount++;
+        }
+        // TDQ-12215~
+
+        if (tableCount > 1) {
             fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.OK, DefaultMessagesImpl.getString(
                     "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
         } else {
