@@ -452,14 +452,20 @@ public class PatternTestView extends ViewPart {
             if (regexStr.length() >= 2 && regexStr.startsWith("'") && regexStr.endsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
                 regexStr = regexStr.substring(1, regexStr.length() - 1);
             }
-            boolean flag = java.util.regex.Pattern.compile(regexStr).matcher(testText.getText()).find();
-            if (flag) {
-                emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
-                resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
-                return;
-            } else {
-                emoticonLabel.setImage(ImageLib.getImage(ImageLib.EXCLAMATION));
-                resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.nonMatch")); //$NON-NLS-1$
+            try {
+                boolean flag = java.util.regex.Pattern.compile(regexStr).matcher(testText.getText()).find();
+                if (flag) {
+                    emoticonLabel.setImage(ImageLib.getImage(ImageLib.CHECK_MARK_PNG));
+                    resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
+                    return;
+                } else {
+                    emoticonLabel.setImage(ImageLib.getImage(ImageLib.RED_WARNING_PNG));
+                    resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.nonMatch")); //$NON-NLS-1$
+                    return;
+                }
+            } catch (java.util.regex.PatternSyntaxException e) {// TDQ-5650 show the error message if any exception
+                emoticonLabel.setImage(ImageLib.getImage(ImageLib.ICON_ERROR_INFO));
+                resultLabel.setText(e.getLocalizedMessage());
                 return;
             }
         } else {
