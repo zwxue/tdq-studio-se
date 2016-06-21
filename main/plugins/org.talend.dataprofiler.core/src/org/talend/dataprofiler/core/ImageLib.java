@@ -294,6 +294,12 @@ public final class ImageLib {
 
     public static final String REFERENCED_PROJECT = "referenced.png"; //$NON-NLS-1$
 
+    public static final String CHECK_MARK_PNG = "check.png";//$NON-NLS-1$
+
+    public static final String RED_WARNING_PNG = "red_warning.png";//$NON-NLS-1$
+
+    public static final String WARNING_PNG = "warning.png";//$NON-NLS-1$
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */
