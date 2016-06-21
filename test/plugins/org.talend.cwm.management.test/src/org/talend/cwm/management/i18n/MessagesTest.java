@@ -28,18 +28,18 @@ public class MessagesTest {
     private static String[][] keyToExpected = {
             { "DefinitionHandler.IndicatorsDefinition", "Indicators' definition not loaded!" }, //$NON-NLS-1$//$NON-NLS-2$
             { "AbstractTableBuilder.NoTypeGiven", "No type given. Type must be set to either tables, views, system tables..." }, //$NON-NLS-1$//$NON-NLS-2$
-            { "EIndicatorChartType.PatternFrequencyStatistics", "Pattern Frequency Statistics" }, //$NON-NLS-1$//$NON-NLS-2$
-            { "Evaluator.NoConnectionFoundInMetadata", "DB Connection \"{0}\" is not available in Meatdata." }, //$NON-NLS-1$//$NON-NLS-2$
+            { "EIndicatorChartType.PatternFrequencyStatistics", "Pattern Frequency" }, //$NON-NLS-1$//$NON-NLS-2$
+            { "Evaluator.NoConnectionFoundInMetadata", "DB Connection \"{0}\" is not available in Metadata." }, //$NON-NLS-1$//$NON-NLS-2$
             { "JavaSqlFactory.UnableDecryptPassword", //$NON-NLS-1$
                     "Unable to decrypt given password correctly. It's probably due to a change in the passphrase used in encryption." } //$NON-NLS-1$
 
     };
 
     private static String[][] keyToExpectedWithArgs = {
-            { "Evaluator.NoConnectionFoundInMetadata", "DB Connection \"" + ARG + "\" is not available in Meatdata." }, //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+            { "Evaluator.NoConnectionFoundInMetadata", "DB Connection \"" + ARG + "\" is not available in Metadata." }, //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
             { "DefinitionHandler.IndicatorsDefinition", "Indicators' definition not loaded!" }, //$NON-NLS-1$//$NON-NLS-2$
             { "AbstractTableBuilder.NoTypeGiven", "No type given. Type must be set to either tables, views, system tables..." }, //$NON-NLS-1$//$NON-NLS-2$
-            { "EIndicatorChartType.PatternFrequencyStatistics", "Pattern Frequency Statistics" }, //$NON-NLS-1$//$NON-NLS-2$
+            { "EIndicatorChartType.PatternFrequencyStatistics", "Pattern Frequency" }, //$NON-NLS-1$//$NON-NLS-2$
             { "JavaSqlFactory.UnableDecryptPassword", //$NON-NLS-1$
                     "Unable to decrypt given password correctly. It's probably due to a change in the passphrase used in encryption." } //$NON-NLS-1$
 

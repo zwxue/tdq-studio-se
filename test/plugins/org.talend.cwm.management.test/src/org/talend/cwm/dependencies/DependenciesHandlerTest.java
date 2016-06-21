@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.cwm.dependencies;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -157,7 +158,6 @@ public class DependenciesHandlerTest {
         DependenciesHandler.getInstance().removeConnDependencyAndSave(analysisItem);
         Assert.assertNull(analysis.getContext().getConnection());
         Assert.assertEquals(true, analysis.getClientDependency().isEmpty());
-
     }
 
     /**

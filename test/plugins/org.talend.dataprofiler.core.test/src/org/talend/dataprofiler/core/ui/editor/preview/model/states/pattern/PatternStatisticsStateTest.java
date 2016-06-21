@@ -45,6 +45,7 @@ public class PatternStatisticsStateTest {
 
         RegexpMatchingIndicator indicator = IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator();
         indicator.setName("Blank text"); //$NON-NLS-1$
+        indicator.setComputed(true);
 
         units.add(new ColumnSetIndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, indicator));
 

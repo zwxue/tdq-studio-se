@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.sql.Types;
 import java.util.ResourceBundle;
@@ -140,9 +141,9 @@ public class ModelElementIndicatorRuleTest {
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.SoundexIndicatorEnum, me, ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule
                 .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.SQL));
-        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
-                ExecutionLanguage.SQL));
-        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+        Assert.assertTrue(ModelElementIndicatorRule
+                .patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me, ExecutionLanguage.SQL));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
                 ExecutionLanguage.SQL));
         when(tdsql.getJavaDataType()).thenReturn(Types.INTEGER);
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.MedianIndicatorEnum, me, ExecutionLanguage.SQL));
