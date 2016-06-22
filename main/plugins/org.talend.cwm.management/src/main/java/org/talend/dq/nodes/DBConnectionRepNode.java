@@ -68,7 +68,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         afterGlobalFilter = new ArrayList<IRepositoryNode>();
         // Retrieve catalogs/schemes.
         DatabaseConnection databaseConnection = getDatabaseConnection();
-        EList<Package> dataPackage = getDatabaseConnection().getDataPackage();
+        EList<Package> dataPackage = databaseConnection.getDataPackage();
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
             String filterCharater = ConnectionHelper.getPackageFilter(databaseConnection);
