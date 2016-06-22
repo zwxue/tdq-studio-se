@@ -17,6 +17,7 @@ import java.util.Properties;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -66,7 +67,10 @@ import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorIn
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
+import org.talend.dataprofiler.core.ui.views.resources.RemoteRepositoryObjectCRUD;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
@@ -96,6 +100,8 @@ import orgomg.cwm.resource.relational.Schema;
 public class OpenItemEditorAction extends Action implements IIntroAction {
 
     protected static Logger log = Logger.getLogger(OpenItemEditorAction.class);
+
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     private IRepositoryViewObject repViewObj = null;
 
@@ -148,6 +154,16 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
     }
 
     protected void duRun() throws BusinessException {
+        // TODO extract the code here to a new method
+        if (repositoryObjectCRUD instanceof RemoteRepositoryObjectCRUD) {
+            try {
+                ProxyRepositoryFactory.getInstance().reload(repViewObj.getProperty());
+                IFile file = PropertyHelper.getItemFile(repViewObj.getProperty());
+                file.refreshLocal(IResource.DEPTH_INFINITE, null);
+            } catch (Exception e1) {
+                log.error(e1, e1);
+            }
+        }
 
         this.itemEditorInput = computeEditorInput(true);
         if (itemEditorInput != null) {
