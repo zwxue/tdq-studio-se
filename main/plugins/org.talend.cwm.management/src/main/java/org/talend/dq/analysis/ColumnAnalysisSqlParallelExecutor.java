@@ -53,6 +53,7 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
             // inst.dbmsLanguage = parent.dbmsLanguage;
             inst.cachedAnalysis = parent.cachedAnalysis;
             inst.schemata = parent.schemata;
+            inst.setMonitor(parent.getMonitor());
         }
         return inst;
     }
@@ -76,6 +77,9 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
     public Boolean run() {
         Expression query = null;
         try {
+            if (!continueRun()) {
+                return Boolean.FALSE;
+            }
             // skip composite indicators that do not require a sql execution
             if (indicator instanceof CompositeIndicator) {
                 // options of composite indicators are handled elsewhere

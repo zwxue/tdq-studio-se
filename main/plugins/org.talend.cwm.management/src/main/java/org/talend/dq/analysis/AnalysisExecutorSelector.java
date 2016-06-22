@@ -147,16 +147,16 @@ public final class AnalysisExecutorSelector {
             // MOD xqliu 2009-02-09 bug 6237
             analysisExecutor.setMonitor(monitor);
             ReturnCode execute = analysisExecutor.execute(analysisItem.getAnalysis());
-
             // save analysis.
             if (Platform.isRunning()) {
                 Display.getDefault().asyncExec(new Runnable() {
 
                     public void run() {
-                        AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
-                        writer.save(analysisItem, Boolean.FALSE);
-                        if (monitor != null) {
-                            monitor.worked(1);
+                        if (monitor != null && !monitor.isCanceled()) {
+                            monitor.subTask(Messages.getString("AnalysisExecutorSelector.SavingAnalysisTask")); //$NON-NLS-1$
+                            AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
+                            writer.save(analysisItem, Boolean.FALSE);
+                            monitor.worked(10);
                         }
                     }
                 });

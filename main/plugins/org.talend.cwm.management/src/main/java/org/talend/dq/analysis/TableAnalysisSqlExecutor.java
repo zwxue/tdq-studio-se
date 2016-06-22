@@ -632,7 +632,11 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
         if (!eval.selectCatalog(catalog.getName())) {
             log.warn("Failed to select catalog " + catalog.getName() + " for connection.");//$NON-NLS-1$//$NON-NLS-2$
         }
-        return eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
+        ReturnCode retCode = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
+        if (getMonitor() != null) {
+            getMonitor().worked(compIndicatorsWorked);
+        }
+        return retCode;
     }
 
     protected boolean belongToSameSchemata(final NamedColumnSet set) {

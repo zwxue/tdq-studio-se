@@ -125,7 +125,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             return rc;
         }
         if (getMonitor() != null) {
-            getMonitor().worked(1);
+            getMonitor().worked(20);
         }
 
         // Set schema for match key.
@@ -191,7 +191,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         }
 
         if (getMonitor() != null) {
-            getMonitor().worked(1);
+            getMonitor().worked(20);
         }
 
         // --- set metadata information of analysis
@@ -213,7 +213,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             resultMetadata.setOutThreshold(false);
         }
         if (getMonitor() != null) {
-            getMonitor().worked(1);
+            getMonitor().worked(20);
         }
         return rc;
     }

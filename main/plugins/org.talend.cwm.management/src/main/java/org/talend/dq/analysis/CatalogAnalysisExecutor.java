@@ -53,8 +53,11 @@ public class CatalogAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
             // ADDED rli 2008-07-10 fixed for the SchemaIndicator will increased after connection analysis running.
             indicator.reset();
         }
-
-        return runAnalysisLow(analysis, sqlStatement, eval, connection);
+        ReturnCode retCode = runAnalysisLow(analysis, sqlStatement, eval, connection);
+        if (getMonitor() != null) {
+            getMonitor().worked(compIndicatorsWorked);
+        }
+        return retCode;
     }
 
 }

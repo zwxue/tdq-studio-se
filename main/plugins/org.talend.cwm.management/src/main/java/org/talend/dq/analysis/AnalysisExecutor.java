@@ -85,6 +85,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     private StringBuffer errorMessage = new StringBuffer();
 
+    // the value of monitor worked for executing all indicators
+    protected int compIndicatorsWorked = 60;
+
     /**
      * Getter for usedMemory.
      * 
@@ -127,10 +130,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             return getReturnCode(false);
         }
         // ~
-        // TDQ-11283: for the tDqReportRun, the monitor is null
-        if (getMonitor() != null) {
-            getMonitor().worked(1);
-        }
 
         // --- run analysis
         boolean ok = false;
@@ -157,7 +156,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
 
         if (getMonitor() != null) {
-            getMonitor().worked(1);
+            monitor.subTask(Messages.getString("AnalysisExecutor.UpdateAnalysisResut")); //$NON-NLS-1$
         }
 
         // --- set metadata information of analysis
@@ -187,8 +186,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
 
         if (getMonitor() != null) {
-            getMonitor().worked(1);
+            getMonitor().worked(10);
         }
+
         return new ReturnCode(this.errorMessage.toString(), ok);
     }
 
@@ -497,6 +497,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     protected boolean continueRun() {
         // MOD scorreia 2013-09-10 avoid checking for each analyzed row. Check only every 1000 rows
         checkContinueCount++;
+        if (getMonitor() == null || getMonitor().isCanceled()) {
+            keepRunning = false;
+            return keepRunning;
+        }
         if (getCheckContinueCount() % Evaluator.CHECK_EVERY_N_COUNT != 0) {
             return keepRunning;
         }
@@ -504,9 +508,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             return true;
         }
 
-        if (getMonitor() != null && getMonitor().isCanceled()) {
-            keepRunning = false;
-        } else if (this.isLowMemory) {
+        if (this.isLowMemory) {
             keepRunning = false;
         } else if (AnalysisThreadMemoryChangeNotifier.getInstance().isUsageThresholdExceeded()) {
             this.usedMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(ManagementFactory.getMemoryMXBean()

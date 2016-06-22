@@ -128,14 +128,16 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
-                if (this.continueRun()) {
+                if (!this.continueRun()) {
+                    break;
+                }
+               
                     if (!createSqlQuery(stringDataFilter, indicator)) {
                         log.error(Messages.getString(
                                 "ColumnAnalysisSqlExecutor.CREATEQUERYERROR", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
                         // return null;
                     }
                 }
-            }
         } catch (AnalysisExecutionException e) {
             log.error(e, e);
             return null;
@@ -1112,6 +1114,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             setError(e.getMessage());
             ok = false;
         }
+        if (StringUtils.isEmpty(getErrorMessage()) && getMonitor() != null && getMonitor().isCanceled()) {
+            setError(Messages.getString("ColumnAnalysisSqlExecutor.AnalysisIsCanceled", analysis.getName())); //$NON-NLS-1$
+        }
 
         return new ReturnCode(getErrorMessage(), ok);
 
@@ -1195,10 +1200,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
          */
         @Override
         protected IStatus run(IProgressMonitor monitor) {
+            if (monitor.isCanceled() || parent.getMonitor().isCanceled()) {
+                return Status.CANCEL_STATUS;
+            }
             ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
                     connection, elementToIndicator, indicator);
             Boolean isSuccess = columnSqlParallel.run();
-
+            // System.out.println("i:" + i + ":::::" + indicator.getAnalyzedElement().getName() + "--" + indicator.getName());
             if (isSuccess) {
                 return Status.OK_STATUS;
             } else {
@@ -1206,6 +1214,15 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 return Status.CANCEL_STATUS;
             }
         }
+
+        @Override
+        public boolean shouldRun() {
+            if (!parent.continueRun()) {
+                return false;
+            }
+            return true;
+        }
+
     }
 
     /**
@@ -1225,68 +1242,75 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         // MOD gdbu 2011-6-10 bug : 21273
         try {
-            int totleWork = 100;
+            final int totleWork = compIndicatorsWorked;
             List<ExecutiveAnalysisJob> jobs = new ArrayList<ExecutiveAnalysisJob>();
 
-            IProgressMonitor monitor = this.getMonitor();
+            final IProgressMonitor monitor = this.getMonitor();
             if (monitor != null) {
-                monitor.beginTask("Run Indicators Parallel", totleWork); //$NON-NLS-1$
+                monitor.subTask("Run Indicators Parallel"); //$NON-NLS-1$
             }
+            int temp = 0;
+            for (int i = 0; i < indicators.size(); i++) {
+                final Indicator indicator = indicators.get(i);
+                if (!this.continueRun()) {
+                    return false;
+                }
+                // TDQ-11851,in order to syn UI and backend-threads, add this Display.
+                Display.getDefault().syncExec(new Runnable() {
 
-            for (Indicator indicator : indicators) {
-                if (this.continueRun()) {
-                    if (monitor != null) {
-                        monitor.setTaskName(Messages.getString(
-                                "ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement() //$NON-NLS-1$
-                                        .getName()));
-                    }
-                    Connection conn = null;
-                    if (pooledConnection) {
-                        conn = getPooledConnection(analysis).getObject();
-                    } else {
-                        conn = getConnection(analysis).getObject();
+                    public void run() {
+                        if (monitor != null) {
+                            monitor.subTask(Messages.getString(
+                                    "ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement() //$NON-NLS-1$
+                                            .getName()));
+                        }
                     }
 
-                    if (conn != null) {
+                });
+                if (monitor != null) {
+                    int current = (i + 1) * totleWork / indicators.size();
+                    if (current > temp) {
+                        monitor.worked(current - temp);
+                        temp = current;
+                    }
+                }
+
+                Connection conn = null;
+                if (pooledConnection) {
+                    conn = getPooledConnection(analysis).getObject();
+                } else {
+                    conn = getConnection(analysis).getObject();
+                }
+
+                      if (conn != null) {
                         ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn,
                                 elementToIndicator, indicator);
                         eaj.setName(AnalysisExecutorHelper.getIndicatorName(indicator));
                         eaj.schedule();
                         jobs.add(eaj);
                     }
-                }
+                
             }
 
-            int temp = 0;
             boolean hasErrorMessage = false;
             // should call join() after schedule all the jobs
             for (int i = 0; i < jobs.size(); i++) {
                 ExecutiveAnalysisJob eaj = jobs.get(i);
-                if (this.continueRun()) {
-                    eaj.join();
+                if (!this.continueRun()) {
+                    break;
                 }
-
+                eaj.join();
                 if (eaj.errorMessage != null) {
                     hasErrorMessage = true;
                     ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
                 }
 
-                if (monitor != null) {
-                    int current = (i + 1) * totleWork / jobs.size();
-                    if (current > temp) {
-                        monitor.worked(current - temp);
-                        temp = current;
-                    }
-                }
             }
             // Added TDQ-8388 20140530 yyin: only show one message to let the user check detail in error log.
             if (hasErrorMessage) {
                 setError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORREFERTOLOG"));//$NON-NLS-1$
             }
 
-            if (monitor != null) {
-                monitor.done();
-            }
         } catch (Throwable thr) {
             log.error(thr);
         } finally {
@@ -1382,6 +1406,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // MOD qiongli 2012-3-7 TDQ-4632 delete some redundancy code for DistinctIndicator.modify directly the sql
         // expression in definition file.
         List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
+        if (!continueRun()) {
+            return false;
+        }
         ret = indicator.storeSqlResults(myResultSet);
 
         // Added TDQ-8787 publish the related event when one indicator is finished: to refresh the chart with new result
@@ -1418,18 +1445,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             Thread.currentThread().setContextClassLoader(hiveClassLoader);
         }
         List<Object[]> myResultSet = new ArrayList<Object[]>();
+        Statement statement = null;
         try {
             if (catalogName != null) { // check whether null argument can be given
                 changeCatalog(catalogName, connection);
             }
-            // create query statement
-            Statement statement = connection.createStatement();
-            // statement.setFetchSize(fetchSize);
-
             // MOD xqliu 2009-02-09 bug 6237
             if (continueRun()) {
+                // create query statement
+                statement = connection.createStatement();
+                // statement.setFetchSize(fetchSize);
                 statement.execute(queryStmt);
-
                 // get the results
                 ResultSet resultSet = statement.getResultSet();
                 if (resultSet == null) {
@@ -1451,8 +1477,19 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
             // -- release resources
 
-            statement.close();
+        } catch (NullPointerException nullExc) {
+            // TDQ-11851 when click 'cancel' on wizard,the connection should be closed, so that some object may be Null.Catch the
+            // Exception and logging here.
+            if (getMonitor().isCanceled()) {
+                log.error(nullExc);
+            } else {
+                throw nullExc;
+            }
+
         } finally {
+            if (statement != null) {
+                statement.close();
+            }
             Thread.currentThread().setContextClassLoader(currClassLoader);
         }
         return myResultSet;

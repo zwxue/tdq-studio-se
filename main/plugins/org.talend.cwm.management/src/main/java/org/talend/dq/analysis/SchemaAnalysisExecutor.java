@@ -37,6 +37,7 @@ public class SchemaAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
         SchemaEvaluator eval = new SchemaEvaluator();
         // MOD xqliu 2009-02-09 bug 6237
         eval.setMonitor(getMonitor());
+
         // // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
@@ -53,8 +54,11 @@ public class SchemaAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
             // ADDED rli 2008-07-10 fixed for the SchemaIndicator will increased after connection analysis running.
             indicator.reset();
         }
-
-        return runAnalysisLow(analysis, sqlStatement, eval, connection);
+        if (getMonitor() != null) {
+            getMonitor().worked(compIndicatorsWorked);
+        }
+        ReturnCode retCode = runAnalysisLow(analysis, sqlStatement, eval, connection);
+        return retCode;
     }
 
 }

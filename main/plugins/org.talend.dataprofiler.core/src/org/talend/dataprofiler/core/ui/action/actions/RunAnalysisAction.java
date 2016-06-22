@@ -206,7 +206,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
                     final boolean isSupportDynamicChart = isSupportDynamicChart();
-                    monitor.beginTask(DefaultMessagesImpl.getString("RunAnalysisAction.running", item.getAnalysis().getName()), 5); //$NON-NLS-1$ 
+                    monitor.beginTask(
+                            DefaultMessagesImpl.getString("RunAnalysisAction.running", item.getAnalysis().getName()), 100); //$NON-NLS-1$ 
                     Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
@@ -224,6 +225,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                     ReturnCode executed = null;
                     try {
+                        monitor.worked(10);
                         executed = AnalysisExecutorSelector.executeAnalysis(item, monitor);
 
                         if (monitor.isCanceled()) {
@@ -239,6 +241,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         if (isNeedUnlock) {
                             unlockAnalysis();
                         }
+                        monitor.subTask(DefaultMessagesImpl.getString("RunAnalysisAction.refresh.page")); //$NON-NLS-1$
+
                     } finally {// if any exception, still need to unregister dynamic events.
                         Display.getDefault().syncExec(new Runnable() {
 
@@ -265,6 +269,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     displayResultStatus(executed);
                     // TODO move this code to the right place
                     addAnalysisToRef(item.getAnalysis());
+                    monitor.worked(20);
                     monitor.done();
                     return Status.OK_STATUS;
                 }

@@ -112,7 +112,9 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         if (!rc.isOk()) {
             traceError(rc.getMessage());
         }
-
+        if (getMonitor() != null) {
+            getMonitor().worked(compIndicatorsWorked);
+        }
         return rc.isOk();
     }
 

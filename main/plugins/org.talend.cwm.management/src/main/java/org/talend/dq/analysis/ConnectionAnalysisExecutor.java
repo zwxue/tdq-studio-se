@@ -54,6 +54,10 @@ public class ConnectionAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
             indicator.reset();
         }
 
-        return runAnalysisLow(analysis, sqlStatement, eval, connection);
+        ReturnCode retCode = runAnalysisLow(analysis, sqlStatement, eval, connection);
+        if (getMonitor() != null) {
+            getMonitor().worked(compIndicatorsWorked);
+        }
+        return retCode;
     }
 }

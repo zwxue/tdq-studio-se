@@ -70,6 +70,9 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
             log.warn(rc.getMessage());
             setError(rc.getMessage());
         }
+        if (getMonitor() != null) {
+            getMonitor().worked(compIndicatorsWorked);
+        }
         return rc.isOk();
     }
 
