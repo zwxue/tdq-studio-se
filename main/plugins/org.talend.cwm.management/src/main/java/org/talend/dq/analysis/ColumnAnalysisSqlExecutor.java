@@ -131,13 +131,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (!this.continueRun()) {
                     break;
                 }
-               
-                    if (!createSqlQuery(stringDataFilter, indicator)) {
-                        log.error(Messages.getString(
-                                "ColumnAnalysisSqlExecutor.CREATEQUERYERROR", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
-                        // return null;
-                    }
+
+                if (!createSqlQuery(stringDataFilter, indicator)) {
+                    log.error(Messages.getString(
+                            "ColumnAnalysisSqlExecutor.CREATEQUERYERROR", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
+                    // return null;
                 }
+            }
         } catch (AnalysisExecutionException e) {
             log.error(e, e);
             return null;
@@ -1200,7 +1200,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
          */
         @Override
         protected IStatus run(IProgressMonitor monitor) {
-            if (monitor.isCanceled() || parent.getMonitor().isCanceled()) {
+            if (parent.getMonitor() != null && parent.getMonitor().isCanceled()) {
                 return Status.CANCEL_STATUS;
             }
             ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
@@ -1256,25 +1256,22 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     return false;
                 }
                 // TDQ-11851,in order to syn UI and backend-threads, add this Display.
-                Display.getDefault().syncExec(new Runnable() {
+                if (monitor != null) {
+                    Display.getDefault().syncExec(new Runnable() {
 
-                    public void run() {
-                        if (monitor != null) {
+                        public void run() {
                             monitor.subTask(Messages.getString(
                                     "ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement() //$NON-NLS-1$
                                             .getName()));
                         }
-                    }
+                    });
 
-                });
-                if (monitor != null) {
                     int current = (i + 1) * totleWork / indicators.size();
                     if (current > temp) {
                         monitor.worked(current - temp);
                         temp = current;
                     }
                 }
-
                 Connection conn = null;
                 if (pooledConnection) {
                     conn = getPooledConnection(analysis).getObject();
@@ -1282,14 +1279,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     conn = getConnection(analysis).getObject();
                 }
 
-                      if (conn != null) {
-                        ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn,
-                                elementToIndicator, indicator);
-                        eaj.setName(AnalysisExecutorHelper.getIndicatorName(indicator));
-                        eaj.schedule();
-                        jobs.add(eaj);
-                    }
-                
+                if (conn != null) {
+                    ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn, elementToIndicator,
+                            indicator);
+                    eaj.setName(AnalysisExecutorHelper.getIndicatorName(indicator));
+                    eaj.schedule();
+                    jobs.add(eaj);
+                }
+
             }
 
             boolean hasErrorMessage = false;
@@ -1480,7 +1477,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } catch (NullPointerException nullExc) {
             // TDQ-11851 when click 'cancel' on wizard,the connection should be closed, so that some object may be Null.Catch the
             // Exception and logging here.
-            if (getMonitor().isCanceled()) {
+            if (getMonitor() != null && getMonitor().isCanceled()) {
                 log.error(nullExc);
             } else {
                 throw nullExc;

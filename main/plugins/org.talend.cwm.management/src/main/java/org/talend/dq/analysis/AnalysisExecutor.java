@@ -497,7 +497,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     protected boolean continueRun() {
         // MOD scorreia 2013-09-10 avoid checking for each analyzed row. Check only every 1000 rows
         checkContinueCount++;
-        if (getMonitor() == null || getMonitor().isCanceled()) {
+        if (getMonitor() != null && getMonitor().isCanceled()) {
             keepRunning = false;
             return keepRunning;
         }
