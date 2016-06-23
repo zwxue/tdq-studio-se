@@ -47,34 +47,6 @@ public class PatternDynamicChartEventReceiver extends DynamicChartEventReceiver 
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver#refreshChart()
-     */
-    @Override
-    public void refreshChart() {
-        // List<IndicatorUnit> indicatorUnits = new ArrayList<IndicatorUnit>();
-        // indicatorUnits.add(new ColumnIndicatorUnit(IndicatorEnum.findIndicatorEnum(this.getIndicator().eClass()), this
-        // .getIndicator(), null));
-        // PatternStatisticsState patternSS = new PatternStatisticsState(indicatorUnits);
-        // Object chart = patternSS.getChart();
-        // TOPChartUtils.getInstance().decorateChart(chart, false);
-        // if (parentChartComposite != null) {
-        // TOPChartUtils.getInstance().refrechChart(parentChartComposite, chart);
-        // }
-        // if (registerChart == null) {
-        // return;
-        // }
-        // Object data = this.dataset;
-        // TOPChartUtils.getInstance().getDatasetFromChart(registerChart, 0);
-        // // TOPChartUtils.getInstance().decorateChart(registerChart, false);
-        // if (this.parentChartComposite != null) {
-        // TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, registerChart);
-        // }
-        //
-        // EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
-    }
 
     /*
      * (non-Javadoc)
