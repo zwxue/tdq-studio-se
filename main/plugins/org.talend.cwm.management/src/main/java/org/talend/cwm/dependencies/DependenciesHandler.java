@@ -672,11 +672,14 @@ public final class DependenciesHandler {
                     break;
                 }
             }
-            for (Dependency model : modelElement2.getSupplierDependency()) {
+            EList<Dependency> supplierDependency = modelElement2.getSupplierDependency();
+            Iterator<Dependency> iterator = supplierDependency.iterator();
+            while (iterator.hasNext()) {
+                Dependency model = iterator.next();
                 EList<ModelElement> clients = model.getClient();
                 for (ModelElement client : clients) {
                     if (StringUtils.equals(client.getName(), analysis.getName())) {
-                        modelElement2.getSupplierDependency().remove(model);
+                        iterator.remove();
                         break;
                     }
                 }
