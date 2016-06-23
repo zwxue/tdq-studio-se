@@ -31,6 +31,7 @@ import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.events.FrequencyDynamicChartEventReceiver;
+import org.talend.dataprofiler.core.ui.events.PatternDynamicChartEventReceiver;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -94,6 +95,8 @@ public class AnalysisUtils {
             ((BenfordFrequencyDynamicChartEventReceiver) eReceiver).setSecondDataset(indicatorModel.getSecondDataset());
         } else if (isFrequency(indicatorModel.getChartType())) {
             eReceiver = new FrequencyDynamicChartEventReceiver();
+        } else if (isPattern(indicatorModel.getChartType())) {
+            eReceiver = new PatternDynamicChartEventReceiver();
         } else {
             eReceiver = new DynamicChartEventReceiver();
         }
@@ -103,6 +106,24 @@ public class AnalysisUtils {
 
         eReceiver.setIndicator(oneIndicator);
         return eReceiver;
+    }
+
+    /**
+     * Judge whether chartType is pattern
+     * 
+     * @param chartType
+     * @return true when chart type is sql pattern regex pattern or udi matching
+     */
+    private static boolean isPattern(EIndicatorChartType chartType) {
+        switch (chartType) {
+        case SQL_PATTERN_MATCHING:
+        case PATTERN_MATCHING:
+        case UDI_MATCHING:
+            return true;
+        default:
+            break;
+        }
+        return false;
     }
 
     /**

@@ -357,8 +357,7 @@ public final class IndicatorCommonUtil {
      * @param indicator
      * @return
      */
-    private static Object handleMatchingValue(Indicator indicator) {
-        Object tempObject;
+    public static PatternMatchingExt handleMatchingValue(Indicator indicator) {
         PatternMatchingExt patternExt = new PatternMatchingExt();
         if (UDIHelper.isUDI(indicator)) {
             UserDefIndicator udi = (UserDefIndicator) indicator;
@@ -372,8 +371,7 @@ public final class IndicatorCommonUtil {
             patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());
             patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());
         }
-        tempObject = patternExt;
-        return tempObject;
+        return patternExt;
     }
 
     /**

@@ -61,18 +61,23 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
                     if (this.getTableViewer() != null) {
                         String str = value == null ? String.valueOf(Double.NaN) : String.valueOf(value);
                         this.refreshTable(str);
+                        if (isLastIndicator()) {
+                            // when current is last one indicator which Summary statistics indicators then update IQRIndicator and
+                            // RangeIndicator
+                            updateValueOfIRQAndRange();
+                        }
                     }
                 } else {
-
                     updateValueOfIRQAndRange();
                 }
                 return true;
             }
         };
+
         eReceiver.setIndicatorType(type);
         eReceiver.setIndicatorName(oneIndicator.getName());
         indicators.add(new ColumnIndicatorUnit(type, oneIndicator, null));
-
+        
         if (IndicatorEnum.IQRIndicatorEnum.equals(type)) {
             this.IRQIndicator = oneIndicator;
             this.IRQIndicatorEvent = eReceiver;
@@ -104,7 +109,9 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
     public void refreshChart() {
         Map<IndicatorUnit, String> indicators2ValueMap = converIndicatorListToMap();
         SummaryStatisticsState state = new SummaryStatisticsState(indicators, indicators2ValueMap);
-        state.setSupportDynamicChart(true);
+        if (!isLastIndicator()) {
+            state.setSupportDynamicChart(true);
+        }
         state.setSqltype(Types.DOUBLE);
         Object chart = state.getChart();
         TOPChartUtils.getInstance().decorateChart(chart, false);
@@ -193,5 +200,10 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
     public void setBAWparentComposite(Object bAWparentComposite) {
         this.BAWparentComposite = bAWparentComposite;
     }
+
+    private boolean isLastIndicator() {
+        return summaryValues.size() == SummaryStatisticsState.FULL_CHART;
+    }
+
 
 }

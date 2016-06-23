@@ -14,14 +14,12 @@ package org.talend.dataprofiler.core.ui.events;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
@@ -119,23 +117,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
             indValue = 0;
         }
         if (dataset != null) {
-            if (indValue instanceof Number) {
-                TOPChartUtils.getInstance().setValue(dataset, (Number) indValue, indicatorName, indicatorName);
-            } else if (indValue instanceof String) {
-                if (!(indicator instanceof ModeIndicator)) {
-                    TOPChartUtils.getInstance().setValue(dataset, Double.parseDouble((String) indValue), indicatorName,
-                            indicatorName);
-                }
-            } else if (indValue instanceof PatternMatchingExt) {
-                PatternMatchingExt patternExt = (PatternMatchingExt) indValue;
-                TOPChartUtils.getInstance().setValue(dataset, patternExt.getNotMatchingValueCount(),
-                        DefaultMessagesImpl.getString("PatternStatisticsState.NotMatching"), this.indicatorName);//$NON-NLS-1$
-                TOPChartUtils.getInstance().setValue(dataset, patternExt.getMatchingValueCount(),
-                        DefaultMessagesImpl.getString("PatternStatisticsState.Matching"), this.indicatorName);//$NON-NLS-1$
-            } else {
-                TOPChartUtils.getInstance().setValue(dataset,
-                        (Number) StringFormatUtil.format(indValue, StringFormatUtil.DOUBLE_NUMBER), indicatorName, indicatorName);
-            }
+            settingDatasetValue(indValue);
         }
         if (tableViewer != null) {
             refreshTable(value == null ? NAN_STRING : String.valueOf(indValue));
@@ -146,13 +128,56 @@ public class DynamicChartEventReceiver extends EventReceiver {
         return true;
     }
 
+    /**
+     * Set dataset value by input parameter.
+     */
+    protected void settingDatasetValue(Object indValue) {
+        if (indValue instanceof Number) {
+            TOPChartUtils.getInstance().setValue(dataset, (Number) indValue, getRowKey(), getRowKey());
+        } else if (indValue instanceof String) {
+            if (!(indicator instanceof ModeIndicator)) {
+                TOPChartUtils.getInstance()
+                        .setValue(dataset, Double.parseDouble((String) indValue), getRowKey(), getRowKey());
+            }
+        } else {
+            TOPChartUtils.getInstance().setValue(dataset,
+                    (Number) StringFormatUtil.format(indValue, StringFormatUtil.DOUBLE_NUMBER), getRowKey(), getRowKey());
+        }
+
+    }
+
     public void clearValue() {
         if (dataset != null) {
-            TOPChartUtils.getInstance().setValue(dataset, 0.0, indicatorName, indicatorName);
+            clearDataset();
         }
         if (tableViewer != null) {
             refreshTable(NAN_STRING);
         }
+    }
+
+    /**
+     * Reset value of special rowKey and columnKey 
+     */
+    protected void clearDataset() {
+        TOPChartUtils.getInstance().setValue(dataset, 0.0, getRowKey(), getColumnKey());
+    }
+
+    /**
+     * Get RowKey current it is the name of indicator sub class maybe override it.
+     * 
+     * @return
+     */
+    protected String getRowKey() {
+        return getIndicatorName();
+    }
+
+    /**
+     * Get ColumnKey current it is the name of indicator sub class maybe override it.
+     * 
+     * @return
+     */
+    protected String getColumnKey() {
+        return getIndicatorName();
     }
 
     // frequency and summary need this method

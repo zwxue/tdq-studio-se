@@ -96,7 +96,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             }
         }
         FrequencyExt[] tempFreq = handleFrequency(frequencyExt);
-
+        clearDataEntity(customerdataset);
         boolean withRowCountIndicator = FrequencyTypeStateUtil.isWithRowCountIndicator(indicator);
         for (int i = 0; i < numOfShown; i++) {
             FrequencyExt freqExt = tempFreq[i];
@@ -108,15 +108,39 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
                 keyLabel = SpecialValueDisplay.EMPTY_FIELD;
             }
 
-            addValueToDataset(customerdataset, freqExt, keyLabel);
+
 
             ChartDataEntity entity = FrequencyTypeStateUtil
                     .createChartEntity(indicator, freqExt, keyLabel, withRowCountIndicator);
 
             if (customerdataset instanceof CustomerDefaultCategoryDataset) {
                 ((CustomerDefaultCategoryDataset) customerdataset).addDataEntity(entity);
+                addValueToDataset(((CustomerDefaultCategoryDataset) customerdataset).getDataset(), freqExt, keyLabel);
+            } else {
+                ICustomerDataset customerDataset = TOPChartUtils.getInstance().getCustomerDataset(customerdataset);
+                if (customerDataset != null && customerDataset instanceof CustomerDefaultCategoryDataset) {
+                    customerDataset.addDataEntity(entity);
+                    addValueToDataset(((CustomerDefaultCategoryDataset) customerDataset).getDataset(), freqExt, keyLabel);
+                }
             }
         }
+    }
+
+    /**
+     * Clear DataEntity becuase of there maybe have a empty string when init it.
+     * 
+     * @param customerdataset
+     */
+    private void clearDataEntity(Object customerdataset) {
+        if (customerdataset instanceof CustomerDefaultCategoryDataset) {
+            ((CustomerDefaultCategoryDataset) customerdataset).clearDataEnities();
+        } else {
+            ICustomerDataset customerDataset = TOPChartUtils.getInstance().getCustomerDataset(customerdataset);
+            if (customerDataset != null && customerDataset instanceof CustomerDefaultCategoryDataset) {
+                ((CustomerDefaultCategoryDataset) customerDataset).clearDataEnities();
+            }
+        }
+
     }
 
     private void restoreChart() {
@@ -124,7 +148,6 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             return;
         }
 
-        // TOPChartUtils.getInstance().decorateChart(registerChart, false);
         if (this.parentChartComposite != null) {
             TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, registerChart);
         }

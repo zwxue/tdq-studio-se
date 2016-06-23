@@ -288,6 +288,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                 DynamicBAWChartEventReceiver bawReceiver = AnalysisUtils.createDynamicBAWChartEventReceiver(
                         oneCategoryIndicatorModel, eventReceivers);
                 bawReceiver.setChartComposite(chartComposite);
+                bawReceiver.setParentChartComposite((Composite) oneCategoryIndicatorModel.getBawParentChartComp());
                 bawReceiver.refreshChart();
                 bawReceiver.setTableViewer(tableViewer);
                 // no need to register the parent baw receiver with one of summary indicator, no need to handle baw

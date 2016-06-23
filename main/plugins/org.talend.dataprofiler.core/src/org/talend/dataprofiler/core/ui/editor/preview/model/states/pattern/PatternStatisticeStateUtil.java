@@ -14,8 +14,10 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern;
 
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonStateUtil;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.RegexPatternExplorer;
+import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.utils.format.StringFormatUtil;
@@ -66,5 +68,20 @@ public class PatternStatisticeStateUtil {
 
     public static DataExplorer getDataExplorer() {
         return new RegexPatternExplorer();
+    }
+
+    /**
+     * 
+     * Convert unitValue when indicator is not computed
+     * 
+     * @param indicator
+     * @param unitValue
+     * @return Instance of PatternMatchingExt which contain the result of currnt matching indicator
+     */
+    public static PatternMatchingExt getUnitValue(Indicator indicator, Object unitValue) {
+        if (indicator.isComputed() && unitValue != null && unitValue instanceof PatternMatchingExt) {
+            return (PatternMatchingExt) unitValue;
+        }
+        return IndicatorCommonUtil.handleMatchingValue(indicator);
     }
 }

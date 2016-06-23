@@ -75,4 +75,8 @@ public class CustomerDefaultCategoryDataset implements ICustomerDataset {
         // clear the dataset
         TOPChartUtil.getInstance().clearDataset(dataset);
     }
+
+    public void clearDataEnities() {
+        dataEnities.clear();
+    }
 }

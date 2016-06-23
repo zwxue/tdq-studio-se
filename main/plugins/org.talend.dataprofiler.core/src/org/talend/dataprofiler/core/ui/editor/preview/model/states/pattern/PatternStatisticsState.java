@@ -47,7 +47,7 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
             String label = unit.getIndicator().getName();
-            PatternMatchingExt patternExt = (PatternMatchingExt) unit.getValue();
+            PatternMatchingExt patternExt = PatternStatisticeStateUtil.getUnitValue(unit.getIndicator(), unit.getValue());
             String notMathCount = PatternStatisticeStateUtil.getNotMatchCount(patternExt);
             String machCount = PatternStatisticeStateUtil.getMatchCount(patternExt);
 
