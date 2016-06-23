@@ -35,7 +35,7 @@ public class InternationalizationUtil {
     public static String getDefinitionInternationalizationLabel(String originalName) {
         return getInternationalizationLabel(originalName);
     }
-    
+
     private static String getInternationalizationLabel(String originalName) {
         return originalName == null ? StringUtils.EMPTY : Messages.getString(originalName);
     }
@@ -54,8 +54,8 @@ public class InternationalizationUtil {
      * @return if originalName is null we will return EMPTY string else will return internationalization string
      */
     public static String getCategoryInternationalizationLabel(String originalName) {
-        return getInternationalizationLabel(originalName.replace(
-                PluginConstant.SPACE_STRING, PluginConstant.UNDER_LINE));
+        return getInternationalizationLabel(originalName == null ? null : originalName.replace(PluginConstant.SPACE_STRING,
+                PluginConstant.UNDER_LINE));
     }
 
     /**
