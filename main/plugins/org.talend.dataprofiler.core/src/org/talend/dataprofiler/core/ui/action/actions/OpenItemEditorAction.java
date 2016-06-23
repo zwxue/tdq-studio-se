@@ -154,16 +154,18 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
     }
 
     protected void duRun() throws BusinessException {
-        // TODO extract the code here to a new method
+        // TDQ-12034: before open the object editor, reload it first especially for git remote project
+        // TODO: extract the code to a IRepositoryObjectCRUDAction method, because this only need to do for git remote
         if (repositoryObjectCRUD instanceof RemoteRepositoryObjectCRUD) {
             try {
                 ProxyRepositoryFactory.getInstance().reload(repViewObj.getProperty());
-                IFile file = PropertyHelper.getItemFile(repViewObj.getProperty());
-                file.refreshLocal(IResource.DEPTH_INFINITE, null);
+                IFile objFile = PropertyHelper.getItemFile(repViewObj.getProperty());
+                objFile.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (Exception e1) {
                 log.error(e1, e1);
             }
         }
+        // TDQ-12034~
 
         this.itemEditorInput = computeEditorInput(true);
         if (itemEditorInput != null) {
