@@ -12,9 +12,18 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -133,8 +142,7 @@ public class ReportUtilsRealTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ReportFileHelper#getSimpleName(org.talend.core.model.properties.Property)}
-     * .
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#getSimpleName(org.talend.core.model.properties.Property)} .
      */
     @Test
     public void testGetSimpleName2() {
@@ -182,8 +190,7 @@ public class ReportUtilsRealTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.helper.ReportFileHelper#deleteRepOutputFolder(org.eclipse.core.resources.IFile)}
-     * .
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#deleteRepOutputFolder(org.eclipse.core.resources.IFile)} .
      */
     @Test
     public void testDeleteRepOutputFolder() {
@@ -217,4 +224,42 @@ public class ReportUtilsRealTest {
             fail("project is null!"); //$NON-NLS-1$
         }
     }
+
+    /**
+     * Test method for {@link org.talend.dq.helper.ReportFileHelper#getReportListParameters(java.io.File)} .
+     */
+    @Test
+    public void testGetReportListParameters() {
+        try {
+            File file = new File("./file.txt");
+            if (file.exists()) {
+                file.delete();
+            }
+            if (file.createNewFile()) {
+                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+                out.println("\"Name\"\t\"Path\"\t\"CreateTime\"");
+                out.println("\"a1-20160624-1847-00059\"\t\"..a1-20160624-1847-00059.pdf\"\t\"1466765283837\"");
+                out.println("\"a2-20160624-1947-00095\"\t\"..a2-20160624-1947-00095.pdf\"\t\"1466795093537\"");
+                out.close();
+
+                List<ReportListParameters> reportListParameters = ReportFileHelper.getReportListParameters(file);
+                String params = "";
+                int i = 0;
+                for (ReportListParameters p : reportListParameters) {
+                    i++;
+                    params += i + ":";
+                    params += "[" + p.getName() + "," + p.getPath() + "," + p.getCreateTime() + "]";
+                }
+                Assert.assertEquals(
+                        "1:[a1-20160624-1847-00059,..a1-20160624-1847-00059.pdf,1466765283837]2:[a2-20160624-1947-00095,..a2-20160624-1947-00095.pdf,1466795093537]",
+                        params);
+            }
+            if (file.exists()) {
+                file.delete();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
