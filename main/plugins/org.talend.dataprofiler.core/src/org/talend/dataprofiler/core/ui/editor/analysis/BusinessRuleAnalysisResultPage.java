@@ -212,7 +212,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                                     Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
                                     ITableTypeStates tableTypeState = TableTypeStatesFactory.getInstance().getTableStateForRule(
-                                            chartType, units, tableIndicator);
+                                            chartType, units);
 
                                     // create table for RownCountIndicator
                                     createTableViewerForRowCount(chartType, units, tableTopComp, analysis, tableTypeState);
