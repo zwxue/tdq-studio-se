@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -48,7 +47,6 @@ import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -247,7 +245,7 @@ public class AnalysisWriter extends AElementPersistance {
         TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
         Analysis analysis = anaItem.getAnalysis();
         List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(anaItem.getProperty());
-        List<ModelElement> clientDepListByResultList = getClientDepListByResult(analysis);
+        List<ModelElement> clientDepListByResultList = DependenciesHandler.getInstance().getClientDepListByResult(analysis);
         for (Property currentClient : clintDependency) {
             ModelElement modelElement = PropertyHelper.getModelElement(currentClient);
             if (!clientDepListByResultList.contains(modelElement)) {
@@ -270,27 +268,6 @@ public class AnalysisWriter extends AElementPersistance {
             }
         }
         return rc;
-    }
-
-    /**
-     * get Client Dependency List.
-     * 
-     * @param Analysis the analysis which we want to save
-     * @return The list all of client dependency(Pattern UDI Connection DQRule)
-     */
-    private List<ModelElement> getClientDepListByResult(Analysis analysis) {
-        List<ModelElement> clientDependencyList = new ArrayList<ModelElement>();
-        DataManager connection = analysis.getContext().getConnection();
-        // when connection is null mean that no any result can be keep so don't need check result again return empty
-        // list
-        if (connection != null) {
-            // DQRule or UDI case
-            clientDependencyList.addAll(AnalysisHelper.getUserDefinedIndicators(analysis));
-            // pattern case
-            clientDependencyList.addAll(AnalysisHelper.getPatterns(analysis));
-            clientDependencyList.add(connection);
-        }
-        return clientDependencyList;
     }
 
 }

@@ -12,14 +12,18 @@
 // ============================================================================
 package org.talend.cwm.dependencies;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
@@ -33,6 +37,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -43,8 +48,12 @@ import org.talend.dataquality.properties.impl.TDQAnalysisItemImpl;
 import org.talend.dataquality.properties.impl.TDQIndicatorDefinitionItemImpl;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.FileUtils;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -177,24 +186,22 @@ public final class DependenciesHandler {
 
     /**
      * 
-     * DOC mzhao 2009-06-12 feature 5887 Comment method "removeSupplierDependenciesBetweenModels". This method removes
-     * supplier dependencies. See {@link DependenciesHandler#removeDependenciesBetweenModels(ModelElement, List)}
+     * This method removes supplier dependencies. See
+     * {@link DependenciesHandler#removeDependenciesBetweenModels(ModelElement, List)}
      * 
-     * @param elementFromRemove
-     * @param elementToRemove
+     * @param rule
+     * @param analyses
      * @return
      */
-    public List<Resource> removeSupplierDependenciesBetweenModels(ModelElement elementFromRemove,
-            List<? extends ModelElement> elementToRemove) {
-        EList<Dependency> supplierDependencies;
+    public boolean removeSupplierDependenciesBetweenModels(ModelElement rule, List<? extends ModelElement> analyses) {
+
         List<Resource> toRemoveResources = new ArrayList<Resource>();
-        for (ModelElement modelElement : elementToRemove) {
+        for (ModelElement modelElement : analyses) {
             toRemoveResources.add(modelElement.eResource());
         }
         // get the client dependencies (
-        supplierDependencies = elementFromRemove.getSupplierDependency();
+        EList<Dependency> supplierDependencies = rule.getSupplierDependency();
 
-        List<Resource> modifiedResources = new ArrayList<Resource>();
         for (Dependency dependency : supplierDependencies) {
             EList<ModelElement> client = dependency.getClient();
             // get the resource of each client
@@ -203,14 +210,13 @@ public final class DependenciesHandler {
                 Resource clientResource = dependencyIterator.next().eResource();
                 if (clientResource != null) {
                     if (toRemoveResources.contains(clientResource)) {
-                        modifiedResources.add(clientResource);
                         dependencyIterator.remove();
                     }
                 }
             }
         }
 
-        return modifiedResources;
+        return true;
     }
 
     /**
@@ -305,7 +311,7 @@ public final class DependenciesHandler {
      * @param client
      * @param supplier
      */
-    private void removeClientDependency(ModelElement client, ModelElement supplier) {
+    public void removeClientDependency(ModelElement client, ModelElement supplier) {
         for (Dependency dependency : client.getClientDependency()) {
             if (dependency.getKind() != null && USAGE.compareTo(dependency.getKind()) == 0) {
                 EObject resolvedObject = ResourceHelper.resolveObject(dependency.getSupplier(), supplier);
@@ -504,6 +510,27 @@ public final class DependenciesHandler {
     }
 
     /**
+     * get Client Dependency List.
+     * 
+     * @param Analysis the analysis which we want to save
+     * @return The list all of client dependency(Pattern UDI Connection DQRule)
+     */
+    public List<ModelElement> getClientDepListByResult(Analysis analysis) {
+        List<ModelElement> clientDependencyList = new ArrayList<ModelElement>();
+        DataManager connection = analysis.getContext().getConnection();
+        // when connection is null mean that no any result can be keep so don't need check result again return empty
+        // list
+        if (connection != null) {
+            // DQRule or UDI case
+            clientDependencyList.addAll(AnalysisHelper.getUserDefinedIndicators(analysis));
+            // pattern case
+            clientDependencyList.addAll(AnalysisHelper.getPatterns(analysis));
+            clientDependencyList.add(connection);
+        }
+        return clientDependencyList;
+    }
+
+    /**
      * 
      * Comment method "removeDependenciesBetweenModel".
      * 
@@ -580,4 +607,109 @@ public final class DependenciesHandler {
 
         return rect.isOk();
     }
+
+    public static ReturnCode removeUselessDependencies(Item localItem, Item remoteItem) {
+
+        ReturnCode rc = new ReturnCode();
+        ModelElement remoteModelElement = PropertyHelper.getModelElement(remoteItem.getProperty());
+        ModelElement localModelElement = PropertyHelper.getModelElement(localItem.getProperty());
+
+        for (Dependency remoteClientDependency : remoteModelElement.getClientDependency()) { // rule2, remote-ana
+            List<Dependency> localClients = localModelElement.getClientDependency();// rule1 list
+            Iterator<Dependency> localClientDependency = localClients.iterator();
+            boolean isContains = false;
+            while (localClientDependency.hasNext()) {
+                // rule2,rule1
+                Dependency next = localClientDependency.next();
+
+                URI uri = EObjectHelper.getURI(remoteClientDependency);
+                String fileName = uri.lastSegment();
+                URI nexturi = EObjectHelper.getURI(next);
+                String nextfileName = nexturi.lastSegment();
+                if (StringUtils.equals(fileName, nextfileName)) {
+                    isContains = true;
+                    break;
+                }
+
+            }
+            if (isContains == false) {
+                findClientAndRemoveDependencyInLocalProject(remoteClientDependency, localModelElement);
+            }
+
+        }
+        return rc;
+    }
+
+    private static void findClientAndRemoveDependencyInLocalProject(ModelElement modelElement, ModelElement analysis) {
+        URI uri = EObjectHelper.getURI(modelElement).trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+        // get file from filename
+        String fileName = uri.lastSegment();
+        File foundFile = null;
+        EResourceConstant[] topConstants = EResourceConstant.getTopConstants();
+        for (EResourceConstant resource : topConstants) {
+            File reportFolder = ResourceManager.getRootProject().getLocation().append(resource.getPath()).toFile();
+            List<File> fileList = FileUtils.getFilesByExtension(reportFolder, FactoriesUtil.PROPERTIES_EXTENSION);
+            for (File file : fileList) {
+                if (file.getName().equals(fileName)) {
+                    foundFile = file;
+                    break;
+                }
+            }
+            if (foundFile != null) {
+                break;
+            }
+        }
+
+        // from file to get model and change it
+        if (foundFile != null) {
+            Property property = PropertyHelper.getProperty(foundFile);
+            ModelElement modelElement2 = PropertyHelper.getModelElement(property);
+            List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(modelElement2);
+            for (ModelElement model : dependencyClients) {
+                if (StringUtils.equals(model.getName(), analysis.getName())) {
+                    dependencyClients.remove(model);
+                    break;
+                }
+            }
+            EList<Dependency> supplierDependency = modelElement2.getSupplierDependency();
+            Iterator<Dependency> iterator = supplierDependency.iterator();
+            while (iterator.hasNext()) {
+                Dependency model = iterator.next();
+                EList<ModelElement> clients = model.getClient();
+                for (ModelElement client : clients) {
+                    if (StringUtils.equals(client.getName(), analysis.getName())) {
+                        iterator.remove();
+                        break;
+                    }
+                }
+            }
+
+            // change the cache content also
+            Item item = property.getItem();
+            Resource itemResource = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                    .getItemResource(item);
+            EObject toRemove = null;
+            for (EObject obj : itemResource.getContents()) {
+                if (obj != null && obj instanceof Dependency) {
+                    EList<ModelElement> clients = ((Dependency) obj).getClient();
+                    for (ModelElement model : clients) {
+                        if (StringUtils.equals(model.getName(), analysis.getName())) {
+                            toRemove = obj;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (toRemove != null) {
+                itemResource.getContents().remove(toRemove);
+            }
+
+            // save the node
+            AElementPersistance writer = ElementWriterFactory.getInstance().create(item);
+            writer.save(item, true);
+        }
+
+    }
+
 }
