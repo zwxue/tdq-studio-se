@@ -57,14 +57,20 @@ public class ItemRecordTest {
         TDQAnalysisItem item = (TDQAnalysisItem) analysisProperty.getItem();
         Analysis analysis = item.getAnalysis();
         AnalysisResult createAnalysisResult = analysis.getResults();
+        Assert.assertEquals(0, createAnalysisResult.getIndicators().size());
         // create Indicator
         RowCountIndicator rowCountIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
         String rowCountPropertyID = EcoreUtil.generateUUID();
         saveIndicatorDefintion(rowCountPropertyID, "ItemRecordWithRefreshedTestIndicatorDefinition1"); //$NON-NLS-1$
         rowCountIndicator.setIndicatorDefinition(((TDQIndicatorDefinitionItem) ProxyRepositoryFactory.getInstance()
                 .getLastVersion(rowCountPropertyID).getProperty().getItem()).getIndicatorDefinition());
+        Assert.assertNotNull("Row count indicator definition should not be null",rowCountIndicator.getIndicatorDefinition()); //$NON-NLS-1$
+        System.out.println("ItemRecordTest.testLoadProperty rowCountIndicator.getName() is :"+rowCountIndicator.getIndicatorDefinition().getLabel()); //$NON-NLS-1$
+        Assert.assertEquals("ItemRecordWithRefreshedTestIndicatorDefinition1", rowCountIndicator.getIndicatorDefinition().getLabel()); //$NON-NLS-1$
         createAnalysisResult.getIndicators().add(rowCountIndicator);
+        Assert.assertEquals(1, createAnalysisResult.getIndicators().size());
         ReturnCode saveAnalysis = saveAnalysis(analysis);
+        Assert.assertEquals(1, ((TDQAnalysisItem)analysisProperty.getItem()).getAnalysis().getResults().getIndicators().size());
         Assert.assertTrue("The analysis first time saving is not work", saveAnalysis.isOk()); //$NON-NLS-1$
 
         File analysisFile = WorkspaceUtils.ifileToFile(PropertyHelper.getItemFile(analysisProperty));
@@ -131,6 +137,8 @@ public class ItemRecordTest {
         createTDQIndicatorDefinitionItem.setIndicatorDefinition(createIndicatorDefinition);
         Property createProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createProperty.setLabel(name);
+        createIndicatorDefinition.setLabel(name);
+        createIndicatorDefinition.setName(name);
         createTDQIndicatorDefinitionItem.setProperty(createProperty);
         createProperty.setId(uuid);
         ProxyRepositoryFactory.getInstance().create(createTDQIndicatorDefinitionItem,
