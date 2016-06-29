@@ -18,6 +18,7 @@ import java.sql.Statement;
 import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.utils.ProductVersion;
@@ -31,6 +32,8 @@ import orgomg.cwm.objectmodel.core.Expression;
  * 
  */
 public class HiveDbmsLanguage extends DbmsLanguage {
+
+    private final String HIVE_IDENTIFIER_QUOTE = "`"; //$NON-NLS-1$
 
     /**
      * DOC qiongli HiveDbmsLanguage constructor comment.
@@ -217,5 +220,20 @@ public class HiveDbmsLanguage extends DbmsLanguage {
     @Override
     public String getCatalogNameFromContext(DatabaseConnection dbConn) {
         return null;
+    }
+
+    @Override
+    public String quote(String sqlIdentifier) {
+        if (sqlIdentifier == null || sqlIdentifier.equals(PluginConstant.EMPTY_STRING)) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        String quotedSqlIdentifier = sqlIdentifier;
+        if (!quotedSqlIdentifier.startsWith(HIVE_IDENTIFIER_QUOTE)) {
+            quotedSqlIdentifier = HIVE_IDENTIFIER_QUOTE + quotedSqlIdentifier;
+        }
+        if (!quotedSqlIdentifier.endsWith(HIVE_IDENTIFIER_QUOTE)) {
+            quotedSqlIdentifier = quotedSqlIdentifier + HIVE_IDENTIFIER_QUOTE;
+        }
+        return quotedSqlIdentifier;
     }
 }
