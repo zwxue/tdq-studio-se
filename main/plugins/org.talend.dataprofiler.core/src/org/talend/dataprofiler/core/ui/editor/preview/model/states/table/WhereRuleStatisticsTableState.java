@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
@@ -48,8 +49,11 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  */
 public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableState {
 
-    public WhereRuleStatisticsTableState(List<TableIndicatorUnit> units) {
+    private Long rowCount;
+
+    public WhereRuleStatisticsTableState(List<TableIndicatorUnit> units, TableIndicator tableIndicator) {
         super(units);
+        this.rowCount = WhereRuleStatisticsStateUtil.initRowCount(tableIndicator);
     }
 
     /*
@@ -123,7 +127,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
 
     @Override
     protected ITableLabelProvider getLabelProvider() {
-        return new WhereRuleTableLabelProvider();
+        return new WhereRuleTableLabelProvider(rowCount);
     }
 
     @Override
@@ -173,6 +177,20 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
      */
     public static class WhereRuleTableLabelProvider extends PatternLabelProvider {
 
+        private Long rowCount = 0L;
+
+        public Long getRowCount() {
+            return this.rowCount;
+        }
+
+        public void setRowCount(Long rowCount) {
+            this.rowCount = rowCount;
+        }
+
+        public WhereRuleTableLabelProvider(Long rowCount) {
+            setRowCount(rowCount);
+        }
+
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
             Image result = super.getColumnImage(element, columnIndex);
@@ -183,8 +201,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
                 Indicator indicator = ((WhereRuleChartDataEntity) element).getIndicator();
 
                 if (!Double.isNaN(Double.parseDouble(((WhereRuleChartDataEntity) element).getNumMatch()))) {
-                    largeThanRowCount = ((WhereRuleIndicator) indicator).getCount() < ((WhereRuleIndicator) indicator)
-                            .getUserCount();
+                    largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getUserCount();
                 }
 
                 if (3 == columnIndex && largeThanRowCount) {
@@ -206,9 +223,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
 
                 if (!Double.isNaN(Double.parseDouble(((WhereRuleChartDataEntity) element).getNumMatch()))) {
                     // MOD yyin 20121031 TDQ-6194, when: match+no match>row count, highlight
-                    largeThanRowCount = ((WhereRuleIndicator) indicator).getCount() < Double
-                            .parseDouble(((WhereRuleChartDataEntity) element).getNumMatch())
-                            + Double.parseDouble(((WhereRuleChartDataEntity) element).getNumNoMatch());
+                    largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getCount();
                 }
 
                 if ((3 == columnIndex || 4 == columnIndex) && largeThanRowCount) {
@@ -218,6 +233,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
 
             return result;
         }
+
     }
 
     public TableIndicatorUnit getRownCountUnit(List<TableIndicatorUnit> units1) {

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import java.util.List;
 
+import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.table.BenfordLawFrequencyTableState;
@@ -161,10 +162,11 @@ public class TableTypeStatesFactory {
         }
     }
 
-    public ITableTypeStates getTableStateForRule(EIndicatorChartType type, List<TableIndicatorUnit> units) {
+    public ITableTypeStates getTableStateForRule(EIndicatorChartType type, List<TableIndicatorUnit> units,
+            TableIndicator tableIndicator) {
         switch (type) {
         case WHERERULE_INDICATOR:
-            return new WhereRuleStatisticsTableState(units);
+            return new WhereRuleStatisticsTableState(units, tableIndicator);
         case SIMPLE_STATISTICS:
             return new SimpleRuleStatisticsTableState(units);
 
