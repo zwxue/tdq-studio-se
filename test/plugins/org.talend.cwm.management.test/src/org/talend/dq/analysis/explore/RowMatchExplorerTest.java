@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,6 +29,8 @@ import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -99,6 +101,12 @@ public class RowMatchExplorerTest {
 
         // indicator
         RowMatchingIndicator rowMatchingIndicator = ColumnsetFactory.eINSTANCE.createRowMatchingIndicator();
+
+        // create indicatorDefinition
+        IndicatorDefinition testIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        testIndicatorDefinition.setName("RowMatchingIndicator"); //$NON-NLS-1$
+        rowMatchingIndicator.setIndicatorDefinition(testIndicatorDefinition);
+
         analysis.getResults().getIndicators().add(rowMatchingIndicator);
         TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.PURPOSE, TaggedValueHelper.PURPOSE);
         TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.DESCRIPTION, TaggedValueHelper.DESCRIPTION);

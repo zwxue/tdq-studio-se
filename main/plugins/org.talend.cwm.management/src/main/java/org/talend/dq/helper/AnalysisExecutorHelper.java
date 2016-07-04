@@ -30,6 +30,7 @@ import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SchemaHelper;
@@ -467,13 +468,17 @@ public final class AnalysisExecutorHelper {
     public static String getIndicatorName(Indicator indicator) {
         String indName = PluginConstant.EMPTY_STRING;
         if (indicator != null) {
+            // set the default indicator name.
+            indName = org.apache.commons.lang.StringUtils.defaultString(indicator.getName());
             // TDQ-11831: fix the indicator drill down open sql editor to use the correct indicator name.after we
             // change "Frenquency table" to "Value frenquency"
             if (indicator instanceof PatternMatchingIndicator || indicator instanceof UserDefIndicator) {
-                indName = org.apache.commons.lang.StringUtils.defaultString(indicator.getName());
+                // do nothing here, just use the default indicator name.
             } else {
-                indName = InternationalizationUtil.getDefinitionInternationalizationLabel(PropertyHelper.getProperty(indicator
-                        .getIndicatorDefinition()));
+                Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
+                if (property != null) {
+                    indName = InternationalizationUtil.getDefinitionInternationalizationLabel(property);
+                }
             }
         }
         return indName;

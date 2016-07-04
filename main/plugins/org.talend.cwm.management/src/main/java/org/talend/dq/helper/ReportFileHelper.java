@@ -634,6 +634,7 @@ public final class ReportFileHelper {
             try {
                 CSVReader reader = FileUtils.createCSVReader(reportListFile);
                 reader.setSkipEmptyRecords(true);
+                reader.setEscapeChar('\\');
                 reader.readHeaders();
                 while (reader.readNext()) {
                     repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()),
