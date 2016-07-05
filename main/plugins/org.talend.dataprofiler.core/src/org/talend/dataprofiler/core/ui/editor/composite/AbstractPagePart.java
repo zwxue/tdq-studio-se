@@ -201,25 +201,38 @@ public abstract class AbstractPagePart {
             // use property.getLabel() instead of dataManager.getDisplayName() because of we set it use first one for
             // TDQ-6286.
 
+            boolean isConnectionAvailble = true;
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
             if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
                 // TDQ-10765: support ref project connection name, make the format of display is: label+(@reference
                 // project name)
                 DQRepositoryNode repNode = (DQRepositoryNode) RepositoryNodeHelper.recursiveFind(prop);
-                String displayName = RepositoryNodeHelper.getAnalysisConComboDisplayName(repNode);
-                index = (Integer) masterPage.getConnCombo().getData(
-                        displayName + RepositoryNodeHelper.getConnectionType(newDataManager));
+                if (repNode != null) {
+                    String displayName = RepositoryNodeHelper.getAnalysisConComboDisplayName(repNode);
+                    index = (Integer) masterPage.getConnCombo().getData(
+                            displayName + RepositoryNodeHelper.getConnectionType(newDataManager));
+                } else {
+                    // when the current project(maybe local project) have no ref project, can not find the ref connection
+                    isConnectionAvailble = false;
+                }
             }
             if (index != null) {
                 masterPage.getConnCombo().select(index);
             }
 
             // MOD qiongli 2011-5-16 bug 21453
-            if (prop != null && prop.getItem() != null && prop.getItem().getState() != null
-                    && prop.getItem().getState().isDeleted()) {
+            if (prop != null && prop.getItem() != null && prop.getItem().getState() != null) {
                 masterPage.getLabelConnDeleted().setVisible(true);
-                masterPage.getLabelConnDeleted().setText(
-                        DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", prop.getDisplayName()));//$NON-NLS-1$
+                if (prop.getItem().getState().isDeleted()) {
+                    masterPage.getLabelConnDeleted().setText(
+                            DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", prop.getDisplayName()));//$NON-NLS-1$
+                } else {
+                    if (!isConnectionAvailble) {
+                        // when the connection is from ref project, but current project have not set ref project
+                        masterPage.getLabelConnDeleted().setText(
+                                DefaultMessagesImpl.getString("AbstractPagePart.ChangeConnectionError1", prop.getDisplayName()));//$NON-NLS-1$
+                    }
+                }
             } else {
                 masterPage.getLabelConnDeleted().setVisible(false);
             }

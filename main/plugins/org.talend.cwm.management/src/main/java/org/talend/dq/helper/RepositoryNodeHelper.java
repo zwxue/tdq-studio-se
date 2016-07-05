@@ -3941,6 +3941,9 @@ public final class RepositoryNodeHelper {
     }
 
     public static ColumnSet getColumnOwner(RepositoryNode node) {
+        if (node == null) {
+            return null;
+        }
         MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
         TdColumn column = ((TdColumn) columnObject.getTdColumn());
 

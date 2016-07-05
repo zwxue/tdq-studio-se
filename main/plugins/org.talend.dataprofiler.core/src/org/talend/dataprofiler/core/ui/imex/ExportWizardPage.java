@@ -51,6 +51,7 @@ import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IExportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
 import org.talend.dataprofiler.core.ui.utils.ImportAndExportUtils;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.EObjectHelper;
@@ -303,6 +304,13 @@ public class ExportWizardPage extends WizardPage {
                     boolean checked = item.getChecked();
                     if (checked) {
                         for (File file : record.getDependencySet()) {
+                            // ADD msjian TDQ-12245: for the reference project file which is depended on by the main items, we
+                            // ignore it(means not export it).
+                            if (!DqFileUtils.isLocalProjectFile(file)) {
+                                continue;
+                            }
+                            // TDQ-12245~
+
                             ItemRecord findRecord = ItemRecord.findRecord(file);
                             if (findRecord != null) {
                                 repositoryTree.setChecked(findRecord, checked);
@@ -352,23 +360,17 @@ public class ExportWizardPage extends WizardPage {
         for (ItemRecord record : elements) {
             errors.addAll(record.getErrors());
             for (File depFile : record.getDependencySet()) {
-                ModelElement element = ItemRecord.getElement(depFile);
-                // MOD qiongli 2012-12-13 TDQ-5356 use itself file name for jrxml
-                boolean isJrxmlDepFile = depFile.getName().endsWith(FactoriesUtil.JRXML);
-                // MOD msjian TDQ-5909: modify to displayName
-                String fileName = element != null && !isJrxmlDepFile ? PropertyHelper.getProperty(element).getDisplayName()
-                        : depFile.getName();
-                // TDQ-5909~
-
-                // ADD msjian TDQ-10669: for the reference project file which is depended on by the main items, we
+                // ADD msjian TDQ-12245: for the reference project file which is depended on by the main items, we
                 // ignore it(means not export it).
-                if (!depFile.getAbsolutePath().startsWith(ResourceManager.getRootProject().getLocation().toOSString())) {
+                if (!DqFileUtils.isLocalProjectFile(depFile)) {
                     continue;
                 }
-                // TDQ-10669~
+                // TDQ-12245~
 
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
+
+                    ModelElement element = ItemRecord.getElement(depFile);
                     // if the element is IndicatorDefinition and it exist in the current project and don't include any
                     // sql and java templates and the AggregatedDefinitions is not empty or TableOverview/ViewOverview
                     // Indicator, don't add it into errors even if it is not exist
@@ -378,6 +380,13 @@ public class ExportWizardPage extends WizardPage {
                             continue;
                         }
                     }
+
+                    // MOD qiongli 2012-12-13 TDQ-5356 use itself file name for jrxml
+                    boolean isJrxmlDepFile = depFile.getName().endsWith(FactoriesUtil.JRXML);
+                    // MOD msjian TDQ-5909: modify to displayName
+                    String fileName = element != null && !isJrxmlDepFile ? PropertyHelper.getProperty(element).getDisplayName()
+                            : depFile.getName();
+                    // TDQ-5909~
                     errors.add("\"" + record.getName() + "\" miss dependency : " + fileName);//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
@@ -512,6 +521,13 @@ public class ExportWizardPage extends WizardPage {
                 ItemRecord[] records = getElements();
                 for (ItemRecord record : records) {
                     for (File depFile : record.getDependencySet()) {
+                        // ADD msjian TDQ-12245: for the reference project file which is depended on by the main items, we
+                        // ignore it(means not export it).
+                        if (!DqFileUtils.isLocalProjectFile(depFile)) {
+                            continue;
+                        }
+                        // TDQ-12245~
+
                         ItemRecord depRecord = ItemRecord.findRecord(depFile);
                         if (!repositoryTree.getChecked(depRecord)) {
                             repositoryTree.setChecked(depRecord, true);

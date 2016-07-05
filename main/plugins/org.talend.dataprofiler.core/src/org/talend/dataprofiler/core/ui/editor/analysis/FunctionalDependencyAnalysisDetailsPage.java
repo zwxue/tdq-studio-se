@@ -303,7 +303,9 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
             if (recursiveFind == null) {
                 recursiveFind = RepositoryNodeHelper.createRepositoryNode(findColumn);
             }
-            columns.add(recursiveFind);
+            if (recursiveFind != null) {
+                columns.add(recursiveFind);
+            }
         }
         return columns;
     }
