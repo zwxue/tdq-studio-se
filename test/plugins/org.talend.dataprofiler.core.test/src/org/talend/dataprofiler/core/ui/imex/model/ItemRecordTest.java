@@ -53,7 +53,7 @@ public class ItemRecordTest {
     @Test
     public void testLoadProperty() throws PersistenceException {
 
-        Property analysisProperty = createAnalysis("AElementPersistanceRealTestanalysis1"); //$NON-NLS-1$
+        Property analysisProperty = createAnalysis("ItemRecordTestanalysis1"); //$NON-NLS-1$
         TDQAnalysisItem item = (TDQAnalysisItem) analysisProperty.getItem();
         Analysis analysis = item.getAnalysis();
         AnalysisResult createAnalysisResult = analysis.getResults();
@@ -64,13 +64,13 @@ public class ItemRecordTest {
         saveIndicatorDefintion(rowCountPropertyID, "ItemRecordWithRefreshedTestIndicatorDefinition1"); //$NON-NLS-1$
         rowCountIndicator.setIndicatorDefinition(((TDQIndicatorDefinitionItem) ProxyRepositoryFactory.getInstance()
                 .getLastVersion(rowCountPropertyID).getProperty().getItem()).getIndicatorDefinition());
-        Assert.assertNotNull("Row count indicator definition should not be null",rowCountIndicator.getIndicatorDefinition()); //$NON-NLS-1$
-        System.out.println("ItemRecordTest.testLoadProperty rowCountIndicator.getName() is :"+rowCountIndicator.getIndicatorDefinition().getLabel()); //$NON-NLS-1$
-        Assert.assertEquals("ItemRecordWithRefreshedTestIndicatorDefinition1", rowCountIndicator.getIndicatorDefinition().getLabel()); //$NON-NLS-1$
+        Assert.assertNotNull("Row count indicator definition should not be null", rowCountIndicator.getIndicatorDefinition()); //$NON-NLS-1$
+        Assert.assertEquals(
+                "ItemRecordWithRefreshedTestIndicatorDefinition1", rowCountIndicator.getIndicatorDefinition().getLabel()); //$NON-NLS-1$
         createAnalysisResult.getIndicators().add(rowCountIndicator);
         Assert.assertEquals(1, createAnalysisResult.getIndicators().size());
         ReturnCode saveAnalysis = saveAnalysis(analysis);
-        Assert.assertEquals(1, ((TDQAnalysisItem)analysisProperty.getItem()).getAnalysis().getResults().getIndicators().size());
+        Assert.assertEquals(1, ((TDQAnalysisItem) analysisProperty.getItem()).getAnalysis().getResults().getIndicators().size());
         Assert.assertTrue("The analysis first time saving is not work", saveAnalysis.isOk()); //$NON-NLS-1$
 
         File analysisFile = WorkspaceUtils.ifileToFile(PropertyHelper.getItemFile(analysisProperty));
