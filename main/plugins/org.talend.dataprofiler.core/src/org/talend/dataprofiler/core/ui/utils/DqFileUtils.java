@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -149,7 +150,7 @@ public final class DqFileUtils {
         }
 
         while (paths.hasMoreElements()) {
-            String nextElement = (String) paths.nextElement();
+            String nextElement = paths.nextElement();
             String currentPath = "/" + nextElement; //$NON-NLS-1$
             URL resourceURL = plugin.getBundle().getEntry(currentPath);
 
@@ -169,5 +170,9 @@ public final class DqFileUtils {
                 }
             }
         }
+    }
+
+    public static boolean isLocalProjectFile(File file) {
+        return file.getAbsolutePath().startsWith(ResourceManager.getRootProject().getLocation().toOSString());
     }
 }
