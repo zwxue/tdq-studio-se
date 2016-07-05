@@ -89,7 +89,7 @@ public class ResourceViewLabelProviderTest {
      */
     @Test
     public void testGetFileCount() {
-        deleteCurrentProject();
+        // deleteCurrentProject();
         IFolder anaFolder = initFolder(EResourceConstant.ANALYSIS.getPath());
         IFolder repFolder = initFolder(EResourceConstant.REPORTS.getPath());
         ResourceViewLabelProvider reViewLabelProvider = new ResourceViewLabelProvider();
