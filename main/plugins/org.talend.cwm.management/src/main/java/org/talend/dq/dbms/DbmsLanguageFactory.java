@@ -126,8 +126,8 @@ public final class DbmsLanguageFactory {
             dbmsLanguage = new MSSqlDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isPostgresql(dbmsSubtype)) {
             dbmsLanguage = new PostgresqlDbmsLanguage(dbmsSubtype, dbVersion);
-        } else if (isParAccel(dbmsSubtype)) {
-            dbmsLanguage = new RedshiftDbmsLanguage(SupportDBUrlType.REDSHIFT.getDBKey(), dbVersion);
+        } else if (isRedshift(dbmsSubtype)) {
+            dbmsLanguage = new RedshiftDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isExasol(dbmsSubtype)) {
             dbmsLanguage = new ExasolDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isSybase(dbmsSubtype)) {
@@ -281,7 +281,7 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.VERTICA, dbms);
     }
 
-    public static boolean isParAccel(String dbms) {
+    public static boolean isRedshift(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.REDSHIFT, dbms);
     }
 
