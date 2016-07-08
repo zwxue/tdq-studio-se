@@ -89,30 +89,16 @@ public class ResourceViewLabelProviderTest {
      */
     @Test
     public void testGetFileCount() {
-        // deleteCurrentProject();
-        IFolder anaFolder = initFolder(EResourceConstant.ANALYSIS.getPath());
+        log.debug("##############testGetFileCount start");
         IFolder repFolder = initFolder(EResourceConstant.REPORTS.getPath());
+        IFolder anaFolder = initFolder(EResourceConstant.ANALYSIS.getPath());
         ResourceViewLabelProvider reViewLabelProvider = new ResourceViewLabelProvider();
-        int AnalysisNum = reViewLabelProvider.getFileCount(anaFolder, filterExtensions);
+        int analysisNum = reViewLabelProvider.getFileCount(anaFolder, filterExtensions);
         int reportNum = reViewLabelProvider.getFileCount(repFolder, filterExtensions);
-        assertEquals(AnalysisNum, 3);
-        assertEquals(reportNum, 3);
-    }
-
-    /**
-     * delete the project which has been login else will effect the result of junit.
-     */
-    private void deleteCurrentProject() {
-        IProject rootProject = ReponsitoryContextBridge.getRootProject();
-        if (rootProject.exists()) {
-            try {
-                rootProject.delete(true, true, null);
-            } catch (CoreException e) {
-                log.error(e, e);
-                Assert.fail(e.getMessage());
-            }
-        }
-
+        log.debug("##############AnalysisNum is" + analysisNum);
+        log.debug("##############reportNum is" + reportNum);
+        assertEquals(3, analysisNum);
+        assertEquals(3, reportNum);
     }
 
     /**
@@ -125,16 +111,17 @@ public class ResourceViewLabelProviderTest {
     public IFolder initFolder(String folderName) {
         IProject rootProject = ReponsitoryContextBridge.getRootProject();
         if (!rootProject.exists()) {
+            log.debug("##############ResourceViewLabelProviderTest enter initProxyRepository method by debug");
             initProxyRepository(rootProject);
         }
 
         if (DQStructureManager.getInstance().isNeedCreateStructure()) {
             DQStructureManager.getInstance().createDQStructure();
         }
-        IFolder aa = rootProject.getFolder(folderName);
-        if (!aa.exists()) {
+        IFolder elementRootFolder = rootProject.getFolder(folderName);
+        if (!elementRootFolder.exists()) {
             try {
-                aa.create(true, true, null);
+                elementRootFolder.create(true, true, null);
             } catch (CoreException e) {
                 Assert.fail(e.getMessage());
             }
@@ -142,28 +129,36 @@ public class ResourceViewLabelProviderTest {
 
         // for analyses
         if (anaFolderName.equals(folderName)) {
-            IFolder subfolder1 = createFolder(aa, "subfolder1");//$NON-NLS-1$
-            IFolder subfolder2 = createFolder(aa, "subfolder2");//$NON-NLS-1$
+            IFolder analysisFolder = createFolder(elementRootFolder, "ResourceViewLabelProviderTestAnalysisFolder");//$NON-NLS-1$
+            IFolder subfolder1 = createFolder(analysisFolder, "subfolder1");//$NON-NLS-1$
+            IFolder subfolder2 = createFolder(analysisFolder, "subfolder2");//$NON-NLS-1$
+            elementRootFolder = analysisFolder;
             // logic delete one
-            createAnalysis("a4", null, true);//$NON-NLS-1$
+            createAnalysis("a4", new Path(analysisFolder.getFullPath().lastSegment()), true);//$NON-NLS-1$
             // ~logic delete one
-            createAnalysis("a1", null, false);//$NON-NLS-1$
-            createAnalysis("a3", subfolder2, false);//$NON-NLS-1$
-            createAnalysis("a2", subfolder1, false);//$NON-NLS-1$
+            createAnalysis("a1", new Path(analysisFolder.getFullPath().lastSegment()), false);//$NON-NLS-1$
+            createAnalysis(
+                    "a3", new Path(analysisFolder.getFullPath().lastSegment()).append(subfolder2.getFullPath().lastSegment()), false);//$NON-NLS-1$
+            createAnalysis(
+                    "a2", new Path(analysisFolder.getFullPath().lastSegment()).append(subfolder1.getFullPath().lastSegment()), false);//$NON-NLS-1$
 
         }
         // for reports
         if (repFolderName.equals(folderName)) {
-            IFolder subfolder1 = createFolder(aa, "subfolder1");//$NON-NLS-1$
-            IFolder subfolder2 = createFolder(aa, "subfolder2");//$NON-NLS-1$
+            IFolder reportFolder = createFolder(elementRootFolder, "ResourceViewLabelProviderTestReportFolder");//$NON-NLS-1$
+            IFolder subfolder1 = createFolder(reportFolder, "subfolder1");//$NON-NLS-1$
+            IFolder subfolder2 = createFolder(reportFolder, "subfolder2");//$NON-NLS-1$
+            elementRootFolder = reportFolder;
             // logic delete one
-            createReport("a4", null, true);//$NON-NLS-1$
+            createReport("a4", new Path(reportFolder.getFullPath().lastSegment()), true);//$NON-NLS-1$
             // ~logic delete one
-            createReport("a1", null, false);//$NON-NLS-1$
-            createReport("a3", subfolder2, false);//$NON-NLS-1$
-            createReport("a2", subfolder1, false);//$NON-NLS-1$
+            createReport("a1", new Path(reportFolder.getFullPath().lastSegment()), false);//$NON-NLS-1$
+            createReport(
+                    "a3", new Path(reportFolder.getFullPath().lastSegment()).append(subfolder2.getFullPath().lastSegment()), false);//$NON-NLS-1$
+            createReport(
+                    "a2", new Path(reportFolder.getFullPath().lastSegment()).append(subfolder1.getFullPath().lastSegment()), false);//$NON-NLS-1$
         }
-        return aa;
+        return elementRootFolder;
     }
 
     /**
@@ -258,11 +253,8 @@ public class ResourceViewLabelProviderTest {
         }
     }
 
-    private void createReport(String name, IFolder folder, Boolean isDelete) {
-        IPath createPath = Path.EMPTY;
-        if (folder != null) {
-            createPath = new Path(folder.getFullPath().lastSegment());
-        }
+    private void createReport(String name, IPath createPath, Boolean isDelete) {
+
         Report report1 = ReportHelper.createReport(name);
         TDQReportItem item1 = PropertiesFactoryImpl.eINSTANCE.createTDQReportItem();
         org.talend.core.model.properties.Property property1 = PropertiesFactory.eINSTANCE.createProperty();
@@ -283,11 +275,7 @@ public class ResourceViewLabelProviderTest {
 
     }
 
-    private void createAnalysis(String name, IFolder folder, Boolean isDelete) {
-        IPath createPath = Path.EMPTY;
-        if (folder != null) {
-            createPath = new Path(folder.getFullPath().lastSegment());
-        }
+    private void createAnalysis(String name, IPath createPath, Boolean isDelete) {
         Analysis analysis1 = AnalysisHelper.createAnalysis(name);
         TDQAnalysisItem item1 = PropertiesFactoryImpl.eINSTANCE.createTDQAnalysisItem();
         org.talend.core.model.properties.Property property1 = PropertiesFactory.eINSTANCE.createProperty();
