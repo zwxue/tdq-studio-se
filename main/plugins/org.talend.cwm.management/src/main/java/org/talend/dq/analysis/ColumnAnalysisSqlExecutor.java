@@ -38,10 +38,13 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.swt.widgets.Display;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.database.EDatabaseTypeName;
+import org.talend.core.database.conn.ConnParameterKeys;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.core.model.metadata.connection.hive.HiveServerVersionInfo;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -1512,7 +1515,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 return false;
             }
             if (ExtractMetaDataUtils.getInstance().isHiveConnection(connection)) {
-                return false;
+                // TDQ-12020 only Hive2 supports connection concurrency.
+                DatabaseConnection dbConn = ((DatabaseConnection) connection);
+                String hiveVersion = dbConn.getParameters().get(ConnParameterKeys.HIVE_SERVER_VERSION);
+                if (HiveServerVersionInfo.HIVE_SERVER_1.getKey().equals(hiveVersion)) {
+                    return false;
+                }
+                return true;
             }
         } catch (SQLException e) {
             log.warn(e, e);
