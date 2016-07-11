@@ -410,12 +410,10 @@ public class FileSystemImportWriter implements IImportWriter {
     private void update(File desFile, boolean isCovered) throws IOException, CoreException {
         String curProjectLabel = ResourceManager.getRootProjectName();
         if (desFile.exists()) {
-            boolean needReloadResource = false;
             IFile desIFile = ResourceService.file2IFile(desFile);
             String fileExt = desIFile.getFileExtension();
 
             if (FactoriesUtil.isEmfFile(fileExt)) {
-                needReloadResource = true;
                 if (!StringUtils.equals(projectName, curProjectLabel)) {
                     String content = FileUtils.readFileToString(desFile, "utf-8");//$NON-NLS-1$
                     content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
@@ -424,7 +422,6 @@ public class FileSystemImportWriter implements IImportWriter {
             }
 
             if (fileExt.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                needReloadResource = true;
                 Property property = PropertyHelper.getProperty(desIFile, true);
 
                 if (property != null) {
@@ -442,10 +439,6 @@ public class FileSystemImportWriter implements IImportWriter {
                 }
             }
 
-            if (isCovered && needReloadResource) {
-                URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
-                EMFSharedResources.getInstance().reloadResource(uri);
-            }
         } else {
             log.error(DefaultMessagesImpl
                     .getString("FileSystemImportWriter.destinationFileIsNotExist", desFile.getAbsolutePath())); //$NON-NLS-1$
@@ -525,11 +518,6 @@ public class FileSystemImportWriter implements IImportWriter {
                                     mergePattern(record, patternItem);
                                     need2MergeModelElementMap.put(patternItem, record.getElement());
                                     isDelete = false;
-                                } else {
-                                    // remove the dependency of the object
-                                    EObjectHelper.removeDependencys(PropertyHelper.getModelElement(object.getProperty()));
-                                    // delete the object
-                                    ProxyRepositoryFactory.getInstance().deleteObjectPhysical(object);
                                 }
                             }
 

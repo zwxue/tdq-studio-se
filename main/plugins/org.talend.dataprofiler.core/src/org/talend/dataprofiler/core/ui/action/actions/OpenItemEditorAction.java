@@ -34,6 +34,7 @@ import org.eclipse.ui.intro.config.IIntroAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.Item;
@@ -86,6 +87,7 @@ import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.ReportFileRepNode;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -221,6 +223,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
      * 
      * @param isOpenItemEditorAction
      * @return
+     * @throws PersistenceException
      */
     public IEditorInput computeEditorInput(boolean isOpenItemEditorAction) throws BusinessException {
         IEditorInput result = null;
@@ -229,7 +232,12 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             String key = repViewObj.getRepositoryObjectType().getKey();
             Item item = repViewObj.getProperty().getItem();
             if (item instanceof TDQItem && !(item instanceof TDQFileItem)) {
+
                 ModelElement modelElement = PropertyHelper.getModelElement(repViewObj.getProperty());
+                if (modelElement.eIsProxy() && repNode != null) {
+                    modelElement = EMFSharedResources.getInstance().reloadModelElementInNode(repNode);
+                    item = repNode.getObject().getProperty().getItem();
+                }
                 if (modelElement == null || modelElement.eResource() == null) {
                     BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
                             ((TDQItem) item).getFilename());
@@ -240,6 +248,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 result = new ConnectionItemEditorInput(item);
                 editorID = ConnectionEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
+
                 result = new AnalysisItemEditorInput(item);
                 Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
                 // AnalysisParameters parameters = analysis.getParameters();
