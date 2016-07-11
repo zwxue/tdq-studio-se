@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
@@ -26,13 +27,19 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dq.helper.PropertyHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -329,5 +336,27 @@ public final class EMFSharedResources {
         }
 
         return false;
+    }
+
+    public ModelElement reloadModelElementInNode(IRepositoryNode repNode) {
+        try {
+            IRepositoryViewObject repViewObj = repNode.getObject();
+            String id = repViewObj.getProperty().getId();
+
+            URI uri = repViewObj.getProperty().getItem().eResource().getURI();
+
+            ProxyRepositoryFactory.getInstance().unloadResources(repViewObj.getProperty());
+            String fileExtension = repViewObj.getProperty().getItem().getFileExtension();
+            String removeEnd = StringUtils.removeEnd(uri.path(), "." + FactoriesUtil.PROPERTIES_EXTENSION); //$NON-NLS-1$
+
+            ProxyRepositoryFactory.getInstance().unloadResources(uri.scheme() + ":" + removeEnd + "." + fileExtension); //$NON-NLS-1$ //$NON-NLS-2$
+
+            IRepositoryViewObject lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(id);
+            Item item = lastVersion.getProperty().getItem();
+            return PropertyHelper.getModelElement(item.getProperty());
+        } catch (PersistenceException e) {
+            log.error("reload model element error: " + e.getMessage()); //$NON-NLS-1$
+            return null;
+        }
     }
 }

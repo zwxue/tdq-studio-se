@@ -470,7 +470,7 @@ public class DQRespositoryView extends CommonNavigator {
                         } else {
                             DQRepositoryNode repoNode = (DQRepositoryNode) obj;
                             if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
-                                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
+                                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode);
                                 openItemEditorAction.run();
 
                             }
@@ -498,7 +498,7 @@ public class DQRespositoryView extends CommonNavigator {
                         Object data = item.getData();
                         DQRepositoryNode repoNode = (DQRepositoryNode) data;
                         if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
-                            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
+                            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode);
                             openItemEditorAction.run();
                         }
 
