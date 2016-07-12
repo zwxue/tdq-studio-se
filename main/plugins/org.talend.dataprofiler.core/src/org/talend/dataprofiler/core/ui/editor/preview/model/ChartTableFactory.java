@@ -629,10 +629,12 @@ public final class ChartTableFactory {
         if (indicator == null || indicator.getAnalyzedElement() == null) {
             return false;
         }
-        // only support 5 kinds of db: mysql, oracle with sid, oracle with service name, oracle oci, postgressql
+        // only support 7 kinds of db: mysql, oracle with sid, oracle with service name, oracle oci,
+        // postgressql,mssql,mssql2005/2008
         String[] supportDB = { EDatabaseTypeName.MYSQL.getDisplayName(), EDatabaseTypeName.PSQL.getDisplayName(),
                 EDatabaseTypeName.ORACLEFORSID.getDisplayName(), EDatabaseTypeName.ORACLESN.getDisplayName(),
-                EDatabaseTypeName.ORACLE_OCI.getDisplayName() };
+                EDatabaseTypeName.ORACLE_OCI.getDisplayName(), EDatabaseTypeName.MSSQL.getDisplayName(),
+                EDatabaseTypeName.MSSQL05_08.getDisplayName() };
         TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (table == null) {
             return false;
