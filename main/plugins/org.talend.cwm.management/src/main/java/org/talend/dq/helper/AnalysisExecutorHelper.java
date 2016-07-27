@@ -439,23 +439,20 @@ public final class AnalysisExecutorHelper {
     }
 
     /**
-     * set the execution number of the analysis, if the running result is ok
+     * set the execution info of analysis.
      * 
      * @param analysis - which need to update the execution number
      * @param isRunAnaResultok - the running result of the analysis is ok or not
+     * @param errorMessage - the error message
      */
-    public static void setExecutionNumberInAnalysisResult(Analysis analysis, boolean isRunAnaResultok) {
+    public static void setExecutionInfoInAnalysisResult(Analysis analysis, boolean isRunAnaResultok, String errorMessage) {
         final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
         resultMetadata.setLastRunOk(isRunAnaResultok);
-
+        resultMetadata.setMessage(errorMessage);
         resultMetadata.setExecutionNumber(resultMetadata.getExecutionNumber() + 1);
         if (isRunAnaResultok) {
             resultMetadata.setLastExecutionNumberOk(resultMetadata.getLastExecutionNumberOk() + 1);
         }
-    }
-
-    public static void setExecuteErrorMessage(Analysis analysis, String errorMessage) {
-        analysis.getResults().getResultMetadata().setMessage(errorMessage);
     }
 
     /**
