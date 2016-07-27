@@ -103,6 +103,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         assert analysis != null;
         // --- preconditions
         if (!check(analysis)) {
+            AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, false, getErrorMessage());
             return getReturnCode(false);
         }
 
@@ -115,15 +116,17 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // --- create SQL statement
         String sql = createSqlStatement(analysis);
         if (sql == null) {
+            AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, false, getErrorMessage());
             return getReturnCode(false);
         }
 
         // ADD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
         // note: this feature is not supported now, if support, delete this
-        if (!StringUtils.isEmpty(errorMessage.toString())) {
+        if (!StringUtils.isEmpty(getErrorMessage())) {
             if ("EXCEL".equals(dbms().getDbmsName())) { //$NON-NLS-1$
                 return getReturnCode(true);
             }
+            AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, false, getErrorMessage());
             return getReturnCode(false);
         }
         // ~
@@ -160,14 +163,14 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             getMonitor().worked(1);
         }
 
-        // --- set metadata information of analysis
         // MOD TDQ-8374 when the setExecutionNumberInAnalysisResult return message is null, should not make the null
         // overwrite the current error messages
-        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok);
         if (isLowMemory) {
             setError(Messages.getString("Evaluator.OutOfMomory", usedMemory));//$NON-NLS-1$
         }
-        AnalysisExecutorHelper.setExecuteErrorMessage(analysis, errorMessage.toString());
+
+        // --- set metadata information of analysis
+        AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, ok, getErrorMessage());
 
         // --- compute execution duration
         if (this.continueRun()) {
@@ -189,7 +192,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         if (getMonitor() != null) {
             getMonitor().worked(1);
         }
-        return new ReturnCode(this.errorMessage.toString(), ok);
+
+        return new ReturnCode(getErrorMessage(), ok);
     }
 
     /**
@@ -245,7 +249,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return a return code with the last error message
      */
     protected ReturnCode getReturnCode(boolean ok) {
-        return ok ? new ReturnCode() : new ReturnCode(this.errorMessage.toString(), false);
+        return ok ? new ReturnCode() : new ReturnCode(getErrorMessage(), false);
     }
 
     protected boolean check(Analysis analysis) {

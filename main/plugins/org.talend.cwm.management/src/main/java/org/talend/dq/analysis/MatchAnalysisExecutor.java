@@ -77,6 +77,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         // --- preconditions
         ReturnCode rc = AnalysisExecutorHelper.check(analysis);
         if (!rc.isOk()) {
+            AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
             return rc;
         }
 
@@ -95,6 +96,8 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         }
         if (recordMatchingIndicator == null || blockKeyIndicator == null) {
             rc.setOk(Boolean.FALSE);
+            rc.setMessage(Messages.getString("MatchAnalysisExecutor.noIndicators")); //$NON-NLS-1$
+            AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
             return rc;
         }
 
@@ -102,6 +105,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         if (anlayzedElements == null || anlayzedElements.size() == 0) {
             rc.setOk(Boolean.FALSE);
             rc.setMessage(Messages.getString("MatchAnalysisExecutor.EmptyAnalyzedElement")); //$NON-NLS-1$
+            AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
             return rc;
         }
 
@@ -113,6 +117,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             if (!file.exists() || !file.isDirectory()) {
                 rc.setOk(Boolean.FALSE);
                 rc.setMessage(Messages.getString("MatchAnalysisExecutor.InvalidPath", file.getPath())); //$NON-NLS-1$
+                AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
                 return rc;
             }
         }
@@ -122,6 +127,8 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         ISQLExecutor sqlExecutor = getSQLExectutor(analysis, recordMatchingIndicator, columnMap);
         if (sqlExecutor == null) {
             rc.setOk(Boolean.FALSE);
+            rc.setMessage(Messages.getString("MatchAnalysisExecutor.noSqlExecutor")); //$NON-NLS-1$
+            AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
             return rc;
         }
         if (getMonitor() != null) {
@@ -148,6 +155,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 log.error(e, e);
                 rc.setOk(Boolean.FALSE);
                 rc.setMessage(e.getMessage());
+                AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
                 return rc;
             }
 
@@ -176,11 +184,13 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 log.error(e, e);
                 rc.setOk(Boolean.FALSE);
                 rc.setMessage(e.getMessage());
+                AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
                 return rc;
             } catch (BusinessException e) {
                 log.error(e, e);
                 rc.setOk(Boolean.FALSE);
                 rc.setMessage(e.getMessage());
+                AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
                 return rc;
             }
         }
@@ -194,16 +204,15 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             getMonitor().worked(1);
         }
 
-        // --- set metadata information of analysis
-        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, rc.isOk());
-
         if (isLowMemory) {
             rc.setMessage(Messages.getString("Evaluator.OutOfMomory", usedMemory));//$NON-NLS-1$
         }
 
         // nodify the master page
         refreshTableWithMatchFullResult(analysis);
-        AnalysisExecutorHelper.setExecuteErrorMessage(analysis, rc.getMessage());
+
+        // --- set metadata information of analysis
+        AnalysisExecutorHelper.setExecutionInfoInAnalysisResult(analysis, rc.isOk(), rc.getMessage());
 
         // --- compute execution duration
         if (this.continueRun()) {
