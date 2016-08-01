@@ -1516,7 +1516,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
             if (ExtractMetaDataUtils.getInstance().isHiveConnection(connection)) {
                 // TDQ-12020 only Hive2 supports connection concurrency.
-                DatabaseConnection dbConn = ((DatabaseConnection) connection);
+                org.talend.core.model.metadata.builder.connection.Connection analysisDataProvider = getAnalysisDataProvider(cachedAnalysis);
+                DatabaseConnection dbConn = ((DatabaseConnection) analysisDataProvider);
                 String hiveVersion = dbConn.getParameters().get(ConnParameterKeys.HIVE_SERVER_VERSION);
                 if (HiveServerVersionInfo.HIVE_SERVER_1.getKey().equals(hiveVersion)) {
                     return false;
