@@ -12,13 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.imex;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.ui.imex.model.IExportWriter;
@@ -68,16 +65,10 @@ public class ExportWizard extends Wizard {
     @Override
     public boolean performFinish() {
 
-        final IExportWriter writer = exportPage.getWriter();
-        File outputFile = writer.getBasePath().toFile();
-        if ((outputFile.isDirectory() && outputFile.listFiles().length > 0) || (outputFile.isFile() && outputFile.exists())) {
-            if (MessageDialogWithToggle.openConfirm(null,
-                    Messages.getString("ExportWizard.waring"), Messages.getString("ExportWizard.fileAlreadyExist"))) { //$NON-NLS-1$ //$NON-NLS-2$
-                FileUtils.deleteQuietly(outputFile);
-            } else {
-                return false;
-            }
+        if (!exportPage.canFinish()) {
+            return false;
         }
+        final IExportWriter writer = exportPage.getWriter();
         final ItemRecord[] records = exportPage.getElements();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {

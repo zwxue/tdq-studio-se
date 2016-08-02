@@ -17,11 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -44,6 +47,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.properties.Project;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
@@ -59,6 +63,7 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.repository.ProjectManager;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -719,5 +724,33 @@ public class ExportWizardPage extends WizardPage {
                 }
             }
         }
+    }
+
+    /**
+     * 
+     * check if the output path is correct.
+     * 
+     * @return
+     */
+    public boolean canFinish() {
+        String lastPath = writer.getBasePath().toString();
+        if (lastPath == null || PluginConstant.EMPTY_STRING.equals(lastPath.trim())) {
+            MessageDialog.openError(getShell(), "Error", Messages.getString("ExportWizardPage.emptyPath"));//$NON-NLS-1$//$NON-NLS-2$
+            return false;
+        }
+        ProjectManager pManager = ProjectManager.getInstance();
+        Project project = pManager.getCurrentProject().getEmfProject();
+        File outputDir = writer.getBasePath().append("\\" + project.getTechnicalLabel()).toFile(); //$NON-NLS-1$
+        // if the file exists,pop an dialog to ask that it will override the old file.
+        if ((dirBTN.getSelection() && outputDir.exists()) || (archBTN.getSelection() && new File(archTxt.getText()).exists())) {
+            File oldFile = outputDir.exists() ? outputDir : new File(archTxt.getText());
+            if (MessageDialogWithToggle.openConfirm(null,
+                    Messages.getString("ExportWizard.waring"), Messages.getString("ExportWizard.fileAlreadyExist"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                FileUtils.deleteQuietly(oldFile);
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 }
