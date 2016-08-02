@@ -267,7 +267,7 @@ public enum FormEnum {
                 // TDQ-11196: Disable bins for frequency table indicator
                 if (indicatorType == IndicatorEnum.FrequencyIndicatorEnum
                         || indicatorType == IndicatorEnum.LowFrequencyIndicatorEnum) {
-                    forms = new FormEnum[] {};
+                    forms = new FormEnum[] { NumbericNominalForm };
                 } else {
                     forms = new FormEnum[] { FreqBinsDesignerForm };
                 }
