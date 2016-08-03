@@ -106,7 +106,8 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         }
         String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
         sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
-        sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, this.indicator.getAnalyzedElement().getName());
+        // TDQ-12398 msjian: add quote for the column
+        sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, dbmsLanguage.quote(this.indicator.getAnalyzedElement().getName()));
 
         if (sql.indexOf(GenericSQLHandler.UDI_INDICATOR_VALUE) != -1) {
             if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
