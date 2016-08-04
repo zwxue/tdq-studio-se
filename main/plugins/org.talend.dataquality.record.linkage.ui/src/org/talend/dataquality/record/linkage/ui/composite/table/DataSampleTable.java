@@ -266,6 +266,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
         if (columns != null) {
             for (ModelElement column : columns) {
+                if (column == null) {
+                    continue;
+                }
                 columnsName.add(column.getName());
             }
         }

@@ -84,6 +84,7 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ContextHelper;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -352,10 +353,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
         });
 
-        reloadDataproviderAndFillConnCombo();
-        // ~
         createConnVersionText(labelButtonClient);
         createConnDeletedLabel(labelButtonClient);
+        reloadDataproviderAndFillConnCombo();
+        // ~
     }
 
     /**
@@ -483,6 +484,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 int deleteIndex = connCombo.getItemCount();
                 if (currentConnectionNode != null) {
                     addItemToCombo(currentConnectionNode, deleteIndex);
+                } else {
+                    getLabelConnDeleted().setVisible(true);
+                    getLabelConnDeleted().setText(
+                            DefaultMessagesImpl.getString(
+                                    "AbstractPagePart.ChangeConnectionError1", EObjectHelper.getURI(connection).path()));//$NON-NLS-1$
                 }
                 connCombo.select(deleteIndex);
             } else {

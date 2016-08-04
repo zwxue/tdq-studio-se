@@ -587,9 +587,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         columnHeader.setAlignment(SWT.CENTER);
         if (columnList.size() > 0) {
             RepositoryNode column = columnList.get(0);
-            MetadataColumnRepositoryObject colObject = (MetadataColumnRepositoryObject) column.getObject();
-            String tableName = ColumnHelper.getColumnOwnerAsColumnSet(colObject.getTdColumn()).getName();
-            columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
+            if (column != null) {
+                MetadataColumnRepositoryObject colObject = (MetadataColumnRepositoryObject) column.getObject();
+                String tableName = ColumnHelper.getColumnOwnerAsColumnSet(colObject.getTdColumn()).getName();
+                columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
+            } else {
+                columnList.remove(column);
+                columnHeader.setText("The connection is not available now!"); //$NON-NLS-1$
+            }
         }
 
         ColumnsElementViewerProvider provider = new ColumnsElementViewerProvider();

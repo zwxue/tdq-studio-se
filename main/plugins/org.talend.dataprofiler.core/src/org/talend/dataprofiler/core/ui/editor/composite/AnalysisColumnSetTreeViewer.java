@@ -681,6 +681,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * @return
      */
     private String getModelElemetnDisplayName(ModelElementIndicator meIndicator) {
+        if (meIndicator.getModelElementRepositoryNode() == null) {
+            return "null"; //$NON-NLS-1$
+        }
         String meName = meIndicator.getElementName();
         String typeName = "";//$NON-NLS-1$
         if (meIndicator instanceof ColumnIndicator) {
