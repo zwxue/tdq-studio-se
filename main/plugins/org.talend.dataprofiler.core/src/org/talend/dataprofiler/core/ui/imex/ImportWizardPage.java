@@ -60,7 +60,6 @@ import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
-import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
 import org.talend.dataprofiler.core.ui.utils.ImportAndExportUtils;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.EObjectHelper;
@@ -231,12 +230,6 @@ public class ImportWizardPage extends WizardPage {
                     boolean checked = item.getChecked();
                     if (checked) {
                         for (File file : record.getDependencySet()) {
-                            // ADD msjian TDQ-12245: for the reference project file which is depended on by the main items, we
-                            // ignore it(means not export it).
-                            if (!DqFileUtils.isLocalProjectFile(file)) {
-                                continue;
-                            }
-                            // TDQ-12245~
                             ItemRecord findRecord = ItemRecord.findRecord(file);
                             if (findRecord != null) {
                                 repositoryTree.setChecked(findRecord, checked);
@@ -383,13 +376,6 @@ public class ImportWizardPage extends WizardPage {
         for (ItemRecord record : elements) {
             dErrors.addAll(record.getErrors());
             for (File depFile : record.getDependencySet()) {
-                // ADD msjian TDQ-12245: for the reference project file which is depended on by the main items, we
-                // ignore it(means not import it).
-                if (!DqFileUtils.isLocalProjectFile(depFile)) {
-                    continue;
-                }
-                // TDQ-12245~
-
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
                     ModelElement element = ItemRecord.getElement(depFile);

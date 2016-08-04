@@ -196,12 +196,13 @@ public abstract class AbstractPagePart {
             fianlDataManager = newDataManager;
 
             // MOD yyin 201204 TDQ-4977
-            Integer index = 0;
+            Integer index = null;
 
             // use property.getLabel() instead of dataManager.getDisplayName() because of we set it use first one for
             // TDQ-6286.
 
-            boolean isConnectionAvailble = true;
+            boolean isConnectionAvailble = !(prop == null);
+
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
             if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
                 // TDQ-10765: support ref project connection name, make the format of display is: label+(@reference
@@ -235,14 +236,22 @@ public abstract class AbstractPagePart {
                 }
             } else {
                 masterPage.getLabelConnDeleted().setVisible(false);
+                // when the connection is from ref project, but current project have not set ref project
+                if (!isConnectionAvailble) {
+                    masterPage.getLabelConnDeleted().setVisible(true);
+                    masterPage.getLabelConnDeleted().setText(
+                            DefaultMessagesImpl.getString(
+                                    "AbstractPagePart.ChangeConnectionError1", EObjectHelper.getURI(newDataManager).path()));//$NON-NLS-1$
+                }
             }
+
             // MOD mzhao 2009-06-09 feature 5887
             if (selectionListener == null) {
                 selectionListener = new SelectionListener() {
 
                     private int prevSelect = masterPage.getConnCombo().getSelectionIndex();
 
-                    private Connection dataProvider = (Connection) fianlDataManager;
+                    private DataManager dataProvider = fianlDataManager;
 
                     public void widgetDefaultSelected(SelectionEvent e) {
                         widgetSelected(e);
@@ -256,7 +265,14 @@ public abstract class AbstractPagePart {
                             if (dataProvider.eIsProxy()) {
                                 dataProvider = (Connection) EObjectHelper.resolveObject(dataProvider);
                             }// ~
-                            dataProvider = callChangeConnectionAction(masterPage, prevSelect, dataProvider);
+                            Connection connection = null;
+                            if (dataProvider instanceof RepositoryNode) {
+                                connection = ((ConnectionItem) ((RepositoryNode) dataProvider).getObject().getProperty()
+                                        .getItem()).getConnection();
+                            } else if (dataProvider instanceof Connection) {
+                                connection = (Connection) dataProvider;
+                            }
+                            connection = callChangeConnectionAction(masterPage, prevSelect, connection);
                             prevSelect = masterPage.getConnCombo().getSelectionIndex();
                         } else {
                             // show error message

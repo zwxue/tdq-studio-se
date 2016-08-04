@@ -52,6 +52,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
@@ -364,25 +365,26 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         GridLayout layout = new GridLayout(2, Boolean.TRUE);
         titleComposite.setLayout(layout);
         analyzeDataLabel = new Label(titleComposite, SWT.NONE);
-        RepositoryNode firstColumnNode = analysisHandler.getAnalyzedColumns().size() > 0 ? RepositoryNodeHelper
+        final int analysisColumnSize = analysisHandler.getAnalyzedColumns().size();
+        final RepositoryNode firstColumnNode = analysisColumnSize > 0 ? RepositoryNodeHelper
                 .recursiveFind(analysisHandler.getAnalyzedColumns().get(0)) : null;
         // register: refresh the dataprovider combobox when the name of the data provider is changed.
         refreshDataProiverLabel = new EventReceiver() {
 
             @Override
             public boolean handle(Object data) {
-                RepositoryNode fColumnNode = analysisHandler.getAnalyzedColumns().size() > 0 ? RepositoryNodeHelper
-                        .recursiveFind(analysisHandler.getAnalyzedColumns().get(0)) : null;
-                if (fColumnNode != null) {
-                    updateAnalyzeDataLabel(fColumnNode);
+                if (firstColumnNode != null) {
+                    updateAnalyzeDataLabel(firstColumnNode);
                 }
                 return true;
             }
         };
         EventManager.getInstance().register(getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL,
                 refreshDataProiverLabel);
-        if (firstColumnNode != null) {
+        if (analysisColumnSize > 0 && firstColumnNode != null) {
             updateAnalyzeDataLabel(firstColumnNode);
+        } else if (analysisColumnSize > 0 && firstColumnNode == null) {
+            analyzeDataLabel.setText(analyzeDataDefaultInfo + "The connection is not available now!"); //$NON-NLS-1$
         } else {
             analyzeDataLabel.setText(analyzeDataDefaultInfo);
         }
@@ -762,8 +764,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     protected void setSampleDataShowWayStatus() {
         DataManager connection = analysisHandler.getConnection();
         boolean isNotSupportRandom = connection != null
-                && (connection instanceof DelimitedFileConnection || ConnectionHelper.isInformix((Connection) connection) || ConnectionHelper
-                        .isSybase((Connection) connection));
+                && (connection instanceof DelimitedFileConnection || ((connection instanceof DatabaseConnection) && (ConnectionHelper
+                        .isInformix((DatabaseConnection) connection) || ConnectionHelper
+                        .isSybase((DatabaseConnection) connection))));
         sampleDataShowWayCombo.setEnabled(!isNotSupportRandom);
     }
 

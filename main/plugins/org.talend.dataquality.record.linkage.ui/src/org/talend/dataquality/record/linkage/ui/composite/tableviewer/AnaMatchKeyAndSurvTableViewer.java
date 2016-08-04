@@ -74,7 +74,7 @@ public class AnaMatchKeyAndSurvTableViewer extends MatchKeyAndSurvivorshipTableV
                 String[] colArray = new String[columnList.size()];
                 int idx = 0;
                 for (MetadataColumn metaCol : columnList) {
-                    colArray[idx++] = metaCol.getName();
+                    colArray[idx++] = metaCol.getName() == null ? "" : metaCol.getName();
                 }
                 editors[i] = new ComboBoxCellEditor(innerTable, colArray, SWT.READ_ONLY);
                 if (colArray.length > 0) {
