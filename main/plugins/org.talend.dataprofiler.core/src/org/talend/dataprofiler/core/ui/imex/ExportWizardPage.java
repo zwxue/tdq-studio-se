@@ -740,10 +740,11 @@ public class ExportWizardPage extends WizardPage {
         }
         ProjectManager pManager = ProjectManager.getInstance();
         Project project = pManager.getCurrentProject().getEmfProject();
-        File outputDir = writer.getBasePath().append("\\" + project.getTechnicalLabel()).toFile(); //$NON-NLS-1$
+        File outputDir = new File(lastPath.trim() + "\\" + project.getTechnicalLabel()); //$NON-NLS-1$
         // if the file exists,pop an dialog to ask that it will override the old file.
-        if ((dirBTN.getSelection() && outputDir.exists()) || (archBTN.getSelection() && new File(archTxt.getText()).exists())) {
-            File oldFile = outputDir.exists() ? outputDir : new File(archTxt.getText());
+        if ((dirBTN.getSelection() && outputDir.exists())
+                || (archBTN.getSelection() && new File(archTxt.getText().trim()).exists())) {
+            File oldFile = outputDir.exists() ? outputDir : new File(archTxt.getText().trim());
             if (MessageDialogWithToggle.openConfirm(null,
                     Messages.getString("ExportWizard.waring"), Messages.getString("ExportWizard.fileAlreadyExist"))) { //$NON-NLS-1$ //$NON-NLS-2$
                 FileUtils.deleteQuietly(oldFile);
