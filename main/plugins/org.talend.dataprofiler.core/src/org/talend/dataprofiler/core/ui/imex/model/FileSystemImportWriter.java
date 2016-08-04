@@ -64,7 +64,6 @@ import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.migration.impl.RenamePatternFinderFolderTask;
-import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
 import org.talend.dataprofiler.migration.IMigrationTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
@@ -304,13 +303,6 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     private void checkDependency(ItemRecord record) {
         for (File file : record.getDependencySet()) {
-            // ADD msjian TDQ-12245: for the reference project file which is depended on by the main items, we
-            // ignore it(means not import it).
-            if (!DqFileUtils.isLocalProjectFile(file)) {
-                continue;
-            }
-            // TDQ-12245~
-
             ModelElement melement = ItemRecord.getElement(file);
             if (melement != null && melement.eIsProxy()) {
                 // if the element is IndicatorDefinition and it exist in the current project and don't include any

@@ -33,7 +33,6 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -98,6 +97,9 @@ public final class MetadataHelper {
      * @param modelElement
      */
     public static void setDefaultDataminingType(ModelElement modelElement) {
+        if (modelElement == null) {
+            return;
+        }
         DataminingType type = getDataminingType(modelElement);
         if (type == null) {
             type = getDefaultDataminingType(0);

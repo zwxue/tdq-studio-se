@@ -192,7 +192,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
                 String[] cols = new String[columnList.size()];
                 int idx = 0;
                 for (MetadataColumn metaCol : columnList) {
-                    cols[idx++] = metaCol.getName();
+                    cols[idx++] = metaCol.getName() == null ? "" : metaCol.getName();
                 }
                 editors[i] = new ComboBoxCellEditor(innerTable, cols, SWT.READ_ONLY);
                 break;
