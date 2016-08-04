@@ -180,9 +180,9 @@ public abstract class PatternExplorer extends DataExplorer {
         }
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         String tableName = getFullyQualifiedTableName(analyzedElement);
-        sql = dbmsLanguage.fillGenericQueryWithColumnsAndTable(sql, analyzedElement.getName(), tableName);
+        sql = dbmsLanguage.fillGenericQueryWithColumnsAndTable(sql, dbmsLanguage.quote(analyzedElement.getName()), tableName);
         if (sql.indexOf(GenericSQLHandler.GROUP_BY_ALIAS) != -1) {
-            sql = sql.replace(GenericSQLHandler.GROUP_BY_ALIAS, "'" + analyzedElement.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+            sql = sql.replace(GenericSQLHandler.GROUP_BY_ALIAS, dbmsLanguage.quote(analyzedElement.getName()));
         }
         return sql;
     }

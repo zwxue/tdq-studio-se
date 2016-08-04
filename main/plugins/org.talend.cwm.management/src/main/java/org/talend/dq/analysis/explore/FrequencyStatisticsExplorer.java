@@ -127,7 +127,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         ModelElement analyzedElement = this.indicator.getAnalyzedElement();
         String tableName = getFullyQualifiedTableName(analyzedElement);
         sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
-        sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, analyzedElement.getName());
+        sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, dbmsLanguage.quote(analyzedElement.getName()));
         if (sql.indexOf(GenericSQLHandler.UDI_INDICATOR_VALUE) != -1) {
             Object key = entity.getKey();
             if (key == null) {
@@ -137,7 +137,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             }
         }
         if (sql.indexOf(GenericSQLHandler.GROUP_BY_ALIAS) != -1) {
-            sql = sql.replace(GenericSQLHandler.GROUP_BY_ALIAS, "'" + analyzedElement.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+            sql = sql.replace(GenericSQLHandler.GROUP_BY_ALIAS, dbmsLanguage.quote(analyzedElement.getName()));
         }
         return sql;
     }
