@@ -740,7 +740,7 @@ public class ExportWizardPage extends WizardPage {
         }
         ProjectManager pManager = ProjectManager.getInstance();
         Project project = pManager.getCurrentProject().getEmfProject();
-        File outputDir = new File(lastPath + File.separator + project.getTechnicalLabel()); //$NON-NLS-1$
+        File outputDir = new File(lastPath + File.separator + project.getTechnicalLabel());
         // if the file exists,pop an dialog to ask that it will override the old file.
         if ((dirBTN.getSelection() && outputDir.exists())
                 || (archBTN.getSelection() && new File(archTxt.getText().trim()).exists())) {
