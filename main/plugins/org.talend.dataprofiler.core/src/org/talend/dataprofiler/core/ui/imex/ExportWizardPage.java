@@ -734,13 +734,13 @@ public class ExportWizardPage extends WizardPage {
      */
     public boolean canFinish() {
         String lastPath = writer.getBasePath().toString();
-        if (lastPath == null || PluginConstant.EMPTY_STRING.equals(lastPath.trim())) {
+        if (lastPath == null || PluginConstant.EMPTY_STRING.equals(lastPath)) {
             MessageDialog.openError(getShell(), "Error", Messages.getString("ExportWizardPage.emptyPath"));//$NON-NLS-1$//$NON-NLS-2$
             return false;
         }
         ProjectManager pManager = ProjectManager.getInstance();
         Project project = pManager.getCurrentProject().getEmfProject();
-        File outputDir = new File(lastPath.trim() + "\\" + project.getTechnicalLabel()); //$NON-NLS-1$
+        File outputDir = new File(lastPath +  File.separator  + project.getTechnicalLabel());
         // if the file exists,pop an dialog to ask that it will override the old file.
         if ((dirBTN.getSelection() && outputDir.exists())
                 || (archBTN.getSelection() && new File(archTxt.getText().trim()).exists())) {

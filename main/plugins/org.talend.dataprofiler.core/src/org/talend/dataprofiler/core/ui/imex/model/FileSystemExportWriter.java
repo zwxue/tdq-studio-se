@@ -212,9 +212,13 @@ public class FileSystemExportWriter implements IExportWriter {
      * 
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(org.eclipse.core.runtime.IPath)
      */
-    public void setBasePath(IPath path) {
-        this.basePath = path;
-    }
+	public void setBasePath(IPath path) {
+		if (path == null) {
+			this.basePath = null;
+		} else {
+			this.basePath = new Path(path.toString().trim());
+		}
+	}
 
     /*
      * (non-Javadoc)
