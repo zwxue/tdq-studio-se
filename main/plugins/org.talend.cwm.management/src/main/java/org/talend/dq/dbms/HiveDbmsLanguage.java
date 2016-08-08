@@ -32,6 +32,8 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class HiveDbmsLanguage extends DbmsLanguage {
 
+    private static final String HIVE_IDENTIFIER_QUOTE = "`"; //$NON-NLS-1$
+
     /**
      * DOC qiongli HiveDbmsLanguage constructor comment.
      */
@@ -230,5 +232,10 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         // TDQ-12042: fix hive can not run well for indicator "Pattern Low Frequency".
         assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
         return translateUsingPattern(expression, charsToReplace, replacementChars);
+    }
+
+    @Override
+    public String getHardCodedQuoteIdentifier() {
+        return HIVE_IDENTIFIER_QUOTE;
     }
 }
