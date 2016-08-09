@@ -295,6 +295,11 @@ public final class AnalysisExecutorHelper {
             }
             // Hot copy to built-in definition.
             deepCopiedDefinition.getSupplierDependency().clear();
+            // TDQ-10737 Because 'BuiltInIndicatorDefinition' is a containment reference, need to Clear these 3 non-containment
+            // reference list
+            deepCopiedDefinition.getCategories().clear();
+            deepCopiedDefinition.getAggregatedDefinitions().clear();
+            deepCopiedDefinition.getSubCategories().clear();
             indicator.setBuiltInIndicatorDefinition(deepCopiedDefinition);
             EMFUtil.saveResource(indicator.eResource());
         } else {
