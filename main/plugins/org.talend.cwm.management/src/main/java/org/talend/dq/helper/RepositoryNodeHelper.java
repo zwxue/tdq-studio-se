@@ -1293,7 +1293,8 @@ public final class RepositoryNodeHelper {
             if (modelElement.eIsProxy()) {
                 modelElement = (ModelElement) EObjectHelper.resolveObject(modelElement);
             }
-            String projectName = modelElement.eResource().getURI().segment(1);
+            // TDQ-12245: fix a NPE when the modelElement is ref project model
+            String projectName = EObjectHelper.getURI(modelElement).segment(1);
             java.util.Set<Project> allProjects = ProxyRepositoryManager.getInstance().getAllProjects();
             for (Project project : allProjects) {
                 if (project.getTechnicalLabel().equals(projectName)) {
