@@ -460,4 +460,9 @@ public class TopService implements ICoreService {
     public void syncLog4jSettings() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void syncMappingsFileFromSystemToProject() {
+        throw new UnsupportedOperationException();
+    }
 }
