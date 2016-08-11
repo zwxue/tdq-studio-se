@@ -114,6 +114,10 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     }
 
     private Boolean setIndicatorDefinition(Indicator indicator, String definitionLabel) {
+        if (definitionLabel == null) {
+            return false;
+        }
+
         // get the definition
         IndicatorDefinition indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(definitionLabel);
         if (indicatorDefinition == null) {
@@ -634,4 +638,13 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
         return setIndicatorDefinition(object, IndicatorEnum.BenfordLawFrequencyIndicatorEnum.getLabel());
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#caseIndicator(org.talend.dataquality.indicators.Indicator)
+     */
+    @Override
+    public Boolean caseIndicator(Indicator object) {
+        return defaultCase(object);
+    }
 }
