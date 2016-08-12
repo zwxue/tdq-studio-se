@@ -62,6 +62,7 @@ import org.talend.dataquality.indicators.ValueIndicator;
 import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
@@ -306,7 +307,8 @@ public final class IndicatorHelper {
      */
     public static List<Indicator> getIndicatorLeaves(Indicator indicator) {
         List<Indicator> leafIndicators = new ArrayList<Indicator>();
-        if (indicator instanceof CompositeIndicator) {
+        if (indicator instanceof CompositeIndicator
+                && !(indicator instanceof RecordMatchingIndicator)) {
             CompositeIndicator compositeIndicator = (CompositeIndicator) indicator;
             try {
                 for (Indicator ind : compositeIndicator.getAllChildIndicators()) {

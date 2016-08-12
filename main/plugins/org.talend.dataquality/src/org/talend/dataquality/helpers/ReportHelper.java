@@ -108,6 +108,10 @@ public final class ReportHelper {
         BASIC_COLUMN_SET(BASIC, PROPS.getProperty("BASIC_COLUMN_SET")), //$NON-NLS-1$
         EVOLUTION_COLUMN_SET(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMN_SET")), //$NON-NLS-1$        
 
+        // Analysis: match analysis
+        BASIC_MATCH_ANALYSIS(BASIC, PROPS.getProperty("BASIC_MATCH_ANALYSIS")), //$NON-NLS-1$
+        EVOLUTION_MATCH_ANALYSIS(EVOLUTION, PROPS.getProperty("EVOLUTION_MATCH_ANALYSIS")), //$NON-NLS-1$      
+
         USER_MADE(USER_DEFINED, null); // for the user to set his own file path
 
         private String label;
@@ -225,126 +229,133 @@ public final class ReportHelper {
                 } else if (EVOLUTION_COLUMN_SET.getLabel().equals(text)) {
                     return EVOLUTION_COLUMN_SET;
                 }
-            }
-
-            return null;
-        }
-
-        public static ReportType getReportType(AnalysisType anaType, String text, String dbType) {
-            // MOD klliu 16372 add Basic and evolution to fit oracle type
-            if (USER_MADE.getLabel().equals(text)) {
-                return USER_MADE;
-            }
-            // Multi column
-            if (anaType.getName().equals(AnalysisType.MULTIPLE_COLUMN.getName())) {
-                if (BASIC_MUTICOLUMN.getLabel().equals(text)) {
-                    return BASIC_MUTICOLUMN;
-                } else if (EVOLUTION_MUTICOLUMN.getLabel().equals(text)) {
-                    return EVOLUTION_MUTICOLUMN;
-                }
-            } else if (anaType.getName().equals(AnalysisType.CONNECTION.getName())) {
-                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
-                    if (BASIC_CONNECTION_ORACLE.getLabel().equals(text)) {
-                        return BASIC_CONNECTION_ORACLE;
-                    } else if (EVOLUTION_CONNECTION_ORACLE.getLabel().equals(text)) {
-                        return EVOLUTION_CONNECTION_ORACLE;
-                    }
-                } else {
-                    if (BASIC_CONNECTION.getLabel().equals(text)) {
-                        return BASIC_CONNECTION;
-                    } else if (EVOLUTION_CONNECTION.getLabel().equals(text)) {
-                        return EVOLUTION_CONNECTION;
-                    }
-                }
-            } else if (anaType.getName().equals(AnalysisType.SCHEMA.getName())) {
-                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
-                    if (BASIC_SCHEMA_ORACLE.getLabel().equals(text)) {
-                        return BASIC_SCHEMA_ORACLE;
-                    } else if (EVOLUTION_SCHEMA_ORACLE.getLabel().equals(text)) {
-                        return EVOLUTION_SCHEMA_ORACLE;
-                    }
-                } else {
-                    if (BASIC_SCHEMA.getLabel().equals(text)) {
-                        return BASIC_SCHEMA;
-                    } else if (EVOLUTION_SCHEMA.getLabel().equals(text)) {
-                        return EVOLUTION_SCHEMA;
-                    }
-                }
-            } else if (anaType.getName().equals(AnalysisType.CATALOG.getName())) {
-                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
-                    if (BASIC_CATALOG_ORACLE.getLabel().equals(text)) {
-                        return BASIC_CATALOG_ORACLE;
-                    } else if (EVOLUTION_CATALOG_ORACLE.getLabel().equals(text)) {
-                        return EVOLUTION_CATALOG_ORACLE;
-                    }
-                } else {
-                    if (BASIC_CATALOG.getLabel().equals(text)) {
-                        return BASIC_CATALOG;
-                    } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
-                        return EVOLUTION_CATALOG;
-                    }
-                }
-            } else if (anaType.getName().equals(AnalysisType.TABLE.getName())) {
-                if (BASIC_TABLE.getLabel().equals(text)) {
-                    return BASIC_TABLE;
-                } else if (EVOLUTION_TABLE.getLabel().equals(text)) {
-                    return EVOLUTION_TABLE;
-                }
-            } else if (anaType.getName().equals(AnalysisType.COLUMNS_COMPARISON.getName())) {
-                // MOD qiongli 2011-6-22 bug 16570,use the same jrxml between oracle and mysql
-                if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
-                    return BASIC_COLUMNS_COMPARISON;
-                } else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
-                    return EVOLUTION_COLUMNS_COMPARISON;
-                }
-            } else if (anaType.getName().equals(AnalysisType.COLUMN_CORRELATION.getName())) {
-                // MOD qiongli 2011-6-22 bug 16570,use the same jrxml between oracle and mysql
-                if (BASIC_COLUMNS_CORRELATION.getLabel().equals(text)) {
-                    return BASIC_COLUMNS_CORRELATION;
-                } else if (EVOLUTION_COLUMNS_CORRELATION.getLabel().equals(text)) {
-                    return EVOLUTION_COLUMNS_CORRELATION;
-                }
-
-            } else if (anaType.getName().equals(AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY.getName())) {
-                if (BASIC_TABLE_FUNCTIONAL_DEPENDENCY.getLabel().equals(text)) {
-                    return BASIC_TABLE_FUNCTIONAL_DEPENDENCY;
-                } else if (EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY.getLabel().equals(text)) {
-                    return EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY;
-                }
-            } else if (anaType.getName().equals(AnalysisType.COLUMN_SET.getName())) {
-                // MOD mzhao 10706, column set analysis
-                if (BASIC_COLUMN_SET.getLabel().equals(text)) {
-                    return BASIC_COLUMN_SET;
-                } else if (EVOLUTION_COLUMN_SET.getLabel().equals(text)) {
-                    return EVOLUTION_COLUMN_SET;
+            } else if (anaType.getName().equals(AnalysisType.MATCH_ANALYSIS.getName())) {
+                // ADD msjian TDQ-7692, match analysis
+                if (BASIC_MATCH_ANALYSIS.getLabel().equals(text)) {
+                    return BASIC_MATCH_ANALYSIS;
+                } else if (EVOLUTION_MATCH_ANALYSIS.getLabel().equals(text)) {
+                    return EVOLUTION_MATCH_ANALYSIS;
                 }
             }
 
             return null;
         }
+
+        // public static ReportType getReportType(AnalysisType anaType, String text, String dbType) {
+        // // MOD klliu 16372 add Basic and evolution to fit oracle type
+        // if (USER_MADE.getLabel().equals(text)) {
+        // return USER_MADE;
+        // }
+        // // Multi column
+        // if (anaType.getName().equals(AnalysisType.MULTIPLE_COLUMN.getName())) {
+        // if (BASIC_MUTICOLUMN.getLabel().equals(text)) {
+        // return BASIC_MUTICOLUMN;
+        // } else if (EVOLUTION_MUTICOLUMN.getLabel().equals(text)) {
+        // return EVOLUTION_MUTICOLUMN;
+        // }
+        // } else if (anaType.getName().equals(AnalysisType.CONNECTION.getName())) {
+        // if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+        // if (BASIC_CONNECTION_ORACLE.getLabel().equals(text)) {
+        // return BASIC_CONNECTION_ORACLE;
+        // } else if (EVOLUTION_CONNECTION_ORACLE.getLabel().equals(text)) {
+        // return EVOLUTION_CONNECTION_ORACLE;
+        // }
+        // } else {
+        // if (BASIC_CONNECTION.getLabel().equals(text)) {
+        // return BASIC_CONNECTION;
+        // } else if (EVOLUTION_CONNECTION.getLabel().equals(text)) {
+        // return EVOLUTION_CONNECTION;
+        // }
+        // }
+        // } else if (anaType.getName().equals(AnalysisType.SCHEMA.getName())) {
+        // if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+        // if (BASIC_SCHEMA_ORACLE.getLabel().equals(text)) {
+        // return BASIC_SCHEMA_ORACLE;
+        // } else if (EVOLUTION_SCHEMA_ORACLE.getLabel().equals(text)) {
+        // return EVOLUTION_SCHEMA_ORACLE;
+        // }
+        // } else {
+        // if (BASIC_SCHEMA.getLabel().equals(text)) {
+        // return BASIC_SCHEMA;
+        // } else if (EVOLUTION_SCHEMA.getLabel().equals(text)) {
+        // return EVOLUTION_SCHEMA;
+        // }
+        // }
+        // } else if (anaType.getName().equals(AnalysisType.CATALOG.getName())) {
+        // if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+        // if (BASIC_CATALOG_ORACLE.getLabel().equals(text)) {
+        // return BASIC_CATALOG_ORACLE;
+        // } else if (EVOLUTION_CATALOG_ORACLE.getLabel().equals(text)) {
+        // return EVOLUTION_CATALOG_ORACLE;
+        // }
+        // } else {
+        // if (BASIC_CATALOG.getLabel().equals(text)) {
+        // return BASIC_CATALOG;
+        // } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
+        // return EVOLUTION_CATALOG;
+        // }
+        // }
+        // } else if (anaType.getName().equals(AnalysisType.TABLE.getName())) {
+        // if (BASIC_TABLE.getLabel().equals(text)) {
+        // return BASIC_TABLE;
+        // } else if (EVOLUTION_TABLE.getLabel().equals(text)) {
+        // return EVOLUTION_TABLE;
+        // }
+        // } else if (anaType.getName().equals(AnalysisType.COLUMNS_COMPARISON.getName())) {
+        // // MOD qiongli 2011-6-22 bug 16570,use the same jrxml between oracle and mysql
+        // if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
+        // return BASIC_COLUMNS_COMPARISON;
+        // } else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
+        // return EVOLUTION_COLUMNS_COMPARISON;
+        // }
+        // } else if (anaType.getName().equals(AnalysisType.COLUMN_CORRELATION.getName())) {
+        // // MOD qiongli 2011-6-22 bug 16570,use the same jrxml between oracle and mysql
+        // if (BASIC_COLUMNS_CORRELATION.getLabel().equals(text)) {
+        // return BASIC_COLUMNS_CORRELATION;
+        // } else if (EVOLUTION_COLUMNS_CORRELATION.getLabel().equals(text)) {
+        // return EVOLUTION_COLUMNS_CORRELATION;
+        // }
+        //
+        // } else if (anaType.getName().equals(AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY.getName())) {
+        // if (BASIC_TABLE_FUNCTIONAL_DEPENDENCY.getLabel().equals(text)) {
+        // return BASIC_TABLE_FUNCTIONAL_DEPENDENCY;
+        // } else if (EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY.getLabel().equals(text)) {
+        // return EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY;
+        // }
+        // } else if (anaType.getName().equals(AnalysisType.COLUMN_SET.getName())) {
+        // // MOD mzhao 10706, column set analysis
+        // if (BASIC_COLUMN_SET.getLabel().equals(text)) {
+        // return BASIC_COLUMN_SET;
+        // } else if (EVOLUTION_COLUMN_SET.getLabel().equals(text)) {
+        // return EVOLUTION_COLUMN_SET;
+        // }
+        // }
+        //
+        // return null;
+        // }
 
         public static ReportType getReportType(Analysis ana, String text) {
             AnalysisType at = AnalysisHelper.getAnalysisType(ana);
             return getReportType(at, text);
         }
 
-        public static ReportType getReportTypeWithDB(Analysis ana, String text, String dbType) {
-            AnalysisType at = AnalysisHelper.getAnalysisType(ana);
-            return getReportType(at, text, dbType);
-        }
+        // public static ReportType getReportTypeWithDB(Analysis ana, String text, String dbType) {
+        // AnalysisType at = AnalysisHelper.getAnalysisType(ana);
+        // return getReportType(at, text, dbType);
+        // }
 
-        /**
-         * DOC Administrator Comment method "getReportType".
-         * 
-         * @param analysis
-         * @param reportType
-         * @param db
-         * @return
-         */
-        public static ReportType getReportType(Analysis analysis, String reportType, String db) {
-            // TODO Auto-generated method stub
-            return null;
-        }
+        // /**
+        // * DOC Administrator Comment method "getReportType".
+        // *
+        // * @param analysis
+        // * @param reportType
+        // * @param db
+        // * @return
+        // */
+        // public static ReportType getReportType(Analysis analysis, String reportType, String db) {
+        // // TODO Auto-generated method stub
+        // return null;
+        // }
     }
 
     private ReportHelper() {
