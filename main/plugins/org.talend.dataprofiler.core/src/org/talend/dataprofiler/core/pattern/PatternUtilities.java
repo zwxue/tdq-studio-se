@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -41,6 +42,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -62,6 +64,7 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -343,10 +346,10 @@ public final class PatternUtilities {
         List<IRepositoryNode> patternRepNodes = RepositoryNodeHelper.getPatternsRepositoryNodes(false);
         ArrayList<Object> ret = new ArrayList<Object>();
         for (Indicator indicator : meIndicator.getPatternIndicators()) {
-            PatternMatchingIndicator patternIndicator = (PatternMatchingIndicator) indicator;
+            Pattern patternInAnalysis = IndicatorHelper.getPattern(indicator);
             for (IRepositoryNode patternRepNode : patternRepNodes) {
                 Pattern pattern = ((PatternRepNode) patternRepNode).getPattern();
-                if (patternIndicator.getName().equals(pattern.getName())) {
+                if (StringUtils.equals(ResourceHelper.getUUID(patternInAnalysis), ResourceHelper.getUUID(pattern))) {
                     ret.add(patternRepNode);
                 }
             }
