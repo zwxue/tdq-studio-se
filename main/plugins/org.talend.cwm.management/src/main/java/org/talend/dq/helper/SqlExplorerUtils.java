@@ -170,7 +170,11 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
     }
 
     public void initAllConnectionsToSQLExplorer() {
-        if (this.initAllDrivers) {
+        // if sqlexplorerService is null, try to init it.
+        if (this.sqlexplorerService == null) {
+            getSqlexplorerService();
+        }
+        if (this.initAllDrivers || this.sqlexplorerService == null) {
             return;
         }
         List<Connection> conns = new ArrayList<Connection>();
@@ -192,9 +196,7 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
             log.error(e, e);
         }
         if (!conns.isEmpty()) {
-            if (this.sqlexplorerService != null) {
-                sqlexplorerService.initAllConnectionsToSQLExplorer(conns);
-            }
+            sqlexplorerService.initAllConnectionsToSQLExplorer(conns);
         }
         initAllDrivers = true;
 
