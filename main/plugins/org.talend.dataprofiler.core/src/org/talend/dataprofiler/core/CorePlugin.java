@@ -46,7 +46,6 @@ import org.osgi.framework.ServiceReference;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.utils.VersionUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
@@ -80,6 +79,7 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.core.ui.views.RespositoryDetailView;
 import org.talend.dataprofiler.help.BookMarkEnum;
+import org.talend.dataprofiler.migration.MigrationPlugin;
 import org.talend.dataprofiler.service.ISemanticStudioService;
 import org.talend.dataquality.analysis.impl.AnalysisImpl;
 import org.talend.dataquality.reports.impl.TdReportImpl;
@@ -379,10 +379,10 @@ public class CorePlugin extends AbstractUIPlugin {
      * DOC bzhou Comment method "getProductVersion".
      * 
      * @return
+     * @deprecated use MigrationPlugin.getDefault().getProductVersion()
      */
     public ProductVersion getProductVersion() {
-        ProductVersion currentVersion = ProductVersion.fromString(VersionUtils.getVersion());
-        return currentVersion;
+        return MigrationPlugin.getDefault().getProductVersion();
     }
 
     /**

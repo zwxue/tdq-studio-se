@@ -15,6 +15,7 @@ package org.talend.dataprofiler.migration;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.talend.commons.utils.VersionUtils;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -64,12 +65,7 @@ public class MigrationPlugin implements BundleActivator {
      * @return
      */
     public ProductVersion getProductVersion() {
-        String version = System.getProperty("studio.version"); //$NON-NLS-1$
-        if (version == null || "".equals(version.trim())) { //$NON-NLS-1$
-            version = (String) bundle.getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
-        }
-        ProductVersion currentVersion = ProductVersion.fromString(version);
-        return currentVersion;
+        return ProductVersion.fromString(VersionUtils.getTalendVersion());
     }
 
 }
