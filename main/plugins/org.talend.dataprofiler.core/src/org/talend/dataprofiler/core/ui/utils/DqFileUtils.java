@@ -22,7 +22,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -137,7 +139,7 @@ public final class DqFileUtils {
      * @param plugin
      * @param srcPath
      * @param recurse
-     * @param suffix
+     * @param suffixs
      * @throws IOException
      */
     public static void searchAllFileInPlugin(List<File> result, Plugin plugin, String srcPath, boolean recurse, String[] suffixs)
@@ -172,7 +174,32 @@ public final class DqFileUtils {
         }
     }
 
+    /**
+     * check whether the file is the local project file.(for example: we can use to check the dependency file when export)
+     * 
+     * @param file
+     * @return boolean
+     */
     public static boolean isLocalProjectFile(File file) {
         return file.getAbsolutePath().startsWith(ResourceManager.getRootProject().getLocation().toOSString());
     }
+
+    /**
+     * check if the DQ file under the basePath.(for example: we can use to check the dependency file when import)
+     * 
+     * @param file
+     * @param basePath
+     * @return boolean
+     */
+    public static boolean isFileUnderBasePath(File file, IPath basePath) {
+        Path dependencyFilePath = new Path(file.getPath());
+        String makeRelativeTo = dependencyFilePath.makeRelativeTo(basePath).segment(0);
+        if (makeRelativeTo.equals(EResourceConstant.DATA_PROFILING.getName())
+                || makeRelativeTo.equals(EResourceConstant.LIBRARIES.getName())
+                || makeRelativeTo.equals(EResourceConstant.METADATA.getName())) {
+            return true;
+        }
+        return false;
+    }
+
 }
