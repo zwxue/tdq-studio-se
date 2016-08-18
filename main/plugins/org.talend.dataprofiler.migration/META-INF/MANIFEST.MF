@@ -6,11 +6,11 @@ Bundle-Version: 6.2.2.qualifier
 Bundle-Activator: org.talend.dataprofiler.migration.MigrationPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.apache.log4j,
- org.talend.utils
+ org.talend.utils,
+ org.talend.commons.runtime
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.migration,
  org.talend.dataprofiler.migration.helper,
  org.talend.dataprofiler.migration.manager
 Bundle-ClassPath: .,
  dist/org.talend.dataprofiler.migration.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
