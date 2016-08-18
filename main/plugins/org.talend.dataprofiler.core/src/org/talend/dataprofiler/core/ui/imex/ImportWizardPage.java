@@ -60,6 +60,7 @@ import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
 import org.talend.dataprofiler.core.ui.utils.ImportAndExportUtils;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.EObjectHelper;
@@ -378,6 +379,12 @@ public class ImportWizardPage extends WizardPage {
             for (File depFile : record.getDependencySet()) {
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
+                    
+                    // TDQ-12410: if the dependency comes from reference project, we ingore it.
+                    if (!DqFileUtils.isFileUnderBasePath(depFile, writer.getBasePath())) {
+                        continue;
+                    }
+                    
                     ModelElement element = ItemRecord.getElement(depFile);
                     // if the element is IndicatorDefinition and it exist in the current project and don't include any
                     // sql and java templates and the AggregatedDefinitions is not empty or TableOverview/ViewOverview

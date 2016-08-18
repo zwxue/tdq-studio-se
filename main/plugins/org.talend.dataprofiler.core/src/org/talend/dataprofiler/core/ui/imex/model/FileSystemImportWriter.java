@@ -64,6 +64,7 @@ import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.migration.impl.RenamePatternFinderFolderTask;
+import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
 import org.talend.dataprofiler.migration.IMigrationTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
@@ -302,9 +303,15 @@ public class FileSystemImportWriter implements IImportWriter {
      * @param record
      */
     private void checkDependency(ItemRecord record) {
-        for (File file : record.getDependencySet()) {
-            ModelElement melement = ItemRecord.getElement(file);
+        for (File depFile : record.getDependencySet()) {
+            ModelElement melement = ItemRecord.getElement(depFile);
             if (melement != null && melement.eIsProxy()) {
+
+                // TDQ-12410: if the dependency comes from reference project, we ingore it.
+                if (!DqFileUtils.isFileUnderBasePath(depFile, getBasePath())) {
+                    continue;
+                }
+
                 // if the element is IndicatorDefinition and it exist in the current project and don't include any
                 // sql and java templates and the AggregatedDefinitions is not empty or TableOverview/ViewOverview
                 // Indicator, don't add it into errors even if it is not exist
