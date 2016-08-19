@@ -368,8 +368,11 @@ public final class IndicatorCommonUtil {
                 patternExt.setNotMatchingValueCount(udi.getNotMatchingValueCount());
             }
         } else {
-            patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());
-            patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());
+            // TDQ-12282 msjian : fix a NPE
+            Long matchingValueCount = ((PatternMatchingIndicator) indicator).getMatchingValueCount();
+            patternExt.setMatchingValueCount(matchingValueCount == null ? 0l : matchingValueCount);
+            Long notMatchingValueCount = ((PatternMatchingIndicator) indicator).getNotMatchingValueCount();
+            patternExt.setNotMatchingValueCount(notMatchingValueCount == null ? 0l : notMatchingValueCount);
         }
         return patternExt;
     }
