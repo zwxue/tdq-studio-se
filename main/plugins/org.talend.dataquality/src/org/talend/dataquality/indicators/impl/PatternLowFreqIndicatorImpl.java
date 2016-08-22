@@ -10,7 +10,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.TextParameters;
-import org.talend.utils.string.AsciiUtils;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Pattern Low Freq Indicator</b></em>'. <!--
@@ -93,7 +92,7 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
      */
     @Override
     public String convertCharacters(String data) {
-        return AsciiUtils.replaceCharacters(String.valueOf(data), this.charsToReplace, this.replacementChars);
+        return replaceCharacters(String.valueOf(data), this.charsToReplace, this.replacementChars);
     }
 
     /*

@@ -43,12 +43,10 @@ import org.talend.utils.collections.MapValueSorter;
  * The following features are implemented:
  * <ul>
  * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValues <em>Unique Values</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDistinctValueCount <em>Distinct Value
- * Count</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValueCount <em>Unique Value Count
- * </em>}</li>
- * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDuplicateValueCount <em>Duplicate Value
- * Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDistinctValueCount <em>Distinct Value Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValueCount <em>Unique Value Count </em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDuplicateValueCount <em>Duplicate Value Count</em>}
+ * </li>
  * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getValueToFreq <em>Value To Freq</em>}</li>
  * </ul>
  * </p>
@@ -863,6 +861,31 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         drillDownMap = (DBMap<Object, List<Object>>) getMapDB(dbName);
         super.handleDrillDownData(masterObject, inputRowList);
 
+    }
+
+    /**
+     * Replace characters from a string by other characters.
+     * 
+     * @param s the string to convert
+     * @param charsToReplace the list of characters to replace
+     * @param replacementChars the replacement characters
+     * @return the new string
+     * 
+     * @generated NOT
+     */
+    protected static String replaceCharacters(final String s, final String charsToReplace, final String replacementChars) {
+        StringBuffer sb = new StringBuffer();
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            int pos = charsToReplace.indexOf(c);
+            if (pos > -1) {
+                sb.append(replacementChars.charAt(pos));
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
 } // FrequencyIndicatorImpl
