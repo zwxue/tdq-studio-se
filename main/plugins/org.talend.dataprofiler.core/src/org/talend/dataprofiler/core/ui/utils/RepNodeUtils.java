@@ -27,9 +27,13 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -454,5 +458,29 @@ public final class RepNodeUtils {
             }
         }
         return javaType;
+    }
+
+    /**
+     * check whether the nodes can support pattern Frequency indicator for sql engine.
+     * 
+     * @param nodes
+     * @return
+     */
+    public static boolean isSupportPatternFrequency(List<IRepositoryNode> nodes) {
+        if (nodes != null && !nodes.isEmpty()) {
+            Connection connection = null;
+            if (nodes.get(0) instanceof ColumnRepNode) {
+                MetadataColumn column = ((MetadataColumnRepositoryObject) nodes.get(0).getObject()).getTdColumn();
+                connection = ConnectionHelper.getTdDataProvider(column);
+            } else if (nodes.get(0) instanceof ColumnSetRepNode) {
+                MetadataTable table = ((MetadataTableRepositoryObject) nodes.get(0).getObject()).getTable();
+                connection = ConnectionHelper.getTdDataProvider(table);
+            }
+
+            if (connection != null && (ConnectionHelper.isTeradata(connection) || ConnectionHelper.isIngress(connection))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

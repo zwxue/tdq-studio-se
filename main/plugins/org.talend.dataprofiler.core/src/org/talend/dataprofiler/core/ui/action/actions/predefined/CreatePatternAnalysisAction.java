@@ -86,4 +86,15 @@ public class CreatePatternAnalysisAction extends AbstractPredefinedAnalysisActio
     protected String getCategoryLabel() {
         return AnalysisLabelParameter.PATTERN_FREQUENCY_ANALYSIS;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#needChangeExecuteLanguageToJava()
+     */
+    @Override
+    protected boolean needChangeExecuteLanguageToJava() {
+        // TDQ-12349: when the database can not support PatternFrequency, set to java engine automatically
+        return !RepNodeUtils.isSupportPatternFrequency(getSelection().toList());
+    }
 }

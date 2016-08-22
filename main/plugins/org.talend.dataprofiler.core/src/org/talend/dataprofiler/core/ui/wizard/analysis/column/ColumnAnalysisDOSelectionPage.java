@@ -106,12 +106,23 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage imple
      */
     void updateCompleteState() {
         // Nodes come from same table or empty both are valid
-        if (nodes.size() == 0 || RepNodeUtils.isValidSelectionFromSameTable(nodes)) {
+        if (nodes.size() == 0) {
             setPageComplete(true);
             this.setMessage(chooseConnStr);
         } else {
-            setPageComplete(false);
-            this.setMessage(DefaultMessagesImpl.getString("ColumnAnalysisDOSelectionPage.selectColumnError1"), ERROR); //$NON-NLS-1$
+            if (!RepNodeUtils.isValidSelectionFromSameTable(nodes)) {
+                setPageComplete(false);
+                this.setMessage(DefaultMessagesImpl.getString("ColumnAnalysisDOSelectionPage.selectColumnError1"), ERROR); //$NON-NLS-1$
+            } else {
+                if (this.getPreviousPage().getWizard() instanceof PatternFrequencyWizard
+                        && !RepNodeUtils.isSupportPatternFrequency(nodes)) {
+                    setPageComplete(true);
+                    this.setMessage(DefaultMessagesImpl.getString("ColumnAnalysisDOSelectionPage.selectColumnError3"), WARNING); //$NON-NLS-1$
+                } else {
+                    setPageComplete(true);
+                    this.setMessage(""); //$NON-NLS-1$
+                }
+            }
         }
 
     }

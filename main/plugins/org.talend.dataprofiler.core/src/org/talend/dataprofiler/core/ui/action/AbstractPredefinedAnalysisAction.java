@@ -232,6 +232,9 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                     if (masterPage != null) {
                         masterPage.refreshPreviewTable(predefinedColumnIndicator, false);
                         masterPage.refreshTheTree(predefinedColumnIndicator);
+                        if (needChangeExecuteLanguageToJava()) {
+                            masterPage.changeExecuteLanguageToJava(true);
+                        }
                         masterPage.doSave(null);
                     }
                 }
@@ -248,4 +251,8 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
     protected abstract boolean isAllowed();
 
     protected abstract boolean preDo();
+
+    protected boolean needChangeExecuteLanguageToJava() {
+        return false;
+    }
 }

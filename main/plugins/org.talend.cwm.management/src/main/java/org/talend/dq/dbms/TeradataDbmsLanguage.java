@@ -100,11 +100,6 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
         return sql;
     }
 
-    @Override
-    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
-        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
-        return expression;
-    }
 
     /*
      * (non-Javadoc)

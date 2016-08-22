@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
@@ -152,6 +153,13 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                             ((ColumnAnalysisDetailsPage) masterPage).refreshPreviewTable(predefinedColumnIndicator, false);
                             ((ColumnAnalysisDetailsPage) masterPage).refreshTheTree(predefinedColumnIndicator);
                         }
+
+                        // TDQ-12349: when the database can not support PatternFrequency, set to java engine automatically
+                        if (this instanceof PatternFrequencyWizard && !RepNodeUtils.isSupportPatternFrequency(nodes)) {
+                            masterPage.changeExecuteLanguageToJava(true);
+                        }
+                        // TDQ-12349~
+
                     } else if (masterPage instanceof ColumnSetAnalysisDetailsPage) {
                         ((ColumnSetAnalysisDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes
                                 .size()]));
