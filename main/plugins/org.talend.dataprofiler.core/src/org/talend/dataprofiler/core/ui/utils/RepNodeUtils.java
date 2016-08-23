@@ -477,7 +477,9 @@ public final class RepNodeUtils {
                 connection = ConnectionHelper.getTdDataProvider(table);
             }
 
-            if (connection != null && (ConnectionHelper.isTeradata(connection) || ConnectionHelper.isIngress(connection))) {
+            if (connection != null
+                    && (ConnectionHelper.isTeradata(connection) || ConnectionHelper.isIngress(connection) || ConnectionHelper
+                            .isSybase(connection))) {
                 return false;
             }
         }
