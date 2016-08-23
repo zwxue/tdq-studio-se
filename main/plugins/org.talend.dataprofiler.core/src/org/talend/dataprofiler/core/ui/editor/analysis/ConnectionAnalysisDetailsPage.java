@@ -76,15 +76,18 @@ public class ConnectionAnalysisDetailsPage extends AbstractFilterMetadataPage {
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
         RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(analyzedElement);
         for (Indicator indicator : schemaIndicators) {
-            for (IRepositoryNode schemaNode : connNode.getChildren()) {
-                String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema());
-                String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
-                if (nodeUuid.equals(anaUuid)) {
-                    OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
-                    cataUIEle.setNode(schemaNode);
-                    cataUIEle.setOverviewIndicator(indicator);
-                    cataUIEleList.add(cataUIEle);
-                    break;
+            if (connNode != null) {
+                for (IRepositoryNode schemaNode : connNode.getChildren()) {
+                    String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject) schemaNode.getObject())
+                            .getSchema());
+                    String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+                    if (nodeUuid.equals(anaUuid)) {
+                        OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+                        cataUIEle.setNode(schemaNode);
+                        cataUIEle.setOverviewIndicator(indicator);
+                        cataUIEleList.add(cataUIEle);
+                        break;
+                    }
                 }
             }
         }
