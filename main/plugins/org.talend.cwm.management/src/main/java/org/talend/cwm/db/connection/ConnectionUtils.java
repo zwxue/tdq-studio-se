@@ -163,6 +163,11 @@ public final class ConnectionUtils {
      */
     public static ReturnCode isConnectionAvailable(Connection analysisDataProvider) {
         ReturnCode returnCode = new ReturnCode();
+        if (analysisDataProvider == null) {
+            returnCode.setOk(false);
+            returnCode.setMessage(Messages.getString("ConnectionUtils.checkConnFailTitle")); //$NON-NLS-1$
+            return returnCode;
+        }
 
         // check hive connection
         IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
