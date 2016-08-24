@@ -15,20 +15,27 @@ package net.sourceforge.sqlexplorer.util;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ILibraryManagerService;
+import org.talend.core.classloader.ClassLoaderFactory;
+import org.talend.core.classloader.DynamicClassLoader;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.ConnParameterKeys;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
+import org.talend.core.hadoop.IHadoopDistributionService;
+import org.talend.core.model.general.ModuleNeeded;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -36,6 +43,8 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.runtime.hd.IHDistribution;
+import org.talend.core.runtime.hd.IHDistributionVersion;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.metadata.managment.connection.manager.DatabaseConnConstants;
@@ -182,10 +191,50 @@ public class AliasAndManaDriverHelper {
                 driverJarNameList.add(path);
             }
         } else {
-            driverJarNameList = EDatabaseVersion4Drivers.getDrivers(dbConnnection.getDatabaseType(),
-                    dbConnnection.getDbVersionString());
+            String databaseType = dbConnnection.getDatabaseType();
+            if (StringUtils.equals(EDatabaseTypeName.IMPALA.getDisplayName(), databaseType)) {
+                driverJarNameList = getImpalaDriverJarNameList(dbConnnection);
+            } else {
+                driverJarNameList = EDatabaseVersion4Drivers.getDrivers(databaseType, dbConnnection.getDbVersionString());
+            }
         }
         manDr.setJars(getDriverJarRealPaths(driverJarNameList));
+    }
+
+    private List<String> getImpalaDriverJarNameList(DatabaseConnection dbConnnection) {
+        List<String> driverJarNameList = new ArrayList<String>();
+        IHadoopDistributionService hadoopService = getHadoopDistributionService();
+        if (hadoopService != null) {
+            String distribution = dbConnnection.getParameters().get(ConnParameterKeys.CONN_PARA_KEY_IMPALA_DISTRIBUTION);
+            String version = dbConnnection.getParameters().get(ConnParameterKeys.CONN_PARA_KEY_IMPALA_VERSION);
+
+            IHDistribution impalaDistribution = hadoopService.getImpalaDistributionManager().getDistribution(distribution, false);
+            if (impalaDistribution != null) {
+                String impalaIndex = EDatabaseTypeName.IMPALA.getProduct() + ClassLoaderFactory.KEY_SEPARATOR
+                        + impalaDistribution.getName();
+                if (impalaDistribution.useCustom()) {
+                    // TODO handle custom impala here
+                } else {
+                    IHDistributionVersion impalaVersion = impalaDistribution.getHDVersion(version, false);
+                    if (impalaVersion != null) {
+                        List<ModuleNeeded> modulesNeeded = impalaVersion.getModulesNeeded();
+                        Set<String> libraries = new HashSet<String>();
+                        for (ModuleNeeded m : modulesNeeded) {
+                            libraries.add(m.getModuleName());
+                        }
+                        driverJarNameList.addAll(libraries);
+                    }
+                }
+            }
+        }
+        return driverJarNameList;
+    }
+
+    private IHadoopDistributionService getHadoopDistributionService() {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IHadoopDistributionService.class)) {
+            return (IHadoopDistributionService) GlobalServiceRegister.getDefault().getService(IHadoopDistributionService.class);
+        }
+        return null;
     }
 
     /**
@@ -253,4 +302,42 @@ public class AliasAndManaDriverHelper {
         return id.toString();
     }
 
+    public ClassLoader getImpalaClassLoader(IMetadataConnection metadataConn) {
+        IHadoopDistributionService hadoopService = getHadoopDistributionService();
+        if (hadoopService != null) {
+            String distribution = (String) metadataConn.getParameter(ConnParameterKeys.CONN_PARA_KEY_IMPALA_DISTRIBUTION);
+            String version = (String) metadataConn.getParameter(ConnParameterKeys.CONN_PARA_KEY_IMPALA_VERSION);
+
+            IHDistribution impalaDistribution = hadoopService.getImpalaDistributionManager().getDistribution(distribution, false);
+            if (impalaDistribution != null) {
+                String impalaIndex = EDatabaseTypeName.IMPALA.getProduct() + ClassLoaderFactory.KEY_SEPARATOR
+                        + impalaDistribution.getName();
+                if (impalaDistribution.useCustom()) {
+                    String jarsStr = (String) metadataConn.getParameter(ConnParameterKeys.CONN_PARA_KEY_HADOOP_CUSTOM_JARS);
+                    String index = "CustomImpala" + ClassLoaderFactory.KEY_SEPARATOR + impalaIndex + ClassLoaderFactory.KEY_SEPARATOR + metadataConn.getId(); //$NON-NLS-1$
+                    DynamicClassLoader classLoader = ClassLoaderFactory.getCustomClassLoader(index, jarsStr);
+                    if (classLoader != null) {
+                        return classLoader;
+                    }
+                } else {
+                    IHDistributionVersion impalaVersion = impalaDistribution.getHDVersion(version, false);
+                    if (impalaVersion != null) {
+                        boolean isKeb = Boolean.valueOf((String) metadataConn
+                                .getParameter(ConnParameterKeys.CONN_PARA_KEY_USE_KRB));
+                        DynamicClassLoader classLoader = ClassLoaderFactory.getClassLoader(impalaIndex
+                                + ClassLoaderFactory.KEY_SEPARATOR + impalaVersion.getVersion() + (isKeb ? "?USE_KRB" : ""));//$NON-NLS-1$//$NON-NLS-2$
+
+                        // if not work for extension point, try modules from hadoop distribution
+                        if (classLoader == null) {
+                            classLoader = ClassLoaderFactory.getClassLoader(impalaVersion);
+                        }
+                        if (classLoader != null) {
+                            return classLoader;
+                        }
+                    }
+                }
+            }
+        }
+        return this.getClass().getClassLoader();
+    }
 }
