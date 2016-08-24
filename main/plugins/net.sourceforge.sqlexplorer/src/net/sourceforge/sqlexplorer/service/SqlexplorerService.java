@@ -363,7 +363,12 @@ public class SqlexplorerService implements ISqlexplorerService {
         String id = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(connection);
         ManagedDriver manDr = driverManager.getDriver(id);
         IMetadataConnection metadataConnection = ConvertionHelper.convert(connection);
-        ClassLoader classLoader = HiveClassLoaderFactory.getInstance().getClassLoader(metadataConnection);
+        ClassLoader classLoader = null;
+        if (EDatabaseTypeName.IMPALA.getXmlName().equalsIgnoreCase(connection.getDatabaseType())) {
+            classLoader = AliasAndManaDriverHelper.getInstance().getImpalaClassLoader(metadataConnection);
+        } else {
+            classLoader = HiveClassLoaderFactory.getInstance().getClassLoader(metadataConnection);
+        }
         if (classLoader != null && classLoader instanceof DynamicClassLoader) {
             DynamicClassLoader dynClassLoader = (DynamicClassLoader) classLoader;
             String libStorePath = dynClassLoader.getLibStorePath();

@@ -15,6 +15,7 @@ import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.util.AliasAndManaDriverHelper;
 import net.sourceforge.squirrel_sql.fw.id.IIdentifier;
 import net.sourceforge.squirrel_sql.fw.persist.ValidationException;
 import net.sourceforge.squirrel_sql.fw.sql.ISQLDriver;
@@ -243,7 +244,8 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
         String userName = dbConn.getUsername();
         userName = userName != null ? userName : PluginConstant.EMPTY_STRING;
         String message = "fail to regist jdbc driver in SQLExplorer";
-        if (driverClassName == null || dbType == null || dbType.equalsIgnoreCase(EDatabaseTypeName.HIVE.getXmlName())) {
+        if (driverClassName == null || dbType == null || dbType.equalsIgnoreCase(EDatabaseTypeName.HIVE.getXmlName())
+                || dbType.equalsIgnoreCase(EDatabaseTypeName.IMPALA.getXmlName())) {
             log.error(message);
             return;
         }
@@ -364,6 +366,12 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
                 unregisterSQLDriver();
                 IMetadataConnection metadataConn = ConvertionHelper.convert(dbConnection);
                 ClassLoader classLoader = HiveClassLoaderFactory.getInstance().getClassLoader(metadataConn);
+                Class<?> classDriver = Class.forName(driverClassName, true, classLoader);
+                jdbcDriver = (Driver) classDriver.newInstance();
+            } else if (dbType.equalsIgnoreCase(EDatabaseTypeName.IMPALA.getXmlName())) {
+                unregisterSQLDriver();
+                IMetadataConnection metadataConn = ConvertionHelper.convert(dbConnection);
+                ClassLoader classLoader = AliasAndManaDriverHelper.getInstance().getImpalaClassLoader(metadataConn);
                 Class<?> classDriver = Class.forName(driverClassName, true, classLoader);
                 jdbcDriver = (Driver) classDriver.newInstance();
             }
