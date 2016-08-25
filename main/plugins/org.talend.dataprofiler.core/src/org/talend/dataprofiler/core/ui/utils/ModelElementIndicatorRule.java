@@ -111,8 +111,11 @@ public final class ModelElementIndicatorRule {
         // MOD msjian 2013-5-15 TDQ-7275 need to disabled indicators for teradata with sql engine.
         boolean isTeradataSQL = connection == null ? false : ConnectionHelper.isTeradata(connection) && isSQLEngine;
 
-        // MOD msjian 2013-5-15 TDQ-12349 need to disabled indicators for ingres with sql engine.
+        // MOD msjian 2016-8-25 TDQ-12349 need to disabled indicators for ingres with sql engine.
         boolean isIngres = connection == null ? false : ConnectionHelper.isIngress(connection) && isSQLEngine;
+
+        // MOD msjian 2016-8-25 TDQ-12464 need to disabled indicators for ingres with sql engine.
+        boolean isSybase = connection == null ? false : ConnectionHelper.isSybase(connection) && isSQLEngine;
 
         // MOD qiongli 2013-8-27 TDQ-2104 disabled soundex indicators for hive with sql engine.
         boolean isVerticaSQL = connection == null ? false : ConnectionHelper.isVertica(connection) && isSQLEngine;
@@ -190,7 +193,7 @@ public final class ModelElementIndicatorRule {
             }
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
-            if (isTeradataSQL || isIngres) {
+            if (isTeradataSQL || isIngres || isSybase) {
                 return false;
             }
         case ModeIndicatorEnum:
