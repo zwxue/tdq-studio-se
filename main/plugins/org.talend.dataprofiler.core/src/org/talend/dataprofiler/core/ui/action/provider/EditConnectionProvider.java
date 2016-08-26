@@ -78,11 +78,10 @@ public class EditConnectionProvider extends AbstractCommonActionProvider {
          * (non-Javadoc) Method declared on IAction.
          */
         public void run() {
-            // CorePlugin.getDefault().openEditor(currentSelection, ConnectionEditor.class.getName());
             Connection connection = PrvResourceFileHelper.getInstance().findProvider(currentSelection);
-            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
-            if (recursiveFind != null) {
-                new ConnectionItemEditorInput(recursiveFind.getObject().getProperty().getItem());
+            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(connection);
+            if (repNode != null) {
+                new ConnectionItemEditorInput(repNode);
             }
         }
     }

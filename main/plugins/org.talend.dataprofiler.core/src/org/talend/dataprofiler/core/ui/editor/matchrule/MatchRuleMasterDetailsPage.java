@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.ui.editor.matchrule;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Composite;
@@ -25,10 +27,10 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.GlobalServiceRegister;
-import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
@@ -39,16 +41,20 @@ import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvi
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.service.IMatchRuleChangeService;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by zshen on Aug 19, 2013 Detailled comment
  * 
  */
 public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
+
+    private static Logger log = Logger.getLogger(MatchRuleMasterDetailsPage.class);
 
     private SelectAlgorithmSection selectAlgorithmSection = null;
 
@@ -59,6 +65,8 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     private MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
 
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
+
+    protected RuleRepNode ruleRepNode;
 
     /**
      * DOC zshen MatchRuleMasterDetailsPage constructor comment.
@@ -77,8 +85,8 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     @Override
     public void dispose() {
         super.dispose();
-        if (this.currentModelElement != null && this.currentModelElement.eResource() != null) {
-            this.currentModelElement.eResource().unload();
+        if (getCurrentModelElement() != null && getCurrentModelElement().eResource() != null) {
+            getCurrentModelElement().eResource().unload();
         }
     }
 
@@ -88,37 +96,9 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             this.setDirty(true);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement(org.eclipse.ui.forms.editor
-     * .FormEditor)
-     */
-    @Override
-    protected ModelElement getCurrentModelElement(FormEditor editor) {
-        MatchRuleItemEditorInput editorInput = getMatchRuleEditorInput();
-        if (editorInput != null) {
-            this.currentModelElement = editorInput.getMatchRule();
-        } else if (this.getEditor().getEditorInput() instanceof FileEditorInput) {
-            FileEditorInput input = (FileEditorInput) this.getEditor().getEditorInput();
-            this.currentModelElement = DQRuleResourceFileHelper.getInstance().findMatchRule(input.getFile());
-        }
-        return this.currentModelElement;
-    }
-
-    private MatchRuleItemEditorInput getMatchRuleEditorInput() {
-        IEditorInput editorInput = this.getEditor().getEditorInput();
-        if (editorInput instanceof MatchRuleItemEditorInput) {
-            return (MatchRuleItemEditorInput) editorInput;
-        }
-        return null;
     }
 
     /*
@@ -200,7 +180,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     private void createMatchAndSurvivorKeySection(Composite mainComp) {
         matchAndSurvivorKeySection = new MatchAndSurvivorKeySection(form, mainComp, toolkit);
-        matchAndSurvivorKeySection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+        matchAndSurvivorKeySection.setMatchRuleDef(getCurrentModelElement());
         matchAndSurvivorKeySection.setAddColumn(!selectAlgorithmSection.isVSRMode());
         matchAndSurvivorKeySection.createContent();
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
@@ -216,7 +196,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     private void createMatchingKeySection(Composite mainComp) {
         matchingKeyDefinitionSection = new MatchKeyDefinitionSection(form, mainComp, toolkit);
-        matchingKeyDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+        matchingKeyDefinitionSection.setMatchRuleDef(getCurrentModelElement());
         matchingKeyDefinitionSection.setAddColumn(!selectAlgorithmSection.isVSRMode());
         matchingKeyDefinitionSection.createContent();
         matchingKeyDefinitionSection.addPropertyChangeListener(this);
@@ -232,7 +212,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      * 
      * private void createSurvivorshipSection(Composite mainComp) { survivorshipDefinitionSection = new
      * SurvivorshipDefinitionSection(form, mainComp, toolkit);
-     * survivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+     * survivorshipDefinitionSection.setMatchRuleDef(getCurrentModelElement());
      * survivorshipDefinitionSection.createContent(); survivorshipDefinitionSection.addPropertyChangeListener(this);
      * survivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
      * survivorshipDefinitionSection.getSection().setExpanded(true); }
@@ -240,7 +220,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     private void createDefaultSurvivorshipSection(Composite mainComp) {
         defaultSurvivorshipDefinitionSection = new DefaultSurvivorshipDefinitionSection(form, mainComp, toolkit);
-        defaultSurvivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+        defaultSurvivorshipDefinitionSection.setMatchRuleDef(getCurrentModelElement());
         defaultSurvivorshipDefinitionSection.createContent();
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
@@ -255,7 +235,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     private void createGenerationOfBlockingKeySection(Composite mainComp) {
         blockingKeyDefinitionSection = new BlockingKeyDefinitionSection(form, mainComp, toolkit);
-        blockingKeyDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+        blockingKeyDefinitionSection.setMatchRuleDef(getCurrentModelElement());
         blockingKeyDefinitionSection.createContent();
         blockingKeyDefinitionSection.addPropertyChangeListener(this);
         blockingKeyDefinitionSection.changeSectionDisStatus(selectAlgorithmSection.isVSRMode());
@@ -270,7 +250,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     private void createSelectRecordLinkageSection(Composite mainComp) {
         selectAlgorithmSection = new SelectAlgorithmSection(form, mainComp, toolkit);
-        selectAlgorithmSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+        selectAlgorithmSection.setMatchRuleDef(getCurrentModelElement());
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
         selectAlgorithmSection.getSection().setExpanded(true);
@@ -313,16 +293,13 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     }
 
     private boolean handleRenameEvent() {
-        String oldName = ((MatchRuleDefinition) getCurrentModelElement(getEditor())).getName();
+        String oldName = (getCurrentModelElement()).getName();
         String newName = nameText.getText();
         if (oldName != null && newName != null && !oldName.equals(newName)) {
             IMatchRuleChangeService changeService = getMatchRuleChangeService();
-            if (changeService == null) {
-                return true;
-            } else {
-                boolean isOk = changeService.objectChange((MatchRuleDefinition) getCurrentModelElement(getEditor()), oldName,
-                        newName, IMatchRuleChangeService.ChangeEvent.BEFORE_RENAME);
-                return isOk;
+            if (changeService != null) {
+                return changeService.objectChange(getCurrentModelElement(), oldName, newName,
+                        IMatchRuleChangeService.ChangeEvent.BEFORE_RENAME);
             }
         }
         return true;
@@ -334,26 +311,62 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      * @return
      */
     private boolean saveMatchRule() {
+        // algorithm
+        getCurrentModelElement().setRecordLinkageAlgorithm(selectAlgorithmSection.getAlgorithmName());
 
-        MatchRuleDefinition saveModelElement = (MatchRuleDefinition) getCurrentModelElement(this.getEditor());
-        // // algorithm
-        saveModelElement.setRecordLinkageAlgorithm(selectAlgorithmSection.getAlgorithmName());
-
-        ReturnCode rc = ElementWriterFactory.getInstance().createdMatchRuleWriter().save(getInputItem(), Boolean.FALSE);
-        if (!rc.isOk()) {
-            return false;
-        }
-        return true;
+        TDQMatchRuleItem matchRuleItem = (TDQMatchRuleItem) getCurrentRepNode().getObject().getProperty().getItem();
+        ReturnCode rc = ElementWriterFactory.getInstance().createdMatchRuleWriter().save(matchRuleItem, Boolean.FALSE);
+        return rc.isOk();
     }
 
-    private TDQMatchRuleItem getInputItem() {
-        MatchRuleItemEditorInput matchRuleEditorInput = getMatchRuleEditorInput();
-        if (matchRuleEditorInput == null) {
-            return null;
-        }
-        Item item = matchRuleEditorInput.getItem();
-        if (item != null) {
-            return (TDQMatchRuleItem) item;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
+     */
+    @Override
+    public MatchRuleDefinition getCurrentModelElement() {
+        return (MatchRuleDefinition) ruleRepNode.getRule();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
+     */
+    @Override
+    public RuleRepNode getCurrentRepNode() {
+        return ruleRepNode;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
+     */
+    @Override
+    protected void init(FormEditor editor) {
+        currentEditor = (DQRuleEditor) editor;
+        ruleRepNode = getMatchRuleRepNodeFromInput(currentEditor.getEditorInput());
+    }
+
+    /**
+     * get PatternRepNode From editorInput
+     * 
+     * @param editorInput
+     * @return
+     */
+    private RuleRepNode getMatchRuleRepNodeFromInput(IEditorInput editorInput) {
+        if (editorInput instanceof FileEditorInput) {
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+            IFile file = fileEditorInput.getFile();
+            if (file != null) {
+                MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
+                matchRuleDefinition = (MatchRuleDefinition) EObjectHelper.resolveObject(matchRuleDefinition);
+                return RepositoryNodeHelper.recursiveFindMatcherRule(matchRuleDefinition);
+            }
+        } else if (editorInput instanceof BusinessRuleItemEditorInput) {
+            return ((BusinessRuleItemEditorInput) editorInput).getRepNode();
         }
         return null;
     }

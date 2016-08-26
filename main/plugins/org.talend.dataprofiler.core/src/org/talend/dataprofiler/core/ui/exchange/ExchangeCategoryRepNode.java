@@ -90,6 +90,5 @@ public class ExchangeCategoryRepNode extends DQRepositoryNode {
             }
         }
         return filterResultsIfAny(list);
-        // return list;
     }
 }

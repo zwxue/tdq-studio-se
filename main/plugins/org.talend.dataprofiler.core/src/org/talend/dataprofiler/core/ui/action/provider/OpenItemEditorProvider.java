@@ -13,9 +13,8 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * 
@@ -32,9 +31,9 @@ public class OpenItemEditorProvider extends AbstractCommonActionProvider {
         if (!isSelectionSameType()) {
             return;
         }
-        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
-        if (obj instanceof IRepositoryViewObject) {
-            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject) obj);
+        IRepositoryNode firstRepositoryNode = getFirstRepositoryNode();
+        if (firstRepositoryNode != null) {
+            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(firstRepositoryNode);
             menu.add(openItemEditorAction);
         }
     }

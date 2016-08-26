@@ -23,7 +23,6 @@ import org.talend.core.database.conn.ConnParameterKeys;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -74,15 +73,12 @@ public class ConnectionEditor extends CommonFormEditor {
     private void refreshHadoopCluster() {
         // TDQ-10717: fix a ClassCastException: the editor input can be org.eclipse.ui.part.FileEditorInput type
         if (getEditorInput() instanceof AbstractItemEditorInput) {
-            Item item = ((AbstractItemEditorInput) getEditorInput()).getItem();
-            if (item instanceof DatabaseConnectionItem) {
-                String hadoopClusterId = ((DatabaseConnection) ((DatabaseConnectionItem) item).getConnection()).getParameters()
-                        .get(ConnParameterKeys.CONN_PARA_KEY_HADOOP_CLUSTER_ID);
-                if (hadoopClusterId != null) {
-                    IRepositoryNode rootNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.HADOOP_CLUSTER);
-                    if (rootNode != null) {
-                        CorePlugin.getDefault().refreshDQView(rootNode);
-                    }
+            String hadoopClusterId = ((DatabaseConnection) ((AbstractItemEditorInput) getEditorInput()).getModel())
+                    .getParameters().get(ConnParameterKeys.CONN_PARA_KEY_HADOOP_CLUSTER_ID);
+            if (hadoopClusterId != null) {
+                IRepositoryNode rootNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.HADOOP_CLUSTER);
+                if (rootNode != null) {
+                    CorePlugin.getDefault().refreshDQView(rootNode);
                 }
             }
         }
@@ -94,7 +90,7 @@ public class ConnectionEditor extends CommonFormEditor {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
             // MOD qiongli 2012-11-29 avoid item is proxy(get item form IRepositoryViewObject).
-            ConnectionRepNode connectionRepNode = ((ConnectionInfoPage) getMasterPage()).getConnectionRepNode();
+            ConnectionRepNode connectionRepNode = ((ConnectionInfoPage) getMasterPage()).getCurrentRepNode();
             if (connectionRepNode != null && connectionRepNode instanceof DBConnectionRepNode) {
                 IRepositoryViewObject object = connectionRepNode.getObject();
                 if (object != null) {
@@ -115,7 +111,7 @@ public class ConnectionEditor extends CommonFormEditor {
                 }
             }
         }
-        setEditorObject(((ConnectionInfoPage) getMasterPage()).getConnectionRepNode());
+        setEditorObject(((ConnectionInfoPage) getMasterPage()).getCurrentRepNode());
         super.doSave(monitor);
     }
 

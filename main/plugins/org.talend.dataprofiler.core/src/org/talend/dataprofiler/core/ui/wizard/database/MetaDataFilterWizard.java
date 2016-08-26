@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.DatabaseConnectionItem;
-import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
@@ -25,6 +24,7 @@ import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.ProjectManager;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -113,8 +113,16 @@ public class MetaDataFilterWizard extends AbstractWizard {
         this.metaDataFilterWizardPage.setDescription(DefaultMessagesImpl.getString("MetaDataFilterWizard.PackageFilterDesc")); //$NON-NLS-1$
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
+     * )
+     */
     @Override
-    public void openEditor(Item item) {
+    public void openEditor(IRepositoryNode repNode) {
+        // do nothing here until now
     }
 
     public DatabaseConnectionItem getDatabaseConnectionItem() {

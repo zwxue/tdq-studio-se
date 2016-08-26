@@ -15,14 +15,12 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC jet this is wizard for create new Function Dependency Analysis.
@@ -40,19 +38,6 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
         super(parameter);
     }
 
-    // private IStructuredSelection initalSelection = null;
-    // private TableAnalysisDPSelectionPage tableAnalysisDPSelectionPage = null;
-    // private DQRuleSelectPage dqruleSelectPage = null;
-
-    private TableAnalysisMetadataWizardPage analysisMetadataWizardPage = null;
-
-    @Override
-    public ModelElement initCWMResourceBuilder() {
-        Analysis analysis = (Analysis) super.initCWMResourceBuilder();
-
-        return analysis;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -60,25 +45,25 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
      * org.eclipse.jface.viewers.IStructuredSelection)
      */
     public void init(IWorkbench workbench, IStructuredSelection selection) {
-        // initalSelection = selection;
         setHelpAvailable(true);
         setWindowTitle("Just a test"); //$NON-NLS-1$
     }
 
     @Override
     public void addPages() {
-        analysisMetadataWizardPage = new TableAnalysisMetadataWizardPage();
-        this.addPage(analysisMetadataWizardPage);
+        this.addPage(new TableAnalysisMetadataWizardPage());
     }
 
     /*
-     * (non-Jsdoc)
+     * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.core.model.properties.Item)
+     * @see
+     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
+     * )
      */
     @Override
-    public void openEditor(Item item) {
-        AnalysisItemEditorInput itemEditorInput = new AnalysisItemEditorInput(item);
+    public void openEditor(IRepositoryNode repNode) {
+        AnalysisItemEditorInput itemEditorInput = new AnalysisItemEditorInput(repNode);
         CorePlugin.getDefault().openEditor(itemEditorInput, AnalysisEditor.class.getName());
     }
 }

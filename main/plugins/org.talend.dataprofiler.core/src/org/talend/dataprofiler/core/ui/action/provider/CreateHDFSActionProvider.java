@@ -41,7 +41,7 @@ public class CreateHDFSActionProvider extends AbstractCommonActionProvider {
         }
 
         // MOD gdbu 2011-4-1 bug 20051
-        RepositoryNode node = (RepositoryNode) getFistContextNode();
+        RepositoryNode node = (RepositoryNode) getFirstRepositoryNode();
 
         if (node != null) {
             // ~20051

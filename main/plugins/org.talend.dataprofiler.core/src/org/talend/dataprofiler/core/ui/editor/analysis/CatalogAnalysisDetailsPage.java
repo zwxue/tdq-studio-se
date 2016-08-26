@@ -56,7 +56,7 @@ public class CatalogAnalysisDetailsPage extends AbstractFilterMetadataPage {
      */
     @Override
     protected void fillDataProvider() {
-        EList<ModelElement> analysedElements = this.analysisItem.getAnalysis().getContext().getAnalysedElements();
+        EList<ModelElement> analysedElements = getCurrentModelElement().getContext().getAnalysedElements();
         tdDataProvider = null;
         if (analysedElements.size() > 0) {
             ModelElement modelElement = analysedElements.get(0);
@@ -72,9 +72,9 @@ public class CatalogAnalysisDetailsPage extends AbstractFilterMetadataPage {
     @Override
     protected List<OverviewIndUIElement> getCatalogIndicators() {
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
-        EList<Indicator> indicators = analysisItem.getAnalysis().getResults().getIndicators();
+        EList<Indicator> indicators = getCurrentModelElement().getResults().getIndicators();
         catalogIndicatorList.clear();
-        IRepositoryNode connNode = getCurrentRepNodeOnUI();
+        IRepositoryNode connNode = getCurrentConnectionRepNode();
         for (Indicator indicator : indicators) {
             if (connNode != null) {
                 for (IRepositoryNode catalogNode : connNode.getChildren()) {
@@ -97,7 +97,7 @@ public class CatalogAnalysisDetailsPage extends AbstractFilterMetadataPage {
     @Override
     protected List<Catalog> getCatalogs() {
         catalogs.clear();
-        EList<ModelElement> analysedElements = this.analysisItem.getAnalysis().getContext().getAnalysedElements();
+        EList<ModelElement> analysedElements = getCurrentModelElement().getContext().getAnalysedElements();
         for (ModelElement element : analysedElements) {
             catalogs.add((Catalog) element);
         }

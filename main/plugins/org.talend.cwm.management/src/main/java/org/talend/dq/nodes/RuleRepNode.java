@@ -28,30 +28,29 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class RuleRepNode extends DQRepositoryNode {
 
-    private IndicatorDefinition rule;
-
-    public IndicatorDefinition getRule() {
-        return this.rule;
-    }
-
     /**
-     * DOC klliu RuleRepNOde constructor comment.
+     * RuleRepNode constructor.
      *
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
      */
     public RuleRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
-        if (object != null && object.getProperty() != null) {
-            Item item = object.getProperty().getItem();
+    }
+
+    public IndicatorDefinition getRule() {
+        if (getObject() != null && getObject().getProperty() != null) {
+            Item item = getObject().getProperty().getItem();
             if (item != null && item instanceof TDQBusinessRuleItem) {
-                this.rule = ((TDQBusinessRuleItem) item).getDqrule();
+                return ((TDQBusinessRuleItem) item).getDqrule();
             } else if (item != null && item instanceof TDQMatchRuleItem) {
-                this.rule = ((TDQMatchRuleItem) item).getMatchRule();
+                return ((TDQMatchRuleItem) item).getMatchRule();
             }
         }
+        return null;
     }
 
     @Override

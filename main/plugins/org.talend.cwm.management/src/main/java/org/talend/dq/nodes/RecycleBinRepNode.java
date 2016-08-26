@@ -45,11 +45,10 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     private static Logger log = Logger.getLogger(RecycleBinRepNode.class);
 
     /**
-     * DOC klliu RecyleBinRepNode constructor comment.
+     * RecyleBinRepNode constructor.
      * 
-     * @param object
-     * @param parent
-     * @param type
+     * @param label
+     * @param inWhichProject
      */
     public RecycleBinRepNode(String label, org.talend.core.model.general.Project inWhichProject) {
         super(null, null, ENodeType.STABLE_SYSTEM_FOLDER, inWhichProject);
@@ -150,7 +149,6 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     }
 
     public boolean isTDQOrMetadataRootFolder(FolderItem folderItem) {
-
         String path = getFullFolderPath(folderItem, PluginConstant.EMPTY_STRING);
         if (path != null && (path.startsWith("TDQ") || path.startsWith("metadata"))) { //$NON-NLS-1$ //$NON-NLS-2$
             return true;

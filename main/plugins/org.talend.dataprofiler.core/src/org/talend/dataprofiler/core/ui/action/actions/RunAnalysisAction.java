@@ -17,7 +17,6 @@ import java.text.DecimalFormat;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -71,7 +70,6 @@ import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -91,51 +89,28 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private IRuningStatusListener listener;
 
-    @Deprecated
-    private IFile selectionFile;// no one used
-
+    /**
+     * Important: keep using the Item, no need to used AnalysisRepNode in this class, remember this!!!
+     * 
+     */
     private TDQAnalysisItem item;
 
     private boolean isNeedUnlock = false;
 
-    @SuppressWarnings("unused")
-    @Deprecated
-    private AnalysisRepNode node;// no need to used
-
-    @Deprecated
-    public IFile getSelectionFile() {
-        return selectionFile;
-    }
-
-    @Deprecated
-    public void setSelectionFile(IFile selectionFile) {
-        this.selectionFile = selectionFile;
-    }
-
-    @Deprecated
-    public void setSelectionNode(AnalysisRepNode node) {
-        this.node = node;
-    }
-
     /**
-     * DOC yyin Comment method "setAnalysisItem".
-     * 
-     * @param item2
+     * RunAnalysisAction constructor.
      */
+    public RunAnalysisAction() {
+        super(DefaultMessagesImpl.getString("RunAnalysisAction.Run")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.RUN_IMAGE));
+    }
+
     public void setAnalysisItem(TDQAnalysisItem item) {
         this.item = item;
     }
 
     public void setListener(IRuningStatusListener listener) {
         this.listener = listener;
-    }
-
-    /**
-     * constructor.
-     */
-    public RunAnalysisAction() {
-        super(DefaultMessagesImpl.getString("RunAnalysisAction.Run")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.RUN_IMAGE));
     }
 
     /*
@@ -301,7 +276,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
     }
 
-    // only sql mode, and column, table, dependency analysis support dynamic chart now
+    /**
+     * only sql mode, and column, table, dependency analysis support dynamic chart now.
+     * 
+     * @return boolean
+     */
     private boolean isSupportDynamicChart() {
         ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(this.item.getAnalysis());
         if (ExecutionLanguage.SQL.equals(executionEngine)) {
@@ -335,7 +314,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     private void addAnalysisToRef(Analysis analysis) {
-
         ISemanticStudioService service = CorePlugin.getDefault().getSemanticStudioService();
         if (service != null) {
             service.enrichOntRepoWithAnalysisResult(analysis);
@@ -423,9 +401,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     private void validateAnalysis() throws BusinessException {
         if (item.getAnalysis() == null || item.getAnalysis().getParameters() == null) {
-            BusinessException createBusinessException = ExceptionFactory.getInstance()
-                    .createBusinessException(item.getFilename());
-            throw createBusinessException;
+            throw ExceptionFactory.getInstance().createBusinessException(item.getFilename());
         }
 
         try {
@@ -437,14 +413,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$
             throw businessException;
         }
-
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
-     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
+     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[], org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
         // ADD mzhao 2009-02-03 If there is no active editor opened, run

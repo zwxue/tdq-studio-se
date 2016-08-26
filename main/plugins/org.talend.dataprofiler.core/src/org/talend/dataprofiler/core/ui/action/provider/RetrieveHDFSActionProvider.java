@@ -37,7 +37,7 @@ public class RetrieveHDFSActionProvider extends AbstractCommonActionProvider {
 
         super.fillContextMenu(menu);
 
-        IRepositoryNode node = getFistContextNode();
+        IRepositoryNode node = getFirstRepositoryNode();
 
         if (node != null) {
             if (node instanceof HDFSOfHCConnectionNode) {

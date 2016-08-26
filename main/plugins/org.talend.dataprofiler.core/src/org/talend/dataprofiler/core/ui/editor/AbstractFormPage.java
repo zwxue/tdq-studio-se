@@ -52,7 +52,6 @@ public abstract class AbstractFormPage extends FormPage {
     public AbstractFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         this.toolkit = this.getEditor().getToolkit();
-        this.currentEditor = (CommonFormEditor) editor;
         this.expandCompositeList = new ArrayList<ExpandableComposite>();
     }
 

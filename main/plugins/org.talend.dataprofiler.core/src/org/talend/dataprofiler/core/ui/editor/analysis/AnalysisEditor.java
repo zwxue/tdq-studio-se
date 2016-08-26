@@ -46,10 +46,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -167,11 +164,8 @@ public class AnalysisEditor extends SupportContextEditor {
                 initContext();
                 // Added 20130930 TDQ-8117, yyin
                 // init the run analysis action, to give it the analysis item and listener
-                AnalysisRepNode analysisRepNode = getMasterPage().getAnalysisRepNode();
-                if (analysisRepNode != null) {
-                    TDQAnalysisItem item = (TDQAnalysisItem) analysisRepNode.getObject().getProperty().getItem();
-                    this.runAction.setAnalysisItem(item);
-                }
+                this.runAction.setAnalysisItem((TDQAnalysisItem) getMasterPage().getCurrentRepNode().getObject().getProperty()
+                        .getItem());
             }
 
             if (resultPage != null) {
@@ -190,7 +184,7 @@ public class AnalysisEditor extends SupportContextEditor {
      * init the context for the analysis.
      */
     private void initContext() {
-        Analysis analysis = getMasterPage().getAnalysis();
+        Analysis analysis = getMasterPage().getCurrentModelElement();
         contextManager = new JobContextManager(analysis.getContextType(), analysis.getDefaultContext());
         this.setLastRunContextGroupName(AnalysisHelper.getContextGroupName(analysis));
     }
@@ -211,7 +205,7 @@ public class AnalysisEditor extends SupportContextEditor {
             }
 
         }
-        setEditorObject(getMasterPage().getAnalysisRepNode());
+        setEditorObject(getMasterPage().getCurrentRepNode());
         super.doSave(monitor);
 
     }
@@ -219,7 +213,6 @@ public class AnalysisEditor extends SupportContextEditor {
     @Override
     protected void firePropertyChange(final int propertyId) {
         if (masterPage.isActive()) {
-            // setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
             setRunActionButtonState(true);
         }
         // MOD klliu 2011-04-08 if masterPage is dirty,then button of SaveAction can been used.
@@ -234,9 +227,8 @@ public class AnalysisEditor extends SupportContextEditor {
         String label = "";//$NON-NLS-1$
         if (input instanceof AnalysisItemEditorInput) {
             AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) input;
-            TDQAnalysisItem tdqAnalysisItem = fileEditorInput.getTDQAnalysisItem();
-            findAnalysis = tdqAnalysisItem.getAnalysis();
-            label = tdqAnalysisItem.getProperty().getLabel();
+            findAnalysis = (Analysis) fileEditorInput.getModel();
+            label = fileEditorInput.getName();
         } else if (input instanceof FileEditorInput) {
             FileEditorInput fileEditorInput = (FileEditorInput) input;
             IFile file = fileEditorInput.getFile();
@@ -301,8 +293,7 @@ public class AnalysisEditor extends SupportContextEditor {
     public void performGlobalAction(String id) {
         if (id.equals(RunAnalysisAction.ID)) {
             // TDQ-10748: make the ref project analysis can not run when press F6
-            DQRepositoryNode node = RepositoryNodeHelper.recursiveFind(this.getMasterPage().getAnalysis());
-            if (node.getProject().isMainProject()) {
+            if (this.getMasterPage().getCurrentRepNode().getProject().isMainProject()) {
                 runAction.run();
             }
             // TDQ-10748~
@@ -443,7 +434,7 @@ public class AnalysisEditor extends SupportContextEditor {
                 return true;
             }
         };
-        EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
+        EventManager.getInstance().register(getMasterPage().getCurrentModelElement(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
                 checkBeforeRunReceiver);
 
         // register: refresh the result page after running it from menu
@@ -461,7 +452,8 @@ public class AnalysisEditor extends SupportContextEditor {
                 return true;
             }
         };
-        EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
+        EventManager.getInstance().register(getMasterPage().getCurrentModelElement(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU,
+                refreshReceiver);
 
         // register: reopen this editor after reload its depended connection
         reopenEditor = new EventReceiver() {
@@ -471,7 +463,7 @@ public class AnalysisEditor extends SupportContextEditor {
                 Display.getDefault().asyncExec(new Runnable() {
 
                     public void run() {
-                        WorkbenchUtils.refreshCurrentAnalysisEditor(getMasterPage().getAnalysis().getName());
+                        WorkbenchUtils.refreshCurrentAnalysisEditor(getMasterPage().getCurrentModelElement().getName());
                     }
 
                 });
@@ -479,8 +471,8 @@ public class AnalysisEditor extends SupportContextEditor {
                 return true;
             }
         };
-        EventManager.getInstance().register(getMasterPage().getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
-                reopenEditor);
+        EventManager.getInstance().register(getMasterPage().getCurrentModelElement().getName(),
+                EventEnum.DQ_ANALYSIS_REOPEN_EDITOR, reopenEditor);
 
         // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show
         // all match indicator in the Indicators section.
@@ -494,8 +486,8 @@ public class AnalysisEditor extends SupportContextEditor {
                     return true;
                 }
             };
-            EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
-                    refresh2ShowMatchIndicator);
+            EventManager.getInstance().register(getMasterPage().getCurrentModelElement(),
+                    EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, refresh2ShowMatchIndicator);
         }
         // TDQ-8860~
 
@@ -520,8 +512,8 @@ public class AnalysisEditor extends SupportContextEditor {
                     return true;
                 }
             };
-            EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
-                    registerDynamicEvent);
+            EventManager.getInstance().register(getMasterPage().getCurrentModelElement(),
+                    EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, registerDynamicEvent);
 
             unRegisterDynamicEvent = new EventReceiver() {
 
@@ -542,8 +534,8 @@ public class AnalysisEditor extends SupportContextEditor {
                     return true;
                 }
             };
-            EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART,
-                    unRegisterDynamicEvent);
+            EventManager.getInstance().register(getMasterPage().getCurrentModelElement(),
+                    EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, unRegisterDynamicEvent);
 
         }
     }
@@ -553,20 +545,24 @@ public class AnalysisEditor extends SupportContextEditor {
      */
     @Override
     public void dispose() {
-        EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN);
-        EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU);
-        EventManager.getInstance().clearEvent(getMasterPage().getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR);
+        EventManager.getInstance().clearEvent(getMasterPage().getCurrentModelElement(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN);
+        EventManager.getInstance().clearEvent(getMasterPage().getCurrentModelElement(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU);
+        EventManager.getInstance().clearEvent(getMasterPage().getCurrentModelElement().getName(),
+                EventEnum.DQ_ANALYSIS_REOPEN_EDITOR);
 
         // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show
         // all match indicator in the Indicators section.
         if (analysisType.equals(AnalysisType.COLUMN_SET)) {
-            EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS);
+            EventManager.getInstance().clearEvent(getMasterPage().getCurrentModelElement(),
+                    EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS);
         }
         // TDQ-8860~
         // Added TDQ8787 2014-06-16 yyin: for dynamic chart, unregister the create all chart event
         if (masterPage instanceof DynamicAnalysisMasterPage) {
-            EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART);
-            EventManager.getInstance().clearEvent(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART);
+            EventManager.getInstance().clearEvent(getMasterPage().getCurrentModelElement(),
+                    EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART);
+            EventManager.getInstance().clearEvent(getMasterPage().getCurrentModelElement(),
+                    EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART);
         }// ~
 
         super.dispose();

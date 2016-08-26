@@ -12,27 +12,35 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import org.talend.core.model.properties.Item;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC klliu Analysis editor input.
  */
 public class AnalysisItemEditorInput extends AbstractItemEditorInput {
 
-    private TDQAnalysisItem item = null;
+    private AnalysisRepNode anaRepNode;
 
     private IRepositoryNode connectionNode;
+
+    /**
+     * AnalysisItemEditorInput constructor.
+     * 
+     * @param anaRepNode
+     */
+    public AnalysisItemEditorInput(IRepositoryNode anaRepNode) {
+        super(anaRepNode);
+    }
 
     public IRepositoryNode getConnectionNode() {
         // MOD mzhao bug 19244, when connection node wasn't set before, find it from analysis.
         if (connectionNode == null) {
-            DataManager connection = item.getAnalysis().getContext().getConnection();
+            DataManager connection = anaRepNode.getAnalysis().getContext().getConnection();
             if (connection != null) {
                 connectionNode = RepositoryNodeHelper.recursiveFind(connection);
             }
@@ -44,35 +52,34 @@ public class AnalysisItemEditorInput extends AbstractItemEditorInput {
         this.connectionNode = connectionNode;
     }
 
-    /**
-     * DOC klliu AnalysisItemEditorInput constructor comment.
+    /*
+     * (non-Javadoc)
      * 
-     * @param reposViewObj
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getRepNode()
      */
-    public AnalysisItemEditorInput(Item item) {
-        super(item);
-        this.item = (TDQAnalysisItem) item;
-
-    }
-
     @Override
-    public String getName() {
-        return getPath() + item.getAnalysis().getName();
+    public AnalysisRepNode getRepNode() {
+        return anaRepNode;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getModelOfRepNode()
+     */
     @Override
-    public String getToolTipText() {
-        return getPath() + item.getAnalysis().getName();
+    public ModelElement getModel() {
+        return anaRepNode.getAnalysis();
     }
 
-    public TDQAnalysisItem getTDQAnalysisItem() {
-        return item;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#setRepNode(org.talend.repository.model.IRepositoryNode)
+     */
+    @Override
+    public void setRepNode(IRepositoryNode node) {
+        this.anaRepNode = (AnalysisRepNode) node;
     }
 
-    public String getModelElementUuid() {
-        if (this.item != null) {
-            return ResourceHelper.getUUID(this.item.getAnalysis());
-        }
-        return super.getModelElementUuid();
-    }
 }

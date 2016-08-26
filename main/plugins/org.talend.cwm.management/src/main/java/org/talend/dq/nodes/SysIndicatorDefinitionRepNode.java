@@ -14,7 +14,6 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
@@ -31,29 +30,21 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
 
     boolean isSystemIndicator = false;
 
-    private IndicatorDefinition indicatorDefinition;
-
-    public IndicatorDefinition getIndicatorDefinition() {
-        return this.indicatorDefinition;
-    }
-
     /**
-     * DOC klliu IndicatorDefinitionRepNode constructor comment.
+     * IndicatorDefinitionRepNode constructor.
      * 
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
      */
     public SysIndicatorDefinitionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
-        Property property = object.getProperty();
-        if (property != null) {
-            Item item = property.getItem();
-            if (item != null && item instanceof TDQIndicatorDefinitionItem) {
-                this.indicatorDefinition = ((TDQIndicatorDefinitionItem) item).getIndicatorDefinition();
-            }
-        }
+    }
+
+    public IndicatorDefinition getIndicatorDefinition() {
+        return ((TDQIndicatorDefinitionItem) this.getObject().getProperty().getItem()).getIndicatorDefinition();
     }
 
     public void setSystemIndicator(boolean isSystemIndicator) {

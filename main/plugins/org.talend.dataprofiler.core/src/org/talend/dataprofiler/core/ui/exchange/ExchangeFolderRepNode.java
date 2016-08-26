@@ -34,11 +34,12 @@ import org.talend.repository.model.RepositoryNode;
 public class ExchangeFolderRepNode extends DQRepositoryNode {
 
     /**
-     * constructor.
+     * ExchangeFolderRepNode constructor.
      * 
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
      */
     public ExchangeFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {

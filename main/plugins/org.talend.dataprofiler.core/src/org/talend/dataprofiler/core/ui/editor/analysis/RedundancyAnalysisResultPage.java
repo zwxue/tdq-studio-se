@@ -378,7 +378,7 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
                 public void handleEvent(Event event) {
 
                     RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
-                    rowMatchExplorer.setAnalysis(masterPage.analysisItem.getAnalysis());
+                    rowMatchExplorer.setAnalysis(masterPage.getCurrentModelElement());
                     rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                     String query = rowMatchExplorer.getRowsMatchStatement();
@@ -401,7 +401,7 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
             public void handleEvent(Event event) {
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
-                rowMatchExplorer.setAnalysis(masterPage.analysisItem.getAnalysis());
+                rowMatchExplorer.setAnalysis(masterPage.getCurrentModelElement());
                 rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                 String query = rowMatchExplorer.getRowsNotMatchStatement();
@@ -417,7 +417,7 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
 
                 // MOD 10913 zshen:unify the method that get sql query
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
-                rowMatchExplorer.setAnalysis(masterPage.analysisItem.getAnalysis());
+                rowMatchExplorer.setAnalysis(masterPage.getCurrentModelElement());
                 rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                 String query = rowMatchExplorer.getAllRowsStatement();
