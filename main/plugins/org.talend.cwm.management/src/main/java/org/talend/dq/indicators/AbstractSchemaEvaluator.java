@@ -664,9 +664,10 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (schemasName.isEmpty()) {
             Collection<Schema> schemas = new ArrayList<Schema>();
             try {
-                schemas = ListUtils.castList(Schema.class,
-                        MetadataFillFactory.getDBInstance(getDataManager())
-                                .fillSchemas(null, getConnection().getMetaData(), null));
+                schemas = ListUtils.castList(
+                        Schema.class,
+                        MetadataFillFactory.getDBInstance(getDataManager()).fillSchemas(getDataManager(),
+                                getConnection().getMetaData(), null));
             } catch (SQLException e) {
                 log.error(e, e);
             }
