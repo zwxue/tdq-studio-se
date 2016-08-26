@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
@@ -33,6 +32,7 @@ import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.UDIndicatorBuilder;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -153,9 +153,14 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.repository.model.IRepositoryNode)
+     */
     @Override
-    public void openEditor(Item item) {
-        IndicatorDefinitionItemEditorInput udiEditorInput = new IndicatorDefinitionItemEditorInput(item);
+    public void openEditor(IRepositoryNode repNode) {
+        IndicatorDefinitionItemEditorInput udiEditorInput = new IndicatorDefinitionItemEditorInput(repNode);
         CorePlugin.getDefault().openEditor(udiEditorInput, IndicatorEditor.class.getName());
     }
 }

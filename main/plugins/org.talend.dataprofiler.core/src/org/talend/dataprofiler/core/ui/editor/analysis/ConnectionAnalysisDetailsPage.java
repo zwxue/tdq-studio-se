@@ -48,12 +48,12 @@ public class ConnectionAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     @Override
     protected void fillDataProvider() {
-        connectionNode = (ConnectionRepNode) getCurrentRepNodeOnUI();
+        connectionNode = (ConnectionRepNode) getCurrentConnectionRepNode();
         if (connectionNode != null) {
             ConnectionItem item = (ConnectionItem) connectionNode.getObject().getProperty().getItem();
             tdDataProvider = item.getConnection();
         } else {
-            EList<ModelElement> analysedElements = this.analysisItem.getAnalysis().getContext().getAnalysedElements();
+            EList<ModelElement> analysedElements = getCurrentModelElement().getContext().getAnalysedElements();
             tdDataProvider = null;
             if (analysedElements.size() > 0) {
                 tdDataProvider = (Connection) analysedElements.get(0);
@@ -70,21 +70,24 @@ public class ConnectionAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     @Override
     public List<OverviewIndUIElement> getSchemaIndicators() {
-        ConnectionIndicator conIndicator = (ConnectionIndicator) analysisItem.getAnalysis().getResults().getIndicators().get(0);
+        ConnectionIndicator conIndicator = (ConnectionIndicator) getCurrentModelElement().getResults().getIndicators().get(0);
         Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
         EList<SchemaIndicator> schemaIndicators = conIndicator.getSchemaIndicators();
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
         RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(analyzedElement);
         for (Indicator indicator : schemaIndicators) {
-            for (IRepositoryNode schemaNode : connNode.getChildren()) {
-                String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema());
-                String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
-                if (nodeUuid.equals(anaUuid)) {
-                    OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
-                    cataUIEle.setNode(schemaNode);
-                    cataUIEle.setOverviewIndicator(indicator);
-                    cataUIEleList.add(cataUIEle);
-                    break;
+            if (connNode != null) {
+                for (IRepositoryNode schemaNode : connNode.getChildren()) {
+                    String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject) schemaNode.getObject())
+                            .getSchema());
+                    String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+                    if (nodeUuid.equals(anaUuid)) {
+                        OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+                        cataUIEle.setNode(schemaNode);
+                        cataUIEle.setOverviewIndicator(indicator);
+                        cataUIEleList.add(cataUIEle);
+                        break;
+                    }
                 }
             }
         }
@@ -93,7 +96,7 @@ public class ConnectionAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     @Override
     public List<OverviewIndUIElement> getCatalogIndicators() {
-        ConnectionIndicator conIndicator = (ConnectionIndicator) analysisItem.getAnalysis().getResults().getIndicators().get(0);
+        ConnectionIndicator conIndicator = (ConnectionIndicator) getCurrentModelElement().getResults().getIndicators().get(0);
         Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
         EList<CatalogIndicator> catalogIndicators = conIndicator.getCatalogIndicators();
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
@@ -105,8 +108,7 @@ public class ConnectionAnalysisDetailsPage extends AbstractFilterMetadataPage {
                     String connUuid = ResourceHelper.getUUID(catalog);
                     String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
 
-                    boolean equals = connUuid.equals(anaUuid);
-                    if (equals) {
+                    if (connUuid.equals(anaUuid)) {
                         OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
                         cataUIEle.setNode(catalogNode);
                         cataUIEle.setOverviewIndicator(indicator);

@@ -27,9 +27,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
-import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
@@ -46,10 +44,7 @@ public class DQRuleEditor extends CommonFormEditor {
 
     private static final String ID = "DQRuleEditor.masterPage";//$NON-NLS-1$
 
-    // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
-
-    // ~
 
     @Override
     protected void addPages() {
@@ -94,23 +89,16 @@ public class DQRuleEditor extends CommonFormEditor {
      */
     private ModelElement getCurrentModelElement() {
         IEditorInput editorInput = this.getEditorInput();
-        ModelElement ruleElement = null;
-
-        if (editorInput instanceof ParserRuleItemEditorInput) {
-            ruleElement = ((ParserRuleItemEditorInput) editorInput).getTDQBusinessRuleItem().getDqrule();
-        } else if (editorInput instanceof FileEditorInput) {
+        if (editorInput instanceof FileEditorInput) {
             FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
             IFile file = fileEditorInput.getFile();
             if (FactoriesUtil.isDQRuleFile(file.getFileExtension())) {
-                ruleElement = DQRuleResourceFileHelper.getInstance().findIndicatorDefinition(file);
+                return DQRuleResourceFileHelper.getInstance().findIndicatorDefinition(file);
             }
-
         } else if (editorInput instanceof BusinessRuleItemEditorInput) {
-            ruleElement = ((BusinessRuleItemEditorInput) editorInput).getTDQBusinessRuleItem().getDqrule();
-        } else if (editorInput instanceof MatchRuleItemEditorInput) {
-            ruleElement = ((MatchRuleItemEditorInput) editorInput).getMatchRule();
+            return ((BusinessRuleItemEditorInput) editorInput).getModel();
         }
-        return ruleElement;
+        return null;
     }
 
     @Override
@@ -120,13 +108,13 @@ public class DQRuleEditor extends CommonFormEditor {
                 masterPage.doSave(monitor);
                 setPartName(masterPage.getIntactElemenetName());
             }
-            setEditorObject(((DQRuleMasterDetailsPage) getMasterPage()).getRuleRepNode());
+            setEditorObject(((DQRuleMasterDetailsPage) getMasterPage()).getCurrentRepNode());
         } else if (parserPage != null) {
             if (parserPage.isDirty()) {
                 parserPage.doSave(monitor);
                 setPartName(parserPage.getIntactElemenetName());
             }
-            setEditorObject(parserPage.getRuleRepNode());
+            setEditorObject(parserPage.getCurrentRepNode());
         } else if (matchPage != null) {
             if (matchPage.isDirty()) {
                 matchPage.doSave(monitor);

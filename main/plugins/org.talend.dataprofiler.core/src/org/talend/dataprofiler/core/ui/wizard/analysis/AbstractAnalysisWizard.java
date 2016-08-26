@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
@@ -22,7 +21,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
@@ -86,14 +84,19 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
         return analysisBuilder;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.repository.model.IRepositoryNode)
+     */
     @Override
-    public void openEditor(Item item) {
+    public void openEditor(IRepositoryNode repNode) {
         String editorID = null;
-        AnalysisItemEditorInput analysisEditorInput = new AnalysisItemEditorInput(item);
+        AnalysisItemEditorInput analysisEditorInput = new AnalysisItemEditorInput(repNode);
         IRepositoryNode connectionRepNode = getParameter().getConnectionRepNode();
         analysisEditorInput.setConnectionNode(connectionRepNode);
         // add support for match analysis editor
-        Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
+        Analysis analysis = (Analysis) analysisEditorInput.getModel();
         if (analysis.getParameters() != null && analysis.getParameters().getAnalysisType().equals(AnalysisType.MATCH_ANALYSIS)) {
             editorID = MatchAnalysisEditor.class.getName();
         } else {

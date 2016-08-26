@@ -95,7 +95,6 @@ import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -451,10 +450,6 @@ public class DQRespositoryView extends CommonNavigator {
                         }
                     }
 
-                    if (obj instanceof IRepositoryViewObject) {
-                        OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject) obj);
-                        openItemEditorAction.run();
-                    }
                     if (obj instanceof DQRepositoryNode) {
                         if (obj instanceof ReportFileRepNode) {
                             new OpenItemEditorAction((IRepositoryNode) obj).run();

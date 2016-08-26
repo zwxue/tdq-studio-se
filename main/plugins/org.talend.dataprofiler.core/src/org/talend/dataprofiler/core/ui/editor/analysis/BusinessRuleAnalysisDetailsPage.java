@@ -141,7 +141,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
     public void recomputeIndicators() {
         analysisHandler = new TableAnalysisHandler();
-        analysisHandler.setAnalysis((Analysis) this.currentModelElement);
+        analysisHandler.setAnalysis(getCurrentModelElement());
         stringDataFilter = analysisHandler.getStringDataFilter();
         EList<ModelElement> analyzedTables = analysisHandler.getAnalyzedTables();
         List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
@@ -496,9 +496,8 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
     @Override
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD gdbu 2011-3-3 bug 19179
-        Analysis ana = this.analysisItem.getAnalysis();
-        for (Domain domain : ana.getParameters().getDataFilter()) {
-            domain.setName(ana.getName());
+        for (Domain domain : getCurrentModelElement().getParameters().getDataFilter()) {
+            domain.setName(getCurrentModelElement().getName());
         }
         // ~
 
@@ -527,11 +526,11 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
         this.saveNumberOfConnectionsPerAnalysis();
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
-        ReturnCode saved = new ReturnCode(false);
         this.nameText.setText(analysisHandler.getName());
         // TDQ-5581,if has removed rules,should remove dependency each other before saving.
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
+        ReturnCode saved = ElementWriterFactory.getInstance().createAnalysisWrite()
+                .save(getCurrentRepNode().getObject().getProperty().getItem(), true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.

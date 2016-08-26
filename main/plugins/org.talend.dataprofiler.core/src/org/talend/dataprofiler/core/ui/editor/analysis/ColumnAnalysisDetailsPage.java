@@ -128,9 +128,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     public void recomputeIndicators() {
         analysisHandler = new ModelElementAnalysisHandler();
-        analysisHandler.setAnalysis((Analysis) this.currentModelElement);
+        analysisHandler.setAnalysis(getCurrentModelElement());
         // Handle JUDIs
-        UDIHelper.updateJUDIsForAnalysis(analysisItem.getAnalysis());
+        UDIHelper.updateJUDIsForAnalysis(getCurrentModelElement());
 
         stringDataFilter = analysisHandler.getStringDataFilterwithContext();
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
@@ -277,7 +277,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
         treeViewer.addPropertyChangeListener(this);
 
         // Added TDQ-9272 : give the execute language to it
-        treeViewer.setLanguage(analysisItem.getAnalysis().getParameters().getExecutionLanguage());
+        treeViewer.setLanguage(getCurrentModelElement().getParameters().getExecutionLanguage());
 
         // pagination compoent
         computePagination();
@@ -478,8 +478,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
         Analysis analysis = analysisHandler.getAnalysis();
 
-        for (Domain domain : this.analysisItem.getAnalysis().getParameters().getDataFilter()) {
-            domain.setName(this.analysisItem.getAnalysis().getName());
+        for (Domain domain : getCurrentModelElement().getParameters().getDataFilter()) {
+            domain.setName(getCurrentModelElement().getName());
         }
 
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
@@ -531,8 +531,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
         this.nameText.setText(analysisHandler.getName());
         // TDQ-5581,if has removed emlements(patten/udi),should remove dependency each other before saving.
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-        ReturnCode saved = new ReturnCode(false);
-        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
+        ReturnCode saved = ElementWriterFactory.getInstance().createAnalysisWrite()
+                .save(getCurrentRepNode().getObject().getProperty().getItem(), true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.
@@ -625,11 +625,11 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
         EventManager.getInstance().clearEvent(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION);
-        MapDBManager.getInstance().closeDB(getAnalysis());
+        MapDBManager.getInstance().closeDB(getCurrentModelElement());
 
         // when the user didn't save, revert the connection combo value
         if (oldConn != null && isDirty()) {
-            this.analysisItem.getAnalysis().getContext().setConnection(oldConn);
+            getCurrentModelElement().getContext().setConnection(oldConn);
         }
 
         if (this.getSampleTable().getExistPreviewData() != null) {
@@ -752,8 +752,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
     private ReturnCode checkMdmExecutionEngine() {
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysisItem.getAnalysis().getContext()
-                    .setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+            getCurrentModelElement().getContext().setConnection(
+                    ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
         return new ReturnCode(true);
     }

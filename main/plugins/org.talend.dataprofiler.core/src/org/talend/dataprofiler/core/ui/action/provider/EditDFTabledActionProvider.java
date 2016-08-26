@@ -36,7 +36,7 @@ public class EditDFTabledActionProvider extends AbstractCommonActionProvider {
 
         super.fillContextMenu(menu);
 
-        IRepositoryNode node = getFistContextNode();
+        IRepositoryNode node = getFirstRepositoryNode();
 
         if (node != null) {
             menu.add(new EditDFTableAction(node));

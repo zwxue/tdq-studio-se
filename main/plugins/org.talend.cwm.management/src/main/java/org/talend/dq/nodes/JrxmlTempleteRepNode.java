@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.repository.model.RepositoryNode;
@@ -22,28 +21,22 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class JrxmlTempleteRepNode extends DQRepositoryNode {
 
-    private TDQJrxmlItem jrxmlItem;
-
-    public TDQJrxmlItem getJrxmlItem() {
-        return this.jrxmlItem;
-    }
-
     /**
-     * DOC klliu JrxmlTempleteRepNode constructor comment.
+     * JrxmlTempleteRepNode constructor.
      * 
      * @param object
      * @param parent
      * @param type
+     * @param inWhichProject
+     * 
      */
     public JrxmlTempleteRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
-        if (object != null && object.getProperty() != null) {
-            Item item = object.getProperty().getItem();
-            if (item != null && item instanceof TDQJrxmlItem) {
-                this.jrxmlItem = (TDQJrxmlItem) item;
-            }
-        }
+    }
+
+    public TDQJrxmlItem getJrxmlItem() {
+        return (TDQJrxmlItem) this.getObject().getProperty().getItem();
     }
 
     @Override

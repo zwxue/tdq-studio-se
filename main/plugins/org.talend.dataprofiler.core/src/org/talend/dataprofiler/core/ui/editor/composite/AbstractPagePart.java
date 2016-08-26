@@ -100,7 +100,7 @@ public abstract class AbstractPagePart {
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ModelElementIndicator[] indicators, Tree tree) {
         // MOD mzhao 2010-07-24, avoid a NPE, feature 13221
-        DataManager connection = masterPage.getAnalysis().getContext().getConnection();
+        DataManager connection = masterPage.getCurrentModelElement().getContext().getConnection();
         Connection tdProvider = null;
         if (connection != null) {
             tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(connection);
@@ -133,13 +133,12 @@ public abstract class AbstractPagePart {
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, Tree tree) {
         if (!isAnalyzedColumnsEmpty(tree)) {
-            DataManager dataManager = masterPage.getAnalysis().getContext().getConnection();
+            DataManager dataManager = masterPage.getCurrentModelElement().getContext().getConnection();
             if (dataManager == null) {
                 if (tree.getData() instanceof AnalysisColumnNominalIntervalTreeViewer) {
                     AnalysisColumnNominalIntervalTreeViewer treeViewer = (AnalysisColumnNominalIntervalTreeViewer) tree.getData();
                     RepositoryNode repositoryNode = treeViewer.getColumnSetMultiValueList().get(0);
                     dataManager = ((ConnectionItem) repositoryNode.getObject().getProperty().getItem()).getConnection();
-                    // dataManager = ConnectionHelper.getTdDataProvider(repositoryNode);
                 } else if (tree.getData() instanceof AnalysisColumnSetTreeViewer) {
                     AnalysisColumnSetTreeViewer treeViewer = (AnalysisColumnSetTreeViewer) tree.getData();
                     IRepositoryNode reposNode = treeViewer.getColumnSetMultiValueList().get(0);

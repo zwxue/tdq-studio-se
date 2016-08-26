@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -68,7 +69,6 @@ import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.process.IContextManager;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.ISubRepositoryObject;
@@ -106,7 +106,6 @@ import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -126,8 +125,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(AbstractAnalysisMetadataPage.class);
-
-    protected TDQAnalysisItem analysisItem;
 
     protected AnalysisRepNode analysisRepNode;
 
@@ -186,6 +183,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     protected DataManager oldConn = null;
 
+    public AbstractAnalysisMetadataPage(FormEditor editor, String id, String title) {
+        super(editor, id, title);
+    }
+
     public ModelElementIndicator[] getCurrentModelElementIndicators() {
         return this.currentModelElementIndicators;
     }
@@ -194,40 +195,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         this.currentModelElementIndicators = modelElementIndicator;
     }
 
-    public AbstractAnalysisMetadataPage(FormEditor editor, String id, String title) {
-        super(editor, id, title);
-        currentEditor = (AnalysisEditor) editor;
-    }
-
-    @Override
-    protected ModelElement getCurrentModelElement(FormEditor editor) {
-        // MOD klliu 2010-12-10
-        IEditorInput editorInput = editor.getEditorInput();
-        if (editorInput instanceof AnalysisItemEditorInput) {
-            AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) editorInput;
-            analysisItem = fileEditorInput.getTDQAnalysisItem();
-        } else if (editorInput instanceof FileEditorInput) {
-            FileEditorInput input = (FileEditorInput) editorInput;
-            Property property = PropertyHelper.getProperty(input.getFile());
-            analysisItem = (TDQAnalysisItem) property.getItem();
-        }
-        Analysis analysis = analysisItem.getAnalysis();
-        initAnalysisRepNode(analysis);
-        return analysis;
-    }
-
-    public AnalysisRepNode getAnalysisRepNode() {
-        return this.analysisRepNode;
-    }
-
-    private void initAnalysisRepNode(Analysis analysis) {
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
-        if (recursiveFind != null && recursiveFind instanceof AnalysisRepNode) {
-            this.analysisRepNode = (AnalysisRepNode) recursiveFind;
-        }
-    }
-
-    protected IRepositoryNode getCurrentRepNodeOnUI() {
+    protected IRepositoryNode getCurrentConnectionRepNode() {
         // MOD klliu 2010-12-10
         IEditorInput editorInput = getEditor().getEditorInput();
         if (editorInput instanceof AnalysisItemEditorInput) {
@@ -263,10 +231,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
         }
         return null;
-    }
-
-    public Analysis getAnalysis() {
-        return analysisItem.getAnalysis();
     }
 
     @Override
@@ -400,12 +364,13 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 return true;
             }
         };
-        EventManager.getInstance().register(getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST, refreshDataProvider);
+        EventManager.getInstance().register(getCurrentModelElement(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
+                refreshDataProvider);
 
         connCombo.addDisposeListener(new DisposeListener() {
 
             public void widgetDisposed(DisposeEvent e) {
-                EventManager.getInstance().clearEvent(getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST);
+                EventManager.getInstance().clearEvent(getCurrentModelElement(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST);
             }
         });
 
@@ -444,8 +409,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     public String getConnectionVersion() {
         String version = null;
-        if (this.analysisItem.getAnalysis() != null) {
-            DataManager dm = this.analysisItem.getAnalysis().getContext().getConnection();
+        if (getCurrentModelElement() != null) {
+            DataManager dm = getCurrentModelElement().getContext().getConnection();
             if (dm != null) {
                 if (dm instanceof Connection) {
                     Connection connection = (Connection) dm;
@@ -521,7 +486,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         connCombo.getTable().removeAll();
         fillComb(connsWithoutDeletion);
 
-        DataManager connection = this.analysisItem.getAnalysis().getContext().getConnection();
+        DataManager connection = getCurrentModelElement().getContext().getConnection();
         if (connection == null) {
             // MOD TDQ-10654 msjian : when there is no connection selected, select 0,else still use the current one
             if (StringUtils.isBlank(connCombo.getText())) {
@@ -535,7 +500,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             // Find the conn index first
             int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connection);
             if (connIdx == -1) {
-                IRepositoryNode currentConnectionNode = getCurrentRepNodeOnUI();
+                IRepositoryNode currentConnectionNode = getCurrentConnectionRepNode();
                 // The current connection is logical deleted!
                 int deleteIndex = connCombo.getItemCount();
                 if (currentConnectionNode != null) {
@@ -732,7 +697,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @throws DataprofilerCoreException
      */
     protected void logSaved(ReturnCode saved) throws DataprofilerCoreException {
-        Analysis analysis = analysisItem.getAnalysis();
+        Analysis analysis = getCurrentModelElement();
         String urlString = analysis.eResource() != null ? (analysis.eResource().getURI().isFile() ? analysis.eResource().getURI()
                 .toFileString() : analysis.eResource().getURI().toString()) : PluginConstant.EMPTY_STRING;
         if (!saved.isOk()) {
@@ -779,8 +744,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         this.toolkit.createLabel(comp,
                 DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
 
-        this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp, AnalysisHandler.createHandler(getAnalysis())
-                .getNumberOfConnectionsPerAnalysisWithContext(), SWT.BORDER);
+        this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp,
+                AnalysisHandler.createHandler(getCurrentModelElement()).getNumberOfConnectionsPerAnalysisWithContext(),
+                SWT.BORDER);
         GridDataFactory.fillDefaults().grab(false, true).applyTo(this.numberOfConnectionsPerAnalysisText);
         ((GridData) this.numberOfConnectionsPerAnalysisText.getLayoutData()).widthHint = 240;
         installProposals(numberOfConnectionsPerAnalysisText);
@@ -825,7 +791,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                     DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$
 
         }
-        TaggedValueHelper.setTaggedValue(this.getAnalysis(), TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
+        TaggedValueHelper.setTaggedValue(getCurrentModelElement(), TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
                 this.numberOfConnectionsPerAnalysisText.getText());
     }
 
@@ -913,7 +879,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
         }
 
-        ExecutionLanguage executionLanguage = analysisItem.getAnalysis().getParameters().getExecutionLanguage();
+        ExecutionLanguage executionLanguage = getCurrentModelElement().getParameters().getExecutionLanguage();
 
         execLang = executionLanguage.getLiteral();
         execCombo.setText(execLang);
@@ -982,10 +948,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     // analysis.
     public String getCurrentExecuteLanguage() {
         return this.execLang;
-    }
-
-    public TDQAnalysisItem getAnalysisItem() {
-        return this.analysisItem;
     }
 
     /**
@@ -1112,7 +1074,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         sampleTable.setLimitNumber(Integer.parseInt(rowLoadedText.getText()));
         sampleTable.setShowRandomData(SampleDataShowWay.RANDOM.getLiteral().equals(sampleDataShowWayCombo.getText()));
         // TDQ-11981: when get the preview data use the data filter real value when set a context value
-        sampleTable.setDataFilter(ContextHelper.getAnalysisContextValue(getAnalysis(), dataFilterComp.getDataFilterString()));
+        sampleTable.setDataFilter(ContextHelper.getAnalysisContextValue(getCurrentModelElement(),
+                dataFilterComp.getDataFilterString()));
 
         sampleTable.reDrawTable(getSelectedColumns(), loadData);
         redrawWarningLabel();
@@ -1215,7 +1178,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             sampleDataShowWayCombo.add(value.getLiteral());
         }
 
-        SampleDataShowWay sampleDataShowWay = analysisItem.getAnalysis().getParameters().getSampleDataShowWay();
+        SampleDataShowWay sampleDataShowWay = getCurrentModelElement().getParameters().getSampleDataShowWay();
         sampleDataShowWayCombo.setText(sampleDataShowWay.getLiteral());
         sampleDataShowWayCombo.addModifyListener(new ModifyListener() {
 
@@ -1267,9 +1230,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         if (dialog.open() == Window.OK) {
             getConnCombo().select(connIndex);
             // save the old first, need to use this to revert
-            oldConn = this.analysisItem.getAnalysis().getContext().getConnection();
+            oldConn = getCurrentModelElement().getContext().getConnection();
 
-            this.analysisItem.getAnalysis().getContext().setConnection(dataManager);
+            getCurrentModelElement().getContext().setConnection(dataManager);
             Object[] modelElements = dialog.getResult();
             setTreeViewInput(modelElements);
         }
@@ -1282,7 +1245,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     protected void setTreeViewInput(Object[] modelElements) {
         // do nothing here
-
     }
 
     /**
@@ -1441,7 +1403,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     @Override
     protected void saveContext() {
         // save contexts
-        Analysis analysis = getAnalysis();
+        Analysis analysis = getCurrentModelElement();
         IContextManager contextManager = currentEditor.getContextManager();
         contextManager.saveToEmf(analysis.getContextType());
         analysis.setDefaultContext(getDefaultContextGroupName((SupportContextEditor) currentEditor));
@@ -1596,5 +1558,57 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     public DataFilterComp getDataFilterComp() {
         return this.dataFilterComp;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
+     */
+    @Override
+    public AnalysisRepNode getCurrentRepNode() {
+        return this.analysisRepNode;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
+     */
+    @Override
+    public Analysis getCurrentModelElement() {
+        return analysisRepNode.getAnalysis();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
+     */
+    @Override
+    protected void init(FormEditor editor) {
+        currentEditor = (AnalysisEditor) editor;
+        this.analysisRepNode = getAnalysisRepNodeFromInput(currentEditor.getEditorInput());
+    }
+
+    /**
+     * get AnalysisRepNode From editorInput
+     * 
+     * @param editorInput
+     * @return
+     */
+    private AnalysisRepNode getAnalysisRepNodeFromInput(IEditorInput editorInput) {
+        if (editorInput instanceof FileEditorInput) {
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+            IFile file = fileEditorInput.getFile();
+            if (file != null) {
+                Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+                analysis = (Analysis) EObjectHelper.resolveObject(analysis);
+                return RepositoryNodeHelper.recursiveFindAnalysis(analysis);
+            }
+        } else if (editorInput instanceof AnalysisItemEditorInput) {
+            return ((AnalysisItemEditorInput) editorInput).getRepNode();
+        }
+        return null;
     }
 }

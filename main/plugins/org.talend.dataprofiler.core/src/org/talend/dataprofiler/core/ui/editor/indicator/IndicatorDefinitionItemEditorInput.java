@@ -12,48 +12,54 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.indicator;
 
-import org.talend.core.model.properties.Item;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
-import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC klliu Indicator definition editor input.
  */
 public class IndicatorDefinitionItemEditorInput extends AbstractItemEditorInput {
 
-
-    private TDQIndicatorDefinitionItem item = null;
+    private SysIndicatorDefinitionRepNode indicatorDefinitionRepNode;
 
     /**
-     * DOC klliu IndicatorDefinitionItemEditorInput constructor comment.
+     * IndicatorDefinitionItemEditorInput constructor.
      * 
-     * @param reposViewObj
+     * @param indicatorDefinitionRepNode
      */
-    public IndicatorDefinitionItemEditorInput(Item item) {
-        super(item);
-        this.item = (TDQIndicatorDefinitionItem) item;
-
+    public IndicatorDefinitionItemEditorInput(IRepositoryNode indicatorDefinitionRepNode) {
+        super(indicatorDefinitionRepNode);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getRepNode()
+     */
     @Override
-    public String getName() {
-        return getPath() + item.getIndicatorDefinition().getName();
+    public SysIndicatorDefinitionRepNode getRepNode() {
+        return indicatorDefinitionRepNode;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getModelOfRepNode()
+     */
     @Override
-    public String getToolTipText() {
-        return getPath() + item.getIndicatorDefinition().getName();
+    public ModelElement getModel() {
+        return indicatorDefinitionRepNode.getIndicatorDefinition();
     }
 
-    public TDQIndicatorDefinitionItem getTDQIndicatorDefinitionItem() {
-        return item;
-    }
-
-    public String getModelElementUuid() {
-        if (this.item != null) {
-            return ResourceHelper.getUUID(this.item.getIndicatorDefinition());
-        }
-        return super.getModelElementUuid();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#setRepNode(org.talend.repository.model.IRepositoryNode)
+     */
+    @Override
+    public void setRepNode(IRepositoryNode node) {
+        this.indicatorDefinitionRepNode = (SysIndicatorDefinitionRepNode) node;
     }
 }

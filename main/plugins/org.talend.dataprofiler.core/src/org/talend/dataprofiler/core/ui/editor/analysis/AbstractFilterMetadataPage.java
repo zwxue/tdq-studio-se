@@ -101,7 +101,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         tableFilterLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.filterOnTable")); //$NON-NLS-1$
         tableFilterLabel.setLayoutData(new GridData());
         tableFilterText = new Text(comp2, SWT.BORDER);
-        EList<Domain> dataFilters = analysisItem.getAnalysis().getParameters().getDataFilter();
+        EList<Domain> dataFilters = getCurrentModelElement().getParameters().getDataFilter();
         String tablePattern = DomainHelper.getTablePattern(dataFilters);
         latestTableFilterValue = tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern;
         tableFilterText.setText(latestTableFilterValue);
@@ -149,7 +149,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             reloadDatabasesBtn = new Button(sectionClient, SWT.CHECK);
             reloadDatabasesBtn.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ReloadDatabases"));//$NON-NLS-1$
 
-            reloadDatabasesBtn.setSelection(AnalysisHelper.getReloadDatabases(analysisItem.getAnalysis()));
+            reloadDatabasesBtn.setSelection(AnalysisHelper.getReloadDatabases(getCurrentModelElement()));
             reloadDatabasesBtn.addMouseListener(new MouseListener() {
 
                 public void mouseDoubleClick(MouseEvent e) {
@@ -173,8 +173,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * @return
      */
     private boolean isConnectionAnalysis() {
-        if (analysisItem.getAnalysis() != null) {
-            return AnalysisType.CONNECTION.equals(AnalysisHelper.getAnalysisType(analysisItem.getAnalysis()));
+        if (getCurrentModelElement() != null) {
+            return AnalysisType.CONNECTION.equals(AnalysisHelper.getAnalysisType(getCurrentModelElement()));
         }
         return false;
     }
@@ -210,11 +210,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD xqliu 2010-01-04 bug 10190
         if (isConnectionAnalysis()) { // MOD zshen 2010-03-19 bug 12041
-            AnalysisHelper.setReloadDatabases(analysisItem.getAnalysis(), reloadDatabasesBtn.getSelection());
+            AnalysisHelper.setReloadDatabases(getCurrentModelElement(), reloadDatabasesBtn.getSelection());
         }
         // ~
 
-        EList<Domain> dataFilters = analysisItem.getAnalysis().getParameters().getDataFilter();
+        EList<Domain> dataFilters = getCurrentModelElement().getParameters().getDataFilter();
         if (!this.tableFilterText.getText().equals(DomainHelper.getTablePattern(dataFilters))) {
             DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());
             latestTableFilterValue = this.tableFilterText.getText();
@@ -228,11 +228,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         this.saveNumberOfConnectionsPerAnalysis();
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
-        ReturnCode saved = new ReturnCode(false);
-        this.nameText.setText(analysisItem.getAnalysis().getName());
+        this.nameText.setText(getCurrentModelElement().getName());
         // ~
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
+        ReturnCode saved = ElementWriterFactory.getInstance().createAnalysisWrite()
+                .save(getCurrentRepNode().getObject().getProperty().getItem(), true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.
@@ -263,7 +263,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     public AnalysisHandler getAnalysisHandler() {
         AnalysisHandler analysisHandler = new AnalysisHandler();
-        analysisHandler.setAnalysis(this.analysisItem.getAnalysis());
+        analysisHandler.setAnalysis(getCurrentModelElement());
         return analysisHandler;
     }
 

@@ -353,7 +353,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                 return true;
             }
         };
-        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
+        EventManager.getInstance().register(masterPage.getCurrentModelElement(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
                 switchBetweenPageEvent);
     }
 
@@ -363,7 +363,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
      * @param eventReceivers
      */
     public void unRegisterDynamicEvent() {
-        EventManager.getInstance().clearEvent(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
+        EventManager.getInstance()
+                .clearEvent(masterPage.getCurrentModelElement(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
 
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);

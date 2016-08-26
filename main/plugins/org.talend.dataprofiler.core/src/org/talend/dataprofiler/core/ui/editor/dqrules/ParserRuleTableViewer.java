@@ -51,7 +51,7 @@ public class ParserRuleTableViewer {
 
     private TableViewer parserRuleTableViewer;
 
-    private List<TdExpression> parserRuleTdExpression;// = new ArrayList<TdExpression>();
+    private List<TdExpression> parserRuleTdExpression;
 
     private List<TdExpression> copyTdExpression;
 
@@ -68,16 +68,14 @@ public class ParserRuleTableViewer {
     private boolean isDirty = false;
 
     public ParserRuleTableViewer(Composite parent, ParserRuleMasterDetailsPage masterPage) {
-        this(parent, (ParserRule) masterPage.getCurrentModelElement(masterPage.getEditor()));
+        this(parent, masterPage.getCurrentModelElement());
         this.masterPage = masterPage;
-
     }
 
     public ParserRuleTableViewer(Composite parent, ParserRule parserRule) {
         this.parentComposite = parent;
         this.parserRule = parserRule;
         this.ruleTable = createTable(parent);
-
     }
 
     /**
@@ -122,8 +120,6 @@ public class ParserRuleTableViewer {
         parserRuleTableViewer.setLabelProvider(new TdExpressionLabelProvider());
         parserRuleTableViewer.setInput(getParserRuleTdExpressions());
 
-        // table.setMenu(createMenus(table));
-        // ColumnViewerDND.installDND(table);
         table.setData(this);
         GridData tableGD = new GridData(GridData.FILL_BOTH);
         tableGD.heightHint = 130;
@@ -196,7 +192,6 @@ public class ParserRuleTableViewer {
         TdExpressionContentProvider contentProvider = (TdExpressionContentProvider) parserRuleTableViewer.getContentProvider();
         List<TdExpression> movedElements = contentProvider.getMovedElements();
         movedElements.remove(tdExpression);
-        // this.parserRuleTableViewer.remove(tdExpression);
         this.parserRuleTdExpression.remove(tdExpression);
         parserRuleTableViewer.setInput(movedElements);
         setDirty(true);
@@ -418,7 +413,6 @@ public class ParserRuleTableViewer {
         }
     }
 
-    
     public Table getRuleTable() {
         return ruleTable;
     }

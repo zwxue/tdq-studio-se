@@ -147,7 +147,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
     @Override
     protected AnalysisHandler getAnalysisHandler() {
-        return this.masterPage.getColumnSetAnalysisHandler();
+        return this.masterPage.getAnalysisHandler();
     }
 
     @Override
@@ -186,7 +186,8 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            if (simpleStaticIndicator.isUsedMapDBMode() && AnalysisHelper.isJavaExecutionEngine(masterPage.getAnalysis())) {
+            if (simpleStaticIndicator.isUsedMapDBMode()
+                    && AnalysisHelper.isJavaExecutionEngine(masterPage.getCurrentModelElement())) {
                 this.createTableSectionPartForMapDB(sectionClient,
                         DefaultMessagesImpl.getString("ColumnSetResultPage.Data"), simpleStaticIndicator); //$NON-NLS-1$
             } else {
@@ -219,8 +220,8 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
         tableviewer.setInput(chartData);
 
         // MOD qiongli feature 19192.
-        if (masterPage.getAnalysis().getParameters().isStoreData()) {
-            ChartTableFactory.addMenuAndTip(tableviewer, tableTypeState.getDataExplorer(), masterPage.getAnalysis());
+        if (masterPage.getCurrentModelElement().getParameters().isStoreData()) {
+            ChartTableFactory.addMenuAndTip(tableviewer, tableTypeState.getDataExplorer(), masterPage.getCurrentModelElement());
         } else {
             TableUtils.addTooltipForTable(tableviewer.getTable());
             TableUtils.addActionTooltip(tableviewer.getTable());
@@ -316,7 +317,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
                 }
 
                 public void mouseDown(MouseEvent e) {
-                    List<Indicator> indicatorsList = masterPage.analysisItem.getAnalysis().getResults().getIndicators();
+                    List<Indicator> indicatorsList = masterPage.getCurrentModelElement().getResults().getIndicators();
                     SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
                     wizard.setFilterType(filterType);
                     wizard.setOldTableInputList(ColumnSetAnalysisResultPage.this.tableFilterResult);
@@ -399,7 +400,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
                 }
 
                 public void mouseDown(MouseEvent e) {
-                    List<Indicator> indicatorsList = masterPage.analysisItem.getAnalysis().getResults().getIndicators();
+                    List<Indicator> indicatorsList = masterPage.getCurrentModelElement().getResults().getIndicators();
                     SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
                     wizard.setFilterType(filterType);
                     wizard.setOldTableInputList(ColumnSetAnalysisResultPage.this.tableFilterResult);
@@ -691,7 +692,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
     }
 
     private boolean containAllMatchIndicator() {
-        List<Indicator> indicatorsList = masterPage.analysisItem.getAnalysis().getResults().getIndicators();
+        List<Indicator> indicatorsList = masterPage.getCurrentModelElement().getResults().getIndicators();
         for (Indicator theIndicator : indicatorsList) {
             if (theIndicator instanceof AllMatchIndicatorImpl) {
                 return true;
@@ -706,7 +707,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
         if (bg != null) {
             bg.dispose();
         }
-        MapDBManager.getInstance().closeDB(masterPage.getAnalysis());
+        MapDBManager.getInstance().closeDB(masterPage.getCurrentModelElement());
         super.dispose();
     }
 

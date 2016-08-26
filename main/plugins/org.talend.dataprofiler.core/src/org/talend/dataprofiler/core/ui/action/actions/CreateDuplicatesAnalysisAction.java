@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -45,6 +44,7 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
@@ -154,13 +154,14 @@ public class CreateDuplicatesAnalysisAction extends Action {
                     // refresh the RepositoryView
                     CorePlugin.getDefault().refreshDQView(analysisRepNode);
                     // open the editor
-                    AnalysisItemEditorInput analysisEditorInput = new AnalysisItemEditorInput((Item) create.getObject());
+                    AnalysisRepNode anaRepNode = RepositoryNodeHelper.recursiveFindAnalysis(analysis);
+                    AnalysisItemEditorInput analysisEditorInput = new AnalysisItemEditorInput(anaRepNode);
                     IRepositoryNode connectionRepNode = RepositoryNodeHelper.recursiveFind(this.getConnection());
                     analysisEditorInput.setConnectionNode(connectionRepNode);
                     CorePlugin.getDefault().openEditor(analysisEditorInput, AnalysisEditor.class.getName());
                 } else {
                     success.setOk(false);
-                    success.setMessage(create.getMessage()); //$NON-NLS-1$
+                    success.setMessage(create.getMessage());
                 }
             } // for
         } catch (Exception e) {
