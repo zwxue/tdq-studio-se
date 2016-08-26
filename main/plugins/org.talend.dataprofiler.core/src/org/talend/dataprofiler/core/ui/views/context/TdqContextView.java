@@ -28,6 +28,8 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQReportItem;
 
 /**
  * created by xqliu on Jul 25, 2013 Detailled comment
@@ -182,11 +184,13 @@ public class TdqContextView extends AbstractContextView {
         if (editorInput != null) {
             if (editorInput instanceof ReportItemEditorInput) {
                 ReportItemEditorInput reportInput = (ReportItemEditorInput) editorInput;
-                boolean readOnly = reportInput.getModel() == null;
+                TDQReportItem tdqReportItem = reportInput.getTDQReportItem();
+                boolean readOnly = tdqReportItem == null || tdqReportItem.getReport() == null;
                 contextComposite.setReadOnly(readOnly);
             } else if (editorInput instanceof AnalysisItemEditorInput) {
                 AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
-                boolean readOnly = analysisInput.getModel() == null;
+                TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+                boolean readOnly = tdqAnalysisItem == null || tdqAnalysisItem.getAnalysis() == null;
                 contextComposite.setReadOnly(readOnly);
             }
         }

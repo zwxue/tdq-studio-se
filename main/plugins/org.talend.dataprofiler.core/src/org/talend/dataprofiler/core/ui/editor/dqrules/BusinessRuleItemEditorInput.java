@@ -12,54 +12,48 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.dqrules;
 
+import org.talend.core.model.properties.Item;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
-import org.talend.dq.nodes.RuleRepNode;
-import org.talend.repository.model.IRepositoryNode;
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
 
 /**
- * this rule editor input includes all types of rule: parse rule, match rule, business rule
+ * DOC klliu business rule editor input.
  */
 public class BusinessRuleItemEditorInput extends AbstractItemEditorInput {
 
-    private RuleRepNode ruleRepNode;
+    private TDQBusinessRuleItem item = null;
 
     /**
-     * BusinessRuleItemEditorInput constructor.
+     * DOC klliu TDQBusinessRuleItemEditorInput constructor comment.
      * 
-     * @param ruleRepNode
+     * @param reposViewObj
      */
-    public BusinessRuleItemEditorInput(IRepositoryNode ruleRepNode) {
-        super(ruleRepNode);
+    public BusinessRuleItemEditorInput(Item item) {
+        super(item);
+        this.item = (TDQBusinessRuleItem) item;
+
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getRepNode()
-     */
     @Override
-    public RuleRepNode getRepNode() {
-        return ruleRepNode;
+    public String getName() {
+        return getPath() + item.getDqrule().getName();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getModelOfRepNode()
-     */
     @Override
-    public ModelElement getModel() {
-        return ruleRepNode.getRule();
+    public String getToolTipText() {
+        return getPath() + item.getDqrule().getName();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#setRepNode(org.talend.repository.model.IRepositoryNode)
-     */
+    public TDQBusinessRuleItem getTDQBusinessRuleItem() {
+        return item;
+    }
+
     @Override
-    public void setRepNode(IRepositoryNode node) {
-        this.ruleRepNode = (RuleRepNode) node;
+    public String getModelElementUuid() {
+        if (this.item != null) {
+            return ResourceHelper.getUUID(this.item.getDqrule());
+        }
+        return super.getModelElementUuid();
     }
 }

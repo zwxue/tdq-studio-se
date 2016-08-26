@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
@@ -38,21 +39,23 @@ public class DBConnectionRepNode extends ConnectionRepNode {
 
     List<IRepositoryNode> afterGlobalFilter;
 
+    public DatabaseConnection getDatabaseConnection() {
+        DatabaseConnection dbConnection = null;
+        Property property = getObject().getProperty();
+        dbConnection = (DatabaseConnection) ((ConnectionItem) property.getItem()).getConnection();
+        return dbConnection;
+    }
+
     /**
-     * DBConnectionRepNode constructor.
+     * DOC klliu DBConnectionRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
-     * @param inWhichProject
      */
     public DBConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
-    }
-
-    public DatabaseConnection getDatabaseConnection() {
-        return (DatabaseConnection) ((ConnectionItem) this.getObject().getProperty().getItem()).getConnection();
     }
 
     /*

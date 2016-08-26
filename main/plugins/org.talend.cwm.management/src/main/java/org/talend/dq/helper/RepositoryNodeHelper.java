@@ -947,7 +947,7 @@ public final class RepositoryNodeHelper {
      * @param modelElement
      * @return
      */
-    public static RuleRepNode recursiveFindRuleParser(ParserRule rule) {
+    private static DQRepositoryNode recursiveFindRuleParser(ParserRule rule) {
         if (rule == null) {
             return null;
         }
@@ -988,7 +988,7 @@ public final class RepositoryNodeHelper {
      * @param modelElement
      * @return
      */
-    public static RuleRepNode recursiveFindMatcherRule(MatchRuleDefinition rule) {
+    private static DQRepositoryNode recursiveFindMatcherRule(MatchRuleDefinition rule) {
         if (rule == null) {
             return null;
         }

@@ -16,8 +16,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -39,6 +37,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
@@ -48,33 +47,85 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IAntlrEditorUIService;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.ParserRule;
-import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
 public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(ParserRuleMasterDetailsPage.class);
-
     final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
 
+    private ParserRule parserRule;
+
     protected RuleRepNode ruleRepNode;
+
+    protected TDQBusinessRuleItem parserRuleItem;
 
     private Section parserRuleDefinitionSection;
 
     private ParserRuleTableViewer parserRuleTableViewer;
 
+    public TDQBusinessRuleItem getParserRuleItem() {
+        if (this.parserRuleItem == null) {
+            if (this.parserRule != null) {
+                initRuleRepNode(this.parserRule);
+            }
+        }
+        return this.parserRuleItem;
+
+    }
+
+    public void setParserRuleItem(TDQBusinessRuleItem parserRuleItem) {
+        this.parserRuleItem = parserRuleItem;
+    }
+
+    public RuleRepNode getRuleRepNode() {
+        return this.ruleRepNode;
+    }
+
+    private void initRuleRepNode(ParserRule parserRule) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(parserRule);
+        if (recursiveFind != null && recursiveFind instanceof RuleRepNode) {
+            this.ruleRepNode = (RuleRepNode) recursiveFind;
+            this.parserRuleItem = (TDQBusinessRuleItem) this.ruleRepNode.getObject().getProperty().getItem();
+        } else {
+            Property property = PropertyHelper.getProperty(parserRule);
+            this.parserRuleItem = (TDQBusinessRuleItem) property.getItem();
+        }
+        // this.repositoryNode = this.ruleRepNode;
+        // this.repositoryViewObject = (RepositoryViewObject) this.ruleRepNode.getObject();
+    }
+
     public ParserRuleMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+        getCurrentModelElement(editor);
+    }
+
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
+        IEditorInput editorInput = editor.getEditorInput();
+        if (editorInput instanceof FileEditorInput) {
+            FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+            this.currentModelElement = DQRuleResourceFileHelper.getInstance().findDQRule(input.getFile());
+        } else if (editorInput instanceof ParserRuleItemEditorInput) {
+            ParserRuleItemEditorInput input = (ParserRuleItemEditorInput) editor.getEditorInput();
+            this.currentModelElement = input.getTDQBusinessRuleItem().getDqrule();
+        }
+        parserRule = (ParserRule) this.currentModelElement;
+        initRuleRepNode(parserRule);
+        return parserRule;
     }
 
     @Override
@@ -120,10 +171,11 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
     }
 
     private boolean saveParserRule() {
-        TaggedValueHelper.setValidStatus(true, getCurrentModelElement());
-        getCurrentModelElement().getExpression().addAll(parserRuleTableViewer.getParserRuleTdExpressions());
-
-        TDQBusinessRuleItem parserRuleItem = (TDQBusinessRuleItem) getCurrentRepNode().getObject().getProperty().getItem();
+        TaggedValueHelper.setValidStatus(true, parserRule);
+        // parserRule.getExpression().clear();
+        parserRule.getExpression().addAll(parserRuleTableViewer.getParserRuleTdExpressions());
+        TDQBusinessRuleItem parserRuleItem = this.getParserRuleItem();
+        parserRuleItem.setDqrule(parserRule);
         ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(parserRuleItem, Boolean.FALSE);
         if (!rc.isOk()) {
             return false;
@@ -209,7 +261,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         labelGd.widthHint = 30;
 
         final Button addButton = new Button(buttonsComposite, SWT.NONE);
-        addButton.setToolTipText("Add New Item"); //$NON-NLS-1$
+        addButton.setToolTipText("Add New Item");
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
@@ -221,7 +273,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         });
 
         final Button delButton = new Button(buttonsComposite, SWT.NONE);
-        delButton.setToolTipText("Delete Selcetion Item"); //$NON-NLS-1$
+        delButton.setToolTipText("Delete Selcetion Item");
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setLayoutData(labelGd);
         delButton.addSelectionListener(new SelectionAdapter() {
@@ -236,7 +288,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
             }
         });
         final Button upButton = new Button(buttonsComposite, SWT.NONE);
-        upButton.setToolTipText("Move Item Up"); //$NON-NLS-1$
+        upButton.setToolTipText("Move Item Up");
         upButton.setImage(ImageLib.getImage(ImageLib.UP_ACTION));
         upButton.setLayoutData(labelGd);
         upButton.addSelectionListener(new SelectionAdapter() {
@@ -252,7 +304,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         });
 
         final Button downButton = new Button(buttonsComposite, SWT.NONE);
-        downButton.setToolTipText("Move Item Down"); //$NON-NLS-1$
+        downButton.setToolTipText("Move Item Down");
         downButton.setImage(ImageLib.getImage(ImageLib.DOWN_ACTION));
         downButton.setLayoutData(labelGd);
         downButton.addSelectionListener(new SelectionAdapter() {
@@ -267,7 +319,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
             }
         });
         final Button copyButton = new Button(buttonsComposite, SWT.NONE);
-        copyButton.setToolTipText("Copy Selcetion Item"); //$NON-NLS-1$
+        copyButton.setToolTipText("Copy Selcetion Item");
         copyButton.setImage(ImageLib.getImage(ImageLib.COPY_ACTION));
         copyButton.setLayoutData(labelGd);
         copyButton.addSelectionListener(new SelectionAdapter() {
@@ -281,7 +333,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         });
 
         final Button pasteButton = new Button(buttonsComposite, SWT.NONE);
-        pasteButton.setToolTipText("Paste Selcetion Item"); //$NON-NLS-1$
+        pasteButton.setToolTipText("Paste Selcetion Item");
         pasteButton.setImage(ImageLib.getImage(ImageLib.PASTE_ACTION));
         pasteButton.setLayoutData(labelGd);
         pasteButton.addSelectionListener(new SelectionAdapter() {
@@ -289,6 +341,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
             @Override
             public void widgetSelected(SelectionEvent e) {
                 parserRuleTableViewer.pasteTdExpression();
+
             }
         });
         if (isNeedTestButton) {
@@ -303,8 +356,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
                     if (GlobalServiceRegister.getDefault().isServiceRegistered(IAntlrEditorUIService.class)) {
                         IAntlrEditorUIService antlrEditorUIService = (IAntlrEditorUIService) GlobalServiceRegister.getDefault()
                                 .getService(IAntlrEditorUIService.class);
-                        antlrEditorUIService.runTestRuleAction(getCurrentModelElement(),
-                                ParserRuleMasterDetailsPage.this.getEditor());
+                        antlrEditorUIService.runTestRuleAction(parserRule, ParserRuleMasterDetailsPage.this.getEditor());
                     }
 
                 }
@@ -329,58 +381,6 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
                     DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
         }
         return rc;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
-     */
-    @Override
-    public ParserRule getCurrentModelElement() {
-        return (ParserRule) ruleRepNode.getRule();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
-     */
-    @Override
-    public RuleRepNode getCurrentRepNode() {
-        return ruleRepNode;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
-     */
-    @Override
-    protected void init(FormEditor editor) {
-        currentEditor = (DQRuleEditor) editor;
-        ruleRepNode = getParseRuleRepNodeFromInput(currentEditor.getEditorInput());
-    }
-
-    /**
-     * get PatternRepNode From editorInput
-     * 
-     * @param editorInput
-     * @return
-     */
-    private RuleRepNode getParseRuleRepNodeFromInput(IEditorInput editorInput) {
-        if (editorInput instanceof FileEditorInput) {
-            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
-            IFile file = fileEditorInput.getFile();
-            if (file != null) {
-                ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule(file);
-                parserRule = (ParserRule) EObjectHelper.resolveObject(parserRule);
-                return RepositoryNodeHelper.recursiveFindRuleParser(parserRule);
-            }
-        } else if (editorInput instanceof BusinessRuleItemEditorInput) {
-            return ((BusinessRuleItemEditorInput) editorInput).getRepNode();
-        }
-        return null;
     }
 
 }

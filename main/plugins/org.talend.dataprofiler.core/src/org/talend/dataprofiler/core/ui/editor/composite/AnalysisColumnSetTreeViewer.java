@@ -638,7 +638,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * @return the analysis
      */
     public Analysis getAnalysis() {
-        return this.masterPage.getAnalysisHandler().getAnalysis();
+        return this.masterPage.getColumnSetAnalysisHandler().getAnalysis();
     }
 
     /**
@@ -647,7 +647,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * @return the analysis
      */
     public AnalysisRepNode getAnalysisNode() {
-        return this.masterPage.getCurrentRepNode();
+        return this.masterPage.getAnalysisRepNode();
     }
 
     public Tree getTree() {

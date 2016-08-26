@@ -84,7 +84,7 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
      * if the current select is Exchange related node.
      */
     public boolean isExchangeNode() {
-        IRepositoryNode firstContextNode = getFirstRepositoryNode();
+        IRepositoryNode firstContextNode = getFistContextNode();
         return firstContextNode instanceof ExchangeComponentRepNode || firstContextNode instanceof ExchangeCategoryRepNode;
     }
 
@@ -92,7 +92,7 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
      * DOC msjian Comment method "isShowMenuForRefNode".
      */
     public boolean isShowMenuForRefNode() {
-        IRepositoryNode fistContextNode = getFirstRepositoryNode();
+        IRepositoryNode fistContextNode = getFistContextNode();
         ERepositoryObjectType contentType = fistContextNode.getContentType();
         if (contentType != null) {
             if (contentType == ERepositoryObjectType.SVN_ROOT || contentType == ERepositoryObjectType.REFERENCED_PROJECTS) {
@@ -141,6 +141,8 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
 
     /**
      * 
+     * MOD bzhou 2011-4-1 bug 20051
+     * 
      * DOC bzhou Comment method "getContextObject".
      * 
      * @return
@@ -150,11 +152,14 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
-     * DOC msjian Comment method "getFirstRepositoryNode".
+     * 
+     * MOD bzhou 2011-4-1 bug 20051
+     * 
+     * DOC bzhou Comment method "getFistContextNode".
      * 
      * @return
      */
-    protected IRepositoryNode getFirstRepositoryNode() {
+    protected IRepositoryNode getFistContextNode() {
         Object object = getContextObject();
 
         if (object instanceof IRepositoryNode) {

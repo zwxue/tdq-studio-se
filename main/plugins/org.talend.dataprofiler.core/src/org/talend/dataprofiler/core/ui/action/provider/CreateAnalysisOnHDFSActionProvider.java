@@ -37,7 +37,7 @@ public class CreateAnalysisOnHDFSActionProvider extends AbstractCommonActionProv
             return;
         }
 
-        RepositoryNode node = (RepositoryNode) getFirstRepositoryNode();
+        RepositoryNode node = (RepositoryNode) getFistContextNode();
         if (node != null) {
             IAction action = null;
             if (node instanceof HDFSOfHCConnectionNode) {

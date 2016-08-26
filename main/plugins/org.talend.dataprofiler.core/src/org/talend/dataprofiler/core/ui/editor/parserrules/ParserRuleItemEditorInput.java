@@ -10,49 +10,49 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.editor.indicator;
+package org.talend.dataprofiler.core.ui.editor.parserrules;
 
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
-import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
 
 /**
- * DOC klliu Indicator definition editor input.
+ * DOC klliu business rule editor input.
  */
-public class IndicatorDefinitionItemEditorInput extends AbstractItemEditorInput {
+public class ParserRuleItemEditorInput extends AbstractItemEditorInput {
 
-
-    private TDQIndicatorDefinitionItem item = null;
+    private TDQBusinessRuleItem item = null;
 
     /**
-     * DOC klliu IndicatorDefinitionItemEditorInput constructor comment.
+     * DOC klliu TDQBusinessRuleItemEditorInput constructor comment.
      * 
      * @param reposViewObj
      */
-    public IndicatorDefinitionItemEditorInput(Item item) {
+    public ParserRuleItemEditorInput(Item item) {
         super(item);
-        this.item = (TDQIndicatorDefinitionItem) item;
+        this.item = (TDQBusinessRuleItem) item;
 
     }
 
     @Override
     public String getName() {
-        return getPath() + item.getIndicatorDefinition().getName();
+        return getPath() + item.getDqrule().getName();
     }
 
     @Override
     public String getToolTipText() {
-        return getPath() + item.getIndicatorDefinition().getName();
+        return getPath() + item.getDqrule().getName();
     }
 
-    public TDQIndicatorDefinitionItem getTDQIndicatorDefinitionItem() {
+    public TDQBusinessRuleItem getTDQBusinessRuleItem() {
         return item;
     }
 
+    @Override
     public String getModelElementUuid() {
         if (this.item != null) {
-            return ResourceHelper.getUUID(this.item.getIndicatorDefinition());
+            return ResourceHelper.getUUID(this.item.getDqrule());
         }
         return super.getModelElementUuid();
     }

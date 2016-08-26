@@ -459,6 +459,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param item
      */
     public void refreshOpenedEditor(Item item) {
+
         if (item == null) {
             return;
         }
@@ -474,7 +475,7 @@ public class CorePlugin extends AbstractUIPlugin {
                     if (it != null && property != null && it.getProperty().getId().equals(property.getId())) {
                         // make sure the item in editorInput is latest.
                         if (!item.equals(it)) {
-                            itemInput.setRepNode(RepositoryNodeHelper.recursiveFind(property));
+                            itemInput.setItem(item);
                         }
                         CommonFormEditor editor = (CommonFormEditor) reference.getEditor(false);
                         editor.refreshEditor();

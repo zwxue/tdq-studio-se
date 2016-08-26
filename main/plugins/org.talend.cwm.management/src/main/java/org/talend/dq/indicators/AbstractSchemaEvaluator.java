@@ -47,6 +47,7 @@ import org.talend.metadata.managment.model.MetadataFillFactory;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -60,6 +61,9 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
+    /**
+     * 
+     */
     public static final char FILTER_SEP = ',';
 
     private DbmsLanguage dbmsLanguage;
@@ -328,7 +332,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @throws SQLException
      */
     private long getRowCounts(String quCatalog, String quSchema, String quTable) throws SQLException {
-        String sql = SELECT_COUNT_FROM + dbms().toQualifiedName(quCatalog, quSchema, quTable);
+        String sqlStatement = SELECT_COUNT_FROM + dbms().toQualifiedName(quCatalog, quSchema, quTable);
 
         long totalRowCount = 0;
         java.sql.Connection conn = getConnection();
@@ -346,15 +350,15 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         // not needed here statement.setFetchSize(fetchSize);
         try {
             if (log.isInfoEnabled()) {
-                log.info("The execute query is:  " + sql); //$NON-NLS-1$
+                log.info("Executing SQL statement: " + sqlStatement); //$NON-NLS-1$
             }
             // MOD xqliu 2009-02-09 bug 6237
             if (continueRun()) {
-                statement.execute(sql);
+                statement.execute(sqlStatement);
             }
         } catch (SQLException e) {
             statement.close();
-            log.warn(e.getMessage() + " for the query: " + sql); //$NON-NLS-1$
+            log.warn(e.getMessage() + " for SQL statement: " + sqlStatement); //$NON-NLS-1$
             if (log.isDebugEnabled()) {
                 log.debug(e, e);
             }
@@ -367,7 +371,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         // get the results
         ResultSet resultSet = statement.getResultSet();
         if (resultSet == null) {
-            String mess = Messages.getString("Evaluator.NoResultSet", sql); //$NON-NLS-1$
+            String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$
             log.warn(mess);
         } else {
             while (resultSet != null && resultSet.next()) {
@@ -640,7 +644,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @return
      */
     protected boolean checkCatalog(String catName) {
-        if (catalogsName.isEmpty()) {
+        if (0 == catalogsName.size()) {
             Collection<Catalog> catalogs = ConnectionHelper.getAllCatalogs(getDataManager());
             for (Catalog tc : catalogs) {
                 catalogsName.add(tc.getName());
@@ -661,7 +665,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @return
      */
     protected boolean checkSchemaByName(String catName) {
-        if (schemasName.isEmpty()) {
+        if (0 == schemasName.size()) {
             Collection<Schema> schemas = new ArrayList<Schema>();
             try {
                 schemas = ListUtils.castList(
@@ -705,6 +709,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                             }
                         }
                     }
+                    // ~
                     return false;
                 } catch (SQLException e) {
                     log.error(e);
@@ -726,9 +731,10 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             return rc;
         }
 
+        DataProvider dataprovider = this.getDataManager();
         // MOD qiongli 2010-9-17，bug 15525
         // MOD qiongli 2010-12-24,bug 17671,avoid NPE
-        if (this.getDataManager() == null) {
+        if (dataprovider == null) {
             rc.setReturnCode(Messages.getString("Evaluator.NoConnectionFoundInMetadata"), false); //$NON-NLS-1$
             return rc;
         }

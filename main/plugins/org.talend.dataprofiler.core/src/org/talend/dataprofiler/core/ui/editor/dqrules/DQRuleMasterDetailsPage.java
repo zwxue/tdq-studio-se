@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -51,6 +49,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -66,19 +65,19 @@ import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
-import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
-
-    private static Logger log = Logger.getLogger(DQRuleMasterDetailsPage.class);
 
     private static final String WHERE = "WHERE"; //$NON-NLS-1$
 
@@ -92,7 +91,39 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
 
+    private WhereRule whereRule;
+
     protected RuleRepNode ruleRepNode;
+
+    protected TDQBusinessRuleItem whereRuleItem;
+
+    public TDQBusinessRuleItem getWhereRuleItem() {
+        if (this.whereRuleItem == null) {
+            if (this.whereRule != null) {
+                initRuleRepNode(this.whereRule);
+            }
+        }
+        return this.whereRuleItem;
+    }
+
+    public void setWhereRuleItem(TDQBusinessRuleItem whereRuleItem) {
+        this.whereRuleItem = whereRuleItem;
+    }
+
+    public RuleRepNode getRuleRepNode() {
+        return this.ruleRepNode;
+    }
+
+    private void initRuleRepNode(WhereRule whereRule) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(whereRule);
+        if (recursiveFind != null && recursiveFind instanceof RuleRepNode) {
+            this.ruleRepNode = (RuleRepNode) recursiveFind;
+            this.whereRuleItem = (TDQBusinessRuleItem) this.ruleRepNode.getObject().getProperty().getItem();
+        } else {
+            Property property = PropertyHelper.getProperty(whereRule);
+            this.whereRuleItem = (TDQBusinessRuleItem) property.getItem();
+        }
+    }
 
     private Section dqRuleDefinitionSection;
 
@@ -104,9 +135,21 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     private List<JoinElement> tempJoinElements;
 
+    public List<JoinElement> getTempJoinElements() {
+        return tempJoinElements;
+    }
+
     private Composite joinElementComp;
 
     private JoinConditionTableViewer joinConditionTableViewer;
+
+    public Text getCriticalityLevelText() {
+        return criticalityLevelText;
+    }
+
+    public Text getWhereText() {
+        return whereText;
+    }
 
     /**
      * DOC xqliu DQRuleMasterDetailsPage constructor comment.
@@ -119,16 +162,19 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         super(editor, id, title);
     }
 
-    public List<JoinElement> getTempJoinElements() {
-        return tempJoinElements;
-    }
-
-    public Text getCriticalityLevelText() {
-        return criticalityLevelText;
-    }
-
-    public Text getWhereText() {
-        return whereText;
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
+        IEditorInput editorInput = editor.getEditorInput();
+        if (editorInput instanceof FileEditorInput) {
+            FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+            this.currentModelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(input.getFile());
+        } else if (editorInput instanceof BusinessRuleItemEditorInput) {
+            BusinessRuleItemEditorInput input = (BusinessRuleItemEditorInput) editor.getEditorInput();
+            this.currentModelElement = input.getTDQBusinessRuleItem().getDqrule();
+        }
+        whereRule = (WhereRule) this.currentModelElement;
+        initRuleRepNode(whereRule);
+        return whereRule;
     }
 
     @Override
@@ -197,7 +243,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         GridData data;
         criticalityLevelText = new Text(container, SWT.BORDER);
-        criticalityLevelText.setText("" + getCurrentModelElement().getCriticalityLevel()); //$NON-NLS-1$
+        criticalityLevelText.setText("" + whereRule.getCriticalityLevel()); //$NON-NLS-1$
         data = new GridData(GridData.FILL_HORIZONTAL);
         criticalityLevelText.setLayoutData(data);
 
@@ -207,7 +253,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         whereText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         WhereClauseDND.installDND(whereText);
-        whereText.setText(getCurrentModelElement().getWhereExpression());
+        whereText.setText(whereRule.getWhereExpression());
         data = new GridData(GridData.FILL_BOTH);
         data.heightHint = 180;
         whereText.setLayoutData(data);
@@ -245,16 +291,16 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         boolean ret = false;
         this.tempJoinElements = cleanJoins(tempJoinElements);
         if (checkValus()) {
-            TaggedValueHelper.setValidStatus(true, getCurrentModelElement());
-            getCurrentModelElement().setCriticalityLevel(Integer.valueOf(getCriticalityLevelText().getText()));
-            getCurrentModelElement().setWhereExpression(whereText.getText());
-            getCurrentModelElement().getJoins().clear();
-            getCurrentModelElement().getJoins().addAll(this.tempJoinElements);
+            TaggedValueHelper.setValidStatus(true, whereRule);
+            whereRule.setCriticalityLevel(Integer.valueOf(getCriticalityLevelText().getText()));
+            whereRule.setWhereExpression(whereText.getText());
+            whereRule.getJoins().clear();
+            whereRule.getJoins().addAll(this.tempJoinElements);
 
-            TDQBusinessRuleItem whereRuleItem = (TDQBusinessRuleItem) getCurrentRepNode().getObject().getProperty().getItem();
-
+            // ReturnCode rc = DQRuleResourceFileHelper.getInstance().save(whereRule);
+            this.getWhereRuleItem().setDqrule(whereRule);
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(whereRuleItem, true);
+            ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(this.getWhereRuleItem(), true);
 
             ret = rc.isOk();
             this.joinConditionTableViewer.updateModelViewer();
@@ -571,7 +617,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         } else {
             tempJoinElements.clear();
         }
-        EList<JoinElement> joins = getCurrentModelElement().getJoins();
+        EList<JoinElement> joins = whereRule.getJoins();
         for (JoinElement join : joins) {
             tempJoinElements.add(cloneJoin(join));
         }
@@ -705,57 +751,4 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         }
         return rc;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
-     */
-    @Override
-    public WhereRule getCurrentModelElement() {
-        return (WhereRule) ruleRepNode.getRule();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
-     */
-    @Override
-    public RuleRepNode getCurrentRepNode() {
-        return ruleRepNode;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
-     */
-    @Override
-    protected void init(FormEditor editor) {
-        currentEditor = (DQRuleEditor) editor;
-        ruleRepNode = getWhereRuleRepNodeFromInput(currentEditor.getEditorInput());
-    }
-
-    /**
-     * get PatternRepNode From editorInput
-     * 
-     * @param editorInput
-     * @return
-     */
-    private RuleRepNode getWhereRuleRepNodeFromInput(IEditorInput editorInput) {
-        if (editorInput instanceof FileEditorInput) {
-            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
-            IFile file = fileEditorInput.getFile();
-            if (file != null) {
-                WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-                whereRule = (WhereRule) EObjectHelper.resolveObject(whereRule);
-                return RepositoryNodeHelper.recursiveFindRuleSql(whereRule);
-            }
-        } else if (editorInput instanceof BusinessRuleItemEditorInput) {
-            return ((BusinessRuleItemEditorInput) editorInput).getRepNode();
-        }
-        return null;
-    }
-
 }

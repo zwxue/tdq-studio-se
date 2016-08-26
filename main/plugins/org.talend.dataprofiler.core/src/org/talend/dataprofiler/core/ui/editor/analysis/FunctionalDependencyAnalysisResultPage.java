@@ -263,8 +263,31 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
         resultTable.setLayoutData(gd);
 
         // add menus
-        ChartTableFactory.addMenuAndTip(tableViewer, new ColumnDependencyExplorer(), this.masterPage.getCurrentModelElement());
+        ChartTableFactory.addMenuAndTip(tableViewer, new ColumnDependencyExplorer(), this.masterPage.analysisItem.getAnalysis());
     }
+
+    /**
+     * DOC jet according to current analysis generator chart dataset "initDataset".
+     * 
+     * @return
+     * @deprecated
+     */
+    // private DefaultCategoryDataset initDataset() {
+    //
+    // DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    //
+    // Analysis analysis = this.getAnalysisHandler().getAnalysis();
+    //
+    // for (Iterator iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
+    // ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
+    // String label = getRowLabel(indicator);
+    // if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
+    // dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
+    //                dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label); //$NON-NLS-1$
+    // }
+    // }
+    // return dataset;
+    // }
 
     /**
      * DOC xqliu Comment method "initCustomerDataset".

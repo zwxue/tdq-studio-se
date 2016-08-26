@@ -47,6 +47,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TableHelper;
@@ -95,6 +97,7 @@ import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -1097,10 +1100,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 WhereRuleIndicator indicator = (WhereRuleIndicator) indicatorUnit.getIndicator();
                 WhereRule whereRule = (WhereRule) indicator.getIndicatorDefinition();
-                // Property property = PropertyHelper.getProperty(whereRule);
-                // Item item = property.getItem();
-                RuleRepNode node = RepositoryNodeHelper.recursiveFindRuleSql(whereRule);
-                BusinessRuleItemEditorInput itemEditorInput = new BusinessRuleItemEditorInput(node);
+                // MOD klliu 2011-04-12 bug 20472
+                Property property = PropertyHelper.getProperty(whereRule);
+                Item item = property.getItem();
+                BusinessRuleItemEditorInput itemEditorInput = new BusinessRuleItemEditorInput(item);
                 // ~
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 try {

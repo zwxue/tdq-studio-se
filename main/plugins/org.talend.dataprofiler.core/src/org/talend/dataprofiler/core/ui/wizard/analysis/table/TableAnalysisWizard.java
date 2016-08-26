@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
@@ -35,7 +36,6 @@ import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -198,15 +198,13 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     }
 
     /*
-     * (non-Javadoc)
+     * (non-Jsdoc)
      * 
-     * @see
-     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
-     * )
+     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.core.model.properties.Item)
      */
     @Override
-    public void openEditor(IRepositoryNode repNode) {
-        AnalysisItemEditorInput itemEditorInput = new AnalysisItemEditorInput(repNode);
+    public void openEditor(Item item) {
+        AnalysisItemEditorInput itemEditorInput = new AnalysisItemEditorInput(item);
         CorePlugin.getDefault().openEditor(itemEditorInput, AnalysisEditor.class.getName());
     }
 }

@@ -126,7 +126,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
     @Override
     protected AnalysisHandler getAnalysisHandler() {
-        return this.masterPage.getAnalysisHandler();
+        return this.masterPage.getColumnCorrelationAnalysisHandler();
     }
 
     @Override

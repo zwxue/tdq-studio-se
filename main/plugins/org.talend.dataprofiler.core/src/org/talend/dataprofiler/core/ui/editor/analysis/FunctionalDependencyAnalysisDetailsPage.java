@@ -39,6 +39,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -73,23 +74,6 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     private Section columnsComparisonSection = null;
 
-    List<RepositoryNode> columnListA = null;
-
-    List<RepositoryNode> columnListB = null;
-
-    private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
-
-    ModelElementAnalysisHandler analysisHandler;
-
-    /**
-     * @param editor
-     * @param id
-     * @param title
-     */
-    public FunctionalDependencyAnalysisDetailsPage(FormEditor editor, String id, String title) {
-        super(editor, id, title);
-    }
-
     public Section getColumnsComparisonSection() {
         return this.columnsComparisonSection;
     }
@@ -97,6 +81,14 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
     public void setColumnsComparisonSection(Section columnsComparisonSection) {
         this.columnsComparisonSection = columnsComparisonSection;
     }
+
+    List<RepositoryNode> columnListA = null;
+
+    List<RepositoryNode> columnListB = null;
+
+    private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
+
+    ModelElementAnalysisHandler analysisHandler;
 
     /*
      * (non-Javadoc)
@@ -109,7 +101,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         analysisHandler = new ModelElementAnalysisHandler();
-        analysisHandler.setAnalysis(getCurrentModelElement());
+        analysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = analysisHandler.getStringDataFilterwithContext();
     }
 
@@ -135,7 +127,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         dataFilterComp.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                AnalysisHelper.setStringDataFilter(getCurrentModelElement(), dataFilterComp.getDataFilterString());
+                AnalysisHelper.setStringDataFilter(analysisItem.getAnalysis(), dataFilterComp.getDataFilterString());
             }
         });
 
@@ -154,6 +146,15 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
     @Override
     public ScrolledForm getScrolledForm() {
         return form;
+    }
+
+    /**
+     * @param editor
+     * @param id
+     * @param title
+     */
+    public FunctionalDependencyAnalysisDetailsPage(FormEditor editor, String id, String title) {
+        super(editor, id, title);
     }
 
     /*
@@ -204,9 +205,13 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
         analysisHandler.changeSampleDataShowWay(sampleDataShowWayCombo.getText());
 
-        for (Domain domain : getCurrentModelElement().getParameters().getDataFilter()) {
-            domain.setName(getCurrentModelElement().getName());
+        // ADD gdbu 2011-3-3 bug 19179
+        // remove the space from analysis name
+        //        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
+        for (Domain domain : this.analysisItem.getAnalysis().getParameters().getDataFilter()) {
+            domain.setName(this.analysisItem.getAnalysis().getName());
         }
+        // ~
 
         IRepositoryViewObject reposObject = null;
         getAnalysisHandler().clearAnalysis();
@@ -215,7 +220,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         List<RepositoryNode> columnListBBNode = anaColumnCompareViewer.getColumnListB();
 
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
-        anaBuilder.setAnalysis(getCurrentModelElement());
+        anaBuilder.setAnalysis(this.analysisItem.getAnalysis());
         Connection tdDataProvider = null;
 
         for (int i = 0; i < columnListAANode.size(); i++) {
@@ -228,7 +233,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
                 indicator.setColumnA(columnA);
                 indicator.setColumnB(columnB);
                 indicator.setIndicatorDefinition(DefinitionHandler.getInstance().getFDRuleDefaultIndicatorDefinition());
-                getCurrentModelElement().getResults().getIndicators().add(indicator);
+                analysisItem.getAnalysis().getResults().getIndicators().add(indicator);
                 anaBuilder.addElementToAnalyze(columnA, indicator);
                 // ADD this line qiongli 2010-6-8
                 anaBuilder.addElementToAnalyze(columnB, indicator);
@@ -239,31 +244,30 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
             reposObject = columnListAANode.get(0).getObject();
             tdDataProvider = ((ConnectionItem) reposObject.getProperty().getItem()).getConnection();
             // MOD qiongli bug 14437:Add dependency
-            getCurrentModelElement().getContext().setConnection(tdDataProvider);
-            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(getCurrentModelElement(),
+            analysisItem.getAnalysis().getContext().setConnection(tdDataProvider);
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysisItem.getAnalysis(),
                     tdDataProvider);
             if (!rc.isOk()) {
-                log.info("fail to save dependency analysis:" + getCurrentModelElement().getFileName());//$NON-NLS-1$
+                log.info("fail to save dependency analysis:" + analysisItem.getAnalysis().getFileName());//$NON-NLS-1$
             }
         } else {
-            getCurrentModelElement().getContext().setConnection(null);
+            analysisItem.getAnalysis().getContext().setConnection(null);
         }
 
         // save the number of connections per analysis
         this.saveNumberOfConnectionsPerAnalysis();
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
-        this.nameText.setText(getCurrentModelElement().getName());
-
+        ReturnCode saved = new ReturnCode(false);
+        this.nameText.setText(analysisItem.getAnalysis().getName());
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-        ReturnCode saved = ElementWriterFactory.getInstance().createAnalysisWrite()
-                .save(getCurrentRepNode().getObject().getProperty().getItem(), true);
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.
         // @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#logSaved(ReturnCode)
         logSaved(saved);
-
+        // ADD xqliu 2012-04-19 TDQ-5005
         anaColumnCompareViewer.setDirty(false);
         dataFilterComp.setDirty(false);
     }
@@ -292,7 +296,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     private List<RepositoryNode> getColumnSet(EReference reference) {
         List<RepositoryNode> columns = new ArrayList<RepositoryNode>();
-        EList<Indicator> indicators = getCurrentModelElement().getResults().getIndicators();
+        EList<Indicator> indicators = analysisItem.getAnalysis().getResults().getIndicators();
         for (Indicator indicator : indicators) {
             TdColumn findColumn = (TdColumn) indicator.eGet(reference);
             RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(findColumn);
@@ -314,7 +318,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
         }
         // ~19179
 
-        if (columnASet.isEmpty() || columnBSet.isEmpty()) {
+        if (columnASet.size() == 0 || columnBSet.size() == 0) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.columnsBlankMessag"), false); //$NON-NLS-1$
         }
         if (columnASet.size() != columnBSet.size()) {
@@ -410,14 +414,15 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
             return null;
         }
         List<TdColumn> columns = ColumnSetHelper.getColumns(previewDataColumnOwner);
-        return columns.toArray(new TdColumn[columns.size()]);
+        ModelElement[] modelElements = columns.toArray(new TdColumn[columns.size()]);
+        return modelElements;
     }
 
     @Override
     protected boolean isDataTableCompVisible() {
         if (anaColumnCompareViewer == null) {
             EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
-            return analyzedColumns != null && !analyzedColumns.isEmpty();
+            return analyzedColumns != null && analyzedColumns.size() > 0;
         } else {
             return anaColumnCompareViewer.getPreviewDataColumnOwner() != null;
         }

@@ -106,6 +106,23 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     private ColumnSetMultiValueIndicator columnSetMultiIndicator;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#isConnectionSupport(org.talend.
+     * repository.model.IRepositoryNode)
+     */
+    @Override
+    protected boolean isConnectionSupport(IRepositoryNode repNode) {
+        // ADD msjian TDQ-8458 2014-1-24: if the current analysis is correlation analysis, Disable to ability file
+        // and MDM connenction
+        if (repNode instanceof DBConnectionRepNode) {
+            return true;
+        }
+        return false;
+        // TDQ-8458~
+    }
+
     private Composite chartComposite;
 
     private static final int TREE_MAX_LENGTH = 400;
@@ -132,23 +149,6 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         super(editor, id, title);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#isConnectionSupport(org.talend.
-     * repository.model.IRepositoryNode)
-     */
-    @Override
-    protected boolean isConnectionSupport(IRepositoryNode repNode) {
-        // ADD msjian TDQ-8458 2014-1-24: if the current analysis is correlation analysis, Disable to ability file
-        // and MDM connenction
-        if (repNode instanceof DBConnectionRepNode) {
-            return true;
-        }
-        return false;
-        // TDQ-8458~
-    }
-
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
@@ -157,7 +157,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     public void recomputeIndicators() {
         correlationAnalysisHandler = new ColumnCorrelationAnalysisHandler();
-        correlationAnalysisHandler.setAnalysis(getCurrentModelElement());
+        correlationAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = correlationAnalysisHandler.getStringDataFilter();
         analyzedColumns = correlationAnalysisHandler.getAnalyzedColumns();
         if (correlationAnalysisHandler.getIndicator() == null && columnSetMultiIndicator != null) {
@@ -463,7 +463,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
                             Display.getDefault().asyncExec(new Runnable() {
 
                                 public void run() {
-                                    new HideSeriesChartComposite(comp, getCurrentModelElement(), columnSetMultiIndicator,
+                                    new HideSeriesChartComposite(comp, analysisItem.getAnalysis(), columnSetMultiIndicator,
                                             tdColumn, false);
                                 }
 
@@ -572,9 +572,15 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     @Override
     public void saveAnalysis() throws DataprofilerCoreException {
-        for (Domain domain : getCurrentModelElement().getParameters().getDataFilter()) {
-            domain.setName(getCurrentModelElement().getName());
+        // ADD gdbu 2011-3-3 bug 19179
+
+        // remove the space from analysis name
+        // this.analysis.setName(this.analysis.getName().replace(" ", ""));
+        // change 'ana' field's 'dataquality' tag content
+        for (Domain domain : this.analysisItem.getAnalysis().getParameters().getDataFilter()) {
+            domain.setName(this.analysisItem.getAnalysis().getName());
         }
+        // ~
 
         IRepositoryViewObject reposObject = null;
         Connection tdProvider = null;
@@ -592,9 +598,10 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         // save analysis
         List<RepositoryNode> repositoryNodeList = treeViewer.getColumnSetMultiValueList();
 
-        if (repositoryNodeList != null && !repositoryNodeList.isEmpty()) {
+        if (repositoryNodeList != null && repositoryNodeList.size() != 0) {
             reposObject = repositoryNodeList.get(0).getObject();
             tdProvider = ((ConnectionItem) reposObject.getProperty().getItem()).getConnection();
+            // tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
             analysis.getContext().setConnection(tdProvider);
 
             List<TdColumn> columnLst = new ArrayList<TdColumn>();
@@ -630,11 +637,11 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
         this.saveNumberOfConnectionsPerAnalysis();
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
+        ReturnCode saved = new ReturnCode(false);
         this.nameText.setText(analysis.getName());
         // ~
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-        ReturnCode saved = ElementWriterFactory.getInstance().createAnalysisWrite()
-                .save(getCurrentRepNode().getObject().getProperty().getItem(), true);
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.
@@ -679,6 +686,10 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
     @Override
     public AnalysisColumnNominalIntervalTreeViewer getTreeViewer() {
         return this.treeViewer;
+    }
+
+    public ColumnCorrelationAnalysisHandler getColumnCorrelationAnalysisHandler() {
+        return correlationAnalysisHandler;
     }
 
     public ColumnSetMultiValueIndicator getColumnSetMultiValueIndicator() {

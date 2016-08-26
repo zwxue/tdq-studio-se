@@ -38,7 +38,7 @@ public class EditHadoopClusterActionProvider extends AbstractCommonActionProvide
 
         super.fillContextMenu(menu);
 
-        IRepositoryNode node = getFirstRepositoryNode();
+        IRepositoryNode node = getFistContextNode();
 
         if (node != null) {
             if (node instanceof HadoopClusterConnectionRepNode) {

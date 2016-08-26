@@ -529,7 +529,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
                 return true;
             }
         };
-        EventManager.getInstance().register(masterPage.getCurrentModelElement(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
+        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
                 switchBetweenPageEvent);
     }
 
@@ -540,8 +540,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
      */
     public void unRegisterDynamicEvent() {
         // Added TDQ-9241
-        EventManager.getInstance()
-                .clearEvent(masterPage.getCurrentModelElement(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
+        EventManager.getInstance().clearEvent(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
 
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);

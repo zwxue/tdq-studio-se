@@ -81,7 +81,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.SampleDataShowWay;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
@@ -120,6 +119,11 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     private EventReceiver refreshTableDataReceiver = null;
 
     private MatchAnalysisHandler analysisHandler;
+
+    @Override
+    public MatchAnalysisHandler getAnalysisHandler() {
+        return analysisHandler;
+    }
 
     private Section dataSampleSection = null;
 
@@ -171,11 +175,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     }
 
     @Override
-    public MatchAnalysisHandler getAnalysisHandler() {
-        return analysisHandler;
-    }
-
-    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         computeIndicators();
@@ -183,7 +182,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     public void computeIndicators() {
         analysisHandler = new MatchAnalysisHandler();
-        analysisHandler.setAnalysis(getCurrentModelElement());
+        analysisHandler.setAnalysis((Analysis) this.currentModelElement);
+
     }
 
     @Override
@@ -208,7 +208,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     private void createSelectRecordLinkageSection() {
         selectAlgorithmSection = new AnalysisSelectionAlgorithmSection(form, topComp, toolkit);
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils
-                .getRecordMatchIndicatorFromAna(getCurrentModelElement());
+                .getRecordMatchIndicatorFromAna((Analysis) getCurrentModelElement(getEditor()));
         selectAlgorithmSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
@@ -218,9 +218,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private void createMatchAndSurvivorKeySection() {
         matchAndSurvivorKeySection = new AnaMatchSurvivorSection(form, topComp, Section.TWISTIE | Section.TITLE_BAR
-                | Section.EXPANDED, toolkit, getCurrentModelElement());
+                | Section.EXPANDED, toolkit, analysisItem.getAnalysis());
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils
-                .getRecordMatchIndicatorFromAna(getCurrentModelElement());
+                .getRecordMatchIndicatorFromAna((Analysis) getCurrentModelElement(getEditor()));
         matchAndSurvivorKeySection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         matchAndSurvivorKeySection.setAddColumn(!selectAlgorithmSection.isVSRMode());
         matchAndSurvivorKeySection.setColumnNameInput(getAllColumnsToKeyMap());
@@ -242,7 +242,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     private void createDefaultSurvivorshipSection() {
         defaultSurvivorshipDefinitionSection = new DefaultSurvivorshipDefinitionSection(form, topComp, toolkit);
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils
-                .getRecordMatchIndicatorFromAna(getCurrentModelElement());
+                .getRecordMatchIndicatorFromAna((Analysis) getCurrentModelElement(getEditor()));
         defaultSurvivorshipDefinitionSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         defaultSurvivorshipDefinitionSection.createContent();
         registerSection(defaultSurvivorshipDefinitionSection.getSection());
@@ -264,7 +264,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         // Added TDQ-10655 hide the store on disk on TOP.
         if (PluginChecker.isTDQLoaded()) {
             MatchParameterSection matchParameterSection = new MatchParameterSection(form, topComp, Section.TWISTIE
-                    | Section.TITLE_BAR | Section.EXPANDED, toolkit, getCurrentModelElement());
+                    | Section.TITLE_BAR | Section.EXPANDED, toolkit, analysisItem.getAnalysis());
             matchParameterSection.addPropertyChangeListener(this);
             matchParameterSection.createParameterCom();
             registerSection(matchParameterSection.getSection());
@@ -278,7 +278,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
      */
     private void createMatchingKeySection() {
         matchingKeySection = new MatchingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
-                toolkit, getCurrentModelElement());
+                toolkit, analysisItem.getAnalysis());
         matchingKeySection.addPropertyChangeListener(this);
         matchingKeySection.setColumnNameInput(getAllColumnsToKeyMap());
         matchingKeySection.createContent();
@@ -297,7 +297,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
      */
     private void createBlockingKeySection() {
         blockingKeySection = new BlockingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
-                toolkit, getCurrentModelElement());
+                toolkit, analysisItem.getAnalysis());
         blockingKeySection.addPropertyChangeListener(this);
         blockingKeySection.setColumnNameInput(getAllColumnsToKeyMap());
         blockingKeySection.createContent();
@@ -366,8 +366,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         titleComposite.setLayout(layout);
         analyzeDataLabel = new Label(titleComposite, SWT.NONE);
         final int analysisColumnSize = analysisHandler.getAnalyzedColumns().size();
-        final RepositoryNode firstColumnNode = analysisColumnSize > 0 ? RepositoryNodeHelper.recursiveFind(analysisHandler
-                .getAnalyzedColumns().get(0)) : null;
+        final RepositoryNode firstColumnNode = analysisColumnSize > 0 ? RepositoryNodeHelper
+                .recursiveFind(analysisHandler.getAnalyzedColumns().get(0)) : null;
         // register: refresh the dataprovider combobox when the name of the data provider is changed.
         refreshDataProiverLabel = new EventReceiver() {
 
@@ -379,7 +379,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 return true;
             }
         };
-        EventManager.getInstance().register(getCurrentModelElement(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL,
+        EventManager.getInstance().register(getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL,
                 refreshDataProiverLabel);
         if (analysisColumnSize > 0 && firstColumnNode != null) {
             updateAnalyzeDataLabel(firstColumnNode);
@@ -742,7 +742,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             sampleDataShowWayCombo.add(value.getLiteral());
         }
 
-        SampleDataShowWay sampleDataShowWay = getCurrentModelElement().getParameters().getSampleDataShowWay();
+        SampleDataShowWay sampleDataShowWay = analysisItem.getAnalysis().getParameters().getSampleDataShowWay();
         sampleDataShowWayCombo.setText(sampleDataShowWay.getLiteral());
         sampleDataShowWayCombo.addModifyListener(new ModifyListener() {
 
@@ -1433,8 +1433,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             return rc;
         }
 
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils
-                .getRecordMatchIndicatorFromAna(getCurrentModelElement());
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysisItem
+                .getAnalysis());
         EList<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
         if (matchRules.size() > 0) {
             MatchRule matchRule = matchRules.get(0);
@@ -1471,9 +1471,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             }
 
             if (checkResultStatus.isOk()) {
-                if (TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY, getCurrentModelElement())) {
-                    if (StringUtils
-                            .isBlank(TaggedValueHelper.getValueString(SQLExecutor.TEMP_DATA_DIR, getCurrentModelElement()))) {
+                if (TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY, this.getAnalysis())) {
+                    if (StringUtils.isBlank(TaggedValueHelper.getValueString(SQLExecutor.TEMP_DATA_DIR, this.getAnalysis()))) {
                         checkResultStatus.setOk(false);
                         checkResultStatus.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.invalidTempFolder")); //$NON-NLS-1$
                     }
@@ -1501,7 +1500,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
      */
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
-        // save the default loaded row count
         if (this.isValidateRowCount()) {
             analysisHandler.changeDefaultRowLoaded(rowLoadedText.getText());
         } else {
@@ -1513,13 +1511,14 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         analysisHandler.changeSampleDataShowWay(sampleDataShowWayCombo.getText());
 
         analysisHandler.saveSelectedAnalyzedElements();
-
-        TDQAnalysisItem analysisItem = (TDQAnalysisItem) getCurrentRepNode().getObject().getProperty().getItem();
         analysisHandler.updateAnaConnRelationship(analysisItem);
 
+        ReturnCode saved = new ReturnCode(false);
         this.nameText.setText(analysisHandler.getName());
+        // save the default loaded row count
+        // tdqAnalysisItem.getAnalysis().setParameters(analysisHandler.getParameters());
 
-        ReturnCode saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(this.analysisItem, true);
         logSaved(saved);
     }
 
@@ -1550,8 +1549,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         EventManager.getInstance().clearEvent(analysisHandler.getAnalysis(),
                 EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL);
 
-        getCurrentModelElement().eResource().unload();
+        this.getCurrentModelElement(this.getEditor()).eResource().unload();
         super.dispose();
+
     }
 
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {

@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.pattern;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -31,7 +32,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.pattern.PatternBuilder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -67,7 +67,7 @@ public class CreatePatternWizard extends AbstractWizard {
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
      * 
-     * @param parameter
+     * @param folder
      * @param type
      */
     public CreatePatternWizard(PatternParameter parameter, ExpressionType type) {
@@ -75,16 +75,9 @@ public class CreatePatternWizard extends AbstractWizard {
         this.parameter = parameter;
     }
 
-    /**
-     * CreatePatternWizard constructor.
-     * 
-     * @param parameter
-     * @param type
-     * @param expression
-     * @param language
-     */
     public CreatePatternWizard(PatternParameter parameter, ExpressionType type, String expression, String language) {
         this(parameter, type);
+
         this.expression = expression;
         this.language = language;
     }
@@ -172,6 +165,7 @@ public class CreatePatternWizard extends AbstractWizard {
     }
 
     public void setPurpose(String purpose) {
+
         this.purpose = purpose;
     }
 
@@ -197,16 +191,9 @@ public class CreatePatternWizard extends AbstractWizard {
         return ret;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
-     * )
-     */
     @Override
-    public void openEditor(IRepositoryNode repNode) {
-        PatternItemEditorInput patternItemEditorInput = new PatternItemEditorInput(repNode);
-        CorePlugin.getDefault().openEditor(patternItemEditorInput, PatternEditor.class.getName());
+    public void openEditor(Item item) {
+        PatternItemEditorInput analysisEditorInput = new PatternItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(analysisEditorInput, PatternEditor.class.getName());
     }
 }

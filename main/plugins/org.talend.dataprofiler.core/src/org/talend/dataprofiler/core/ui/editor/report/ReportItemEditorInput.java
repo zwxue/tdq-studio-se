@@ -12,54 +12,43 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.report;
 
+import org.talend.core.model.properties.Item;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
-import org.talend.dq.nodes.ReportRepNode;
-import org.talend.repository.model.IRepositoryNode;
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.dataquality.properties.TDQReportItem;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
 public class ReportItemEditorInput extends AbstractItemEditorInput {
 
-    private ReportRepNode reportRepNode;
-
+    private TDQReportItem reportItem;
     /**
-     * ReportItemEditorInput constructor.
+     * DOC klliu ReportItemEditorInput constructor comment.
      * 
-     * @param reportRepNode
+     * @param reposViewObj
      */
-    public ReportItemEditorInput(IRepositoryNode reportRepNode) {
-        super(reportRepNode);
+    public ReportItemEditorInput(Item item) {
+        super(item);
+        reportItem = (TDQReportItem) item;
+    }
+    @Override
+    public String getName() {
+        return getPath() + reportItem.getReport().getName();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getRepNode()
-     */
     @Override
-    public ReportRepNode getRepNode() {
-        return reportRepNode;
+    public String getToolTipText() {
+        return getPath() + reportItem.getReport().getName();
+    }
+    public TDQReportItem getTDQReportItem() {
+        return reportItem;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getModelOfRepNode()
-     */
-    @Override
-    public ModelElement getModel() {
-        return reportRepNode.getReport();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#setRepNode(org.talend.repository.model.IRepositoryNode)
-     */
-    @Override
-    public void setRepNode(IRepositoryNode node) {
-        this.reportRepNode = (ReportRepNode) node;
+    public String getModelElementUuid() {
+        if (this.item != null) {
+            return ResourceHelper.getUUID(this.reportItem.getReport());
+        }
+        return super.getModelElementUuid();
     }
 }

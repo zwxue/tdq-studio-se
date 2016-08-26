@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -85,7 +84,6 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -93,6 +91,7 @@ import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -162,6 +161,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     protected Composite expressionComp;
 
+    protected IndicatorDefinition definition;
+
+    private TDQIndicatorDefinitionItem definitionItem;
+
     protected SysIndicatorDefinitionRepNode indicatorDefinitionRepNode;
 
     protected IndicatorCategory category;
@@ -206,8 +209,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAA"//$NON-NLS-1$
             + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999"; //$NON-NLS-1$
 
-    private SysIndicatorDefinitionRepNode indicatorRepNode;
-
     /**
      * DOC bZhou IndicatorDefinitionMaterPage constructor comment.
      * 
@@ -230,8 +231,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         String intactElemenetName = super.getIntactElemenetName();
         String internationalizationLabel = StringUtils.EMPTY;
         Property property = getProperty();
-        if (property != null && getCurrentModelElement() != null
-                && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(getCurrentModelElement().eClass())) {
+        ModelElement tempCurrentModelElement = this.getCurrentModelElement(currentEditor);
+        if (property != null && tempCurrentModelElement != null
+                && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(tempCurrentModelElement.eClass())) {
             // system indicatorDefinition need to be internationalization
             internationalizationLabel = InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
             if (StringUtils.EMPTY.equals(internationalizationLabel)) {
@@ -248,9 +250,71 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     private void initIndicatorDefinitionRepNode(IndicatorDefinition indicatorDefinition) {
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(getCurrentModelElement());
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(definition);
         if (recursiveFind != null && recursiveFind instanceof SysIndicatorDefinitionRepNode) {
             this.indicatorDefinitionRepNode = (SysIndicatorDefinitionRepNode) recursiveFind;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#initialize(org.eclipse.ui.forms.editor.FormEditor
+     * )
+     */
+    @Override
+    public void initialize(FormEditor editor) {
+        super.initialize(editor);
+        String[] databaseTypes = PatternLanguageType.getAllLanguageTypes();
+        // initialize user defined indicator category
+        definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
+
+        allDBTypeList = new ArrayList<String>();
+        allDBTypeList.addAll(Arrays.asList(databaseTypes));
+        // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
+        removeJavaType();
+
+        // MOD xqliu 2010-03-23 feature 11201
+        remainDBTypeListAF = new ArrayList<String>();
+        remainDBTypeListAF.addAll(allDBTypeList);
+
+        remainDBTypeListCM = new ArrayList<String>();
+        remainDBTypeListCM.addAll(allDBTypeList);
+
+        // MOD xqliu 2010-03-23 feature 11201
+        initTempMaps();
+
+        if (widgetMap == null) {
+            widgetMap = new HashMap<CCombo, Composite>();
+        } else {
+            widgetMap.clear();
+        }
+
+        if (definition != null && definition.getCategories().size() > 0) {
+            category = definition.getCategories().get(0);
+        }
+
+        if (definition != null) {
+            hasAggregateExpression = definition.getAggregate1argFunctions().size() > 0;
+            hasDateExpression = definition.getDate1argFunctions().size() > 0;
+            hasCharactersMapping = definition.getCharactersMapping().size() > 0;
+            hasCharactersMapping = hasCharactersMapping || isEastAsiaPatternFequencyStatics(definition);
+        }
+        afExpressionMap = new HashMap<String, AggregateDateExpression>();
+        afExpressionMapTemp = new HashMap<String, AggregateDateExpression>();
+
+        charactersMappingMap = new HashMap<String, CharactersMapping>();
+        charactersMappingMapTemp = new HashMap<String, CharactersMapping>();
+
+        // ADD xqliu 2010-03-23 feature 11201
+        initTempExpressionList(definition);
+
+        initIndicatorDefinitionRepNode(definition);
+
+        if (this.indicatorDefinitionRepNode != null) {
+            this.definitionItem = (TDQIndicatorDefinitionItem) this.indicatorDefinitionRepNode.getObject().getProperty()
+                    .getItem();
         }
     }
 
@@ -390,8 +454,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         charactersMappingLineComp.setLayout(new GridLayout());
         charactersMappingLineComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (getCurrentModelElement() != null) {
-            EList<CharactersMapping> charactersMappings = getCurrentModelElement().getCharactersMapping();
+        if (definition != null) {
+            EList<CharactersMapping> charactersMappings = definition.getCharactersMapping();
 
             if (charactersMappings != null && charactersMappings.size() > 0) {
                 for (CharactersMapping charactersMapping : charactersMappings) {
@@ -629,9 +693,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         afExpressionComp.setLayout(new GridLayout());
         afExpressionComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (getCurrentModelElement() != null) {
-            EList<TdExpression> aggregate1argFunctions = getCurrentModelElement().getAggregate1argFunctions();
-            EList<TdExpression> date1argFunctions = getCurrentModelElement().getDate1argFunctions();
+        if (definition != null) {
+            EList<TdExpression> aggregate1argFunctions = definition.getAggregate1argFunctions();
+            EList<TdExpression> date1argFunctions = definition.getDate1argFunctions();
 
             if (aggregate1argFunctions != null && aggregate1argFunctions.size() > 0) {
                 for (TdExpression expression : aggregate1argFunctions) {
@@ -900,7 +964,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ADD klliu 2010-06-02 bug 13451: Class name of Java User Define Indicator must be validated
         // MOD backport klliu2010-06-10
         if (tempExpressionMap.size() == 0) {
-            if (getCurrentModelElement() != null) {
+            if (definition != null) {
                 // MOD xqliu 2010-03-23 feature 11201
                 for (TdExpression expression : tempExpressionList) {
                     createNewLineWithExpression(expression);
@@ -1122,7 +1186,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             List<TdExpression> modifyList = new ArrayList<TdExpression>();
             modifyList.add(tempExpressionMap.get(this.combo));
             // update other Temp Maps
-            if (getCurrentModelElement() instanceof UDIndicatorDefinition) {
+            if (definition instanceof UDIndicatorDefinition) {
                 if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                     modifyList.add(tempViewValidRowsExpressionMap.get(this.combo));
                     modifyList.add(tempViewInvalidRowsExpressionMap.get(this.combo));
@@ -1190,7 +1254,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             updateLineAndOtherCombos(combo, expression, oldLanguage);
 
             // then update other Temp Maps
-            if (getCurrentModelElement() instanceof UDIndicatorDefinition) {
+            if (definition instanceof UDIndicatorDefinition) {
                 if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                     modifyList.add(tempViewValidRowsExpressionMap.get(combo));
                     modifyList.add(tempViewInvalidRowsExpressionMap.get(combo));
@@ -1391,6 +1455,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
+                definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
                 final ExpressionEditDialog editDialog = initExpresstionEditDialog(combo, version, patternText.getText());
                 if (Dialog.OK == editDialog.open()) {
                     patternText.setText(editDialog.getTempExpression().getBody());
@@ -1428,7 +1493,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (isDirty()) {
             tdExpression = tempExpressionMap.get(combo);
         } else {
-            tdExpression = getCurrentLanguageExp(getCurrentModelElement().getSqlGenericExpression(),
+            tdExpression = getCurrentLanguageExp(definition.getSqlGenericExpression(),
                     PatternLanguageType.findLanguageByName(combo.getText()), version);
         }
         return tdExpression;
@@ -1473,7 +1538,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         labelGd.widthHint = 65;
         addButton.setLayoutData(labelGd);
         // MOD qiongli 2011-8-15 feature TDQ-1894:disable for phone nuber indicator
-        if (getCurrentModelElement() != null && category != null && IndicatorCategoryHelper.isPhoneNumberCategory(category)) {
+        if (definition != null && category != null && IndicatorCategoryHelper.isPhoneNumberCategory(category)) {
             addButton.setEnabled(false);
         }
         addButton.addSelectionListener(new SelectionAdapter() {
@@ -1486,6 +1551,32 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 setDirty(true);
             }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement(org.eclipse.ui.forms.editor
+     * .FormEditor)
+     */
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
+        IEditorInput editorInputt = editor.getEditorInput();
+        IndicatorDefinition ind = null;
+        // MOD klliu 2010-12-10
+        if (editorInputt instanceof IndicatorEditorInput) {
+            IndicatorEditorInput indicatorEditorInput = (IndicatorEditorInput) editorInputt;
+            ind = indicatorEditorInput.getIndicatorDefinition();
+        } else if (editorInputt instanceof FileEditorInput) {
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInputt;
+            ind = IndicatorResourceFileHelper.getInstance().findIndDefinition(fileEditorInput.getFile());
+        } else if (editorInputt instanceof IndicatorDefinitionItemEditorInput) {
+            IndicatorDefinitionItemEditorInput indicatorDefEditorInput = (IndicatorDefinitionItemEditorInput) editorInputt;
+            TDQIndicatorDefinitionItem tdqIndicatorDefinitionItem = indicatorDefEditorInput.getTDQIndicatorDefinitionItem();
+            ind = tdqIndicatorDefinitionItem.getIndicatorDefinition();
+        }
+        return ind;
     }
 
     /*
@@ -1535,20 +1626,22 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     return;
                 }
             }
-            rc = UDIHelper.validate(getCurrentModelElement());
+            rc = UDIHelper.validate(definition);
         }
 
         if (rc.isOk()) {
+            // MOD by zshen for bug 18724 2011.02.23
+            if (this.definitionItem != null) {
+                this.definitionItem.setIndicatorDefinition(definition);
+            }
             super.doSave(monitor);
             this.isDirty = false;
             // Mod TDQ-7474, only when rc is ok, should save the definition
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            TDQIndicatorDefinitionItem indicatorDefinitionItem = (TDQIndicatorDefinitionItem) getCurrentRepNode().getObject()
-                    .getProperty().getItem();
-            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(indicatorDefinitionItem, true);
+            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem, true);
 
-            if (UDIHelper.isJUDIValid(getCurrentModelElement()) && needReloadJUDIJar) {
-                UDIHelper.clearJAVAUDIMAPByIndicatorDefinition(getCurrentModelElement());
+            if (UDIHelper.isJUDIValid(definition) && needReloadJUDIJar) {
+                UDIHelper.clearJAVAUDIMAPByIndicatorDefinition(definition);
             }
         } else {
             MessageUI.openError(rc.getMessage());
@@ -1595,7 +1688,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     private CCombo updateExpressions() {
-        EList<TdExpression> expressions = getCurrentModelElement().getSqlGenericExpression();
+        EList<TdExpression> expressions = definition.getSqlGenericExpression();
         expressions.clear();
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
 
@@ -1619,7 +1712,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     private boolean updateCharactersMapping() {
-        EList<CharactersMapping> charactersMappings = getCurrentModelElement().getCharactersMapping();
+        EList<CharactersMapping> charactersMappings = definition.getCharactersMapping();
         charactersMappings.clear();
         for (CharactersMapping cm : charactersMappingMapTemp.values()) {
             String c = cm.getCharactersToReplace();
@@ -1636,7 +1729,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     private void updateDateExpression() {
-        EList<TdExpression> date1argFunctions = getCurrentModelElement().getDate1argFunctions();
+        EList<TdExpression> date1argFunctions = definition.getDate1argFunctions();
         date1argFunctions.clear();
         for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
             TdExpression expression = ade.getDateExpression();
@@ -1647,7 +1740,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     private void updateAggregateExpression() {
-        EList<TdExpression> aggregate1argFunctions = getCurrentModelElement().getAggregate1argFunctions();
+        EList<TdExpression> aggregate1argFunctions = definition.getAggregate1argFunctions();
         aggregate1argFunctions.clear();
         for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
             TdExpression expression = ade.getAggregateExpression();
@@ -2482,103 +2575,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
         }
         return rc;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
-     */
-    @Override
-    public SysIndicatorDefinitionRepNode getCurrentRepNode() {
-        return this.indicatorRepNode;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
-     */
-    @Override
-    public IndicatorDefinition getCurrentModelElement() {
-        return indicatorRepNode.getIndicatorDefinition();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
-     */
-    @Override
-    protected void init(FormEditor editor) {
-        currentEditor = (IndicatorEditor) editor;
-        this.indicatorRepNode = getIndicatorRepNodeFromInput(currentEditor.getEditorInput());
-
-        String[] databaseTypes = PatternLanguageType.getAllLanguageTypes();
-        // initialize user defined indicator category
-
-        allDBTypeList = new ArrayList<String>();
-        allDBTypeList.addAll(Arrays.asList(databaseTypes));
-        // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
-        removeJavaType();
-
-        // MOD xqliu 2010-03-23 feature 11201
-        remainDBTypeListAF = new ArrayList<String>();
-        remainDBTypeListAF.addAll(allDBTypeList);
-
-        remainDBTypeListCM = new ArrayList<String>();
-        remainDBTypeListCM.addAll(allDBTypeList);
-
-        // MOD xqliu 2010-03-23 feature 11201
-        initTempMaps();
-
-        if (widgetMap == null) {
-            widgetMap = new HashMap<CCombo, Composite>();
-        } else {
-            widgetMap.clear();
-        }
-
-        if (getCurrentModelElement() != null && getCurrentModelElement().getCategories().size() > 0) {
-            category = getCurrentModelElement().getCategories().get(0);
-        }
-
-        if (getCurrentModelElement() != null) {
-            hasAggregateExpression = getCurrentModelElement().getAggregate1argFunctions().size() > 0;
-            hasDateExpression = getCurrentModelElement().getDate1argFunctions().size() > 0;
-            hasCharactersMapping = getCurrentModelElement().getCharactersMapping().size() > 0;
-            hasCharactersMapping = hasCharactersMapping || isEastAsiaPatternFequencyStatics(getCurrentModelElement());
-        }
-        afExpressionMap = new HashMap<String, AggregateDateExpression>();
-        afExpressionMapTemp = new HashMap<String, AggregateDateExpression>();
-
-        charactersMappingMap = new HashMap<String, CharactersMapping>();
-        charactersMappingMapTemp = new HashMap<String, CharactersMapping>();
-
-        // ADD xqliu 2010-03-23 feature 11201
-        initTempExpressionList(getCurrentModelElement());
-
-        initIndicatorDefinitionRepNode(getCurrentModelElement());
-    }
-
-    /**
-     * get PatternRepNode From editorInput
-     * 
-     * @param editorInput
-     * @return
-     */
-    private SysIndicatorDefinitionRepNode getIndicatorRepNodeFromInput(IEditorInput editorInput) {
-        if (editorInput instanceof FileEditorInput) {
-            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
-            IFile file = fileEditorInput.getFile();
-            if (file != null) {
-                IndicatorDefinition indicatorDefinition = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
-                indicatorDefinition = (IndicatorDefinition) EObjectHelper.resolveObject(indicatorDefinition);
-                return RepositoryNodeHelper.recursiveFindIndicatorDefinition(indicatorDefinition);
-            }
-        } else if (editorInput instanceof IndicatorDefinitionItemEditorInput) {
-            return ((IndicatorDefinitionItemEditorInput) editorInput).getRepNode();
-        }
-        return null;
     }
 
 }

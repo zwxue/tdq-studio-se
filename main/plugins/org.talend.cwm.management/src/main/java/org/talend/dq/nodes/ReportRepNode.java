@@ -15,6 +15,7 @@ package org.talend.dq.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.properties.TDQReportItem;
@@ -32,21 +33,28 @@ public class ReportRepNode extends DQRepositoryNode {
 
     public static final String GEN_FLODER = "Generated Documents";//$NON-NLS-1$
 
+    private Report report;
+
+    public Report getReport() {
+        return this.report;
+    }
+
     /**
-     * ReportRepNode constructor.
+     * DOC klliu ReportRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
-     * @param inWhichProject
      */
     public ReportRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
-    }
-
-    public Report getReport() {
-        return ((TDQReportItem) this.getObject().getProperty().getItem()).getReport();
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof TDQReportItem) {
+                this.report = ((TDQReportItem) item).getReport();
+            }
+        }
     }
 
     @Override

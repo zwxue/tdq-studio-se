@@ -98,7 +98,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         }
 
         this.oldDataProvider = tdProvider;
-        this.analysisItem = (TDQAnalysisItem) masterPage.getCurrentRepNode().getObject().getProperty().getItem();
+        this.analysisItem = masterPage.getAnalysisItem();
         this.changeActionStatus = new ReturnCode(Boolean.FALSE);
     }
 

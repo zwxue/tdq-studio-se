@@ -884,7 +884,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
      */
     public void doSetInput() {
         List<OverviewIndUIElement> indicatorList = null;
-        if (masterPage.getCurrentModelElement().getResults().getIndicators().size() > 0) {
+        if (masterPage.analysisItem.getAnalysis().getResults().getIndicators().size() > 0) {
             indicatorList = getCatalogIndicators();
             if (indicatorList.size() == 0) {
                 catalogTableViewer.setInput(getSchemaIndicators());
@@ -970,11 +970,11 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + schemaSize);
 
-        ExecutionInformations resultMetadata = masterPage.getCurrentModelElement().getResults().getResultMetadata();
+        ExecutionInformations resultMetadata = masterPage.analysisItem.getAnalysis().getResults().getResultMetadata();
 
         toolkit.createLabel(rightComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.createionDate", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
-        toolkit.createLabel(rightComp, getFormatDateStr(masterPage.getCurrentModelElement().getCreationDate()));
+        toolkit.createLabel(rightComp, getFormatDateStr(masterPage.analysisItem.getAnalysis().getCreationDate()));
         toolkit.createLabel(rightComp,
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDate", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(rightComp, getFormatDateStr(resultMetadata.getExecutionDate()));
@@ -1000,7 +1000,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.lastSucessfulExecution", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getLastExecutionNumberOk());
         // MOD qiongli 2011-5-16
-        DataManager connection = masterPage.getCurrentModelElement().getContext().getConnection();
+        DataManager connection = masterPage.analysisItem.getAnalysis().getContext().getConnection();
         if (connection != null) {
             RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(connection);
             if (connNode != null && connNode.getObject().isDeleted()) {
@@ -1040,7 +1040,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
      * @return
      */
     private String getDatabaseType(Properties pameterProperties) {
-        DataManager dataManager = masterPage.getCurrentModelElement().getContext().getConnection();
+        DataManager dataManager = masterPage.analysisItem.getAnalysis().getContext().getConnection();
         if (dataManager instanceof DatabaseConnection) {
             return ((DatabaseConnection) dataManager).getDatabaseType();
         } else {

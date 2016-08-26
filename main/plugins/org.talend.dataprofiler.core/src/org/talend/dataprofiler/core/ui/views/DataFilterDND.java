@@ -68,7 +68,7 @@ public final class DataFilterDND {
 
             @Override
             public void dropAccept(DropTargetEvent event) {
-                // do nothing until now
+                // String existStr = targetControl.getText();
             }
 
             @Override
@@ -76,14 +76,18 @@ public final class DataFilterDND {
                 if (event.detail != DND.DROP_NONE) {
                     IStructuredSelection selection = (IStructuredSelection) commonViewer.getSelection();
                     if (!selection.isEmpty()) {
+                        // Iterator<TdColumn> it = selection.iterator();
                         List list = selection.toList();
                         IEditorPart currentActiveEditor = CorePlugin.getDefault().getCurrentActiveEditor();
                         if (currentActiveEditor instanceof AnalysisEditor) {
                             AnalysisEditor editor = (AnalysisEditor) currentActiveEditor;
                             AnalysisItemEditorInput input = (AnalysisItemEditorInput) editor.getEditorInput();
+                            Analysis analysis = input.getTDQAnalysisItem().getAnalysis();
+                            // AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
+                            // while (it.hasNext()) {
                             for (Object object : list) {
                                 DBColumnRepNode node = (DBColumnRepNode) object;
-                                DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage((Analysis) input.getModel());
+                                DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
                                 MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
                                 String name = columnObject.getTdColumn().getName();
                                 targetControl.insert(language.quote(name));

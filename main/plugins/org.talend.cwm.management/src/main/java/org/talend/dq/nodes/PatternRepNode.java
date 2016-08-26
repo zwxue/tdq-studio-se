@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -30,21 +31,28 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class PatternRepNode extends DQRepositoryNode {
 
+    private Pattern pattern;
+
+    public Pattern getPattern() {
+        return this.pattern;
+    }
+
     /**
-     * PatternRepNode constructor.
+     * DOC klliu PatternRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
-     * @param inWhichProject
      */
     public PatternRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type,
             org.talend.core.model.general.Project inWhichProject) {
         super(object, parent, type, inWhichProject);
-    }
-
-    public Pattern getPattern() {
-        return ((TDQPatternItem) this.getObject().getProperty().getItem()).getPattern();
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof TDQPatternItem) {
+                this.pattern = ((TDQPatternItem) item).getPattern();
+            }
+        }
     }
 
     @Override

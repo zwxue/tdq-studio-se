@@ -79,8 +79,8 @@ import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmD
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
-import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
@@ -98,7 +98,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.writer.impl.DataProviderWriter;
@@ -158,7 +157,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         IEditorInput editorInput = null;
         if (item instanceof ConnectionItem) {
             clazz = ConnectionEditor.class;
-            editorInput = new ConnectionItemEditorInput(RepositoryNodeHelper.recursiveFind(item.getProperty()));
+            editorInput = new ConnectionItemEditorInput(item);
         }
 
         if (editorInput != null && clazz != null && CoreRuntimePlugin.getInstance().isDataProfilePerspectiveSelected()) {
@@ -266,6 +265,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
         TaggedValueHelper.setValidStatus(true, parserRule);
         for (HashMap<String, Object> expression : values) {
+
             parserRule.addExpression(expression.get(RULE_NAME).toString(),
                     expression.get(RULE_TYPE) instanceof Integer ? Integer.toString((Integer) expression.get(RULE_TYPE))
                             : expression.get(RULE_TYPE).toString(), expression.get(RULE_VALUE).toString());
@@ -277,11 +277,11 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         IFolder folder = ResourceManager.getRulesParserFolder();
         TypedReturnCode<Object> returnObject = ElementWriterFactory.getInstance().createdRuleWriter().create(parserRule, folder);
         Object object = returnObject.getObject();
-
-        RuleRepNode parserRuleNode = RepositoryNodeHelper.recursiveFindRuleParser(parserRule);
-        BusinessRuleItemEditorInput parserRuleEditorInput = new BusinessRuleItemEditorInput(parserRuleNode);
-        CorePlugin.getDefault().openEditor(parserRuleEditorInput, DQRuleEditor.class.getName());
-        refresh(object);
+        if (object instanceof Item) {
+            ParserRuleItemEditorInput parserRuleEditorInput = new ParserRuleItemEditorInput((Item) object);
+            CorePlugin.getDefault().openEditor(parserRuleEditorInput, DQRuleEditor.class.getName());
+            this.refresh(object);
+        }
     }
 
     public List<Map<String, String>> getPaserRulesFromRules(Object parser) {

@@ -17,6 +17,7 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ColumnHelper;
@@ -28,7 +29,6 @@ import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.ProjectManager;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -130,13 +130,12 @@ public class ColumnFilterWizard extends AbstractWizard {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
-     * )
+     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.core.model.properties.Item)
      */
     @Override
-    public void openEditor(IRepositoryNode repNode) {
+    public void openEditor(Item item) {
         // no need to implement anything now
+
     }
 
     /*

@@ -42,7 +42,7 @@ public class CreateHiveOfHCActionProvider extends AbstractCommonActionProvider {
         }
 
         // MOD gdbu 2011-4-1 bug 20051
-        RepositoryNode node = (RepositoryNode) getFirstRepositoryNode();
+        RepositoryNode node = (RepositoryNode) getFistContextNode();
 
         if (node != null) {
             if (HadoopClusterUtils.getDefault().hideAction(node)) {

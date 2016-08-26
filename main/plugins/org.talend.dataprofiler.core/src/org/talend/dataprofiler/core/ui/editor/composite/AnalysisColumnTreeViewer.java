@@ -867,7 +867,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @return the analysis
      */
     public AnalysisRepNode getAnalysisNode() {
-        return this.masterPage.getCurrentRepNode();
+        return this.masterPage.getAnalysisRepNode();
     }
 
     public Tree getTree() {

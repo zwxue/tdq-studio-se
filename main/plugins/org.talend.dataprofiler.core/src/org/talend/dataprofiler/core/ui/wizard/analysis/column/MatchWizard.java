@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -74,16 +75,9 @@ public class MatchWizard extends ColumnWizard {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
-     * )
-     */
     @Override
-    public void openEditor(IRepositoryNode repNode) {
-        super.openEditor(repNode);
+    public void openEditor(Item item) {
+        super.openEditor(item);
 
         if (selectionPage != null) {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()

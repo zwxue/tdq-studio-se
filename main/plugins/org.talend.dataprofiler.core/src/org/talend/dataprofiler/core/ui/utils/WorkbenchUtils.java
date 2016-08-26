@@ -45,6 +45,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -53,6 +54,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
@@ -344,14 +346,26 @@ public final class WorkbenchUtils {
                     IEditorInput editorInput = editorRef.getEditorInput();
                     if (editorInput instanceof AbstractItemEditorInput) {
                         AbstractItemEditorInput anaItemEditorInput = (AbstractItemEditorInput) editorInput;
+                        Item item = anaItemEditorInput.getItem();
+                        Property property = item.getProperty();
+
+                        if (property == null) {
+                            continue;
+                        }
+
+                        IRepositoryViewObject lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
                         // close the editor
                         activePage.closeEditor(editorRef.getEditor(false), false);
                         // reopen the analysis
-                        new OpenItemEditorAction(anaItemEditorInput.getRepNode()).run();
+                        if (lastVersion != null) {
+                            new OpenItemEditorAction(lastVersion).run();
+                        }
                     }
                 }
             } catch (PartInitException e) {
                 log.error(e);
+            } catch (PersistenceException e) {
+                log.error(e, e);
             }
         }
         activePage.activate(activePartReference.getPart(false));
@@ -361,9 +375,26 @@ public final class WorkbenchUtils {
      * 
      * Refresh the analysis which is openning
      * 
-     * @param String analysisName: can be StringUtils.EMPTY
+     * @param connectionItem
+     */
+
+    public static void refreshCurrentAnalysisEditor() {
+
+        List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName(), StringUtils.EMPTY);
+        // update match analysis if any opened:TDQ-8267 added by yyin
+        iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName(), StringUtils.EMPTY));
+
+        closeAndOpenEditor(iEditorReference);
+    }
+
+    /**
+     * 
+     * Refresh the analysis which is openning
+     * 
+     * @param connectionItem
      */
     public static void refreshCurrentAnalysisEditor(String analysisName) {
+
         List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName(), analysisName);
         // update match analysis if any opened:TDQ-8267 added by yyin
         iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName(), analysisName));
@@ -408,7 +439,8 @@ public final class WorkbenchUtils {
                             AnalysisItemEditorInput anaItemEditorInput = (AnalysisItemEditorInput) editorInput;
                             // if not pointed which analysis, add all opened ones.
                             if (StringUtils.isEmpty(analysisName)
-                                    || StringUtils.equals(analysisName, anaItemEditorInput.getModel().getName())) {
+                                    || StringUtils.equals(analysisName, anaItemEditorInput.getTDQAnalysisItem().getAnalysis()
+                                            .getName())) {
                                 returnCode.add(editorRef);
                             }
                         }

@@ -38,6 +38,10 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.CorrelationAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetAnalysisDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.BusinessRuleAnalysisDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.DateTimeDialog;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
@@ -195,10 +199,43 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private void setPercentUIEnable() {
         IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
+        AbstractMetadataFormPage masterPage = null;
+        boolean tableMasterPage = false;
+        boolean columnSetMasterPage = false;
+        boolean columnCorrelationMasterPage = false;
+        AnalysisEditor anaEditor = null;
         if (editor != null) {
-            AnalysisEditor anaEditor = (AnalysisEditor) editor;
-            AbstractMetadataFormPage masterPage = anaEditor.getMasterPage();
-            isContainRowCount = AnalysisHelper.containsRowCount((Analysis) masterPage.getCurrentModelElement());
+            anaEditor = (AnalysisEditor) editor;
+            Object temp = anaEditor.getMasterPage();
+            if (temp != null) {
+                tableMasterPage = temp instanceof BusinessRuleAnalysisDetailsPage;
+                columnSetMasterPage = temp instanceof ColumnSetAnalysisDetailsPage;
+                columnCorrelationMasterPage = temp instanceof CorrelationAnalysisDetailsPage;
+                if (tableMasterPage) {
+                    masterPage = (BusinessRuleAnalysisDetailsPage) temp;
+                } else if (columnSetMasterPage) {
+                    masterPage = (ColumnSetAnalysisDetailsPage) temp;
+                } else if (columnCorrelationMasterPage) {
+                    masterPage = (CorrelationAnalysisDetailsPage) temp;
+                } else {
+                    masterPage = (ColumnAnalysisDetailsPage) temp;
+                }
+            }
+        }
+
+        if (masterPage != null) {
+            Analysis ana;
+            if (tableMasterPage) {
+                ana = ((BusinessRuleAnalysisDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
+            } else if (columnSetMasterPage) {
+                ana = ((ColumnSetAnalysisDetailsPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
+            } else if (columnCorrelationMasterPage) {
+                ana = ((CorrelationAnalysisDetailsPage) masterPage).getColumnCorrelationAnalysisHandler()
+                        .getAnalysis();
+            } else {
+                ana = ((ColumnAnalysisDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
+            }
+            isContainRowCount = AnalysisHelper.containsRowCount(ana);
         }
 
         pLowerText.setEnabled(isContainRowCount);

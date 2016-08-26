@@ -60,7 +60,7 @@ public class ImportMatchRuleAction extends Action {
                 MatchRuleElementTreeSelectionDialog.MATCH_ANALYSIS_TYPE);
 
         List<String> inputColumnNames = new ArrayList<String>();
-        Analysis analysis = masterPage.getCurrentModelElement();
+        Analysis analysis = masterPage.getAnalysis();
         EList<ModelElement> elements = analysis.getContext().getAnalysedElements();
         for (ModelElement me : elements) {
             inputColumnNames.add(me.getName());

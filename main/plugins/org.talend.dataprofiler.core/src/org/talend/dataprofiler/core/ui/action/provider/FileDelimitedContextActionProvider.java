@@ -34,7 +34,7 @@ public class FileDelimitedContextActionProvider extends AbstractCommonActionProv
 
         super.fillContextMenu(menu);
 
-        IRepositoryNode node = getFirstRepositoryNode();
+        IRepositoryNode node = getFistContextNode();
 
         if (node != null) {
             menu.add(new EditFileDelimitedAction(node));

@@ -147,7 +147,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
 
-        this.analysis = masterPage.getCurrentModelElement();
+        this.analysis = masterPage.getAnalysis();
         columnListA = new ArrayList<RepositoryNode>();
         columnListB = new ArrayList<RepositoryNode>();
 

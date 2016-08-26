@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -43,6 +41,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -61,22 +60,50 @@ import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.properties.TDQPatternItem;
-import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
 public class PatternMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(PatternMasterDetailsPage.class);
+    private Pattern pattern;
 
     private PatternRepNode patternRepNode;
+
+    private TDQPatternItem patternItem;
+
+    protected Pattern getPattern() {
+        return this.pattern;
+    }
+
+    protected PatternRepNode getPatternRepNode() {
+        return this.patternRepNode;
+    }
+
+    protected TDQPatternItem getPatternItem() {
+        return this.patternItem;
+    }
+
+    private void initPatternRepNode(Pattern pattern) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(pattern);
+
+        if (recursiveFind != null && recursiveFind instanceof PatternRepNode) {
+            this.patternRepNode = (PatternRepNode) recursiveFind;
+            this.patternItem = (TDQPatternItem) this.patternRepNode.getObject().getProperty().getItem();
+        } else {
+            Property property = PropertyHelper.getProperty(pattern);
+            this.patternItem = (TDQPatternItem) property.getItem();
+        }
+    }
 
     private Composite patternDefinitionSectionComp;
 
@@ -92,15 +119,15 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     private String expressionType;
 
-    /**
-     * PatternMasterDetailsPage constructor.
-     * 
-     * @param editor
-     * @param id
-     * @param title
-     */
     public PatternMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+    }
+
+    @Override
+    public void initialize(FormEditor editor) {
+        super.initialize(editor);
+        reset();
+        this.expressionType = DomainHelper.getExpressionType((Pattern) currentModelElement);
     }
 
     /**
@@ -115,8 +142,24 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         } else {
             tempPatternComponents.clear();
         }
+        // tempPatternComponents.addAll(pattern.getComponents());
         remainDBTypeList = new ArrayList<String>();
         remainDBTypeList.addAll(allDBTypeList);
+    }
+
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
+        IEditorInput editorInput = editor.getEditorInput();
+        if (editorInput instanceof PatternItemEditorInput) {
+            PatternItemEditorInput input = (PatternItemEditorInput) editorInput;
+            this.pattern = input.getTDQPatternItem().getPattern();
+        } else if (editorInput instanceof FileEditorInput) {
+            FileEditorInput input = (FileEditorInput) this.getEditor().getEditorInput();
+            this.pattern = PatternResourceFileHelper.getInstance().findPattern(input.getFile());
+        }
+        this.currentModelElement = pattern;
+        initPatternRepNode(pattern);
+        return pattern;
     }
 
     @Override
@@ -164,7 +207,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         componentsComp.setLayout(new GridLayout());
 
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(componentsComp);
-        EList<PatternComponent> components = getCurrentModelElement().getComponents();
+        EList<PatternComponent> components = this.pattern.getComponents();
         for (int i = 0; i < components.size(); i++) {
             RegularExpression regularExpress = (RegularExpression) components.get(i);
             // RegularExpressionImpl newRegularExpress = (RegularExpressionImpl)
@@ -201,7 +244,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                     String languageName = PatternLanguageType.findNameByLanguage(language);
                     remainDBTypeList.remove(languageName);
                 }
-                if (remainDBTypeList.isEmpty()) {
+                if (remainDBTypeList.size() == 0) {
                     MessageDialog.openWarning(
                             null,
                             DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -295,8 +338,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 public void widgetSelected(SelectionEvent e) {
                     // Open test pattern viewer
                     PatternTestView patternTestView = CorePlugin.getDefault().getPatternTestView();
-                    patternTestView
-                            .setPatternExpression(PatternMasterDetailsPage.this, getCurrentModelElement(), finalRegExpress);
+                    patternTestView.setPatternExpression(PatternMasterDetailsPage.this, pattern, finalRegExpress);
                 }
             });
         }
@@ -340,19 +382,19 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     }
 
     private boolean savePattern() {
-        if (tempPatternComponents.isEmpty()) {
+        if (tempPatternComponents.size() == 0) {
             MessageDialog
                     .openError(
                             null,
-                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.error"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.cannotSave", getCurrentModelElement().getName())); //$NON-NLS-1$ //$NON-NLS-2$
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.error"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.cannotSave", pattern.getName())); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
-        getCurrentModelElement().getComponents().clear();
-        getCurrentModelElement().getComponents().addAll(tempPatternComponents);
+        this.pattern.getComponents().clear();
+        this.pattern.getComponents().addAll(tempPatternComponents);
 
         // PTODO fixed bug 4296: set the Pattern is valid
-        TaggedValueHelper.setValidStatus(true, getCurrentModelElement());
-        EList<PatternComponent> components = getCurrentModelElement().getComponents();
+        TaggedValueHelper.setValidStatus(true, pattern);
+        EList<PatternComponent> components = this.pattern.getComponents();
         List<String> existLanguage = new ArrayList<String>();
         for (int i = 0; i < components.size(); i++) {
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
@@ -374,11 +416,16 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 existLanguage.add(language);
             }
         }
-        TDQPatternItem patternItem = (TDQPatternItem) this.patternRepNode.getObject().getProperty().getItem();
+        // EMFUtil.saveSingleResource(pattern.eResource());
+        // Item patternItem = ((PatternItemEditorInput) this.getEditor().getEditorInput()).getItem();
+        // ((TDQPatternItem) patternItem).setPattern(this.pattern);
+        this.patternItem.setPattern(this.pattern);
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-        ElementWriterFactory.getInstance().createPatternWriter().save(patternItem, true);
+        ElementWriterFactory.getInstance().createPatternWriter().save(this.patternItem, true);
+        // PatternResourceFileHelper.getInstance().save(pattern);
 
         return true;
+
     }
 
     /*
@@ -394,59 +441,5 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                     DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
         }
         return rc;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
-     */
-    @Override
-    public PatternRepNode getCurrentRepNode() {
-        return this.patternRepNode;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
-     */
-    @Override
-    public Pattern getCurrentModelElement() {
-        return patternRepNode.getPattern();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
-     */
-    @Override
-    protected void init(FormEditor editor) {
-        currentEditor = (PatternEditor) editor;
-        reset();
-        this.patternRepNode = getPatternRepNodeFromInput(currentEditor.getEditorInput());
-        this.expressionType = DomainHelper.getExpressionType(getCurrentModelElement());
-    }
-
-    /**
-     * get PatternRepNode From editorInput
-     * 
-     * @param editorInput
-     * @return
-     */
-    private PatternRepNode getPatternRepNodeFromInput(IEditorInput editorInput) {
-        if (editorInput instanceof FileEditorInput) {
-            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
-            IFile file = fileEditorInput.getFile();
-            if (file != null) {
-                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                pattern = (Pattern) EObjectHelper.resolveObject(pattern);
-                return RepositoryNodeHelper.recursiveFindPattern(pattern);
-            }
-        } else if (editorInput instanceof PatternItemEditorInput) {
-            return ((PatternItemEditorInput) editorInput).getRepNode();
-        }
-        return null;
     }
 }

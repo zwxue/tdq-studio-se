@@ -15,12 +15,13 @@ package org.talend.dataprofiler.core.ui.wizard.matchrule;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
+import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
@@ -30,7 +31,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.MatchRuleDefinitionWriter;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -118,13 +118,11 @@ public class NewMatchRuleWizard extends AbstractWizard {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
-     * )
+     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.core.model.properties.Item)
      */
     @Override
-    public void openEditor(IRepositoryNode repNode) {
-        BusinessRuleItemEditorInput matchRuleEditorInput = new BusinessRuleItemEditorInput(repNode);
+    public void openEditor(Item item) {
+        MatchRuleItemEditorInput matchRuleEditorInput = new MatchRuleItemEditorInput(item);
         CorePlugin.getDefault().openEditor(matchRuleEditorInput, DQRuleEditor.class.getName());
     }
 

@@ -68,7 +68,7 @@ public class PatternMouseAdapter extends MouseAdapter {
     public PatternMouseAdapter(AbstractColumnDropTree columnDropTree, AbstractAnalysisMetadataPage masterPage,
             ModelElementIndicator meIndicator, TreeItem treeItem) {
         this.masterPage = masterPage;
-        this.analysis = masterPage.getCurrentModelElement();
+        this.analysis = masterPage.getAnalysis();
         this.meIndicator = meIndicator;
         this.treeItem = treeItem;
         this.columnDropTree = columnDropTree;
