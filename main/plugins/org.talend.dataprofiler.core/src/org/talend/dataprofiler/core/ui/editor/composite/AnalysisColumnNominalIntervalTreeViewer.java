@@ -733,12 +733,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
      * @return the analysis
      */
     public Analysis getAnalysis() {
-        return this.masterPage.getColumnCorrelationAnalysisHandler().getAnalysis();
+        return this.masterPage.getCurrentModelElement();
     }
-
-    // public List<String> getComboString() {
-    // return comboTextList;
-    // }
 
     public Tree getTree() {
         return tree;
@@ -747,12 +743,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     @Override
     public void updateModelViewer() {
         masterPage.recomputeIndicators();
-        // columnSetMultiValueList =
-        // masterPage.getColumnSetMultiValueIndicator()
-        // .getAnalyzedColumns().subList(
-        // 0,
-        // masterPage.getColumnSetMultiValueIndicator()
-        // .getAnalyzedColumns().size());
         columnSetMultiValueList.clear();
         this.setElements(masterPage.getColumnSetMultiValueIndicator().getAnalyzedColumns());
     }

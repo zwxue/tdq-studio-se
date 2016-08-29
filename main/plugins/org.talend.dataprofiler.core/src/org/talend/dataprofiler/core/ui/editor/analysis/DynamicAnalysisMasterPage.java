@@ -307,7 +307,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
                 return true;
             }
         };
-        EventManager.getInstance().register(this.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
+        EventManager.getInstance().register(getCurrentModelElement(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
                 switchBetweenPageEvent);
 
     }
@@ -318,7 +318,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
      * @param eventReceivers
      */
     public void unRegisterDynamicEvent() {
-        EventManager.getInstance().clearEvent(this.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
+        EventManager.getInstance().clearEvent(getCurrentModelElement(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE);
 
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);

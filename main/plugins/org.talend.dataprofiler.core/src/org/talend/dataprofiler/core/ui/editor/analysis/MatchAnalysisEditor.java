@@ -38,9 +38,9 @@ public class MatchAnalysisEditor extends AnalysisEditor {
             toolbar.addActions(importMatchRuleAction);
 
             // when there are some keys in the analysis
-            if (getMasterPage().getAnalysis().getResults() != null) {
+            if (getMasterPage().getCurrentModelElement().getResults() != null) {
                 exportMatchRuleAction = new ExportMatchRuleAction(
-                        MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(getMasterPage().getAnalysis()));
+                        MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(getMasterPage().getCurrentModelElement()));
                 exportMatchRuleAction.setToolTipText(DefaultMessagesImpl.getString("MatchAnalysisEditor.exportMatchRule"));//$NON-NLS-1$
                 toolbar.addActions(exportMatchRuleAction);
             }

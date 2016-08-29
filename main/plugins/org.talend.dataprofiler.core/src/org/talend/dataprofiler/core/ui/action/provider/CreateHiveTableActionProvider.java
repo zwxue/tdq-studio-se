@@ -37,7 +37,7 @@ public class CreateHiveTableActionProvider extends AbstractCommonActionProvider 
             return;
         }
 
-        RepositoryNode node = (RepositoryNode) getFistContextNode();
+        RepositoryNode node = (RepositoryNode) getFirstRepositoryNode();
         if (node != null) {
             IAction action = null;
             if (node instanceof HDFSOfHCConnectionNode) {

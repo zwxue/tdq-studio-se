@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 //
 // Copyright (C) 2006-2016 Talend Inc. - www.talend.com
 //
@@ -15,19 +15,19 @@ package org.talend.dataprofiler.core.ui.editor.matchrule;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataquality.properties.TDQMatchRuleItem;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * created by zshen on Aug 19, 2013
- * Detailled comment
+ * TDQ-8212 msjian note: this class ONLY used for MDM team to open matchrule editor, because they only can get item, didn't have
+ * IRepositoryNode.
  *
  */
 public class MatchRuleItemEditorInput extends AbstractItemEditorInput {
 
-
     /**
-     * DOC zshen MatchRuleItemEditorInput constructor comment.
+     * MatchRuleItemEditorInput constructor.
      *
      * @param tdqItem
      */
@@ -39,4 +39,53 @@ public class MatchRuleItemEditorInput extends AbstractItemEditorInput {
         return ((TDQMatchRuleItem) this.getItem()).getMatchRule();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getRepNode()
+     */
+    @Override
+    public IRepositoryNode getRepNode() {
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#setRepNode(org.talend.repository.model.IRepositoryNode)
+     */
+    @Override
+    public void setRepNode(IRepositoryNode node) {
+        // do nothing
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getModel()
+     */
+    @Override
+    public ModelElement getModel() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return item.getProperty().getLabel();
+    }
+
+    @Override
+    public String getToolTipText() {
+        return item.getProperty().getLabel();
+    }
+
+    @Override
+    public String getPath() {
+        return item.getState().getPath() + "/";//$NON-NLS-1$ 
+    }
+
+    @Override
+    public Item getItem() {
+        return (Item) EObjectHelper.resolveObject(item);
+    }
 }

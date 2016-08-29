@@ -25,6 +25,13 @@ public class PatternLanguageRepNode extends DQRepositoryNode {
 
     private RegularExpression regularExpression = null;
 
+    /**
+     * PatternLanguageRepNode constructor.
+     * 
+     * @param parent
+     * @param type
+     * @param inWhichProject
+     */
     public PatternLanguageRepNode(RepositoryNode parent, ENodeType type, org.talend.core.model.general.Project inWhichProject) {
         super(null, parent, type, inWhichProject);
     }

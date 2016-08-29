@@ -63,8 +63,6 @@ import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInpu
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
-import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleItemEditorInput;
-import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
@@ -116,15 +114,6 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
     private Connection connection = null;
 
     private IRepositoryNode repNode = null;
-
-    public OpenItemEditorAction() {
-        super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
-    }
-
-    public OpenItemEditorAction(IRepositoryViewObject reposViewObj) {
-        super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
-        this.repViewObj = reposViewObj;
-    }
 
     public OpenItemEditorAction(IRepositoryNode repNode) {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
@@ -239,31 +228,21 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     item = repNode.getObject().getProperty().getItem();
                 }
                 if (modelElement == null || modelElement.eResource() == null) {
-                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                            ((TDQItem) item).getFilename());
-                    throw createBusinessException;
+                    throw ExceptionFactory.getInstance().createBusinessException(((TDQItem) item).getFilename());
                 }
             }
             if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)) {
-                result = new ConnectionItemEditorInput(item);
+                result = new ConnectionItemEditorInput(repNode);
                 editorID = ConnectionEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
-
-                result = new AnalysisItemEditorInput(item);
+                result = new AnalysisItemEditorInput(repNode);
                 Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
-                // AnalysisParameters parameters = analysis.getParameters();
-                // AnalysisType analysisType = parameters.getAnalysisType();
-                // boolean equals = analysisType.equals(AnalysisType.CONNECTION);
-                // if (equals) {
-
                 if (analysis == null || analysis.getContext() == null) {
-                    BusinessException createBusinessException = ExceptionFactory.getInstance()
-                            .createBusinessException(repViewObj);
-                    throw createBusinessException;
+                    throw ExceptionFactory.getInstance().createBusinessException(repViewObj);
                 }
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 RepositoryNode connectionRepositoryNode = null;
-                if (analysedElements.size() > 0) {
+                if (!analysedElements.isEmpty()) {
                     ModelElement modelElement = analysedElements.get(0);
                     if (modelElement instanceof Connection) {
                         connection = (Connection) modelElement;
@@ -301,52 +280,37 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     editorID = AnalysisEditor.class.getName();
                 }
             } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
-                result = new IndicatorDefinitionItemEditorInput(item);
+                result = new IndicatorDefinitionItemEditorInput(repNode);
                 TDQIndicatorDefinitionItem definitionItem = (TDQIndicatorDefinitionItem) item;
                 if (definitionItem.getIndicatorDefinition().eResource() == null) {
-                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                            definitionItem.getFilename());
-                    throw createBusinessException;
+                    throw ExceptionFactory.getInstance().createBusinessException(definitionItem.getFilename());
                 }
                 if (UDIHelper.getUDICategory(definitionItem.getIndicatorDefinition()) == null) {
-                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                            definitionItem.getFilename());
-                    throw createBusinessException;
+                    throw ExceptionFactory.getInstance().createBusinessException(definitionItem.getFilename());
                 }
                 editorID = IndicatorEditor.class.getName();
-            } else if (ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key)) {
-                result = new BusinessRuleItemEditorInput(item);
-                editorID = DQRuleEditor.class.getName();
-
-            } else if (ERepositoryObjectType.TDQ_RULES_PARSER.getKey().equals(key)) {
-                result = new ParserRuleItemEditorInput(item);
-                editorID = DQRuleEditor.class.getName();
-            } else if (ERepositoryObjectType.TDQ_RULES_MATCHER.getKey().equals(key)) {
-                result = new MatchRuleItemEditorInput(item);
+            } else if (ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key)
+                    || ERepositoryObjectType.TDQ_RULES_PARSER.getKey().equals(key)
+                    || ERepositoryObjectType.TDQ_RULES_MATCHER.getKey().equals(key)) {
+                result = new BusinessRuleItemEditorInput(repNode);
                 editorID = DQRuleEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
-                result = new PatternItemEditorInput(item);
+                result = new PatternItemEditorInput(repNode);
                 TDQPatternItem patternItem = (TDQPatternItem) item;
                 if (patternItem.getPattern() == null || patternItem.getPattern().eResource() == null) {
-                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                            patternItem.getFilename());
-                    throw createBusinessException;
+                    throw ExceptionFactory.getInstance().createBusinessException(patternItem.getFilename());
                 }
                 editorID = PatternEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_REPORT_ELEMENT.getKey().equals(key)) {
-                result = new ReportItemEditorInput(item);
+                result = new ReportItemEditorInput(repNode);
                 TDQReportItem reportItem = (TDQReportItem) item;
                 if (!(reportItem.getReport() instanceof TdReport)) {
-                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                            reportItem.getFilename());
-                    throw createBusinessException;
+                    throw ExceptionFactory.getInstance().createBusinessException(reportItem.getFilename());
                 }
                 for (AnalysisMap anaMap : ((TdReport) reportItem.getReport()).getAnalysisMap()) {
                     Analysis analysis = anaMap.getAnalysis();
                     if (analysis.eResource() == null) {
-                        BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                                reportItem.getFilename());
-                        throw createBusinessException;
+                        throw ExceptionFactory.getInstance().createBusinessException(reportItem.getFilename());
                     }
                 }
                 editorID = "org.talend.dataprofiler.core.tdq.ui.editor.report.ReportEditror"; //$NON-NLS-1$
@@ -356,9 +320,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 DQRepositoryNode node = (DQRepositoryNode) repViewObj.getRepositoryNode();
                 file = ResourceManager.getRoot().getProject(node.getProject().getTechnicalLabel()).getFile(append);
                 if (!file.exists()) {
-                    BusinessException createBusinessException = ExceptionFactory.getInstance()
-                            .createBusinessException(repViewObj);
-                    throw createBusinessException;
+                    throw ExceptionFactory.getInstance().createBusinessException(repViewObj);
                 }
                 if (ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
                     editorID = SqlExplorerUtils.SQLEDITOR_ID;

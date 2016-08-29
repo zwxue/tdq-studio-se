@@ -12,46 +12,63 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.pattern;
 
-import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
-import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dq.nodes.PatternRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC klliu Pattern item editor input.
  */
 public class PatternItemEditorInput extends AbstractItemEditorInput {
 
+    private PatternRepNode patternRepNode;
 
-    private TDQPatternItem item = null;
     /**
-     * DOC klliu TDQPatternItemEditorInput constructor comment.
-     * @param reposViewObj
+     * PatternItemEditorInput constructor.
+     * 
+     * @param patternRepNode
      */
-    public PatternItemEditorInput(Item item) {
-        super(item);
-        this.item = (TDQPatternItem) item;
-
+    public PatternItemEditorInput(IRepositoryNode patternRepNode) {
+        super(patternRepNode);
     }
 
     @Override
-    public String getName() {
-        return getPath() + item.getPattern().getName();
-    }
-
-    @Override
-    public String getToolTipText() {
-        return getPath() + item.getPattern().getName();
-    }
-
-    public TDQPatternItem getTDQPatternItem() {
-        return item;
-    }
-
     public String getModelElementUuid() {
-        if (this.item != null) {
-            return ResourceHelper.getUUID(this.item.getParent());
+        if (this.patternRepNode != null) {
+            return ResourceHelper.getUUID(getItem().getParent());
         }
         return super.getModelElementUuid();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getRepNode()
+     */
+    @Override
+    public PatternRepNode getRepNode() {
+        return patternRepNode;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#getModelOfRepNode()
+     */
+    @Override
+    public ModelElement getModel() {
+        return patternRepNode.getPattern();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput#setRepNode(org.talend.repository.model.IRepositoryNode)
+     */
+    @Override
+    public void setRepNode(IRepositoryNode node) {
+        this.patternRepNode = (PatternRepNode) node;
     }
 }

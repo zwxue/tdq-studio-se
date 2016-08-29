@@ -63,6 +63,7 @@ import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.model.bridge.ReponsitoryContextBridge;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.CorePackage;
@@ -112,8 +113,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected Section metadataSection;
 
-    protected ModelElement currentModelElement;
-
     protected Section contextGroupSection = null;
 
     protected ContextComposite contextComposite;
@@ -153,7 +152,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        this.currentModelElement = getCurrentModelElement(editor);
+        init(editor);
     }
 
     @Override
@@ -178,9 +177,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * @throws BusinessException
      */
     public String getIntactElemenetName() {
-        if (currentModelElement == null) {
-            currentModelElement = getCurrentModelElement(getEditor());
-        }
         Property property = getProperty();
         // Added TDQ-11312, when open from the tasks, and name changed, can not get the property. 20160517 yyin
         // TDQ-11312
@@ -198,8 +194,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         }
         return DqRepositoryViewService.buildElementName(property);
     }
-
-    protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm currentform, Composite parentCom) {
         Section section = createSection(currentform, topComp, getMetadataSectionTitle(), getMetadataSectionDescription());
@@ -345,7 +339,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         if (property != null) {
             // MDO qionlgi 2012-5-30 TDQ-5078 the ModelElement name could contain special chars.
-            String name = currentModelElement.getName();
+            String name = getCurrentModelElement().getName();
             if (name == null || PluginConstant.EMPTY_STRING.equals(name)) {
                 name = property.getLabel();
             }
@@ -357,7 +351,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
             // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
-            if (DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
+            if (DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(getCurrentModelElement().eClass())) {
                 nameText.setEditable(false);
                 nameText.setText(InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel()));
             } else {
@@ -368,7 +362,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
             // ~ MOD klliu bug 3938 check the currentModelElement's AUTHOR whether is null,if not ,
             // the content of authorText is currentModelElement's AUTHOR
-            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.AUTHOR, currentModelElement.getTaggedValue());
+            TaggedValue tv = TaggedValueHelper
+                    .getTaggedValue(TaggedValueHelper.AUTHOR, getCurrentModelElement().getTaggedValue());
             authorText.setText(author == null ? (tv == null ? PluginConstant.EMPTY_STRING
                     : (tv.getValue() == null ? PluginConstant.EMPTY_STRING : tv.getValue())) : author);
             // ~
@@ -390,27 +385,27 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                     .openError(
                             null,
                             DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"));//$NON-NLS-1$//$NON-NLS-2$
-            nameText.setText(currentModelElement.getName());
+            nameText.setText(getCurrentModelElement().getName());
             nameText.setFocus();
         } else {
             // MOD gdbu 2011-4-8 bug : 19976
             // nameText.setText(WorkspaceUtils.normalize(nameText.getText()));
             // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
-            if (!DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
-                currentModelElement.setName(nameText.getText());
+            if (!DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(getCurrentModelElement().eClass())) {
+                getCurrentModelElement().setName(nameText.getText());
             }
             // ~19976
         }
 
-        MetadataHelper.setPurpose(purposeText.getText(), currentModelElement);
-        MetadataHelper.setDescription(descriptionText.getText(), currentModelElement);
-        MetadataHelper.setAuthor(currentModelElement, authorText.getText());
-        MetadataHelper.setDevStatus(currentModelElement, statusCombo.getText());
+        MetadataHelper.setPurpose(purposeText.getText(), getCurrentModelElement());
+        MetadataHelper.setDescription(descriptionText.getText(), getCurrentModelElement());
+        MetadataHelper.setAuthor(getCurrentModelElement(), authorText.getText());
+        MetadataHelper.setDevStatus(getCurrentModelElement(), statusCombo.getText());
 
         Property property = getProperty();
         if (property != null) {
             // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
-            if (!DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
+            if (!DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(getCurrentModelElement().eClass())) {
                 property.setDisplayName(nameText.getText());
                 property.setLabel(WorkspaceUtils.normalize(nameText.getText()));
             }
@@ -548,7 +543,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     public boolean isNameTextUpdate() {
-        String newDataproviderName = this.currentModelElement.getName();
+        String newDataproviderName = getCurrentModelElement().getName();
         if (newDataproviderName == null) {
             return modify;
         } else {
@@ -703,5 +698,16 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         contextManager.saveToEmf(el);
         return el;
     }
+
+    /**
+     * from node to get ModelElement.
+     * 
+     * @return
+     */
+    public abstract ModelElement getCurrentModelElement();
+
+    public abstract IRepositoryNode getCurrentRepNode();
+
+    protected abstract void init(FormEditor editor);
 
 }

@@ -29,12 +29,15 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -66,7 +69,8 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
             if (csResult.isOk()) {
                 Object savedObj = csResult.getObject();
                 if (savedObj instanceof Item) {
-                    openEditor((Item) savedObj);
+                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(((Item) savedObj).getProperty());
+                    openEditor(recursiveFind);
                 }
 
                 CorePlugin.getDefault().refresh(modelElement);
@@ -81,7 +85,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
         return false;
     }
 
-    public abstract void openEditor(Item item);
+    public abstract void openEditor(IRepositoryNode repNode);
 
     public ReturnCode checkMetadata() {
         String elementName = getParameter().getName();

@@ -43,13 +43,11 @@ public class PatternEditor extends CommonFormEditor {
             ExceptionHandler.process(e, Level.ERROR);
         }
 
-        // ADD xqliu 2009-07-02 bug 7687
         TdEditorToolBar toolbar = getToolBar();
         if (toolbar != null && masterPage != null) {
             saveAction = new DefaultSaveAction(this);
             toolbar.addActions(saveAction);
         }
-        // ~
     }
 
     @Override
@@ -58,9 +56,8 @@ public class PatternEditor extends CommonFormEditor {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
         }
-        setEditorObject(((PatternMasterDetailsPage) getMasterPage()).getPatternRepNode());
+        setEditorObject(((PatternMasterDetailsPage) getMasterPage()).getCurrentRepNode());
         super.doSave(monitor);
-
     }
 
     @Override

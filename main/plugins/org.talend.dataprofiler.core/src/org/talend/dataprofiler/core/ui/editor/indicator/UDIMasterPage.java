@@ -165,8 +165,8 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     public void initialize(FormEditor editor) {
         super.initialize(editor);
 
-        if (definition != null && definition.getCategories().size() > 0) {
-            category = definition.getCategories().get(0);
+        if (getCurrentModelElement() != null && getCurrentModelElement().getCategories().size() > 0) {
+            category = getCurrentModelElement().getCategories().get(0);
         } else {
             category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
         }
@@ -200,8 +200,8 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
      * 
      */
     private void initTempIndicatorDefinitionParameter() {
-        if (definition != null) {
-            tempParameters = cloneIndicatorDefParameter(definition.getIndicatorDefinitionParameter());
+        if (getCurrentModelElement() != null) {
+            tempParameters = cloneIndicatorDefParameter(getCurrentModelElement().getIndicatorDefinitionParameter());
         } else {
             tempParameters.clear();
         }
@@ -341,7 +341,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
             createJavaTitleComp();
         }
         // ~
-        EList<TaggedValue> tvs = definition.getTaggedValue();
+        EList<TaggedValue> tvs = getCurrentModelElement().getTaggedValue();
         String classNameStr = null;
         String jarPathStr = PluginConstant.EMPTY_STRING;
         for (TaggedValue tv : tvs) {
@@ -557,7 +557,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
      */
     private void openJarSelectDialog(Text jarPathText, Text classNameText) {
         String jarpathStr = jarPathText.getText();
-        JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(definition,
+        JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(getCurrentModelElement(),
                 ResourceManager.getUDIJarFolder(), jarpathStr.split("\\|\\|"));//$NON-NLS-1$
         selectDialog.setControls(jarPathText, classNameText);
         if (Window.OK == selectDialog.open()) {
@@ -827,7 +827,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     @Override
     public void putTdExpressToTempMap(final CCombo combo, final TdExpression expression) {
         super.putTdExpressToTempMap(combo, expression);
-        UDIndicatorDefinition definition2 = (UDIndicatorDefinition) definition;
+        UDIndicatorDefinition definition2 = (UDIndicatorDefinition) getCurrentModelElement();
         if (IndicatorCategoryHelper.isUserDefMatching(category)) {
             tempViewValidRowsExpressionMap = setToTempMap(expression, combo, definition2.getViewValidRowsExpression(),
                     tempViewValidRowsExpressionMap);
@@ -850,7 +850,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     @Override
     public void removeFromTempMap(final CCombo combo) {
         super.removeFromTempMap(combo);
-        if (definition instanceof UDIndicatorDefinition) {
+        if (getCurrentModelElement() instanceof UDIndicatorDefinition) {
 
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                 tempViewValidRowsExpressionMap.remove(combo);
@@ -874,28 +874,31 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         editDialog.setLanguage(language);
         editDialog.setCategory(category);
         if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-            EList<TdExpression> viewValidRowsExpression = ((UDIndicatorDefinition) definition).getViewValidRowsExpression();
+            EList<TdExpression> viewValidRowsExpression = ((UDIndicatorDefinition) getCurrentModelElement())
+                    .getViewValidRowsExpression();
             TdExpression viewValidRows = getCurrentLanguageExp(viewValidRowsExpression, language, version);
             if (isDirty()) {
                 viewValidRows = tempViewValidRowsExpressionMap.get(combo);
             }
             editDialog.setTempViewValidRowsExp(cloneExpression(viewValidRows));
 
-            EList<TdExpression> viewInvalidRowsExpression = ((UDIndicatorDefinition) definition).getViewInvalidRowsExpression();
+            EList<TdExpression> viewInvalidRowsExpression = ((UDIndicatorDefinition) getCurrentModelElement())
+                    .getViewInvalidRowsExpression();
             TdExpression viewInvalidRows = getCurrentLanguageExp(viewInvalidRowsExpression, language, version);
             if (isDirty()) {
                 viewInvalidRows = tempViewInvalidRowsExpressionMap.get(combo);
             }
             editDialog.setTempViewInvalidRowsExp(cloneExpression(viewInvalidRows));
 
-            EList<TdExpression> viewValidValuesExpression = ((UDIndicatorDefinition) definition).getViewValidValuesExpression();
+            EList<TdExpression> viewValidValuesExpression = ((UDIndicatorDefinition) getCurrentModelElement())
+                    .getViewValidValuesExpression();
             TdExpression viewValidValues = getCurrentLanguageExp(viewValidValuesExpression, language, version);
             if (isDirty()) {
                 viewValidValues = tempViewValidValuesExpressionMap.get(combo);
             }
             editDialog.setTempViewValidValuesExp(cloneExpression(viewValidValues));
 
-            EList<TdExpression> viewInvalidValuesExpression = ((UDIndicatorDefinition) definition)
+            EList<TdExpression> viewInvalidValuesExpression = ((UDIndicatorDefinition) getCurrentModelElement())
                     .getViewInvalidValuesExpression();
             TdExpression viewInvalidValues = getCurrentLanguageExp(viewInvalidValuesExpression, language, version);
             if (isDirty()) {
@@ -904,7 +907,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
             editDialog.setTempViewInvalidValuesExp(cloneExpression(viewInvalidValues));
 
         } else {
-            EList<TdExpression> viewRowsExpression = ((UDIndicatorDefinition) definition).getViewRowsExpression();
+            EList<TdExpression> viewRowsExpression = ((UDIndicatorDefinition) getCurrentModelElement()).getViewRowsExpression();
             TdExpression viewRows = getCurrentLanguageExp(viewRowsExpression, language, version);
             if (isDirty()) {
                 viewRows = tempViewRowsExpressionMap.get(combo);
@@ -951,7 +954,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
      * save UDI Expressions.
      */
     private void saveUDIExpression() {
-        UDIndicatorDefinition def = (UDIndicatorDefinition) definition;
+        UDIndicatorDefinition def = (UDIndicatorDefinition) getCurrentModelElement();
         EList<TdExpression> viewValidRowsExpression = def.getViewValidRowsExpression();
         viewValidRowsExpression.clear();
         viewValidRowsExpression = saveFromTempMapToDefinition(viewValidRowsExpression, tempViewValidRowsExpressionMap);
@@ -973,7 +976,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         viewRowsExpression = saveFromTempMapToDefinition(viewRowsExpression, tempViewRowsExpressionMap);
 
         if (category != null) {
-            UDIHelper.setUDICategory(definition, category);
+            UDIHelper.setUDICategory(getCurrentModelElement(), category);
         }
 
     }
@@ -985,7 +988,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
      */
     private void saveTaggedValues(CCombo javaUDICombo) {
         // Save Java UDI
-        EList<TaggedValue> tvs = definition.getTaggedValue();
+        EList<TaggedValue> tvs = getCurrentModelElement().getTaggedValue();
         if (javaUDICombo != null) {
             boolean isNewTaggedValue = true;
             for (TaggedValue tv : tvs) {
@@ -1005,8 +1008,8 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
                         ((Text) javaUDICombo.getData(TaggedValueHelper.CLASS_NAME_TEXT)).getText());
                 TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.JAR_FILE_PATH,
                         ((Text) javaUDICombo.getData(TaggedValueHelper.JAR_FILE_PATH)).getText());
-                definition.getTaggedValue().add(classNameTV);
-                definition.getTaggedValue().add(jarPathTV);
+                getCurrentModelElement().getTaggedValue().add(classNameTV);
+                getCurrentModelElement().getTaggedValue().add(jarPathTV);
             }
         } else {
             // Remove Java UDI tagged values if there have.
@@ -1070,7 +1073,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
      * set ClassName And JarPath For Java.
      */
     private void setClassNameAndJarPathForJava() {
-        EList<TaggedValue> tvs = definition.getTaggedValue();
+        EList<TaggedValue> tvs = getCurrentModelElement().getTaggedValue();
         if (classNameForSave == null || jarPathForSave == null) {
             for (TaggedValue tv : tvs) {
                 if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
@@ -1090,7 +1093,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
      * @param IndicatorDefinition
      */
     private void saveDefinitionParameters() {
-        EList<IndicatorDefinitionParameter> params = definition.getIndicatorDefinitionParameter();
+        EList<IndicatorDefinitionParameter> params = getCurrentModelElement().getIndicatorDefinitionParameter();
         if (params != null) {
             params.clear();
             params.addAll(tempParameters);
@@ -1200,7 +1203,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
      * @return boolean
      */
     private boolean checkContainsJavaDefinition() {
-        EList<TaggedValue> tvs = definition.getTaggedValue();
+        EList<TaggedValue> tvs = getCurrentModelElement().getTaggedValue();
         for (TaggedValue tv : tvs) {
             if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT) || tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                 return true;
@@ -1215,7 +1218,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
      * @return boolean
      */
     private boolean checkIsHaveSqlExpression() {
-        EList<TdExpression> expression = definition.getSqlGenericExpression();
+        EList<TdExpression> expression = getCurrentModelElement().getSqlGenericExpression();
         if (!expression.isEmpty()) {
             return true;
         }

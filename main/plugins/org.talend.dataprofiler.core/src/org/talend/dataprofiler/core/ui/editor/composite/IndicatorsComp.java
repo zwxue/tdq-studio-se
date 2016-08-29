@@ -242,9 +242,9 @@ public class IndicatorsComp extends AbstractPagePart {
      */
     public Analysis getAnalysis() {
         if (masterPage instanceof ColumnSetAnalysisDetailsPage) {
-            return ((ColumnSetAnalysisDetailsPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
+            return ((ColumnSetAnalysisDetailsPage) masterPage).getCurrentModelElement();
         } else if (masterPage instanceof CorrelationAnalysisDetailsPage) {
-            return ((CorrelationAnalysisDetailsPage) masterPage).getAnalysis();
+            return ((CorrelationAnalysisDetailsPage) masterPage).getCurrentModelElement();
         }
         return null;
     }

@@ -150,12 +150,11 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         recomputeIndicators();
-
     }
 
     public void recomputeIndicators() {
         columnSetAnalysisHandler = new ColumnSetAnalysisHandler();
-        columnSetAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
+        columnSetAnalysisHandler.setAnalysis(getCurrentModelElement());
         stringDataFilter = columnSetAnalysisHandler.getStringDataFilter();
         analyzedColumns = columnSetAnalysisHandler.getAnalyzedColumns();
         if (columnSetAnalysisHandler.getSimpleStatIndicator() == null
@@ -374,7 +373,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
             setTreeViewInput(columns);
             // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java
             // engine,show all match indicator in the Indicators section.
-            EventManager.getInstance().publish(getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
+            EventManager.getInstance().publish(getCurrentModelElement(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
             // TDQ-8860~
         }
     }
@@ -610,9 +609,8 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
         // remove the space from analysis name
         // columnSetAnalysisHandler.setName(columnSetAnalysisHandler.getName().replace(" ", ""));
-        Analysis ana = analysisItem.getAnalysis();
-        for (Domain domain : ana.getParameters().getDataFilter()) {
-            domain.setName(ana.getName());
+        for (Domain domain : getCurrentModelElement().getParameters().getDataFilter()) {
+            domain.setName(getCurrentModelElement().getName());
         }
         // ~
 
@@ -679,11 +677,11 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
         this.saveNumberOfConnectionsPerAnalysis();
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
-        ReturnCode saved = new ReturnCode(false);
         this.nameText.setText(columnSetAnalysisHandler.getName());
         // TDQ-5581,if has removed emlements(patten),should remove dependency each other before saving.
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
+        ReturnCode saved = ElementWriterFactory.getInstance().createAnalysisWrite()
+                .save(getCurrentRepNode().getObject().getProperty().getItem(), true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.
@@ -730,10 +728,6 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
     @Override
     public AbstractColumnDropTree getTreeViewer() {
         return this.treeViewer;
-    }
-
-    public ColumnSetAnalysisHandler getColumnSetAnalysisHandler() {
-        return columnSetAnalysisHandler;
     }
 
     public SimpleStatIndicator getSimpleStatIndicator() {

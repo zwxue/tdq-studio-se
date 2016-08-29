@@ -28,7 +28,6 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
-import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 
 /**
@@ -55,12 +54,10 @@ public class IndicatorEditor extends CommonFormEditor {
     }
 
     private String getName(IEditorInput input) {
-        if (input instanceof IndicatorEditorInput) {
+        if (input instanceof IndicatorEditorInput || input instanceof IndicatorDefinitionItemEditorInput) {
             return input.getName();
         } else if (input instanceof FileEditorInput) {
             return IndicatorResourceFileHelper.getInstance().findIndDefinition(((FileEditorInput) input).getFile()).getName();
-        } else if (input instanceof IndicatorDefinitionItemEditorInput) {
-            return input.getName();
         }
         return DefaultMessagesImpl.getString("IndicatorEditor.IndicatorEditor"); //$NON-NLS-1$
     }
@@ -104,11 +101,7 @@ public class IndicatorEditor extends CommonFormEditor {
         if (editorInput instanceof IndicatorEditorInput) {// from DQRespositoryView double click
             definition = ((IndicatorEditorInput) editorInput).getIndicatorDefinition();
         } else if (editorInput instanceof IndicatorDefinitionItemEditorInput) {// from OpenItemEditorAction
-            TDQIndicatorDefinitionItem definitionItem = ((IndicatorDefinitionItemEditorInput) editorInput)
-                    .getTDQIndicatorDefinitionItem();
-            if (definitionItem != null) {
-                definition = definitionItem.getIndicatorDefinition();
-            }
+            definition = (IndicatorDefinition) ((IndicatorDefinitionItemEditorInput) editorInput).getModel();
         } else if (editorInput instanceof FileEditorInput) {
             // when open the indicator inside an analysis
             FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
@@ -116,7 +109,6 @@ public class IndicatorEditor extends CommonFormEditor {
             if (FactoriesUtil.isUDIFile(file.getFileExtension())) {
                 definition = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
             }
-
         }
         if (definition instanceof UDIndicatorDefinition) {
             return false;

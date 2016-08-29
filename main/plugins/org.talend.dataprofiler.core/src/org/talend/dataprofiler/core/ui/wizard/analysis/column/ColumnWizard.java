@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.PlatformUI;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
@@ -128,15 +127,15 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     }
 
     /*
-     * (non-Jsdoc)
+     * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.core.model.properties
-     * .Item)
+     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
+     * )
      */
     @Override
-    public void openEditor(Item item) {
-        super.openEditor(item);
+    public void openEditor(IRepositoryNode repNode) {
+        super.openEditor(repNode);
         if (this.selectionPage != null) {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
