@@ -102,18 +102,20 @@ public class ConnectionAnalysisDetailsPage extends AbstractFilterMetadataPage {
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
         RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(analyzedElement);
         for (Indicator indicator : catalogIndicators) {
-            for (IRepositoryNode catalogNode : connNode.getChildren()) {
-                Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
-                String connUuid = ResourceHelper.getUUID(catalog);
-                String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+            if (connNode != null) {
+                for (IRepositoryNode catalogNode : connNode.getChildren()) {
+                    Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
+                    String connUuid = ResourceHelper.getUUID(catalog);
+                    String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
 
-                boolean equals = connUuid.equals(anaUuid);
-                if (equals) {
-                    OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
-                    cataUIEle.setNode(catalogNode);
-                    cataUIEle.setOverviewIndicator(indicator);
-                    cataUIEleList.add(cataUIEle);
-                    break;
+                    boolean equals = connUuid.equals(anaUuid);
+                    if (equals) {
+                        OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+                        cataUIEle.setNode(catalogNode);
+                        cataUIEle.setOverviewIndicator(indicator);
+                        cataUIEleList.add(cataUIEle);
+                        break;
+                    }
                 }
             }
         }
