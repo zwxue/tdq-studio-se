@@ -424,7 +424,6 @@ public final class AnalysisExecutorHelper {
     private static void hotCopyPatterns(Indicator indicator, List<Pattern> patterns) {
         Set<Pattern> deepCopiedPatterns = new HashSet<Pattern>();
         for (Pattern pattern : patterns) {
-            pattern.getSupplierDependency().clear();
             Pattern deepCopiedPattern = EObjectHelper.deepCopy(pattern);
             deepCopiedPattern.getSupplierDependency().clear();
             deepCopiedPatterns.add(deepCopiedPattern);
