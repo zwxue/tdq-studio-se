@@ -484,41 +484,52 @@ public class SqlexplorerService implements ISqlexplorerService {
         List<INode> catalogs = root.getCatalogs();
         List<INode> schemas = root.getSchemas();
 
-        Catalog doSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPackageElement);
+        Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPackageElement);
         Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(parentPackageElement);
 
         INode catalogOrSchemaNode = null;
-        if (doSwitch != null) {
-            // MOD klliu bug 14662 2010-08-05
-            if (catalogs.size() != 0) {
-                for (INode catalogNode : catalogs) {
-                    if (parentPackageElement.getName().equalsIgnoreCase(catalogNode.getName())) {
-                        catalogOrSchemaNode = catalogNode;
-                        break;
-                    }
-                }
-            } else {
-                catalogOrSchemaNode = root;
-            }
-        } else {
-            // MOD by zshen for 20517
-            if (schemas.size() == 0) {
-                // the case for mssql/postgrel(which have catalog and schema structor) schema analysis.
-                Catalog shcmeaOfCatalogNode = CatalogHelper.getParentCatalog(parentPackageElement);
-                for (INode catalogNode : catalogs) {
-                    if (shcmeaOfCatalogNode.getName().equalsIgnoreCase(catalogNode.getName())) {
-                        catalogOrSchemaNode = catalogNode;
-                        break;
-                    }
-                }
-            }
-            for (INode schemaNode : schemas) {
-                if (parentPackageElement.getName().equalsIgnoreCase(schemaNode.getName())) {
-                    catalogOrSchemaNode = schemaNode;
+        // TDQ-12005: fix Exasol database can view index/keys well
+        if (isExasol(url) && !catalogs.isEmpty()) {
+            for (INode catalogNode : catalogs) {
+                if ("EXA_DB".equalsIgnoreCase(catalogNode.getName())) {
+                    catalogOrSchemaNode = catalogNode;
                     break;
                 }
             }
+        } else {
+            if (catalog != null) {
+                // MOD klliu bug 14662 2010-08-05
+                if (!catalogs.isEmpty()) {
+                    for (INode catalogNode : catalogs) {
+                        if (parentPackageElement.getName().equalsIgnoreCase(catalogNode.getName())) {
+                            catalogOrSchemaNode = catalogNode;
+                            break;
+                        }
+                    }
+                } else {
+                    catalogOrSchemaNode = root;
+                }
+            } else {
+                // MOD by zshen for 20517
+                if (!schemas.isEmpty()) {
+                    // the case for mssql/postgrel(which have catalog and schema structor) schema analysis.
+                    Catalog shcmeaOfCatalogNode = CatalogHelper.getParentCatalog(parentPackageElement);
+                    for (INode catalogNode : catalogs) {
+                        if (shcmeaOfCatalogNode != null && shcmeaOfCatalogNode.getName().equalsIgnoreCase(catalogNode.getName())) {
+                            catalogOrSchemaNode = catalogNode;
+                            break;
+                        }
+                    }
+                }
+                for (INode schemaNode : schemas) {
+                    if (parentPackageElement.getName().equalsIgnoreCase(schemaNode.getName())) {
+                        catalogOrSchemaNode = schemaNode;
+                        break;
+                    }
+                }
+            }
         }
+
         // find the table folder node.
         if (catalogOrSchemaNode == null) {
             throw new NullPointerException(Messages.getString("SqlExplorerBridge.CATORSCHMISNULL")); //$NON-NLS-1$
@@ -613,6 +624,10 @@ public class SqlexplorerService implements ISqlexplorerService {
      */
     private boolean isNetezza(String url) {
         return StringUtils.startsWithIgnoreCase(url, "jdbc:netezza");
+    }
+
+    private boolean isExasol(String url) {
+        return StringUtils.startsWithIgnoreCase(url, "jdbc:exa");
     }
 
     /*
