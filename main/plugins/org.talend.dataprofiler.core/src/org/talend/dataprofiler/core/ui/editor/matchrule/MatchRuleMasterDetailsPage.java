@@ -27,6 +27,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.GlobalServiceRegister;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -67,6 +68,13 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
 
     protected RuleRepNode ruleRepNode;
+
+    /*
+     * these two variables are used only when this page comes from MDM team
+     */
+    private MatchRuleDefinition matchRuleDefiniton;
+
+    private Item item;
 
     /**
      * DOC zshen MatchRuleMasterDetailsPage constructor comment.
@@ -314,7 +322,8 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         // algorithm
         getCurrentModelElement().setRecordLinkageAlgorithm(selectAlgorithmSection.getAlgorithmName());
 
-        TDQMatchRuleItem matchRuleItem = (TDQMatchRuleItem) getCurrentRepNode().getObject().getProperty().getItem();
+        TDQMatchRuleItem matchRuleItem = (TDQMatchRuleItem) (item != null ? item : (TDQMatchRuleItem) getCurrentRepNode()
+                .getObject().getProperty().getItem());
         ReturnCode rc = ElementWriterFactory.getInstance().createdMatchRuleWriter().save(matchRuleItem, Boolean.FALSE);
         return rc.isOk();
     }
@@ -326,6 +335,10 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     @Override
     public MatchRuleDefinition getCurrentModelElement() {
+        if (matchRuleDefiniton != null) {
+            // when this page comes from MDM team
+            return matchRuleDefiniton;
+        }
         return (MatchRuleDefinition) ruleRepNode.getRule();
     }
 
@@ -336,6 +349,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     @Override
     public RuleRepNode getCurrentRepNode() {
+        // this can be null when this page comes from MDM team
         return ruleRepNode;
     }
 
@@ -367,6 +381,10 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
             }
         } else if (editorInput instanceof BusinessRuleItemEditorInput) {
             return ((BusinessRuleItemEditorInput) editorInput).getRepNode();
+        } else if (editorInput instanceof MatchRuleItemEditorInput) {
+            // this is only comes from MDM team
+            matchRuleDefiniton = (MatchRuleDefinition) ((MatchRuleItemEditorInput) editorInput).getMatchRule();
+            item = ((MatchRuleItemEditorInput) editorInput).getItem();
         }
         return null;
     }

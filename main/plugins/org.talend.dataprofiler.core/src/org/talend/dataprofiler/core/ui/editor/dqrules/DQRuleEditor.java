@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleMasterDetailsPage;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
@@ -97,6 +98,9 @@ public class DQRuleEditor extends CommonFormEditor {
             }
         } else if (editorInput instanceof BusinessRuleItemEditorInput) {
             return ((BusinessRuleItemEditorInput) editorInput).getModel();
+        } else if (editorInput instanceof MatchRuleItemEditorInput) {
+            // this only used when this comes from MDM team
+            return ((MatchRuleItemEditorInput) editorInput).getMatchRule();
         }
         return null;
     }
