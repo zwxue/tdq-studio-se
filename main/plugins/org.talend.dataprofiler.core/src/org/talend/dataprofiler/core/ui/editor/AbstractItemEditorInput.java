@@ -33,7 +33,21 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public abstract class AbstractItemEditorInput implements IEditorInput {
 
     /**
-     * AbstractItemEditorInput constructor.
+     * note: ONLY used for MDM team to open matchrule editor, because they only can get item, didn't have IRepositoryNode
+     */
+    protected Item item = null;
+
+    /**
+     * note: ONLY used for MDM team to open matchrule editor, because they only can get item, didn't have IRepositoryNode.
+     * 
+     * @param tdqItem
+     */
+    public AbstractItemEditorInput(Item tdqItem) {
+        this.item = tdqItem;
+    }
+
+    /**
+     * note: for DQ team, use this AbstractItemEditorInput constructor.
      * 
      * @param repNode
      */
@@ -63,7 +77,7 @@ public abstract class AbstractItemEditorInput implements IEditorInput {
 
     public Object getAdapter(Class adapter) {
         if (adapter.equals(IFile.class)) {
-            return PropertyHelper.getItemFile(this.getItem().getProperty());
+            return PropertyHelper.getItemFile(getItem().getProperty());
         }
         return null;
     }

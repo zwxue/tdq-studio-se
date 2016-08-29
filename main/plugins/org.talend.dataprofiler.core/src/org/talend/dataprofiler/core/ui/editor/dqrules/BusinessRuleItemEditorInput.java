@@ -18,14 +18,15 @@ import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * this rule editor input includes all types of rule: parse rule, match rule, business rule
+ * TDQ-8212 msjian note: for DQ team, use this rule editor input for all types of rule: parse rule, match rule, business
+ * rule, NOT use MatchRuleItemEditorInput class.
  */
 public class BusinessRuleItemEditorInput extends AbstractItemEditorInput {
 
     private RuleRepNode ruleRepNode;
 
     /**
-     * BusinessRuleItemEditorInput constructor.
+     * note: for DQ team, use this BusinessRuleItemEditorInput constructor.
      * 
      * @param ruleRepNode
      */
