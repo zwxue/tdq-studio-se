@@ -154,47 +154,48 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
      * @return
      */
     private ModelElement dupAnaWithoutBuiltInPattern(ModelElement oldModelElement) {
-
-        if (oldModelElement instanceof Analysis)
-            try {
-                Analysis analysis = (Analysis) oldModelElement;
-                EList<Indicator> indicators = analysis.getResults().getIndicators();
-                List<Indicator> orignalIndicators = new ArrayList<Indicator>();
-                orignalIndicators.addAll(indicators);
-                Map<Indicator, List<Pattern>> map = new HashMap<Indicator, List<Pattern>>();
-                // 1.move the built in pattern before copy the analysis
-                // 2.after copy the analysis without built-in pattern, reset the built for the old analysis.
-                for (Indicator indicator : indicators) {
-                    if (!(indicator instanceof PatternMatchingIndicator)) {
-                        continue;
-                    }
-                    List<Pattern> builtInLs = new ArrayList<Pattern>();
-                    if (indicator instanceof AllMatchIndicator) {
-                        EList<RegexpMatchingIndicator> list = ((AllMatchIndicator) indicator)
-                                .getCompositeRegexMatchingIndicators();
-                        for (RegexpMatchingIndicator regxIndicator : list) {
-                            builtInLs.addAll(indicator.getParameters().getDataValidDomain().getBuiltInPatterns());
-                            map.put(indicator, builtInLs);
-                            regxIndicator.getParameters().getDataValidDomain().getBuiltInPatterns().clear();
-                        }
-                    } else {
+        ModelElement newModEle = null;
+        if (!(oldModelElement instanceof Analysis)) {
+            newModEle = (ModelElement) EMFSharedResources.getInstance().copyEObject(oldModelElement);
+            return newModEle;
+        }
+        try {
+            Analysis analysis = (Analysis) oldModelElement;
+            EList<Indicator> indicators = analysis.getResults().getIndicators();
+            List<Indicator> orignalIndicators = new ArrayList<Indicator>();
+            orignalIndicators.addAll(indicators);
+            Map<Indicator, List<Pattern>> map = new HashMap<Indicator, List<Pattern>>();
+            // 1.move the built in pattern before copy the analysis
+            // 2.after copy the analysis without built-in pattern, reset the built for the old analysis.
+            for (Indicator indicator : indicators) {
+                if (!(indicator instanceof PatternMatchingIndicator)) {
+                    continue;
+                }
+                List<Pattern> builtInLs = new ArrayList<Pattern>();
+                if (indicator instanceof AllMatchIndicator) {
+                    EList<RegexpMatchingIndicator> list = ((AllMatchIndicator) indicator).getCompositeRegexMatchingIndicators();
+                    for (RegexpMatchingIndicator regxIndicator : list) {
                         builtInLs.addAll(indicator.getParameters().getDataValidDomain().getBuiltInPatterns());
                         map.put(indicator, builtInLs);
-                        indicator.getParameters().getDataValidDomain().getBuiltInPatterns().clear();
+                        regxIndicator.getParameters().getDataValidDomain().getBuiltInPatterns().clear();
                     }
+                } else {
+                    builtInLs.addAll(indicator.getParameters().getDataValidDomain().getBuiltInPatterns());
+                    map.put(indicator, builtInLs);
+                    indicator.getParameters().getDataValidDomain().getBuiltInPatterns().clear();
                 }
-                ModelElement newModEle = (ModelElement) EMFSharedResources.getInstance().copyEObject(analysis);
-                for (Indicator patternInd : map.keySet()) {
-                    patternInd.getParameters().getDataValidDomain().getBuiltInPatterns().addAll(map.get(patternInd));
-                }
-                ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                        .saveResource(analysis.eResource());
-
-                return newModEle;
-            } catch (Exception e) {
-                LOG.error(e);
             }
-        return oldModelElement;
+            newModEle = (ModelElement) EMFSharedResources.getInstance().copyEObject(analysis);
+            for (Indicator patternInd : map.keySet()) {
+                patternInd.getParameters().getDataValidDomain().getBuiltInPatterns().addAll(map.get(patternInd));
+            }
+            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                    .saveResource(analysis.eResource());
+
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+        return newModEle;
     }
 
     /*
