@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.common.ui.pagination.pageloder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,12 +37,15 @@ public class MapDBPageListHelper {
 
     public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, Map<Long, T> indexMap, ColumnFilter filter,
             long fromIndex, long toIndex, long totalSize) {
-
-        List<Object[]> content = db.subList(fromIndex, toIndex, indexMap);
-        if (filter != null) {
-            content = filter.filterArray(content);
+        List<Object[]> content;
+        if (db == null) {
+            content = new ArrayList<Object[]>();
+        } else {
+            content = db.subList(fromIndex, toIndex, indexMap);
+            if (filter != null) {
+                content = filter.filterArray(content);
+            }
         }
-
         return new PageResult<Object[]>(content, totalSize);
     }
 
