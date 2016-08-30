@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -68,6 +69,7 @@ import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageConstant;
 import org.talend.dataprofiler.common.ui.pagination.pageloder.MapDBPageLoader;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
@@ -84,6 +86,8 @@ import org.talend.dq.helper.SqlExplorerUtils;
  * Display result for drill down operation
  */
 public class DrillDownResultEditor extends EditorPart {
+
+    private static Logger log = Logger.getLogger(DrillDownResultEditor.class);
 
     private TableViewer tableView;
 
@@ -200,7 +204,13 @@ public class DrillDownResultEditor extends EditorPart {
         tableView.setContentProvider(new DrillDownResultContentProvider());
         // set page size
         final PageableController controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
-        table.setData(ddEditorInput.getDataSetForMapDB(controller.getPageSize()));
+        Object dataSetForMapDB = ddEditorInput.getDataSetForMapDB(controller.getPageSize());
+        if (dataSetForMapDB == null) {
+            log.error(DefaultMessagesImpl.getString("DrillDownResultEditor.drillDownError"), new RuntimeException(
+                    DefaultMessagesImpl.getString("DrillDownResultEditor.drillDownErrorMessage")));
+        } else {
+            table.setData(dataSetForMapDB);
+        }
         // for columnSet analysis here only have one db file need to support drill down and data section
         Analysis analysis = ddEditorInput.getAnalysis();
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();

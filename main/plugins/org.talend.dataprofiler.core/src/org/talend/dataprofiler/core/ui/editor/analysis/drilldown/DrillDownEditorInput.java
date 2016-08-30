@@ -209,6 +209,9 @@ public class DrillDownEditorInput implements IEditorInput {
             columnHeader[headerIndex++] = columnElement;
         }
         AbstractDB<?> mapDB = getMapDB();
+        if (mapDB == null) {
+            return null;
+        }
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
         if (AnalysisType.COLUMN_SET == analysisType) {
             Long size = getCurrentIndicatorResultSize();
@@ -281,7 +284,7 @@ public class DrillDownEditorInput implements IEditorInput {
         if (isColumnSetIndicator()) {
             return getColumnSetIndicatorResultSize();
         } else {
-            return Long.valueOf(mapDB.size());
+            return mapDB == null ? 0l : Long.valueOf(mapDB.size());
         }
     }
 
