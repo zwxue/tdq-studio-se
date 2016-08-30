@@ -229,6 +229,7 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/validRow"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/inValidRow"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/storeData"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/Indicator/builtInIndicatorDefinition"/>
         <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/handle">
           <genParameters ecoreParameter="dataquality.ecore#//indicators/Indicator/handle/data"/>
         </genOperations>
@@ -682,6 +683,7 @@
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
             ecoreFeature="ecore:EReference dataquality.ecore#//domain/Domain/patterns"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//domain/Domain/javaUDIIndicatorParameter"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//domain/Domain/builtInPatterns"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//domain/EnumerationRule">
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
@@ -833,6 +835,7 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/MatchKeyDefinition/confidenceWeight"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/MatchKeyDefinition/handleNull"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/MatchKeyDefinition/threshold"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/MatchKeyDefinition/tokenizationType"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//rules/AlgorithmDefinition">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/AlgorithmDefinition/algorithmType"/>

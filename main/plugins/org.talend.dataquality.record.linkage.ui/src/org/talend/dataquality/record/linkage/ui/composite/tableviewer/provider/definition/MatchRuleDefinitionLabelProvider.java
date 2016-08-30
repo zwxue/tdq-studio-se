@@ -34,6 +34,15 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
 
     /*
      * (non-Javadoc)
+     * headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
+     * headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
+     * headers.add(MatchAnalysisConstant.CUSTOM_MATCHER); // 20
+     * headers.add(MatchAnalysisConstant.TOKENIZATION_TYPE); // 20
+     * if (isAddColumn()) {
+     * headers.add(MatchAnalysisConstant.THRESHOLD); // 14
+     * }
+     * headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
+     * headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
      * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider#getColumnText(
@@ -45,30 +54,34 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
             MatchKeyDefinition mkd = (MatchKeyDefinition) element;
             if (isAddThresholdColumn) {
                 switch (columnIndex) {
-                case 0:
+                case 0:// MatchAnalysisConstant.MATCH_KEY_NAME
                     return mkd.getName();
-                case 1:
+                case 1:// MatchAnalysisConstant.MATCHING_TYPE
                     return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
-                case 2:
+                case 2:// MatchAnalysisConstant.CUSTOM_MATCHER
                     return CustomAttributeMatcherHelper.getClassName(mkd.getAlgorithm().getAlgorithmParameters());
-                case 3:
+                case 3:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                    return String.valueOf(mkd.getTokenizationType());
+                case 4:// MatchAnalysisConstant.THRESHOLD
                     return String.valueOf(mkd.getThreshold());
-                case 4:
+                case 5:// MatchAnalysisConstant.CONFIDENCE_WEIGHT
                     return String.valueOf(mkd.getConfidenceWeight());
-                case 5:
+                case 6:// MatchAnalysisConstant.HANDLE_NULL
                     return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getLabel();
                 }
             } else {
                 switch (columnIndex) {
-                case 0:
+                case 0:// MatchAnalysisConstant.MATCH_KEY_NAME
                     return mkd.getName();
-                case 1:
+                case 1:// MatchAnalysisConstant.MATCHING_TYPE
                     return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
-                case 2:
+                case 2:// MatchAnalysisConstant.CUSTOM_MATCHER
                     return CustomAttributeMatcherHelper.getClassName(mkd.getAlgorithm().getAlgorithmParameters());
-                case 3:
+                case 3:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                    return String.valueOf(mkd.getTokenizationType());
+                case 4:// MatchAnalysisConstant.CONFIDENCE_WEIGHT
                     return String.valueOf(mkd.getConfidenceWeight());
-                case 4:
+                case 5:// MatchAnalysisConstant.HANDLE_NULL
                     return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getLabel();
                 }
             }

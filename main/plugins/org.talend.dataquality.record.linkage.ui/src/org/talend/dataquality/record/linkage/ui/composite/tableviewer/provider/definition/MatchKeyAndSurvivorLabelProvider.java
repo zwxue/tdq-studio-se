@@ -44,24 +44,25 @@ public class MatchKeyAndSurvivorLabelProvider extends MatchRuleLabelProvider {
             MatchKeyAndSurvivorDefinition mkd = (MatchKeyAndSurvivorDefinition) element;
             // used for MDM T-swoosh
             switch (columnIndex) {
-            case 0:
+            case 0:// MatchAnalysisConstant.MATCH_KEY_NAME
                 return mkd.getMatchKey().getName();
-            case 1:
+            case 1:// MatchAnalysisConstant.MATCHING_TYPE
                 return AttributeMatcherType.valueOf(mkd.getMatchKey().getAlgorithm().getAlgorithmType()).getLabel();
-            case 2:
+            case 2:// MatchAnalysisConstant.CUSTOM_MATCHER
                 return CustomAttributeMatcherClassNameConvert.getClassName(mkd.getMatchKey().getAlgorithm()
                         .getAlgorithmParameters());
-            case 3:
+            case 3:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                return String.valueOf(mkd.getMatchKey().getTokenizationType());
+            case 4:// MatchAnalysisConstant.THRESHOLD
                 return String.valueOf(mkd.getMatchKey().getThreshold());
-            case 4:
+            case 5:// MatchAnalysisConstant.CONFIDENCE_WEIGHT
                 return String.valueOf(mkd.getMatchKey().getConfidenceWeight());
-            case 5:
+            case 6:// MatchAnalysisConstant.HANDLE_NULL
                 return mkd.getMatchKey().getHandleNull();
-            case 6:
+            case 7:// MatchAnalysisConstant.FUNCTION
                 return SurvivorShipAlgorithmEnum.getTypeBySavedValue(mkd.getSurvivorShipKey().getFunction().getAlgorithmType())
                         .getValue();
-
-            case 7:
+            case 8:// MatchAnalysisConstant.PARAMETER
                 return mkd.getSurvivorShipKey().getFunction().getAlgorithmParameters();
 
             }

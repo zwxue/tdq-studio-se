@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.constant.TokenizedResolutionMethod;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorshipUtils;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
@@ -47,6 +48,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * DOC yyin class global comment. Detailled comment
+ * 
  */
 public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTableViewer<MatchKeyAndSurvivorDefinition> {
 
@@ -182,10 +184,13 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
             case 2:
                 editors[i] = new jarFileCellEditor(innerTable, SWT.READ_ONLY);
                 break;
-            case 5:
-                editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
+            case 3:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                editors[i] = new ComboBoxCellEditor(innerTable, TokenizedResolutionMethod.getAllTypes(), SWT.READ_ONLY);
                 break;
             case 6:
+                editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
+                break;
+            case 7:
                 editors[i] = new ComboBoxCellEditor(innerTable, SurvivorShipAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
 

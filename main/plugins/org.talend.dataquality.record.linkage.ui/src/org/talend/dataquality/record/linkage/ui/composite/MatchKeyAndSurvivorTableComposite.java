@@ -58,6 +58,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
         }
         headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
         headers.add(MatchAnalysisConstant.CUSTOM_MATCHER); // 20
+        headers.add(MatchAnalysisConstant.TOKENIZATION_TYPE); // 20
         headers.add(MatchAnalysisConstant.THRESHOLD); // 14
         headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
         headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
@@ -143,7 +144,6 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
             // Analysis editor
             return new AnaMatchKeyAndSurvTableViewer(this, getTableStyle(), isAddColumn(), matchRule);
         } else {
-            // Definition editor
             return new MatchKeyAndSurvivorshipTableViewer(this, getTableStyle(), isAddColumn(), matchRule);
         }
     }

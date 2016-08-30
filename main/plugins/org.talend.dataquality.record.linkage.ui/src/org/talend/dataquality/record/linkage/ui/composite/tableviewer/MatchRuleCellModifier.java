@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.constant.TokenizedResolutionMethod;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchKeyDefinition;
@@ -48,6 +49,10 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
                 }
             } else if (MatchAnalysisConstant.INPUT_COLUMN.equalsIgnoreCase(property)) {
                 return columnList.size() > 0;
+            } else if (MatchAnalysisConstant.TOKENIZATION_TYPE.equalsIgnoreCase(property)) {
+                if (AttributeMatcherType.CUSTOM.name().equals(mkd.getAlgorithm().getAlgorithmType())) {
+                    return false;
+                }
             }
             return true;
         }
@@ -76,6 +81,8 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
             return mkd.getName();
         } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
             return String.valueOf(mkd.getThreshold());
+        } else if (MatchAnalysisConstant.TOKENIZATION_TYPE.equalsIgnoreCase(property)) {
+            return TokenizedResolutionMethod.getTypeByValue(mkd.getTokenizationType()).ordinal();
         }
         return null;
 
@@ -147,6 +154,12 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
                 } catch (NumberFormatException e) {
                     // revert user change at here so don't need do anything
                 }
+            } else if (MatchAnalysisConstant.TOKENIZATION_TYPE.equalsIgnoreCase(property)) {
+                TokenizedResolutionMethod valueByIndex = TokenizedResolutionMethod.values()[Integer.valueOf(newValue)];
+                if (StringUtils.equals(mkd.getTokenizationType(), valueByIndex.getComponentValue())) {
+                    return;
+                }
+                mkd.setTokenizationType(valueByIndex.getComponentValue());
             } else {
                 return;
             }

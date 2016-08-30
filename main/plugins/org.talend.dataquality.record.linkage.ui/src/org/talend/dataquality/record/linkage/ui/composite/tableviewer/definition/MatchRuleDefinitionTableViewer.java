@@ -22,6 +22,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.constant.TokenizedResolutionMethod;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.cellEditor.jarFileCellEditor;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition.MatchRuleDefinitionLabelProvider;
@@ -46,6 +47,15 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
 
     /*
      * (non-Javadoc)
+     * headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
+     * headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
+     * headers.add(MatchAnalysisConstant.CUSTOM_MATCHER); // 20
+     * headers.add(MatchAnalysisConstant.TOKENIZATION_TYPE); // 20
+     * if (isAddColumn()) {
+     * headers.add(MatchAnalysisConstant.THRESHOLD); // 14
+     * }
+     * headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
+     * headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
      * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
@@ -56,13 +66,16 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
         for (int i = 0; i < editors.length; ++i) {
             if (isAddColumn()) {
                 switch (i) {
-                case 1:
+                case 1:// MatchAnalysisConstant.MATCHING_TYPE
                     editors[i] = new ComboBoxCellEditor(innerTable, AttributeMatcherType.getAllTypes(), SWT.READ_ONLY);
                     break;
-                case 2:
+                case 2:// MatchAnalysisConstant.CUSTOM_MATCHER
                     editors[i] = new jarFileCellEditor(innerTable, SWT.READ_ONLY);
                     break;
-                case 5:
+                case 3:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                    editors[i] = new ComboBoxCellEditor(innerTable, TokenizedResolutionMethod.getAllTypes(), SWT.READ_ONLY);
+                    break;
+                case 6:// MatchAnalysisConstant.HANDLE_NULL
                     editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
                 default:
@@ -77,7 +90,10 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
                 case 2:
                     editors[i] = new jarFileCellEditor(innerTable, SWT.READ_ONLY);
                     break;
-                case 4:
+                case 3:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                    editors[i] = new ComboBoxCellEditor(innerTable, TokenizedResolutionMethod.getAllTypes(), SWT.READ_ONLY);
+                    break;
+                case 5:
                     editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
                 default:

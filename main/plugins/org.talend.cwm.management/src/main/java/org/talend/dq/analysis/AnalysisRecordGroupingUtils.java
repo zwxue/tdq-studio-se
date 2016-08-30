@@ -163,7 +163,8 @@ public class AnalysisRecordGroupingUtils {
             double attrThreshold, Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName,
             String handleNull, String jarPath) {
         Map<String, String> matchKeyMap = getMatchKeyMap(column, algoType, algoParameter, confidentWeight, attrThreshold,
-                columnIndexMap, matchInterval, attributeName, null, handleNull, jarPath);
+                columnIndexMap, matchInterval, attributeName, null, handleNull, jarPath, null);// the last one parameter need to
+                                                                                               // be check by junit
         return matchKeyMap;
     }
 
@@ -185,7 +186,7 @@ public class AnalysisRecordGroupingUtils {
      */
     public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
             double attrThreshold, Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName,
-            String matchKeyName, String handleNull, String jarPath) {
+            String matchKeyName, String handleNull, String jarPath, String tokenizationType) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();
         for (MetadataColumn metaCol : columnIndexMap.keySet()) {
             if (metaCol.getName().equals(column)) {
@@ -201,6 +202,7 @@ public class AnalysisRecordGroupingUtils {
         matchKeyMap.put(IRecordGrouping.ATTRIBUTE_NAME, attributeName);
         matchKeyMap.put(IRecordGrouping.MATCH_KEY_NAME, matchKeyName);
         matchKeyMap.put(IRecordGrouping.HANDLE_NULL, handleNull);
+        matchKeyMap.put(IRecordGrouping.TOKENIZATION_TYPE, tokenizationType);
         matchKeyMap.put(IRecordGrouping.JAR_PATH, jarPath);
         return matchKeyMap;
     }
@@ -571,11 +573,12 @@ public class AnalysisRecordGroupingUtils {
             matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), algorithmType, matchDef.getAlgorithm()
                     .getAlgorithmParameters(), matchDef.getConfidenceWeight(), matchDef.getThreshold(), columnMap, matcher
                     .getMatchInterval(), matchDef.getColumn(), matchDef.getName(), matchDef.getHandleNull(),
-                    CustomAttributeMatcherHelper.getFullJarPath(matchDef.getAlgorithm().getAlgorithmParameters()));
+                    CustomAttributeMatcherHelper.getFullJarPath(matchDef.getAlgorithm().getAlgorithmParameters()), null);
         } else {
             matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), algorithmType, matchDef.getAlgorithm()
                     .getAlgorithmParameters(), matchDef.getConfidenceWeight(), matchDef.getThreshold(), columnMap, matcher
-                    .getMatchInterval(), matchDef.getColumn(), matchDef.getName(), matchDef.getHandleNull(), null);
+                    .getMatchInterval(), matchDef.getColumn(), matchDef.getName(), matchDef.getHandleNull(), null, matchDef
+                    .getTokenizationType());
         }
         return matchKeyMap;
     }

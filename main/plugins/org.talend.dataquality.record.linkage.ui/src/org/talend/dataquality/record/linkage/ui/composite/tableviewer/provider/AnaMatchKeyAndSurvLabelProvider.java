@@ -43,9 +43,9 @@ public class AnaMatchKeyAndSurvLabelProvider extends MatchKeyAndSurvivorLabelPro
         if (element instanceof MatchKeyAndSurvivorDefinition) {
             MatchKeyAndSurvivorDefinition mkd = (MatchKeyAndSurvivorDefinition) element;
             switch (columnIndex) {
-            case 0:
+            case 0:// MatchAnalysisConstant.MATCH_KEY_NAME
                 return mkd.getMatchKey().getName();
-            case 1:
+            case 1:// MatchAnalysisConstant.INPUT_COLUMN
                 return mkd.getColumn();
             default:
                 return super.getColumnText(element, columnIndex - 1);

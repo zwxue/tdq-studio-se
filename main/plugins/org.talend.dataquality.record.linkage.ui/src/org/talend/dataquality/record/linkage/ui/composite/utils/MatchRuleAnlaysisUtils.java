@@ -32,6 +32,7 @@ import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.constant.TokenizedResolutionMethod;
 import org.talend.dataquality.record.linkage.ui.composite.table.ISortComparator;
 import org.talend.dataquality.record.linkage.ui.composite.table.SortComparator;
 import org.talend.dataquality.record.linkage.ui.composite.table.SortState;
@@ -79,6 +80,7 @@ public class MatchRuleAnlaysisUtils {
         createMatchKeyDefinition1.setColumn(columnName);
         createMatchKeyDefinition1.setConfidenceWeight(1);
         createMatchKeyDefinition1.setHandleNull(HandleNullEnum.NULL_MATCH_NULL.getValue());
+        createMatchKeyDefinition1.setTokenizationType(TokenizedResolutionMethod.NO.getComponentValue());
         createAlgorithmDefinition1.setAlgorithmParameters(StringUtils.EMPTY);
         createAlgorithmDefinition1.setAlgorithmType(AttributeMatcherType.values()[0].name());
         createMatchKeyDefinition1.setAlgorithm(createAlgorithmDefinition1);

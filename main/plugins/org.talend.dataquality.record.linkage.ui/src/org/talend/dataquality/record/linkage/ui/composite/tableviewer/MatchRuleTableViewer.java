@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.constant.TokenizedResolutionMethod;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.cellEditor.jarFileCellEditor;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
@@ -70,7 +71,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             switch (i) {
-            case 1:
+            case 1:// MatchAnalysisConstant.INPUT_COLUMN
                 String[] cols = new String[columnList.size()];
                 int idx = 0;
                 for (MetadataColumn metaCol : columnList) {
@@ -78,16 +79,19 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
                 }
                 editors[i] = new ComboBoxCellEditor(innerTable, cols, SWT.READ_ONLY);
                 break;
-            case 2:
+            case 2:// MatchAnalysisConstant.MATCHING_TYPE
                 editors[i] = new ComboBoxCellEditor(innerTable, AttributeMatcherType.getAllTypes(), SWT.READ_ONLY);
                 break;
-            case 3:
+            case 3:// MatchAnalysisConstant.CUSTOM_MATCHER
                 editors[i] = new jarFileCellEditor(innerTable, SWT.READ_ONLY);
                 break;
-            case 5:
+            case 4:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                editors[i] = new ComboBoxCellEditor(innerTable, TokenizedResolutionMethod.getAllTypes(), SWT.READ_ONLY);
+                break;
+            case 6:// MatchAnalysisConstant.HANDLE_NULL
                 editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
-            default:
+            default:// MatchAnalysisConstant.MATCH_KEY_NAME and MatchAnalysisConstant.CONFIDENCE_WEIGHT
                 editors[i] = new TextCellEditor(innerTable);
             }
         }

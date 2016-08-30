@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.rules.*;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.AppliedBlockKey;
 import org.talend.dataquality.rules.BlockKeyDefinition;
@@ -47,7 +49,7 @@ public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
      */
     public static RulesFactory init() {
         try {
-            RulesFactory theRulesFactory = (RulesFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.rules"); 
+            RulesFactory theRulesFactory = (RulesFactory)EPackage.Registry.INSTANCE.getEFactory(RulesPackage.eNS_URI);
             if (theRulesFactory != null) {
                 return theRulesFactory;
             }
@@ -282,8 +284,8 @@ public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
      * @generated
      */
     @SuppressWarnings("unchecked")
-    public List createTdExpressionListFromString(EDataType eDataType, String initialValue) {
-        return (List)super.createFromString(initialValue);
+    public List<TdExpression> createTdExpressionListFromString(EDataType eDataType, String initialValue) {
+        return (List<TdExpression>)super.createFromString(initialValue);
     }
 
     /**

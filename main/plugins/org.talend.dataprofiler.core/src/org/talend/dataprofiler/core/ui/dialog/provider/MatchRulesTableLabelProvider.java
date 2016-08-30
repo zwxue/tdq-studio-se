@@ -45,6 +45,8 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
 
     public static final String PARAMETER = "PARAMETER"; //$NON-NLS-1$
 
+    public static final String TOKENIZATION_TYPE = "TOKENIZATION_TYPE"; //$NON-NLS-1$ The Value should keep same with MatchAnalysisConstant.TOKENIZATION_TYPE
+
     List<String> inputColumnNames;
 
     public MatchRulesTableLabelProvider(List<String> inputColumnNames) {
@@ -87,19 +89,22 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
         case 3: // custom matcher class
             result = CustomAttributeMatcherClassNameConvert.getClassName(rule.get(CUSTOM_MATCHER));
             break;
-        case 4: // confidence weight
+        case 4: // TOKENIZATION_TYPE
+            result = rule.get(TOKENIZATION_TYPE);
+            break;
+        case 5: // confidence weight
             result = rule.get(CONFIDENCE_WEIGHT);
             break;
-        case 5: // handle null
+        case 6: // handle null
             result = rule.get(HANDLE_NULL);
             break;
-        case 6: // threshold
+        case 7: // threshold
             result = rule.get(THRESHOLD);
             break;
-        case 7: // survivorship function
+        case 8: // survivorship function
             result = rule.get(SURVIVORSHIP_FUNCTION);
             break;
-        case 8: // parameter
+        case 9: // parameter
             result = rule.get(PARAMETER);
             break;
         }

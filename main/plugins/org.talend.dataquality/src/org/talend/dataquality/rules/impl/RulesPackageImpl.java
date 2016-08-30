@@ -640,6 +640,15 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getMatchKeyDefinition_TokenizationType() {
+        return (EAttribute)matchKeyDefinitionEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getAlgorithmDefinition() {
         return algorithmDefinitionEClass;
     }
@@ -836,6 +845,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         createEAttribute(matchKeyDefinitionEClass, MATCH_KEY_DEFINITION__CONFIDENCE_WEIGHT);
         createEAttribute(matchKeyDefinitionEClass, MATCH_KEY_DEFINITION__HANDLE_NULL);
         createEAttribute(matchKeyDefinitionEClass, MATCH_KEY_DEFINITION__THRESHOLD);
+        createEAttribute(matchKeyDefinitionEClass, MATCH_KEY_DEFINITION__TOKENIZATION_TYPE);
 
         algorithmDefinitionEClass = createEClass(ALGORITHM_DEFINITION);
         createEAttribute(algorithmDefinitionEClass, ALGORITHM_DEFINITION__ALGORITHM_TYPE);
@@ -965,6 +975,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         initEAttribute(getMatchKeyDefinition_ConfidenceWeight(), theEcorePackage.getEInt(), "confidenceWeight", null, 0, 1, MatchKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getMatchKeyDefinition_HandleNull(), theEcorePackage.getEString(), "handleNull", null, 0, 1, MatchKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getMatchKeyDefinition_Threshold(), theEcorePackage.getEDouble(), "threshold", null, 0, 1, MatchKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchKeyDefinition_TokenizationType(), theEcorePackage.getEString(), "tokenizationType", "", 0, 1, MatchKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(algorithmDefinitionEClass, AlgorithmDefinition.class, "AlgorithmDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getAlgorithmDefinition_AlgorithmType(), theEcorePackage.getEString(), "algorithmType", null, 0, 1, AlgorithmDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

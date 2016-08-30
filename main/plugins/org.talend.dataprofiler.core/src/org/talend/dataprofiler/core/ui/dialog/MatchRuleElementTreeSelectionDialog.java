@@ -459,9 +459,11 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         TableColumn c4 = new TableColumn(table, SWT.NULL);
         c4.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CUSTOM_MATCHER_CLASS")); //$NON-NLS-1$
         TableColumn c5 = new TableColumn(table, SWT.NULL);
-        c5.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CONFIDENCE_WEIGHT")); //$NON-NLS-1$
+        c5.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.TOKENIZATION_TYPE")); //$NON-NLS-1$
         TableColumn c6 = new TableColumn(table, SWT.NULL);
-        c6.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.HANDLE_NULL")); //$NON-NLS-1$
+        c6.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CONFIDENCE_WEIGHT")); //$NON-NLS-1$
+        TableColumn c7 = new TableColumn(table, SWT.NULL);
+        c7.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.HANDLE_NULL")); //$NON-NLS-1$
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
         TableLayout tableLayout = new TableLayout();
@@ -494,15 +496,17 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         TableColumn c4 = new TableColumn(table, SWT.NULL);
         c4.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CUSTOM_MATCHER_CLASS")); //$NON-NLS-1$
         TableColumn c5 = new TableColumn(table, SWT.NULL);
-        c5.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CONFIDENCE_WEIGHT")); //$NON-NLS-1$
+        c5.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.TOKENIZATION_TYPE")); //$NON-NLS-1$
         TableColumn c6 = new TableColumn(table, SWT.NULL);
-        c6.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.HANDLE_NULL")); //$NON-NLS-1$
+        c6.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CONFIDENCE_WEIGHT")); //$NON-NLS-1$
         TableColumn c7 = new TableColumn(table, SWT.NULL);
-        c7.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.THRESHOLD")); //$NON-NLS-1$
+        c7.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.HANDLE_NULL")); //$NON-NLS-1$
         TableColumn c8 = new TableColumn(table, SWT.NULL);
-        c8.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.SURVIVORSHIP_FUNCTION")); //$NON-NLS-1$
+        c8.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.THRESHOLD")); //$NON-NLS-1$
         TableColumn c9 = new TableColumn(table, SWT.NULL);
-        c9.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.PARAMETER")); //$NON-NLS-1$
+        c9.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.SURVIVORSHIP_FUNCTION")); //$NON-NLS-1$
+        TableColumn c10 = new TableColumn(table, SWT.NULL);
+        c10.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.PARAMETER")); //$NON-NLS-1$
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
         TableLayout tableLayout = new TableLayout();
@@ -674,6 +678,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                     // set threshold
                     pr.put(MatchRulesTableLabelProvider.THRESHOLD, String.valueOf(matchKey.getThreshold()));
 
+                    pr.put(MatchRulesTableLabelProvider.TOKENIZATION_TYPE, String.valueOf(matchKey.getTokenizationType()));
                     // set survivorship function and parameter
                     AlgorithmDefinition algorithmDefinition = getSurvivorshipFunctionAlgorithm(matchKey, matchRuleDefinition);
                     pr.put(MatchRulesTableLabelProvider.SURVIVORSHIP_FUNCTION,

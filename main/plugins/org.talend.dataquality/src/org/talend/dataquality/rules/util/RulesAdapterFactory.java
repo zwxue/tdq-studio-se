@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.*;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.AppliedBlockKey;
 import org.talend.dataquality.rules.BlockKeyDefinition;

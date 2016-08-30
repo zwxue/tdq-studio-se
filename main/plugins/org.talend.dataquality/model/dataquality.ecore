@@ -1408,6 +1408,8 @@
           <details key="documentation" value="Threshold on the matching probability of the attribute."/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tokenizationType" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"
+          defaultValueLiteral=""/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AlgorithmDefinition">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="algorithmType" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>

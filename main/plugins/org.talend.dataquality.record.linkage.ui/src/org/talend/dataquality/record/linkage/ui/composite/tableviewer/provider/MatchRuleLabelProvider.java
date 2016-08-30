@@ -51,17 +51,19 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
         if (element instanceof MatchKeyDefinition) {
             MatchKeyDefinition mkd = (MatchKeyDefinition) element;
             switch (columnIndex) {
-            case 0:
+            case 0:// MatchAnalysisConstant.MATCH_KEY_NAME
                 return mkd.getName();
-            case 1:
+            case 1:// MatchAnalysisConstant.INPUT_COLUMN
                 return mkd.getColumn();
-            case 2:
+            case 2:// MatchAnalysisConstant.MATCHING_TYPE
                 return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
-            case 3:
+            case 3:// MatchAnalysisConstant.CUSTOM_MATCHER
                 return CustomAttributeMatcherHelper.getClassName(mkd.getAlgorithm().getAlgorithmParameters());
-            case 4:
+            case 4:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                return String.valueOf(mkd.getTokenizationType());
+            case 5:// MatchAnalysisConstant.CONFIDENCE_WEIGHT
                 return String.valueOf(mkd.getConfidenceWeight());
-            case 5:
+            case 6:// MatchAnalysisConstant.HANDLE_NULL
                 return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getLabel();
             }
 

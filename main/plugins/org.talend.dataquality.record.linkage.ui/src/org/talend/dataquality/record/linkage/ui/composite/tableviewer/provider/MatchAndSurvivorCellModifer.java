@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.constant.TokenizedResolutionMethod;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchCellModifier;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorDefinition;
@@ -51,6 +52,10 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                         | isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.CONCATENATE);
             } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
                 return !isMatcherType(mkd, AttributeMatcherType.EXACT);
+            } else if (MatchAnalysisConstant.TOKENIZATION_TYPE.equalsIgnoreCase(property)) {
+                if (AttributeMatcherType.CUSTOM.name().equals(mkd.getMatchKey().getAlgorithm().getAlgorithmType())) {
+                    return false;
+                }
             }
             return true;
         }
@@ -106,6 +111,8 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     .getIndex();
         } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
             return mkd.getSurvivorShipKey().getFunction().getAlgorithmParameters();
+        } else if (MatchAnalysisConstant.TOKENIZATION_TYPE.equalsIgnoreCase(property)) {
+            return TokenizedResolutionMethod.getTypeByValue(mkd.getMatchKey().getTokenizationType()).ordinal();
         }
         return null;
 
@@ -211,6 +218,12 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                 }
             } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
                 mkd.getSurvivorShipKey().getFunction().setAlgorithmParameters(newValue);
+            } else if (MatchAnalysisConstant.TOKENIZATION_TYPE.equalsIgnoreCase(property)) {
+                TokenizedResolutionMethod valueByIndex = TokenizedResolutionMethod.values()[Integer.valueOf(newValue)];
+                if (StringUtils.equals(mkd.getMatchKey().getTokenizationType(), valueByIndex.getComponentValue())) {
+                    return;
+                }
+                mkd.getMatchKey().setTokenizationType(valueByIndex.getComponentValue());
             } else {
                 return;
             }

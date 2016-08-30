@@ -2624,13 +2624,22 @@ public interface RulesPackage extends EPackage {
     int MATCH_KEY_DEFINITION__THRESHOLD = KEY_DEFINITION_FEATURE_COUNT + 3;
 
     /**
+     * The feature id for the '<em><b>Tokenization Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCH_KEY_DEFINITION__TOKENIZATION_TYPE = KEY_DEFINITION_FEATURE_COUNT + 4;
+
+    /**
      * The number of structural features of the '<em>Match Key Definition</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MATCH_KEY_DEFINITION_FEATURE_COUNT = KEY_DEFINITION_FEATURE_COUNT + 4;
+    int MATCH_KEY_DEFINITION_FEATURE_COUNT = KEY_DEFINITION_FEATURE_COUNT + 5;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.rules.impl.AlgorithmDefinitionImpl <em>Algorithm Definition</em>}' class.
@@ -3750,6 +3759,17 @@ public interface RulesPackage extends EPackage {
     EAttribute getMatchKeyDefinition_Threshold();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.rules.MatchKeyDefinition#getTokenizationType <em>Tokenization Type</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Tokenization Type</em>'.
+     * @see org.talend.dataquality.rules.MatchKeyDefinition#getTokenizationType()
+     * @see #getMatchKeyDefinition()
+     * @generated
+     */
+    EAttribute getMatchKeyDefinition_TokenizationType();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.rules.AlgorithmDefinition <em>Algorithm Definition</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4243,6 +4263,14 @@ public interface RulesPackage extends EPackage {
          * @generated
          */
         EAttribute MATCH_KEY_DEFINITION__THRESHOLD = eINSTANCE.getMatchKeyDefinition_Threshold();
+
+        /**
+         * The meta object literal for the '<em><b>Tokenization Type</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute MATCH_KEY_DEFINITION__TOKENIZATION_TYPE = eINSTANCE.getMatchKeyDefinition_TokenizationType();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.rules.impl.AlgorithmDefinitionImpl <em>Algorithm Definition</em>}' class.

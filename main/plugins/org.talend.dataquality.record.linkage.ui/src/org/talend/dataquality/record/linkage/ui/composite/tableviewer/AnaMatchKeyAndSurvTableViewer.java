@@ -22,6 +22,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.constant.TokenizedResolutionMethod;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.cellEditor.jarFileCellEditor;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorshipTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.AnaMatchKeyAndSurvLabelProvider;
@@ -70,7 +71,7 @@ public class AnaMatchKeyAndSurvTableViewer extends MatchKeyAndSurvivorshipTableV
         for (int i = 0; i < editors.length; ++i) {
             // used for MDM T-swoosh
             switch (i) {
-            case 1:
+            case 1:// MatchAnalysisConstant.INPUT_COLUMN
                 String[] colArray = new String[columnList.size()];
                 int idx = 0;
                 for (MetadataColumn metaCol : columnList) {
@@ -81,19 +82,22 @@ public class AnaMatchKeyAndSurvTableViewer extends MatchKeyAndSurvivorshipTableV
                     ((ComboBoxCellEditor) editors[i]).setValue(0);
                 }
                 break;
-            case 2:
+            case 2:// MatchAnalysisConstant.MATCHING_TYPE
                 editors[i] = new ComboBoxCellEditor(innerTable, AttributeMatcherType.getAllTypes(), SWT.READ_ONLY);
                 break;
-            case 3:
+            case 3:// MatchAnalysisConstant.CUSTOM_MATCHER
                 editors[i] = new jarFileCellEditor(innerTable, SWT.READ_ONLY);
                 break;
-            case 6:
+            case 4:// MatchAnalysisConstant.TOKENIZATION_TYPE
+                editors[i] = new ComboBoxCellEditor(innerTable, TokenizedResolutionMethod.getAllTypes(), SWT.READ_ONLY);
+                break;
+            case 7:// MatchAnalysisConstant.HANDLE_NULL
                 editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
-            case 7:
+            case 8:// MatchAnalysisConstant.FUNCTION
                 editors[i] = new ComboBoxCellEditor(innerTable, SurvivorShipAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
-            default:
+            default:// MatchAnalysisConstant.THRESHOLD MatchAnalysisConstant.CONFIDENCE_WEIGHT and MatchAnalysisConstant.PARAMETER
                 editors[i] = new TextCellEditor(innerTable);
             }
 

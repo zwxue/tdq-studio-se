@@ -26,6 +26,7 @@ import org.talend.dataquality.rules.RulesPackage;
  *   <li>{@link org.talend.dataquality.rules.impl.MatchKeyDefinitionImpl#getConfidenceWeight <em>Confidence Weight</em>}</li>
  *   <li>{@link org.talend.dataquality.rules.impl.MatchKeyDefinitionImpl#getHandleNull <em>Handle Null</em>}</li>
  *   <li>{@link org.talend.dataquality.rules.impl.MatchKeyDefinitionImpl#getThreshold <em>Threshold</em>}</li>
+ *   <li>{@link org.talend.dataquality.rules.impl.MatchKeyDefinitionImpl#getTokenizationType <em>Tokenization Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -101,6 +102,26 @@ public class MatchKeyDefinitionImpl extends KeyDefinitionImpl implements MatchKe
      * @ordered
      */
     protected double threshold = THRESHOLD_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getTokenizationType() <em>Tokenization Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getTokenizationType()
+     * @generated
+     * @ordered
+     */
+    protected static final String TOKENIZATION_TYPE_EDEFAULT = "";
+
+    /**
+     * The cached value of the '{@link #getTokenizationType() <em>Tokenization Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getTokenizationType()
+     * @generated
+     * @ordered
+     */
+    protected String tokenizationType = TOKENIZATION_TYPE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -232,6 +253,27 @@ public class MatchKeyDefinitionImpl extends KeyDefinitionImpl implements MatchKe
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getTokenizationType() {
+        return tokenizationType;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setTokenizationType(String newTokenizationType) {
+        String oldTokenizationType = tokenizationType;
+        tokenizationType = newTokenizationType;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.MATCH_KEY_DEFINITION__TOKENIZATION_TYPE, oldTokenizationType, tokenizationType));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -257,6 +299,8 @@ public class MatchKeyDefinitionImpl extends KeyDefinitionImpl implements MatchKe
                 return getHandleNull();
             case RulesPackage.MATCH_KEY_DEFINITION__THRESHOLD:
                 return getThreshold();
+            case RulesPackage.MATCH_KEY_DEFINITION__TOKENIZATION_TYPE:
+                return getTokenizationType();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -280,6 +324,9 @@ public class MatchKeyDefinitionImpl extends KeyDefinitionImpl implements MatchKe
                 return;
             case RulesPackage.MATCH_KEY_DEFINITION__THRESHOLD:
                 setThreshold((Double)newValue);
+                return;
+            case RulesPackage.MATCH_KEY_DEFINITION__TOKENIZATION_TYPE:
+                setTokenizationType((String)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -305,6 +352,9 @@ public class MatchKeyDefinitionImpl extends KeyDefinitionImpl implements MatchKe
             case RulesPackage.MATCH_KEY_DEFINITION__THRESHOLD:
                 setThreshold(THRESHOLD_EDEFAULT);
                 return;
+            case RulesPackage.MATCH_KEY_DEFINITION__TOKENIZATION_TYPE:
+                setTokenizationType(TOKENIZATION_TYPE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -325,6 +375,8 @@ public class MatchKeyDefinitionImpl extends KeyDefinitionImpl implements MatchKe
                 return HANDLE_NULL_EDEFAULT == null ? handleNull != null : !HANDLE_NULL_EDEFAULT.equals(handleNull);
             case RulesPackage.MATCH_KEY_DEFINITION__THRESHOLD:
                 return threshold != THRESHOLD_EDEFAULT;
+            case RulesPackage.MATCH_KEY_DEFINITION__TOKENIZATION_TYPE:
+                return TOKENIZATION_TYPE_EDEFAULT == null ? tokenizationType != null : !TOKENIZATION_TYPE_EDEFAULT.equals(tokenizationType);
         }
         return super.eIsSet(featureID);
     }
@@ -345,6 +397,8 @@ public class MatchKeyDefinitionImpl extends KeyDefinitionImpl implements MatchKe
         result.append(handleNull);
         result.append(", threshold: ");
         result.append(threshold);
+        result.append(", tokenizationType: ");
+        result.append(tokenizationType);
         result.append(')');
         return result.toString();
     }
