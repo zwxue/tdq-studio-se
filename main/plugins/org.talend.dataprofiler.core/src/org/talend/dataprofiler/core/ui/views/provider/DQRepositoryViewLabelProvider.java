@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.views.provider;
 
 import java.sql.Driver;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -409,7 +410,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
                 // firstly,find driver from cache.if not find,load jar by lib folder then find driver from
                 // SQLExplorer driver.
-                if (!EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(dbType)) {
+                if (!(StringUtils.equalsIgnoreCase(EDatabaseTypeName.IMPALA.getXmlName(), dbType) || StringUtils
+                        .equalsIgnoreCase(EDatabaseTypeName.HIVE.getXmlName(), dbType))) {
                     Driver driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
                     if (driver != null) {
                         return false;
