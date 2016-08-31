@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.repository.model.IRepositoryNode;
@@ -34,12 +33,12 @@ public class OpenItemEditorProvider extends AbstractCommonActionProvider {
             return;
         }
 
-        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+        Object firstObject = getContextObject();
+
         // TDQ-12485: use this check to hidden the open menu especailly some node no need to show open menu for example
-        if (obj instanceof IRepositoryViewObject) {
-            IRepositoryNode firstRepositoryNode = getFirstRepositoryNode();
-            if (firstRepositoryNode != null) {
-                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(firstRepositoryNode);
+        if (firstObject instanceof IRepositoryViewObject) {
+            if (firstObject instanceof IRepositoryNode) {
+                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryNode) firstObject);
                 menu.add(openItemEditorAction);
             }
         }
