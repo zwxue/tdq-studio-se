@@ -1137,14 +1137,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         updateOtherCombos(combo);
     }
 
-    private void createDbVersionText(final CCombo combo, final Composite composite, String value, int width) {
-        final Text dbVersionText = new Text(composite, SWT.BORDER);
-        dbVersionText.setText(value == null ? PluginConstant.EMPTY_STRING : value);
-        dbVersionText.setLayoutData(new GridData(GridData.BEGINNING));
-        ((GridData) dbVersionText.getLayoutData()).widthHint = width;
-        dbVersionText.addModifyListener(new DbVersionTextModListener(combo));
-    }
-
     /**
      * 
      * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
@@ -1320,7 +1312,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param detailComp
      */
     protected void createDataBaseLineComponent(final CCombo combo, TdExpression expression, Composite detailComp) {
-        createDbVersionText(combo, detailComp, expression.getVersion(), 30);
+        final Text dbVersionText = new Text(detailComp, SWT.BORDER);
+        dbVersionText.setText(expression.getVersion() == null ? PluginConstant.EMPTY_STRING : expression.getVersion());
+        dbVersionText.setLayoutData(new GridData(GridData.BEGINNING));
+        ((GridData) dbVersionText.getLayoutData()).widthHint = 30;
+        dbVersionText.addModifyListener(new DbVersionTextModListener(combo));
+
         final Text expressionText = new Text(detailComp, SWT.BORDER);
         expressionText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) expressionText.getLayoutData()).widthHint = 600;
@@ -1333,7 +1330,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         expressionText.setEditable(isPatternTextEditable());
         // }
         // TDQ-6841~
-        createExpressionEditButton(detailComp, expressionText, combo, expression.getVersion());
+
+        // TDQ-7868: when createExpressionEditButton, use the current version value in dbVersionText
+        createExpressionEditButton(detailComp, expressionText, combo, dbVersionText);
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
         detailComp.getParent().layout();
@@ -1446,7 +1445,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     private void createExpressionEditButton(Composite expressComp, final Text patternText, final CCombo combo,
-            final String version) {
+            final Text dbVersionText) {
         Button editButton = new Button(expressComp, SWT.PUSH);
         editButton.setText(EDIT_BUTTON_TEXT);
         editButton.setToolTipText(EDIT_BUTTON_TEXT);
@@ -1456,7 +1455,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
 
                 definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
-                final ExpressionEditDialog editDialog = initExpresstionEditDialog(combo, version, patternText.getText());
+                final ExpressionEditDialog editDialog = initExpresstionEditDialog(combo, dbVersionText.getText(),
+                        patternText.getText());
                 if (Dialog.OK == editDialog.open()) {
                     patternText.setText(editDialog.getTempExpression().getBody());
                     handleSelectExpression(combo, editDialog);
