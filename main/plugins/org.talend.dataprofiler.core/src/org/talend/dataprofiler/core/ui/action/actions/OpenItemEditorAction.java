@@ -84,6 +84,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.RepositoryWorkUnit;
@@ -194,9 +195,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 file = ResourceManager.getRoot().getProject(node.getProject().getTechnicalLabel()).getFile(append);
 
                 if (!file.exists()) {
-                    BusinessException createBusinessException = ExceptionFactory.getInstance()
-                            .createBusinessException(repViewObj);
-                    throw createBusinessException;
+                    throw ExceptionFactory.getInstance().createBusinessException(repViewObj);
                 }
                 try {
                     IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, true);
@@ -215,6 +214,12 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
      * @throws PersistenceException
      */
     public IEditorInput computeEditorInput(boolean isOpenItemEditorAction) throws BusinessException {
+        // TDQ-12499 msjian add : when click the node under recyclebin, no need to find a EditorInput
+        if (repNode != null && repNode.getParent() instanceof RecycleBinRepNode && !isOpenItemEditorAction) {
+            return null;
+        }
+        // TDQ-12499~
+
         IEditorInput result = null;
         if (repViewObj != null) {
             // Connection editor

@@ -34,7 +34,7 @@ import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC mzhao DQ editor link helper.
@@ -47,7 +47,7 @@ public class DQEditorLinkHelper implements ILinkHelper {
         if (CorePlugin.getDefault().getRepositoryViewWithoutBringToTop() == null) {
             return null;
         }
-        RepositoryNode node = null;
+        IRepositoryNode node = null;
         if (editorInput instanceof AbstractItemEditorInput) {
             Item item = ((AbstractItemEditorInput) editorInput).getItem();
             if (item instanceof TDQAnalysisItem) {
@@ -85,7 +85,7 @@ public class DQEditorLinkHelper implements ILinkHelper {
     }
 
     public void activateEditor(IWorkbenchPage aPage, IStructuredSelection aSelection) {
-        RepositoryNode repNode = (RepositoryNode) aSelection.getFirstElement();
+        IRepositoryNode repNode = (IRepositoryNode) aSelection.getFirstElement();
         OpenItemEditorAction openEditorAction = new OpenItemEditorAction(repNode);
         // MOD msjian TDQ-4209 2012-2-7 : modify to IEditorInput type
         try {
