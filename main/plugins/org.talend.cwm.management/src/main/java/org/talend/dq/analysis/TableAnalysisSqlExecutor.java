@@ -105,14 +105,16 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
 
     private boolean isAnalyzedElementValid(Indicator indicator) {
         if (indicator.getAnalyzedElement() == null) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
             return false;
         }
 
         // check the AnalyzedElement as set
         NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (set == null) {
-            traceError(Messages.getString("TableAnalysisSqlExecutor.ANALYZEDELEMENTISNOTATABLE", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString(
+                    "TableAnalysisSqlExecutor.ANALYZEDELEMENTISNOTATABLE", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
             return false;
         }
         // --- get the schema owner
@@ -141,10 +143,11 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
     private boolean isExpressionValid(Expression sqlGenericExpression, Indicator indicator) {
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
             final EClass indicatorEclass = indicator.eClass();
-            traceError(Messages.getString(
-                    "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR",//$NON-NLS-1$
-                    (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
-                    ResourceHelper.getUUID(indicator.getIndicatorDefinition())));
+            traceError(Messages
+                    .getString(
+                            "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR",//$NON-NLS-1$
+                            (indicator.getName() != null ? AnalysisExecutorHelper.getIndicatorName(indicator) : indicatorEclass
+                                    .getName()), ResourceHelper.getUUID(indicator.getIndicatorDefinition())));
             return false;
         } else {
             return true;
@@ -158,7 +161,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
         }
 
         IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-        if (!isIndicatorDefinitionValid(indicatorDefinition, indicator.getName())) {
+        if (!isIndicatorDefinitionValid(indicatorDefinition, AnalysisExecutorHelper.getIndicatorName(indicator))) {
             return Boolean.FALSE;
         }
 
@@ -432,7 +435,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
 
         Expression query = dbms().getInstantiatedExpression(indicator);
         if (query == null) {
-            traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+            traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                     + "query is null");//$NON-NLS-1$
             return Boolean.FALSE;
         } else {
@@ -443,12 +446,12 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
                 // give result to indicator so that it handles the results
                 Boolean isExecSuccess = indicator.storeSqlResults(myResultSet);
                 if (!isExecSuccess) {
-                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                    traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                             + "SQL query: " + query.getBody());//$NON-NLS-1$
                     return Boolean.FALSE;
                 }
             } catch (Exception e) {
-                traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" "//$NON-NLS-1$//$NON-NLS-2$
                         + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
                 return Boolean.FALSE;
             }
@@ -523,7 +526,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
         }
 
         IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-        if (!isIndicatorDefinitionValid(indicatorDefinition, indicator.getName())) {
+        if (!isIndicatorDefinitionValid(indicatorDefinition, AnalysisExecutorHelper.getIndicatorName(indicator))) {
             return PluginConstant.EMPTY_STRING;
         }
 

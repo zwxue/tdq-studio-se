@@ -382,7 +382,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (IndicatorsPackage.eINSTANCE.getDefValueCountIndicator().equals(indicatorEclass)) {
                 String defValue = ColumnHelper.getDefaultValue(tdColumn);
                 if (defValue == null) {
-                    traceError(Messages.getString("ColumnAnalysisSqlExecutor.NODEFAULTVALUE", colName, indicator.getName()));//$NON-NLS-1$
+                    traceError(Messages
+                            .getString(
+                                    "ColumnAnalysisSqlExecutor.NODEFAULTVALUE", colName, AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
                     rt.setOk(false);
                     return rt;
                 }
@@ -433,8 +435,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (colNameWithFunction == null) {
             colNameWithFunction = dbms().getPatternFinderDefaultFunction(colName);
             if (colNameWithFunction == null) {
-                traceError(Messages.getString(
-                        "ColumnAnalysisSqlExecutor.NOREPLACEMENTFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
+                traceError(Messages
+                        .getString(
+                                "ColumnAnalysisSqlExecutor.NOREPLACEMENTFOUNDFORDBTYPE", language, AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
                 rt.setOk(false);
             }
         }
@@ -458,7 +461,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // the analysis, will not check the expression and create again(from
             // the definition).
             if (indicator.getInstantiatedExpressions().size() <= 0) {
-                traceError(Messages.getString("ColumnAnalysisSqlExecutor.NOPATTERNFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
+                traceError(Messages
+                        .getString(
+                                "ColumnAnalysisSqlExecutor.NOPATTERNFOUNDFORDBTYPE", language, AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
                 rt.setOk(false);
             }
         }
@@ -501,7 +506,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         TypedReturnCode<TdColumn> rt = new TypedReturnCode<TdColumn>(true);
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
             rt.setOk(false);
             return rt;
         }
@@ -509,7 +515,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement);
         rt.setObject(tdColumn);
         if (tdColumn == null) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYZEDISNOTCOLUMNINDICATOR", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.ANALYZEDISNOTCOLUMNINDICATOR", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
             rt.setOk(false);
         }
         return rt;
@@ -542,7 +549,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // TDQ-10559~
 
         if (indicatorDefinition == null) {
-            traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.INTERNALERROR", AnalysisExecutorHelper.getIndicatorName(indicator)));//$NON-NLS-1$
             rt.setOk(false);
         }
         rt.setObject(indicatorDefinition);
@@ -1166,7 +1174,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
             Expression query = dbms().getInstantiatedExpression(indicator);
             if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                traceError("Query not executed for indicator: \"" + indicator.getName() + "\" " //$NON-NLS-1$//$NON-NLS-2$
+                traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" " //$NON-NLS-1$//$NON-NLS-2$
                         + ((query == null) ? "query is null" : "SQL query: " + query.getBody())); //$NON-NLS-1$//$NON-NLS-2$  
                 runStatus = Boolean.FALSE;
             } else {
