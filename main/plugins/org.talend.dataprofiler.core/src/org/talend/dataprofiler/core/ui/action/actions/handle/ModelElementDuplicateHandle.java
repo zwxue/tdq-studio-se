@@ -175,8 +175,8 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
                 if (indicator instanceof AllMatchIndicator) {
                     EList<RegexpMatchingIndicator> list = ((AllMatchIndicator) indicator).getCompositeRegexMatchingIndicators();
                     for (RegexpMatchingIndicator regxIndicator : list) {
-                        builtInLs.addAll(indicator.getParameters().getDataValidDomain().getBuiltInPatterns());
-                        map.put(indicator, builtInLs);
+                        builtInLs.addAll(regxIndicator.getParameters().getDataValidDomain().getBuiltInPatterns());
+                        map.put(regxIndicator, builtInLs);
                         regxIndicator.getParameters().getDataValidDomain().getBuiltInPatterns().clear();
                     }
                 } else {
