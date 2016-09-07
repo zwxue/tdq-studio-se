@@ -33,6 +33,7 @@ import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -131,7 +132,8 @@ public abstract class DataExplorer implements IDataExplorer {
                 if (analyzedElement != null) {
                     aeName = analyzedElement.getName() == null ? PluginConstant.EMPTY_STRING : analyzedElement.getName();
                 }
-                indName = this.indicator.getName() == null ? PluginConstant.EMPTY_STRING : this.indicator.getName();
+                indName = this.indicator.getName() == null ? PluginConstant.EMPTY_STRING : AnalysisExecutorHelper
+                        .getIndicatorName(indicator);
             }
             showing = showing == null ? PluginConstant.EMPTY_STRING : showing;
             //            sb.append("/*\n"); //$NON-NLS-1$
