@@ -215,8 +215,15 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
      */
     public IEditorInput computeEditorInput(boolean isOpenItemEditorAction) throws BusinessException {
         // TDQ-12499 msjian add : when click the node under recyclebin, no need to find a EditorInput
-        if (repNode != null && repNode.getParent() instanceof RecycleBinRepNode && !isOpenItemEditorAction) {
-            return null;
+        if (repNode != null && !isOpenItemEditorAction) {
+            IRepositoryNode currentNode = repNode;
+            do {
+                RepositoryNode parentNode = currentNode.getParent();
+                if (parentNode != null && parentNode instanceof RecycleBinRepNode) {
+                    return null;
+                }
+                currentNode = parentNode;
+            } while (currentNode != null);
         }
         // TDQ-12499~
 
