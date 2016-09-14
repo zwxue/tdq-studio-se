@@ -151,7 +151,8 @@ public final class ChartDecorator {
             if (plot instanceof CategoryPlot) {
                 decorateCategoryPlot(chart, orientation);
 
-                int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
+                CategoryDataset dataset = chart.getCategoryPlot().getDataset();
+                int rowCount = dataset != null ? dataset.getRowCount() : 20;
                 for (int i = 0; i < rowCount; i++) {
                     // by zshen bug 14173 add the color in the colorList when chart need more the color than 8.
                     if (i >= COLOR_LIST.size()) {
@@ -319,15 +320,17 @@ public final class ChartDecorator {
         font = null;
 
         if (render instanceof BarRenderer) {
-
-            int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
-            if (!isContainCJKCharacter(chart.getCategoryPlot().getDataset().getColumnKeys().toArray())) {
-                domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));//$NON-NLS-1$
+            CategoryDataset dataset = chart.getCategoryPlot().getDataset();
+            if (dataset != null) {
+                int rowCount = dataset.getRowCount();
+                if (!isContainCJKCharacter(dataset.getColumnKeys().toArray())) {
+                    domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));//$NON-NLS-1$
+                }
+                ((BarRenderer) render).setItemMargin(-0.40 * rowCount);
             }
             domainAxis.setUpperMargin(0.1);
             // MOD klliu bug 14570: Label size too long in Text statistics graph 2010-08-09
             domainAxis.setMaximumCategoryLabelLines(10);
-            ((BarRenderer) render).setItemMargin(-0.40 * rowCount);
 
             // ADD msjian TDQ-5111 2012-4-9: set Bar Width and let it look well
             // not do this when the bar is horizontal Orientation
