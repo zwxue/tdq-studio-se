@@ -23,9 +23,12 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -35,6 +38,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RemoveMatchKeyDefinitionAction;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.record.linkage.ui.section.GroupStatisticsRowCompartor;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 
@@ -90,7 +94,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     public void initTable(List<String> headers) {
-        initTable(headers, null);
+        initTable(headers, null, false);
     }
 
     /**
@@ -101,7 +105,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
      * @param columnMap all of columns which can be used by current Table
      * @param pixelDataOfHeaders the width of the column
      */
-    public void initTable(List<String> headers, List<MetadataColumn> columnMap) {
+    public void initTable(List<String> headers, List<MetadataColumn> columnMap, boolean withSorter) {
         TableLayout tLayout = new TableLayout();
         innerTable.setLayout(tLayout);
         innerTable.setHeaderVisible(true);
@@ -110,13 +114,34 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
         innerTable.setLayoutData(gd);
 
         for (int index = 0; index < headers.size(); index++) {
+            final int sortIndex = index;
             String columnLabel = getInternationalizedLabel(headers.get(index));
             if (columnLabel != null) {
                 if (columnLabel.length() == 1) {
                     columnLabel = columnLabel + PluginConstant.SPACE_STRING + PluginConstant.SPACE_STRING;
                 }
                 tLayout.addColumnData(new ColumnPixelData(columnLabel.length() * getHeaderDisplayWeight(index)));
-                new TableColumn(innerTable, SWT.LEFT).setText(columnLabel);
+                final TableColumn tableColumn = new TableColumn(innerTable, SWT.LEFT);
+                tableColumn.setText(columnLabel);
+                if (withSorter) {
+                    final ViewerComparator comparator = getComparator();
+                    tableColumn.addSelectionListener(new SelectionAdapter() {
+
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            ((GroupStatisticsRowCompartor) comparator).setColumn(sortIndex);
+                            int dir = getTable().getSortDirection();
+                            if (getTable().getSortColumn() == tableColumn) {
+                                dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
+                            } else {
+                                dir = SWT.DOWN;
+                            }
+                            getTable().setSortDirection(dir);
+                            getTable().setSortColumn(tableColumn);
+                            refresh();
+                        }
+                    });
+                }
             }
         }
 

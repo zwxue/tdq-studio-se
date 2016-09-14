@@ -47,7 +47,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
     public DuplicateRecordTableViewer(Composite parent, int style) {
         super(parent, style, Boolean.TRUE);
         initHeaders();
-        initTable(tableHeaders, new ArrayList<MetadataColumn>());
+        initTable(tableHeaders, new ArrayList<MetadataColumn>(), false);
     }
 
     /**

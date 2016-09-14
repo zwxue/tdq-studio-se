@@ -62,7 +62,7 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<Bl
 
         tableViewer = createTableViewer();
         tableViewer.addPropertyChangeListener(this);
-        ((BlockingKeyTableViewer) tableViewer).initTable(headers, columnList);
+        ((BlockingKeyTableViewer) tableViewer).initTable(headers, columnList, false);
     }
 
     /*

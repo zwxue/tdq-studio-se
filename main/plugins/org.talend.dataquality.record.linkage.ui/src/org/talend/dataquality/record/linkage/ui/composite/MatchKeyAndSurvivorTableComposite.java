@@ -71,7 +71,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
     protected void createTable() {
         tableViewer = createTableViewer();
         tableViewer.addPropertyChangeListener(this);
-        tableViewer.initTable(headers, columnList);
+        tableViewer.initTable(headers, columnList, false);
         // Create match interval
         createMatchIntervalComposite();
         // setInput(matchRule);

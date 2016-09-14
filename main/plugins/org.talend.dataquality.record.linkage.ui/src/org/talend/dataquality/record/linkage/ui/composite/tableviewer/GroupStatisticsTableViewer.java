@@ -23,6 +23,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.GroupStatisticsTableLabelProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
+import org.talend.dataquality.record.linkage.ui.section.GroupStatisticsRowCompartor;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 
@@ -42,8 +43,9 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
      */
     public GroupStatisticsTableViewer(Composite parent, int style) {
         super(parent, style, Boolean.TRUE);
+        setComparator(new GroupStatisticsRowCompartor());
         initHeaders();
-        initTable(tableHeaders, new ArrayList<MetadataColumn>());
+        initTable(tableHeaders, new ArrayList<MetadataColumn>(), true);
     }
 
     /**
