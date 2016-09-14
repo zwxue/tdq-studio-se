@@ -5,9 +5,7 @@
  */
 package org.talend.dataquality.indicators.columnset.impl;
 
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -158,28 +156,9 @@ public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImp
 
         matchedRecordCount = MATCHED_RECORD_COUNT_EDEFAULT;
         suspectRecordCount = SUSPECT_RECORD_COUNT_EDEFAULT;
-        groupSize2groupFrequency = new TreeMap<Object, Long>(new ComparatorOrderByKey<>());
+        groupSize2groupFrequency = new TreeMap<Object, Long>();
 
         return super.reset();
-    }
-
-    /**
-     * TDQ-12441 msjian: sorting by [group size] should be number order, not string order.
-     *
-     * @param <Object>
-     * @generated NOT
-     */
-    private static class ComparatorOrderByKey<Object> implements Comparator<Object>, Serializable {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public int compare(Object key1, Object key2) {
-            Long intKey1 = Long.valueOf(key1.toString());
-            Long intKey2 = Long.valueOf(key2.toString());
-            return (int) (intKey1 - intKey2);
-        }
-
     }
 
     /*
