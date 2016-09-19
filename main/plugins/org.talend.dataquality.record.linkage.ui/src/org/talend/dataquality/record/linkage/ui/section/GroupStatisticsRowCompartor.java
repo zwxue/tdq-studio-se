@@ -41,12 +41,12 @@ public class GroupStatisticsRowCompartor extends ViewerSorter {
 
     public void setColumn(int column) {
         if (column == this.propertyIndex) {
-            // Same column as last sort; toggle the direction
+            // Same column as last sort; switch the direction
             direction = 1 - direction;
         } else {
-            // New column; do an ascending sort
+            // New column; do an desc sort
             this.propertyIndex = column;
-            direction = ASCENDING;
+            direction = DESCENDING;
         }
     }
 
