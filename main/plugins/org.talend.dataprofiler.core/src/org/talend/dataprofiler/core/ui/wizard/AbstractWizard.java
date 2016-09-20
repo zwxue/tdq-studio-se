@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -69,8 +70,12 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
             if (csResult.isOk()) {
                 Object savedObj = csResult.getObject();
                 if (savedObj instanceof Item) {
-                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(((Item) savedObj).getProperty());
-                    openEditor(recursiveFind);
+                    if (!RepositoryNodeHelper.isOpenDQCommonViewer() && savedObj instanceof TDQMatchRuleItem) {
+                        openEditor((TDQMatchRuleItem) savedObj);
+                    } else {
+                        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(((Item) savedObj).getProperty());
+                        openEditor(recursiveFind);
+                    }
                 }
 
                 CorePlugin.getDefault().refresh(modelElement);
@@ -86,6 +91,10 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
     }
 
     public abstract void openEditor(IRepositoryNode repNode);
+
+    public void openEditor(TDQMatchRuleItem item) {
+
+    }
 
     public ReturnCode checkMetadata() {
         String elementName = getParameter().getName();
