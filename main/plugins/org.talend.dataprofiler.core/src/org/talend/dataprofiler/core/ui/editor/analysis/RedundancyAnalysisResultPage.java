@@ -23,6 +23,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -336,9 +338,30 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
                 if (e.widget instanceof TableCursor) {
                     ((TableCursor) e.widget).setForeground(new Color(null, 0, 0, 0));
                 }
+                // ~
             }
+
         });
-        // ~
+
+        // TDQ-10416 msjian: show the menu when right click after a left click
+        cursor.addMouseListener(new MouseListener() {
+
+            public void mouseDoubleClick(MouseEvent e) {
+                // do nothing
+            }
+
+            public void mouseDown(MouseEvent e) {
+
+                if (e.button == 3) {
+                    resultTable.getMenu().setVisible(true);
+                }
+            }
+
+            public void mouseUp(MouseEvent e) {
+                // do nothing
+            }
+
+        });
     }
 
     /**
