@@ -56,7 +56,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
         return getChildren(false);
     }
 
-    public String getLabelWithCount() {
+    private String getLabelWithCount() {
         String label = "Report"; //$NON-NLS-1$
         if (this.getObject() != null) {
             label = this.getObject().getLabel();

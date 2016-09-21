@@ -250,8 +250,11 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
     @Override
     public String getDisplayText() {
         if (!ReportSubFolderType.SUB_FOLDER.equals(getReportSubFolderType())) {
+            if (ReportSubFolderType.GENERATED_DOCS.equals(getReportSubFolderType())) {
+                return (String) getProperties(EProperties.LABEL);
+            }
             return (String) getProperties(EProperties.LABEL) + getCount();
         }
-        return getLabelWithCount();
+        return super.getDisplayText();
     }
 }
