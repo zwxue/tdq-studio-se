@@ -62,19 +62,25 @@ public class ColumnsSelectWithConstraintDialog extends ColumnsSelectionDialog {
         Set<?> keySet = modelElementCheckedMap.keySet();
         RepositoryNode[] repNodeArray = keySet.toArray(new RepositoryNode[keySet.size()]);
         int tableCount = 0;
-        for (RepositoryNode node : repNodeArray) {
-            if (node.getId() == null) {
-                continue;
-            }
-            tableCount++;
-        }
-        // TDQ-12215~
-
-        if (tableCount > 1) {
-            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.OK, DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+        if (repNodeArray.length <= 0) {
+            fCurrStatus = new Status(IStatus.WARNING, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
         } else {
-            fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
+            for (RepositoryNode node : repNodeArray) {
+                if (node.getId() == null) {
+                    continue;
+                }
+                tableCount++;
+            }
+
+            // TDQ-12215~
+
+            if (tableCount > 1) {
+                fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
+                        "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+            } else {
+                fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
+            }
         }
         updateStatus(fCurrStatus);
     }

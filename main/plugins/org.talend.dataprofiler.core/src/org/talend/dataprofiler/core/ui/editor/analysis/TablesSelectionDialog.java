@@ -18,6 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,9 +35,11 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
@@ -244,6 +249,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                         handleTablesChecked((IRepositoryNode) element, false);
                     }
                 }
+                updateOKStatus();
             }
         });
 
@@ -300,6 +306,27 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         List<IRepositoryNode> repoNodeList = checkedFlag ? RepositoryNodeHelper.getNmaedColumnSetNodes(packageNode) : null;
         packageCheckedMap.put(key, repoNodeList);
         getTableViewer().setAllChecked(checkedFlag);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#updateOKStatus()
+     */
+    @Override
+    protected void updateOKStatus() {
+        int initSize = 0;
+        for (RepositoryNodeKey nodeKey : packageCheckedMap.keySet()) {
+            List<IRepositoryNode> tableList = packageCheckedMap.get(nodeKey);
+            initSize += tableList == null ? 0 : tableList.size();
+        }
+        if (initSize <= 0) {
+            Status fCurrStatus = new Status(IStatus.WARNING, PlatformUI.PLUGIN_ID, IStatus.WARNING,
+                    DefaultMessagesImpl.getString("TablesSelectionDialog.noTableFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$
+            this.updateStatus(fCurrStatus);
+            return;
+        }
+        super.updateOKStatus();
     }
 
     @Override
@@ -487,6 +514,13 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     @Override
     protected void okPressed() {
+        List<IRepositoryNode> allCheckedTables = getAllCheckedTables();
+        // Added TDQ-8718 20140505 yyin: if no columns checked, warn the user
+        if (allCheckedTables.size() == 0) {
+            MessageDialogWithToggle.openWarning(this.getShell(), DefaultMessagesImpl.getString("ColumnSelectionDialog.warning"),//$NON-NLS-1$ 
+                    DefaultMessagesImpl.getString("TablesSelectionDialog.NoTableSelecte"));//$NON-NLS-1$
+            return;
+        }// ~
         super.okPressed();
         this.packageCheckedMap = null;
     }
