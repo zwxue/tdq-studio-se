@@ -396,7 +396,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
             filterDataBt.addMouseListener(new MouseListener() {
 
                 public void mouseDoubleClick(MouseEvent e) {
-                    // TODO Auto-generated method stub
+                    // do nothing until now
                 }
 
                 public void mouseDown(MouseEvent e) {
@@ -416,7 +416,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
                 }
 
                 public void mouseUp(MouseEvent e) {
-                    // TODO Auto-generated method stub
+                    // do nothing until now
 
                 }
 
