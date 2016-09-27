@@ -511,7 +511,7 @@ public class SqlexplorerService implements ISqlexplorerService {
                 }
             } else {
                 // MOD by zshen for 20517
-                if (!schemas.isEmpty()) {
+                if (schemas.isEmpty()) {
                     // the case for mssql/postgrel(which have catalog and schema structor) schema analysis.
                     Catalog shcmeaOfCatalogNode = CatalogHelper.getParentCatalog(parentPackageElement);
                     for (INode catalogNode : catalogs) {
