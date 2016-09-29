@@ -823,6 +823,8 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
                     // reset the select key buttons status
                     resetSelectKeyButton();
+                } else {
+                    ConnectionUtils.openWarningForCheckConnection(getAnalysisHandler().getAnalysis().getName());
                 }
 
                 return true;
