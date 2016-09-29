@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -2234,7 +2234,7 @@ public class DbmsLanguageTest {
         // Assert hive
         dbms = getHiveDbmsLanguage();
         queryColWithPrefix = dbms.getQueryColumnsWithPrefix(columns);
-        Assert.assertEquals("myCol1,myCol2", queryColWithPrefix); //$NON-NLS-1$
+        Assert.assertEquals("`myCol1`,`myCol2`", queryColWithPrefix); //$NON-NLS-1$
 
     }
 

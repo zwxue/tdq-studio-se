@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -240,7 +243,7 @@ public class PatternExplorerRealTest {
 
         String clause = patternExplorer.getValidValuesStatement();
 
-        assertEquals("SELECT lname FROM `catalog1`.`table1` ", clause); //$NON-NLS-1$
+        assertEquals("SELECT `lname` FROM `catalog1`.`table1` ", clause); //$NON-NLS-1$
     }
 
     /**
@@ -307,7 +310,7 @@ public class PatternExplorerRealTest {
 
         String clause = patternExplorer.getInvalidValuesStatement();
 
-        assertEquals("SELECT lname FROM `catalog1`.`table1` WHERE NOT (id>=1) ", clause); //$NON-NLS-1$
+        assertEquals("SELECT `lname` FROM `catalog1`.`table1` WHERE NOT (id>=1) ", clause); //$NON-NLS-1$
     }
 
     /**

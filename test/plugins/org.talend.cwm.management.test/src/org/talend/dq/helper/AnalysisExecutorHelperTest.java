@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +39,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.ReturnCode;
@@ -196,7 +200,7 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckPatternDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "/data/builtin/pattern_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String anaPropertyFile = "data/builtin/pattern_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
         Resource anaPropertyResource = getResource(anaPropertyFile);
         Analysis ana = null;
         Property anaProperty = null;
@@ -226,7 +230,7 @@ public class AnalysisExecutorHelperTest {
      * @throws IOException
      */
     private Resource getResource(String anaPropertyFile) {
-        URL fileUrl = this.getClass().getResource(anaPropertyFile);
+        URL fileUrl = CWMPlugin.getDefault().getBundle().getResource(anaPropertyFile);
         File propertyFile;
         try {
             propertyFile = new File(FileLocator.toFileURL(fileUrl).toURI().getPath().toString());
@@ -237,6 +241,9 @@ public class AnalysisExecutorHelperTest {
         } catch (IOException e) {
             fail("Can not find the file: " + anaPropertyFile);
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            fail("Can not find the file: " + anaPropertyFile);
+            e.printStackTrace();
         }
         return null;
     }
@@ -244,7 +251,7 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckPatternWithOutDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "/data/builtin/pattern_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String anaPropertyFile = "data/builtin/pattern_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
         Resource anaPropertyResource = getResource(anaPropertyFile);
         Analysis ana = null;
         Property anaProperty = null;
@@ -266,7 +273,7 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckPatternWithOutDependencyFilesAndBuiltIn() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "/data/builtin/pattern_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String anaPropertyFile = "data/builtin/pattern_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
         Resource anaPropertyResource = getResource(anaPropertyFile);
         Analysis ana = null;
         Property anaProperty = null;
@@ -288,7 +295,7 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckIndicatorWithDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "/data/builtin/indicator_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String anaPropertyFile = "data/builtin/indicator_with_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
         Resource anaPropertyResource = getResource(anaPropertyFile);
         Analysis ana = null;
         Property anaProperty = null;
@@ -325,7 +332,7 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckIndicatorWithOutDependencyFilesAndBuiltIn() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "/data/builtin/indicator_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String anaPropertyFile = "data/builtin/indicator_without_dep_builtin/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
         Resource anaPropertyResource = getResource(anaPropertyFile);
         Analysis ana = null;
         Property anaProperty = null;
@@ -351,7 +358,7 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckIndicatorWithOutDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "/data/builtin/indicator_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
+        String anaPropertyFile = "data/builtin/indicator_without_dep/TDQ_Data_Profiling/Analyses/patternMatchAna_0.1.properties"; //$NON-NLS-1$
         Resource anaPropertyResource = getResource(anaPropertyFile);
         Analysis ana = null;
         Property anaProperty = null;
@@ -387,7 +394,7 @@ public class AnalysisExecutorHelperTest {
     @Test
     public void testCheckRuleWithDependencyFiles() {
         // Load analysis item/property model from test file.
-        String anaPropertyFile = "/data/builtin/rule_with_dep/TDQ_Data_Profiling/Analyses/matchRuleAna_0.1.properties"; //$NON-NLS-1$
+        String anaPropertyFile = "data/builtin/rule_with_dep/TDQ_Data_Profiling/Analyses/matchRuleAna_0.1.properties"; //$NON-NLS-1$
         Resource anaPropertyResource = getResource(anaPropertyFile);
         Analysis ana = null;
         Property anaProperty = null;

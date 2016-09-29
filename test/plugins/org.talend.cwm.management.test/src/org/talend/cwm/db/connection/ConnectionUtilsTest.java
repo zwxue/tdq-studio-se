@@ -182,11 +182,8 @@ public class ConnectionUtilsTest {
             try {
                 URL resource = CWMPlugin.getDefault().getBundle()
                         .getResource("jdbc" + Path.SEPARATOR + "mysql-connector-java-5.1.12-bin.jar"); //$NON-NLS-1$ //$NON-NLS-2$
-                System.out.println(resource.toString());
                 fileURL = FileLocator.toFileURL(resource);
-                System.out.println(fileURL.toString());
                 URI uri = fileURL.toURI();
-                System.out.println(uri.toString());
                 sourceFile = new File(uri);
             } catch (IllegalArgumentException e) {
                 try {

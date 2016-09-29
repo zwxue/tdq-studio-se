@@ -34,6 +34,8 @@ import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory;
@@ -77,6 +79,9 @@ public class SummaryStastictisExplorerRealTest {
         // test for MeanIndicator
         MeanIndicator meanIndicator = IndicatorsFactory.eINSTANCE.createMeanIndicator();
         meanIndicator.setAnalyzedElement(tdColumnReal);
+        IndicatorDefinition  meanIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        meanIndicatorDef.setName("Mean");
+        meanIndicator.setIndicatorDefinition(meanIndicatorDef);
 
         ChartDataEntity entityReal = new ChartDataEntity();
         entityReal.setValue("0"); //$NON-NLS-1$
@@ -89,6 +94,9 @@ public class SummaryStastictisExplorerRealTest {
         // test for MedianIndicator
         MedianIndicator medianIndicator = IndicatorsFactory.eINSTANCE.createMedianIndicator();
         medianIndicator.setAnalyzedElement(tdColumnReal);
+        IndicatorDefinition  medianIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        medianIndicatorDef.setName("Median");
+        medianIndicator.setIndicatorDefinition(medianIndicatorDef);
 
         entityReal.setIndicator(medianIndicator);
         summaryExplorerSql.setEnitty(entityReal);
@@ -99,13 +107,24 @@ public class SummaryStastictisExplorerRealTest {
         // test for IQRIndicator
         MaxValueIndicator maxValueIndicator = IndicatorsFactory.eINSTANCE.createMaxValueIndicator();
         maxValueIndicator.setValue("80"); //$NON-NLS-1$
+        IndicatorDefinition  maxValueIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        maxValueIndicatorDef.setName("Maximum");
+        maxValueIndicator.setIndicatorDefinition(maxValueIndicatorDef);
+        
         MinValueIndicator minValueIndicator = IndicatorsFactory.eINSTANCE.createMinValueIndicator();
         minValueIndicator.setValue("20"); //$NON-NLS-1$
+        IndicatorDefinition  minValueIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        minValueIndicatorDef.setName("Minimum");
+        minValueIndicator.setIndicatorDefinition(minValueIndicatorDef);
 
         IQRIndicator iqrIndicator = IndicatorsFactory.eINSTANCE.createIQRIndicator();
         iqrIndicator.setUpperValue(maxValueIndicator);
         iqrIndicator.setLowerValue(minValueIndicator);
         iqrIndicator.setAnalyzedElement(tdColumnReal);
+        IndicatorDefinition  iqrIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        iqrIndicatorDef.setName("Inter Quartile Range");
+        iqrIndicator.setIndicatorDefinition(iqrIndicatorDef);
+        
 
         entityReal.setIndicator(iqrIndicator);
         summaryExplorerSql.setEnitty(entityReal);
@@ -116,6 +135,9 @@ public class SummaryStastictisExplorerRealTest {
         // test for LowerQuartileIndicator
         LowerQuartileIndicator lowerQuartileIndicator = IndicatorsFactory.eINSTANCE.createLowerQuartileIndicator();
         lowerQuartileIndicator.setAnalyzedElement(tdColumnReal);
+        IndicatorDefinition  lowerQuartileIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        lowerQuartileIndicatorDef.setName("Lower Quartile");
+        lowerQuartileIndicator.setIndicatorDefinition(lowerQuartileIndicatorDef);
 
         entityReal.setIndicator(lowerQuartileIndicator);
         summaryExplorerSql.setEnitty(entityReal);
@@ -126,6 +148,9 @@ public class SummaryStastictisExplorerRealTest {
         // test for UpperQuartileIndicator
         UpperQuartileIndicator upperQuartileIndicator = IndicatorsFactory.eINSTANCE.createUpperQuartileIndicator();
         upperQuartileIndicator.setAnalyzedElement(tdColumnReal);
+        IndicatorDefinition  upperQuartileIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        upperQuartileIndicatorDef.setName("Upper Quartile");
+        upperQuartileIndicator.setIndicatorDefinition(upperQuartileIndicatorDef);
 
         entityReal.setIndicator(upperQuartileIndicator);
         summaryExplorerSql.setEnitty(entityReal);
@@ -138,6 +163,9 @@ public class SummaryStastictisExplorerRealTest {
         rangeIndicator.setUpperValue(maxValueIndicator);
         rangeIndicator.setLowerValue(minValueIndicator);
         rangeIndicator.setAnalyzedElement(tdColumnReal);
+        IndicatorDefinition  rangeIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        rangeIndicatorDef.setName("Range");
+        rangeIndicator.setIndicatorDefinition(rangeIndicatorDef);
 
         entityReal.setIndicator(rangeIndicator);
         summaryExplorerSql.setEnitty(entityReal);

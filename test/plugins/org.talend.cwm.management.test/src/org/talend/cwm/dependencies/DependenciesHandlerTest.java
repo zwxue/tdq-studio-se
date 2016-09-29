@@ -212,7 +212,9 @@ public class DependenciesHandlerTest {
         // init UDI supplier Dependency
         analysisResult1.getIndicators().add(createUserDefIndicator);
         ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
-        createIndicatorDefinition.getSupplierDependency().get(0).getClient().clear();
+        if (!createIndicatorDefinition.getSupplierDependency().isEmpty()) {
+            createIndicatorDefinition.getSupplierDependency().get(0).getClient().clear();
+        }
 
         // call the test method
         TypedReturnCode<Dependency> setUsageDependencyOn = DependenciesHandler.getInstance().setUsageDependencyOn(analysis,
@@ -276,7 +278,9 @@ public class DependenciesHandlerTest {
         // init UDI supplier Dependency
         analysisResult1.getIndicators().add(createUserDefIndicator);
         ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
-        createIndicatorDefinition.getSupplierDependency().get(0).getClient().clear();
+        if (!createIndicatorDefinition.getSupplierDependency().isEmpty()) {
+            createIndicatorDefinition.getSupplierDependency().get(0).getClient().clear();    
+        }
         Analysis analysisFromFile = AnalysisFactory.eINSTANCE.createAnalysis();
         try {
             analysis.eResource().unload();
@@ -348,7 +352,9 @@ public class DependenciesHandlerTest {
         // init UDI supplier Dependency
         analysisResult1.getIndicators().add(createUserDefIndicator);
         ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
-        analysis.getClientDependency().get(0).getSupplier().clear();
+        if (!analysis.getClientDependency().isEmpty()) {
+            analysis.getClientDependency().get(0).getSupplier().clear();
+        }
         IndicatorDefinition createIndicatorDefinitionFromFile = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         try {
             createIndicatorDefinition.eResource().unload();

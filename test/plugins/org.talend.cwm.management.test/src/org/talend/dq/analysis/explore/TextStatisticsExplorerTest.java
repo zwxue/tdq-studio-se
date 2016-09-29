@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.sql.Types;
 import java.util.Map;
@@ -27,6 +28,8 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
@@ -57,6 +60,10 @@ public class TextStatisticsExplorerTest {
         IndicatorParameters indicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         indicatorParameters.setDateParameters(null);
         averageLengthIndicator.setParameters(indicatorParameters);
+        IndicatorDefinition  averageLengthIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        averageLengthIndicatorDef.setName("Average Length");
+        averageLengthIndicator.setIndicatorDefinition(averageLengthIndicatorDef);
+
 
         Analysis analysis = UnitTestBuildHelper.createAndInitAnalysis();
         TaggedValueHelper.setTaggedValue(analysis.getContext().getConnection(), TaggedValueHelper.DB_PRODUCT_NAME, "Teradata");
@@ -78,7 +85,7 @@ public class TextStatisticsExplorerTest {
                         + "-- Purpose:  ;\n"
                         + "-- Description:  ;\n"
                         + "-- AnalyzedElement: NAME ;\n"
-                        + "-- Indicator: AverageLengthIndicator ;\n"
+                        + "-- Indicator: Average Length ;\n"
                         + "-- Showing: View rows ;\n"
                         + "SELECT t.* FROM(SELECT CAST(SUM( CHAR_LENGTH( CASE WHEN   CHAR_LENGTH( TRIM(NAME) ) =0  THEN '' ELSE  NAME END) ) / (COUNT(NAME )*1.00)+0.99 as int) c,CAST(SUM( CHAR_LENGTH( CASE WHEN   CHAR_LENGTH( TRIM(NAME) ) =0  THEN '' ELSE  NAME END) ) / (COUNT(NAME)*1.00) as int) f FROM TDQ_CALENDAR WHERE(NAME IS NOT NULL)) e, TDQ_CALENDAR t WHERE  CHAR_LENGTH( CASE WHEN   CHAR_LENGTH( TRIM(NAME) ) =0  THEN '' ELSE  NAME END)  BETWEEN f AND c",
                 queryMap.get("View rows"));

@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.writer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import junit.framework.Assert;
 
 import org.eclipse.core.runtime.Path;
@@ -20,12 +20,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQItemService;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -56,13 +56,13 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
-import org.talend.repository.model.RepositoryConstants;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwmx.analysis.informationreporting.InformationreportingFactory;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -75,12 +75,12 @@ public class AElementPersistanceRealTest {
 
     @Before
     public void setUp() throws Exception {
-        ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
-        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
-        if (repository == null) {
-            Assert.fail("No local Repository found! Probably due to a missing plugin in the product."); //$NON-NLS-1$
+        System.setProperty("studio.version", "6.3");
+        UnitTestBuildHelper.initProjectStructure();
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQItemService.class)) {
+            ITDQItemService tdqService = (ITDQItemService) GlobalServiceRegister.getDefault().getService(ITDQItemService.class);
+            tdqService.createDQStructor();
         }
-        proxyRepository.setRepositoryFactoryFromProvider(repository);
     }
 
     /**

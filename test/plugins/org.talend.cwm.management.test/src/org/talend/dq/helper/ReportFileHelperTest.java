@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class ReportFileHelperTest {
 
     @Test
     public void testSaveReportListFile() throws PersistenceException, URISyntaxException, IOException {
-        URL fileUrl = this.getClass().getResource("/data/" + ReportFileHelper.REPORT_LIST); //$NON-NLS-1$
+        URL fileUrl = this.getClass().getResource("/data/test.report.list"); //$NON-NLS-1$
         File file = new File(FileLocator.toFileURL(fileUrl).toURI().getPath().toString());
         assertTrue(file.exists());
         List<ReportListParameters> repList = ReportFileHelper.getReportListParameters(file);
@@ -74,7 +75,7 @@ public class ReportFileHelperTest {
 
     @Test
     public void testGetReportListParameters() throws URISyntaxException, IOException {
-        URL fileUrl = this.getClass().getResource("/data/" + ReportFileHelper.REPORT_LIST); //$NON-NLS-1$
+        URL fileUrl = this.getClass().getResource("/data/test.report.list"); //$NON-NLS-1$
         File file = new File(FileLocator.toFileURL(fileUrl).toURI().getPath().toString());
         assertTrue(file.exists());
         List<ReportListParameters> reportListParameters = ReportFileHelper.getReportListParameters(file);
