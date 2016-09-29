@@ -60,12 +60,17 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     protected static final String NEW_MENU_NAME = "column.analysis.menu"; //$NON-NLS-1$
 
     public boolean isShowMenu() {
+        Object object = getContextObject();
+        // TDQ-12622 msjian : when there is nothing selected, no need to check show menu
+        if (object == null) {
+            return false;
+        }
+
         if (!isShowMenuWhenIsReadonlyUser()) {
             return false;
         }
 
-        // hidden all menues for all reference project node
-        Object object = getContextObject();
+        // hidden all the menus for all reference project node
         if (object instanceof DQRepositoryNode) {
             DQRepositoryNode node = (DQRepositoryNode) object;
             if (!node.getProject().isMainProject()) {
@@ -92,15 +97,15 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
      * DOC msjian Comment method "isShowMenuForRefNode".
      */
     public boolean isShowMenuForRefNode() {
-        IRepositoryNode fistContextNode = getFirstRepositoryNode();
-        ERepositoryObjectType contentType = fistContextNode.getContentType();
+        IRepositoryNode firstContextNode = getFirstRepositoryNode();
+        ERepositoryObjectType contentType = firstContextNode.getContentType();
         if (contentType != null) {
             if (contentType == ERepositoryObjectType.SVN_ROOT || contentType == ERepositoryObjectType.REFERENCED_PROJECTS) {
                 return false;
             }
         }
 
-        if (ERepositoryObjectType.REFERENCED_PROJECTS.getLabel().equals(fistContextNode.getProperties(EProperties.LABEL))) {
+        if (ERepositoryObjectType.REFERENCED_PROJECTS.getLabel().equals(firstContextNode.getProperties(EProperties.LABEL))) {
             return false;
         }
 
