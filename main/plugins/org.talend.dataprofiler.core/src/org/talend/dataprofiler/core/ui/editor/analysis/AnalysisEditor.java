@@ -164,8 +164,8 @@ public class AnalysisEditor extends SupportContextEditor {
                 initContext();
                 // Added 20130930 TDQ-8117, yyin
                 // init the run analysis action, to give it the analysis item and listener
-                this.runAction.setAnalysisItem((TDQAnalysisItem) getMasterPage().getCurrentRepNode().getObject().getProperty()
-                        .getItem());
+                this.runAction.setAnalysisItems(new TDQAnalysisItem[] { (TDQAnalysisItem) getMasterPage().getCurrentRepNode()
+                        .getObject().getProperty().getItem() });
             }
 
             if (resultPage != null) {

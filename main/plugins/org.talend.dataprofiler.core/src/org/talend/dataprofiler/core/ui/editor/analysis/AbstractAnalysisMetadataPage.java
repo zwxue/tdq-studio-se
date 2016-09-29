@@ -1007,6 +1007,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 if (ConnectionUtils.checkConnection(conn)) {
                     // need to give the new connection to the dialog to show only this new one in the dialog.
                     openColumnsSelectionDialog(conn);
+                } else {
+                    ConnectionUtils.openWarningForCheckConnection(getAnalysisHandler().getAnalysis().getName());
                 }
 
                 return true;

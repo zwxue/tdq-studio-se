@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.properties.Item;
@@ -25,8 +27,6 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class RunAnalysisActionProvider extends AbstractCommonActionProvider {
 
-    private RunAnalysisAction runAnalysisAction;
-
     /**
      * Adds a submenu to the given menu with the name "New Component".
      */
@@ -35,20 +35,27 @@ public class RunAnalysisActionProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
-        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
-        RepositoryNode node = (RepositoryNode) obj;
-        RepositoryNode parent = node.getParent();
-        if (!(parent instanceof ReportSubFolderRepNode)) {
-            // IPath append = WorkbenchUtils.getFilePath(node);
-            Item item = node.getObject().getProperty().getItem();
-            if (item instanceof TDQAnalysisItem) {
-                // IFile file = ResourceManager.getRootProject().getFile(append);
-                runAnalysisAction = new RunAnalysisAction();
-                // runAnalysisAction.setSelectionFile(file);
-                runAnalysisAction.setAnalysisItem((TDQAnalysisItem) item);
-                menu.add(runAnalysisAction);
+        Object[] array = ((TreeSelection) this.getContext().getSelection()).toArray();
+        ArrayList<TDQAnalysisItem> selectedItemsList = new ArrayList<TDQAnalysisItem>();
+
+        for (Object obj : array) {
+            RepositoryNode node = (RepositoryNode) obj;
+            RepositoryNode parent = node.getParent();
+            if (!(parent instanceof ReportSubFolderRepNode)) {
+                // IPath append = WorkbenchUtils.getFilePath(node);
+                Item item = node.getObject().getProperty().getItem();
+                if (item instanceof TDQAnalysisItem) {
+                    selectedItemsList.add((TDQAnalysisItem) item);
+                }
             }
         }
 
+        if (!selectedItemsList.isEmpty()) {
+            // IFile file = ResourceManager.getRootProject().getFile(append);
+            RunAnalysisAction runAnalysisAction = new RunAnalysisAction();
+            // runAnalysisAction.setSelectionFile(file);
+            runAnalysisAction.setAnalysisItems(selectedItemsList.toArray(new TDQAnalysisItem[selectedItemsList.size()]));
+            menu.add(runAnalysisAction);
+        }
     }
 }
