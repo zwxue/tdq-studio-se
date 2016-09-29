@@ -94,7 +94,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Deprecated
     private IFile selectionFile;// no one used
 
-    private TDQAnalysisItem item;
+    private TDQAnalysisItem[] items;
 
     private boolean isNeedUnlock = false;
 
@@ -122,8 +122,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * 
      * @param item2
      */
-    public void setAnalysisItem(TDQAnalysisItem item) {
-        this.item = item;
+    public void setAnalysisItems(TDQAnalysisItem[] items) {
+        this.items = items;
     }
 
     public void setListener(IRuningStatusListener listener) {
@@ -145,51 +145,71 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     @Override
     public void run() {
+        if (items != null) {
+            for (TDQAnalysisItem anaItem : items) {
+                new RunAnalysisThread(anaItem).start();
+            }
+        }
+    }
+
+    /**
+     * DOC msjian Comment method "runAnalysisForItem".
+     */
+    protected void runAnalysisForItem(final TDQAnalysisItem anaItem) {
         try {
-            if (item == null) {
+            if (anaItem == null) {
                 log.error("Analysis item is null"); //$NON-NLS-1$
                 return;
             }
 
-            if (ifLockByOthers()) {
+            if (ifLockByOthers(anaItem)) {
                 return;
             }
 
             // check if the analysis need to be saved or can run before real running by the event
-            if (!EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN, null)) {
+            if (!EventManager.getInstance().publish(anaItem.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN, null)) {
                 // if the analysis need save but can not be saved, return without continue;
                 // or the analysis can not run, return without continue
                 return;
             }
 
             // to do validate after save.
-            validateAnalysis();
+            validateAnalysis(anaItem);
 
-            if (!isConnectedAvailable()) {
+            if (!isConnectedAvailable(anaItem)) {
+                Display.getDefault().syncExec(new Runnable() {
+
+                    public void run() {
+                        ConnectionUtils.openWarningForCheckConnection(anaItem.getAnalysis().getName());
+                    }
+                });
+
                 return;
             }
 
             if (log.isInfoEnabled()) {
-                addTaggedVaLueIntoConnection();
+                addTaggedVaLueIntoConnection(anaItem);
             }
 
-            AnalysisType analysisType = item.getAnalysis().getParameters().getAnalysisType();
+            AnalysisType analysisType = anaItem.getAnalysis().getParameters().getAnalysisType();
             if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
                 // If the analysis type is column comparison, ask user to continue to run or not.
-                if (!isContinueRun()) {
-                    return;
+                if (Display.getCurrent() != null) {
+                    if (!isContinueRun()) {
+                        return;
+                    }
                 }
             } else if (AnalysisType.CONNECTION.equals(analysisType)) {
                 // If the analysis type is overview analysis, reload the database.
                 // TODO check here the needed of reloading database
-                reloadConnection();
+                reloadConnection(anaItem);
             }
 
             // lock the analysis before running it if it is not locked yet.(whenever the editor is not opened)
             // when the run comes from the button in editor, the listener is not null;
             // when the run comes from context menu, the listener is null
-            if (this.listener == null && !ProxyRepositoryManager.getInstance().isLocked(item)) {
-                if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item)) {
+            if (this.listener == null && !ProxyRepositoryManager.getInstance().isLocked(anaItem)) {
+                if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(anaItem)) {
                     // if the analysis is not editable , return without running.
                     isNeedUnlock = false;
                     return;
@@ -205,7 +225,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 @Override
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
-                    monitor.beginTask(DefaultMessagesImpl.getString("RunAnalysisAction.running", item.getAnalysis().getName()), 5); //$NON-NLS-1$ 
+                    monitor.beginTask(
+                            DefaultMessagesImpl.getString("RunAnalysisAction.running", anaItem.getAnalysis().getName()), 5); //$NON-NLS-1$ 
+
                     Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
@@ -213,9 +235,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                 listener.fireRuningItemChanged(false);
                             }
                             // register dynamic event for who supported dynamic chart
-                            if (isSupportDynamicChart()) {
-                                EventManager.getInstance().publish(item.getAnalysis(),
-                                        EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
+                            if (isSupportDynamicChart(anaItem)) {
+                                EventManager.getInstance().publish(anaItem.getAnalysis(),
+
+                                EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
                             }
                         }
 
@@ -223,20 +246,19 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                     ReturnCode executed = null;
                     try {
-                        executed = AnalysisExecutorSelector.executeAnalysis(item, monitor);
-
+                        executed = AnalysisExecutorSelector.executeAnalysis(anaItem, monitor);
                         if (monitor.isCanceled()) {
-                            TdqAnalysisConnectionPool.closeConnectionPool(item.getAnalysis());
+                            TdqAnalysisConnectionPool.closeConnectionPool(anaItem.getAnalysis());
                             executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
                             monitor.done();
                             if (isNeedUnlock) {
-                                unlockAnalysis();
+                                unlockAnalysis(anaItem);
                             }
                             return Status.CANCEL_STATUS;
                         }
 
                         if (isNeedUnlock) {
-                            unlockAnalysis();
+                            unlockAnalysis(anaItem);
                         }
                     } finally {// if any exception, still need to unregister dynamic events.
                         Display.getDefault().syncExec(new Runnable() {
@@ -244,8 +266,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             public void run() {
                                 // Added TDQ-8787 20140616 yyin: unregister all dynamic chart events after executing
                                 // the analysis
-                                if (isSupportDynamicChart()) {
-                                    EventManager.getInstance().publish(item.getAnalysis(),
+                                if (isSupportDynamicChart(anaItem)) {
+                                    EventManager.getInstance().publish(anaItem.getAnalysis(),
                                             EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
                                 }
 
@@ -253,17 +275,17 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                     listener.fireRuningItemChanged(true);
                                 } else {
                                     // TODO yyin publish the event from listener.
-                                    EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU,
-                                            null);
+                                    EventManager.getInstance().publish(anaItem.getAnalysis(),
+                                            EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
                                 }
 
                             }
 
                         });
                     }
-                    displayResultStatus(executed);
+                    displayResultStatus(executed, anaItem);
                     // TODO move this code to the right place
-                    addAnalysisToRef(item.getAnalysis());
+                    addAnalysisToRef(anaItem.getAnalysis());
                     monitor.done();
                     return Status.OK_STATUS;
                 }
@@ -295,13 +317,17 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
     }
 
-    // only sql mode, and column, table, dependency analysis support dynamic chart now
-    private boolean isSupportDynamicChart() {
-        ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(this.item.getAnalysis());
+    /**
+     * only sql mode, and column, table, dependency analysis support dynamic chart now.
+     * 
+     * @return boolean
+     */
+    private boolean isSupportDynamicChart(TDQAnalysisItem runItem) {
+        ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(runItem.getAnalysis());
         if (ExecutionLanguage.SQL.equals(executionEngine)) {
             if (listener == null) {// when run from context menu.
-                if (AnalysisType.MULTIPLE_COLUMN.equals(item.getAnalysis().getParameters().getAnalysisType())
-                        || AnalysisType.BUSINESS_RULE.equals(item.getAnalysis().getParameters().getAnalysisType())) {
+                if (AnalysisType.MULTIPLE_COLUMN.equals(runItem.getAnalysis().getParameters().getAnalysisType())
+                        || AnalysisType.BUSINESS_RULE.equals(runItem.getAnalysis().getParameters().getAnalysisType())) {
                     return true;
                 }
                 return false;
@@ -314,8 +340,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
     }
 
-    private void addTaggedVaLueIntoConnection() {
-        DataManager datamanager = item.getAnalysis().getContext().getConnection();
+    private void addTaggedVaLueIntoConnection(TDQAnalysisItem runItem) {
+        DataManager datamanager = runItem.getAnalysis().getContext().getConnection();
         if (datamanager instanceof DatabaseConnection) {
             TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
                     datamanager.getTaggedValue());
@@ -339,9 +365,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     /**
      * unlock analysis.
      */
-    private void unlockAnalysis() {
+    private void unlockAnalysis(TDQAnalysisItem runItem) {
         try {
-            ProxyRepositoryFactory.getInstance().unlock(this.item);
+            ProxyRepositoryFactory.getInstance().unlock(runItem);
         } catch (PersistenceException e) {
             log.error(e, e);
         } catch (LoginException e) {
@@ -355,20 +381,16 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * @return
      */
     private Boolean isContinueRun() {
-        boolean isContinueRun = Boolean.TRUE;
-        if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
-            isContinueRun = Boolean.FALSE;
-        }
-        return isContinueRun;
+        return MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG")); //$NON-NLS-1$
     }
 
     /**
      * reload analysis connection.
      */
-    private void reloadConnection() {
-        if (AnalysisHelper.getReloadDatabases(item.getAnalysis())) {
-            Connection conntion = (Connection) item.getAnalysis().getContext().getConnection();
+    private void reloadConnection(TDQAnalysisItem runItem) {
+        if (AnalysisHelper.getReloadDatabases(runItem.getAnalysis())) {
+            Connection conntion = (Connection) runItem.getAnalysis().getContext().getConnection();
             if (conntion != null) {
                 try {
                     RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
@@ -385,8 +407,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * 
      * @return true when the connection is well connected
      */
-    private boolean isConnectedAvailable() {
-        DataManager datamanager = item.getAnalysis().getContext().getConnection();
+    private boolean isConnectedAvailable(TDQAnalysisItem runItem) {
+        DataManager datamanager = runItem.getAnalysis().getContext().getConnection();
         return ConnectionUtils.checkConnection(datamanager);
     }
 
@@ -395,10 +417,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * 
      * @return
      */
-    private boolean ifLockByOthers() {
+    private boolean ifLockByOthers(TDQAnalysisItem runItem) {
         // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
-        if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
-            RepositoryNode node1 = RepositoryNodeHelper.recursiveFind(this.item.getProperty());
+        if (ProxyRepositoryManager.getInstance().isLockByOthers(runItem)) {
+            RepositoryNode node1 = RepositoryNodeHelper.recursiveFind(runItem.getProperty());
             if (node1 != null) {
                 CorePlugin.getDefault().refreshDQView(node1.getParent());
             }
@@ -415,16 +437,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * 
      * @throws BusinessException
      */
-    private void validateAnalysis() throws BusinessException {
-        if (item.getAnalysis() == null || item.getAnalysis().getParameters() == null) {
-            BusinessException createBusinessException = ExceptionFactory.getInstance()
-                    .createBusinessException(item.getFilename());
-            throw createBusinessException;
+    private void validateAnalysis(TDQAnalysisItem runItem) throws BusinessException {
+        if (runItem.getAnalysis() == null || runItem.getAnalysis().getParameters() == null) {
+            throw ExceptionFactory.getInstance().createBusinessException(runItem.getFilename());
         }
 
         try {
             // check whether the field is integer value
-            AnalysisHandler.createHandler(item.getAnalysis()).getNumberOfConnectionsPerAnalysis();
+            AnalysisHandler.createHandler(runItem.getAnalysis()).getNumberOfConnectionsPerAnalysis();
         } catch (NumberFormatException nfe) {
             BusinessException businessException = new BusinessException();
             businessException.setAdditonalMessage(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mustBeNumber", //$NON-NLS-1$
@@ -450,7 +470,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         // MOD TDQ-8117 20131008 yyin: find the analysis item from the editor
         IEditorInput editorInput = activateEditor.getEditorInput();
         if (editorInput instanceof AnalysisItemEditorInput) {
-            this.item = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem());
+            setAnalysisItems(new TDQAnalysisItem[] { ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem()) });
         }
         AbstractAnalysisMetadataPage masterPage = ((AnalysisEditor) activateEditor).getMasterPage();
         listener = masterPage;
@@ -463,12 +483,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * 
      * @param executed
      */
-    private void displayResultStatus(final ReturnCode executed) {
+    private void displayResultStatus(final ReturnCode executed, final TDQAnalysisItem runItem) {
         if (log.isInfoEnabled()) {
-            int executionDuration = item.getAnalysis().getResults().getResultMetadata().getExecutionDuration();
+            int executionDuration = runItem.getAnalysis().getResults().getResultMetadata().getExecutionDuration();
             log.info(DefaultMessagesImpl
                     .getString(
-                            "RunAnalysisAction.displayInformation", new Object[] { item.getAnalysis().getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ 
+                            "RunAnalysisAction.displayInformation", new Object[] { runItem.getAnalysis().getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ 
 
         }
 
@@ -486,9 +506,30 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     MessageDialogWithToggle.openError(
                             shell,
                             DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis",//$NON-NLS-1$ //$NON-NLS-2$ 
-                                            item.getAnalysis().getName(), executed.getMessage()));
+                                            runItem.getAnalysis().getName(), executed.getMessage()));
                 }
             });
+        }
+    }
+
+    /**
+     * TDQ-12624 msjian: fix can run more than one analysis at the same time
+     *
+     */
+    class RunAnalysisThread extends Thread {
+
+        TDQAnalysisItem runAnalysisThreadItem;
+
+        RunAnalysisThread(TDQAnalysisItem item) {
+            super();
+            runAnalysisThreadItem = item;
+        }
+
+        @Override
+        public void run() {
+            synchronized (runAnalysisThreadItem) {
+                runAnalysisForItem(runAnalysisThreadItem);
+            }
         }
     }
 }

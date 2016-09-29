@@ -143,16 +143,18 @@ public final class ConnectionUtils {
      */
     public static boolean checkConnection(DataManager datamanager) {
         Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
-        ReturnCode connectionAvailable = new ReturnCode(false);
-        connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
+        ReturnCode connectionAvailable = isConnectionAvailable(analysisDataProvider);
         if (!connectionAvailable.isOk()) {
             log.error(connectionAvailable.getMessage());
-            MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
-                    Messages.getString("ConnectionUtils.checkConnFailTitle"),//$NON-NLS-1$
-                    Messages.getString("ConnectionUtils.checkConnFailMsg"));//$NON-NLS-1$
             return false;
         }
         return true;
+    }
+
+    public static void openWarningForCheckConnection(String analysisName) {
+        MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
+                Messages.getString("ConnectionUtils.checkConnFailTitle"),//$NON-NLS-1$
+                Messages.getString("ConnectionUtils.checkConnFailMsg", analysisName));//$NON-NLS-1$
     }
 
     /**

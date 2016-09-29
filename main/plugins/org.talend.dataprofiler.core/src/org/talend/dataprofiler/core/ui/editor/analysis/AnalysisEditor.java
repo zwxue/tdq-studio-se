@@ -176,7 +176,7 @@ public class AnalysisEditor extends SupportContextEditor {
                 AnalysisRepNode analysisRepNode = getMasterPage().getAnalysisRepNode();
                 if (analysisRepNode != null) {
                     TDQAnalysisItem item = (TDQAnalysisItem) analysisRepNode.getObject().getProperty().getItem();
-                    this.runAction.setAnalysisItem(item);
+                    this.runAction.setAnalysisItems(new TDQAnalysisItem[] { item });
                 }
             }
 
