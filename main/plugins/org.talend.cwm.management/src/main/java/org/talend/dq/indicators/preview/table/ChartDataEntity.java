@@ -334,11 +334,12 @@ public class ChartDataEntity {
                     || indicatorEnum == IndicatorEnum.FrequencyIndicatorEnum
                     || indicatorEnum == IndicatorEnum.LowFrequencyIndicatorEnum
                     || indicatorEnum == IndicatorEnum.SoundexIndicatorEnum
-                    || indicatorEnum == IndicatorEnum.SoundexLowIndicatorEnum) {
+                    || indicatorEnum == IndicatorEnum.SoundexLowIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.EastAsiaPatternLowFreqIndicatorEnum
+                    || indicatorEnum == IndicatorEnum.EastAsiaPatternFreqIndicatorEnum) {
                 if (key != null && key.toString().length() > 30) {
-                    msg.append("The original value is: " //$NON-NLS-1$
-                            + (key.toString().length() > 200 ? key.toString().substring(0, 200)
-                                    + "...(" + key.toString().length() + " characters)" : key.toString())); //$NON-NLS-1$ //$NON-NLS-2$
+                    msg.append(key.toString().length() > 200 ? key.toString().substring(0, 200)
+                            + "...(" + key.toString().length() + " characters)" : key.toString()); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             } else if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
                 msg.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\""); //$NON-NLS-1$ //$NON-NLS-2$

@@ -323,14 +323,20 @@ public final class ChartDecorator {
             CategoryDataset dataset = chart.getCategoryPlot().getDataset();
             if (dataset != null) {
                 int rowCount = dataset.getRowCount();
-                if (!isContainCJKCharacter(dataset.getColumnKeys().toArray())) {
+                List<?> columnKeys = dataset.getColumnKeys();
+                if (!isContainCJKCharacter(columnKeys.toArray())) {
                     domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));//$NON-NLS-1$
                 }
                 ((BarRenderer) render).setItemMargin(-0.40 * rowCount);
+
+                // TDQ-12621 add Tooltip for Lable
+                for (Object colKey : columnKeys) {
+                    domainAxis.addCategoryLabelToolTip(colKey.toString(), colKey.toString());
+                }
             }
             domainAxis.setUpperMargin(0.1);
-            // MOD klliu bug 14570: Label size too long in Text statistics graph 2010-08-09
-            domainAxis.setMaximumCategoryLabelLines(10);
+            // TDQ-12621 Only display in 1 line for the label, other chars will be displayed as "..."
+            domainAxis.setMaximumCategoryLabelLines(1);
 
             // ADD msjian TDQ-5111 2012-4-9: set Bar Width and let it look well
             // not do this when the bar is horizontal Orientation
