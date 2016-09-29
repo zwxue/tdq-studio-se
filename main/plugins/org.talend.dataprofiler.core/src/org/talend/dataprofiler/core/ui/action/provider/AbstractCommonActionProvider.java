@@ -60,12 +60,17 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     protected static final String NEW_MENU_NAME = "column.analysis.menu"; //$NON-NLS-1$
 
     public boolean isShowMenu() {
+        Object object = getContextObject();
+        // TDQ-12622 msjian : when there is nothing selected, no need to check show menu
+        if (object == null) {
+            return false;
+        }
+
         if (!isShowMenuWhenIsReadonlyUser()) {
             return false;
         }
 
-        // hidden all menues for all reference project node
-        Object object = getContextObject();
+        // hidden all the menus for all reference project node
         if (object instanceof DQRepositoryNode) {
             DQRepositoryNode node = (DQRepositoryNode) object;
             if (!node.getProject().isMainProject()) {
