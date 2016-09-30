@@ -43,7 +43,7 @@ public class DateFrequencyStateUtil {
 
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
-                    String keyLabel = FrequencyTypeStateUtil.getKeyLabel(freqExt);
+                    String keyLabel = FrequencyTypeStateUtil.getKeyLabel(freqExt, 30);
 
                     customerdataset.addValue(freqExt.getValue(), unit.getIndicatorName(), keyLabel);
 
@@ -84,7 +84,7 @@ public class DateFrequencyStateUtil {
 
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
-                    String keyLabel = FrequencyTypeStateUtil.getKeyLabel(freqExt);
+                    String keyLabel = FrequencyTypeStateUtil.getKeyLabel(freqExt, 30);
                     dataEnities.add(DateFrequencyStateUtil.createDataEntity(unit, freqExt, keyLabel));
                 }
             }

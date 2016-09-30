@@ -101,10 +101,11 @@ public class FrequencyTypeStateUtil {
     /**
      * DOC yyin Comment method "getKeyLabel".
      * 
+     * @param maxKeyLength the max length for keyLable,in general,30 for Tableviewer,200 for chart.
      * @param freqExt
      * @return
      */
-    public static String getKeyLabel(FrequencyExt freqExt) {
+    public static String getKeyLabel(FrequencyExt freqExt, int maxKeyLength) {
         String keyLabel = String.valueOf(freqExt.getKey());
         if ("null".equals(keyLabel)) { //$NON-NLS-1$
             keyLabel = SpecialValueDisplay.NULL_FIELD;
@@ -112,9 +113,9 @@ public class FrequencyTypeStateUtil {
         if ("".equals(keyLabel)) { //$NON-NLS-1$
             keyLabel = SpecialValueDisplay.EMPTY_FIELD;
         }
-        // TDQ-10785: when the data is too long we show the first 30 characters for table and chart
-        if (keyLabel.length() > 30) {
-            keyLabel = keyLabel.substring(0, 30) + "...(" + keyLabel.length() + " characters)"; //$NON-NLS-1$ //$NON-NLS-2$
+        // TDQ-10785: when the data is too long we show the first maxKeyLength characters for table and chart
+        if (keyLabel.length() > maxKeyLength) {
+            keyLabel = keyLabel.substring(0, maxKeyLength) + "...(" + keyLabel.length() + " characters)"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         // TDQ-10785~
         return keyLabel;
