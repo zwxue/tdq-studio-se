@@ -122,7 +122,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public void run() {
         if (items != null) {
             for (TDQAnalysisItem anaItem : items) {
-                new RunAnalysisThread(anaItem).start();
+                runAnalysisForItem(anaItem);
             }
         }
     }
@@ -152,13 +152,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             validateAnalysis(anaItem);
 
             if (!isConnectedAvailable(anaItem)) {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    public void run() {
-                        ConnectionUtils.openWarningForCheckConnection(anaItem.getAnalysis().getName());
-                    }
-                });
-
                 return;
             }
 
@@ -169,10 +162,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             AnalysisType analysisType = anaItem.getAnalysis().getParameters().getAnalysisType();
             if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
                 // If the analysis type is column comparison, ask user to continue to run or not.
-                if (Display.getCurrent() != null) {
-                    if (!isContinueRun()) {
-                        return;
-                    }
+                if (!isContinueRun()) {
+                    return;
                 }
             } else if (AnalysisType.CONNECTION.equals(analysisType)) {
                 // If the analysis type is overview analysis, reload the database.
@@ -387,7 +378,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     private boolean isConnectedAvailable(TDQAnalysisItem runItem) {
         DataManager datamanager = runItem.getAnalysis().getContext().getConnection();
-        return ConnectionUtils.checkConnection(datamanager);
+        return ConnectionUtils.checkConnection(datamanager, runItem.getAnalysis().getName());
     }
 
     /**
@@ -488,24 +479,4 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
     }
 
-    /**
-     * TDQ-12624 msjian: fix can run more than one analysis at the same time
-     *
-     */
-    class RunAnalysisThread extends Thread {
-
-        TDQAnalysisItem runAnalysisThreadItem;
-
-        RunAnalysisThread(TDQAnalysisItem item) {
-            super();
-            runAnalysisThreadItem = item;
-        }
-
-        @Override
-        public void run() {
-            synchronized (runAnalysisThreadItem) {
-                runAnalysisForItem(runAnalysisThreadItem);
-            }
-        }
-    }
 }

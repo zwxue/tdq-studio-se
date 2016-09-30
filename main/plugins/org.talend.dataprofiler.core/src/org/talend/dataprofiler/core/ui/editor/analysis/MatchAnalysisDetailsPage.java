@@ -817,14 +817,12 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
                 // check if the connection is unavailable, give a warning dialog to user without opening the columns
                 // select dialog
                 DataManager dataManager = (DataManager) data;
-                if (ConnectionUtils.checkConnection(dataManager)) {
+                if (ConnectionUtils.checkConnection(dataManager, getAnalysisHandler().getAnalysis().getName())) {
                     // need to give the new connection to the dialog to show only this new one in the dialog.
                     openColumnsSelectionDialog(dataManager);
 
                     // reset the select key buttons status
                     resetSelectKeyButton();
-                } else {
-                    ConnectionUtils.openWarningForCheckConnection(getAnalysisHandler().getAnalysis().getName());
                 }
 
                 return true;
