@@ -191,7 +191,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
         try {
             File file = iPath.toFile();
             if (!file.exists()) {
-                return null;
+                return new ArrayList<Object[]>();
             }
 
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
