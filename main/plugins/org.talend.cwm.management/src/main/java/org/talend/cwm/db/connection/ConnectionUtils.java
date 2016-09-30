@@ -139,22 +139,20 @@ public final class ConnectionUtils {
      * check whether the connection is available.
      * 
      * @param datamanager
+     * @param analysisName
      * @return boolean
      */
-    public static boolean checkConnection(DataManager datamanager) {
+    public static boolean checkConnection(DataManager datamanager, String analysisName) {
         Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
         ReturnCode connectionAvailable = isConnectionAvailable(analysisDataProvider);
         if (!connectionAvailable.isOk()) {
             log.error(connectionAvailable.getMessage());
+            MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
+                    Messages.getString("ConnectionUtils.checkConnFailTitle"),//$NON-NLS-1$
+                    Messages.getString("ConnectionUtils.checkConnFailMsg", analysisName));//$NON-NLS-1$
             return false;
         }
         return true;
-    }
-
-    public static void openWarningForCheckConnection(String analysisName) {
-        MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
-                Messages.getString("ConnectionUtils.checkConnFailTitle"),//$NON-NLS-1$
-                Messages.getString("ConnectionUtils.checkConnFailMsg", analysisName));//$NON-NLS-1$
     }
 
     /**
