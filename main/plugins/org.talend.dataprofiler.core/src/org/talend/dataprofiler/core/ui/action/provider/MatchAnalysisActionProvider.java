@@ -36,7 +36,6 @@ public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
      */
     @Override
     public void init(ICommonActionExtensionSite site) {
-
         if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
             matchAnalysisAction = new MatchAnalysisAction();
         }
@@ -47,7 +46,6 @@ public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
      * 
      * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.action.IMenuManager)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void fillContextMenu(IMenuManager menu) {
         // MOD mzhao user readonly role on svn repository mode.
@@ -65,9 +63,9 @@ public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
         // when the selection is valid, only two possible status: only one columnset is select, otherwise is some
         // columns in the same columnset are selected; so only check the fist node in the selection is enough.
         if (currentSelection.toList().get(0) instanceof ColumnSetRepNode) {
-            matchAnalysisAction.setText(DefaultMessagesImpl.getString("MatchAnalysisAction.matchAnalysis"));
+            matchAnalysisAction.setText(DefaultMessagesImpl.getString("MatchAnalysisAction.matchAnalysis")); //$NON-NLS-1$
         } else {
-            matchAnalysisAction.setText(DefaultMessagesImpl.getString("MatchAnalysisAction.analyzeMatches"));
+            matchAnalysisAction.setText(DefaultMessagesImpl.getString("MatchAnalysisAction.analyzeMatches")); //$NON-NLS-1$
         }
         menu.add(matchAnalysisAction);
     }
