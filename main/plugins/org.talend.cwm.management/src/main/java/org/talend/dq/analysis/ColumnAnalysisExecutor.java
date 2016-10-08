@@ -33,6 +33,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.helpers.RowCountIndicatorsAdapter;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.EObjectHelper;
@@ -77,6 +78,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
+        RowCountIndicatorsAdapter.getInstance().clear();
         for (Indicator indicator : indicators) {
             assert indicator != null;
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());

@@ -306,9 +306,39 @@ public final class IndicatorHelper {
      * @return the leaf indicators
      */
     public static List<Indicator> getIndicatorLeaves(Indicator indicator) {
-        List<Indicator> leafIndicators = new ArrayList<Indicator>();
-        if (indicator instanceof CompositeIndicator
-                && !(indicator instanceof RecordMatchingIndicator)) {
+        List<Indicator> leafIndicators = new ArrayList<>();
+        if (indicator instanceof CompositeIndicator && !(indicator instanceof RecordMatchingIndicator)) {
+            CompositeIndicator compositeIndicator = (CompositeIndicator) indicator;
+            try {
+                for (Indicator ind : compositeIndicator.getAllChildIndicators()) {
+                    leafIndicators.addAll(getIndicatorLeaves(ind));
+                }
+            } catch (Exception e) {
+                log.error(e);
+            }
+        } else {
+            if (indicator instanceof RowCountIndicator) {
+                RowCountIndicatorsAdapter.getInstance().addRowCountIndicator((RowCountIndicator) indicator);
+                if (!leafIndicators.contains(RowCountIndicatorsAdapter.getInstance())) {
+                    leafIndicators.add(RowCountIndicatorsAdapter.getInstance());
+                }
+            } else {
+                leafIndicators.add(indicator);
+            }
+        }
+        return leafIndicators;
+    }
+
+    /**
+     * Method "getIndicatorLeaves" returns the leaf indicators when the given indicator is a composite indicator or the
+     * given indicator.
+     * 
+     * @param indicator the indicator
+     * @return the leaf indicators
+     */
+    public static List<Indicator> getIndicatorLeavesBySingleNode(Indicator indicator) {
+        List<Indicator> leafIndicators = new ArrayList<>();
+        if (indicator instanceof CompositeIndicator && !(indicator instanceof RecordMatchingIndicator)) {
             CompositeIndicator compositeIndicator = (CompositeIndicator) indicator;
             try {
                 for (Indicator ind : compositeIndicator.getAllChildIndicators()) {
@@ -329,11 +359,35 @@ public final class IndicatorHelper {
      * @param result
      * @return all the leaf indicators
      */
-    public static List<Indicator> getIndicatorLeaves(AnalysisResult result) {
-        List<Indicator> leafIndicators = new ArrayList<Indicator>();
+    public static List<Indicator> getIndicatorLeavesBySingleNode(AnalysisResult result) {
+        List<Indicator> leafIndicators = new ArrayList<>();
         EList<Indicator> indicators = result.getIndicators();
         for (Indicator indicator : indicators) {
-            leafIndicators.addAll(getIndicatorLeaves(indicator));
+            for (Indicator indi : getIndicatorLeavesBySingleNode(indicator)) {
+                if (!leafIndicators.contains(indi)) {
+                    leafIndicators.add(indi);
+                }
+            }
+        }
+        return leafIndicators;
+    }
+
+    /**
+     * Method "getIndicatorLeaves".
+     * 
+     * @param result
+     * @return all the leaf indicators
+     */
+    public static List<Indicator> getIndicatorLeaves(AnalysisResult result) {
+        List<Indicator> leafIndicators = new ArrayList<>();
+        EList<Indicator> indicators = result.getIndicators();
+        RowCountIndicatorsAdapter.getInstance().clear();
+        for (Indicator indicator : indicators) {
+            for (Indicator indi : getIndicatorLeaves(indicator)) {
+                if (!leafIndicators.contains(indi)) {
+                    leafIndicators.add(indi);
+                }
+            }
         }
         return leafIndicators;
     }

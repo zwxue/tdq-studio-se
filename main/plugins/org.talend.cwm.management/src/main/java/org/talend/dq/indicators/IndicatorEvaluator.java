@@ -382,12 +382,13 @@ public class IndicatorEvaluator extends Evaluator<String> {
     public boolean storeIndicator(String elementToAnalyze, Indicator indicator) {
         boolean ok = true;
         final List<Indicator> indicatorLeaves = IndicatorHelper.getIndicatorLeaves(indicator);
-        this.allIndicators.addAll(indicatorLeaves);
         for (Indicator leaf : indicatorLeaves) {
-            if (!MultiMapHelper.addUniqueObjectToListMap(elementToAnalyze, leaf, elementToIndicators)) {
+            if (!this.allIndicators.contains(leaf)
+                    && !MultiMapHelper.addUniqueObjectToListMap(elementToAnalyze, leaf, elementToIndicators)) {
                 ok = false;
             }
         }
+        this.allIndicators.addAll(indicatorLeaves);
         return ok;
     }
 
