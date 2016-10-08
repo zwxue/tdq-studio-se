@@ -283,7 +283,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage impleme
                 // check if the connection is unavailable, give a warning dialog to user without opening the columns
                 // select dialog
                 Connection conn = (Connection) data;
-                if (ConnectionUtils.checkConnection(conn)) {
+                if (ConnectionUtils.checkConnection(conn, getAnalysisHandler().getAnalysis().getName())) {
                     // need to give the new connection to the dialog to show only this new one in the dialog.
                     openColumnsSelectionDialog(conn);
                 }
