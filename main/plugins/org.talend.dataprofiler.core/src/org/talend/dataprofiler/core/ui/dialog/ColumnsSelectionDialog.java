@@ -37,6 +37,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
@@ -293,9 +296,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         if (allcheckedTableNodes.size() > 1) {
             fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
                     "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$
-        } else if (tableNodesFromMap.length <= 0) {// only 1 table node is checked but no columns checked on right tree.
-            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+        } else if (tableNodesFromMap.length <= 0) {// current connection is come from another reference project and no columns
+                                                   // checked on right tree.
+            Item item = connNode == null ? null : connNode.getObject().getProperty().getItem();
+            if (item != null && DqRepositoryViewService.isComeFromRefrenceProject(((ConnectionItem) item).getConnection())) {
+                fCurrStatus = new Status(IStatus.WARNING, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
+                        "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+            }
         }
 
         updateStatus(fCurrStatus);
