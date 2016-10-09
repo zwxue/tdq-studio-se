@@ -285,17 +285,11 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     protected void updateStatusBySelection() {
         Status fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
         // TDQ-12215: filter the tableNodes when it has set column filter, because they are duplicate in the map.
-        Set<?> keySet = modelElementCheckedMap.keySet();
-        RepositoryNode[] tableNodesFromMap = keySet.toArray(new RepositoryNode[keySet.size()]);
-
         List<RepositoryNode> allcheckedTableNodes = getAllCheckedTableNodes();
         // when checked table count >1, means there are more than one table's column selected. then make the OK status disable
         if (allcheckedTableNodes.size() > 1) {
             fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
                     "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$
-        } else if (tableNodesFromMap.length <= 0) {// only 1 table node is checked but no columns checked on right tree.
-            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
         }
 
         updateStatus(fCurrStatus);
