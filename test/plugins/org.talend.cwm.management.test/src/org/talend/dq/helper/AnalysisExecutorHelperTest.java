@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.commons.emf.EMFUtil;
@@ -212,6 +213,15 @@ public class AnalysisExecutorHelperTest {
                 break;
             }
         }
+        if (ana == null) {
+            Assert.fail("The analysis is null!");
+        }
+        if (ana.getResults() == null) {
+            Assert.fail("The result of analysis is null!");
+        }
+        if (ana.getResults().getIndicators() == null) {
+            Assert.fail("The indicators of analysis is null!");
+        }
         assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getBuiltInPatterns().size() == 0);
 
         ReturnCode rc = AnalysisExecutorHelper.check(ana);
@@ -263,6 +273,15 @@ public class AnalysisExecutorHelperTest {
                 break;
             }
         }
+        if (ana == null) {
+            Assert.fail("The analysis is null!");
+        }
+        if (ana.getResults() == null) {
+            Assert.fail("The result of analysis is null!");
+        }
+        if (ana.getResults().getIndicators() == null) {
+            Assert.fail("The indicators of analysis is null!");
+        }
         assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getPatterns().get(0).getName() == null);
 
         ReturnCode rc = AnalysisExecutorHelper.check(ana);
@@ -284,6 +303,15 @@ public class AnalysisExecutorHelperTest {
                 ana = ((TDQAnalysisItem) anaProperty.getItem()).getAnalysis();
                 break;
             }
+        }
+        if (ana == null) {
+            Assert.fail("The analysis is null!");
+        }
+        if (ana.getResults() == null) {
+            Assert.fail("The result of analysis is null!");
+        }
+        if (ana.getResults().getIndicators() == null) {
+            Assert.fail("The indicators of analysis is null!");
         }
         assertTrue(ana.getResults().getIndicators().get(0).getParameters().getDataValidDomain().getPatterns().get(0).getName() == null);
 
@@ -307,7 +335,15 @@ public class AnalysisExecutorHelperTest {
                 break;
             }
         }
-
+        if (ana == null) {
+            Assert.fail("The analysis is null!");
+        }
+        if (ana.getResults() == null) {
+            Assert.fail("The result of analysis is null!");
+        }
+        if (ana.getResults().getIndicators() == null) {
+            Assert.fail("The indicators of analysis is null!");
+        }
         for (Indicator indicator : ana.getResults().getIndicators()) {
             if (!(indicator instanceof PatternMatchingIndicator)) {
                 // Check system indicator and UDI
@@ -344,6 +380,15 @@ public class AnalysisExecutorHelperTest {
                 break;
             }
         }
+        if (ana == null) {
+            Assert.fail("The analysis is null!");
+        }
+        if (ana.getResults() == null) {
+            Assert.fail("The result of analysis is null!");
+        }
+        if (ana.getResults().getIndicators() == null) {
+            Assert.fail("The indicators of analysis is null!");
+        }
         for (Indicator indicator : ana.getResults().getIndicators()) {
             if (!(indicator instanceof PatternMatchingIndicator)) {
                 // Check system indicator and UDI
@@ -369,6 +414,15 @@ public class AnalysisExecutorHelperTest {
                 ana = ((TDQAnalysisItem) anaProperty.getItem()).getAnalysis();
                 break;
             }
+        }
+        if (ana == null) {
+            Assert.fail("The analysis is null!");
+        }
+        if (ana.getResults() == null) {
+            Assert.fail("The result of analysis is null!");
+        }
+        if (ana.getResults().getIndicators() == null) {
+            Assert.fail("The indicators of analysis is null!");
         }
         for (Indicator indicator : ana.getResults().getIndicators()) {
             if (!(indicator instanceof PatternMatchingIndicator)) {
@@ -406,7 +460,15 @@ public class AnalysisExecutorHelperTest {
                 break;
             }
         }
-
+        if (ana == null) {
+            Assert.fail("The analysis is null!");
+        }
+        if (ana.getResults() == null) {
+            Assert.fail("The result of analysis is null!");
+        }
+        if (ana.getResults().getIndicators() == null) {
+            Assert.fail("The indicators of analysis is null!");
+        }
         for (Indicator indicator : ana.getResults().getIndicators()) {
             if (!(indicator instanceof PatternMatchingIndicator)) {
                 // Check system indicator and UDI
