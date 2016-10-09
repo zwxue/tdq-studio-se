@@ -283,23 +283,50 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * Update the status of dailog by select action
      */
     protected void updateStatusBySelection() {
-        Status fCurrStatus = null;
+        Status fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
         // TDQ-12215: filter the tableNodes when it has set column filter, because they are duplicate in the map.
         Set<?> keySet = modelElementCheckedMap.keySet();
-        RepositoryNode[] repNodeArray = keySet.toArray(new RepositoryNode[keySet.size()]);
+        RepositoryNode[] tableNodesFromMap = keySet.toArray(new RepositoryNode[keySet.size()]);
 
-        Object[] checkedElements = this.getTreeViewer().getCheckedElements();
-        if (repNodeArray.length <= 0) {// the 'modelElementCheckedMap' is empty
-            if (checkedElements.length > 1) {// check on the TableFolder/catalog Node,all children table nodes are checked.
-                fCurrStatus = getStatusByTableCount(checkedElements);
-            } else {// only 1 table node is checked but no columns checked on right tree.
-                fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
-                        "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
-            }
-        } else {
-            fCurrStatus = getStatusByTableCount(repNodeArray);
+        List<RepositoryNode> allcheckedTableNodes = getAllCheckedTableNodes();
+        // when checked table count >1, means there are more than one table's column selected. then make the OK status disable
+        if (allcheckedTableNodes.size() > 1) {
+            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$
+        } else if (tableNodesFromMap.length <= 0) {// only 1 table node is checked but no columns checked on right tree.
+            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
         }
+
         updateStatus(fCurrStatus);
+    }
+
+    /**
+     * 
+     * Compute the checked Table Nodes.
+     * 
+     * @param repNodeArray
+     * @return
+     */
+    private List<RepositoryNode> getAllCheckedTableNodes() {
+        Set<?> keySet = modelElementCheckedMap.keySet();
+        RepositoryNode[] tableNodesFromMap = keySet.toArray(new RepositoryNode[keySet.size()]);
+        List<RepositoryNode> allcheckedTableNodes = new ArrayList<RepositoryNode>();
+        for (Object checkElement : this.getTreeViewer().getCheckedElements()) {
+            if ((checkElement instanceof DBTableRepNode || checkElement instanceof DBViewRepNode || checkElement instanceof DFTableRepNode)
+                    && ((RepositoryNode) checkElement).getId() != null) {
+                allcheckedTableNodes.add((RepositoryNode) checkElement);
+            }
+        }
+        for (RepositoryNode node : tableNodesFromMap) {
+            if (node.getId() == null) {
+                continue;
+            }
+            if (!allcheckedTableNodes.contains(node)) {
+                allcheckedTableNodes.add(node);
+            }
+        }
+        return allcheckedTableNodes;
     }
 
     /**
@@ -310,24 +337,24 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * @param tableCount
      * @return
      */
-    private Status getStatusByTableCount(Object[] repNodes) {
-        int tableCount = 0;
-        Status fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
-        for (Object node : repNodes) {
-            if (!(node instanceof RepositoryNode) || ((RepositoryNode) node).getId() == null) {
-                continue;
-            }
-            tableCount++;
-        }
-
-        // TDQ-12215~
-
-        if (tableCount > 1) {
-            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
-        }
-        return fCurrStatus;
-    }
+    // private Status getStatusByTableCount(Object[] repNodes) {
+    // int tableCount = 0;
+    // Status fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
+    // for (Object node : repNodes) {
+    // if (!(node instanceof RepositoryNode) || ((RepositoryNode) node).getId() == null) {
+    // continue;
+    // }
+    // tableCount++;
+    // }
+    //
+    // // TDQ-12215~
+    //
+    // if (tableCount > 1) {
+    // fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
+    //                    "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+    // }
+    // return fCurrStatus;
+    // }
 
     /**
      * 
