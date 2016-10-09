@@ -19,6 +19,8 @@ import java.util.Set;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -34,6 +36,8 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -279,7 +283,50 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * Update the status of dailog by select action
      */
     protected void updateStatusBySelection() {
-        // If sub class need update status by selection can implement it
+        Status fCurrStatus = null;
+        // TDQ-12215: filter the tableNodes when it has set column filter, because they are duplicate in the map.
+        Set<?> keySet = modelElementCheckedMap.keySet();
+        RepositoryNode[] repNodeArray = keySet.toArray(new RepositoryNode[keySet.size()]);
+
+        Object[] checkedElements = this.getTreeViewer().getCheckedElements();
+        if (repNodeArray.length <= 0) {// the 'modelElementCheckedMap' is empty
+            if (checkedElements.length > 1) {// check on the TableFolder/catalog Node,all children table nodes are checked.
+                fCurrStatus = getStatusByTableCount(checkedElements);
+            } else {// only 1 table node is checked but no columns checked on right tree.
+                fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
+                        "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+            }
+        } else {
+            fCurrStatus = getStatusByTableCount(repNodeArray);
+        }
+        updateStatus(fCurrStatus);
+    }
+
+    /**
+     * 
+     * when the table count >1, means there are more than one table's column selected. then make the ok status disable
+     * 
+     * @param repNodes
+     * @param tableCount
+     * @return
+     */
+    private Status getStatusByTableCount(Object[] repNodes) {
+        int tableCount = 0;
+        Status fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
+        for (Object node : repNodes) {
+            if (!(node instanceof RepositoryNode) || ((RepositoryNode) node).getId() == null) {
+                continue;
+            }
+            tableCount++;
+        }
+
+        // TDQ-12215~
+
+        if (tableCount > 1) {
+            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+        }
+        return fCurrStatus;
     }
 
     /**

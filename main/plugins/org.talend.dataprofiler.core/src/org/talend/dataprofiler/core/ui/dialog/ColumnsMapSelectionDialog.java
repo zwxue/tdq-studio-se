@@ -134,6 +134,11 @@ public class ColumnsMapSelectionDialog extends ColumnsSelectionDialog {
         }
     }
 
+    @Override
+    protected void updateStatusBySelection() {
+        // empty implement here, because it could select different table and the OK button are enabled.
+    }
+
     /**
      * DOC xqliu ColumnsMapSelectionDialog class global comment. Detailled comment
      */
@@ -284,6 +289,7 @@ public class ColumnsMapSelectionDialog extends ColumnsSelectionDialog {
             return super.getParent(element);
         }
 
+        @Override
         public boolean hasChildren(Object element) {
             return Boolean.FALSE;
         }

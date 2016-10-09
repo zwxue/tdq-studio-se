@@ -13,15 +13,9 @@
 package org.talend.dataprofiler.core.ui.dialog;
 
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -52,38 +46,6 @@ public class ColumnsSelectWithConstraintDialog extends ColumnsSelectionDialog {
         super(metadataFormPage, parent, title, checkedRepoNodes, message, addConnFilter);
     }
 
-    @Override
-    protected void updateStatusBySelection() {
-        Status fCurrStatus;
-        // the table node all stored in the map as key, so when the key's number >1, means there are more than one
-        // table's column selected. then make the ok status disable
-
-        // TDQ-12215: filter the tableNodes when it has set column filter, because they are duplicate in the map.
-        Set<?> keySet = modelElementCheckedMap.keySet();
-        RepositoryNode[] repNodeArray = keySet.toArray(new RepositoryNode[keySet.size()]);
-        int tableCount = 0;
-        if (repNodeArray.length <= 0) {
-            fCurrStatus = new Status(IStatus.WARNING, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
-        } else {
-            for (RepositoryNode node : repNodeArray) {
-                if (node.getId() == null) {
-                    continue;
-                }
-                tableCount++;
-            }
-
-            // TDQ-12215~
-
-            if (tableCount > 1) {
-                fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
-                        "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
-            } else {
-                fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
-            }
-        }
-        updateStatus(fCurrStatus);
-    }
 
     /*
      * (non-Javadoc)
