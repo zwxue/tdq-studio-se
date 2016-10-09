@@ -51,19 +51,6 @@ public class ColumnsSelectWithConstraintDialog extends ColumnsSelectionDialog {
         super(metadataFormPage, parent, title, checkedRepoNodes, message, addConnFilter);
     }
 
-    @Override
-    protected void updateStatusBySelection() {
-        Status fCurrStatus;
-        // the table node all stored in the map as key, so when the key's number >1, means there are more than one
-        // table's column selected. then make the ok status disable
-        if (super.modelElementCheckedMap.keySet().size() > 1) {
-            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.OK, DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
-        } else {
-            fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
-        }
-        updateStatus(fCurrStatus);
-    }
 
     /*
      * (non-Javadoc)

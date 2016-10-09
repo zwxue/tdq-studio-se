@@ -134,6 +134,11 @@ public class ColumnsMapSelectionDialog extends ColumnsSelectionDialog {
         }
     }
 
+	@Override
+	protected void updateStatusBySelection() {
+		// empty implement here, because it could select different table and the OK button are enabled.
+	}
+
     /**
      * DOC xqliu ColumnsMapSelectionDialog class global comment. Detailled comment
      */

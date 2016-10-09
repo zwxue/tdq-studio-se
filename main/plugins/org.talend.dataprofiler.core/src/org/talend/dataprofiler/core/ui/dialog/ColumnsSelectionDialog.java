@@ -19,6 +19,8 @@ import java.util.Set;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -34,6 +36,8 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -279,7 +283,42 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * Update the status of dailog by select action
      */
     protected void updateStatusBySelection() {
-        // If sub class need update status by selection can implement it
+    	 Status fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
+         List<RepositoryNode> allcheckedTableNodes = getAllCheckedTableNodes();
+         // when checked table count >1, means there are more than one table's column selected. then make the OK status disable
+         if (allcheckedTableNodes.size() > 1) {
+             fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
+                     "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$
+         }
+        updateStatus(fCurrStatus);
+    }
+    
+    /**
+     * 
+     * Compute the checked Table Nodes.
+     * 
+     * @param repNodeArray
+     * @return
+     */
+    private List<RepositoryNode> getAllCheckedTableNodes() {
+        Set<?> keySet = modelElementCheckedMap.keySet();
+        RepositoryNode[] tableNodesFromMap = keySet.toArray(new RepositoryNode[keySet.size()]);
+        List<RepositoryNode> allcheckedTableNodes = new ArrayList<RepositoryNode>();
+        for (Object checkElement : this.getTreeViewer().getCheckedElements()) {
+            if ((checkElement instanceof DBTableRepNode || checkElement instanceof DBViewRepNode || checkElement instanceof DFTableRepNode)
+                    && ((RepositoryNode) checkElement).getId() != null) {
+                allcheckedTableNodes.add((RepositoryNode) checkElement);
+            }
+        }
+        for (RepositoryNode node : tableNodesFromMap) {
+            if (node.getId() == null) {
+                continue;
+            }
+            if (!allcheckedTableNodes.contains(node)) {
+                allcheckedTableNodes.add(node);
+            }
+        }
+        return allcheckedTableNodes;
     }
 
     /**
