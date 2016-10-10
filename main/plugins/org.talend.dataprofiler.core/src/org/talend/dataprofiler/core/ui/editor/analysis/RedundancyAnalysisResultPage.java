@@ -325,13 +325,12 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
             @Override
             public void widgetSelected(SelectionEvent e) {
                 int column = cursor.getColumn();
-
                 if (column == 1) {
                     resultTable.setMenu(createMenu(resultTable, rowMatchingIndicatorA));
-                }
-
-                if (column == 2) {
+                } else if (column == 2) {
                     resultTable.setMenu(createMenu(resultTable, rowMatchingIndicatorB));
+                } else {
+                    resultTable.setMenu(null);
                 }
 
                 // ADD by msjian 2011-4-29 20602: click the data, its color changed
@@ -351,9 +350,13 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
             }
 
             public void mouseDown(MouseEvent e) {
-
-                if (e.button == 3) {
-                    resultTable.getMenu().setVisible(true);
+                if (resultTable.getMenu() != null) {
+                    int column = cursor.getColumn();
+                    if (e.button == 3 && (column == 1 || column == 2)) {
+                        resultTable.getMenu().setVisible(true);
+                    } else {
+                        resultTable.getMenu().setVisible(false);
+                    }
                 }
             }
 
