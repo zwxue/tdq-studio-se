@@ -32,6 +32,7 @@ import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -228,7 +229,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      */
     private void addRownCountDataEntity2CustomerDataset(CustomerDefaultCategoryDataset customerDataset, TableIndicatorUnit unit) {
         if (IndicatorEnum.RowCountIndicatorEnum.equals(unit.getType())) {
-            String value = CommonStateUtil.getUnitValue(unit.getValue());
+            String value = CommonStateUtil.getUnitValue(unit.getValue(), StringFormatUtil.DOUBLE_NUMBER);
             String label = unit.getIndicatorName();
             customerDataset.addValue(Double.parseDouble(value), label, label);
             ChartDataEntity entityCount = CommonStateUtil.createDataEntity(unit, value, label, Double.valueOf(value).longValue());

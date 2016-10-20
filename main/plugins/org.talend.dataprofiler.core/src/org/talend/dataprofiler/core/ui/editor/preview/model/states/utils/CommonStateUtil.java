@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
@@ -33,11 +35,6 @@ public class CommonStateUtil {
             defaultValue = "0"; //$NON-NLS-1$
         }
         return unitValue != null ? StringFormatUtil.format(unitValue, style).toString() : defaultValue;
-    }
-
-    public static String getUnitValue(Object unitValue) {
-        // TDQ-11643: msjian make the chart value format like "X.XX" the same to table values.
-        return getUnitValue(unitValue, StringFormatUtil.DOUBLE_NUMBER);
     }
 
     /**
@@ -80,6 +77,12 @@ public class CommonStateUtil {
         for (IndicatorUnit tiu : units) {
             if (IndicatorEnum.RowCountIndicatorEnum.equals(tiu.getType())) {
                 return tiu.getIndicator().getCount();
+            }
+        }
+
+        for (IndicatorUnit tiu : units) {
+            if (IndicatorEnum.UserDefinedIndicatorEnum.equals(tiu.getType()) && UDIHelper.isCount(tiu.getIndicator())) {
+                return ((UserDefIndicator) tiu.getIndicator()).getUserCount();
             }
         }
 
