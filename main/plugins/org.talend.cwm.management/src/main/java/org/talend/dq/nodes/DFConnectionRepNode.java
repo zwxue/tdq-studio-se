@@ -21,6 +21,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DelimitedFileConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -28,6 +29,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataTableRepository
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.record.RecordFile;
 
@@ -39,7 +41,10 @@ public class DFConnectionRepNode extends ConnectionRepNode {
     public DelimitedFileConnection getDfConnection() {
         DelimitedFileConnection dfConnection = null;
         Property property = getObject().getProperty();
-        dfConnection = (DelimitedFileConnection) ((DelimitedFileConnectionItem) property.getItem()).getConnection();
+        Item item = property.getItem();
+        if (item instanceof DelimitedFileConnectionItem) {
+            dfConnection = (DelimitedFileConnection) ((DelimitedFileConnectionItem) item).getConnection();
+        }
         return dfConnection;
     }
 
@@ -57,11 +62,14 @@ public class DFConnectionRepNode extends ConnectionRepNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        EList<Package> dataPackage = getDfConnection().getDataPackage();
-        if (dataPackage != null && dataPackage.size() > 0) {
-            Package pack = dataPackage.get(0);
-            if (pack instanceof RecordFile) {
-                return filterResultsIfAny(createRepositoryNodeSchema());
+        DelimitedFileConnection dfConnection = getDfConnection();
+        if (dfConnection != null) {
+            EList<Package> dataPackage = dfConnection.getDataPackage();
+            if (dataPackage != null && dataPackage.size() > 0) {
+                Package pack = dataPackage.get(0);
+                if (pack instanceof RecordFile) {
+                    return filterResultsIfAny(createRepositoryNodeSchema());
+                }
             }
         }
 
