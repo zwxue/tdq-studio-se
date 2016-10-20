@@ -88,9 +88,6 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
         TableIndicatorUnit rowCountUnit = CommonStateUtil.getRowCountTableIndicatorUnit(tableunits);
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
         if (rowCountUnit != null) {
-            // final Object unitValue = rownCountUnit.getValue();
-            // unitValue != null ?Double.parseDouble(unitValue.toString()): Double.NaN;
-
             String value = CommonStateUtil.getUnitValue(rowCountUnit.getValue(), StringFormatUtil.DOUBLE_NUMBER);
             String label = rowCountUnit.getIndicatorName();
             ChartDataEntity createDataEntity = CommonStateUtil.createDataEntity(rowCountUnit, value, label, Double.valueOf(value)
