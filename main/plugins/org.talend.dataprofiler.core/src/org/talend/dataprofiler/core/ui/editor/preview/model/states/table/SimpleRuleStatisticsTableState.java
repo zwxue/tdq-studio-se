@@ -54,8 +54,8 @@ public class SimpleRuleStatisticsTableState extends AbstractRuleStatisticsTableS
         if (rowCountUnit != null) {
             String value = CommonStateUtil.getUnitValue(rowCountUnit.getValue());
             String label = rowCountUnit.getIndicatorName();
-            ChartDataEntity createDataEntity = CommonStateUtil
-                    .createDataEntity(rowCountUnit, value, label, Long.parseLong(value));
+            ChartDataEntity createDataEntity = CommonStateUtil.createDataEntity(rowCountUnit, value, label, Double.valueOf(value)
+                    .longValue());
             dataEnities.add(createDataEntity);
         }
         return dataEnities.toArray(new ChartDataEntity[dataEnities.size()]);

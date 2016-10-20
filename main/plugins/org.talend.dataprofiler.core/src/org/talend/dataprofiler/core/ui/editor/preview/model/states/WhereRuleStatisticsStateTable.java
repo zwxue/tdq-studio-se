@@ -231,7 +231,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
             String value = CommonStateUtil.getUnitValue(unit.getValue());
             String label = unit.getIndicatorName();
             customerDataset.addValue(Double.parseDouble(value), label, label);
-            ChartDataEntity entityCount = CommonStateUtil.createDataEntity(unit, value, label, Long.parseLong(value));
+            ChartDataEntity entityCount = CommonStateUtil.createDataEntity(unit, value, label, Double.valueOf(value).longValue());
             customerDataset.addDataEntity(entityCount);
         }
     }
