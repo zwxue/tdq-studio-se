@@ -340,7 +340,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         dataTableComp.setLayoutData(gridData);
         sampleTable = new DataSampleTable();
         // use handler to save selected columns
-        ModelElement[] selectedColumns = this.analysisHandler.getSelectedColumns();
+        ModelElement[] selectedColumns = getSelectedColumnsFromHandler();
 
         if (selectedColumns != null && selectedColumns.length > 0) {
             // use ModelElement instead of node to get the data source type directly.
@@ -540,7 +540,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         // set all key's column into red/green columns
         // set all not selected columns into black color
         String keyName = isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY;
-        for (ModelElement column : getSelectedColumns()) {
+        for (ModelElement column : getSelectedColumnsFromHandler()) {
             if (currentKeyColumn.contains(column.getName())) {
                 sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? DataSampleTable.COLOR_RED
                         : DataSampleTable.COLOR_GREEN, keyName);
@@ -553,7 +553,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     }
 
     private void setAllColumnColorToBlack() {
-        for (ModelElement column : getSelectedColumns()) {
+        for (ModelElement column : getSelectedColumnsFromHandler()) {
             sampleTable.changeColumnHeaderLabelColor(column.getName(), DataSampleTable.COLOR_BLACK, PluginConstant.EMPTY_STRING);
         }
         sampleTable.setNatTableFont(sampleTable.getNatTable());
@@ -618,7 +618,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private void suggestConfiguration() {
         // TODO Auto-generated method stub
-        if (getSelectedColumns() == null || getSelectedColumns().length < 1) {
+        if (getSelectedColumnsFromHandler() == null || getSelectedColumnsFromHandler().length < 1) {
             return;
         }
 
@@ -1042,9 +1042,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
         // TDQ-9354 get selected columns from Anlaysis not form "selectedNodes".avoid to get an old instance when rename
         // the related connection then click "select data".
-        if (getSelectedColumns() != null) {
+        if (getSelectedColumnsFromHandler() != null) {
             // analysis has noe selected nodes
-            for (ModelElement selectedColumn : getSelectedColumns()) {
+            for (ModelElement selectedColumn : getSelectedColumnsFromHandler()) {
                 RepositoryNode node = RepositoryNodeHelper.recursiveFind(selectedColumn);
                 reposViewObjList.add(node);
             }
@@ -1128,7 +1128,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         subPanel.setLayoutData(layoutDataFillBoth);
         subPanel.setLayout(new GridLayout(1, true));
 
-        DataSampleTable.TControl tControl = sampleTable.createTable(subPanel, analysisHandler.getSelectedColumns(), listOfData);
+        DataSampleTable.TControl tControl = sampleTable.createTable(subPanel, getSelectedColumnsFromHandler(), listOfData);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(tControl.getControl());
 
         // when refresh the data, the dataSampleSection's width is not 0
@@ -1171,13 +1171,13 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
      */
     private Map<MetadataColumn, String> getAllColumnsToKeyMap() {
         // only when open the analysis and match key is not empty
-        if (analysisHandler.getSelectedColumns() == null || analysisHandler.getSelectedColumns().length < 1) {
+        if (getSelectedColumnsFromHandler() == null || getSelectedColumnsFromHandler().length < 1) {
             return null;
         }
 
         Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
         int index = 0;
-        for (ModelElement column : analysisHandler.getSelectedColumns()) {
+        for (ModelElement column : getSelectedColumnsFromHandler()) {
             columnMap.put((MetadataColumn) column, String.valueOf(index++));
         }
         return columnMap;
@@ -1198,7 +1198,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         String columnName = sampleTable.getCurrentSelectedColumn();
         if (!isBlockingKeyButtonPushed && !isMatchingKeyButtonPushed) {
             // sort by column
-            sampleTable.sortByColumn(Arrays.asList(getSelectedColumns()));
+            sampleTable.sortByColumn(Arrays.asList(getSelectedColumnsFromHandler()));
             sampleTable.setNatTableFont(sampleTable.getNatTable());
             return;
         }
@@ -1344,35 +1344,6 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     }
 
     /**
-     * if (columns == null || columns.length == 0) {
-     * return new ArrayList<Object[]>();
-     * }
-     * 
-     * // use ModelElement instead of node to get the data source type directly.
-     * // get connection from column[0]
-     * DataManager connection = null;
-     * boolean isDelimitedFile = false;
-     * ModelElement modelElement = columns[0];
-     * if (modelElement instanceof MetadataColumn && !(modelElement instanceof TdColumn)) {
-     * isDelimitedFile = true;
-     * connection = ConnectionHelper.getTdDataProvider((MetadataColumn) modelElement);
-     * } else if (modelElement instanceof TdColumn) {
-     * connection = ConnectionHelper.getTdDataProvider((TdColumn) modelElement);
-     * } else {// other case it is not support by now
-     * log.warning(DefaultMessagesImpl.getString("DataPreviewHandler.UnSupportType")); //$NON-NLS-1$
-     * return new ArrayList<Object[]>();
-     * }
-     * 
-     * ISQLExecutor sqlExecutor = null;
-     * if (isDelimitedFile) {
-     * sqlExecutor = new DelimitedFileSQLExecutor();
-     * } else {// is database
-     * sqlExecutor = new DatabaseSQLExecutor();
-     * }
-     * // set limit
-     * sqlExecutor.setLimit(limit);
-     * sqlExecutor.setShowRandomData(isRandomData);
-     * return sqlExecutor.executeQuery(connection, Arrays.asList(columns), dataFilter);
      * DOC zshen Comment method "disposeDataTable".
      */
 
