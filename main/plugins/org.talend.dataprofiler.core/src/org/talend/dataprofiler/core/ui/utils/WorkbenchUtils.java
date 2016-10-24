@@ -347,7 +347,7 @@ public final class WorkbenchUtils {
                         // close the editor
                         activePage.closeEditor(editorRef.getEditor(false), false);
                         // reopen the analysis
-                        new OpenItemEditorAction(anaItemEditorInput.getRepNode()).run();
+                        new OpenItemEditorAction(new IRepositoryNode[] { anaItemEditorInput.getRepNode() }).run();
                     }
                 }
             } catch (PartInitException e) {

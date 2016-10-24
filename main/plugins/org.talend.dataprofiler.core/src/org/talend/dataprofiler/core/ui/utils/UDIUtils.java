@@ -306,12 +306,9 @@ public final class UDIUtils {
                             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                             DefaultMessagesImpl.getString("PatternUtilities.Warning"), DefaultMessagesImpl.getString("UDIUtils.NoExpression", executeType)); //$NON-NLS-1$ //$NON-NLS-2$
             if (openUDI) {
-
-                // LocalRepositoryFactory.getInstance().getLastVersion(ProjectManager.getInstance().getCurrentProject(),
-                // EcoreUtil.getID(udi));
                 RepositoryNode node = RepositoryNodeHelper.recursiveFind(udid);
                 if (RepositoryNodeHelper.canOpenEditor(node)) {
-                    new OpenItemEditorAction(node).run();
+                    new OpenItemEditorAction(new IRepositoryNode[] { node }).run();
                 }
             }
             return null;

@@ -137,6 +137,17 @@
 <!-- Resource Content--> 
    <extension  
          point="org.eclipse.ui.navigator.navigatorContent">
+       <actionProvider
+             class="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider"
+             id="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider">
+          <enablement>
+             <and>
+                <instanceof
+                      value="org.talend.repository.model.IRepositoryNode">
+                </instanceof>
+             </and>
+          </enablement>
+       </actionProvider>
       
       <navigatorContent
             name="%navigatorContent.name.DQResource"
@@ -223,15 +234,6 @@
                     </or>
              </enablement>
       </actionProvider>
-      <actionProvider 
-                id="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider"
-                class="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider">
-            <enablement>
-    <instanceof
-          value="org.talend.repository.model.IRepositoryNode">
-    </instanceof>
-            </enablement>
-        </actionProvider>      
       <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.RunAnalysisActionProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.RunAnalysisActionProvider">
@@ -724,17 +726,6 @@
              <instanceof
                    value="org.talend.repository.model.IRepositoryNode">
              </instanceof>
-          </enablement>
-       </actionProvider>
-       <actionProvider
-             class="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider"
-             id="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider">
-          <enablement>
-             <and>
-                <instanceof
-                      value="org.talend.repository.model.RepositoryNode">
-                </instanceof>
-             </and>
           </enablement>
        </actionProvider>
        <actionProvider

@@ -12,9 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.IMenuManager;
-import org.talend.core.model.repository.IRepositoryViewObject;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -28,19 +33,24 @@ public class OpenItemEditorProvider extends AbstractCommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
-
         if (!isSelectionSameType()) {
             return;
         }
 
-        Object firstObject = getContextObject();
+        Object[] array = ((TreeSelection) this.getContext().getSelection()).toArray();
+        List<IRepositoryNode> selectedItemsList = new ArrayList<IRepositoryNode>();
 
-        // TDQ-12485: use this check to hidden the open menu especailly some node no need to show open menu for example
-        if (firstObject instanceof IRepositoryViewObject) {
-            if (firstObject instanceof IRepositoryNode) {
-                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryNode) firstObject);
-                menu.add(openItemEditorAction);
+        for (Object obj : array) {
+            if (obj instanceof IRepositoryNode) {
+                IRepositoryNode node = (IRepositoryNode) obj;
+                if (RepositoryNodeHelper.canOpenEditor(node) && !(node instanceof ReportRepNode)) {
+                    selectedItemsList.add((IRepositoryNode) obj);
+                }
             }
+        }
+
+        if (!selectedItemsList.isEmpty()) {
+            menu.add(new OpenItemEditorAction(selectedItemsList.toArray(new IRepositoryNode[selectedItemsList.size()])));
         }
     }
 }

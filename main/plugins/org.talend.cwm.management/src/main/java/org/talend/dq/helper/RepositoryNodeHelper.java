@@ -2465,20 +2465,20 @@ public final class RepositoryNodeHelper {
         return commonViewer;
     }
 
-    public static boolean canOpenEditor(RepositoryNode node) {
+    public static boolean canOpenEditor(IRepositoryNode node) {
         return node instanceof AnalysisRepNode || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                 || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode || node instanceof RuleRepNode
                 || node instanceof DBConnectionRepNode || node instanceof ReportRepNode || node instanceof ReportFileRepNode
                 || node instanceof ReportAnalysisRepNode || node instanceof HiveOfHCConnectionNode;
     }
 
-    public static List<IRepositoryNode> getNmaedColumnSetNodes(IRepositoryNode node) {
+    public static List<IRepositoryNode> getNamedColumnSetNodes(IRepositoryNode node) {
         ArrayList<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
         if (node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode || node instanceof DBTableFolderRepNode
                 || node instanceof DBViewFolderRepNode) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode children : childrens) {
-                list.addAll(getNmaedColumnSetNodes(children));
+                list.addAll(getNamedColumnSetNodes(children));
             }
         } else if (node instanceof DBTableRepNode || node instanceof DBViewRepNode) {
             list.add(node);

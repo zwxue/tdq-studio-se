@@ -200,7 +200,7 @@ public final class PatternUtilities {
             if (openPattern) {
                 RepositoryNode node = RepositoryNodeHelper.recursiveFind(pattern);
                 if (RepositoryNodeHelper.canOpenEditor(node)) {
-                    new OpenItemEditorAction(node).run();
+                    new OpenItemEditorAction(new IRepositoryNode[] { node }).run();
                 }
             }
             result.setOk(false);

@@ -300,6 +300,7 @@ public abstract class Evaluator<T> {
     }
 
     protected boolean continueRun() {
+        // TOCHANGE msjian 2016-10-21 Use thread notification technology to stop the analysis
         // MOD scorreia 2013-09-10 avoid checking for each analyzed row. Check only every 1000 rows
         checkContinueCount++;
         if (checkContinueCount % CHECK_EVERY_N_COUNT != 0) {

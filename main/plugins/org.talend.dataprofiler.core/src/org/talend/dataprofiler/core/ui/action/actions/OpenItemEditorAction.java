@@ -104,68 +104,63 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
-    private IRepositoryViewObject repViewObj = null;
-
     protected String editorID = null;
-
-    private IEditorInput itemEditorInput = null;
 
     private IFile file = null;
 
-    private Connection connection = null;
+    private IRepositoryNode[] repNodes = null;
 
-    private IRepositoryNode repNode = null;
-
-    public OpenItemEditorAction(IRepositoryNode repNode) {
+    public OpenItemEditorAction(IRepositoryNode[] selectedNodes) {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
-        this.repNode = repNode;
-        this.repViewObj = repNode.getObject();
-        setImageDescriptor(ImageLib.getImageDescriptorByRepositoryNode(repNode));
+        this.repNodes = selectedNodes;
     }
 
     @Override
     public void run() {
         // MOD qiongli 2011-7-14 bug 21707,unload all unlocked resources before opening an editor.move all code in this
         // method to method doRun().
-        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open an DQ editor") {//$NON-NLS-1$
+        if (repNodes != null) {
+            RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open an DQ editor") {//$NON-NLS-1$
 
-            @Override
-            protected void run() {
-                try {
-                    duRun();
-                } catch (BusinessException e) {
-                    org.talend.dataprofiler.core.exception.ExceptionHandler.process(e, Level.FATAL);
-                } catch (Throwable e) {
-                    log.error(e, e);
+                @Override
+                protected void run() {
+                    try {
+                        for (IRepositoryNode repNode : repNodes) {
+                            setImageDescriptor(ImageLib.getImageDescriptorByRepositoryNode(repNode));
+                            duRun(repNode);
+                        }
+                    } catch (BusinessException e) {
+                        org.talend.dataprofiler.core.exception.ExceptionHandler.process(e, Level.FATAL);
+                    } catch (Throwable e) {
+                        log.error(e, e);
+                    }
                 }
-            }
-        };
-        workUnit.setAvoidUnloadResources(true);
-        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
-        // duRun();
+            };
+            workUnit.setAvoidUnloadResources(true);
+            ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+        }
     }
 
-    protected void duRun() throws BusinessException {
+    protected void duRun(IRepositoryNode repNode) throws BusinessException {
         // TDQ-12034: before open the object editor, reload it first especially for git remote project
         // TODO: extract the code to a IRepositoryObjectCRUDAction method, because this only need to do for git remote
         if (repositoryObjectCRUD instanceof RemoteRepositoryObjectCRUD) {
             try {
-                ProxyRepositoryFactory.getInstance().reload(repViewObj.getProperty());
-                IFile objFile = PropertyHelper.getItemFile(repViewObj.getProperty());
+                ProxyRepositoryFactory.getInstance().reload(repNode.getObject().getProperty());
+                IFile objFile = PropertyHelper.getItemFile(repNode.getObject().getProperty());
                 objFile.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (Exception e1) {
                 log.error(e1, e1);
             }
         }
         // TDQ-12034~
-
-        this.itemEditorInput = computeEditorInput(true);
+        IEditorInput itemEditorInput = computeEditorInput(repNode, true);
         if (itemEditorInput != null) {
             // open ItemEditorInput
             CorePlugin.getDefault().openEditor(itemEditorInput, editorID);
         } else {
             // not find ItemEditorInput
-            if (repViewObj == null) {
+            if (repNode.getObject() == null) {
                 // open Report's genetated doc file
                 if (repNode != null && repNode instanceof ReportFileRepNode) {
                     ReportFileRepNode reportFileNode = (ReportFileRepNode) repNode;
@@ -190,12 +185,12 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else {
                 // if there don't found the correct ItemEditorInput and it is not Report's genetated doc file, try to
                 // open it as a File, this code will not be execute when method computeEditorInput() work well
-                IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
-                DQRepositoryNode node = (DQRepositoryNode) repViewObj.getRepositoryNode();
+                IPath append = WorkbenchUtils.getFilePath(repNode.getObject().getRepositoryNode());
+                DQRepositoryNode node = (DQRepositoryNode) repNode.getObject().getRepositoryNode();
                 file = ResourceManager.getRoot().getProject(node.getProject().getTechnicalLabel()).getFile(append);
 
                 if (!file.exists()) {
-                    throw ExceptionFactory.getInstance().createBusinessException(repViewObj);
+                    throw ExceptionFactory.getInstance().createBusinessException(repNode.getObject());
                 }
                 try {
                     IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, true);
@@ -207,13 +202,14 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
     }
 
     /**
-     * get the ItemEditorInput according to the reposViewObj, if there no ItemEditorInput return null.
+     * get the ItemEditorInput according to the repNode, if there no ItemEditorInput return null.
      * 
+     * @param repNode
      * @param isOpenItemEditorAction
-     * @return
+     * @return IEditorInput
      * @throws PersistenceException
      */
-    public IEditorInput computeEditorInput(boolean isOpenItemEditorAction) throws BusinessException {
+    public IEditorInput computeEditorInput(IRepositoryNode repNode, boolean isOpenItemEditorAction) throws BusinessException {
         // TDQ-12499 msjian add : when click the node under recyclebin, no need to find a EditorInput
         if (repNode != null && !isOpenItemEditorAction) {
             IRepositoryNode currentNode = repNode;
@@ -228,6 +224,8 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         // TDQ-12499~
 
         IEditorInput result = null;
+        IRepositoryViewObject repViewObj = repNode.getObject();
+
         if (repViewObj != null) {
             // Connection editor
             String key = repViewObj.getRepositoryObjectType().getKey();
@@ -237,7 +235,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 ModelElement modelElement = PropertyHelper.getModelElement(repViewObj.getProperty());
                 if (modelElement.eIsProxy() && repNode != null) {
                     modelElement = EMFSharedResources.getInstance().reloadModelElementInNode(repNode);
-                    item = repNode.getObject().getProperty().getItem();
+                    item = repViewObj.getProperty().getItem();
                 }
                 if (modelElement == null || modelElement.eResource() == null) {
                     throw ExceptionFactory.getInstance().createBusinessException(((TDQItem) item).getFilename());
@@ -255,11 +253,11 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 RepositoryNode connectionRepositoryNode = null;
                 if (!analysedElements.isEmpty()) {
+                    Connection connection = null;
                     ModelElement modelElement = analysedElements.get(0);
                     if (modelElement instanceof Connection) {
                         connection = (Connection) modelElement;
-                    }
-                    if (modelElement instanceof Catalog) {
+                    } else if (modelElement instanceof Catalog) {
                         Catalog catalog = SwitchHelpers.CATALOG_SWITCH.caseCatalog((Catalog) modelElement);
                         connection = ConnectionHelper.getConnection(catalog);
                     } else if (modelElement instanceof Schema) {
@@ -342,7 +340,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 result = new TDQFileEditorInput(file);
                 // Added TDQ-7143 yyin 20130531
                 ((TDQFileEditorInput) result).setFileItem(item);
-                CorePlugin.getDefault().refreshDQView(this.repNode);
+                CorePlugin.getDefault().refreshDQView(repNode);
                 // ~
             }
             // ADD msjian TDQ-4209 2012-2-7 : return the editorInput of *.jrxml and *.sql files
@@ -366,21 +364,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
      * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
      */
     public void run(IIntroSite site, Properties params) {
-        initRepositoryViewObject(params);
+        this.repNodes = new IRepositoryNode[] { RepositoryNodeHelper.recursiveFind(params.getProperty("nodeId")) }; //$NON-NLS-1$
         PlatformUI.getWorkbench().getIntroManager().closeIntro(PlatformUI.getWorkbench().getIntroManager().getIntro());
         run();
-    }
-
-    /**
-     * DOC xqliu Comment method "initRepositoryViewObject".
-     * 
-     * @param params
-     */
-    private void initRepositoryViewObject(Properties params) {
-        RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(params.getProperty("nodeId")); //$NON-NLS-1$
-        if (repositoryNode != null) {
-            this.repViewObj = repositoryNode.getObject();
-        }
     }
 
 }

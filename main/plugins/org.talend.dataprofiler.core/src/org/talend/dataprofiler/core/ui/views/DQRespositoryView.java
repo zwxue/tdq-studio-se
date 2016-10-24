@@ -452,7 +452,7 @@ public class DQRespositoryView extends CommonNavigator {
 
                     if (obj instanceof DQRepositoryNode) {
                         if (obj instanceof ReportFileRepNode) {
-                            new OpenItemEditorAction((IRepositoryNode) obj).run();
+                            new OpenItemEditorAction(new IRepositoryNode[] { (IRepositoryNode) obj }).run();
                         } else if (obj instanceof DFConnectionRepNode) {
                             new EditFileDelimitedAction((IRepositoryNode) obj).run();
                         } else if (obj instanceof HadoopClusterConnectionRepNode
@@ -465,7 +465,8 @@ public class DQRespositoryView extends CommonNavigator {
                         } else {
                             DQRepositoryNode repoNode = (DQRepositoryNode) obj;
                             if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
-                                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode);
+                                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(
+                                        new IRepositoryNode[] { repoNode });
                                 openItemEditorAction.run();
 
                             }
@@ -493,7 +494,8 @@ public class DQRespositoryView extends CommonNavigator {
                         Object data = item.getData();
                         DQRepositoryNode repoNode = (DQRepositoryNode) data;
                         if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
-                            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode);
+                            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(
+                                    new IRepositoryNode[] { repoNode });
                             openItemEditorAction.run();
                         }
 

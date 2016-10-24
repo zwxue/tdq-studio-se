@@ -270,7 +270,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         if (repoNodeList == null) {
             Boolean allCheckFlag = this.getTreeViewer().getChecked(node);
             this.getTableViewer().setAllChecked(allCheckFlag);
-            repoNodeList = allCheckFlag ? RepositoryNodeHelper.getNmaedColumnSetNodes(node) : new ArrayList<IRepositoryNode>();
+            repoNodeList = allCheckFlag ? RepositoryNodeHelper.getNamedColumnSetNodes(node) : new ArrayList<IRepositoryNode>();
             packageCheckedMap.put(packageKey, repoNodeList);
             return allCheckFlag ? repoNodeList.toArray(new IRepositoryNode[repoNodeList.size()]) : null;
         } else {
@@ -303,7 +303,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private void handleTablesChecked(IRepositoryNode packageNode, Boolean checkedFlag) {
         RepositoryNodeKey key = new RepositoryNodeKey(packageNode);
-        List<IRepositoryNode> repoNodeList = checkedFlag ? RepositoryNodeHelper.getNmaedColumnSetNodes(packageNode) : null;
+        List<IRepositoryNode> repoNodeList = checkedFlag ? RepositoryNodeHelper.getNamedColumnSetNodes(packageNode) : null;
         packageCheckedMap.put(key, repoNodeList);
         getTableViewer().setAllChecked(checkedFlag);
     }
@@ -490,7 +490,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             if (packageCheckedMap.containsKey(packageKey)) {
                 tableList.addAll(packageCheckedMap.get(packageKey));
             } else {
-                tableList.addAll(RepositoryNodeHelper.getNmaedColumnSetNodes(node));
+                tableList.addAll(RepositoryNodeHelper.getNamedColumnSetNodes(node));
             }
         }
 
