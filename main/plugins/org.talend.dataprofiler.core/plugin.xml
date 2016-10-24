@@ -84,37 +84,6 @@
               </property>
            </options>
         </viewer>
-        <viewer
-              viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
-           <options>
-              <property
-                    name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
-                    value="true">
-              </property>
-           </options>
-        </viewer>
-        <viewer
-              viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
-           <options>
-              <property
-                    name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
-                    value="org.talend.dataprofiler.core.property1">
-              </property>
-           </options>
-        </viewer>
-        <viewer
-              viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
-           <options>
-              <property
-                    name="org.talend.dataprofiler.core.property1"
-                    value="org.talend.dataprofiler.core.property1">
-              </property>
-           </options>
-        </viewer>
-        <viewer
-              viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
-        </viewer>
-             
    </extension>
         <extension
          point="org.eclipse.ui.perspectives">
@@ -141,11 +110,9 @@
              class="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider"
              id="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider">
           <enablement>
-             <and>
-                <instanceof
-                      value="org.talend.repository.model.IRepositoryNode">
-                </instanceof>
-             </and>
+             <instanceof
+                   value="org.talend.repository.model.IRepositoryNode">
+             </instanceof>
           </enablement>
        </actionProvider>
       
@@ -193,44 +160,27 @@
       <actionProvider
                 class="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"
                 id="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"> 
-            <enablement> 
-                    <or>
-              <adapt
-                    type="org.talend.dq.nodes.DBConnectionFolderRepNode">
-              </adapt>
-              <adapt
-                    type="org.talend.dq.nodes.DBConnectionSubFolderRepNode">
-              </adapt>
-              <adapt
-                    type="java.util.Collection">
-                 <count
-                       value="0">
-                 </count>
-              </adapt>
-              <adapt
-                    type="org.talend.dq.nodes.DFConnectionFolderRepNode">
-              </adapt>
-              <adapt
-                    type="org.talend.dq.nodes.DFConnectionSubFolderRepNode">
-              </adapt>
-              <adapt
-                    type="org.talend.dq.nodes.hadoopcluster.HadoopClusterFolderRepNode">
-              </adapt>
-           </or>
-             </enablement>
-        </actionProvider>
+           <enablement>
+                 <or>
+                   <instanceof value="org.talend.dq.nodes.DBConnectionFolderRepNode"/>
+                   <instanceof value="org.talend.dq.nodes.DBConnectionSubFolderRepNode"/>
+                   <instanceof value="org.talend.dq.nodes.DFConnectionFolderRepNode"/>
+                   <instanceof value="org.talend.dq.nodes.DFConnectionSubFolderRepNode"/>
+                   <instanceof value="org.talend.dq.nodes.hadoopcluster.HadoopClusterFolderRepNode"/>
+                 </or>
+          </enablement>   
+      </actionProvider>
       <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.NewAnalysisActionProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.NewAnalysisActionProvider">
             <enablement> 
                     <or>
-                        <adapt type="org.talend.dq.nodes.AnalysisFolderRepNode" />
-      <adapt
-            type="org.talend.dq.nodes.AnalysisSubFolderRepNode">
-      </adapt>   
-                        <adapt type="java.util.Collection"> 
-                            <count value="0" />
+                        <adapt 
+                             type="org.talend.dq.nodes.AnalysisFolderRepNode">
                         </adapt>
+                        <adapt 
+                             type="org.talend.dq.nodes.AnalysisSubFolderRepNode">
+                        </adapt>   
                     </or>
              </enablement>
       </actionProvider>
@@ -238,19 +188,18 @@
             class="org.talend.dataprofiler.core.ui.action.provider.RunAnalysisActionProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.RunAnalysisActionProvider">
          <enablement>
-            <and>
-                <instanceof value="org.talend.dq.nodes.AnalysisRepNode"/>
-            </and>
+            <instanceof
+                  value="org.talend.dq.nodes.AnalysisRepNode">
+            </instanceof>
          </enablement>
       </actionProvider>
       <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.DuplicateResourceProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.DuplicateResourceProvider">
          <enablement>
-            <and>
                <instanceof
                      value="org.talend.repository.model.IRepositoryNode">
-               </instanceof></and>
+               </instanceof>
          </enablement>
       </actionProvider>        
       <actionProvider
@@ -267,15 +216,11 @@
             </or>
          </enablement>
       </actionProvider> 
-      
-      
       <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider">
          <enablement>
-            <and>
                 <instanceof value="org.talend.dq.nodes.DBColumnRepNode"/>           
-            </and>
          </enablement>
       </actionProvider> 
       
@@ -348,9 +293,9 @@
             class="org.talend.dataprofiler.core.ui.action.provider.RemoveAnalysisActionProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.RemoveAnalysisActionProvider">
          <enablement>
-            <and>
-                <instanceof value="org.talend.dq.nodes.ReportAnalysisRepNode"/>
-            </and>
+            <instanceof
+                  value="org.talend.dq.nodes.ReportAnalysisRepNode">
+            </instanceof>
          </enablement>
       </actionProvider>
       <actionProvider
@@ -364,12 +309,6 @@
                <instanceof
                      value="org.talend.dq.nodes.RulesSQLSubFolderRepNode">
                </instanceof>
-               <adapt
-                     type="java.util.Collection">
-                  <count
-                        value="0">
-                  </count>
-               </adapt>
             </or>
          </enablement>
       </actionProvider>
@@ -385,12 +324,6 @@
                <instanceof
                      value="org.talend.dq.nodes.RulesParserSubFolderRepNode">
                </instanceof>
-               <adapt
-                     type="java.util.Collection">
-                  <count
-                        value="0">
-                  </count>
-               </adapt>
             </or>
          </enablement>
       </actionProvider>
@@ -404,12 +337,6 @@
                 </adapt>
                 <adapt
                       type="org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode">
-                </adapt>
-                <adapt
-                      type="java.util.Collection">
-                   <count
-                         value="0">
-                   </count>
                 </adapt>
              </or>
           </enablement>
@@ -448,12 +375,6 @@
                <instanceof
                      value="org.talend.dq.nodes.PatternSqlSubFolderRepNode">
                </instanceof>
-               <adapt
-                     type="java.util.Collection">
-                  <count
-                        value="0">
-                  </count>
-               </adapt>
             </or>
          </enablement>
       </actionProvider>
@@ -821,12 +742,6 @@
                <instanceof
                      value="org.talend.dq.nodes.RulesMatcherSubFolderRepNode">
                </instanceof>
-               <adapt
-                     type="java.util.Collection">
-                  <count
-                        value="0">
-                  </count>
-               </adapt>
             </or>
          </enablement>
       </actionProvider>
@@ -837,9 +752,6 @@
                     <or>
                         <adapt type="org.talend.dq.nodes.hadoopcluster.HadoopClusterConnectionRepNode" />
                         <adapt  type="org.talend.dq.nodes.hadoopcluster.HDFSOfHCFolderRepNode" />
-                        <adapt type="java.util.Collection"> 
-                            <count value="0" />
-                        </adapt>
                     </or>
              </enablement>
       </actionProvider>
@@ -850,9 +762,6 @@
                     <or>
                         <adapt type="org.talend.dq.nodes.hadoopcluster.HadoopClusterConnectionRepNode" />
                         <adapt  type="org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode" />
-                        <adapt type="java.util.Collection"> 
-                            <count value="0" />
-                        </adapt>
                     </or>
              </enablement>
       </actionProvider>
@@ -862,9 +771,6 @@
             <enablement> 
                     <or>
                         <adapt  type="org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode" />
-                        <adapt type="java.util.Collection"> 
-                            <count value="0" />
-                        </adapt>
                     </or>
              </enablement>
       </actionProvider>
@@ -875,9 +781,6 @@
                     <or>
                         <adapt type="org.talend.dq.nodes.hadoopcluster.HadoopClusterConnectionRepNode" />
                         <adapt  type="org.talend.dq.nodes.hadoopcluster.HiveOfHCFolderRepNode" />
-                        <adapt type="java.util.Collection"> 
-                            <count value="0" />
-                        </adapt>
                     </or>
              </enablement>
       </actionProvider>
@@ -887,9 +790,6 @@
             <enablement> 
                     <or>
                         <adapt type="org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode" />
-                        <adapt type="java.util.Collection"> 
-                            <count value="0" />
-                        </adapt>
                     </or>
              </enablement>
       </actionProvider>
@@ -899,9 +799,6 @@
             <enablement> 
                     <or>
                         <adapt  type="org.talend.dq.nodes.hadoopcluster.HDFSOfHCConnectionNode" />
-                        <adapt type="java.util.Collection"> 
-                            <count value="0" />
-                        </adapt>
                     </or>
              </enablement>
       </actionProvider>
@@ -927,11 +824,9 @@
             class="org.talend.dataprofiler.core.ui.action.provider.DeleteResourceProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.DeleteResourceProvider">
          <enablement>
-            <or>
                <instanceof
                      value="org.talend.repository.model.RepositoryNode">
                </instanceof>
-            </or>
          </enablement>
       </actionProvider>       
   </extension>
