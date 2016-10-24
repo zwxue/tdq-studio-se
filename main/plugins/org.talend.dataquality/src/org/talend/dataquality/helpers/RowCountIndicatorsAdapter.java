@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -137,7 +138,9 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
     public boolean setInstantiatedExpression(Expression expression) {
         int index = 0;
         for (RowCountIndicator rci : this.rowCountIndiSet) {
-            rci.setInstantiatedExpression(expression);
+            TdExpression copySqlExpression = BooleanExpressionHelper.createTdExpression(expression.getLanguage(),
+                    expression.getBody());
+            rci.setInstantiatedExpression(copySqlExpression);
             index++;
         }
         if (index == 0 || index != rowCountIndiSet.size()) {
