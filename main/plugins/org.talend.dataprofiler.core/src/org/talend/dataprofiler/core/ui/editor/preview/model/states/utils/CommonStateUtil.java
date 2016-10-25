@@ -81,7 +81,11 @@ public class CommonStateUtil {
         }
         for (IndicatorUnit tiu : units) {
             if (IndicatorEnum.UserDefinedIndicatorEnum.equals(tiu.getType()) && UDIHelper.isCount(tiu.getIndicator())) {
-                return ((UserDefIndicator) tiu.getIndicator()).getUserCount();
+                Long userCount = ((UserDefIndicator) tiu.getIndicator()).getUserCount();
+                if (userCount == null) {
+                    userCount = ((UserDefIndicator) tiu.getIndicator()).getCount();
+                }
+                return userCount;
             }
         }
         return 0l;
