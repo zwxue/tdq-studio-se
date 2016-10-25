@@ -311,10 +311,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
      * @return
      */
     public boolean openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
-        if (isDirty()) {
-            absMasterPage.doSave(null);
-        }
-
         IndicatorUnit indicatorUnit = (IndicatorUnit) indicatorItem.getData(INDICATOR_UNIT_KEY);
         if (FormEnum.isExsitingForm(indicatorUnit)) {
             IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
