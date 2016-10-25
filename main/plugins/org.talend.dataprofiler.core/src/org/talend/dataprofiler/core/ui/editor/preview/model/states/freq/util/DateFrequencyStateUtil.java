@@ -32,7 +32,8 @@ public class DateFrequencyStateUtil {
 
     public static ICustomerDataset getCustomerDataset(List<IndicatorUnit> units, int sortType) {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
-
+        Long rowCount = FrequencyTypeStateUtil.getRowCountIndicator(units) == null ? 0l : FrequencyTypeStateUtil
+                .getRowCountIndicator(units).getCount();
         for (IndicatorUnit unit : units) {
             if (unit.isExcuted()) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
@@ -47,7 +48,7 @@ public class DateFrequencyStateUtil {
 
                     customerdataset.addValue(freqExt.getValue(), unit.getIndicatorName(), keyLabel);
 
-                    ChartDataEntity entity = createDataEntity(unit, freqExt, keyLabel);
+                    ChartDataEntity entity = createDataEntity(unit, freqExt, keyLabel, rowCount);
 
                     customerdataset.addDataEntity(entity);
                 }
@@ -56,7 +57,7 @@ public class DateFrequencyStateUtil {
         return customerdataset;
     }
 
-    public static ChartDataEntity createDataEntity(IndicatorUnit unit, FrequencyExt freqExt, String keyLabel) {
+    public static ChartDataEntity createDataEntity(IndicatorUnit unit, FrequencyExt freqExt, String keyLabel, Long rowCount) {
         ChartDataEntity entity = new ChartDataEntity();
         entity.setIndicator(unit.getIndicator());
         entity.setKey(freqExt == null ? null : freqExt.getKey());
@@ -67,13 +68,17 @@ public class DateFrequencyStateUtil {
         if (freqExt == null) {
             entity.setPercent(0.0);
         } else {
-            entity.setPercent(freqExt.getFrequency());
+            Double percent = freqExt.getFrequency();
+            percent = Double.isNaN(percent) ? (rowCount == 0l ? Double.NaN : (double) freqExt.getValue() / rowCount) : percent;
+            entity.setPercent(percent);
         }
         return entity;
     }
 
     public static ChartDataEntity[] getDataEntity(List<IndicatorUnit> units, int sortType) {
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
+        Long rowCount = FrequencyTypeStateUtil.getRowCountIndicator(units) == null ? 0l : FrequencyTypeStateUtil
+                .getRowCountIndicator(units).getCount();
         for (IndicatorUnit unit : units) {
             if (unit.isExcuted()) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
@@ -85,7 +90,7 @@ public class DateFrequencyStateUtil {
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
                     String keyLabel = FrequencyTypeStateUtil.getKeyLabel(freqExt, 30);
-                    dataEnities.add(DateFrequencyStateUtil.createDataEntity(unit, freqExt, keyLabel));
+                    dataEnities.add(DateFrequencyStateUtil.createDataEntity(unit, freqExt, keyLabel, rowCount));
                 }
             }
         }
