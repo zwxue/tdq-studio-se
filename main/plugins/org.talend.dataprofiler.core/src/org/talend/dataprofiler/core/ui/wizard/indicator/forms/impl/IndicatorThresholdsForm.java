@@ -29,24 +29,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorPart;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.DateTimeDialog;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
-import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -87,11 +81,13 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private boolean isOptionForRowCount;
 
+    private IndicatorEnum currentIndicatorEnum;
+
     public IndicatorThresholdsForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style, parameters);
 
         Indicator currentIndicator = (Indicator) parameters.eContainer();
-        IndicatorEnum currentIndicatorType = IndicatorEnum.findIndicatorEnum(currentIndicator.eClass());
+        currentIndicatorEnum = IndicatorEnum.findIndicatorEnum(currentIndicator.eClass());
         ModelElement analyzedElement = currentIndicator.getAnalyzedElement();
         if (null != analyzedElement) {
 
@@ -104,7 +100,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 MetadataColumn mColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(analyzedElement);
                 int sqltype = TalendTypeConvert.convertToJDBCType(mColumn.getTalendType());
                 isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
-                        && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
+                        && currentIndicatorEnum.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
                 if (isRangeForDate) {
                     isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
                 }
@@ -112,7 +108,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 // int sqltype = ((TdColumn) analyzedElement).getJavaType();
                 int sqltype = ((TdColumn) analyzedElement).getSqlDataType().getJavaDataType();
                 isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
-                        && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
+                        && currentIndicatorEnum.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
 
                 if (isRangeForDate) {
                     isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
@@ -120,7 +116,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             }
         }
 
-        isOptionForRowCount = (currentIndicatorType == IndicatorEnum.RowCountIndicatorEnum)
+        isOptionForRowCount = (currentIndicatorEnum == IndicatorEnum.RowCountIndicatorEnum)
                 || UDIHelper.isCount(currentIndicator);
 
         setupForm();
@@ -173,7 +169,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             higherText.setEnabled(false);
         }
 
-        if (!isOptionForRowCount && !isRangeForDate) {
+        if (!isOptionForRowCount && !isRangeForDate && currentIndicatorEnum.isCountRow()) {
             Group pGroup = new Group(this, SWT.NONE);
             pGroup.setLayout(new GridLayout(2, false));
             pGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -189,21 +185,9 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             pHigherText = new Text(pGroup, SWT.BORDER);
             pHigherText.setLayoutData(gdText);
 
-            setPercentUIEnable();
         }
     }
 
-    private void setPercentUIEnable() {
-        IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
-        if (editor != null) {
-            AnalysisEditor anaEditor = (AnalysisEditor) editor;
-            AbstractMetadataFormPage masterPage = anaEditor.getMasterPage();
-            isContainRowCount = AnalysisHelper.containsRowCount((Analysis) masterPage.getCurrentModelElement());
-        }
-
-        pLowerText.setEnabled(isContainRowCount);
-        pHigherText.setEnabled(isContainRowCount);
-    }
 
     @Override
     public FormEnum getFormEnum() {
@@ -309,26 +293,44 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             }
         } else {
             // bug 10550 by zshen,Cannot set a negative threshold on individual summary statistics indicators
-            if ((!CheckValueUtils.isNumberWithNegativeValue(min) && !CheckValueUtils.isEmpty(min))
-                    || (!CheckValueUtils.isNumberWithNegativeValue(max) && !CheckValueUtils.isEmpty(max))) {
-
-                rc.setOk(false);
-                statusLabelText += MSG_ONLY_NUMBER + System.getProperty("line.separator"); //$NON-NLS-1$
-            } else {
-                // MOD yyi 2010-04-15 bug 12483 : check the value is out of range
+            // bug TDQ-11920, when the indicator count row,the threshold is Integer, or else, the threshold could be Double.
+            if (currentIndicatorEnum.isCountRow()){
+                if (!CheckValueUtils.isNumberWithNegativeValue(min) && !CheckValueUtils.isEmpty(min)
+                        || !CheckValueUtils.isNumberWithNegativeValue(max) && !CheckValueUtils.isEmpty(max)) {
+                    rc.setOk(false);
+                    statusLabelText += MSG_ONLY_NUMBER + System.getProperty("line.separator"); //$NON-NLS-1$
+                }
+            }else{
+                if ((!CheckValueUtils.isRealNumberValue(min) && !CheckValueUtils.isEmpty(min) || !CheckValueUtils
+                        .isRealNumberValue(max) && !CheckValueUtils.isEmpty(max))) {
+                    statusLabelText += MSG_ONLY_REAL_NUMBER + System.getProperty("line.separator"); //$NON-NLS-1$
+                    rc.setOk(false);
+                } 
+            }
+           
+            if(rc.isOk()){    
+            // MOD yyi 2010-04-15 bug 12483 : check the value is out of range
                 try {
                     if (!CheckValueUtils.isEmpty(max)) {
-                        Long.valueOf(max);
+                        if (currentIndicatorEnum.isCountRow()) {
+                            Long.valueOf(max);
+                        } else {
+                            Double.valueOf(max);
+                        }
                     }
                     if (!CheckValueUtils.isEmpty(min)) {
-                        Long.valueOf(min);
+                        if (currentIndicatorEnum.isCountRow()) {
+                            Long.valueOf(min);
+                        } else {
+                            Double.valueOf(min);
+                        }
                     }
                 } catch (NumberFormatException e) {
                     rc.setOk(false);
                     statusLabelText += UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE_LONG + System.getProperty("line.separator"); //$NON-NLS-1$
                 }
-
             }
+
         }
 
         if (CheckValueUtils.isAoverB(min, max)) {
