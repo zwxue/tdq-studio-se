@@ -81,7 +81,6 @@ import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
@@ -90,6 +89,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -714,7 +714,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree implements 
      * clicked then the size of return array will be zero. If have a Where Clause is error will return null
      */
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
-        String whereExpression = AnalysisHelper.getStringDataFilter(this.getAnalysis());
+        String whereExpression = ContextHelper.getDataFilterWithoutContext(this.getAnalysis());
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
                 shell,
                 DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators(), whereExpression); //$NON-NLS-1$
