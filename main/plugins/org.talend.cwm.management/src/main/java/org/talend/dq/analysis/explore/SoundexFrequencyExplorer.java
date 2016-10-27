@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -64,9 +65,11 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         // ~11005
 
         // MOD mzhao bug 9740 2009-11-10
-        String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : dbmsLanguage
-                .getSoundexPrefix() + "("//$NON-NLS-1$ 
-                + function + ")" + dbmsLanguage.equal() + dbmsLanguage.getSoundexPrefix() + "('" + entity.getKey() + "')"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+        String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull()
+                : dbmsLanguage.getSoundexPrefix()
+                        + "("//$NON-NLS-1$ 
+                        + function
+                        + ")" + dbmsLanguage.equal() + dbmsLanguage.getSoundexPrefix() + "('" + StringEscapeUtils.escapeSql(entity.getKey().toString()) + "')"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
         return clause;
     }
 
