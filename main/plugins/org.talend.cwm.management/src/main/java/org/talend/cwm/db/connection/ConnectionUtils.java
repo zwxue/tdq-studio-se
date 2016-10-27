@@ -147,7 +147,7 @@ public final class ConnectionUtils {
         ReturnCode connectionAvailable = isConnectionAvailable(analysisDataProvider);
         if (!connectionAvailable.isOk()) {
             log.error(connectionAvailable.getMessage());
-            MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
+            MessageDialogWithToggle.openError(Display.getCurrent().getActiveShell(),
                     Messages.getString("ConnectionUtils.checkConnFailTitle"),//$NON-NLS-1$
                     Messages.getString("ConnectionUtils.checkConnFailMsg", analysisName));//$NON-NLS-1$
             return false;

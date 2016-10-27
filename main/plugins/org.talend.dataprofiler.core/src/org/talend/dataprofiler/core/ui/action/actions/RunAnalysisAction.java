@@ -378,6 +378,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     private boolean isConnectedAvailable(TDQAnalysisItem runItem) {
         DataManager datamanager = runItem.getAnalysis().getContext().getConnection();
+        if (datamanager == null) {
+            log.error(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoColumnAssigned", runItem.getAnalysis().getName())); //$NON-NLS-1$
+            MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"),//$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoColumnAssigned", runItem.getAnalysis().getName()));//$NON-NLS-1$
+            return false;
+        }
         return ConnectionUtils.checkConnection(datamanager, runItem.getAnalysis().getName());
     }
 
@@ -456,7 +462,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             log.info(DefaultMessagesImpl
                     .getString(
                             "RunAnalysisAction.displayInformation", new Object[] { runItem.getAnalysis().getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ 
-
         }
 
         if (!StringUtils.isBlank(executed.getMessage())) {
@@ -470,10 +475,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
                         shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
                     }
-                    MessageDialogWithToggle.openError(
-                            shell,
-                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis",//$NON-NLS-1$ //$NON-NLS-2$ 
-                                            runItem.getAnalysis().getName(), executed.getMessage()));
+                    String errorMessage = DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis",//$NON-NLS-1$
+                            runItem.getAnalysis().getName(), executed.getMessage());
+                    log.error(errorMessage);
+                    MessageDialogWithToggle.openError(shell,
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), errorMessage); //$NON-NLS-1$
                 }
             });
         }

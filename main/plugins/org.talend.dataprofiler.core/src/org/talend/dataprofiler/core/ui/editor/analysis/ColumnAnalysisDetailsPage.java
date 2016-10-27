@@ -709,7 +709,8 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
         // ~
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators == null || modelElementIndicators.length == 0) {
-            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoColumnAssigned"), false); //$NON-NLS-1$
+            return new ReturnCode(DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.NoColumnAssigned", analysisHandler.getName()), false); //$NON-NLS-1$
         }
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             if (modelElementIndicator.getIndicators().length == 0) {
