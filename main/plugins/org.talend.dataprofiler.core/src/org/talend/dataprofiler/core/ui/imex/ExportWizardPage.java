@@ -389,10 +389,10 @@ public class ExportWizardPage extends WizardPage {
                     // MOD qiongli 2012-12-13 TDQ-5356 use itself file name for jrxml
                     boolean isJrxmlDepFile = depFile.getName().endsWith(FactoriesUtil.JRXML);
                     // MOD msjian TDQ-5909: modify to displayName
-                    String fileName = element != null && !isJrxmlDepFile ? PropertyHelper.getProperty(element).getDisplayName()
-                            : depFile.getName();
+                    String dptLabel = element != null && !isJrxmlDepFile && PropertyHelper.getProperty(element) != null ? PropertyHelper
+                            .getProperty(element).getDisplayName() : depFile.getName();
                     // TDQ-5909~
-                    errors.add("\"" + record.getName() + "\" miss dependency : " + fileName);//$NON-NLS-1$ //$NON-NLS-2$ 
+                    errors.add("\"" + record.getName() + "\" miss dependency : " + dptLabel);//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
         }
