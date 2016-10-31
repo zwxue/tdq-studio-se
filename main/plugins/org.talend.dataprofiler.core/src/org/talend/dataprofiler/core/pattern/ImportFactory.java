@@ -558,8 +558,13 @@ public final class ImportFactory {
                     String[] columnsValue = reader.getValues();
                     HashMap<String, String> record = new HashMap<String, String>();
                     for (int i = 0; i < headers.length; i++) {
-                        if (columnsValue[i] != null && columnsValue[i].length() > 0) {
-                            record.put(headers[i], columnsValue[i]);
+                        // TDQ-6714: fix when there is no regexp for the imported udi (csv) file.
+                        if (i >= columnsValue.length) {
+                            record.put(headers[i], ""); //$NON-NLS-1$
+                        } else {
+                            if (columnsValue[i] != null && columnsValue[i].length() > 0) {
+                                record.put(headers[i], columnsValue[i]);
+                            }
                         }
                     }
                     for (PatternLanguageType languagetype : PatternLanguageType.values()) {
