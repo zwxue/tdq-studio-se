@@ -24,7 +24,6 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.AnalysisExecutorHelper;
-import org.talend.utils.collections.MultiMapHelper;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -94,9 +93,9 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
                 }
             }
 
+            // add mapping of analyzed elements to their indicators
             synchronized (elementToIndicator) {
-                // add mapping of analyzed elements to their indicators
-                MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
+                addElements2IndicatorsMapping(elementToIndicator, indicator);
             }
 
             query = dbms().getInstantiatedExpression(indicator);

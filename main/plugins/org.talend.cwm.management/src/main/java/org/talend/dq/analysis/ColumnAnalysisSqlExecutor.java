@@ -63,6 +63,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.helpers.RowCountIndicatorsAdapter;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
@@ -1160,9 +1161,29 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
 
             // add mapping of analyzed elements to their indicators
-            MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
+            addElements2IndicatorsMapping(elementToIndicator, indicator);
         }
         return runStatus;
+    }
+
+    /**
+     * add mapping of analyzed elements to their indicators.
+     * 
+     * @param elementToIndicator
+     * @param indicator
+     */
+    protected void addElements2IndicatorsMapping(Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator) {
+        // TDQ-12743 msjian: for each element, we need to add a rowCountIndicator mapping, because later we will use the mapping
+        // to set rowcount for each element
+        if (indicator instanceof RowCountIndicatorsAdapter) {
+            RowCountIndicatorsAdapter indicator1 = (RowCountIndicatorsAdapter) indicator;
+            Set<RowCountIndicator> rowCountIndiSet = indicator1.getRowCountIndiSet();
+            for (RowCountIndicator rowCountInd : rowCountIndiSet) {
+                MultiMapHelper.addUniqueObjectToListMap(rowCountInd.getAnalyzedElement(), indicator, elementToIndicator);
+            }
+        } else {
+            MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
+        }
     }
 
     /**

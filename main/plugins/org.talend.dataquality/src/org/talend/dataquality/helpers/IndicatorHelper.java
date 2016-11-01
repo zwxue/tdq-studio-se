@@ -342,7 +342,7 @@ public final class IndicatorHelper {
             CompositeIndicator compositeIndicator = (CompositeIndicator) indicator;
             try {
                 for (Indicator ind : compositeIndicator.getAllChildIndicators()) {
-                    leafIndicators.addAll(getIndicatorLeaves(ind));
+                    leafIndicators.addAll(getIndicatorLeavesBySingleNode(ind));
                 }
             } catch (Exception e) {
                 log.error(e);
