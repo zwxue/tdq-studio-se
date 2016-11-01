@@ -15,7 +15,6 @@ package org.talend.dq.indicators;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +27,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
@@ -41,7 +41,6 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.ListUtils;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.metadata.managment.model.MetadataFillFactory;
 import org.talend.utils.sugars.ReturnCode;
@@ -662,25 +661,14 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      */
     protected boolean checkSchemaByName(String catName) {
         if (schemasName.isEmpty()) {
-            Collection<Schema> schemas = new ArrayList<Schema>();
-            try {
-                schemas = ListUtils.castList(
-                        Schema.class,
-                        MetadataFillFactory.getDBInstance(getDataManager()).fillSchemas(getDataManager(),
-                                getConnection().getMetaData(), null));
-            } catch (SQLException e) {
-                log.error(e, e);
-            }
-            for (Schema ts : schemas) {
+            for (Schema ts : SchemaHelper.getSchemas(getDataManager().getDataPackage())) {
                 schemasName.add(ts.getName());
             }
         }
-
-        if (!schemasName.contains(catName)) {
-            return false;
+        if (schemasName.contains(catName)) {
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     /**
