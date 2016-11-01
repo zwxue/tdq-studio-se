@@ -47,8 +47,7 @@ public class SimpleRuleStatisticsChartState extends AbstractChartTypeStatesTable
             String value = CommonStateUtil.getUnitValue(unit.getValue());
             String label = unit.getIndicatorName();
             customerdataset.addValue(Double.parseDouble(value), label, ""); //$NON-NLS-1$
-            ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label,
-                    CommonStateUtil.getTableIndicatorUnitRowCount(units));
+            ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label);
             customerdataset.addDataEntity(entity);
         }
         return customerdataset;

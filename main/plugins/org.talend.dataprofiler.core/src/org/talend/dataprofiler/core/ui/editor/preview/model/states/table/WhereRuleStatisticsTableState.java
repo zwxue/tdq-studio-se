@@ -42,7 +42,6 @@ import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-4 Detailled comment
@@ -85,16 +84,14 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
      * @return
      */
     public ChartDataEntity[] getDataEntityOfRowCount() {
-        TableIndicatorUnit rowCountUnit = CommonStateUtil.getRowCountTableIndicatorUnit(tableunits);
+        TableIndicatorUnit rownCountUnit = WhereRuleStatisticsStateUtil.getRownCountUnit(tableunits);
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
-        if (rowCountUnit != null) {
+        if (rownCountUnit != null) {
             // final Object unitValue = rownCountUnit.getValue();
             // unitValue != null ?Double.parseDouble(unitValue.toString()): Double.NaN;
-
-            String value = CommonStateUtil.getUnitValue(rowCountUnit.getValue(), StringFormatUtil.DOUBLE_NUMBER);
-            String label = rowCountUnit.getIndicatorName();
-            ChartDataEntity createDataEntity = CommonStateUtil.createDataEntity(rowCountUnit, value, label, Double.valueOf(value)
-                    .longValue());
+            String value = CommonStateUtil.getUnitValue(rownCountUnit.getValue());
+            String label = rownCountUnit.getIndicatorName();
+            ChartDataEntity createDataEntity = CommonStateUtil.createDataEntity(rownCountUnit, value, label);
             dataEnities.add(createDataEntity);
         }
         return dataEnities.toArray(new ChartDataEntity[dataEnities.size()]);
@@ -236,6 +233,14 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
             return result;
         }
 
+    }
+
+    public TableIndicatorUnit getRownCountUnit(List<TableIndicatorUnit> units1) {
+        return WhereRuleStatisticsStateUtil.getRownCountUnit(units1);
+    }
+
+    public List<TableIndicatorUnit> removeRowCountUnit(List<TableIndicatorUnit> units1) {
+        return WhereRuleStatisticsStateUtil.removeRowCountUnit(units1);
     }
 
 }
