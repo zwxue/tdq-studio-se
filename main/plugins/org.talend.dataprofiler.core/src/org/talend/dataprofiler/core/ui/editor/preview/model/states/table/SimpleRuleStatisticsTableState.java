@@ -26,7 +26,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonS
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.SimpleStatisticsStateUtil;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-4 Detailled comment
@@ -53,7 +52,7 @@ public class SimpleRuleStatisticsTableState extends AbstractRuleStatisticsTableS
         TableIndicatorUnit rowCountUnit = CommonStateUtil.getRowCountTableIndicatorUnit(tableunits);
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
         if (rowCountUnit != null) {
-            String value = CommonStateUtil.getUnitValue(rowCountUnit.getValue(), StringFormatUtil.DOUBLE_NUMBER);
+            String value = CommonStateUtil.getUnitValue(rowCountUnit.getValue());
             String label = rowCountUnit.getIndicatorName();
             ChartDataEntity createDataEntity = CommonStateUtil.createDataEntity(rowCountUnit, value, label, Double.valueOf(value)
                     .longValue());
