@@ -33,11 +33,6 @@ public class CommonStateUtil {
         return unitValue != null ? StringFormatUtil.format(unitValue, style).toString() : defaultValue;
     }
 
-    public static String getUnitValue(Object unitValue) {
-        // TDQ-11643: msjian make the chart value format like "X.XX" the same to table values.
-        return getUnitValue(unitValue, StringFormatUtil.DOUBLE_NUMBER);
-    }
-
     /**
      * create the data entity
      * 

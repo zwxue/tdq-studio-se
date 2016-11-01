@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.SimpleS
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -44,7 +45,7 @@ public class SimpleRuleStatisticsChartState extends AbstractChartTypeStatesTable
     public ICustomerDataset getCustomerDataset() {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (TableIndicatorUnit unit : units) {
-            String value = CommonStateUtil.getUnitValue(unit.getValue());
+            String value = CommonStateUtil.getUnitValue(unit.getValue(), StringFormatUtil.DOUBLE_NUMBER);
             String label = unit.getIndicatorName();
             customerdataset.addValue(Double.parseDouble(value), label, ""); //$NON-NLS-1$
             ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label);

@@ -42,6 +42,7 @@ import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-4 Detailled comment
@@ -89,7 +90,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
         if (rownCountUnit != null) {
             // final Object unitValue = rownCountUnit.getValue();
             // unitValue != null ?Double.parseDouble(unitValue.toString()): Double.NaN;
-            String value = CommonStateUtil.getUnitValue(rownCountUnit.getValue());
+            String value = CommonStateUtil.getUnitValue(rownCountUnit.getValue(), StringFormatUtil.DOUBLE_NUMBER);
             String label = rownCountUnit.getIndicatorName();
             ChartDataEntity createDataEntity = CommonStateUtil.createDataEntity(rownCountUnit, value, label);
             dataEnities.add(createDataEntity);
