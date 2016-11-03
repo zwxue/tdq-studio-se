@@ -81,20 +81,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private static final int META_FIELD_WIDTH = 200;
 
-    private static final String NAME_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.name"); //$NON-NLS-1$
-
-    private static final String PURPOSE_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.purpose"); //$NON-NLS-1$
-
-    private static final String DESCRIPTION_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.description"); //$NON-NLS-1$
-
-    private static final String AUTHOR_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.author"); //$NON-NLS-1$
-
-    private static final String STATUS_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.status"); //$NON-NLS-1$
-
-    private static final String WHITESPACE_CHECK_MSG = DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace"); //$NON-NLS-1$
-
-    private static final String NAMECONNOTBEEMPTY = DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"); //$NON-NLS-1$
-
     protected Text nameText;
 
     protected Text purposeText;
@@ -200,13 +186,13 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         Composite parent = toolkit.createComposite(section);
         parent.setLayout(new GridLayout(2, false));
 
-        nameText = createMetadataTextFiled(NAME_LABEL, parent);
+        nameText = createMetadataTextFiled(DefaultMessagesImpl.getString("AbstractMetadataFormPage.name"), parent); //$NON-NLS-1$
         // set the max number of characters to be entered in the text field
         // ADDED sgandon 16/03/2010 bug 11760
         nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME,
                 MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
 
-        purposeText = createMetadataTextFiled(PURPOSE_LABEL, parent);
+        purposeText = createMetadataTextFiled(DefaultMessagesImpl.getString("AbstractMetadataFormPage.purpose"), parent); //$NON-NLS-1$
         // set the max number of characters to be entered in the text field
         // ADDED sgandon 16/03/2010 bug 11760
         purposeText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE,
@@ -214,7 +200,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         // description fields
         // ADDED sgandon 16/03/2010 bug 11760
-        toolkit.createLabel(parent, DESCRIPTION_LABEL);
+        toolkit.createLabel(parent, DefaultMessagesImpl.getString("AbstractMetadataFormPage.description")); //$NON-NLS-1$
 
         descriptionText = toolkit.createText(parent, null, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         GridDataFactory.fillDefaults().hint(META_FIELD_WIDTH, 60).applyTo(descriptionText);
@@ -222,7 +208,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         descriptionText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.DESCRIPTION,
                 MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
 
-        authorText = createMetadataTextFiled(AUTHOR_LABEL, parent);
+        authorText = createMetadataTextFiled(DefaultMessagesImpl.getString("AbstractMetadataFormPage.author"), parent); //$NON-NLS-1$
         // ADDED 2010-04-01 sgandon bug 11760 : author size limitation
         authorText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.AUTHOR,
                 MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
@@ -233,7 +219,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             authorText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         }
 
-        toolkit.createLabel(parent, STATUS_LABEL);
+        toolkit.createLabel(parent, DefaultMessagesImpl.getString("AbstractMetadataFormPage.status")); //$NON-NLS-1$
         statusCombo = new CCombo(parent, SWT.BORDER);
         statusCombo.setEditable(false);
 
@@ -268,6 +254,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                     setDirty(true);
 
                     // MOD msjian 2011-7-18 23216: when changed the name of a connection to null, write a warning
+                    String NAMECONNOTBEEMPTY = DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"); //$NON-NLS-1$
                     if (PluginConstant.EMPTY_STRING.equals(nameText.getText())) {
                         getManagedForm().getMessageManager().addMessage(NAMECONNOTBEEMPTY, NAMECONNOTBEEMPTY, null,
                                 IMessageProvider.ERROR, nameText);
@@ -570,6 +557,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     private void validateWhithspace(Text field) {
+        String WHITESPACE_CHECK_MSG = DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace"); //$NON-NLS-1$
         if (field.getText().length() > 0 && PluginConstant.EMPTY_STRING.equals(field.getText().trim())) {
             getManagedForm().getMessageManager().addMessage(WHITESPACE_CHECK_MSG, WHITESPACE_CHECK_MSG, null,
                     IMessageProvider.ERROR, field);
@@ -614,6 +602,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         }
         if (PluginConstant.EMPTY_STRING.equals(elementName.trim())) {
             this.nameText.setText(oldProperty.getDisplayName());
+            String NAMECONNOTBEEMPTY = DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"); //$NON-NLS-1$
             ret.setReturnCode(NAMECONNOTBEEMPTY, false);
             return ret;
         }

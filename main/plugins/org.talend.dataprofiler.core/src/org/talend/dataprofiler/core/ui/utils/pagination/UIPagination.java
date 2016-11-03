@@ -86,11 +86,6 @@ public class UIPagination {
         }
     }
 
-    public UIPagination(FormToolkit toolkit, Composite composite, Composite chartComposite) {
-        this(toolkit, composite);
-        this.chartComposite = chartComposite;
-    }
-
     public UIPagination(FormToolkit toolkit) {
         this(toolkit, null);
     }

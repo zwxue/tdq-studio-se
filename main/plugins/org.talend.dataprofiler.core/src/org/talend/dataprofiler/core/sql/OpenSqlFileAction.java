@@ -18,7 +18,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -44,8 +43,6 @@ public class OpenSqlFileAction extends Action {
     protected static Logger log = Logger.getLogger(OpenSqlFileAction.class);
 
     private List<IFile> folder;
-
-    private IEditorInput editorInput;
 
     /**
      * DOC qzhang AddSqlFileAction constructor comment.

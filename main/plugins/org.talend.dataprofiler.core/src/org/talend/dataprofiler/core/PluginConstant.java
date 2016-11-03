@@ -139,4 +139,15 @@ public final class PluginConstant {
     public static final String NA_STRING = org.talend.dataquality.PluginConstant.NA_STRING;
 
     public static final String MAX_NB_ROWS_ANALYSIS_EDITOR = "MAX_NB_ROWS_ANALYSIS_EDITOR"; //$NON-NLS-1$
+
+    public static final String WHERE = "WHERE"; //$NON-NLS-1$
+
+    public static final int CRITICALITY_LEVEL_MIN = 1;
+
+    public static final int CRITICALITY_LEVEL_MAX = 10;
+
+    public static final String DEFAULT_OPERATOR = "="; //$NON-NLS-1$
+
+    public static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
 }

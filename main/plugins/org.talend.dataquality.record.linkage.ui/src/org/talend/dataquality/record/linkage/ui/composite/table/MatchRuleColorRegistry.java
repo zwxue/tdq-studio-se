@@ -23,20 +23,7 @@ public class MatchRuleColorRegistry {
             { 0, 169, 206 }, { 167, 168, 170 }, { 236, 171, 124 }, { 184, 179, 112 }, { 212, 211, 211 }, { 131, 211, 230 },
             { 255, 211, 139 } };
 
-    private static java.awt.Color[] awtColors;
-
     private static Color[] swtColors;
-
-    public static java.awt.Color[] getColorsForAwt() {
-        if (null == awtColors) {
-            awtColors = new java.awt.Color[COLORS.length];
-            for (int i = 0; i < COLORS.length; i++) {
-                awtColors[i] = new java.awt.Color(COLORS[i][0], COLORS[i][1], COLORS[i][2]);
-            }
-        }
-        return awtColors;
-
-    }
 
     public static Color[] getColorsForSwt() {
 

@@ -50,6 +50,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleMasterDetailsPage;
@@ -85,15 +86,6 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     private List<JoinElement> myJoinElement;
 
     private Composite parentComposite;
-
-    private static final String DEFAULT_OPERATOR = "="; //$NON-NLS-1$
-
-    private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-
-    private String[] headers = {
-            DefaultMessagesImpl.getString("JoinConditionTableViewer.TableA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.Operator"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnB") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-
-    private int[] widths = { 100, 100, 100, 70, 100, 100, 100 };
 
     private Package columnSetPackage;
 
@@ -141,6 +133,10 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         table.setLinesVisible(true);
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+        String[] headers = {
+                DefaultMessagesImpl.getString("JoinConditionTableViewer.TableA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.Operator"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnB") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+        int[] widths = { 100, 100, 100, 70, 100, 100, 100 };
+
         for (int i = 0; i < headers.length; ++i) {
             TableColumn tableColumn = new TableColumn(table, SWT.LEFT, i);
             tableColumn.setText(headers[i]);
@@ -160,7 +156,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 editors[i] = new TextCellEditor(table);
                 break;
             case 3:
-                editors[i] = new ComboBoxCellEditor(table, OPERATORS, SWT.READ_ONLY);
+                editors[i] = new ComboBoxCellEditor(table, PluginConstant.OPERATORS, SWT.READ_ONLY);
                 break;
             default:
                 editors[i] = null;
@@ -256,7 +252,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
      */
     public JoinElement addJoinElement() {
         JoinElement newJoinElement = RulesFactory.eINSTANCE.createJoinElement();
-        newJoinElement.setOperator(DEFAULT_OPERATOR);
+        newJoinElement.setOperator(PluginConstant.DEFAULT_OPERATOR);
         this.myTableViewer.add(newJoinElement);
         this.myJoinElement.add(newJoinElement);
         this.masterPage.setDirty(true);
@@ -342,8 +338,8 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 break;
             case 3:
                 String stringValue = join.getOperator();
-                int i = OPERATORS.length - 1;
-                while (!stringValue.equals(OPERATORS[i]) && i > 0) {
+                int i = PluginConstant.OPERATORS.length - 1;
+                while (!stringValue.equals(PluginConstant.OPERATORS[i]) && i > 0) {
                     --i;
                 }
                 result = new Integer(i);
@@ -377,7 +373,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                         join.setTableAliasA(valueString);
                         break;
                     case 3:
-                        valueString = OPERATORS[((Integer) value).intValue()].trim();
+                        valueString = PluginConstant.OPERATORS[((Integer) value).intValue()].trim();
                         if (!join.getOperator().equals(valueString)) {
                             join.setOperator(valueString);
                         }

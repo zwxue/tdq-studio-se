@@ -280,7 +280,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         composite.setLayoutData(gd);
         final Button addButton = new Button(composite, SWT.NONE);
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-        addButton.setToolTipText(ADD_BUTTON_TEXT);
+        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
         GridData labelGd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
         labelGd.horizontalAlignment = SWT.RIGHT;
         labelGd.widthHint = 65;
@@ -299,7 +299,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
             }
         });
         final Button romoveButton = new Button(composite, SWT.NONE);
-        romoveButton.setImage(DELETE_BUTTON_IMAGE);
+        romoveButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         romoveButton.setToolTipText(REMOVE_BUTTON_TEXT);
         GridData reGd = new GridData();
         reGd.horizontalAlignment = SWT.LEFT;
@@ -480,8 +480,8 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     private void createEditButtonForJavaLine(Composite detailComp, final Text jarPathText, final Text classNameText) {
         Button button = new Button(detailComp, SWT.PUSH);
         button.setLayoutData(new GridData(GridData.FILL_BOTH));
-        button.setText(EDIT_BUTTON_TEXT);
-        button.setToolTipText(EDIT_BUTTON_TEXT);
+        button.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
+        button.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
         // ((GridData) button.getLayoutData()).widthHint = 100;
         button.addSelectionListener(new SelectionAdapter() {
 

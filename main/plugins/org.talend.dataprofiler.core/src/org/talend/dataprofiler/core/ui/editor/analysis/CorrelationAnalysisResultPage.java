@@ -81,8 +81,6 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
     protected static Logger log = Logger.getLogger(CorrelationAnalysisResultPage.class);
 
-    // private Composite resultComp;
-
     private Composite graphicsAndTableComp;
 
     private CorrelationAnalysisDetailsPage masterPage;

@@ -660,8 +660,7 @@ public final class ImageLib {
         ENodeType type = node.getType();
         if (node instanceof ReportAnalysisRepNode) {
             imageName = ImageLib.ANALYSIS_OBJECT;
-        }
-        if (node instanceof RecycleBinRepNode) {
+        } else if (node instanceof RecycleBinRepNode) {
             imageName = ImageLib.RECYCLEBIN_EMPTY;
         } else if (type.equals(ENodeType.SYSTEM_FOLDER)) {
             String label = viewObject.getLabel();
@@ -726,7 +725,6 @@ public final class ImageLib {
                     imageName = ImageLib.TD_COLUMN;
                 }
             } else if (node instanceof DFColumnRepNode) {
-
                 imageName = ImageLib.TD_COLUMN;
             } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
                 imageName = ImageLib.FOLDERNODE_IMAGE;

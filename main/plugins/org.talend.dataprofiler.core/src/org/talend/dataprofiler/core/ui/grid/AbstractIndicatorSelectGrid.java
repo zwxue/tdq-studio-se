@@ -29,7 +29,6 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -73,13 +72,13 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     static final Color lineColor = new Color(Display.getCurrent(), 180, 200, 220);
 
-    static final Image tickImage = ImageLib.getImage(ImageLib.TICK_IMAGE);
+    // static final Image tickImage = ImageLib.getImage(ImageLib.TICK_IMAGE);
 
-    static final Image indImage = ImageLib.getImage(ImageLib.IND_DEFINITION);
+    // static final Image indImage = ImageLib.getImage(ImageLib.IND_DEFINITION);
 
-    static final Image patternImage = ImageLib.getImage(ImageLib.PATTERN_REG);
+    // static final Image patternImage = ImageLib.getImage(ImageLib.PATTERN_REG);
 
-    static final Image pkImage = ImageLib.getImage(ImageLib.PK_ICON);
+    // static final Image pkImage = ImageLib.getImage(ImageLib.PK_ICON);
 
     static final int COLUMN_WIDTH = 50;
 
@@ -218,7 +217,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
             newCol.setHeaderFont(headerFont);
             IRepositoryNode repNode = _modelElementIndicator.getModelElementRepositoryNode();
             if (repNode instanceof DBColumnRepNode && ((DBColumnRepNode) repNode).isKey()) {
-                newCol.setImage(pkImage);
+                newCol.setImage(ImageLib.getImage(ImageLib.PK_ICON));
             }
             newCol.addListener(SWT.Resize, new Listener() {
 

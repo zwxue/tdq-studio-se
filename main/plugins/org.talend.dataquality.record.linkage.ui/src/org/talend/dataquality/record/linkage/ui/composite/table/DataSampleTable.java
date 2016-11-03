@@ -120,8 +120,6 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     public static final Color COLOR_GREEN = Display.getDefault().getSystemColor(SWT.COLOR_GREEN);
 
-    private static final Color SYSTEM_COLOR = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-
     /**
      * the font used for nattable. for the font size, when the system font size is normal(normal and 125% all is 8), it
      * can show well;when the system font size is bigger(150% is 9), we set the size smaller to make it show well.
@@ -685,7 +683,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
                 IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "EVEN_BODY"); //$NON-NLS-1$
 
-        natTable.setBackground(SYSTEM_COLOR);
+        natTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
         // add the listener for the column header selection
         addCustomSelectionBehaviour();

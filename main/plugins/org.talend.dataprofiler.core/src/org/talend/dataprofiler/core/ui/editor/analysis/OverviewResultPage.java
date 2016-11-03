@@ -115,10 +115,6 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     private SchemaIndicator currentCatalogIndicator = null; // used in sqlserver
 
-    private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema"); //$NON-NLS-1$
-
-    private static final String CATALOG = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog"); //$NON-NLS-1$
-
     private static final int COLUMN_TABLE_WIDTH = 100;
 
     private static final int COLUMN_VIEW_WIDTH = 150;
@@ -376,17 +372,17 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     private void createCatalogTableColumns(Table table) {
         TableColumn tableColumn = new TableColumn(table, SWT.LEFT | SWT.FILL);
-        tableColumn.setText(CATALOG);
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog")); //$NON-NLS-1$
         tableColumn.setWidth(COL1_WIDTH);
-        createNbRowsCol(table, CATALOG);
+        createNbRowsCol(table, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog")); //$NON-NLS-1$
         createCommonStatisticalColumns(table);
     }
 
     private void createSchemaTableColumns(Table table) {
         TableColumn tableColumn = new TableColumn(table, SWT.LEFT);
-        tableColumn.setText(SCHEMA);
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema")); //$NON-NLS-1$
         tableColumn.setWidth(COL1_WIDTH);
-        createNbRowsCol(table, SCHEMA);
+        createNbRowsCol(table, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema")); //$NON-NLS-1$
         createCommonStatisticalColumns(table);
     }
 
@@ -425,9 +421,9 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     private void createCatalogSchemaColumns(Table table) {
         TableColumn tableColumn = new TableColumn(table, SWT.LEFT);
-        tableColumn.setText(CATALOG);
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog")); //$NON-NLS-1$
         tableColumn.setWidth(COL1_WIDTH);
-        createNbRowsCol(table, CATALOG);
+        createNbRowsCol(table, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog")); //$NON-NLS-1$
         tableColumn = new TableColumn(table, SWT.LEFT);
         tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.otherSchemata")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);

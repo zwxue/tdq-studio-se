@@ -101,43 +101,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private static Logger log = Logger.getLogger(IndicatorDefinitionMaterPage.class);
 
-    protected static final Image DELETE_BUTTON_IMAGE = ImageLib.getImage(ImageLib.DELETE_ACTION);
-
-    private static final String DELETE_EXPRESSION_TOOLTIP = DefaultMessagesImpl
-            .getString("IndicatorDefinitionMaterPage.deleteExpression"); //$NON-NLS-1$
-
-    private static final String DELETE_CHARACTER_MAPPING_TOOLTIP = DefaultMessagesImpl
-            .getString("IndicatorDefinitionMaterPage.deleteCharacterMapping"); //$NON-NLS-1$
-
-    private static final String NO_MORE_PATTERN_ERROR = DefaultMessagesImpl
-            .getString("PatternMasterDetailsPage.patternExpression"); //$NON-NLS-1$
-
-    private static final String WARNING = DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"); //$NON-NLS-1$
-
-    private static final String ADDITIONAL_FUNCTIONS_SECTION_TITLE = DefaultMessagesImpl
-            .getString("IndicatorDefinitionMaterPage.AdditionalFunctionsSectionTitle"); //$NON-NLS-1$
-
-    private static final Image ADD_BUTTON_IMAGE = ImageLib.getImage(ImageLib.ADD_ACTION);
-
-    protected static final String EDIT_BUTTON_TEXT = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression"); //$NON-NLS-1$
-
-    private static final String SQL_TEMPLATE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate"); //$NON-NLS-1$
-
-    private static final String DB_VERSION = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion"); //$NON-NLS-1$
-
-    private static final String DATABASE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database"); //$NON-NLS-1$
-
-    protected static final String ADD_BUTTON_TEXT = DefaultMessagesImpl.getString("PatternMasterDetailsPage.add"); //$NON-NLS-1$
-
-    private static final String CHARACTER_MAPPING_SECTION_TITLE = DefaultMessagesImpl
-            .getString("IndicatorDefinitionMaterPage.CharactersMappingSectionTitle"); //$NON-NLS-1$
-
-    private static final String DEFINITION_SECTION_DESCRIPTION = DefaultMessagesImpl
-            .getString("IndicatorDefinitionMaterPage.definitionDecription"); //$NON-NLS-1$
-
-    private static final String DEFINITION_SECTION_TITLE = DefaultMessagesImpl
-            .getString("IndicatorDefinitionMaterPage.definition"); //$NON-NLS-1$
-
     private static final String ADDITIONAL_FUNCTIONS_SPLIT = PluginConstant.SEMICOLON_STRING;
 
     protected Section definitionSection;
@@ -371,7 +334,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createCharactersMappingSection() {
-        charactersMappingSection = createSection(form, topComp, CHARACTER_MAPPING_SECTION_TITLE, null);
+        charactersMappingSection = createSection(form, topComp,
+                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.CharactersMappingSectionTitle"), null); //$NON-NLS-1$
         charactersMappingComp = createCharactersMappingComp();
         charactersMappingSection.setClient(charactersMappingComp);
     }
@@ -421,8 +385,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createCMAddButton(Composite composite) {
         final Button addButton = new Button(composite, SWT.NONE);
-        addButton.setImage(ADD_BUTTON_IMAGE);
-        addButton.setToolTipText(ADD_BUTTON_TEXT);
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.CENTER;
         labelGd.widthHint = 65;
@@ -439,7 +403,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     remainDBTypeListCM.remove(languageName);
                 }
                 if (remainDBTypeListCM.size() == 0) {
-                    MessageDialog.openWarning(Display.getCurrent().getActiveShell(), WARNING, NO_MORE_PATTERN_ERROR);
+                    MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$
                     return;
                 }
 
@@ -552,8 +518,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createDelButton(final Composite parent, final String language) {
         Button delButton = new Button(parent, SWT.PUSH);
-        delButton.setImage(DELETE_BUTTON_IMAGE);
-        delButton.setToolTipText(DELETE_CHARACTER_MAPPING_TOOLTIP);
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        delButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.deleteCharacterMapping")); //$NON-NLS-1$
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
@@ -611,7 +577,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      */
     private void createAdditionalFunctionsSection() {
-        additionalFunctionsSection = createSection(form, topComp, ADDITIONAL_FUNCTIONS_SECTION_TITLE, null);
+        additionalFunctionsSection = createSection(form, topComp,
+                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.AdditionalFunctionsSectionTitle"), null); //$NON-NLS-1$
         additionalFunctionsComp = createAdditionalFunctionsComp();
         additionalFunctionsSection.setClient(additionalFunctionsComp);
     }
@@ -821,8 +788,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createAFAddButton(Composite composite) {
         final Button addButton = new Button(composite, SWT.NONE);
-        addButton.setImage(ADD_BUTTON_IMAGE);
-        addButton.setToolTipText(ADD_BUTTON_TEXT);
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.CENTER;
         labelGd.widthHint = 65;
@@ -839,7 +806,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     remainDBTypeListAF.remove(languageName);
                 }
                 if (remainDBTypeListAF.size() == 0) {
-                    MessageDialog.openWarning(Display.getCurrent().getActiveShell(), WARNING, NO_MORE_PATTERN_ERROR);
+                    MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$
                     return;
                 }
 
@@ -868,7 +837,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * create Definition Section.
      */
     protected void createDefinitionSection() {
-        definitionSection = createSection(form, topComp, DEFINITION_SECTION_TITLE, DEFINITION_SECTION_DESCRIPTION);
+        definitionSection = createSection(form, topComp,
+                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definition"), DefaultMessagesImpl //$NON-NLS-1$
+                        .getString("IndicatorDefinitionMaterPage.definitionDecription")); //$NON-NLS-1$
         definitionComp = createDefinitionComp();
         definitionSection.setClient(definitionComp);
     }
@@ -923,19 +894,19 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         // database Label
         Label databaseLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        databaseLabel.setText(DATABASE);
+        databaseLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database")); //$NON-NLS-1$
         databaseLabel.setLayoutData(new GridData());
         ((GridData) databaseLabel.getLayoutData()).widthHint = 160;
 
         // dbversion Label
         Label dbversionLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        dbversionLabel.setText(DB_VERSION);
+        dbversionLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion")); //$NON-NLS-1$
         dbversionLabel.setLayoutData(new GridData(GridData.BEGINNING));
         ((GridData) dbversionLabel.getLayoutData()).widthHint = 38;
 
         // sqlTemplate Label
         Label sqlTemplateLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        sqlTemplateLabel.setText(SQL_TEMPLATE);
+        sqlTemplateLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(dataBaseTitleComp);
     }
 
@@ -1313,8 +1284,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     protected void createExpressionDelButton(final Composite expressComp, final CCombo languageCombo) {
         Button delButton = new Button(expressComp, SWT.PUSH);
-        delButton.setImage(DELETE_BUTTON_IMAGE);
-        delButton.setToolTipText(DELETE_EXPRESSION_TOOLTIP);
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        delButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.deleteExpression")); //$NON-NLS-1$
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
@@ -1383,8 +1354,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private void createExpressionEditButton(Composite expressComp, final Text patternText, final CCombo combo,
             final Text dbVersionText) {
         Button editButton = new Button(expressComp, SWT.PUSH);
-        editButton.setText(EDIT_BUTTON_TEXT);
-        editButton.setToolTipText(EDIT_BUTTON_TEXT);
+        editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
+        editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
         editButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -1466,8 +1437,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createAddButton(final Composite parent) {
         final Button addButton = new Button(parent, SWT.NONE);
-        addButton.setImage(ADD_BUTTON_IMAGE);
-        addButton.setToolTipText(ADD_BUTTON_TEXT);
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.CENTER;
         labelGd.widthHint = 65;

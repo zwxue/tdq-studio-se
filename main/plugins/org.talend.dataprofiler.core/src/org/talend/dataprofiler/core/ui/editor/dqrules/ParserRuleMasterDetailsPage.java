@@ -16,7 +16,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -62,8 +61,6 @@ import org.talend.utils.sugars.ReturnCode;
  * DOC klliu class global comment. Detailled comment
  */
 public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
-
-    private static Logger log = Logger.getLogger(ParserRuleMasterDetailsPage.class);
 
     final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
 

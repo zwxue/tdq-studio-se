@@ -43,10 +43,6 @@ public final class TableUtils {
 
     public static final Color highlightBlue = new Color(Display.getCurrent(), 223, 232, 246);
 
-    private TableUtils() {
-
-    }
-
     /**
      * add "Right-click for actions" Tooltip.
      * 
@@ -56,8 +52,8 @@ public final class TableUtils {
 
         table.setToolTipText(""); //$NON-NLS-1$
 
-        final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-        shell.setLayout(new FillLayout());
+        // final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay().);
+        // shell.setLayout(new FillLayout());
 
         final Listener labelListener = new Listener() {
 
@@ -93,8 +89,6 @@ public final class TableUtils {
                 TableItem item = table.getItem(mousePoint);
                 switch (event.type) {
                 case SWT.Dispose:
-                    shell.dispose();
-                    break;
                 case SWT.KeyDown:
                 case SWT.KeyUp:
                 case SWT.MouseExit:
@@ -103,10 +97,7 @@ public final class TableUtils {
                 case SWT.MenuDetect:
                 case SWT.MouseDoubleClick:
                     if (actionTooltipShell != null && !actionTooltipShell.isDisposed()) {
-                        actionTooltipShell.dispose();
-                    }
-                    if (actionTooltipLabel != null && !actionTooltipLabel.isDisposed()) {
-                        actionTooltipLabel.dispose();
+                        actionTooltipShell.close();
                     }
                     break;
                 case SWT.MouseHover:
@@ -121,7 +112,7 @@ public final class TableUtils {
             }
 
             private void showActionTooltip(TableItem item, Point mousePoint) {
-                actionTooltipShell = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
+                actionTooltipShell = new Shell(PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.ON_TOP | SWT.TOOL);
                 actionTooltipShell.setLayout(new FillLayout());
                 actionTooltipLabel = new Label(actionTooltipShell, SWT.NONE);
 
@@ -156,8 +147,8 @@ public final class TableUtils {
     public static void addTooltipForTable(final Table table) {
         table.setToolTipText(""); //$NON-NLS-1$
 
-        final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-        shell.setLayout(new FillLayout());
+        // final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
+        // shell.setLayout(new FillLayout());
 
         final Listener labelListener = new Listener() {
 
@@ -192,7 +183,7 @@ public final class TableUtils {
                 TableItem item = table.getItem(mousePoint);
                 switch (event.type) {
                 case SWT.Dispose:
-                    shell.dispose();
+                    // shell.dispose();
                     if (item != null) {
                         item.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                     }
@@ -203,9 +194,8 @@ public final class TableUtils {
                         item.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                     }
                     if (rangeTooltipShell != null && !rangeTooltipShell.isDisposed()) {
-                        rangeTooltipShell.dispose();
+                        rangeTooltipShell.close();
                     }
-
                     break;
                 case SWT.MouseHover:
                     if (item != null) {
@@ -225,7 +215,7 @@ public final class TableUtils {
             }
 
             private void showRangeTooltip(TableItem item, String msg, Point mousePoint) {
-                rangeTooltipShell = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
+                rangeTooltipShell = new Shell(PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.ON_TOP | SWT.TOOL);
                 rangeTooltipShell.setLayout(new FillLayout());
                 rangeTooltipLabel = new Label(rangeTooltipShell, SWT.NONE);
 

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -77,18 +76,6 @@ import org.talend.utils.sugars.ReturnCode;
  * DOC xqliu class global comment. Detailled comment
  */
 public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
-
-    private static Logger log = Logger.getLogger(DQRuleMasterDetailsPage.class);
-
-    private static final String WHERE = "WHERE"; //$NON-NLS-1$
-
-    private static final int CRITICALITY_LEVEL_MIN = 1;
-
-    private static final int CRITICALITY_LEVEL_MAX = 10;
-
-    private static final String DEFAULT_OPERATOR = "="; //$NON-NLS-1$
-
-    private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
 
@@ -294,7 +281,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         } else {
             try {
                 int i = Integer.valueOf(cl).intValue();
-                if (!(i >= CRITICALITY_LEVEL_MIN && i <= CRITICALITY_LEVEL_MAX)) {
+                if (!(i >= PluginConstant.CRITICALITY_LEVEL_MIN && i <= PluginConstant.CRITICALITY_LEVEL_MAX)) {
                     ret = false;
                     msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevelIsInvalid") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
@@ -308,7 +295,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             ret = false;
             msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsEmpty") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
         } else {
-            if (wh.startsWith(WHERE)) {
+            if (wh.startsWith(PluginConstant.WHERE)) {
                 ret = false;
                 msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsInvalid") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
             }
@@ -482,7 +469,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             @Override
             public void widgetSelected(SelectionEvent e) {
                 JoinElement newJoinElement = RulesFactory.eINSTANCE.createJoinElement();
-                newJoinElement.setOperator(DEFAULT_OPERATOR);
+                newJoinElement.setOperator(PluginConstant.DEFAULT_OPERATOR);
                 creatNewJoinElementLine(newJoinElement);
                 tempJoinElements.add(newJoinElement);
                 joinConditionSection.setExpanded(true);
@@ -521,8 +508,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         final CCombo combo = new CCombo(expressComp, SWT.BORDER);
         combo.setEditable(false);
-        combo.setItems(OPERATORS);
-        combo.setText(flag ? fje.getOperator() : DEFAULT_OPERATOR);
+        combo.setItems(PluginConstant.OPERATORS);
+        combo.setText(flag ? fje.getOperator() : PluginConstant.DEFAULT_OPERATOR);
         GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(combo);
         combo.addSelectionListener(new SelectionAdapter() {
 
@@ -614,7 +601,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         public JoinElement getJoinElement() {
             if (joinElement == null) {
                 joinElement = RulesFactory.eINSTANCE.createJoinElement();
-                joinElement.setOperator(DEFAULT_OPERATOR);
+                joinElement.setOperator(PluginConstant.DEFAULT_OPERATOR);
             }
             return joinElement;
         }

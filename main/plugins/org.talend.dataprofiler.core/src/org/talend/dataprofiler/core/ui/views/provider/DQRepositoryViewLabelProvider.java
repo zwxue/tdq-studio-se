@@ -103,8 +103,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider implements IFontProvider, IColorProvider {
 
-    private static Font italicFont;
-
     private static final Color STABLE_SECONDARY_ENTRY_COLOR = new Color(null, 100, 100, 100);
 
     private static final Color STABLE_PRIMARY_ENTRY_COLOR = new Color(null, 0, 0, 0);
@@ -119,16 +117,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     public DQRepositoryViewLabelProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
-
-        if (null == italicFont) {
-            italicFont = Display.getDefault().getSystemFont();
-            FontData[] exfds = italicFont.getFontData();
-            if (exfds.length > 0) {
-                FontData fd = exfds[0];
-                fd.setStyle(SWT.ITALIC);
-                italicFont = new Font(italicFont.getDevice(), fd);
-            }
-        }
     }
 
     @Override
@@ -278,7 +266,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 }
             }
         }
-        // ~
 
         return image;
     }
@@ -474,7 +461,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                         if (connectionItem.getConnection() instanceof DatabaseConnection) {
                             changeURL = ConnectionHelper.isUrlChanged(connectionItem.getConnection());
                             if (changeURL) {
-                                return italicFont;
+                                return getItalicFont();
                             }
                         }
                     }
@@ -484,6 +471,17 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             }
         }
         return super.getFont(element);
+    }
+
+    private Font getItalicFont() {
+        Font italicFont = Display.getDefault().getSystemFont();
+        FontData[] exfds = italicFont.getFontData();
+        if (exfds.length > 0) {
+            FontData fd = exfds[0];
+            fd.setStyle(SWT.ITALIC);
+            italicFont = new Font(italicFont.getDevice(), fd);
+        }
+        return italicFont;
     }
 
     /*

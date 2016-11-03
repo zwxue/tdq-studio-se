@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -73,8 +72,6 @@ import org.talend.utils.sugars.ReturnCode;
  * DOC rli class global comment. Detailled comment
  */
 public class PatternMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
-
-    private static Logger log = Logger.getLogger(PatternMasterDetailsPage.class);
 
     private PatternRepNode patternRepNode;
 
