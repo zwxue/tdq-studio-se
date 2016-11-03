@@ -108,10 +108,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         }
                         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                         CommonNavigator findView = (CommonNavigator) activePage.findView(DQRespositoryView.ID);
-
-                        CommonViewer commonViewer = findView.getCommonViewer();
-                        if (commonViewer != null) {
-                            commonViewer.refresh();
+                        if (findView != null) {
+                            CommonViewer commonViewer = findView.getCommonViewer();
+                            if (commonViewer != null) {
+                                commonViewer.refresh();
+                            }
                         }
                     }
 
