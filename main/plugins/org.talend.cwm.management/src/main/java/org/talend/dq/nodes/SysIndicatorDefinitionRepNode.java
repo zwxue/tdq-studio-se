@@ -44,7 +44,11 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
     }
 
     public IndicatorDefinition getIndicatorDefinition() {
-        return ((TDQIndicatorDefinitionItem) this.getObject().getProperty().getItem()).getIndicatorDefinition();
+        Property property = this.getObject().getProperty();
+        if (property != null && property.getItem() != null) {
+            return ((TDQIndicatorDefinitionItem) property.getItem()).getIndicatorDefinition();
+        }
+        return null;
     }
 
     public void setSystemIndicator(boolean isSystemIndicator) {

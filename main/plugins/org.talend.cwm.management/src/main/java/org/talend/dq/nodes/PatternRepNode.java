@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -44,7 +45,11 @@ public class PatternRepNode extends DQRepositoryNode {
     }
 
     public Pattern getPattern() {
-        return ((TDQPatternItem) this.getObject().getProperty().getItem()).getPattern();
+        Property property = this.getObject().getProperty();
+        if (property != null && property.getItem() != null) {
+            return ((TDQPatternItem) property.getItem()).getPattern();
+        }
+        return null;
     }
 
     @Override

@@ -15,6 +15,7 @@ package org.talend.dq.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.analysis.Analysis;
@@ -42,7 +43,11 @@ public class AnalysisRepNode extends DQRepositoryNode {
     }
 
     public Analysis getAnalysis() {
-        return ((TDQAnalysisItem) this.getObject().getProperty().getItem()).getAnalysis();
+        Property property = this.getObject().getProperty();
+        if (property != null && property.getItem() != null) {
+            return ((TDQAnalysisItem) property.getItem()).getAnalysis();
+        }
+        return null;
     }
 
     /*

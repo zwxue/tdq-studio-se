@@ -15,6 +15,7 @@ package org.talend.dq.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.properties.TDQReportItem;
@@ -46,7 +47,11 @@ public class ReportRepNode extends DQRepositoryNode {
     }
 
     public Report getReport() {
-        return ((TDQReportItem) this.getObject().getProperty().getItem()).getReport();
+        Property property = this.getObject().getProperty();
+        if (property != null && property.getItem() != null) {
+            return ((TDQReportItem) property.getItem()).getReport();
+        }
+        return null;
     }
 
     @Override
