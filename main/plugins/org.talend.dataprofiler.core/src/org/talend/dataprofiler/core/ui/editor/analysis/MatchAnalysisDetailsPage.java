@@ -28,6 +28,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -542,10 +543,10 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
         String keyName = isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY;
         for (ModelElement column : getSelectedColumnsFromHandler()) {
             if (currentKeyColumn.contains(column.getName())) {
-                sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? DataSampleTable.COLOR_RED
-                        : DataSampleTable.COLOR_GREEN, keyName);
+                sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? GUIHelper.COLOR_RED
+                        : GUIHelper.COLOR_GREEN, keyName);
             } else {
-                sampleTable.changeColumnHeaderLabelColor(column.getName(), DataSampleTable.COLOR_BLACK, keyName);
+                sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK, keyName);
             }
         }
         sampleTable.setNatTableFont(sampleTable.getNatTable());
@@ -554,7 +555,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     private void setAllColumnColorToBlack() {
         for (ModelElement column : getSelectedColumnsFromHandler()) {
-            sampleTable.changeColumnHeaderLabelColor(column.getName(), DataSampleTable.COLOR_BLACK, PluginConstant.EMPTY_STRING);
+            sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK, PluginConstant.EMPTY_STRING);
         }
         sampleTable.setNatTableFont(sampleTable.getNatTable());
         sampleTable.refresh();
@@ -1226,10 +1227,10 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
             Boolean isAdded = isKeyAlreadyAdded(columnName);
             if (isAdded) {
                 removeCurrentKeyFromCurrentMatchRule(columnName);
-                sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_BLACK, DataSampleTable.MATCH_EKY);
+                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK, DataSampleTable.MATCH_EKY);
             } else {
                 addCurrentKeyFromCurrentMatchRule(columnName);
-                sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_RED, DataSampleTable.MATCH_EKY);
+                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_RED, DataSampleTable.MATCH_EKY);
             }
         } catch (Exception e) {
             log.error(e, e);
@@ -1298,10 +1299,10 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
         if (isAdded) {
             blockingKeySection.removeBlockingKey(columnName);
-            sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_BLACK, DataSampleTable.BLOCK_EKY);
+            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK, DataSampleTable.BLOCK_EKY);
         } else {
             blockingKeySection.createBlockingKey(columnName);
-            sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_GREEN, DataSampleTable.BLOCK_EKY);
+            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_GREEN, DataSampleTable.BLOCK_EKY);
         }
     }
 

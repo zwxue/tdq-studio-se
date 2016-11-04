@@ -114,12 +114,6 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     public static final String BLOCK_EKY = "BLOCK"; //$NON-NLS-1$
 
-    public static final Color COLOR_BLACK = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-
-    public static final Color COLOR_RED = Display.getDefault().getSystemColor(SWT.COLOR_RED);
-
-    public static final Color COLOR_GREEN = Display.getDefault().getSystemColor(SWT.COLOR_GREEN);
-
     /**
      * the font used for nattable. for the font size, when the system font size is normal(normal and 125% all is 8), it
      * can show well;when the system font size is bigger(150% is 9), we set the size smaller to make it show well.

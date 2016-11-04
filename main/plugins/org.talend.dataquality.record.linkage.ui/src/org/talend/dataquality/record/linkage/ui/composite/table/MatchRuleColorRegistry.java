@@ -26,7 +26,6 @@ public class MatchRuleColorRegistry {
     private static Color[] swtColors;
 
     public static Color[] getColorsForSwt() {
-
         if (null == swtColors) {
             swtColors = new Color[COLORS.length];
             for (int i = 0; i < COLORS.length; i++) {

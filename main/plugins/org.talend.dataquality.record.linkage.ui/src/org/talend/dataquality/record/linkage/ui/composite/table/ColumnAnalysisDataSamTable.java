@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dq.analysis.data.preview.DataPreviewHandler;
@@ -29,8 +28,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *
  */
 public class ColumnAnalysisDataSamTable extends DataSampleTable {
-
-    private Logger log = Logger.getLogger(ColumnAnalysisDataSamTable.class);
 
     private String dataFilter = StringUtils.EMPTY;
 
@@ -85,7 +82,6 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
      */
     @Override
     protected List<Object[]> createPreviewData(ModelElement[] columns) throws SQLException {
-
         DataPreviewHandler dataPreviewHandler = new DataPreviewHandler();
         dataPreviewHandler.setDataFilter(dataFilter);
         return dataPreviewHandler.createPreviewData(columns, getLimitNumber(), isShowRandomData());
