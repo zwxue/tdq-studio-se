@@ -71,6 +71,7 @@ import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
@@ -227,7 +228,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
         ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
         collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns")); //$NON-NLS-1$
-        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        WorkbenchUtils.setHyperlinkImage(collapseAllImageLink, ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override
@@ -240,7 +241,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
         ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
         expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns")); //$NON-NLS-1$
-        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        WorkbenchUtils.setHyperlinkImage(expandAllImageLink, ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override

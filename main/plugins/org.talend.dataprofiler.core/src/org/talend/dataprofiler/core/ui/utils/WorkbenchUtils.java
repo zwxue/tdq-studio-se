@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -43,6 +44,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -628,5 +630,17 @@ public final class WorkbenchUtils {
         }
 
         return part;
+    }
+
+    /**
+     * use this method to set ImageHyperlink's image insteadof using ImageHyperlink.setImage() to avoid new Image()
+     * NOTE: this method only can be used when the ImageHyperlink is alway enable.
+     * 
+     * @param imageHyperlink
+     * @param image
+     */
+    public static void setHyperlinkImage(ImageHyperlink imageHyperlink, Image image) {
+        imageHyperlink.setActiveImage(image);
+        imageHyperlink.setBackgroundImage(image);
     }
 }

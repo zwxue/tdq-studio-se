@@ -75,6 +75,7 @@ import org.talend.dataprofiler.core.ui.events.TableDynamicChartEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
@@ -211,7 +212,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
         ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
         collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("TableMasterDetailsPage.collapseAllTables")); //$NON-NLS-1$
-        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        WorkbenchUtils.setHyperlinkImage(collapseAllImageLink, ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override
@@ -224,7 +225,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
         ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
         expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("TableMasterDetailsPage.expandAllTables")); //$NON-NLS-1$
-        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        WorkbenchUtils.setHyperlinkImage(expandAllImageLink, ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override

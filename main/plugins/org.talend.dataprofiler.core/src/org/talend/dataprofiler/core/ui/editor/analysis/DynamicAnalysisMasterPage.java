@@ -48,6 +48,7 @@ import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -170,7 +171,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
     private void createExpandAllLink(Composite actionBarComp) {
         ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
         expandAllImageLink.setToolTipText(getExpandString());
-        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        WorkbenchUtils.setHyperlinkImage(expandAllImageLink, ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override
@@ -198,7 +199,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
     private void createCollapseAllLink(Composite actionBarComp) {
         ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
         collapseAllImageLink.setToolTipText(getCollapseAllString());
-        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        WorkbenchUtils.setHyperlinkImage(collapseAllImageLink, ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override

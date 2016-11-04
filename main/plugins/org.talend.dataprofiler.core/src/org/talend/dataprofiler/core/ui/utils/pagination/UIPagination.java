@@ -92,7 +92,6 @@ public class UIPagination {
 
     public void init() {
         createNavComposite(composite);
-
         refresh();
     }
 
@@ -411,25 +410,25 @@ public class UIPagination {
         navImageMap.clear();
         // IMG_LNK_NAV_LAST
         Map<Boolean, Image> map = new HashMap<Boolean, Image>();
-        map.put(true, new Image(null, IMG_LNK_NAV_LAST, SWT.IMAGE_COPY));
+        map.put(true, IMG_LNK_NAV_LAST);
         map.put(false, new Image(null, IMG_LNK_NAV_LAST, SWT.IMAGE_DISABLE));
         navImageMap.put(IMG_LNK_NAV_LAST, map);
 
         // IMG_LNK_NAV_NEXT
         Map<Boolean, Image> map2 = new HashMap<Boolean, Image>();
-        map2.put(true, new Image(null, IMG_LNK_NAV_NEXT, SWT.IMAGE_COPY));
+        map2.put(true, IMG_LNK_NAV_NEXT);
         map2.put(false, new Image(null, IMG_LNK_NAV_NEXT, SWT.IMAGE_DISABLE));
         navImageMap.put(IMG_LNK_NAV_NEXT, map2);
 
         // IMG_LNK_NAV_PREV
         Map<Boolean, Image> map3 = new HashMap<Boolean, Image>();
-        map3.put(true, new Image(null, IMG_LNK_NAV_PREV, SWT.IMAGE_COPY));
+        map3.put(true, IMG_LNK_NAV_PREV);
         map3.put(false, new Image(null, IMG_LNK_NAV_PREV, SWT.IMAGE_DISABLE));
         navImageMap.put(IMG_LNK_NAV_PREV, map3);
 
         // IMG_LNK_NAV_FIRST
         Map<Boolean, Image> map4 = new HashMap<Boolean, Image>();
-        map4.put(true, new Image(null, IMG_LNK_NAV_FIRST, SWT.IMAGE_COPY));
+        map4.put(true, IMG_LNK_NAV_FIRST);
         map4.put(false, new Image(null, IMG_LNK_NAV_FIRST, SWT.IMAGE_DISABLE));
         navImageMap.put(IMG_LNK_NAV_FIRST, map4);
     }

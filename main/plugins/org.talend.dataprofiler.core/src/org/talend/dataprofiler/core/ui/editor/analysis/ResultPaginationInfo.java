@@ -50,6 +50,7 @@ import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.IEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -92,7 +93,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
     private void createCollapseAllLink(Composite composite, final String label) {
         ImageHyperlink collapseAllImageLink = uiPagination.getToolkit().createImageHyperlink(composite, SWT.NONE);
         collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseColumn")); //$NON-NLS-1$
-        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        WorkbenchUtils.setHyperlinkImage(collapseAllImageLink, ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override
@@ -118,7 +119,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
     private void createExpandAllLink(Composite composite, final String label) {
         ImageHyperlink expandAllImageLink = uiPagination.getToolkit().createImageHyperlink(composite, SWT.NONE);
         expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandColumn")); //$NON-NLS-1$
-        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        WorkbenchUtils.setHyperlinkImage(expandAllImageLink, ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override
