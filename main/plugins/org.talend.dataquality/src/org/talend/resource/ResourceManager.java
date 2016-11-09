@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
@@ -188,11 +189,20 @@ public final class ResourceManager {
             analysisUUID = ResourceHelper.getUUID(analysis);
             if (AnalysisType.MULTIPLE_COLUMN.equals(analysis.getParameters().getAnalysisType())) {
                 modelElementName = indicator.getAnalyzedElement().getName();
+                //TDQ-12795, only for file delimited connection, the name of the column maybe null, but the label always has value.
+                if(modelElementName==null){
+                    if(indicator.getAnalyzedElement() instanceof MetadataColumn){
+                        modelElementName = ((MetadataColumn)indicator.getAnalyzedElement()).getLabel();
+                    }else{
+                        modelElementName =Path.EMPTY.toString();
+                        log.error(Messages.getString("ResourceManager.CanNotGetColunName"));
+                    }
+                }
             }
         }
-
+        
         return getTempMapDBFolder().append(analysisUUID).append(modelElementName).append(indicatorUUID).append("_").toString();
-
+ 
     }
 
     /**
