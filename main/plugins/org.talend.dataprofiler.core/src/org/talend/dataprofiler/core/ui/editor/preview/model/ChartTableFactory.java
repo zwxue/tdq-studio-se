@@ -31,7 +31,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
@@ -111,10 +110,10 @@ public final class ChartTableFactory {
      * @param currentIndicator
      */
     public static void addJobGenerationMenu(final Menu menu, final Analysis analysis, final Indicator currentIndicator) {
-        final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
-        final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
-        final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
-        final boolean isVertica = ConnectionHelper.isVertica(tdDataProvider);
+        Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
+        boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
+        boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
+        boolean isVertica = ConnectionHelper.isVertica(tdDataProvider);
 
         if (PluginChecker.isTDCPLoaded() && !(isDelimitedFileAnalysis || isHiveConnection)) {
             final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault().getService(
@@ -158,13 +157,7 @@ public final class ChartTableFactory {
     }
 
     public static void addMenuAndTip(final TableViewer tbViewer, final IDataExplorer explorer, final Analysis analysis) {
-
-        final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
-        final boolean isJAVALanguage = ExecutionLanguage.JAVA == currentEngine;
-        final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
-
         final Table table = tbViewer.getTable();
-
         table.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -186,7 +179,7 @@ public final class ChartTableFactory {
 
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
 
-                        if (!isJAVALanguage) {
+                        if (ExecutionLanguage.SQL == analysis.getParameters().getExecutionLanguage()) {
                             boolean showExtraMenu = false;
                             for (final MenuItemEntity itemEntity : itemEntities) {
                                 MenuItem item = new MenuItem(menu, SWT.PUSH);
@@ -200,13 +193,14 @@ public final class ChartTableFactory {
                                         // DBMSLanguage.
                                         if (isPatternMatchingIndicator(indicator)
                                                 && !((PatternExplorer) explorer).isImplementRegexFunction(itemEntity.getLabel())) {
-                                            MessageDialog.openInformation(new Shell(), itemEntity.getLabel(),
+                                            MessageDialog.openInformation(null, itemEntity.getLabel(),
                                                     DefaultMessagesImpl.getString("ChartTableFactory.NoSupportPatternTeradata"));//$NON-NLS-1$
                                             return;
                                         }
 
                                         String query = itemEntity.getQuery();
                                         String editorName = indicator.getName();
+                                        Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
                                         SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                     }
                                 });
@@ -253,7 +247,7 @@ public final class ChartTableFactory {
 
                                     /**
                                      * DOC xqliu Comment method "buildColumnsMap".
-                                     * 
+                                     *
                                      * @param wrInd
                                      * @return
                                      */
@@ -290,7 +284,7 @@ public final class ChartTableFactory {
 
                                     /**
                                      * DOC xqliu Comment method "getUserSelectedMap".
-                                     * 
+                                     *
                                      * @param map
                                      * @return
                                      */
@@ -317,7 +311,7 @@ public final class ChartTableFactory {
 
                                     /**
                                      * DOC xqliu Comment method "getConnectionNode".
-                                     * 
+                                     *
                                      * @param map
                                      * @return
                                      */
@@ -335,7 +329,7 @@ public final class ChartTableFactory {
 
                                     /**
                                      * DOC xqliu Comment method "getColumnNodes".
-                                     * 
+                                     *
                                      * @param map
                                      * @return
                                      */
@@ -419,7 +413,6 @@ public final class ChartTableFactory {
      * @param itemEntity
      */
     public static void createMenuOfGenerateRegularPattern(final Analysis analysis, Menu menu, final ChartDataEntity dataEntity) {
-        final String query = dataEntity.getKey() == null ? dataEntity.getLabel() : dataEntity.getKey().toString();
         MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
         itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
         itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
@@ -427,9 +420,8 @@ public final class ChartTableFactory {
 
             @Override
             public void widgetSelected(SelectionEvent e1) {
-                DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                PatternTransformer pattTransformer = new PatternTransformer(language);
-                createPattern(analysis, query, pattTransformer);
+                String query = dataEntity.getKey() == null ? dataEntity.getLabel() : dataEntity.getKey().toString();
+                createPattern(analysis, query);
             }
         });
     }
@@ -441,11 +433,12 @@ public final class ChartTableFactory {
      * @param itemEntity
      * @param pattTransformer
      */
-    public static void createPattern(Analysis analysis, String query, final PatternTransformer pattTransformer) {
-        String language = pattTransformer.getDbmsLanguage().getDbmsName();
+    public static void createPattern(Analysis analysis, String query) {
+        DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
+        PatternTransformer pattTransformer = new PatternTransformer(language);
         String regex = pattTransformer.getRegexp(query);
         IFolder folder = ResourceManager.getPatternRegexFolder();
-        new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
+        new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

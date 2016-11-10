@@ -87,13 +87,14 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         if (previewChartList == null || uiPagination.getChartComposite() == null) {
             return;
         }
+
         previewChartList.clear();
         clearDynamicList();
 
         if (EditorPreferencePage.isHideGraphicsSectionForSettingsPage() || !TOPChartUtils.getInstance().isTOPChartInstalled()) {
             return;
         }
-        for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             final ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(
                     uiPagination.getChartComposite(), ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
 

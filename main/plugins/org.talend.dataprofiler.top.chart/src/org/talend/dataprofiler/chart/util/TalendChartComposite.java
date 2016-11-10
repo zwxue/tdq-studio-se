@@ -60,7 +60,7 @@ public class TalendChartComposite extends ChartComposite {
     @Override
     public void dispose() {
         super.dispose();
-        if (popupMenu == null) {
+        if (popupMenu == null || popupMenu.isDisposed()) {
             return;
         }
         for (MenuItem item : popupMenu.getItems()) {

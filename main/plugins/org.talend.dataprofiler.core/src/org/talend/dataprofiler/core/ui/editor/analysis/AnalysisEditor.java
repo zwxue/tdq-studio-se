@@ -562,10 +562,9 @@ public class AnalysisEditor extends SupportContextEditor {
             EventManager.getInstance().clearEvent(getMasterPage().getCurrentModelElement(),
                     EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART);
             EventManager.getInstance().clearEvent(getMasterPage().getCurrentModelElement(),
-                    EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART);
+                    EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART);
         }// ~
 
         super.dispose();
     }
-
 }

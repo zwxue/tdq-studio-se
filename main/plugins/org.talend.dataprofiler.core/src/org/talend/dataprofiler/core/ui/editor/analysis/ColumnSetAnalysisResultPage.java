@@ -707,7 +707,9 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
         if (bg != null) {
             bg.dispose();
         }
-        MapDBManager.getInstance().closeDB(masterPage.getCurrentModelElement());
+        if (AnalysisHelper.isJavaExecutionEngine(masterPage.getCurrentModelElement())) {
+            MapDBManager.getInstance().closeDB(masterPage.getCurrentModelElement());
+        }
         super.dispose();
     }
 

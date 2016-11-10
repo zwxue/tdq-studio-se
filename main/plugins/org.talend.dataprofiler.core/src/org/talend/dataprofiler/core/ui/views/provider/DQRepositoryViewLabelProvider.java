@@ -18,7 +18,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
@@ -28,9 +27,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.talend.commons.runtime.model.repository.ERepositoryStatus;
-import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
@@ -94,7 +91,6 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
-import org.talend.utils.exceptions.MissingDriverException;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -317,19 +313,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     @Override
     public String getText(Object element) {
-        try {
-            if (element != null && element instanceof IRepositoryNode) {
-                IRepositoryNode node = (IRepositoryNode) element;
-                return RepositoryNodeHelper.getDisplayLabel(node);
-            }
-        } catch (MissingDriverException e) {
-            if (PluginChecker.isOnlyTopLoaded()) {
-                MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                        DefaultMessagesImpl.getString("ResourceViewContentProvider.warining"), //$NON-NLS-1$
-                        e.getErrorMessage());
-            } else {
-                log.error(e, e);
-            }
+        if (element != null && element instanceof IRepositoryNode) {
+            IRepositoryNode node = (IRepositoryNode) element;
+            return RepositoryNodeHelper.getDisplayLabel(node);
         }
         String text = super.getText(element);
         return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$

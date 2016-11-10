@@ -159,7 +159,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         allExpandableCompositeList.clear();
         columnCompositeMap.clear();
 
-        for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
 
             ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(
                     uiPagination.getChartComposite(),
@@ -195,7 +195,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             exComp.setTextClient(collapseExpandComposite);
             // TDQ-11525~
 
-            final Composite comp = uiPagination.getToolkit().createComposite(exComp);
+            Composite comp = uiPagination.getToolkit().createComposite(exComp);
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
             exComp.setClient(comp);
@@ -216,8 +216,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         }
     }
 
-    private void createResultDataComposite(final Composite comp, final ModelElementIndicator modelElementIndicator) {
-
+    private void createResultDataComposite(Composite comp, ModelElementIndicator modelElementIndicator) {
         if (modelElementIndicator.getIndicators().length != 0) {
             Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
                     .getIndicatorComposite(modelElementIndicator);
@@ -245,7 +244,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
      * @param chartType
      * @param units
      */
-    private void createChart(final Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
+    private void createChart(Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
         DynamicIndicatorModel dyModel = new DynamicIndicatorModel();
 
         // MOD TDQ-8787 20140618 yyin: to let the chart and table use the same dataset
@@ -288,7 +287,6 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
         // create table viewer firstly
         ITableTypeStates tableTypeState = TableTypeStatesFactory.getInstance().getTableState(chartType, units);
-
         ChartDataEntity[] dataEntities = tableTypeState.getDataEntity();
         TableWithData chartData = new TableWithData(chartType, dataEntities);
         TableViewer tableviewer = tableTypeState.getTableForm(composite);
@@ -342,8 +340,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     Object chartComposite = TOPChartUtils.getInstance().createTalendChartComposite(composite, SWT.NONE, chart,
                             true);
                     dyModel.setBawParentChartComp(chartComposite);
-                    Map<String, Object> menuMap = createMenuForAllDataEntity(((Composite) chartComposite).getShell(),
-                            dataExplorer, analysis, ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
+                    Map<String, Object> menuMap = createMenuForAllDataEntity((Composite) chartComposite, dataExplorer, analysis,
+                            ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
                     // call chart service to create related mouse listener
                     if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)
                             || EIndicatorChartType.FREQUENCE_STATISTICS.equals(chartType)) {

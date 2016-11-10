@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -78,7 +80,7 @@ public final class TableUtils {
             }
         };
 
-        Listener tableListener = new Listener() {
+        final Listener tableListener = new Listener() {
 
             Shell actionTooltipShell = null;
 
@@ -137,6 +139,21 @@ public final class TableUtils {
         table.addListener(SWT.MenuDetect, tableListener);
         table.addListener(SWT.Selection, tableListener);
         table.addListener(SWT.KeyUp, tableListener);
+
+        table.addDisposeListener(new DisposeListener() {
+
+            public void widgetDisposed(DisposeEvent e) {
+                table.removeListener(SWT.Dispose, tableListener);
+                table.removeListener(SWT.KeyDown, tableListener);
+                table.removeListener(SWT.MouseHover, tableListener);
+                table.removeListener(SWT.MouseMove, tableListener);
+                table.removeListener(SWT.MouseExit, tableListener);
+                table.removeListener(SWT.MouseDoubleClick, tableListener);
+                table.removeListener(SWT.MenuDetect, tableListener);
+                table.removeListener(SWT.Selection, tableListener);
+                table.removeListener(SWT.KeyUp, tableListener);
+            }
+        });
     }
 
     /**
@@ -146,9 +163,6 @@ public final class TableUtils {
      */
     public static void addTooltipForTable(final Table table) {
         table.setToolTipText(""); //$NON-NLS-1$
-
-        // final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-        // shell.setLayout(new FillLayout());
 
         final Listener labelListener = new Listener() {
 
@@ -172,7 +186,7 @@ public final class TableUtils {
             }
         };
 
-        Listener tableListener = new Listener() {
+        final Listener tableListener = new Listener() {
 
             Shell rangeTooltipShell = null;
 
@@ -183,7 +197,6 @@ public final class TableUtils {
                 TableItem item = table.getItem(mousePoint);
                 switch (event.type) {
                 case SWT.Dispose:
-                    // shell.dispose();
                     if (item != null) {
                         item.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                     }
@@ -236,6 +249,16 @@ public final class TableUtils {
         table.addListener(SWT.KeyDown, tableListener);
         table.addListener(SWT.MouseMove, tableListener);
         table.addListener(SWT.MouseHover, tableListener);
+
+        table.addDisposeListener(new DisposeListener() {
+
+            public void widgetDisposed(DisposeEvent e) {
+                table.removeListener(SWT.Dispose, tableListener);
+                table.removeListener(SWT.KeyDown, tableListener);
+                table.removeListener(SWT.MouseMove, tableListener);
+                table.removeListener(SWT.MouseHover, tableListener);
+            }
+        });
     }
 
     /**

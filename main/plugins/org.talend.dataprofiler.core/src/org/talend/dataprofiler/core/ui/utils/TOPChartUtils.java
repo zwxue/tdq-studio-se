@@ -22,10 +22,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -139,7 +141,6 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         }
         return null;
     }
-
 
     /**
      * 
@@ -283,16 +284,37 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         }
     }
 
-    // checkSql: =true , use the check sql service as the judgement, = false, come from the column ana, use the input
-    // compute as the judgement
-    public Menu createMenu(final Shell shell, final IDataExplorer explorer, final Analysis analysis,
+    /**
+     * create the menu used for the chart in the analysis result page.
+     * 
+     * @param composite NOTE:this parameter must be a composite which can be disposed, because we need its dispose listener to
+     * dispose
+     * the menu. BUT when the composite's shell is top shell, it is NOT allowed, becasue it will never dispose until close the
+     * studio.
+     * @param explorer
+     * @param analysis
+     * @param currentEngine
+     * @param currentDataEntity
+     * @param currentIndicator
+     * @param checkSql : when it is true , use the check sql service as the judgement, when is false, come from the column ana,
+     * use the input compute as the judgement
+     * @return
+     */
+    public Menu createMenu(final Composite composite, final IDataExplorer explorer, final Analysis analysis,
             final ExecutionLanguage currentEngine, final ChartDataEntity currentDataEntity, final Indicator currentIndicator,
             final boolean checkSql) {
-        Menu menu = new Menu(shell, SWT.POP_UP);
+        final Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
+        // TDQ-12737: fix the no more handles error, because we create a potentially unreferenced menu, so we must dispose it
+        composite.addListener(SWT.Dispose, new Listener() {
+
+            public void handleEvent(Event event) {
+                menu.dispose();
+            }
+        });
 
         int createPatternFlag = 0;
         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
-        for (final MenuItemEntity itemEntity : itemEntities) {
+        for (MenuItemEntity itemEntity : itemEntities) {
             MenuItem item = new MenuItem(menu, SWT.PUSH);
             item.setText(itemEntity.geti18nLabel());
             item.setImage(itemEntity.getIcon());
@@ -594,7 +616,7 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     public ICustomerDataset getCustomerDataset(Object dataset) {
         if (isTOPChartInstalled()) {
             Object customerDataset = chartService.getCustomerDataset(dataset);
-            if(customerDataset!=null&&customerDataset instanceof ICustomerDataset){
+            if (customerDataset != null && customerDataset instanceof ICustomerDataset) {
                 return (ICustomerDataset) customerDataset;
             }
         }

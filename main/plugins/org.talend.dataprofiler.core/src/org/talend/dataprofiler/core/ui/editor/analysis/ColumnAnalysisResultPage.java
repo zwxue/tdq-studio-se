@@ -24,7 +24,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -68,8 +67,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     private EventReceiver registerDynamicRefreshEvent;
 
     private EventReceiver switchBetweenPageEvent;
-
-    Composite chartTableComposite = null;
 
     private Composite chartComposite;
 
@@ -185,7 +182,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         resultSection.setTextClient(collapseExpandComposite);
         // TDQ-11525
 
-        chartTableComposite = toolkit.createComposite(resultSection);
+        Composite chartTableComposite = toolkit.createComposite(resultSection);
         chartTableComposite.setLayout(new GridLayout());
         chartTableComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -266,11 +263,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         }
         if (resultComp != null && !resultComp.isDisposed()) {
             resultComp.dispose();
-        }
-        if (chartComposite != null && !chartComposite.isDisposed()) {
-            for (Control control : chartComposite.getChildren()) {
-                control.dispose();
-            }
         }
     }
 

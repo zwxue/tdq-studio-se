@@ -86,12 +86,9 @@ public class UIPagination {
         }
     }
 
-    public UIPagination(FormToolkit toolkit) {
-        this(toolkit, null);
-    }
-
     public void init() {
         createNavComposite(composite);
+        initPageNav();
         refresh();
     }
 
@@ -102,12 +99,6 @@ public class UIPagination {
     }
 
     public void refresh() {
-        if (pageNavComp != null) {
-            pageNavComp.dispose();
-            createNavComposite(composite);
-        }
-        initPageNav();
-        notifyPageNavigator();
         // First show zero-indexed contents.
         if (pageCache.size() > currentPage && pageCache.size() > 0) {
             getCurrentPage().renderContents();
@@ -462,10 +453,6 @@ public class UIPagination {
         go();
     }
 
-    public void setComposite(Composite composite) {
-        this.composite = composite;
-    }
-
     public void setChartComposite(Composite chartComposite) {
         this.chartComposite = chartComposite;
     }
@@ -536,6 +523,13 @@ public class UIPagination {
         IPagination iPagination = getCurrentPage();
         if (iPagination instanceof IndicatorPaginationInfo) {
             ((IndicatorPaginationInfo) iPagination).clearDynamicList();
+        }
+    }
+
+    public void dispose() {
+        IPagination iPagination = getCurrentPage();
+        if (iPagination instanceof IndicatorPaginationInfo) {
+            ((IndicatorPaginationInfo) iPagination).dispose();
         }
     }
 }

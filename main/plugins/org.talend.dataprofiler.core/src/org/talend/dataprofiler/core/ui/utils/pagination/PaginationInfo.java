@@ -12,24 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils.pagination;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
 /**
  * 
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
 public abstract class PaginationInfo implements IPagination {
-
-    private static Logger log = Logger.getLogger(PaginationInfo.class);
 
     protected ScrolledForm form;
 
@@ -51,24 +44,11 @@ public abstract class PaginationInfo implements IPagination {
      * @see org.talend.dataprofiler.core.ui.utils.pagination.IPagination#renderContents()
      */
     public void renderContents() {
-        IRunnableWithProgress rwp = new IRunnableWithProgress() {
-
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("Loading page...", objectList.size()); //$NON-NLS-1$
-                uiPagination.notifyPageNavigator();
-                render();
-                uiPagination.updatePageInfoLabel();
-                monitor.done();
-                uiPagination.pack();
-                form.reflow(true);
-            }
-        };
-        try {
-            ProgressUI.popProgressDialog(rwp, false, true);
-        } catch (Exception ex) {
-            log.error(ex, ex);
-        }
-
+        uiPagination.notifyPageNavigator();
+        render();
+        uiPagination.updatePageInfoLabel();
+        uiPagination.pack();
+        form.reflow(true);
     }
 
     /*

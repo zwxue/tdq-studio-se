@@ -78,6 +78,7 @@ import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
@@ -326,8 +327,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
         disposeChartComposite();
 
         if (uiPagination == null) {
-            uiPagination = new UIPagination(toolkit);
-            uiPagination.setComposite(navigationComposite);
+            uiPagination = new UIPagination(toolkit, navigationComposite);
         } else {
             lastTimePageNumber = uiPagination.getCurrentPageNumber();
             uiPagination.reset();
@@ -648,7 +648,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
         EventManager.getInstance().clearEvent(dataPreviewSection, EventEnum.DQ_SELECT_ELEMENT_AFTER_CREATE_CONNECTION);
-        MapDBManager.getInstance().closeDB(getCurrentModelElement());
+        if (AnalysisHelper.isJavaExecutionEngine(getCurrentModelElement())) {
+            MapDBManager.getInstance().closeDB(getCurrentModelElement());
+        }
 
         // when the user didn't save, revert the connection combo value
         if (oldConn != null && isDirty()) {

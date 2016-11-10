@@ -148,8 +148,7 @@ public class TOPChartService implements ITOPChartService {
         Object barChart = ChartFactory.createBarChart(null, axisXLabel, categoryAxisLabel, (CategoryDataset) dataset,
                 PlotOrientation.VERTICAL, false, true, false);
         Object lineChart = ChartDecorator.decorateBenfordLawChartByKCD((CategoryDataset) dataset, customerDataset,
-                (JFreeChart) barChart, title,
-                categoryAxisLabel, dotChartLabels, formalValues);
+                (JFreeChart) barChart, title, categoryAxisLabel, dotChartLabels, formalValues);
         return lineChart;
 
     }
@@ -221,7 +220,7 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public void addMouseListenerForChart(Object chartComposite, final Map<String, Object> menuMap, final boolean useRowFirst) {
         final ChartComposite chartComp = (ChartComposite) chartComposite;
-        chartComp.addChartMouseListener(new ChartMouseListener() {
+        ChartMouseListener listener = new ChartMouseListener() {
 
             @Override
             public void chartMouseClicked(ChartMouseEvent event) {
@@ -277,13 +276,14 @@ public class TOPChartService implements ITOPChartService {
 
             }
 
-        });
+        };
+        chartComp.addChartMouseListener(listener);
         chartComp.addDisposeListener(new DisposeListener() {
 
             @Override
             public void widgetDisposed(DisposeEvent e) {
+                chartComp.removeChartMouseListener(listener);
                 chartComp.dispose();
-
             }
 
         });
@@ -292,7 +292,7 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public void addMouseListenerForConceptChart(Object chartComposite, final Map<String, Object> actionMap) {
         final ChartComposite chartComp = (ChartComposite) chartComposite;
-        chartComp.addChartMouseListener(new ChartMouseListener() {
+        ChartMouseListener listener = new ChartMouseListener() {
 
             @Override
             public void chartMouseClicked(ChartMouseEvent event) {
@@ -367,13 +367,14 @@ public class TOPChartService implements ITOPChartService {
 
             }
 
-        });
+        };
+        chartComp.addChartMouseListener(listener);
         chartComp.addDisposeListener(new DisposeListener() {
 
             @Override
             public void widgetDisposed(DisposeEvent e) {
+                chartComp.removeChartMouseListener(listener);
                 chartComp.dispose();
-
             }
 
         });
@@ -412,7 +413,7 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public void addListenerToChartComp(Object chartComposite, final String referenceLink, final String menuText) {
         final ChartComposite chartComp = (ChartComposite) chartComposite;
-        chartComp.addChartMouseListener(new ChartMouseListener() {
+        ChartMouseListener listener = new ChartMouseListener() {
 
             @Override
             public void chartMouseClicked(ChartMouseEvent event) {
@@ -439,13 +440,14 @@ public class TOPChartService implements ITOPChartService {
                 // no need to implement
             }
 
-        });
+        };
+        chartComp.addChartMouseListener(listener);
         chartComp.addDisposeListener(new DisposeListener() {
 
             @Override
             public void widgetDisposed(DisposeEvent e) {
+                chartComp.removeChartMouseListener(listener);
                 chartComp.dispose();
-
             }
         });
     }
@@ -916,7 +918,6 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public void addSpecifiedListenersForCorrelationChart(Object chartcomp, final Object chart, final boolean isAvg,
             final boolean isDate, final Map<Integer, Object> keyWithAdapter) {
-        // final Menu menu = (Menu) menu1;
         final ChartComposite chartComp = (ChartComposite) chartcomp;
         chartComp.addChartMouseListener(new ChartMouseListener() {
 
@@ -1101,7 +1102,7 @@ public class TOPChartService implements ITOPChartService {
      */
     @Override
     public Object getCustomerDataset(Object dataset) {
-        if(dataset==null){
+        if (dataset == null) {
             return null;
         }
         if (dataset instanceof EncapsulationCumstomerDataset) {

@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.commons.exception.ExceptionHandler;
@@ -155,7 +154,7 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
      * @param chartDataEntities
      * @return
      */
-    protected Map<String, Object> createMenuForAllDataEntity(Shell shell, DataExplorer dataExplorer, Analysis analysis,
+    protected Map<String, Object> createMenuForAllDataEntity(Composite composite, DataExplorer dataExplorer, Analysis analysis,
             ChartDataEntity[] chartDataEntities) {
         Map<String, Object> menuMap = new HashMap<String, Object>();
         final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
@@ -167,7 +166,7 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
         // TDQ-7275~
         for (ChartDataEntity oneDataEntity : chartDataEntities) {
             Indicator indicator = oneDataEntity.getIndicator();
-            Menu menu = TOPChartUtils.getInstance().createMenu(shell, dataExplorer, analysis, currentEngine, oneDataEntity,
+            Menu menu = TOPChartUtils.getInstance().createMenu(composite, dataExplorer, analysis, currentEngine, oneDataEntity,
                     indicator, false);
             ChartTableFactory.addJobGenerationMenu(menu, analysis, indicator);
 
