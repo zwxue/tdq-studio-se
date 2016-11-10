@@ -220,7 +220,7 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public void addMouseListenerForChart(Object chartComposite, final Map<String, Object> menuMap, final boolean useRowFirst) {
         final ChartComposite chartComp = (ChartComposite) chartComposite;
-        ChartMouseListener listener = new ChartMouseListener() {
+        final ChartMouseListener listener = new ChartMouseListener() {
 
             @Override
             public void chartMouseClicked(ChartMouseEvent event) {
@@ -292,7 +292,7 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public void addMouseListenerForConceptChart(Object chartComposite, final Map<String, Object> actionMap) {
         final ChartComposite chartComp = (ChartComposite) chartComposite;
-        ChartMouseListener listener = new ChartMouseListener() {
+        final ChartMouseListener listener = new ChartMouseListener() {
 
             @Override
             public void chartMouseClicked(ChartMouseEvent event) {
@@ -413,7 +413,7 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public void addListenerToChartComp(Object chartComposite, final String referenceLink, final String menuText) {
         final ChartComposite chartComp = (ChartComposite) chartComposite;
-        ChartMouseListener listener = new ChartMouseListener() {
+        final ChartMouseListener listener = new ChartMouseListener() {
 
             @Override
             public void chartMouseClicked(ChartMouseEvent event) {
