@@ -492,6 +492,20 @@
          unpack="false"/>
 
    <plugin
+         id="org.talend.libraries.clearspring.analytics"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataquality.statistics"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.talend.dataquality.record.linkage"
          download-size="0"
          install-size="0"
