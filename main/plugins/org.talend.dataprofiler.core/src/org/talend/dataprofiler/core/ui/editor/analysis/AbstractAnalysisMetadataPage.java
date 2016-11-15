@@ -797,7 +797,13 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             public void verifyText(VerifyEvent e) {
                 String inputValue = e.text;
-                // if it is context varible, do not check
+                // TDQ-8528 improvement: no allow '0'.
+                String textContent = numberOfConnectionsPerAnalysisText.getText();
+                if (StringUtils.isEmpty(textContent) && "0".equals(inputValue)) { //$NON-NLS-1$
+                    e.doit = false;
+                    return;
+                }
+                // if it is context variable, do not check
                 if (!ContextHelper.isContextVar(inputValue)) {
                     Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
                     char[] charArray = inputValue.toCharArray();
