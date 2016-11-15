@@ -406,6 +406,7 @@ public class AnalysisRecordGroupingUtils {
             analysisMatchRecordGrouping.initialize();
         } else {
             analysisMatchRecordGrouping.setRecordLinkAlgorithm(RecordMatcherType.T_SwooshAlgorithm);
+            analysisMatchRecordGrouping.setOrginalInputColumnSize(columnMap.size()+1);
             analysisMatchRecordGrouping.initialize();
             SurvivorShipAlgorithmParams survivorShipAlgorithmParams = createSurvivorShipAlgorithmParams(
                     analysisMatchRecordGrouping, recordMatchingIndicator, columnMap);

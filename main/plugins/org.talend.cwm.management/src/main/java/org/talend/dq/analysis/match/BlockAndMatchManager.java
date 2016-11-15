@@ -36,6 +36,7 @@ import org.talend.dq.analysis.AnalysisRecordGroupingUtils;
 
 /**
  * For each record: find its related block, and use this block's matching to do the match.
+ * Used for running the match analysis
  * 
  */
 public class BlockAndMatchManager {
@@ -149,7 +150,7 @@ public class BlockAndMatchManager {
 
         String blockkey = blockKeyGenerator.getGenKey(blockKeyDefinition, columnValueMap);
         // add the block key into the record
-        Attribute attribute = new Attribute(MatchAnalysisConstant.BLOCK_KEY);
+        Attribute attribute = new Attribute(MatchAnalysisConstant.BLOCK_KEY,record.getAttributes().size());
         attribute.setValue(blockkey);
         record.getAttributes().add(attribute);
 

@@ -19,19 +19,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.genkey.BlockingKeyHandler;
 import org.talend.dataquality.record.linkage.grouping.AnalysisMatchRecordGrouping;
 import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
+import org.talend.dataquality.record.linkage.grouping.swoosh.AnalysisSwooshMatchRecordGrouping;
 import org.talend.dq.analysis.AnalysisRecordGroupingUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * created by zshen on Sep 16, 2013 Detailled comment
+ * Used for the "chart" button in the analysis.
  * 
  */
 public class ExecuteMatchRuleHandler {
@@ -109,7 +113,11 @@ public class ExecuteMatchRuleHandler {
         List<Map<String, String>> blockKeySchema = AnalysisRecordGroupingUtils.getBlockKeySchema(recordMatchingIndicator);
         Map<String, String> colName2IndexMap = new HashMap<String, String>();
         for (MetadataColumn metaCol : columnMap.keySet()) {
-            colName2IndexMap.put(metaCol.getName(), columnMap.get(metaCol));
+            if(metaCol.getName()==null){
+                colName2IndexMap.put(metaCol.getLabel(), columnMap.get(metaCol));
+            }else{
+                colName2IndexMap.put(metaCol.getName(), columnMap.get(metaCol));
+            }
         }
         BlockingKeyHandler blockKeyHandler = new BlockingKeyHandler(blockKeySchema, colName2IndexMap);
         blockKeyHandler.setInputData(matchRows);
@@ -131,7 +139,13 @@ public class ExecuteMatchRuleHandler {
     private void computeMatchGroupResult(Map<MetadataColumn, String> columnMap, MatchGroupResultConsumer matchResultConsumer,
             List<Object[]> matchRows, RecordMatchingIndicator recordMatchingIndicator) throws BusinessException {
         boolean isOpenWarningDialog = false;
-        AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
+        AnalysisMatchRecordGrouping analysisMatchRecordGrouping = null;
+        if (recordMatchingIndicator.getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm()
+                .equals(RecordMatcherType.T_SwooshAlgorithm.name())) {
+            analysisMatchRecordGrouping = new AnalysisSwooshMatchRecordGrouping(matchResultConsumer);
+        } else {
+            analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
+        }
         AnalysisRecordGroupingUtils.setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
         analysisMatchRecordGrouping.setMatchRows(matchRows);
 
