@@ -770,12 +770,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             public void verifyText(VerifyEvent e) {
                 String inputValue = e.text;
-                // TDQ-8528 improvement: no allow '0'.
-                String textContent = numberOfConnectionsPerAnalysisText.getText();
-                if (StringUtils.isEmpty(textContent) && "0".equals(inputValue)) { //$NON-NLS-1$
-                    e.doit = false;
-                    return;
-                }
                 // if it is context variable, do not check
                 if (!ContextHelper.isContextVar(inputValue)) {
                     Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
@@ -798,9 +792,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @throws DataprofilerCoreException
      */
     protected void saveNumberOfConnectionsPerAnalysis() throws DataprofilerCoreException {
-        // check whether the field is Blank
-        if (StringUtils.isBlank(numberOfConnectionsPerAnalysisText.getText().trim())) {
-            throw new DataprofilerCoreException(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField", //$NON-NLS-1$
+        String numberStr = numberOfConnectionsPerAnalysisText.getText().trim();
+        // check whether the field is valid(not blank and not 0).
+        if (StringUtils.isBlank(numberStr) || Integer.parseInt(numberStr) == 0) {
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
+                    "AbstractAnalysisMetadataPage.connectionPerAnaError", //$NON-NLS-1$
                     DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$
 
         }
