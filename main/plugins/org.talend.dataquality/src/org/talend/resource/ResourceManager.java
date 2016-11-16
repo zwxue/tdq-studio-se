@@ -192,7 +192,11 @@ public final class ResourceManager {
                 //TDQ-12795, only for file delimited connection, the name of the column maybe null, but the label always has value.
                 if(modelElementName==null){
                     if(indicator.getAnalyzedElement() instanceof MetadataColumn){
-                        modelElementName = ((MetadataColumn)indicator.getAnalyzedElement()).getLabel();
+                        if(indicator.getAnalyzedElement().eIsProxy()){
+                            modelElementName =Path.EMPTY.toString();
+                        }else{
+                            modelElementName = ((MetadataColumn)indicator.getAnalyzedElement()).getLabel();
+                        }
                     }else{
                         modelElementName =Path.EMPTY.toString();
                         log.error(Messages.getString("ResourceManager.CanNotGetColunName"));
@@ -200,9 +204,7 @@ public final class ResourceManager {
                 }
             }
         }
-        
         return getTempMapDBFolder().append(analysisUUID).append(modelElementName).append(indicatorUUID).append("_").toString();
- 
     }
 
     /**
