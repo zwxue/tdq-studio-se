@@ -488,10 +488,11 @@ public class SqlexplorerService implements ISqlexplorerService {
         Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(parentPackageElement);
 
         INode catalogOrSchemaNode = null;
-        // TDQ-12005: fix Exasol database can view index/keys well
-        if (isExasol(url) && !catalogs.isEmpty()) {
+        // TDQ-12005: fix Exasol/hive(TDQ-11887: hdp20 at least) database can view index/keys well
+        String findCatalogNodeName = isExasol(url) ? "EXA_DB" : (isHive(url) ? "NoCatalog" : "");
+        if (!findCatalogNodeName.equals("") && !catalogs.isEmpty()) {
             for (INode catalogNode : catalogs) {
-                if ("EXA_DB".equalsIgnoreCase(catalogNode.getName())) {
+                if (findCatalogNodeName.equalsIgnoreCase(catalogNode.getName())) {
                     catalogOrSchemaNode = catalogNode;
                     break;
                 }
@@ -628,6 +629,10 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     private boolean isExasol(String url) {
         return StringUtils.startsWithIgnoreCase(url, "jdbc:exa");
+    }
+
+    private boolean isHive(String url) {
+        return StringUtils.startsWithIgnoreCase(url, "jdbc:hive");
     }
 
     /*
