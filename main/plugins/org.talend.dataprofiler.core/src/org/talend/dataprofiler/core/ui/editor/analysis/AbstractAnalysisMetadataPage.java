@@ -952,7 +952,12 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     public void enableExecuteLanguage() {
-        execCombo.setEnabled(true);
+        // TDQ-12766: when "Run with sample data" checked, change "Execution engine" nothing
+        if (runWithSampleBtn != null && runWithSampleBtn.getSelection()) {
+            // can not set enable
+        } else {
+            execCombo.setEnabled(true);
+        }
     }
 
     protected boolean includeJavaEnginIndicator() {
