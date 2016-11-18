@@ -207,6 +207,8 @@ public class AnalysisEditor extends SupportContextEditor {
         }
         setEditorObject(getMasterPage().getCurrentRepNode());
         super.doSave(monitor);
+        
+        masterPage.setOldDataproviderName(masterPage.getCurrentModelElement().getName());
 
     }
 
