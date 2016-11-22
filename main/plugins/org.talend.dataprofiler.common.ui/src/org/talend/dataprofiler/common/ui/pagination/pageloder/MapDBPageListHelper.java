@@ -31,8 +31,13 @@ public class MapDBPageListHelper {
             long fromIndex, long toIndex, long totalSize) {
 
         List<Object[]> content = db.subList(fromIndex, toIndex, indexMap, dataValidator);
-
-        return new PageResult<Object[]>(content, totalSize);
+        long elementSize = content.size();
+        long pageSize = toIndex - fromIndex;
+        long realTotalSize = totalSize;
+        if (pageSize > elementSize) {
+            realTotalSize = toIndex - pageSize + elementSize;
+        }
+        return new PageResult<Object[]>(content, realTotalSize);
     }
 
     public static <T> PageResult<Object[]> createPage(AbstractDB<T> db, Map<Long, T> indexMap, ColumnFilter filter,

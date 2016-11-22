@@ -20,6 +20,8 @@ import org.talend.cwm.indicator.DataValidation;
  */
 public class DataValidationImpl implements DataValidation {
 
+    private boolean checkKey = false;
+
     /*
      * (non-Javadoc)
      * 
@@ -28,6 +30,26 @@ public class DataValidationImpl implements DataValidation {
     @Override
     public boolean isValid(Object inputData) {
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.indicator.DataValidation#isCheckKey()
+     */
+    @Override
+    public boolean isCheckKey() {
+        return checkKey;
+    }
+
+    /**
+     * Sets the checkKey.
+     * 
+     * @param checkKey the checkKey to set
+     */
+    @Override
+    public void setCheckKey(boolean checkKey) {
+        this.checkKey = checkKey;
     }
 
 }
