@@ -116,7 +116,7 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
      * @param parent
      */
     private void createRightContainer(Composite parent) {
-        Composite right = createComposite(parent, SWT.BORDER);
+        Composite right = createComposite(parent, SWT.NONE);
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         if (!keepLeft) {
             gridData = new GridData(SWT.END, SWT.CENTER, true, false, 2, 1);
