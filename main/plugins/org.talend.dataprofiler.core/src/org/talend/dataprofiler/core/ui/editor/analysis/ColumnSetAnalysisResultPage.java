@@ -32,9 +32,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.nebula.widgets.pagination.AbstractPageControllerComposite;
+import org.eclipse.nebula.widgets.pagination.IPageChangedListener;
 import org.eclipse.nebula.widgets.pagination.IPageLoader;
 import org.eclipse.nebula.widgets.pagination.PageLoaderStrategyHelper;
 import org.eclipse.nebula.widgets.pagination.PageableController;
@@ -66,6 +67,8 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
+import org.talend.dataprofiler.core.ui.editor.analysis.renderer.ColumnSetNavigationPageGraphicsRenderer;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternsDataValidation;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
@@ -115,9 +118,19 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
     private TableViewer columnsElementViewer;
 
-    private List<Map<Integer, RegexpMatchingIndicator>> tableFilterResult;
+    private TableFilterResult tableFilterResult = new TableFilterResult(null);
 
     private DataFilterType filterType = DataFilterType.ALL_DATA;
+
+    private PageableController controller = null;
+
+    private IPageChangedListener createLoadPageAndReplaceItemsListener = null;
+
+    private Composite buttonComposite = null;
+
+    private AbstractDB<Object> mapDB = null;
+
+    private AbstractPageControllerComposite resultAndPageButtonsDecorator = null;
 
     /**
      * @param editor
@@ -320,13 +333,14 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
                     List<Indicator> indicatorsList = masterPage.getCurrentModelElement().getResults().getIndicators();
                     SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
                     wizard.setFilterType(filterType);
-                    wizard.setOldTableInputList(ColumnSetAnalysisResultPage.this.tableFilterResult);
+                    wizard.setOldTableInputList(ColumnSetAnalysisResultPage.this.tableFilterResult.getTableFilterResult());
                     WizardDialog dialog = new WizardDialog(null, wizard);
                     dialog.setPageSize(300, 400);
                     wizard.setContainer(dialog);
                     wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));//$NON-NLS-1$
                     if (WizardDialog.OK == dialog.open()) {
-                        ColumnSetAnalysisResultPage.this.tableFilterResult = wizard.getPatternSelectPage().getTableInputList();
+                        ColumnSetAnalysisResultPage.this.tableFilterResult = new TableFilterResult(wizard.getPatternSelectPage()
+                                .getTableInputList());
                         filterType = wizard.getPatternSelectPage().getFilterType();
                         columnsElementViewer.refresh();
                     }
@@ -355,7 +369,6 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
             columnsElementViewer.setContentProvider(provider);
             columnsElementViewer.setLabelProvider(provider);
             columnsElementViewer.setInput(tableRows);
-            columnsElementViewer.addFilter(new PatternDataFilter());
             for (int i = 0; i < tableColumnNames.size(); i++) {
                 table.getColumn(i).pack();
             }
@@ -383,7 +396,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
             sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             sectionTableComp.setLayout(new GridLayout());
             // MOD zshen for feature 14000
-            AbstractDB<Object> mapDB = null;
+
             try {
                 mapDB = MapDBUtils.getMapDB(StandardDBName.dataSection.name(), ssIndicator);
             } catch (IOError error) {
@@ -403,15 +416,17 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
                     List<Indicator> indicatorsList = masterPage.getCurrentModelElement().getResults().getIndicators();
                     SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
                     wizard.setFilterType(filterType);
-                    wizard.setOldTableInputList(ColumnSetAnalysisResultPage.this.tableFilterResult);
+                    wizard.setOldTableInputList(ColumnSetAnalysisResultPage.this.tableFilterResult.getTableFilterResult());
                     WizardDialog dialog = new WizardDialog(null, wizard);
                     dialog.setPageSize(300, 400);
                     wizard.setContainer(dialog);
                     wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));//$NON-NLS-1$
                     if (WizardDialog.OK == dialog.open()) {
-                        ColumnSetAnalysisResultPage.this.tableFilterResult = wizard.getPatternSelectPage().getTableInputList();
+                        ColumnSetAnalysisResultPage.this.tableFilterResult = new TableFilterResult(wizard.getPatternSelectPage()
+                                .getTableInputList());
                         filterType = wizard.getPatternSelectPage().getFilterType();
                         columnsElementViewer.refresh();
+                        redrawController();
                     }
                 }
 
@@ -430,7 +445,6 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
             table.setHeaderVisible(true);
             TableSectionViewerProvider provider = new TableSectionViewerProvider();
             columnsElementViewer.setContentProvider(provider);
-            columnsElementViewer.addFilter(new PatternDataFilter());
             columnSetElementSection.setClient(sectionTableComp);
             columnSetElementSection.setExpanded(false);
             int pageSize = 100;
@@ -438,19 +452,14 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
             setupTableGridDataLimitedSize(table, pageSize);
 
             // add pagation control
-            final PageableController controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
-            if (mapDB != null) {
-                final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object>(mapDB);
+            controller = new PageableController(MapDBPageConstant.NUMBER_PER_PAGE);
 
-                controller.addPageChangedListener(PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
-                        columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null));
-                ResultAndNavigationPageGraphicsRenderer resultAndPageButtonsDecorator = new ResultAndNavigationPageGraphicsRenderer(
-                        sectionTableComp, SWT.NONE, controller);
-                resultAndPageButtonsDecorator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            if (mapDB != null) {
+                redrawPagationComposite(sectionTableComp, null, true);
             }
             createColumns(controller, ssIndicator);
             // Set current page to 0 to refresh the table
-            controller.setCurrentPage(0);
+            controller.reset();
             for (TableColumn column : table.getColumns()) {
                 column.pack();
             }
@@ -459,6 +468,49 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
             columnSetElementSection.setEnabled(false);
         }
         return columnSetElementSection;
+    }
+
+    private void redrawController() {
+        Composite parent = buttonComposite.getParent();
+        if (ColumnSetAnalysisResultPage.this.tableFilterResult.isEmptyResult() || DataFilterType.ALL_DATA == filterType) {
+            redrawPagationComposite(parent, null, true);
+        } else {
+            redrawPagationComposite(parent, ColumnSetAnalysisResultPage.this.tableFilterResult.getTableFilterResult(), false);
+        }
+    }
+
+    /**
+     * DOC zshen Comment method "redrawPagationComposite".
+     * 
+     * @param parent
+     */
+    private void redrawPagationComposite(Composite parent, List<Map<Integer, RegexpMatchingIndicator>> patternList,
+            boolean withPageNumberButton) {
+        final IPageLoader<PageResult<Object[]>> pageLoader = new MapDBPageLoader<Object>(mapDB, new PatternsDataValidation(
+                patternList, filterType), mapDB.size());
+        controller.removePageChangedListener(createLoadPageAndReplaceItemsListener);
+        controller.removePageChangedListener(resultAndPageButtonsDecorator);
+        controller.setCurrentPage(-1);
+        createLoadPageAndReplaceItemsListener = PageLoaderStrategyHelper.createLoadPageAndReplaceItemsListener(controller,
+                columnsElementViewer, pageLoader, PageResultContentProvider.getInstance(), null);
+        controller.addPageChangedListener(createLoadPageAndReplaceItemsListener);
+        if (buttonComposite != null) {
+            buttonComposite.dispose();
+        }
+        buttonComposite = new Composite(parent, SWT.NONE);
+        buttonComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        buttonComposite.setLayout(new GridLayout());
+
+        if (withPageNumberButton) {
+            resultAndPageButtonsDecorator = new ResultAndNavigationPageGraphicsRenderer(buttonComposite, SWT.NONE, controller);
+        } else {
+            resultAndPageButtonsDecorator = new ColumnSetNavigationPageGraphicsRenderer(buttonComposite, SWT.NONE, controller);
+
+        }
+        GridData gridData = new GridData(GridData.FILL_BOTH);
+        resultAndPageButtonsDecorator.setLayoutData(gridData);
+        controller.reset();
+        parent.layout();
     }
 
     /**
@@ -604,51 +656,6 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
         }
     }
 
-    /**
-     * 
-     * zshen ColumnSetResultPage class global comment. Detailled comment
-     */
-    private class PatternDataFilter extends ViewerFilter {
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-         * java.lang.Object)
-         */
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (DataFilterType.ALL_DATA.equals(filterType)) {
-                return true;
-            }
-            if (tableFilterResult != null) {
-                for (Map<Integer, RegexpMatchingIndicator> tableItem : ColumnSetAnalysisResultPage.this.tableFilterResult) {
-                    if (element instanceof Object[]) {
-                        for (int index = 0; index < ((Object[]) element).length; index++) {
-                            RegexpMatchingIndicator regMatIndicator = tableItem.get(index);
-                            if (regMatIndicator == null) {
-                                continue;
-                            }
-                            String regex = regMatIndicator.getRegex();
-                            Pattern p = java.util.regex.Pattern.compile(regex);
-
-                            Object theElement = ((Object[]) element)[index];
-                            if (theElement == null) {
-                                theElement = "null";//$NON-NLS-1$
-                            }
-                            Matcher m = p.matcher(String.valueOf(theElement));
-                            if (m.find() ^ DataFilterType.MATCHES.equals(filterType)) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -736,8 +743,8 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
      * @return get the color of the element.
      */
     private Color getMatchColor(Object element, int columnIndex) {
-        if (tableFilterResult != null) {
-            for (Map<Integer, RegexpMatchingIndicator> tableItem : this.tableFilterResult) {
+        if (tableFilterResult.getTableFilterResult() != null) {
+            for (Map<Integer, RegexpMatchingIndicator> tableItem : this.tableFilterResult.getTableFilterResult()) {
                 RegexpMatchingIndicator regMatIndicator = tableItem.get(columnIndex);
                 if (regMatIndicator == null) {
                     continue;
@@ -761,11 +768,11 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
     }
 
     public List<Map<Integer, RegexpMatchingIndicator>> getTableFilterResult() {
-        return tableFilterResult;
+        return tableFilterResult.getTableFilterResult();
     }
 
     public void setTableFilterResult(List<Map<Integer, RegexpMatchingIndicator>> tableFilterResult) {
-        this.tableFilterResult = tableFilterResult;
+        this.tableFilterResult = new TableFilterResult(tableFilterResult);
     }
 
 }

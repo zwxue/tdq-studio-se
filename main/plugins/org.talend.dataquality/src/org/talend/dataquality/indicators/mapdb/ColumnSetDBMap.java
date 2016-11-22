@@ -131,7 +131,7 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
 
         while (iterator.hasNext()) {
             List<Object> next = iterator.next();
-            if (dataValiator != null && !dataValiator.isValid(this.get(next))) {
+            if (dataValiator != null && !dataValiator.isValid(dataValiator.isCheckKey() ? next : this.get(next))) {
                 continue;
             }
             if (index == 0 && fromKey == null && indexMap != null) {
@@ -147,7 +147,13 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
                 break;
             }
             if (stratToRecord == true) {
-                returnList.add(next.toArray());
+                Object arrayElement[] = new Object[next.size() + 1];
+                for (int i = 0; i < next.size(); i++) {
+                    arrayElement[i] = next.get(i);
+                }
+                Long value = this.get(next);
+                arrayElement[next.size()] = (value == null ? "" : value.toString()); //$NON-NLS-1$
+                returnList.add(arrayElement);
             }
             index++;
 
