@@ -82,7 +82,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
         } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
             return String.valueOf(mkd.getThreshold());
         } else if (MatchAnalysisConstant.TOKENIZATION_TYPE.equalsIgnoreCase(property)) {
-            return TokenizedResolutionMethod.getTypeByValue(mkd.getTokenizationType()).ordinal();
+            return TokenizedResolutionMethod.getTypeByValueWithDefault(mkd.getTokenizationType()).ordinal();
         }
         return null;
 

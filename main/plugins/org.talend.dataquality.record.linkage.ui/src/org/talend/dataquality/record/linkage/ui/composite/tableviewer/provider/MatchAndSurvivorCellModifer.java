@@ -112,7 +112,7 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
         } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
             return mkd.getSurvivorShipKey().getFunction().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.TOKENIZATION_TYPE.equalsIgnoreCase(property)) {
-            return TokenizedResolutionMethod.getTypeByValue(mkd.getMatchKey().getTokenizationType()).ordinal();
+            return TokenizedResolutionMethod.getTypeByValueWithDefault(mkd.getMatchKey().getTokenizationType()).ordinal();
         }
         return null;
 
