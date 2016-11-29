@@ -12,13 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp.intro;
 
-
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -53,7 +52,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction preferenceAction;
 
-    private IWorkbenchAction aboutAction;
+    private NewAboutAction aboutAction;
 
     private IWorkbenchAction saveAction;
 
@@ -103,8 +102,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         helpAction = ActionFactory.HELP_CONTENTS.create(workbenchWindow);
         register(helpAction);
 
-        aboutAction = ActionFactory.ABOUT.create(workbenchWindow);
-        register(aboutAction);
+        aboutAction = new NewAboutAction(workbenchWindow);
 
         resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(workbenchWindow);
         register(resetPerspectiveAction);
@@ -151,6 +149,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         helpMenu.add(welcomeAction);
         helpMenu.add(helpAction);
         helpMenu.add(aboutAction);
+
         // ADD qiongli 2010-6-3,bug 0012874
         CheatSheetCategoryBasedSelectionAction cscAction = new CheatSheetCategoryBasedSelectionAction();
         cscAction.setText(Messages.getString("ApplicationActionBarAdvisor.CheatSheets"));//$NON-NLS-1$
@@ -199,9 +198,27 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(ActionFactory.SAVE.create(window));
 
         // add feature:15174
-        //Workbench3xImplementation4CoolBar.createLinksToolbarItem(coolBar);
+        // Workbench3xImplementation4CoolBar.createLinksToolbarItem(coolBar);
         IToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         toolBarManager.add(new LinksToolbarItem());
         coolBar.add(new ToolBarContributionItem(toolBarManager, LinksToolbarItem.COOLITEM_LINKS_ID));
+    }
+
+    private class NewAboutAction extends Action {
+
+        IWorkbenchAction aboutAction;
+
+        public NewAboutAction(IWorkbenchWindow workbenchWindow) {
+            super(""); //$NON-NLS-1$
+            aboutAction = ActionFactory.ABOUT.create(workbenchWindow);
+            register(aboutAction);
+            this.setText(aboutAction.getText());
+            this.setToolTipText(aboutAction.getToolTipText());
+        }
+
+        @Override
+        public void run() {
+            aboutAction.run();
+        }
     }
 }
