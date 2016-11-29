@@ -24,21 +24,17 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
-import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
-import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
-import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
@@ -327,35 +323,6 @@ public final class AnalysisHelper {
             return setStringDataFilter(analysis, datafilterString);
         }
 
-    }
-
-    /**
-     * Method "containsRowCount".
-     * 
-     * @param analysis
-     * @return true if this analysis contains the row count indicator
-     */
-    public static boolean containsRowCount(Analysis analysis) {
-        final AnalysisResult results = analysis.getResults();
-        if (results == null) {
-            return false;
-        }
-        final EList<Indicator> indicators = results.getIndicators();
-        for (Indicator indicator : indicators) {
-            if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
-                return true;
-            }
-            if (IndicatorsPackage.eINSTANCE.getCountsIndicator().equals(indicator.eClass())) {
-                CountsIndicator cInd = (CountsIndicator) indicator;
-                if (cInd.getRowCountIndicator() != null) {
-                    return true;
-                }
-            }
-            if (ColumnsetPackage.eINSTANCE.getSimpleStatIndicator().equals(indicator.eClass())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static Domain createDomain(Analysis analysis, String datafilterString) {

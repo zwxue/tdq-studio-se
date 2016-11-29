@@ -29,11 +29,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.DateTimeDialog;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
@@ -42,8 +47,11 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
@@ -73,7 +81,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private static final String PERCENTAGE_THRESHOLD = "Percentage Threshold"; //$NON-NLS-1$
 
-    private boolean isContainRowCount;
+    private boolean isShowPercentageUI;
 
     private boolean isRangeForDate;
 
@@ -119,7 +127,36 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         isOptionForRowCount = (currentIndicatorEnum == IndicatorEnum.RowCountIndicatorEnum)
                 || UDIHelper.isCount(currentIndicator);
 
+        isShowPercentageUI = !isOptionForRowCount && !isRangeForDate && currentIndicatorEnum.isCountRow()
+                && isContainRowCountIndicator();
+
         setupForm();
+    }
+
+    private boolean isContainRowCountIndicator() {
+        IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
+        if (editor != null) {
+            AbstractAnalysisMetadataPage masterPage = ((AnalysisEditor) editor).getMasterPage();
+            for (ModelElementIndicator meIndicator : masterPage.getCurrentModelElementIndicators()) {
+                if (meIndicator != null) {
+                    for (Indicator indicator : meIndicator.getIndicators()) {
+                        if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
+                            return true;
+                        }
+                        if (IndicatorsPackage.eINSTANCE.getCountsIndicator().equals(indicator.eClass())) {
+                            CountsIndicator cInd = (CountsIndicator) indicator;
+                            if (cInd.getRowCountIndicator() != null) {
+                                return true;
+                            }
+                        }
+                        if (ColumnsetPackage.eINSTANCE.getSimpleStatIndicator().equals(indicator.eClass())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -169,7 +206,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             higherText.setEnabled(false);
         }
 
-        if (!isOptionForRowCount && !isRangeForDate && currentIndicatorEnum.isCountRow()) {
+        if (isShowPercentageUI) {
             Group pGroup = new Group(this, SWT.NONE);
             pGroup.setLayout(new GridLayout(2, false));
             pGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -184,10 +221,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             pHigher.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.higherThreshold")); //$NON-NLS-1$
             pHigherText = new Text(pGroup, SWT.BORDER);
             pHigherText.setLayoutData(gdText);
-
         }
     }
-
 
     @Override
     public FormEnum getFormEnum() {
@@ -198,7 +233,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
     public boolean performFinish() {
         boolean isMinEmpty = CheckValueUtils.isEmpty(lowerText.getText());
         boolean isMaxEmpty = CheckValueUtils.isEmpty(higherText.getText());
-        if (isContainRowCount) {
+        if (isShowPercentageUI) {
             String plower = pLowerText.getText();
             String phigher = pHigherText.getText();
             boolean isPerMinEmpty = CheckValueUtils.isEmpty(plower);
@@ -294,22 +329,22 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         } else {
             // bug 10550 by zshen,Cannot set a negative threshold on individual summary statistics indicators
             // bug TDQ-11920, when the indicator count row,the threshold is Integer, or else, the threshold could be Double.
-            if (currentIndicatorEnum.isCountRow()){
+            if (currentIndicatorEnum.isCountRow()) {
                 if (!CheckValueUtils.isNumberWithNegativeValue(min) && !CheckValueUtils.isEmpty(min)
                         || !CheckValueUtils.isNumberWithNegativeValue(max) && !CheckValueUtils.isEmpty(max)) {
                     rc.setOk(false);
                     statusLabelText += MSG_ONLY_NUMBER + System.getProperty("line.separator"); //$NON-NLS-1$
                 }
-            }else{
+            } else {
                 if ((!CheckValueUtils.isRealNumberValue(min) && !CheckValueUtils.isEmpty(min) || !CheckValueUtils
                         .isRealNumberValue(max) && !CheckValueUtils.isEmpty(max))) {
                     statusLabelText += MSG_ONLY_REAL_NUMBER + System.getProperty("line.separator"); //$NON-NLS-1$
                     rc.setOk(false);
-                } 
+                }
             }
-           
-            if(rc.isOk()){    
-            // MOD yyi 2010-04-15 bug 12483 : check the value is out of range
+
+            if (rc.isOk()) {
+                // MOD yyi 2010-04-15 bug 12483 : check the value is out of range
                 try {
                     if (!CheckValueUtils.isEmpty(max)) {
                         if (currentIndicatorEnum.isCountRow()) {
@@ -390,7 +425,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
         });
 
-        if (isContainRowCount) {
+        if (isShowPercentageUI) {
             pLowerText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
@@ -463,7 +498,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             higherText.setText(indicatorThreshold[1] == null ? "" : indicatorThreshold[1]); //$NON-NLS-1$
         }
         String[] indicatorPersentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(parameters);
-        if (indicatorPersentThreshold != null && isContainRowCount) {
+        if (indicatorPersentThreshold != null && isShowPercentageUI) {
             if (StringUtils.isNotEmpty(indicatorPersentThreshold[0])) {
                 Double min = StringFormatUtil.parseDouble(indicatorPersentThreshold[0]);
                 min = min > 1 ? min : StringFormatUtil.formatPercentDecimalDouble(min);
