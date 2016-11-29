@@ -64,7 +64,7 @@ public class UserDefIndicatorFolderRepNode extends DQFolderRepNode {
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
 
-            if (isIgnoreFolder(withDeleted, project, folder)) {
+            if (isIgnoreFolder(withDeleted, project, folder) || "lib".equals(folder.getLabel())) { //$NON-NLS-1$
                 continue;
             }
 
