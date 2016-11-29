@@ -23,7 +23,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.SimpleS
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.utils.format.StringFormatUtil;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -48,7 +47,7 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
     public ICustomerDataset getCustomerDataset() {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
-            String value = CommonStateUtil.getUnitValue(unit.getValue(), StringFormatUtil.INT_NUMBER);
+            String value = CommonStateUtil.getUnitValue(unit.getValue(), 0);
             String label = unit.getIndicatorName();
             customerdataset.addValue(Double.parseDouble(value), label, label);
             ChartDataEntity entity = CommonStateUtil.createDataEntity(unit, value, label);

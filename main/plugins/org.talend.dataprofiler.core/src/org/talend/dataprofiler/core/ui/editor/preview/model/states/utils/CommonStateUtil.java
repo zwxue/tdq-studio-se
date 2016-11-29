@@ -12,12 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model.states.utils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
@@ -25,12 +26,24 @@ import org.talend.utils.format.StringFormatUtil;
  */
 public class CommonStateUtil {
 
-    public static String getUnitValue(Object unitValue, int style) {
+    /**
+     * 
+     * DOC qiongli Comment method "getUnitValue".
+     * 
+     * @param unitValue an object value will transfer to a String
+     * @param scale how many decimal digits will be keep.
+     * @return
+     */
+    public static String getUnitValue(Object unitValue, int scale) {
         String defaultValue = String.valueOf(Double.NaN);
-        if (style == StringFormatUtil.INT_NUMBER) {
+        if (scale == 0) {// Integer
             defaultValue = "0"; //$NON-NLS-1$
         }
-        return unitValue != null ? StringFormatUtil.format(unitValue, style).toString() : defaultValue;
+        if (unitValue == null || PluginConstant.EMPTY_STRING.equals(unitValue)) {
+            return defaultValue;
+        }
+        BigDecimal bigDec = new BigDecimal(unitValue.toString());
+        return bigDec.setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
     }
 
     /**

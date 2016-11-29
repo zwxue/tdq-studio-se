@@ -20,7 +20,6 @@ import org.talend.dq.analysis.explore.RegexPatternExplorer;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
-import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-3 Detailled comment
@@ -53,7 +52,7 @@ public class PatternStatisticeStateUtil {
      * @return
      */
     public static String getMatchCount(PatternMatchingExt patternExt) {
-        return CommonStateUtil.getUnitValue(patternExt.getMatchingValueCount(), StringFormatUtil.INT_NUMBER);
+        return CommonStateUtil.getUnitValue(patternExt.getMatchingValueCount(), 0);
     }
 
     /**
@@ -63,7 +62,7 @@ public class PatternStatisticeStateUtil {
      * @return
      */
     public static String getNotMatchCount(PatternMatchingExt patternExt) {
-        return CommonStateUtil.getUnitValue(patternExt.getNotMatchingValueCount(), StringFormatUtil.INT_NUMBER);
+        return CommonStateUtil.getUnitValue(patternExt.getNotMatchingValueCount(), 0);
     }
 
     public static DataExplorer getDataExplorer() {

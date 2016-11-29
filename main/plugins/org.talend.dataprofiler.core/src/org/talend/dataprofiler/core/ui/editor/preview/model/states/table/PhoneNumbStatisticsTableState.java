@@ -26,7 +26,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.CommonS
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.PhoneNumbStatisticsStateUtil;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
@@ -52,7 +51,7 @@ public class PhoneNumbStatisticsTableState extends AbstractTableTypeStates {
     public ChartDataEntity[] getDataEntity() {
         List<ChartDataEntity> dataEnities = new ArrayList<ChartDataEntity>();
         for (IndicatorUnit unit : units) {
-            String value = CommonStateUtil.getUnitValue(unit.getValue(), StringFormatUtil.INT_NUMBER);
+            String value = CommonStateUtil.getUnitValue(unit.getValue(), 0);
             String label = unit.getIndicatorName();
             ChartDataEntity entity = PhoneNumbStatisticsStateUtil.createDataEntity(unit.getIndicator(), value, label);
             dataEnities.add(entity);
