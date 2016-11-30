@@ -1021,7 +1021,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
                     changeExecuteLanguageToJava(false);
                     execLang = execCombo1.getText();
                     return;
-                } else if (ExecutionLanguage.JAVA.equals(currentLanguage) && checkSqlEnginIndicatorExist()) {
+                } else if (ExecutionLanguage.JAVA.equals(currentLanguage) && checkSqlEnginIndicatorExist() && isRunWithSampleData) {
                     MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.SqlIndicatorExistWarning")); //$NON-NLS-1$
                     changeExecuteLanguageToSql(true);
                     execLang = execCombo1.getText();

@@ -1040,6 +1040,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                     runWithSampleBtn.setSelection(!isRunWithSampleData);
                     isRunWithSampleData = false;
                     return;
+                } else if (includeJavaEnginIndicator()) {
+                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.JavaIndicatorExistWarning")); //$NON-NLS-1$
+                    runWithSampleBtn.setSelection(!isRunWithSampleData);
+                    isRunWithSampleData = true;
+                    return;
                 }
                 doCheckOption();
                 AbstractAnalysisMetadataPage.this.setDirty(true);
