@@ -1716,6 +1716,12 @@
            name="Update DBConnection DriverJarPath Task"
            version="6.2.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.AddHiveCharMapInPatternFrenquencyTask"
+           id="org.talend.dataprofiler.core.migration.impl.AddHiveCharMapInPatternFrenquencyTask"
+           name="Add character map for hive and impala in PatternFrequency and LowFrequency Indicators"
+           version="6.3.1">
+     </workspacetask>
   </extension>
   
   <extension

@@ -67,7 +67,7 @@ public class AddTeradataExpressionInPatternFrenquencyIndicatorTask extends Abstr
         if (teraDefinition != null && !IndicatorDefinitionFileHelper.isExistSqlExprWithLanguage(lowDefinition, Teradata)) {
             IndicatorDefinitionFileHelper.addSqlExpression(lowDefinition, Teradata, PATTERN_LOW_FREQUENCY_SQL);
             IndicatorDefinitionFileHelper.addCharacterMapping(lowDefinition, Teradata, CHAR_NAME, CHAR_TOREPLACE, CHAR_REPLACE);
-            isFrequencyAdded = IndicatorDefinitionFileHelper.save(lowDefinition);
+            isLowFrequencyUpdated = IndicatorDefinitionFileHelper.save(lowDefinition);
         }
 
         DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
@@ -97,4 +97,3 @@ public class AddTeradataExpressionInPatternFrenquencyIndicatorTask extends Abstr
     }
 
 }
-

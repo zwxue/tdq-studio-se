@@ -183,6 +183,18 @@ public final class IndicatorDefinitionFileHelper {
         return false;
     }
 
+    public static boolean isExistCharacterMappingWithLanguage(IndicatorDefinition definition, String language) {
+        if (null == definition) {
+            return false;
+        }
+        for (CharactersMapping e : definition.getCharactersMapping()) {
+            if (e.getLanguage().equals(language)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Added yyin TDQ-6099 20121227
      * 
