@@ -35,4 +35,12 @@ public class RedshiftDbmsLanguage extends PostgresqlDbmsLanguage {
         super(dbmsType, dbVersion);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.PostgresqlDbmsLanguage#getInvalidClauseBenFord(java.lang.String)
+     */
+    public String getInvalidClauseBenFord(String columnName) {
+        return columnName + " is null or " + columnName + "='' or SUBSTRING(" + columnName + ", 1,1)  ~ '[^0-9]'";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
 }
