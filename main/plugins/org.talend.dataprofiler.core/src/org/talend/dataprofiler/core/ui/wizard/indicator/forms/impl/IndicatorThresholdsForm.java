@@ -135,23 +135,31 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private boolean isContainRowCountIndicator() {
         IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
-        if (editor != null) {
-            AbstractAnalysisMetadataPage masterPage = ((AnalysisEditor) editor).getMasterPage();
-            for (ModelElementIndicator meIndicator : masterPage.getCurrentModelElementIndicators()) {
-                if (meIndicator != null) {
-                    for (Indicator indicator : meIndicator.getIndicators()) {
-                        if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
+        if (editor == null) {
+            return false;
+        }
+        AbstractAnalysisMetadataPage masterPage = ((AnalysisEditor) editor).getMasterPage();
+        if (masterPage == null) {
+            return false;
+        }
+        ModelElementIndicator[] currentModelElementIndicators = masterPage.getCurrentModelElementIndicators();
+        if (currentModelElementIndicators == null) {
+            return false;
+        }
+        for (ModelElementIndicator meIndicator : currentModelElementIndicators) {
+            if (meIndicator != null && meIndicator.getIndicators() != null) {
+                for (Indicator indicator : meIndicator.getIndicators()) {
+                    if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
+                        return true;
+                    }
+                    if (IndicatorsPackage.eINSTANCE.getCountsIndicator().equals(indicator.eClass())) {
+                        CountsIndicator cInd = (CountsIndicator) indicator;
+                        if (cInd.getRowCountIndicator() != null) {
                             return true;
                         }
-                        if (IndicatorsPackage.eINSTANCE.getCountsIndicator().equals(indicator.eClass())) {
-                            CountsIndicator cInd = (CountsIndicator) indicator;
-                            if (cInd.getRowCountIndicator() != null) {
-                                return true;
-                            }
-                        }
-                        if (ColumnsetPackage.eINSTANCE.getSimpleStatIndicator().equals(indicator.eClass())) {
-                            return true;
-                        }
+                    }
+                    if (ColumnsetPackage.eINSTANCE.getSimpleStatIndicator().equals(indicator.eClass())) {
+                        return true;
                     }
                 }
             }
