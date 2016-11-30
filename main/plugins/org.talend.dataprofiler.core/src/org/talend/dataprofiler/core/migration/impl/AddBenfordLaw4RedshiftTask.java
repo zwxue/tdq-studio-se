@@ -44,13 +44,16 @@ public class AddBenfordLaw4RedshiftTask extends AbstractWorksapceUpdateTask {
     protected boolean doExecute() throws Exception {
         definitionHandler = DefinitionHandler.getInstance();
         IndicatorDefinition regexPatternDefinition = definitionHandler.getDefinitionById(BENFORD_LAW_UUID);
-        if (regexPatternDefinition != null
-                && !IndicatorDefinitionFileHelper.isExistSqlExprWithLanguage(regexPatternDefinition, Redshift)) {
-            IndicatorDefinitionFileHelper
-                    .addSqlExpression(
-                            regexPatternDefinition,
-                            Redshift,
-                            "SELECT SUBSTRING(<%=__COLUMN_NAMES__%>,1,2), COUNT(*)  FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY SUBSTRING(<%=__COLUMN_NAMES__%>,1,2) order by SUBSTRING(<%=__COLUMN_NAMES__%>,1,2)"); //$NON-NLS-1$
+        if (regexPatternDefinition != null) {
+            if (!IndicatorDefinitionFileHelper.isExistSqlExprWithLanguage(regexPatternDefinition, Redshift)) {
+                IndicatorDefinitionFileHelper
+                        .addSqlExpression(regexPatternDefinition, Redshift,
+                                "SELECT SUBSTRING(<%=__COLUMN_NAMES__%>,1,1), COUNT(*)  FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 1 order by 1"); //$NON-NLS-1$
+            } else {
+                IndicatorDefinitionFileHelper
+                        .updateSqlExpression(regexPatternDefinition, Redshift,
+                                "SELECT SUBSTRING(<%=__COLUMN_NAMES__%>,1,1), COUNT(*)  FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 1 order by 1"); //$NON-NLS-1$
+            }
             IndicatorDefinitionFileHelper.save(regexPatternDefinition);
             DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
         }
