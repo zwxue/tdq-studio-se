@@ -364,6 +364,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 try {
                     RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
                     ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
+                    CorePlugin.getDefault().refreshDQView(connectionNode);
                 } catch (ReloadCompareException e) {
                     log.error(e, e);
                 }

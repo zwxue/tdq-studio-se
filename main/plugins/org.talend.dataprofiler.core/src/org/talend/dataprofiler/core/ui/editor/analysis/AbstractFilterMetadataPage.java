@@ -33,6 +33,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -148,8 +149,12 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         if (isConnectionAnalysis()) {
             reloadDatabasesBtn = new Button(sectionClient, SWT.CHECK);
             reloadDatabasesBtn.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ReloadDatabases"));//$NON-NLS-1$
-
-            reloadDatabasesBtn.setSelection(AnalysisHelper.getReloadDatabases(getCurrentModelElement()));
+            if (DqRepositoryViewService.isComeFromRefrenceProject(this.getTdDataProvider())) {
+                reloadDatabasesBtn.setEnabled(false);
+                reloadDatabasesBtn.setSelection(false);
+            } else {
+                reloadDatabasesBtn.setSelection(AnalysisHelper.getReloadDatabases(getCurrentModelElement()));
+            }
             reloadDatabasesBtn.addMouseListener(new MouseListener() {
 
                 public void mouseDoubleClick(MouseEvent e) {
@@ -261,6 +266,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // do nothing here
     }
 
+    @Override
     public AnalysisHandler getAnalysisHandler() {
         AnalysisHandler analysisHandler = new AnalysisHandler();
         analysisHandler.setAnalysis(getCurrentModelElement());

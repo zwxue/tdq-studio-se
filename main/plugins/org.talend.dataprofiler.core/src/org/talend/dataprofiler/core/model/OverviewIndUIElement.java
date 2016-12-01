@@ -16,13 +16,15 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class OverviewIndUIElement {
 
     private Indicator overviewIndicator = null;
 
     private IRepositoryNode node = null;
+
+    private boolean isVirtualNode = false;
 
     public void setOverviewIndicator(Indicator overviewIndicator) {
         this.overviewIndicator = overviewIndicator;
@@ -39,4 +41,23 @@ public class OverviewIndUIElement {
     public IRepositoryNode getNode() {
         return node;
     }
+
+    /**
+     * Getter for isVirtualNode.
+     * 
+     * @return the isVirtualNode
+     */
+    public boolean isVirtualNode() {
+        return this.isVirtualNode;
+    }
+
+    /**
+     * Sets the isVirtualNode.
+     * 
+     * @param isVirtualNode the isVirtualNode to set
+     */
+    public void setVirtualNode(boolean isVirtualNode) {
+        this.isVirtualNode = isVirtualNode;
+    }
+
 }

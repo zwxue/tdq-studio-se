@@ -44,6 +44,7 @@ public class ConnectionAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     public ConnectionAnalysisDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+        fillDataProvider();
     }
 
     @Override

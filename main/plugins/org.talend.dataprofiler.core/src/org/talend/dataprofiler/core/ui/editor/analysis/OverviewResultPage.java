@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -57,6 +58,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
@@ -82,12 +84,14 @@ import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -132,6 +136,8 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
     private TableViewer schemaTableViewer;
 
     private AbstractStatisticalViewerProvider provider;
+
+    private static final Logger log = Logger.getLogger(OverviewResultPage.class);
 
     private SchemaTableSorter[][] tableSorters = {
             { new SchemaTableSorter(SchemaTableSorter.TABLE), new SchemaTableSorter(-SchemaTableSorter.TABLE) },
@@ -626,6 +632,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                 @Override
                 public void mouseDown(MouseEvent e) {
                     if (e.button == 3) {
+                        TableItem item = catalogOrSchemaTable.getItem(catalogOrSchemaTable.getSelectionIndex());
                         // TDQ-11430: show the menu only when there have data and have selected one.
                         if (catalogOrSchemaTable.getItemCount() > 0 && catalogOrSchemaTable.getSelectionIndex() != -1) {
                             final Menu menu = new Menu(catalogOrSchemaTable.getShell(), SWT.POP_UP);
@@ -655,7 +662,8 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                                 }
 
                             });
-
+                            TableItem tableItem = catalogOrSchemaTable.getItem(catalogOrSchemaTable.getSelectionIndex());
+                            final OverviewIndUIElement data = (OverviewIndUIElement) tableItem.getData();
                             MenuItem tableAnalysisMenuItem = new MenuItem(menu, SWT.PUSH);
                             tableAnalysisMenuItem.setText(DefaultMessagesImpl
                                     .getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
@@ -664,12 +672,14 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
                                 @Override
                                 public void widgetSelected(SelectionEvent e) {
-                                    TableItem tableItem = catalogOrSchemaTable.getItem(catalogOrSchemaTable.getSelectionIndex());
-                                    OverviewIndUIElement data = (OverviewIndUIElement) tableItem.getData();
+
                                     runTableAnalysis(data);
                                 }
 
                             });
+                            if (data.isVirtualNode()) {
+                                tableAnalysisMenuItem.setEnabled(false);
+                            }
                         } else {
                             // TDQ-11430: when there is no views will not show menu
                             catalogOrSchemaTable.setMenu(null);
@@ -701,6 +711,9 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                 public void mouseDown(MouseEvent e) {
                     if (e.button == 3) {
                         // TDQ-11430: show the menu only when there have data and have selected one.
+                        TableItem tableItem = tableCatalogOrSchemaView.getItem(tableCatalogOrSchemaView.getSelectionIndex());
+                        final OverviewIndUIElement data = (OverviewIndUIElement) tableItem.getData();
+
                         if (tableCatalogOrSchemaView.getItemCount() > 0 && tableCatalogOrSchemaView.getSelectionIndex() != -1) {
                             final Menu menu = new Menu(tableCatalogOrSchemaView.getShell(), SWT.POP_UP);
                             tableCatalogOrSchemaView.setMenu(menu);
@@ -713,13 +726,14 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
                                 @Override
                                 public void widgetSelected(SelectionEvent e) {
-                                    TableItem tableItem = tableCatalogOrSchemaView.getItem(tableCatalogOrSchemaView
-                                            .getSelectionIndex());
-                                    ViewIndicator viewIndicator = (ViewIndicator) tableItem.getData();
+                                    ViewIndicator viewIndicator = (ViewIndicator) data.getOverviewIndicator();
                                     runTableAnalysis(viewIndicator.getTableName());
                                 }
 
                             });
+                            if (data.isVirtualNode()) {
+                                tableAnalysisMenuItem.setEnabled(false);
+                            }
                         } else {
                             // TDQ-11430: when there is no views will not show menu
                             tableCatalogOrSchemaView.setMenu(null);
@@ -732,8 +746,8 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
         tableOfCatalogOrSchemaViewer.getTable().setMenu(null);
         tableOfCatalogOrSchemaViewer.setInput(tableElements);
         List<ViewIndicator> indicatorViewList = schemaIndicator.getViewIndicators();
-
-        viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
+        List<OverviewIndUIElement> viewElements = wapperInput(indicatorViewList, parentNode);
+        viewOfCatalogOrSchemaViewer.setInput(viewElements);
         viewOfCatalogOrSchemaViewer.getTable().setMenu(null);
         // MOD xqliu 2009-11-05 bug 9521
         tableAndViewComposite.pack();
@@ -742,6 +756,58 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
         // ~
         form.reflow(true);
 
+    }
+
+    /**
+     * DOC zshen Comment method "wapperInput".
+     * 
+     * @param indicatorViewList
+     * @param parentNode
+     * @return
+     */
+    private List<OverviewIndUIElement> wapperInput(List<ViewIndicator> indicatorViewList, IRepositoryNode parentNode) {
+        List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
+        List<IRepositoryNode> children = parentNode.getChildren();
+        for (IRepositoryNode folderNode : children) {
+            if (folderNode instanceof DBViewFolderRepNode) {
+                List<IRepositoryNode> tableNodes = folderNode.getChildren();
+                // MOD 20120315 klliu&yyin TDQ-2391, avoid getting many times for table nodes.
+                for (ViewIndicator indicator : indicatorViewList) {
+                    boolean equals = false;
+                    for (IRepositoryNode tableNode : tableNodes) {
+                        MetadataTable table = ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
+                        String name = table.getName();
+                        String tableName = indicator.getTableName();
+                        // String connUuid = ResourceHelper.getUUID(table);
+                        // String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+
+                        equals = name.equals(tableName);
+                        if (equals) {
+                            OverviewIndUIElement tableUIEle = new OverviewIndUIElement();
+                            tableUIEle.setNode(tableNode);
+                            tableUIEle.setOverviewIndicator(indicator);
+                            try {
+                                if (DqRepositoryViewService.getColumns(getTdDataProvider(), (ColumnSet) table, true).isEmpty()) {
+                                    tableUIEle.setVirtualNode(true);
+                                }
+                            } catch (Exception e) {
+                                log.error(e, e);
+                            }
+                            cataUIEleList.add(tableUIEle);
+                            break;
+                        }
+                    }
+                    if (!equals) {
+                        OverviewIndUIElement tableUIEle = new OverviewIndUIElement();
+                        tableUIEle.setOverviewIndicator(indicator);
+                        tableUIEle.setVirtualNode(true);
+                        cataUIEleList.add(tableUIEle);
+                    }
+                }
+            }
+        }
+
+        return cataUIEleList;
     }
 
     private void runTableAnalysis(OverviewIndUIElement data) {
@@ -798,6 +864,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                 List<IRepositoryNode> tableNodes = folderNode.getChildren();
                 // MOD 20120315 klliu&yyin TDQ-2391, avoid getting many times for table nodes.
                 for (TableIndicator indicator : indicatorTableList) {
+                    boolean equals = false;
                     for (IRepositoryNode tableNode : tableNodes) {
                         MetadataTable table = ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
                         String name = table.getName();
@@ -805,14 +872,27 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                         // String connUuid = ResourceHelper.getUUID(table);
                         // String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
 
-                        boolean equals = name.equals(tableName);
+                        equals = name.equals(tableName);
                         if (equals) {
                             OverviewIndUIElement tableUIEle = new OverviewIndUIElement();
                             tableUIEle.setNode(tableNode);
                             tableUIEle.setOverviewIndicator(indicator);
+                            try {
+                                if (DqRepositoryViewService.getColumns(getTdDataProvider(), (ColumnSet) table, true).isEmpty()) {
+                                    tableUIEle.setVirtualNode(true);
+                                }
+                            } catch (Exception e) {
+                                log.error(e, e);
+                            }
                             cataUIEleList.add(tableUIEle);
                             break;
                         }
+                    }
+                    if (!equals) {
+                        OverviewIndUIElement tableUIEle = new OverviewIndUIElement();
+                        tableUIEle.setOverviewIndicator(indicator);
+                        tableUIEle.setVirtualNode(true);
+                        cataUIEleList.add(tableUIEle);
                     }
                 }
             }

@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 
 /**
@@ -45,8 +46,8 @@ public class ViewOfCatalogOrSchemaProvider extends LabelProvider implements ITab
     }
 
     public String getColumnText(Object element, int columnIndex) {
-        if (element instanceof ViewIndicator) {
-            ViewIndicator indicatorUIEle = (ViewIndicator) element;
+        if (element instanceof OverviewIndUIElement) {
+            ViewIndicator indicatorUIEle = (ViewIndicator) ((OverviewIndUIElement) element).getOverviewIndicator();
             switch (columnIndex) {
             case 0:
                 return indicatorUIEle.getTableName();
@@ -61,7 +62,7 @@ public class ViewOfCatalogOrSchemaProvider extends LabelProvider implements ITab
     }
 
     public Image getColumnImage(Object element, int columnIndex) {
-        if (element instanceof ViewIndicator && columnIndex == 0) {
+        if (element instanceof OverviewIndUIElement && columnIndex == 0) {
             return CWMImageEnum.View.getImg();
         }
         return null;
@@ -76,8 +77,8 @@ public class ViewOfCatalogOrSchemaProvider extends LabelProvider implements ITab
     }
 
     public Color getBackground(Object element, int columnIndex) {
-        if (element instanceof ViewIndicator) {
-            ViewIndicator indicator = (ViewIndicator) element;
+        if (element instanceof OverviewIndUIElement) {
+            ViewIndicator indicator = (ViewIndicator) ((OverviewIndUIElement) element).getOverviewIndicator();
             if (indicator.getRowCount() == 0) {
                 return bg;
             }
