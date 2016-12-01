@@ -44,6 +44,7 @@ import org.talend.dataprofiler.core.ui.utils.DateTimeDialog;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -141,6 +142,10 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         AbstractAnalysisMetadataPage masterPage = ((AnalysisEditor) editor).getMasterPage();
         if (masterPage == null) {
             return false;
+        }
+        // if the analysis type is TABLE Analysis, just return true
+        if (AnalysisType.TABLE.equals(masterPage.getAnalysisHandler().getAnalysis().getParameters().getAnalysisType())) {
+            return true;
         }
         ModelElementIndicator[] currentModelElementIndicators = masterPage.getCurrentModelElementIndicators();
         if (currentModelElementIndicators == null) {
