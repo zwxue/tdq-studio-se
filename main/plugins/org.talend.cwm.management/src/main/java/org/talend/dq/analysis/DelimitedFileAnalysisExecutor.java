@@ -24,6 +24,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.helpers.RowCountIndicatorsAdapter;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.DelimitedFileIndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
@@ -55,6 +56,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
         DelimitedFileConnection con = (DelimitedFileConnection) analysis.getContext().getConnection();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         eval.setMonitor(getMonitor());
+        RowCountIndicatorsAdapter.getInstance().clear();
         for (Indicator indicator : indicators) {
             assert indicator != null;
             MetadataColumn mColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
