@@ -52,7 +52,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
      */
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        DelimitedFileIndicatorEvaluator eval = new DelimitedFileIndicatorEvaluator(analysis);
+        DelimitedFileIndicatorEvaluator eval = createIndicatorEvaluator(analysis);
         DelimitedFileConnection con = (DelimitedFileConnection) analysis.getContext().getConnection();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         eval.setMonitor(getMonitor());
@@ -76,6 +76,16 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
             getMonitor().worked(compIndicatorsWorked);
         }
         return rc.isOk();
+    }
+
+    /**
+     * DOC zshen Comment method "createIndicatorEvaluator".
+     * 
+     * @param analysis
+     * @return
+     */
+    protected DelimitedFileIndicatorEvaluator createIndicatorEvaluator(Analysis analysis) {
+        return new DelimitedFileIndicatorEvaluator(analysis);
     }
 
     @Override

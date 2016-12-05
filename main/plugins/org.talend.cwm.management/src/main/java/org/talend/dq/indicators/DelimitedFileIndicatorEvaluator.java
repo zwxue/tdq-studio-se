@@ -59,7 +59,7 @@ import com.talend.csv.CSVReader;
  */
 public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
-    private DelimitedFileConnection delimitedFileconnection = null;
+    protected DelimitedFileConnection delimitedFileconnection = null;
 
     private Logger log = Logger.getLogger(DelimitedFileIndicatorEvaluator.class);
 
@@ -166,7 +166,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         // use TOSDelimitedReader in FileInputDelimited to parse.
         ReturnCode returnCode = new ReturnCode(true);
         try {
-            FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
+            FileInputDelimited fileInputDelimited = createFileInputDelimited();
 
             long currentRow = JavaSqlFactory.getHeadValue(delimitedFileconnection);
 
@@ -188,6 +188,16 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             log.error(e, e);
         }
         return returnCode;
+    }
+
+    /**
+     * DOC zshen Comment method "createFileInputDelimited".
+     * 
+     * @return
+     * @throws IOException
+     */
+    protected FileInputDelimited createFileInputDelimited() throws IOException {
+        return AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
     }
 
     /**
@@ -224,7 +234,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
     private ReturnCode useCsvReader(File file, List<ModelElement> analysisElementList, List<MetadataColumn> columnElementList,
             EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
         ReturnCode returnCode = new ReturnCode(true);
-        int limitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
+        int limitValue = getCsvReaderLimit();
         int headValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
         CSVReader csvReader = null;
         try {
@@ -258,6 +268,15 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             }
         }
         return returnCode;
+    }
+
+    /**
+     * DOC zshen Comment method "getCsvReaderLimit".
+     * 
+     * @return
+     */
+    protected int getCsvReaderLimit() {
+        return JavaSqlFactory.getLimitValue(delimitedFileconnection);
     }
 
     @Override

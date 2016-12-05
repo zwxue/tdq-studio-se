@@ -139,6 +139,11 @@ public final class AnalysisExecutorHelper {
     }
 
     public static FileInputDelimited createFileInputDelimited(DelimitedFileConnection delimitedFileconnection) throws IOException {
+        return createFileInputDelimited(delimitedFileconnection, Integer.MAX_VALUE);
+    }
+
+    public static FileInputDelimited createFileInputDelimited(DelimitedFileConnection delimitedFileconnection, int limit)
+            throws IOException {
         String rowSeparator = JavaSqlFactory.getRowSeparatorValue(delimitedFileconnection);
         String encoding = JavaSqlFactory.getEncoding(delimitedFileconnection);
         String fieldSeparatorValue = JavaSqlFactory.getFieldSeparatorValue(delimitedFileconnection);
@@ -155,7 +160,7 @@ public final class AnalysisExecutorHelper {
         return new FileInputDelimited(ParameterUtil.trimParameter(path), ParameterUtil.trimParameter(encoding),
                 ParameterUtil.trimParameter(StringUtils.loadConvert(fieldSeparatorValue, languageName)),
                 ParameterUtil.trimParameter(StringUtils.loadConvert(rowSeparator, languageName)), isSkipeEmptyRow, headValue,
-                footValue, limitValue, -1, isSpliteRecord);
+                footValue, limitValue < limit ? limitValue : limit, -1, isSpliteRecord);
     }
 
     /**

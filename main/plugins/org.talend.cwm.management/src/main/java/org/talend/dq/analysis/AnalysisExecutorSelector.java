@@ -107,10 +107,14 @@ public final class AnalysisExecutorSelector {
         // MOD qiongli 2010-11-9 feature 16796
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection((DataProvider) analysis.getContext().getConnection());
         boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
+        boolean isValid = hasSampleDataValid(analysis);
         if (isDelimitedFile) {
-            return new DelimitedFileAnalysisExecutor();
+            if (isValid) {
+                return new DelimitedFileAnalysisExecutorWithSampleData();
+            } else {
+                return new DelimitedFileAnalysisExecutor();
+            }
         } else {
-            boolean isValid = hasSampleDataValid(analysis);
             if (isValid) {
                 return new ColumnAnalysisExecutorWithSampleData();
             } else {

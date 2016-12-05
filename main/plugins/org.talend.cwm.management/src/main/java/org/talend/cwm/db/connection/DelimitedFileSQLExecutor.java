@@ -102,7 +102,9 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
     }
 
     private void useCsvReader(File file, DelimitedFileConnection delimitedFileconnection, List<ModelElement> analysisElementList) {
-        int limitValue = JavaSqlFactory.getLimitValue(delimitedFileconnection);
+        int tableLimit = getLimit();
+        int connLimit = JavaSqlFactory.getLimitValue(delimitedFileconnection);
+        int limitValue = tableLimit < connLimit ? tableLimit : connLimit;
         int headValue = JavaSqlFactory.getHeadValue(delimitedFileconnection);
         CSVReader csvReader = null;
         try {
@@ -126,11 +128,12 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
             long currentRecord = 0;
             while (csvReader.readNext()) {
-                currentRecord++;
                 // skip the head rows
                 if (currentRecord <= headValue) {
                     continue;
                 }
+                currentRecord++;
+
                 if (limitValue != -1 && currentRecord > limitValue) {
                     break;
                 }
