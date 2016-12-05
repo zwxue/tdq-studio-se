@@ -38,19 +38,19 @@ public class PatternFreqIndicatorImplTest {
 
     @Test
     public void testLatin1PerfWithLoop() {
-        int countStart = 800000;
-        int countMax = 1000000;
-        int countStep = 500000;
-
-        int lengthStart = 5;
-        int lengthMax = 20;
-        int lengthStep = 5;
-
-        for (int count = countStart; count < countMax; count += countStep) {
-            for (int length = lengthStart; length <= lengthMax; length += lengthStep) {
-                testLatin1Perf(count, length);
-            }
-        }
+        // int countStart = 800000;
+        // int countMax = 1000000;
+        // int countStep = 500000;
+        //
+        // int lengthStart = 5;
+        // int lengthMax = 20;
+        // int lengthStep = 5;
+        //
+        // for (int count = countStart; count < countMax; count += countStep) {
+        // for (int length = lengthStart; length <= lengthMax; length += lengthStep) {
+        // testLatin1Perf(count, length);
+        // }
+        // }
     }
 
     private void testLatin1Perf(int count, int length) {
