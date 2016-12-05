@@ -443,7 +443,12 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         }
         return null;
     }
-
+    public List getColumnKeys(Object dataset) {
+        if (isTOPChartInstalled()) {
+            return chartService.getColumnKeys(dataset);
+        }
+        return null;
+    }
     public void setValue(Object dataset, Number value, Comparable rowKey, Comparable columnKey) {
         if (isTOPChartInstalled()) {
             chartService.setValue(dataset, value, rowKey, columnKey);
