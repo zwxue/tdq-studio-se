@@ -467,7 +467,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
         TableLayout tableLayout = new TableLayout();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             tableLayout.addColumnData(new ColumnWeightData(1, 150, true));
         }
         table.setLayout(tableLayout);
@@ -510,7 +510,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
         TableLayout tableLayout = new TableLayout();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             tableLayout.addColumnData(new ColumnWeightData(1, 150, true));
         }
         table.setLayout(tableLayout);
