@@ -63,6 +63,7 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.ImageLib;
@@ -786,13 +787,11 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                             OverviewIndUIElement tableUIEle = new OverviewIndUIElement();
                             tableUIEle.setNode(tableNode);
                             tableUIEle.setOverviewIndicator(indicator);
-                            try {
-                                if (DqRepositoryViewService.getColumns(getTdDataProvider(), (ColumnSet) table, true).isEmpty()) {
-                                    tableUIEle.setVirtualNode(true);
-                                }
-                            } catch (Exception e) {
-                                log.error(e, e);
+                            if (DqRepositoryViewService.isComeFromRefrenceProject(getTdDataProvider())
+                                    && ColumnSetHelper.getColumns((ColumnSet) table).isEmpty()) {
+                                tableUIEle.setVirtualNode(true);
                             }
+
                             cataUIEleList.add(tableUIEle);
                             break;
                         }
@@ -877,12 +876,9 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
                             OverviewIndUIElement tableUIEle = new OverviewIndUIElement();
                             tableUIEle.setNode(tableNode);
                             tableUIEle.setOverviewIndicator(indicator);
-                            try {
-                                if (DqRepositoryViewService.getColumns(getTdDataProvider(), (ColumnSet) table, true).isEmpty()) {
-                                    tableUIEle.setVirtualNode(true);
-                                }
-                            } catch (Exception e) {
-                                log.error(e, e);
+                            if (DqRepositoryViewService.isComeFromRefrenceProject(getTdDataProvider())
+                                    && ColumnSetHelper.getColumns((ColumnSet) table).isEmpty()) {
+                                tableUIEle.setVirtualNode(true);
                             }
                             cataUIEleList.add(tableUIEle);
                             break;
