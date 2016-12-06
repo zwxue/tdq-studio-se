@@ -859,6 +859,12 @@
             name="zookeeper-3.4.6.2.3.2.0-2950.jar"
             required="true"
             uripath="platform:/plugin/org.talend.libraries.zookeeper/lib/zookeeper-3.4.6.2.3.2.0-2950.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="plugin:org.talend.libraries.hadoop.hdp.2.3"
+            id="commons-logging-1.2.jar"
+            name="commons-logging-1.2.jar" mvn_uri="mvn:org.talend.libraries/commons-logging-1.2/6.1.0"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.2.3/lib/commons-logging-1.2.jar">
       </libraryNeeded>      
    </extension>
    <extension
