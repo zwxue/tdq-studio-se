@@ -68,4 +68,8 @@ public class MigrationPlugin implements BundleActivator {
         return ProductVersion.fromString(VersionUtils.getTalendVersion());
     }
 
+    public ProductVersion getProductDisplayVersion() {
+        return ProductVersion.fromString(VersionUtils.getDisplayVersion());
+    }
+
 }
