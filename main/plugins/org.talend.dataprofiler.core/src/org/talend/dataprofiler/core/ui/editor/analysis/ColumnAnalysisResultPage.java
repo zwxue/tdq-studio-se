@@ -292,7 +292,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                     DynamicChartEventReceiver eReceiver = AnalysisUtils.createDynamicChartEventReceiver(
                             oneCategoryIndicatorModel, index++, oneIndicator);
                     eReceiver.setChartComposite(chartComposite);
-
+                    eReceiver.refreshChart();
+                    eReceiver.setTableViewer(tableViewer);
+ 
                     // clear data
                     eReceiver.clearValue();
                     registerIndicatorEvent(oneIndicator, eReceiver);

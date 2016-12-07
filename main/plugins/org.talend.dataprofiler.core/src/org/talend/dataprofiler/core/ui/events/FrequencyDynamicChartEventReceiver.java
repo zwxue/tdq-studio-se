@@ -103,7 +103,12 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
         List columnKeys = TOPChartUtils.getInstance().getColumnKeys(customerdataset);
         FrequencyExt freqE = tempFreq[0];
         if(!columnKeys.contains(String.valueOf(freqE.getKey()))){
-            columnKeys.clear();
+            //columnKeys.clear();
+            TOPChartUtils.getInstance().clearDataset(customerdataset);
+            ICustomerDataset customerDataset = TOPChartUtils.getInstance().getCustomerDataset(customerdataset);
+            if (customerDataset != null && customerDataset instanceof CustomerDefaultCategoryDataset) {
+                ((CustomerDefaultCategoryDataset) customerDataset).clearAll();
+            }
         }
         
         for (int i = 0; i < numOfShown; i++) {
@@ -125,8 +130,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             } else {
                 ICustomerDataset customerDataset = TOPChartUtils.getInstance().getCustomerDataset(customerdataset);
                 if (customerDataset != null && customerDataset instanceof CustomerDefaultCategoryDataset) {
-                    customerDataset.addDataEntity(entity);
-                    
+                    customerDataset.addDataEntity(entity);                   
                    
                     addValueToDataset(((CustomerDefaultCategoryDataset) customerDataset).getDataset(), freqExt, keyLabel);
                 }
