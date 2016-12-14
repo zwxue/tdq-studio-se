@@ -124,7 +124,6 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -1006,13 +1005,14 @@ public class DQRespositoryView extends CommonNavigator {
                     // equals super.run()
                     // new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()).run();
                     CorePlugin.getDefault().refreshWorkSpace();
-
-                    ProxyRepositoryManager.getInstance().refresh();
+                    // this line do unload is the same as setAvoidUnloadResources(false), so comment it
+                    // ProxyRepositoryManager.getInstance().refresh();
                     getCommonViewer().refresh();
                 }
 
             };
-            repositoryWorkUnit.setAvoidUnloadResources(true);
+            // TDQ-12262: set to false, because for git remote project, when the item file is updated, need to unload.
+            repositoryWorkUnit.setAvoidUnloadResources(false);
             ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
             try {
                 repositoryWorkUnit.throwPersistenceExceptionIfAny();
