@@ -1,25 +1,21 @@
 Talend Open Studio for Data Quality
-Copyright (c) 2006 - 2016 Talend Inc. - www.talend.com
+Copyright (c) 2011 - 2017 Talend Inc. - www.talend.com
 All rights reserved.
-
-
+ 
 This program and the accompanying materials are made available
-under the terms of the Apache License, Version 2.0
-
-
+under the terms of the Talend Commercial Software License and
+Services Agreement which accompanies this distribution.
+ 
 This product includes software developed at
 Talend Inc. (http://www.talend.com).
-
-
+ 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org).
-Licensed under the Apache License Version 2.0.
-
-
+Licensed under the Apache License Version 2.0
+ 
 This product includes software developed at
 The Eclipse Foundation (http://www.eclipse.org).
 Licensed under the Eclipse Public License - v1.0
-
 
 This product includes software developed at 
 AtInject (https://code.google.com/p/atinject/).
@@ -72,12 +68,12 @@ Licensed under Apache-2.0
 
 
 This product includes software developed at 
-Hadoop Libraries.
+Hadoop Libraries (Retrieved from CDH3u0. LICENSE.txt explains that Zookeeper is distributed under Apache License 2.0).
 Licensed under Apache-2.0
 
 
 This product includes software developed at 
-Hadoop Libraries (Retrieved from CDH3u0. LICENSE.txt explains that Zookeeper is distributed under Apache License 2.0).
+Hadoop Libraries.
 Licensed under Apache-2.0
 
 
@@ -104,12 +100,12 @@ Licensed under Apache-2.0
 This product includes software developed at 
 Jackson Java JSON-processor.
 Licensed under Apache-2.0
-Copyright ©2009 FasterXML, LLC
+
 
 This product includes software developed at 
 Jackson Java JSON-processor.
 Licensed under Apache-2.0
-
+Copyright ©2009 FasterXML, LLC
 
 This product includes software developed at 
 Jackson Libraries.
@@ -157,6 +153,11 @@ Licensed under Apache-2.0
 
 
 This product includes software developed at 
+StreamLib (https://github.com/addthis/stream-lib).
+Licensed under Apache-2.0
+Copyright 2016 AddThis
+
+This product includes software developed at 
 Woden.
 Licensed under Apache-2.0
 
@@ -190,6 +191,11 @@ This product includes software developed at
 Jackson Java JSON-processor.
 Licensed under Apache-2.0;LGPL-2.1
 
+
+This product includes software developed at 
+Dom4J (http://www.dom4j.org/dom4j-1.6.1/).
+Licensed under BSD
+Copyright 2001-2005 (C) MetaStuff, Ltd. All Rights Reserved.
 
 This product includes software developed at 
 Java Universal Network Graph.
@@ -252,6 +258,11 @@ Licensed under EPL-1.0;LGPL-2.1
 
 
 This product includes software developed at 
+Json.
+Licensed under JSON
+
+
+This product includes software developed at 
 Java Json (http://www.json.org/license.html).
 Licensed under Json
 
@@ -267,17 +278,19 @@ Licensed under Public Domain
 
 
 This product includes software developed at 
-SL4J.
+SL4J (http://www.slf4j.org/license.html).
 Licensed under X11
 
 
 This product includes software developed at 
-SL4J (http://www.slf4j.org/license.html).
+SL4J.
 Licensed under X11
 
 
 This product includes software developed at 
 Simple Logging Facade for Java.
 Licensed under X11
+
+
 
 
