@@ -124,6 +124,7 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.SqlExplorerUtils;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -1005,8 +1006,7 @@ public class DQRespositoryView extends CommonNavigator {
                     // equals super.run()
                     // new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()).run();
                     CorePlugin.getDefault().refreshWorkSpace();
-                    // this line do unload is the same as setAvoidUnloadResources(false), so comment it
-                    // ProxyRepositoryManager.getInstance().refresh();
+                    ProxyRepositoryManager.getInstance().refresh();
                     getCommonViewer().refresh();
                 }
 
