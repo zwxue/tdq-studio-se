@@ -142,6 +142,14 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
     }
 
     protected void duRun(IRepositoryNode repNode) throws BusinessException {
+        // TDQ-12200: fix a NPE when the open item is unsynchronized status(for example is deleted by others).
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
+        if (repNode.getObject().getProperty() == null) {
+            repositoryObjectCRUD.showWarningDialog();
+            return;
+        }
+        // TDQ-12200~
+
         // TDQ-12034: before open the object editor, reload it first especially for git remote project
         // TODO: extract the code to a IRepositoryObjectCRUDAction method, because this only need to do for git remote
         if (repositoryObjectCRUD instanceof RemoteRepositoryObjectCRUD) {
