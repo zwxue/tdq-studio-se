@@ -380,10 +380,11 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             // If there is no elements checked in table view (right panel), then the parent element in tree viewer
             // should be unchecked.
             List<?> checkedList = (List<?>) modelElementCheckedMap.get(tableParent);
-            if (checkedList == null || checkedList.size() == 0) {
-                getTreeViewer().setChecked(tableParent, checkedFlag);
-            } else {
+            if (checkedList != null) {
                 checkedList.remove(reposNode);
+                if (checkedList.size() == 0) {
+                    getTreeViewer().setChecked(tableParent, checkedFlag);
+                }
             }
         }
     }
