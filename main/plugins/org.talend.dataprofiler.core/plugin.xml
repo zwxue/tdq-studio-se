@@ -80,7 +80,7 @@
            <options>
               <property
                     name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
-                    value="true">
+                    value="false">
               </property>
            </options>
         </viewer>
