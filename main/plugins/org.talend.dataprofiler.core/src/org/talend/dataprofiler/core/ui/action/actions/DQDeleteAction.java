@@ -64,6 +64,7 @@ import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
+import org.talend.dataprofiler.core.ui.views.resources.RemoteRepositoryObjectCRUD;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -219,6 +220,18 @@ public class DQDeleteAction extends DeleteAction {
         for (Object obj : deleteElements) {
             RepositoryNode node = (RepositoryNode) obj;
             selectedNodes.add(node);
+
+            // TDQ-12034: reload the delete node to make sure when check the dependency correct.
+            if (repositoryObjectCRUD instanceof RemoteRepositoryObjectCRUD) {
+                try {
+                    ProxyRepositoryFactory.getInstance().reload(node.getObject().getProperty());
+                    IFile objFile = PropertyHelper.getItemFile(node.getObject().getProperty());
+                    objFile.refreshLocal(IResource.DEPTH_INFINITE, null);
+                } catch (Exception e1) {
+                    log.error(e1, e1);
+                }
+            }
+            // TDQ-12034~
         }
         if (DQRepositoryNode.isOnFilterring()) {
             setPreviousFilteredNode(selectedNodes.get(0));
