@@ -1015,7 +1015,8 @@ public class DQRespositoryView extends CommonNavigator {
                 }
 
             };
-            repositoryWorkUnit.setAvoidUnloadResources(true);
+            // TDQ-12262: set to false, because for git remote project, when the item file is updated, need to unload.
+            repositoryWorkUnit.setAvoidUnloadResources(false);
             ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
             try {
                 repositoryWorkUnit.throwPersistenceExceptionIfAny();
