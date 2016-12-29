@@ -1031,7 +1031,7 @@ public class DQRespositoryView extends CommonNavigator {
         IStructuredSelection selection = (IStructuredSelection) anEvent.getSelection();
         Object element = selection.getFirstElement();
         RepositoryNode repoNode = (RepositoryNode) element;
-        if (repoNode.canExpandForDoubleClick()) {
+        if (repoNode != null && repoNode.canExpandForDoubleClick()) {
             super.handleDoubleClick(anEvent);
         }
     }
