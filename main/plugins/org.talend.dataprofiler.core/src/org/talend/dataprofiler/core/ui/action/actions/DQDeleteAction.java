@@ -48,6 +48,7 @@ import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.runtime.model.repository.ERepositoryStatus;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -633,6 +634,20 @@ public class DQDeleteAction extends DeleteAction {
             if (tempNode.getObject() != null) {
                 CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
             }
+
+            // TDQ-12207 msjian: unlock the object which is locked by user only, then we will unify the logic to the same as above
+            // closeEditorIfOpened)
+            if (ProxyRepositoryFactory.getInstance().getStatus(tempNode.getObject()) == ERepositoryStatus.LOCK_BY_USER) {
+                try {
+                    ProxyRepositoryFactory.getInstance().unlock(tempNode.getObject());
+                } catch (PersistenceException e) {
+                    log.error(e, e);
+                } catch (LoginException e) {
+                    log.error(e, e);
+                }
+            }
+            // TDQ-12207~
+
             // need to pass the tempNode parameter at here for logical delete dependce.
             excuteSuperRun(tempNode, tempNode.getParent());
             CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
