@@ -140,7 +140,6 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         return null;
     }
 
-
     /**
      * 
      * zshen Create Benford chart and keep customer dataset
@@ -297,8 +296,8 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
             item.setText(itemEntity.geti18nLabel());
             item.setImage(itemEntity.getIcon());
             item.setEnabled(DrillDownUtils.isMenuItemEnable(currentDataEntity, itemEntity, analysis));
-            item.addSelectionListener(createSelectionAdapter(analysis, currentEngine, currentDataEntity, currentIndicator,
-                    itemEntity, checkSql));
+            item.addSelectionListener(createSelectionAdapter(analysis, currentDataEntity, currentIndicator.getName(), itemEntity,
+                    checkSql));
 
             if (ChartTableFactory.isPatternFrequencyIndicator(currentIndicator)
                     && !ChartTableFactory.isEastAsiaPatternFrequencyIndicator(currentIndicator) && createPatternFlag == 0) {
@@ -310,14 +309,13 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         return menu;
     }
 
-    private SelectionAdapter createSelectionAdapter(final Analysis analysis1, final ExecutionLanguage currentEngine,
-            final ChartDataEntity currentDataEntity, final Indicator currentIndicator, final MenuItemEntity itemEntity,
-            final boolean checkSql) {
+    public SelectionAdapter createSelectionAdapter(final Analysis analysis1, final ChartDataEntity currentDataEntity,
+            final String editorName, final MenuItemEntity itemEntity, final boolean checkSql) {
         return new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (ExecutionLanguage.JAVA == currentEngine) {
+                if (ExecutionLanguage.JAVA == analysis1.getParameters().getExecutionLanguage()) {
                     try {
                         DrillDownEditorInput input = new DrillDownEditorInput(analysis1, currentDataEntity, itemEntity);
                         Boolean check = checkSql ? SqlExplorerUtils.getDefault().getSqlexplorerService() != null : input
@@ -349,7 +347,6 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
                             Connection tdDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analysis1.getContext()
                                     .getConnection());
                             String query = itemEntity.getQuery();
-                            String editorName = currentIndicator.getName();
                             SqlExplorerUtils.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                         }
 
@@ -594,7 +591,7 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     public ICustomerDataset getCustomerDataset(Object dataset) {
         if (isTOPChartInstalled()) {
             Object customerDataset = chartService.getCustomerDataset(dataset);
-            if(customerDataset!=null&&customerDataset instanceof ICustomerDataset){
+            if (customerDataset != null && customerDataset instanceof ICustomerDataset) {
                 return (ICustomerDataset) customerDataset;
             }
         }
