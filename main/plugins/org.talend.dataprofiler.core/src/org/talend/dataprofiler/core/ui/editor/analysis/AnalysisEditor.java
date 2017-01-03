@@ -217,8 +217,9 @@ public class AnalysisEditor extends SupportContextEditor {
 
     @Override
     protected void firePropertyChange(final int propertyId) {
-        // TDQ-11550 msjian: when the analysis is locked, set the run button disable
-        setRunActionButtonState(masterPage.isActive());
+        if (masterPage.isActive()) {
+            setRunActionButtonState(true);
+        }
         // MOD klliu 2011-04-08 if masterPage is dirty,then button of SaveAction can been used.
         setSaveActionButtonState(masterPage.isDirty());
         super.firePropertyChange(propertyId);
