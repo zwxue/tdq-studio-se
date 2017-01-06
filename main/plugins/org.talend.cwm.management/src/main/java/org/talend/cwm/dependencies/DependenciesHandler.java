@@ -279,11 +279,15 @@ public final class DependenciesHandler {
             if (dependency.getKind() != null && USAGE.compareTo(dependency.getKind()) == 0) {
                 // if exist return true with the dependency
                 EObject resolvedObject = ResourceHelper.resolveObject(dependency.getClient(), client);
+                // check whether the client contains relation dependency, if yes remove the dependency firstly
                 if (resolvedObject == null) {
+                    if (checkClientDependencyExist(client, supplier)) {
+                        // normal case the code should not come here, except import same project with the second time
+                        removeClientDependency(client, supplier);
+                    }
                     // if not add analysis to the dependency
                     dependency.getClient().add(client);
                 }
-
                 TypedReturnCode<Dependency> rc = new TypedReturnCode<Dependency>();
                 rc.setObject(dependency);
                 return rc;
@@ -291,6 +295,44 @@ public final class DependenciesHandler {
         }
         // if not exist create a usage dependency
         return createUsageDependencyOn(client, supplier);
+    }
+
+    /**
+     * DOC zshen Comment method "removeClientDependency".
+     * 
+     * @param client
+     * @param supplier
+     */
+    private void removeClientDependency(ModelElement client, ModelElement supplier) {
+        for (Dependency dependency : client.getClientDependency()) {
+            if (dependency.getKind() != null && USAGE.compareTo(dependency.getKind()) == 0) {
+                EObject resolvedObject = ResourceHelper.resolveObject(dependency.getSupplier(), supplier);
+                if (resolvedObject != null) {
+                    client.getClientDependency().remove(dependency);
+                    return;
+                }
+            }
+        }
+
+    }
+
+    /**
+     * DOC zshen Comment method "checkClientDependency".
+     * 
+     * @param client
+     * @param supplier
+     * @return
+     */
+    private boolean checkClientDependencyExist(ModelElement client, ModelElement supplier) {
+        for (Dependency dependency : client.getClientDependency()) {
+            if (dependency.getKind() != null && USAGE.compareTo(dependency.getKind()) == 0) {
+                EObject resolvedObject = ResourceHelper.resolveObject(dependency.getSupplier(), supplier);
+                if (resolvedObject != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
