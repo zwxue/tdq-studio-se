@@ -90,9 +90,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public static final String ID = "org.talend.common.runTalendElement"; //$NON-NLS-1$
 
     private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00"); //$NON-NLS-1$
-    
+
     private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
-    
+
     private IRuningStatusListener listener;
 
     @Deprecated
@@ -153,11 +153,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             // TDQ-11550: refresh first especially for remote project, can get the lastest item status correctly
             repositoryObjectCRUD.refreshDQViewForRemoteProject();
 
-            if (!repositoryObjectCRUD.isSelectionAvailable()) {
-                repositoryObjectCRUD.showWarningDialog();
-                return;
-            }
-            
             for (TDQAnalysisItem anaItem : items) {
                 runAnalysisForItem(anaItem);
             }
