@@ -195,6 +195,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             FileEditorInput fileEditorInput = new FileEditorInput(file2);
             this.setInput(fileEditorInput);
             property = PropertyHelper.getProperty(fileEditorInput.getFile());
+            this.setOldDataproviderName(currentModelElement.getName());
         }
         return DqRepositoryViewService.buildElementName(property);
     }
