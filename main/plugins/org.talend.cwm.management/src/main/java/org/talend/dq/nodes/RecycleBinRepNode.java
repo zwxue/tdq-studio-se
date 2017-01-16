@@ -131,11 +131,16 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     private void addItemToRecycleBin(Project project) {
         List<DQRepositoryNode> foldersList = new ArrayList<DQRepositoryNode>();
         List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(project.getEmfProject());
+        //MOD TDQ-12205, make sure that the metadata is on the end of the list.
+        FolderItem metadata = null;
         for (FolderItem folderItem : folderItems) {
-            if (isTDQOrMetadataRootFolder(folderItem)) {
+            if (isTDQRootFolder(folderItem)) {
                 addItemToRecycleBin(this, folderItem, foldersList, project);
+            }else if (isMetadataRootFolder(folderItem)) {
+                metadata = folderItem;
             }
         }
+        addItemToRecycleBin(this, metadata, foldersList, project);
     }
 
     /*
@@ -149,10 +154,18 @@ public class RecycleBinRepNode extends DQRepositoryNode {
         return super.getChildren();
     }
 
-    public boolean isTDQOrMetadataRootFolder(FolderItem folderItem) {
+    public boolean isTDQRootFolder(FolderItem folderItem) {
 
         String path = getFullFolderPath(folderItem, PluginConstant.EMPTY_STRING);
-        if (path != null && (path.startsWith("TDQ") || path.startsWith("metadata"))) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (path != null && path.startsWith("TDQ")) { //$NON-NLS-1$ //$NON-NLS-2$
+            return true;
+        }
+        return false;
+    }
+    public boolean isMetadataRootFolder(FolderItem folderItem) {
+
+        String path = getFullFolderPath(folderItem, PluginConstant.EMPTY_STRING);
+        if (path != null && path.startsWith("metadata")) { //$NON-NLS-1$ //$NON-NLS-2$
             return true;
         }
         return false;
