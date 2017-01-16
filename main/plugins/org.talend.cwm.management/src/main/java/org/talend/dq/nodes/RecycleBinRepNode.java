@@ -140,7 +140,9 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                 metadata = folderItem;
             }
         }
-        addItemToRecycleBin(this, metadata, foldersList, project);
+        if(metadata!=null){
+            addItemToRecycleBin(this, metadata, foldersList, project);
+        }
     }
 
     /*
