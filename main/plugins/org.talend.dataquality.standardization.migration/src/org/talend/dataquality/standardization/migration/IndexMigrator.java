@@ -171,7 +171,7 @@ public class IndexMigrator {
                     fieldNames.add(fields.get(k).name());
                 }
 
-                if (fieldNames.contains(F_WORD) && fieldNames.contains(F_SYN)) {
+                if (fieldNames.contains(F_WORD)) {
                     // for "out of the box" indexes, regenerate the index with 2
                     // extra fields ("SYNTERM" and "WORDTERM") for better scoring.
                     String word = doc.getValues(F_WORD)[0];
