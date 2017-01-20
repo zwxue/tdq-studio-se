@@ -542,7 +542,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 proxyRepository.checkAvailability();
                 proxyRepository.initialize();
 
-                XmiResourceManager xmiResourceManager = new XmiResourceManager();
+                XmiResourceManager xmiResourceManager = proxyRepository.getRepositoryFactoryFromProvider().getResourceManager();
                 IProject rootProject = ResourceManager.getRootProject();
 
                 if (rootProject.getFile(FileConstants.LOCAL_PROJECT_FILENAME).exists()) {
