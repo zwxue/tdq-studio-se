@@ -381,6 +381,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return
      * @deprecated use MigrationPlugin.getDefault().getProductVersion()
      */
+    @Deprecated
     public ProductVersion getProductVersion() {
         return MigrationPlugin.getDefault().getProductVersion();
     }
@@ -542,7 +543,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 proxyRepository.checkAvailability();
                 proxyRepository.initialize();
 
-                XmiResourceManager xmiResourceManager = new XmiResourceManager();
+                XmiResourceManager xmiResourceManager = proxyRepository.getRepositoryFactoryFromProvider().getResourceManager();
                 IProject rootProject = ResourceManager.getRootProject();
 
                 if (rootProject.getFile(FileConstants.LOCAL_PROJECT_FILENAME).exists()) {
