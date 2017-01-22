@@ -38,6 +38,7 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -158,7 +159,10 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         // TDQ-12034: before open the object editor, reload it first especially for git remote project
         // TDQ-12771: for local, also can avoid error when the cache node is changed but not save it.
         try {
-            ProxyRepositoryFactory.getInstance().reload(repViewObj.getProperty());
+            Property reloadProp = ProxyRepositoryFactory.getInstance().reload(repViewObj.getProperty());
+            //TDQ-13238 should also get last version for repViewObj after reload property.or else,the property in repViewObj will be a Proxy.
+            //TODO Check with mingsheng if we can only need to get latest repViewObj no need to reload property.
+            this.repViewObj=ProxyRepositoryFactory.getInstance().getLastVersion(reloadProp.getId());
             IFile objFile = PropertyHelper.getItemFile(repViewObj.getProperty());
             objFile.refreshLocal(IResource.DEPTH_INFINITE, null);
         } catch (Exception e1) {
