@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.talend.dataquality; singleton:=true
+Bundle-SymbolicName: org.talend.dataquality;singleton:=true
 Bundle-Version: 6.4.0.qualifier
 Bundle-ClassPath: .,
  dist/org.talend.dataquality.jar
@@ -62,6 +62,7 @@ Export-Package: org.talend.algorithms,
  org.talend.dataquality.rules.impl,
  org.talend.dataquality.rules.util,
  org.talend.dataquality.sample.data,
+ org.talend.dataquality.service,
  org.talend.i18n,
  org.talend.resource
 Require-Bundle: org.talend.utils;visibility:=reexport,
@@ -72,7 +73,11 @@ Require-Bundle: org.talend.utils;visibility:=reexport,
  org.talend.libraries.google.libphonumber,
  org.talend.commons.runtime,
  org.talend.libraries.mapdb;visibility:=reexport,
- org.talend.dataquality.common
-Eclipse-RegisterBuddy: org.apache.log4j,org.talend.testutils,org.talend.libraries.mapdb
+ org.talend.dataquality.common,
+ org.talend.core.runtime
+Eclipse-RegisterBuddy: org.apache.log4j,
+ org.talend.testutils,
+ org.talend.libraries.mapdb
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Activator: org.talend.dataquality.DataQualityPlugin
