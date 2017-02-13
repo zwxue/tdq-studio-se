@@ -468,14 +468,8 @@ public class AnalysisEditor extends SupportContextEditor {
 
             @Override
             public boolean handle(Object data) {
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    public void run() {
-                        WorkbenchUtils.refreshCurrentAnalysisEditor(getMasterPage().getAnalysis().getName());
-                    }
-
-                });
-
+            	 // TDQ-13275 remove 'Display.getDefault().asyncExec' to avoid error with Multi-thread open editors.
+                WorkbenchUtils.refreshCurrentAnalysisEditor(getMasterPage().getAnalysis().getName());
                 return true;
             }
         };
