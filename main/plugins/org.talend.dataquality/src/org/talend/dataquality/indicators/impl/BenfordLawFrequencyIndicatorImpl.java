@@ -33,6 +33,7 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected BenfordLawFrequencyIndicatorImpl() {
@@ -121,6 +122,7 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -204,8 +206,12 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         for (int i = 1; i <= 9; i++) {
             this.valueToFreq.put(String.valueOf(i), 0L);
         }
-        this.valueToFreq.put(INVALID, 0L);
-        this.valueToFreq.put(ZERO, 0L);
+        if (this.valueToFreq.get(INVALID) != null) {
+            this.valueToFreq.put(INVALID, 0L);
+        }
+        if (this.valueToFreq.get(ZERO) != null) {
+            this.valueToFreq.put(ZERO, 0L);
+        }
         return ok;
     }
 
