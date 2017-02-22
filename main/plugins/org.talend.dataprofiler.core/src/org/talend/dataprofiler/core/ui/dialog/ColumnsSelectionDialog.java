@@ -383,7 +383,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (checkedList != null) {
                 checkedList.remove(reposNode);
                 if (checkedList.size() == 0) {
+                    // all the sub nodes has been unchecked, so need to uncheck the parent and remove it from the map
                     getTreeViewer().setChecked(tableParent, checkedFlag);
+                    modelElementCheckedMap.remove(tableParent);
                 }
             }
         }
