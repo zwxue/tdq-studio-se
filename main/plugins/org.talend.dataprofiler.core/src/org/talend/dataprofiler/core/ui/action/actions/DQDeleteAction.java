@@ -224,12 +224,15 @@ public class DQDeleteAction extends DeleteAction {
 
             // TDQ-12034: reload the delete node to make sure when check the dependency correct.
             if (repositoryObjectCRUD instanceof RemoteRepositoryObjectCRUD) {
-                try {
-                    ProxyRepositoryFactory.getInstance().reload(node.getObject().getProperty());
-                    IFile objFile = PropertyHelper.getItemFile(node.getObject().getProperty());
-                    objFile.refreshLocal(IResource.DEPTH_INFINITE, null);
-                } catch (Exception e1) {
-                    log.error(e1, e1);
+                // TDQ-13357: fix NPE, because for ReportFileRepNode, repNode.getObject() == null
+                if (node.getObject() != null) {
+                    try {
+                        ProxyRepositoryFactory.getInstance().reload(node.getObject().getProperty());
+                        IFile objFile = PropertyHelper.getItemFile(node.getObject().getProperty());
+                        objFile.refreshLocal(IResource.DEPTH_INFINITE, null);
+                    } catch (Exception e1) {
+                        log.error(e1, e1);
+                    }
                 }
             }
             // TDQ-12034~
