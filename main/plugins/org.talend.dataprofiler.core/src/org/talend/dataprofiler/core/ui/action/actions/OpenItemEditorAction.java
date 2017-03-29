@@ -159,8 +159,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         // TDQ-12034: before open the object editor, reload it first especially for git remote project
         // TDQ-12771: for local, also can avoid error when the cache node is changed but not save it.
         try {
-            //TDQ-13238 get last version for repViewObj instead of reload property.if reload property,the property in repViewObj will be a Proxy.
-            this.repViewObj=ProxyRepositoryFactory.getInstance().getLastVersion(repViewObj.getId());
+        	 Property reloadProp = ProxyRepositoryFactory.getInstance().reload(repViewObj.getProperty());
+        	//TDQ-13238 also get last version for repViewObj after reload property.or else,the property in repViewObj will be a Proxy.
+            this.repViewObj=ProxyRepositoryFactory.getInstance().getLastVersion(reloadProp.getId());
             IFile objFile = PropertyHelper.getItemFile(repViewObj.getProperty());
             objFile.refreshLocal(IResource.DEPTH_INFINITE, null);
         } catch (Exception e1) {
