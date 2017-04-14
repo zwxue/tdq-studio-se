@@ -376,10 +376,12 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
         ElementWriterFactory.getInstance().createPatternWriter().save(patternItem, true);
 
-        //TDQ-11688
-        RepositoryUpdateManager.updateDQPattern(patternItem);
+        // TDQ-13498 : SQL pattern should not pop up modify jobs' dialog.
+        if (!ExpressionType.SQL_LIKE.getLiteral().equals(expressionType)) {
+            // TDQ-11688
+            RepositoryUpdateManager.updateDQPattern(patternItem);
+        }
 
-        
         return true;
     }
 
