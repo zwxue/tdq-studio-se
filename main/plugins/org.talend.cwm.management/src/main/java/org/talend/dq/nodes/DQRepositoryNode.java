@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.PluginConstant;
-import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
@@ -349,10 +348,8 @@ public class DQRepositoryNode extends RepositoryNode {
     }
 
     public String getDisplayTextWithProjectName() {
-        if (ProxyRepositoryManager.getInstance().isMergeRefProject()) {
-            if (!this.getProject().isMainProject()) {
-                return getDisplayText() + getDisplayProjectName();
-            }
+        if (!this.getProject().isMainProject()) {
+            return getDisplayText() + getDisplayProjectName();
         }
         return getDisplayText();
     }
