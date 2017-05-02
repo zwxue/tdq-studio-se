@@ -37,6 +37,7 @@ import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
@@ -159,9 +160,10 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         // TDQ-12034: before open the object editor, reload it first especially for git remote project
         // TDQ-12771: for local, also can avoid error when the cache node is changed but not save it.
         try {
-        	 Property reloadProp = ProxyRepositoryFactory.getInstance().reload(repViewObj.getProperty());
-        	//TDQ-13238 also get last version for repViewObj after reload property.or else,the property in repViewObj will be a Proxy.
-            this.repViewObj=ProxyRepositoryFactory.getInstance().getLastVersion(reloadProp.getId());
+            Property reloadProp = ProxyRepositoryFactory.getInstance().reload(repViewObj.getProperty());
+            // TDQ-13238 also get last version for repViewObj after reload property.or else,the property in repViewObj will be a
+            // Proxy.
+            this.repViewObj = ProxyRepositoryFactory.getInstance().getLastVersion(reloadProp.getId());
             IFile objFile = PropertyHelper.getItemFile(repViewObj.getProperty());
             objFile.refreshLocal(IResource.DEPTH_INFINITE, null);
         } catch (Exception e1) {
@@ -246,6 +248,10 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             }
             if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)) {
                 result = new ConnectionItemEditorInput(item);
+                Connection connection = ((ConnectionItem) item).getConnection();
+                if (connection == null || connection.getDataPackage().size() == 0) {
+                    throw ExceptionFactory.getInstance().createBusinessException(repViewObj);
+                }
                 editorID = ConnectionEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
 

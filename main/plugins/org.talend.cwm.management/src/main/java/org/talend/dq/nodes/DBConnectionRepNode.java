@@ -42,7 +42,10 @@ public class DBConnectionRepNode extends ConnectionRepNode {
     public DatabaseConnection getDatabaseConnection() {
         DatabaseConnection dbConnection = null;
         Property property = getObject().getProperty();
-        dbConnection = (DatabaseConnection) ((ConnectionItem) property.getItem()).getConnection();
+        if (property != null && property.getItem() != null
+                && ((ConnectionItem) property.getItem()).getConnection() instanceof DatabaseConnection) {
+            dbConnection = (DatabaseConnection) ((ConnectionItem) property.getItem()).getConnection();
+        }
         return dbConnection;
     }
 
@@ -68,24 +71,25 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         afterGlobalFilter = new ArrayList<IRepositoryNode>();
         // Retrieve catalogs/schemes.
         DatabaseConnection databaseConnection = getDatabaseConnection();
-        EList<Package> dataPackage = databaseConnection.getDataPackage();
-        if (dataPackage != null && dataPackage.size() > 0) {
-            Package pack = dataPackage.get(0);
-            String filterCharater = ConnectionHelper.getPackageFilter(databaseConnection);
-            List<IRepositoryNode> afterPackageFilter = null;
-            if (pack instanceof Schema) {
-                // MOD gdbu 2011-6-29 bug : 22204
-                afterGlobalFilter = filterResultsIfAny(createRepositoryNodeSchema(dataPackage));
-                afterPackageFilter = filterPackages(filterCharater, afterGlobalFilter);
-                return afterPackageFilter == null ? afterGlobalFilter : afterPackageFilter;
-            } else if (pack instanceof Catalog) {
-                afterGlobalFilter = filterResultsIfAny(createRepositoryNodeCatalog(dataPackage));
-                afterPackageFilter = filterPackages(filterCharater, afterGlobalFilter);
-                return afterPackageFilter == null ? afterGlobalFilter : afterPackageFilter;
-                // ~22204
+        if (databaseConnection != null) {
+            EList<Package> dataPackage = databaseConnection.getDataPackage();
+            if (dataPackage != null && dataPackage.size() > 0) {
+                Package pack = dataPackage.get(0);
+                String filterCharater = ConnectionHelper.getPackageFilter(databaseConnection);
+                List<IRepositoryNode> afterPackageFilter = null;
+                if (pack instanceof Schema) {
+                    // MOD gdbu 2011-6-29 bug : 22204
+                    afterGlobalFilter = filterResultsIfAny(createRepositoryNodeSchema(dataPackage));
+                    afterPackageFilter = filterPackages(filterCharater, afterGlobalFilter);
+                    return afterPackageFilter == null ? afterGlobalFilter : afterPackageFilter;
+                } else if (pack instanceof Catalog) {
+                    afterGlobalFilter = filterResultsIfAny(createRepositoryNodeCatalog(dataPackage));
+                    afterPackageFilter = filterPackages(filterCharater, afterGlobalFilter);
+                    return afterPackageFilter == null ? afterGlobalFilter : afterPackageFilter;
+                    // ~22204
+                }
             }
         }
-
         return new ArrayList<IRepositoryNode>();
 
     }
