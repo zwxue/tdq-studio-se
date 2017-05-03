@@ -12,10 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.chart.util;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.SlidingCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 
 /**
@@ -27,6 +33,8 @@ public class TalendChartComposite extends ChartComposite {
 
     private Menu popupMenu;
 
+    private SlidingCategoryDataset slidDataSet = null;
+
     /**
      * DOC talend TalendChartComposite constructor comment.
      * 
@@ -37,6 +45,31 @@ public class TalendChartComposite extends ChartComposite {
      */
     public TalendChartComposite(Composite comp, int style, JFreeChart chart, boolean useBuffer) {
         super(comp, style, chart, useBuffer);
+        computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        // TDQ-13375 add listener when drag the scroll bar for frequency indicator bar chart
+        if (style == SWT.VERTICAL) {
+            ScrollBar verticalBar = this.getVerticalBar();
+            CategoryDataset dataset = chart.getCategoryPlot().getDataset();
+            if (dataset instanceof SlidingCategoryDataset) {
+                slidDataSet = (SlidingCategoryDataset) dataset;
+                verticalBar.addSelectionListener(new SelectionListener() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        int selection = verticalBar.getSelection();
+                        if (selection < slidDataSet.getUnderlyingDataset().getColumnCount()) {
+                            slidDataSet.setFirstCategoryIndex(selection);
+                        }
+                    }
+
+                    @Override
+                    public void widgetDefaultSelected(SelectionEvent e) {
+                        widgetSelected(e);
+                    }
+
+                });
+            }
+        }
     }
 
     /*
