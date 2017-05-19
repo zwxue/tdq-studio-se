@@ -369,7 +369,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
     private boolean executeRule(WhereRuleIndicator rule, Connection connection) {
         // set the connection's catalog
         String catalogName = getCatalogOrSchemaName(rule.getAnalyzedElement());
-        if (catalogName != null) { // check whether null argument can be given
+        if (catalogName != null && needChangeCatalog(connection)) { // check whether null argument can be given
             changeCatalog(catalogName, connection);
         }
 
@@ -429,7 +429,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
     private boolean executeIndicator(Indicator indicator, Connection connection) {
         // set the connection's catalog
         String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
-        if (catalogName != null) { // check whether null argument can be given
+        if (catalogName != null && needChangeCatalog(connection)) { // check whether null argument can be given
             changeCatalog(catalogName, connection);
         }
 
@@ -477,7 +477,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
     }
 
     protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
-        if (catalogName != null) { // check whether null argument can be given
+        if (catalogName != null && needChangeCatalog(connection)) { // check whether null argument can be given
             changeCatalog(catalogName, connection);
         }
         // create query statement
