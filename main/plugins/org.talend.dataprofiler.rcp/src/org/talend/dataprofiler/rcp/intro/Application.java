@@ -58,6 +58,8 @@ public class Application implements IApplication {
     public Object start(IApplicationContext context) {
         Display display = PlatformUI.createDisplay();
         Shell shell = new Shell(display, SWT.ON_TOP);
+        // TDQ-12221: do check before use to make sure can popup the "Connect to TalendForge"
+        checkBrowserSupport();
         try {
             boolean accept = openLicenseAndRegister(shell);
             if (!accept) {
@@ -66,8 +68,6 @@ public class Application implements IApplication {
         } catch (BusinessException e) {
             log.error(e.getMessage());
         }
-
-        checkBrowserSupport();
 
         try {
             if (!CorePlugin.getDefault().isRepositoryInitialized()) {
