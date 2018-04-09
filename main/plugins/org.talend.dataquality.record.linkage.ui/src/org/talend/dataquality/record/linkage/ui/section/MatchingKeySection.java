@@ -131,6 +131,9 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         // ADD msjian TDQ-8090: add a edit button
         Composite com = toolkit.createComposite(ruleFolder);
         GridLayout comTableLayout = new GridLayout(2, Boolean.TRUE);
+        comTableLayout.marginBottom = 0;
+        comTableLayout.marginHeight = 0;
+        comTableLayout.marginWidth = 0;
         com.setLayout(comTableLayout);
 
         createEditButton(com);
@@ -202,8 +205,6 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         ruleFolder.setRenderer(new MatchRuleCTabFolderRenderer(ruleFolder));
         ruleFolder.setMaximizeVisible(false);
         ruleFolder.setMinimizeVisible(false);
-        // set higher than before, because add a edit button.
-        ruleFolder.setTabHeight(36);
         ruleFolder.setSimple(false);
         ruleFolder.setDragDetect(true);
 
