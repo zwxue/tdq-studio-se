@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.ui.runtime.image.IImage;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.properties.Property;
@@ -198,13 +199,14 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
-     */
     @Override
     public String getDisplayText() {
         return getLabelWithCount();
     }
+
+    @Override
+    public IImage getIcon() {
+        return getIconWithState(this.getObject());
+    }
+
 }

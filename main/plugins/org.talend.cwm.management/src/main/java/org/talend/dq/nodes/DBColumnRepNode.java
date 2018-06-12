@@ -14,6 +14,7 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
+import org.talend.commons.ui.runtime.image.IImage;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
@@ -127,4 +128,10 @@ public class DBColumnRepNode extends ColumnRepNode {
     public String getDisplayText() {
         return getLabel() + "(" + getNodeDataType() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    @Override
+    public IImage getIcon() {
+        return null;
+    }
+
 }

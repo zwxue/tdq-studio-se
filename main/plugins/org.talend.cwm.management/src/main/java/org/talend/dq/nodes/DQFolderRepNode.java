@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.ui.runtime.image.ECoreImage;
+import org.talend.commons.ui.runtime.image.IImage;
 import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.repository.Folder;
@@ -136,5 +138,14 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
             IRepositoryNode folderNode) throws PersistenceException {
         return ProxyRepositoryFactory.getInstance().getTdqRepositoryViewObjects(project, getContentType(),
                 RepositoryNodeHelper.getPath(folderNode).toString());
+    }
+    
+    protected IImage getIconWithState(Object obj) {
+        // Not work need to chech more TODO
+        // IRepositoryView repositoryView = RepositoryManagerHelper.getRepositoryView();
+        // if (repositoryView != null) {
+        // return (repositoryView.getExpandedState(obj) ? ECoreImage.FOLDER_OPEN_ICON : ECoreImage.FOLDER_CLOSE_ICON);
+        // }
+        return ECoreImage.FOLDER_CLOSE_ICON;
     }
 }

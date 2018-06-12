@@ -137,4 +137,5 @@ public class DBConnectionFolderRepNode extends DQFolderRepNode {
             updateSoftwareSystem(viewObject);
         }
     }
+
 }

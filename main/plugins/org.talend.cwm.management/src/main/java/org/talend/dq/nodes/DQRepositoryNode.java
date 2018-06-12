@@ -15,6 +15,10 @@ package org.talend.dq.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.graphics.Image;
+import org.talend.commons.ui.runtime.image.ECoreImage;
+import org.talend.commons.ui.runtime.image.IImage;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -358,4 +362,21 @@ public class DQRepositoryNode extends RepositoryNode {
         return "(@" + this.getProject().getLabel() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ 
     }
 
+    @Override
+    public IImage getIcon() {
+        if (getParent() != null && getParent() instanceof RecycleBinRepNode
+                && ERepositoryObjectType.FOLDER.equals(this.getObjectType())) {
+            return ECoreImage.FOLDER_CLOSE_ICON;
+        }
+
+        IImage iImage = super.getIcon();
+        if (iImage != null) {
+            return iImage;
+        }
+        return null;
+    }
+
+    public Image getImage() {
+        return null;
+    }
 }
