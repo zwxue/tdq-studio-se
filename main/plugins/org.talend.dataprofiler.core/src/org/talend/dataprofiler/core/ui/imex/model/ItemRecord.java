@@ -46,6 +46,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ContextViewHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -754,10 +755,28 @@ public class ItemRecord {
                         || name.equals(EResourceConstant.EXCHANGE.getName()) || name.equals(EResourceConstant.RULES.getName())
                         || name.equals(EResourceConstant.SYSTEM_INDICATORS.getName())
                         || name.equals(EResourceConstant.JRXML_TEMPLATE.getName())
+                        || name.equals(EResourceConstant.USER_DEFINED_INDICATORS.getName())
                         || name.equals(EResourceConstant.PATTERNS.getName())
+                        || name.equals(EResourceConstant.INDICATORS.getName())
                         || name.equals(EResourceConstant.FILEDELIMITED.getName())
-                        || name.equals(EResourceConstant.DB_CONNECTIONS.getName())) {
-                    return DefaultMessagesImpl.getString("ItemRecord." + name.replace(' ', '_'));
+                        || name.equals(EResourceConstant.DB_CONNECTIONS.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_TEXT_STATISTICS.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_CORRELATION.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_FRAUDDETECTION.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_PATTERN_FREQUENCY_STATISTICS.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_PATTERN_MATCHING.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_ADVANCED_STATISTICS.getName())
+                        || name.equals(EResourceConstant.SOURCE_FILES.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_ROW_COMPARISON.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_SIMPLE_STATISTICS.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_SUMMARY_STATISTICS.getName())
+                        || name.equals(EResourceConstant.SYSTEM_INDICATORS_BUSINESS_RULES.getName())
+                        || name.equals(EResourceConstant.RULES_PARSER.getName())
+                        || name.equals(EResourceConstant.RULES_MATCHER.getName())) {
+                    return Messages.getString("RepositoryNodeHelper." + name.replace(' ', '_'));
+                } else if (name.equals(EResourceConstant.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS.getName())) {
+                    return Messages.getString(name.replace(' ', '_'));
                 } else {
                     return name;
                 }
