@@ -813,6 +813,9 @@ public class ItemRecord {
         if ("jasper".equals(path.getFileExtension()) //$NON-NLS-1$
                 || (fileName != null && (fileName.equals(".Talend.definition") || fileName.equals(".Talend.properties")))) {//$NON-NLS-1$ //$NON-NLS-2$
             return false;
+        } else if (path.toString().contains(EResourceConstant.SYSTEM_INDICATORS_PATTERN_FREQUENCY_STATISTICS.getPath())
+                && path.lastSegment().endsWith(".definition")) {
+            return !(fileName != null && fileName.startsWith("C"));
         }
 
         return FactoriesUtil.JAR.equals(path.getFileExtension()) || propPath.toFile().exists()
@@ -838,7 +841,11 @@ public class ItemRecord {
                         return lastSeg.equals(constant.getName())
                                 || pathStr.contains(EResourceConstant.DB_CONNECTIONS.getPath())
                                 || pathStr.contains(EResourceConstant.FILEDELIMITED.getPath());
+                    } else if (constant == EResourceConstant.LIBRARIES) {
+                        // hide the System Indicators/Overview
+                        return !pathStr.contains(EResourceConstant.SYSTEM_INDICATORS_OVERVIEW.getPath());
                     }
+
 
                     return true;
                 }
