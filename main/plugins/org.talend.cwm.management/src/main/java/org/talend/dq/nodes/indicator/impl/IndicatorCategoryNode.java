@@ -13,6 +13,7 @@
 package org.talend.dq.nodes.indicator.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.nodes.indicator.AbstractNode;
 import org.talend.dq.nodes.indicator.ICategoryNode;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
@@ -71,7 +72,7 @@ public class IndicatorCategoryNode extends AbstractNode implements ICategoryNode
     public String getLabel() {
         String displayLabel = label;
         if (StringUtils.isEmpty(displayLabel) && indicatorEnum != null) {
-            displayLabel = this.indicatorEnum.getLabel();
+            displayLabel = Messages.getString(this.indicatorEnum.getLabel().replace(' ', '_'));
         }
         return displayLabel;
     }

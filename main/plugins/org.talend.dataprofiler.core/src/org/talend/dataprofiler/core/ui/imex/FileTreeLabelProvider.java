@@ -140,14 +140,7 @@ public class FileTreeLabelProvider extends LabelProvider {
     public String getText(Object element) {
         if (element instanceof ItemRecord) {
             ItemRecord record = (ItemRecord) element;
-            String label = record.getName();
-            // make the display text the same as dq repository view
-            if (label.equals(EResourceConstant.DATA_PROFILING.getName()) || label.equals(EResourceConstant.LIBRARIES.getName())) {
-                return label.substring(4, label.length());
-            } else if (label.equals(EResourceConstant.METADATA.getName())) {
-                return label.substring(0, 1).toUpperCase() + label.substring(1);
-            }
-            return label;
+            return record.getName();
         }
         return super.getText(element);
     }
