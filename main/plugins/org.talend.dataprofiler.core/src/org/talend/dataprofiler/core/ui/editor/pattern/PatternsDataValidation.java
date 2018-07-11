@@ -36,7 +36,8 @@ public class PatternsDataValidation extends DataValidationImpl {
      * 
      * @param tableFilterResult
      */
-    public PatternsDataValidation(List<Map<Integer, RegexpMatchingIndicator>> tableFilterResult, DataFilterType filterType) {
+    public PatternsDataValidation(List<Map<Integer, RegexpMatchingIndicator>> tableFilterResult,
+            DataFilterType filterType) {
         this.tableFilterResult = tableFilterResult;
         this.filterType = filterType;
     }
@@ -87,6 +88,24 @@ public class PatternsDataValidation extends DataValidationImpl {
     @Override
     public boolean isCheckKey() {
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.validation.DataValidationImpl#getReorderIndex()
+     */
+    @Override
+    public int getReorderIndex() {
+        if (this.propertiesStr == null) {
+            return -1;
+        }
+        for (int index = 0; index < this.propertiesStr.length; index++) {
+            if (propertiesStr[index].equals(sortPropertyName)) {
+                return index;
+            }
+        }
+        return -1;
     }
 
 }
