@@ -36,11 +36,15 @@ import org.talend.dataprofiler.core.ui.views.context.TdqContextView;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
+import orgomg.cwm.foundation.expressions.ExpressionNode;
+import orgomg.cwm.objectmodel.core.TaggedValue;
+import orgomg.cwmx.foundation.er.Domain;
 
 /**
  * created by msjian on 2014-6-19 Detailled comment
@@ -110,6 +114,22 @@ public final class ContextViewHelper {
             for (AnalysisRepNode anaNode : anaList) {
                 EList<ContextType> contextList = anaNode.getAnalysis().getContextType();
                 if (findAndUpdateContext(contextList, contextItem, contextManager)) {
+                    // check the context values used in the tagged values, if need to change
+                    updateContextNameUsed(anaNode.getAnalysis().getTaggedValue(), contextManager);
+
+                    // check Data Filter, which can use context value
+                    for (Domain domain : anaNode.getAnalysis().getDomain()) {
+                        for (ExpressionNode node : domain.getExpressionNode()) {
+                            if (ContextHelper.isContextVar(node.getExpression().getBody())) {
+                                String newContextParamName = getNewContextParamName(contextManager.getRenameGroupContext(), node
+                                        .getExpression().getBody());
+                                if (newContextParamName != null) {
+                                    node.getExpression().setBody(newContextParamName);
+                                }
+                            }
+                        }
+                    }
+
                     ElementWriterFactory.getInstance().createAnalysisWrite().save(anaNode.getAnalysis());
                     // refresh the analysis
                     WorkbenchUtils.refreshCurrentAnalysisEditor(anaNode.getAnalysis().getName());
@@ -122,12 +142,55 @@ public final class ContextViewHelper {
             for (ReportRepNode repNode : repList) {
                 EList<ContextType> contextList = ((TdReport) repNode.getReport()).getContext();
                 if (findAndUpdateContext(contextList, contextItem, contextManager)) {
+                    // check tagged values in report
+                    updateContextNameUsed(((TdReport) repNode.getReport()).getTaggedValue(), contextManager);
+
+                    // check logo in report, which can use context value
+                    String logo = ((TdReport) repNode.getReport()).getLogo();
+                    if (ContextHelper.isContextVar(logo)) {
+                        String newContextParamName = getNewContextParamName(contextManager.getRenameGroupContext(), logo);
+                        if (newContextParamName != null) {
+                            ((TdReport) repNode.getReport()).setLogo(newContextParamName);
+                        }
+                    }
+
                     ElementWriterFactory.getInstance().createReportWriter().save(repNode.getReport());
                     // refresh the report
                     WorkbenchUtils.refreshCurrentReportEditor(repNode.getReport().getName());
                 }
             }
         }
+    }
+
+    // <taggedValue xmi:id="_oNUOA2SHEei3I9ER6mSBYg" tag="NUMBER_OF_CONNECTIONS_PER_ANALYSIS"
+    // value="context.connection_number"/>
+    // check the tagged values in ana/rep, if some tagged value used context value is
+    // renamed(update value)
+    public static void updateContextNameUsed(List<TaggedValue> values, JobContextManager contextManager) {
+        // rename context group name
+        Map<IContext, String> renameGroupContext = contextManager.getRenameGroupContext();
+        for (TaggedValue value : values) {
+            // first check if tagged values used context or not.
+            if (ContextHelper.isContextVar(value.getValue())) {
+                // if this used context parameter is renamed, update.
+                String newContextParamName = getNewContextParamName(renameGroupContext, value.getValue());
+                if (newContextParamName != null) {
+                    value.setValue(newContextParamName);
+                }
+            }
+        }
+    }
+
+    // find the new name of the old context parameter, which name is changed
+    private static String getNewContextParamName(Map<IContext, String> renameGroupContext, String oldname) {
+        if (!renameGroupContext.isEmpty() && renameGroupContext.containsValue(oldname)) {
+            for (IContext renamedContext : renameGroupContext.keySet()) {
+                if (StringUtils.equals(oldname, renameGroupContext.get(renamedContext))) {
+                    return renamedContext.getName();
+                }
+            }
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -153,18 +216,14 @@ public final class ContextViewHelper {
         }
 
         if (CollectionUtils.isNotEmpty(contextList)) {
+            Map<IContext, String> renameGroupContext = contextManager.getRenameGroupContext();
             for (ContextType modifiedContext : changedList) {
                 String modifiedContextName = modifiedContext.getName();
                 for (ContextType context : contextList) {
                     // rename context group name
-                    Map<IContext, String> renameGroupContext = contextManager.getRenameGroupContext();
-                    if (!renameGroupContext.isEmpty() && renameGroupContext.containsValue(context.getName())) {
-                        for (IContext renamedContext : renameGroupContext.keySet()) {
-                            if (StringUtils.equals(context.getName(), renameGroupContext.get(renamedContext))) {
-                                context.setName(renamedContext.getName());
-                                break;
-                            }
-                        }
+                    String newContextParamName = getNewContextParamName(renameGroupContext, context.getName());
+                    if (newContextParamName != null) {
+                        context.setName(newContextParamName);
                     }
 
                     if (StringUtils.equals(context.getName(), modifiedContextName)) {
