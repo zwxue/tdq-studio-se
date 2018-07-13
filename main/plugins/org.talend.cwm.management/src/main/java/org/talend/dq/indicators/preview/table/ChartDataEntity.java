@@ -341,9 +341,15 @@ public class ChartDataEntity {
                     || indicatorEnum == IndicatorEnum.CSWordPatternLowFreqIndicatorEnum
                     || indicatorEnum == IndicatorEnum.CIWordPatternFreqIndicatorEnum
                     || indicatorEnum == IndicatorEnum.CIWordPatternLowFreqIndicatorEnum) {
-                if (key != null && key.toString().length() > 30) {
-                    msg.append(key.toString().length() > 200 ? key.toString().substring(0, 200)
-                            + "...(" + key.toString().length() + " characters)" : key.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                if (key != null) {
+                    String keyLabel = key.toString();
+                    long keyLabelCPCount = keyLabel.codePoints().count();
+                    if (keyLabelCPCount > 30) {
+                        msg.append(keyLabelCPCount > 200 ? keyLabel.substring(0,
+                                keyLabel.offsetByCodePoints(0, 200))
+                                + "...(" + keyLabelCPCount + " characters)" : keyLabel); //$NON-NLS-1$ //$NON-NLS-2$
+                    }
+
                 }
             } else if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
                 msg.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\""); //$NON-NLS-1$ //$NON-NLS-2$

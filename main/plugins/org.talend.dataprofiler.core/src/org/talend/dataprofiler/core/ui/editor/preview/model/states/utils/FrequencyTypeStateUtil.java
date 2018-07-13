@@ -114,8 +114,11 @@ public class FrequencyTypeStateUtil {
             keyLabel = SpecialValueDisplay.EMPTY_FIELD;
         }
         // TDQ-10785: when the data is too long we show the first maxKeyLength characters for table and chart
-        if (keyLabel.length() > maxKeyLength) {
-            keyLabel = keyLabel.substring(0, maxKeyLength) + "...(" + keyLabel.length() + " characters)"; //$NON-NLS-1$ //$NON-NLS-2$
+        long keyLabelCPCount = keyLabel.codePoints().count();
+        if (keyLabelCPCount > maxKeyLength) {
+            keyLabel =
+                    keyLabel.substring(0, keyLabel.offsetByCodePoints(0, maxKeyLength))
+                            + "...(" + keyLabelCPCount + " characters)"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         // TDQ-10785~
         return keyLabel;
