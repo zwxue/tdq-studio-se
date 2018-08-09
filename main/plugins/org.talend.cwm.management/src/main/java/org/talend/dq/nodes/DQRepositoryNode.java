@@ -195,8 +195,10 @@ public class DQRepositoryNode extends RepositoryNode {
             label = getObject().getLabel();
         } else {
             if (null != this.getObject() && this.getObject().isDeleted()) {
-                label = this.getProperties(EProperties.LABEL) == null ? PluginConstant.EMPTY_STRING : this.getProperties(
-                        EProperties.LABEL).toString();
+                label =
+                        this.getProperties(EProperties.LABEL) == null ? PluginConstant.EMPTY_STRING : this
+                                .getProperties(EProperties.LABEL)
+                                .toString();
             }
         }
         if (label.toLowerCase().contains(getFilterStr())) {
@@ -265,8 +267,9 @@ public class DQRepositoryNode extends RepositoryNode {
         boolean returnVal = false;
         String label = getLabel();
         if (null != this.getObject() && this.getObject().isDeleted()) {
-            label = this.getProperties(EProperties.LABEL) == null ? PluginConstant.EMPTY_STRING : this.getProperties(
-                    EProperties.LABEL).toString();
+            label =
+                    this.getProperties(EProperties.LABEL) == null ? PluginConstant.EMPTY_STRING : this.getProperties(
+                            EProperties.LABEL).toString();
         }
         if (label.toLowerCase().contains(getFilterStr())) {
             returnVal = true;
@@ -378,5 +381,15 @@ public class DQRepositoryNode extends RepositoryNode {
 
     public Image getImage() {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // call super method to make sure that there are same name element
+        if (super.equals(obj)) {
+            // this expression is used to judge whether they are come from different project
+            return this.getProject().equals(((DQRepositoryNode) obj).getProject());
+        }
+        return false;
     }
 }
