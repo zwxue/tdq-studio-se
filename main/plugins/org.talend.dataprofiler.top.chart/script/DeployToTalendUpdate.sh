@@ -33,8 +33,8 @@
 
 list="net.sourceforge.sqlexplorer net.sourceforge.sqlexplorer.nl \
  org.talend.dataprofiler.top.chart org.talend.dataprofiler.top.chart.nl"
-version="6.5.1" # overwrite this variable
-revision_suffix="20171215_1808-EP" # overwrite this variable
+version="7.0.1" # overwrite this variable
+revision_suffix="20180411_1414" # overwrite this variable
 repo_id="talend-update"
 repo_url="https://talend-update.talend.com/nexus/content/repositories/libraries"
 
