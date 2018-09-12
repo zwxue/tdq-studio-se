@@ -82,6 +82,7 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -110,9 +111,22 @@ public class ItemRecord {
 
     private IRepositoryViewObject conflictObject;
 
+    private List<Dependency> clientDepenList;
+
+    private List<Dependency> supplierDepenList;
+
+    private List<IFile> clientDepenFileList;
+
+    private List<IFile> supplierDepenFileList;
+
+    // two type of conflict name and uuid
+    private EConflictType eConflictType;
+
     private Set<File> dependencySet = new HashSet<File>();
 
-    private List<String> errors = new ArrayList<String>();
+    private List<ImportMessage> errors = new ArrayList<ImportMessage>();
+
+    private List<ImportMessage> warns = new ArrayList<ImportMessage>();
 
     private ItemRecord parent;
 
@@ -652,7 +666,17 @@ public class ItemRecord {
      */
     public void addError(String error) {
         String err = (elementEName != null) ? "[" + elementEName.name() + "]" + error : error; //$NON-NLS-1$ //$NON-NLS-2$
-        this.errors.add(err);
+        this.errors.add(new ImportMessage(err, EMessageType.ERROR));
+    }
+
+    /**
+     * zshen Comment method "addWarn".
+     * 
+     * @param warn
+     */
+    public void addWarn(String warnItem) {
+        String warn = (elementEName != null) ? "[" + elementEName.name() + "]" + warnItem : warnItem; //$NON-NLS-1$ //$NON-NLS-2$
+        this.warns.add(new ImportMessage(warn, EMessageType.WARN));
     }
 
     /**
@@ -669,8 +693,28 @@ public class ItemRecord {
      * 
      * @return the errors
      */
-    public List<String> getErrors() {
+    public List<ImportMessage> getErrors() {
         return this.errors;
+    }
+
+    /**
+     * 
+     */
+    public List<String> getErrorMessage() {
+        List<String> errorMessage = new ArrayList<String>();
+        for (ImportMessage message : this.getErrors()) {
+            errorMessage.add(message.toString());
+        }
+        return errorMessage;
+    }
+
+    /**
+     * Getter for warns.
+     * 
+     * @return the warns
+     */
+    public List<ImportMessage> getWarns() {
+        return this.warns;
     }
 
     /**
@@ -680,6 +724,15 @@ public class ItemRecord {
      */
     public boolean isValid() {
         return errors.isEmpty();
+    }
+
+    /**
+     * Judge whether there are some error or warn need to be show
+     * 
+     * @return
+     */
+    public boolean existMessageToShow() {
+        return !errors.isEmpty() || !warns.isEmpty();
     }
 
     /**
@@ -748,11 +801,15 @@ public class ItemRecord {
                 return StringUtils.EMPTY;
             } else {
                 String name = file.getName();
-                if (name.equals(EResourceConstant.DATA_PROFILING.getName()) || name.equals(EResourceConstant.LIBRARIES.getName())
-                        || name.equals(EResourceConstant.METADATA.getName()) || name.equals(EResourceConstant.ANALYSIS.getName())
-                        || name.equals(EResourceConstant.REPORTS.getName()) || name.equals(EResourceConstant.CONTEXT.getName())
+                if (name.equals(EResourceConstant.DATA_PROFILING.getName())
+                        || name.equals(EResourceConstant.LIBRARIES.getName())
+                        || name.equals(EResourceConstant.METADATA.getName())
+                        || name.equals(EResourceConstant.ANALYSIS.getName())
+                        || name.equals(EResourceConstant.REPORTS.getName())
+                        || name.equals(EResourceConstant.CONTEXT.getName())
                         || name.equals(EResourceConstant.HADOOP_CLUSTER.getName())
-                        || name.equals(EResourceConstant.EXCHANGE.getName()) || name.equals(EResourceConstant.RULES.getName())
+                        || name.equals(EResourceConstant.EXCHANGE.getName())
+                        || name.equals(EResourceConstant.RULES.getName())
                         || name.equals(EResourceConstant.SYSTEM_INDICATORS.getName())
                         || name.equals(EResourceConstant.JRXML_TEMPLATE.getName())
                         || name.equals(EResourceConstant.USER_DEFINED_INDICATORS.getName())
@@ -847,7 +904,6 @@ public class ItemRecord {
                         return !pathStr.contains(EResourceConstant.SYSTEM_INDICATORS_OVERVIEW.getPath());
                     }
 
-
                     return true;
                 }
             }
@@ -886,6 +942,24 @@ public class ItemRecord {
     }
 
     /**
+     * Find checked record
+     * 
+     * @param filereturn
+     */
+    public static ItemRecord findCheckedRecord(ItemRecord[] checkedRecords, File findFile) {
+        ItemRecord findRecord = ItemRecord.findRecord(findFile);
+        if (findRecord == null) {
+            return null;
+        }
+        for (ItemRecord record : checkedRecords) {
+            if (findRecord.getFile().getAbsolutePath().equals(record.getFile().getAbsolutePath())) {
+                return record;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Getter for allItemRecords.
      * 
      * @return the allItemRecords
@@ -912,4 +986,89 @@ public class ItemRecord {
         this.conflictObject = conflictObject;
     }
 
+    /**
+     * Getter for eConflictType.
+     * 
+     * @return the eConflictType
+     */
+    protected EConflictType geteConflictType() {
+        return this.eConflictType;
+    }
+
+    /**
+     * Sets the eConflictType.
+     * 
+     * @param eConflictType the eConflictType to set
+     */
+    protected void seteConflictType(EConflictType eConflictType) {
+        this.eConflictType = eConflictType;
+    }
+
+    /**
+     * Getter for clientDepenList.
+     * 
+     * @return the clientDepenList
+     */
+    protected List<Dependency> getClientDepenList() {
+        if (clientDepenList == null) {
+            clientDepenList = new ArrayList<Dependency>();
+        }
+        return this.clientDepenList;
+    }
+
+    /**
+     * Getter for supplierDepenList.
+     * 
+     * @return the supplierDepenList
+     */
+    protected List<Dependency> getSupplierDepenList() {
+        if (supplierDepenList == null) {
+            supplierDepenList = new ArrayList<Dependency>();
+        }
+        return this.supplierDepenList;
+    }
+
+    /**
+     * Getter for clientDepenFileList.
+     * 
+     * @return the clientDepenFileList
+     */
+    protected List<IFile> getClientDepenFileList() {
+        if (clientDepenFileList == null) {
+            clientDepenFileList = new ArrayList<IFile>();
+        }
+        return this.clientDepenFileList;
+    }
+
+    /**
+     * Getter for supplierDepenFileList.
+     * 
+     * @return the supplierDepenFileList
+     */
+    protected List<IFile> getSupplierDepenFileList() {
+        if (supplierDepenFileList == null) {
+            supplierDepenFileList = new ArrayList<IFile>();
+        }
+        return this.supplierDepenFileList;
+    }
+
+    /**
+     * Judge whether current record is emf element
+     */
+    public boolean isEMFValid() {
+        return this.getElement() != null;
+    }
+
+    public boolean needMergeDependency() {
+        return this.getSupplierDepenFileList().size() > 0 || this.getClientDepenFileList().size() > 0;
+    }
+
+    public boolean isInvalidNAMEConflictExist() {
+        if (EConflictType.NAME == this.eConflictType
+                && (this.getElement() instanceof Connection || this.getElement() instanceof Analysis || this
+                        .getElement() instanceof Report)) {
+            return true;
+        }
+        return false;
+    }
 }

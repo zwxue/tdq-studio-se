@@ -137,8 +137,8 @@ public final class DependenciesHandler {
             // this clear the corresponding getClientDependency() of each client
             // (objects that requires the
             // elementToDelete)
-            client.clear();
         }
+        supplierDependencies.clear();
         // MOD zshen :softwareSystem don't belong to dependency but need to remove together.
         // MOD sizhaoliu TDQ-6316
         // if (elementToDelete instanceof Connection) {
@@ -448,13 +448,16 @@ public final class DependenciesHandler {
             IndicatorDefinition newIndicatorDefinition = tdqIndicatorItem.getIndicatorDefinition();
             List<IRepositoryViewObject> allAnaList = new ArrayList<IRepositoryViewObject>();
             try {
-                allAnaList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT, true));
+                allAnaList.addAll(ProxyRepositoryFactory.getInstance().getAll(
+                        ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT, true));
             } catch (PersistenceException e) {
                 log.error(e, e);
             }
             for (IRepositoryViewObject theAna : allAnaList) {
-                List<Indicator> indicators = IndicatorHelper.getIndicators(((TDQAnalysisItem) theAna.getProperty().getItem())
-                        .getAnalysis().getResults());
+                List<Indicator> indicators =
+                        IndicatorHelper.getIndicators(((TDQAnalysisItem) theAna.getProperty().getItem())
+                                .getAnalysis()
+                                .getResults());
                 for (Indicator indicator : indicators) {
                     IndicatorDefinition oldIndicatorDefinition = indicator.getIndicatorDefinition();
                     if (ModelElementHelper.compareUUID(oldIndicatorDefinition, newIndicatorDefinition)) {
@@ -490,8 +493,8 @@ public final class DependenciesHandler {
                 for (Property containViewObject : listProperty) {
                     Item item2 = containViewObject.getItem();
                     if (item2 instanceof TDQIndicatorDefinitionItemImpl) {
-                        IndicatorDefinition oldIndicatorDefinition = ((TDQIndicatorDefinitionItemImpl) item2)
-                                .getIndicatorDefinition();
+                        IndicatorDefinition oldIndicatorDefinition =
+                                ((TDQIndicatorDefinitionItemImpl) item2).getIndicatorDefinition();
                         if (ModelElementHelper.compareUUID(oldIndicatorDefinition, newIndicatorDefinition)) {
                             isContain = true;
                             break;
@@ -641,7 +644,11 @@ public final class DependenciesHandler {
     }
 
     private static void findClientAndRemoveDependencyInLocalProject(ModelElement modelElement, ModelElement analysis) {
-        URI uri = EObjectHelper.getURI(modelElement).trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        URI uri =
+                EObjectHelper
+                        .getURI(modelElement)
+                        .trimFileExtension()
+                        .appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
         // get file from filename
         String fileName = uri.lastSegment();
@@ -667,8 +674,12 @@ public final class DependenciesHandler {
 
             // change the cache content also
             Item item = property.getItem();
-            Resource itemResource = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                    .getItemResource(item);
+            Resource itemResource =
+                    ProxyRepositoryFactory
+                            .getInstance()
+                            .getRepositoryFactoryFromProvider()
+                            .getResourceManager()
+                            .getItemResource(item);
 
             List<EObject> toRemoveObjList = new ArrayList<EObject>();
             for (EObject obj : itemResource.getContents()) {
