@@ -330,10 +330,19 @@ public class FileSystemImportWriter implements IImportWriter {
         Property p2 = confilctObject.getProperty();
         // If set this parameter will delete the object when finished the wizard.
         record.setConflictObject(confilctObject);
-        if (p1.getId().equals(p2.getId())) {
+        boolean isIdSame = p1.getId().equals(p2.getId());
+        boolean isNameSame = WorkspaceUtils.normalize(p1.getLabel()).equalsIgnoreCase(p2.getLabel());
+        if (isIdSame && !isNameSame) {
+            record.seteConflictType(EConflictType.UUIDBUTNAME);
+            if (record.isInvalidNAMEConflictExist()) {
+                record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.needSameNameConflictObject", //$NON-NLS-1$
+                        record.getName()));
+            }
+            return true;
+        } else if (isIdSame) {
             record.seteConflictType(EConflictType.UUID);
             return true;
-        } else if (WorkspaceUtils.normalize(p1.getLabel()).equalsIgnoreCase(p2.getLabel())) {
+        } else if (isNameSame) {
             record.seteConflictType(EConflictType.NAME);
             if (record.isInvalidNAMEConflictExist()) {
                 record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.hasNameConflictObject", //$NON-NLS-1$
@@ -1398,6 +1407,7 @@ public class FileSystemImportWriter implements IImportWriter {
                                 EMFSharedResources.getInstance().reloadModelElementInNode(
                                         PropertyHelper.getProperty(clientElementIFile, false));
                         ModelElement clientElement = PropertyHelper.getModelElement(clientProperty);
+                        DependenciesHandler.getInstance().removeClientDependency(clientElement, modelElement);
                         DependenciesHandler.getInstance().setUsageDependencyOn(clientElement, modelElement);
                         ProxyRepositoryFactory.getInstance().save(clientProperty.getItem(), false);
                     }
@@ -1406,6 +1416,7 @@ public class FileSystemImportWriter implements IImportWriter {
                                 EMFSharedResources.getInstance().reloadModelElementInNode(
                                         PropertyHelper.getProperty(SupplierElementIFile, false));
                         ModelElement supplierElement = PropertyHelper.getModelElement(supplierProperty);
+                        DependenciesHandler.getInstance().removeClientDependency(modelElement, supplierElement);
                         DependenciesHandler.getInstance().setUsageDependencyOn(modelElement, supplierElement);
                         ProxyRepositoryFactory.getInstance().save(supplierProperty.getItem(), false);
                     }

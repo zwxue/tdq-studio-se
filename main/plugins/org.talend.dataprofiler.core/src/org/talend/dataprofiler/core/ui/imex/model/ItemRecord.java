@@ -1068,6 +1068,8 @@ public class ItemRecord {
                 && (this.getElement() instanceof Connection || this.getElement() instanceof Analysis || this
                         .getElement() instanceof Report)) {
             return true;
+        } else if (EConflictType.UUIDBUTNAME == this.eConflictType) {
+            return true;
         }
         return false;
     }
