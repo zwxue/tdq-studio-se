@@ -24,6 +24,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -331,7 +332,26 @@ public class FileSystemImportWriter implements IImportWriter {
         // If set this parameter will delete the object when finished the wizard.
         record.setConflictObject(confilctObject);
         boolean isIdSame = p1.getId().equals(p2.getId());
-        boolean isNameSame = WorkspaceUtils.normalize(p1.getLabel()).equalsIgnoreCase(p2.getLabel());
+        boolean isNameSame =
+                WorkspaceUtils.normalize(p1.getLabel()).equalsIgnoreCase(WorkspaceUtils.normalize(p2.getLabel()));
+        boolean isSamePath = true;
+        URI uri1 = p1.eResource().getURI();
+        URI uri2 = p2.eResource().getURI();
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        for (int j = 1, size = uri1.segmentCount(); j < size; ++j) {
+            if (root.getLocation().segment(j) != null && root.getLocation().segment(j).equals(uri1.segment(j))) {
+                continue;
+            } else if (uri1.segment(j).startsWith("tempFolder_")) {
+                // continue project name
+                continue;
+            } else if (!uri1.decode(uri1.segment(j)).equals(
+                    uri2.decode(uri2.segment((uri2.segmentCount()) - (uri1.segmentCount() - j))))) {
+                isSamePath = false;
+                break;
+            }
+            // uri1.segment(j).equals(uri2.segment(j)) then continue
+        }
+
         if (isIdSame && !isNameSame) {
             record.seteConflictType(EConflictType.UUIDBUTNAME);
             if (record.isInvalidNAMEConflictExist()) {
@@ -339,8 +359,13 @@ public class FileSystemImportWriter implements IImportWriter {
                         record.getName()));
             }
             return true;
+
         } else if (isIdSame) {
             record.seteConflictType(EConflictType.UUID);
+            if (!isSamePath) {
+                record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.needSamePathConflictObject", //$NON-NLS-1$
+                        record.getName()));
+            }
             return true;
         } else if (isNameSame) {
             record.seteConflictType(EConflictType.NAME);
@@ -582,7 +607,8 @@ public class FileSystemImportWriter implements IImportWriter {
                                                             .getItem());
                                                     isDelete = false;
                                                 } else if (isWhereRule(modEle)) {
-                                                    // do nothing here now
+                                                    storeDependencyForIndicator(record);
+                                                    isDelete = false;
                                                 }
                                             } else if (isMatchRuleDefinition(modEle)) {
                                                 // do nothing here now
