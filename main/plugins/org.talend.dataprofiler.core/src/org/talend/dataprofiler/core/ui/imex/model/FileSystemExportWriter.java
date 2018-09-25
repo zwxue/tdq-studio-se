@@ -132,9 +132,11 @@ public class FileSystemExportWriter implements IExportWriter {
                             write(resPath, desPath);
                         }
                     }
-                } else {
+                } else {// may not come here check if have time
                     for (ImportMessage error : record.getErrors()) {
-                        log.error(error.toString());
+                        if (EMessageType.ERROR == error.getType()) {
+                            log.error(error.toString());
+                        }
                     }
                 }
 

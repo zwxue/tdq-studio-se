@@ -15,5 +15,6 @@ package org.talend.dataprofiler.core.ui.imex.model;
 public enum EMessageType {
 
     ERROR,
+    DEPENDENCYERROR,
     WARN;
 }

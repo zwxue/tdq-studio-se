@@ -346,7 +346,6 @@ public final class EMFSharedResources {
     public Property reloadModelElementInNode(Property property) {
         try {
             String id = property.getId();
-
             URI uri = property.getItem().eResource().getURI();
 
             ProxyRepositoryFactory.getInstance().unloadResources(property);

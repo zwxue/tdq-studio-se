@@ -55,7 +55,7 @@ public interface IImportWriter {
     public List<String> check();
 
     /**
-     * DOC bZhou Comment method "populate".
+     * Recompute the statu of records
      * 
      * @param elements
      * @param checkExisted

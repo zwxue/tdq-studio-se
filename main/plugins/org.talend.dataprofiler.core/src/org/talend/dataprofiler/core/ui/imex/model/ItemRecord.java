@@ -126,8 +126,6 @@ public class ItemRecord {
 
     private List<ImportMessage> errors = new ArrayList<ImportMessage>();
 
-    private List<ImportMessage> warns = new ArrayList<ImportMessage>();
-
     private ItemRecord parent;
 
     private ItemRecord[] childern;
@@ -670,13 +668,23 @@ public class ItemRecord {
     }
 
     /**
+     * Add dependency error
+     * 
+     * @param error the content of dependency error message
+     */
+    public void addDependencyError(String error) {
+        String err = (elementEName != null) ? "[" + elementEName.name() + "]" + error : error; //$NON-NLS-1$ //$NON-NLS-2$
+        this.errors.add(new ImportMessage(err, EMessageType.DEPENDENCYERROR));
+    }
+
+    /**
      * zshen Comment method "addWarn".
      * 
      * @param warn
      */
     public void addWarn(String warnItem) {
         String warn = (elementEName != null) ? "[" + elementEName.name() + "]" + warnItem : warnItem; //$NON-NLS-1$ //$NON-NLS-2$
-        this.warns.add(new ImportMessage(warn, EMessageType.WARN));
+        this.errors.add(new ImportMessage(warn, EMessageType.WARN));
     }
 
     /**
@@ -703,18 +711,26 @@ public class ItemRecord {
     public List<String> getErrorMessage() {
         List<String> errorMessage = new ArrayList<String>();
         for (ImportMessage message : this.getErrors()) {
-            errorMessage.add(message.toString());
+            if (EMessageType.ERROR == message.getType() || EMessageType.DEPENDENCYERROR == message.getType()) {
+                errorMessage.add(message.toString());
+            }
         }
         return errorMessage;
     }
 
     /**
-     * Getter for warns.
      * 
-     * @return the warns
      */
-    public List<ImportMessage> getWarns() {
-        return this.warns;
+    public List<String> getErrorMessage(boolean isOrverWrite) {
+        List<String> errorMessage = new ArrayList<String>();
+        for (ImportMessage message : this.getErrors()) {
+            if (isOrverWrite && EMessageType.ERROR == message.getType()) {
+                errorMessage.add(message.toString());
+            } else if (!isOrverWrite && EMessageType.DEPENDENCYERROR == message.getType()) {
+                errorMessage.add(message.toString());
+            }
+        }
+        return errorMessage;
     }
 
     /**
@@ -723,16 +739,30 @@ public class ItemRecord {
      * @return
      */
     public boolean isValid() {
-        return errors.isEmpty();
+        for (ImportMessage importMessage : errors) {
+            if (EMessageType.WARN == importMessage.getType()) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
-     * Judge whether there are some error or warn need to be show
+     * Judge whether there are some errors or warns need to show
      * 
      * @return
      */
     public boolean existMessageToShow() {
-        return !errors.isEmpty() || !warns.isEmpty();
+        return !errors.isEmpty();
+    }
+
+    /**
+     * Judge whether there are only some warns need to show
+     */
+    public boolean onlyWarnToShow() {
+        return existMessageToShow() && isValid();
     }
 
     /**
@@ -1063,12 +1093,31 @@ public class ItemRecord {
         return this.getSupplierDepenFileList().size() > 0 || this.getClientDepenFileList().size() > 0;
     }
 
+    /**
+     * Judge whether there is a name confilct exist
+     */
     public boolean isInvalidNAMEConflictExist() {
         if (EConflictType.NAME == this.eConflictType
                 && (this.getElement() instanceof Connection || this.getElement() instanceof Analysis || this
                         .getElement() instanceof Report)) {
             return true;
-        } else if (EConflictType.UUIDBUTNAME == this.eConflictType) {
+        } else if (EConflictType.UUIDBUTNAME == this.eConflictType
+                && !(this.getElement() instanceof Connection || this.getElement() instanceof Analysis || this
+                        .getElement() instanceof Report)) {
+            // analysis connection and report do that first then we will do others
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Judge whether it is the case which need to rename first
+     */
+    public boolean isNeedToRenameFirst() {
+        if (EConflictType.UUIDBUTNAME == this.eConflictType
+                && (this.getElement() instanceof Connection || this.getElement() instanceof Analysis || this
+                        .getElement() instanceof Report)) {
+            // analysis connection and report do that first then we will do others
             return true;
         }
         return false;

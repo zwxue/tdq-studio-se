@@ -155,26 +155,26 @@ public class FileSystemImportWriter implements IImportWriter {
      * ItemRecord [], boolean)
      */
 
-    public ItemRecord[] populate(ItemRecord[] elements, boolean checkExisted) {
+    public ItemRecord[] populate(ItemRecord[] elements, boolean isOverWrite) {
         List<ItemRecord> inValidRecords = new ArrayList<ItemRecord>();
 
         for (ItemRecord record : elements) {
 
             record.getErrors().clear();
-            record.getWarns().clear();
 
             // modify: if it is a indicator and used in analysis, do not add errors
-            checkConflict(record, isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()));
+            checkConflict(record, isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()),
+                    isOverWrite);
 
             // Added 20120809 yyin TDQ-4189, when it is indicator, can be overwrite
-            if (!checkExisted && (isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()))) {
+            if (isOverWrite && (isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()))) {
                 continue;
             }// ~
 
             checkDependency(record);
 
-            if (checkExisted && record.getConflictObject() != null) {
-                record.addWarn(DefaultMessagesImpl.getString(
+            if (!isOverWrite && record.getConflictObject() != null) {
+                record.addError(DefaultMessagesImpl.getString(
                         "FileSystemImproWriter.hasConflictObject", record.getName()));//$NON-NLS-1$ 
             }
 
@@ -294,7 +294,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * @param record
      * @param checkExisted
      */
-    private void checkConflict(ItemRecord record, boolean isIndicator) {
+    private void checkConflict(ItemRecord record, boolean isIndicator, boolean isOverWrite) {
         Property property = record.getProperty();
         if (property != null) {
             try {
@@ -302,7 +302,8 @@ public class FileSystemImportWriter implements IImportWriter {
                 List<IRepositoryViewObject> allObjects = ProxyRepositoryFactory.getInstance().getAll(itemType, true);
                 for (IRepositoryViewObject object : allObjects) {
                     if (isConflict(property, object, record)) {
-                        if (!isIndicator && itemType != ERepositoryObjectType.CONTEXT) {
+                        // dependency error is invalid for overWrite case
+                        if (!isIndicator && itemType != ERepositoryObjectType.CONTEXT && !isOverWrite) {
                             List<IRepositoryViewObject> supplierDependency =
                                     DependenciesHandler.getInstance().getSupplierDependency(object);
                             for (IRepositoryViewObject supplierViewObject : supplierDependency) {
@@ -310,17 +311,20 @@ public class FileSystemImportWriter implements IImportWriter {
                                         DefaultMessagesImpl
                                                 .getString(
                                                         "FileSystemImproWriter.DependencyWarning", new Object[] { record.getName(), supplierViewObject.getProperty().getLabel(), object.getLabel() });//$NON-NLS-1$
-                                if (EConflictType.UUID == record.geteConflictType()) {
-                                    record.addWarn(message);
-                                } else if (EConflictType.NAME == record.geteConflictType()) {
-                                    record.addError(message);
-                                }
+                                record.addDependencyError(message);
+                                // if (EConflictType.UUID == record.geteConflictType()) {
+                                // record.addWarn(message);
+                                // } else if (record.isNeedToRenameFirst()) {
+                                //
+                                // } else if (EConflictType.NAME == record.geteConflictType()
+                                // || record.isInvalidNAMEConflictExist()) {
+                                // record.addError(message);
+                                // }
                             }
                         }
                         return;
                     }
                 }
-                record.setConflictObject(null);
             } catch (Exception e) {
                 record.addError(DefaultMessagesImpl.getString("FileSystemImportWriter.CheckFailed", record.getName()));//$NON-NLS-1$ 
             }
@@ -330,7 +334,7 @@ public class FileSystemImportWriter implements IImportWriter {
     private boolean isConflict(Property p1, IRepositoryViewObject confilctObject, ItemRecord record) {
         Property p2 = confilctObject.getProperty();
         // If set this parameter will delete the object when finished the wizard.
-        record.setConflictObject(confilctObject);
+
         boolean isIdSame = p1.getId().equals(p2.getId());
         boolean isNameSame =
                 WorkspaceUtils.normalize(p1.getLabel()).equalsIgnoreCase(WorkspaceUtils.normalize(p2.getLabel()));
@@ -341,7 +345,7 @@ public class FileSystemImportWriter implements IImportWriter {
         for (int j = 1, size = uri1.segmentCount(); j < size; ++j) {
             if (root.getLocation().segment(j) != null && root.getLocation().segment(j).equals(uri1.segment(j))) {
                 continue;
-            } else if (uri1.segment(j).startsWith("tempFolder_")) {
+            } else if (uri1.segment(j).startsWith("tempFolder_")) { //$NON-NLS-1$
                 // continue project name
                 continue;
             } else if (!uri1.decode(uri1.segment(j)).equals(
@@ -353,21 +357,30 @@ public class FileSystemImportWriter implements IImportWriter {
         }
 
         if (isIdSame && !isNameSame) {
+            record.setConflictObject(confilctObject);
             record.seteConflictType(EConflictType.UUIDBUTNAME);
             if (record.isInvalidNAMEConflictExist()) {
                 record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.needSameNameConflictObject", //$NON-NLS-1$
                         record.getName()));
             }
+            record
+                    .addWarn(DefaultMessagesImpl
+                            .getString(
+                                    "FileSystemImproWriter.sameUUIDDifferentNameReplace", record.getName(), record.getConflictObject().getLabel(), record.getName())); //$NON-NLS-1$
+            // replace message needed by warn
             return true;
-
         } else if (isIdSame) {
+            record.setConflictObject(confilctObject);
             record.seteConflictType(EConflictType.UUID);
             if (!isSamePath) {
                 record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.needSamePathConflictObject", //$NON-NLS-1$
                         record.getName()));
             }
+            record.addWarn(DefaultMessagesImpl.getString("FileSystemImproWriter.sameUUIDReplace", record.getName())); //$NON-NLS-1$
+            // replace message needed by warn
             return true;
         } else if (isNameSame) {
+            record.setConflictObject(confilctObject);
             record.seteConflictType(EConflictType.NAME);
             if (record.isInvalidNAMEConflictExist()) {
                 record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.hasNameConflictObject", //$NON-NLS-1$
@@ -375,6 +388,7 @@ public class FileSystemImportWriter implements IImportWriter {
             }
             return true;
         }
+        // else case mean that no conflict
         return false;
     }
 
@@ -574,6 +588,23 @@ public class FileSystemImportWriter implements IImportWriter {
                         try {
                             List<ItemRecord> needToRemoveList = new ArrayList<ItemRecord>();
                             int work = 0;
+                            for (ItemRecord record : fRecords) {
+                                IRepositoryViewObject object = record.getConflictObject();
+                                if (object != null) {
+                                    Property conflictProperty = object.getProperty();
+                                    ModelElement modEle = record.getElement();
+                                    if (isConnection(modEle) || isAnalysis(modEle) || isReport(modEle)) {
+                                        if (record.isNeedToRenameFirst()) {
+                                            conflictProperty.setLabel(modEle.getName());
+                                            ElementWriterFactory
+                                                    .getInstance()
+                                                    .create(conflictProperty.getItem())
+                                                    .save(conflictProperty.getItem(), true);
+                                            record.seteConflictType(EConflictType.UUID);
+                                        }
+                                    }
+                                }
+                            }
 
                             for (ItemRecord record : fRecords) {
 
@@ -694,13 +725,63 @@ public class FileSystemImportWriter implements IImportWriter {
                             }
 
                             for (ItemRecord removeRecord : needToRemoveList) {
+
                                 Map<IPath, IPath> toImportMap = mapping(removeRecord);
+                                // NAME conflict will not come here
+                                // if (removeRecord.isNeedToRenameFirst()) {
+                                // // find a way to create a new item and keep old one
+                                // Property removedProperty = removeRecord.getProperty();
+                                // // TODO Record uuid from here after that we will replace it on it again
+                                // // (newUUID:oldUUID)
+                                // // Property newProperty =
+                                // // ElementWriterFactory
+                                // // .getInstance()
+                                // // .create(removedProperty.getItem())
+                                // // .initProperty(PropertyHelper.getModelElement(removedProperty));
+                                // // ProxyRepositoryFactory
+                                // // .getInstance()
+                                // // .create(newProperty.getItem(), Path.EMPTY, true);
+                                // updateFiles.clear();
+                                // updateFilesCoverd.clear();
+                                //
+                                // for (IPath resPath : toImportMap.keySet()) {
+                                // IPath desPath = toImportMap.get(resPath);
+                                // ResourceSet resourceSet =
+                                // ProxyRepositoryFactory
+                                // .getInstance()
+                                // .getRepositoryFactoryFromProvider()
+                                // .getResourceManager().resourceSet;
+                                // synchronized (resourceSet) {
+                                // write(resPath, desPath);
+                                // allCopiedFiles.add(desPath.toFile());
+                                // }
+                                // allImportItems.add(desPath);
+                                // // TDQ-12180
+                                // AbstractSvnRepositoryService svnReposService =
+                                // GlobalServiceRegister.getDefault().getSvnRepositoryService(
+                                // AbstractSvnRepositoryService.class);
+                                // if (svnReposService != null) {
+                                // svnReposService.addIfImportOverride(desPath);
+                                // }
+                                // }
+                                // for (File file : updateFiles) {
+                                // update(file, false);
+                                // }
+                                // // never come here in this case
+                                // for (File file : updateFilesCoverd) {
+                                // update(file, true);
+                                // }
+                                //
+                                // fMonitor.worked(++work);
+                                // continue;
+                                // }
                                 IRepositoryViewObject removeViewObject = removeRecord.getConflictObject();
                                 // remove the dependency of the object
                                 // EObjectHelper.removeDependencys(PropertyHelper.getModelElement(removeViewObject
                                 // .getProperty()));
                                 // delete the object
                                 ProxyRepositoryFactory.getInstance().deleteObjectPhysical(removeViewObject);
+
                                 updateFiles.clear();
                                 updateFilesCoverd.clear();
 
@@ -733,6 +814,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
                                 fMonitor.worked(++work);
                             }
+
                             finish(fRecords, fMonitor);
 
                         } catch (Exception e) {
@@ -1409,6 +1491,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * [], org.eclipse.core.runtime.IProgressMonitor)
      */
     public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
+        // TODO replace all item uuid if we can find in the map
         mergeImportItemsDependency(records);
         cleanImportedItems();
         doMigration(monitor);
@@ -1422,10 +1505,19 @@ public class FileSystemImportWriter implements IImportWriter {
             // If record is not a emf element then we don't need to comput dependency
             if (itemRecord.geteConflictType() != null && itemRecord.isEMFValid() && itemRecord.needMergeDependency()) {
                 try {
+                    Property conflictProperty = itemRecord.getConflictObject().getProperty();
+                    if (conflictProperty.eIsProxy()) {
+                        conflictProperty =
+                                PropertyHelper.getProperty(PropertyHelper.getItemFile(conflictProperty), true);
 
+                    }
                     Property currentProperty =
-                            EMFSharedResources.getInstance().reloadModelElementInNode(
-                                    itemRecord.getConflictObject().getProperty());
+                            EMFSharedResources.getInstance().reloadModelElementInNode(conflictProperty);
+                    // NAME conflict will not come here
+                    if (itemRecord.isNeedToRenameFirst()) {
+                        // find a way to create a new item and keep old one
+                        currentProperty = itemRecord.getProperty();
+                    }
                     ModelElement modelElement = PropertyHelper.getModelElement(currentProperty);
 
                     for (IFile clientElementIFile : itemRecord.getClientDepenFileList()) {
@@ -1436,6 +1528,7 @@ public class FileSystemImportWriter implements IImportWriter {
                         DependenciesHandler.getInstance().removeClientDependency(clientElement, modelElement);
                         DependenciesHandler.getInstance().setUsageDependencyOn(clientElement, modelElement);
                         ProxyRepositoryFactory.getInstance().save(clientProperty.getItem(), false);
+                        this.allImportItems.add(WorkspaceUtils.ifileToLocationPath(clientElementIFile));
                     }
                     for (IFile SupplierElementIFile : itemRecord.getSupplierDepenFileList()) {
                         Property supplierProperty =
@@ -1445,6 +1538,7 @@ public class FileSystemImportWriter implements IImportWriter {
                         DependenciesHandler.getInstance().removeClientDependency(modelElement, supplierElement);
                         DependenciesHandler.getInstance().setUsageDependencyOn(modelElement, supplierElement);
                         ProxyRepositoryFactory.getInstance().save(supplierProperty.getItem(), false);
+                        this.allImportItems.add(WorkspaceUtils.ifileToLocationPath(SupplierElementIFile));
                     }
                     ProxyRepositoryFactory.getInstance().save(currentProperty.getItem(), false);
                 } catch (PersistenceException e) {
@@ -1797,6 +1891,12 @@ public class FileSystemImportWriter implements IImportWriter {
                 Property property = PropertyHelper.getProperty(desIFile, true);
                 if (property != null) {
                     try {
+                        // try {
+                        // update(path.toFile(), false);
+                        // } catch (CoreException e) {
+                        // // TODO Auto-generated catch block
+                        // e.printStackTrace();
+                        // }
                         ProxyRepositoryFactory.getInstance().reload(property, desIFile);
                     } catch (PersistenceException e) {
                         log.error(e);
@@ -1809,4 +1909,5 @@ public class FileSystemImportWriter implements IImportWriter {
         // delete the temp folder
         deleteTempProjectFolder();
     }
+
 }

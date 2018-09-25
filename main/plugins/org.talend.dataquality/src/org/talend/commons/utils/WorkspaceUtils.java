@@ -63,12 +63,16 @@ public final class WorkspaceUtils {
     }
 
     public static File ifileToFile(IFile ifile) {
+        return ifileToLocationPath(ifile).toFile();
+    }
+
+    public static IPath ifileToLocationPath(IFile ifile) {
         IPath location =
                 ifile.getLocation() == null ? ResourceManager
                         .getRootProject()
                         .getLocation()
                         .append(ifile.getFullPath()) : ifile.getLocation();
-        return location.toFile();
+        return location;
     }
 
     public static IFile fileToIFile(File file) {

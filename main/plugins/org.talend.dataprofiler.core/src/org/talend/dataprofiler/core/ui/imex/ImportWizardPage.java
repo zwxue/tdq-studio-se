@@ -57,6 +57,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
+import org.talend.dataprofiler.core.ui.imex.model.EMessageType;
 import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportMessage;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
@@ -282,7 +283,7 @@ public class ImportWizardPage extends WizardPage {
      * if the user select:overwrite, the conflick records become valid.otherwise, invalid when conflict
      */
     private void populateElement() {
-        ItemRecord[] invalidRecords = writer.populate(getElements(), !overwriteBTN.getSelection());
+        ItemRecord[] invalidRecords = writer.populate(getElements(), overwriteBTN.getSelection());
         updateErrorList(invalidRecords);
 
         if (invalidRecords.length > 0) {
@@ -296,12 +297,12 @@ public class ImportWizardPage extends WizardPage {
      * @param invalidRecords
      */
     public void removeInvalidRecords(ItemRecord[] invalidRecords) {
+        if (overwriteBTN.getSelection()) {
+            return;
+        }
         if (invalidRecords != null) {
             for (ItemRecord record : invalidRecords) {
-
-                if (!overwriteBTN.getSelection()) {
-                    repositoryTree.setChecked(record, false);
-                }
+                repositoryTree.setChecked(record, false);
             }
 
             repositoryTree.refresh();
@@ -383,9 +384,16 @@ public class ImportWizardPage extends WizardPage {
 
         dErrors.addAll(writer.check());
 
+        boolean onlyWarnMessage = true;
+
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
-            dErrors.addAll(record.getErrorMessage());
+            // only warn to show mean that no error message
+            if (onlyWarnMessage && !record.onlyWarnToShow()) {
+                onlyWarnMessage = false;
+            } else {
+                dErrors.addAll(record.getErrorMessage());
+            }
             for (File depFile : record.getDependencySet()) {
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
@@ -421,9 +429,13 @@ public class ImportWizardPage extends WizardPage {
 
         if (!dErrors.isEmpty()) {
             setErrorMessage(dErrors.get(0));
+        } else if (onlyWarnMessage) {
+            setErrorMessage(null);
+            this.setMessage(Messages.getString("ImportWizardPage.replaceWarn"), ERROR); //$NON-NLS-1$
         } else {
             setErrorMessage(null);
         }
+
         updatePageStatus();
     }
 
@@ -496,7 +508,8 @@ public class ImportWizardPage extends WizardPage {
              */
             @Override
             public Image getImage(Object element) {
-                if (overwriteBTN.getSelection()) {
+                ImportMessage imporMessage = (ImportMessage) element;
+                if (EMessageType.WARN == imporMessage.getType()) {
                     return ImageLib.getImage(ImageLib.WARN_OVR);
                 }
                 return ImageLib.getImage(ImageLib.ICON_ERROR_INFO);
@@ -687,7 +700,6 @@ public class ImportWizardPage extends WizardPage {
 
         for (ItemRecord record : records) {
             errors.addAll(record.getErrors());
-            errors.addAll(record.getWarns());
         }
 
         errorsList.setInput(errors);
