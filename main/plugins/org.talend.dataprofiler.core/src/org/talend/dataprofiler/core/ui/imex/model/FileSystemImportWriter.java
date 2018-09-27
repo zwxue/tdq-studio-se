@@ -312,14 +312,6 @@ public class FileSystemImportWriter implements IImportWriter {
                                                 .getString(
                                                         "FileSystemImproWriter.DependencyWarning", new Object[] { record.getName(), supplierViewObject.getProperty().getLabel(), object.getLabel() });//$NON-NLS-1$
                                 record.addDependencyError(message);
-                                // if (EConflictType.UUID == record.geteConflictType()) {
-                                // record.addWarn(message);
-                                // } else if (record.isNeedToRenameFirst()) {
-                                //
-                                // } else if (EConflictType.NAME == record.geteConflictType()
-                                // || record.isInvalidNAMEConflictExist()) {
-                                // record.addError(message);
-                                // }
                             }
                         }
                         return;
@@ -345,8 +337,8 @@ public class FileSystemImportWriter implements IImportWriter {
         for (int j = 1, size = uri1.segmentCount(); j < size; ++j) {
             if (root.getLocation().segment(j) != null && root.getLocation().segment(j).equals(uri1.segment(j))) {
                 continue;
-            } else if (uri1.segment(j).startsWith("tempFolder_")) { //$NON-NLS-1$
-                // continue project name
+            } else if (uri1.segment(j).equals(this.tempFolder.getName())) {
+                // continue and next one should be project name
                 continue;
             } else if (!uri1.decode(uri1.segment(j)).equals(
                     uri2.decode(uri2.segment((uri2.segmentCount()) - (uri1.segmentCount() - j))))) {
@@ -727,54 +719,6 @@ public class FileSystemImportWriter implements IImportWriter {
                             for (ItemRecord removeRecord : needToRemoveList) {
 
                                 Map<IPath, IPath> toImportMap = mapping(removeRecord);
-                                // NAME conflict will not come here
-                                // if (removeRecord.isNeedToRenameFirst()) {
-                                // // find a way to create a new item and keep old one
-                                // Property removedProperty = removeRecord.getProperty();
-                                // // TODO Record uuid from here after that we will replace it on it again
-                                // // (newUUID:oldUUID)
-                                // // Property newProperty =
-                                // // ElementWriterFactory
-                                // // .getInstance()
-                                // // .create(removedProperty.getItem())
-                                // // .initProperty(PropertyHelper.getModelElement(removedProperty));
-                                // // ProxyRepositoryFactory
-                                // // .getInstance()
-                                // // .create(newProperty.getItem(), Path.EMPTY, true);
-                                // updateFiles.clear();
-                                // updateFilesCoverd.clear();
-                                //
-                                // for (IPath resPath : toImportMap.keySet()) {
-                                // IPath desPath = toImportMap.get(resPath);
-                                // ResourceSet resourceSet =
-                                // ProxyRepositoryFactory
-                                // .getInstance()
-                                // .getRepositoryFactoryFromProvider()
-                                // .getResourceManager().resourceSet;
-                                // synchronized (resourceSet) {
-                                // write(resPath, desPath);
-                                // allCopiedFiles.add(desPath.toFile());
-                                // }
-                                // allImportItems.add(desPath);
-                                // // TDQ-12180
-                                // AbstractSvnRepositoryService svnReposService =
-                                // GlobalServiceRegister.getDefault().getSvnRepositoryService(
-                                // AbstractSvnRepositoryService.class);
-                                // if (svnReposService != null) {
-                                // svnReposService.addIfImportOverride(desPath);
-                                // }
-                                // }
-                                // for (File file : updateFiles) {
-                                // update(file, false);
-                                // }
-                                // // never come here in this case
-                                // for (File file : updateFilesCoverd) {
-                                // update(file, true);
-                                // }
-                                //
-                                // fMonitor.worked(++work);
-                                // continue;
-                                // }
                                 IRepositoryViewObject removeViewObject = removeRecord.getConflictObject();
                                 // remove the dependency of the object
                                 // EObjectHelper.removeDependencys(PropertyHelper.getModelElement(removeViewObject
@@ -1662,6 +1606,11 @@ public class FileSystemImportWriter implements IImportWriter {
         return null;
     }
 
+    /**
+     * Backup worksapce into stdio worksapce and create a folder which start with tempFolder to store it.
+     * Note that we should keep sub class call this method if it must be override.
+     * So that we can keep copy import files from same location
+     */
     protected File backUPWorksapce(IPath workspacePath) {
         try {
             if (log.isDebugEnabled()) {
@@ -1891,12 +1840,6 @@ public class FileSystemImportWriter implements IImportWriter {
                 Property property = PropertyHelper.getProperty(desIFile, true);
                 if (property != null) {
                     try {
-                        // try {
-                        // update(path.toFile(), false);
-                        // } catch (CoreException e) {
-                        // // TODO Auto-generated catch block
-                        // e.printStackTrace();
-                        // }
                         ProxyRepositoryFactory.getInstance().reload(property, desIFile);
                     } catch (PersistenceException e) {
                         log.error(e);

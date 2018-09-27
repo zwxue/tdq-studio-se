@@ -133,11 +133,10 @@ public final class DependenciesHandler {
                     modifiedResources.add(clientResource);
                 }
             }
-            // clear the dependencies of all clients
-            // this clear the corresponding getClientDependency() of each client
-            // (objects that requires the
-            // elementToDelete)
         }
+        // clear client and we need to clear supplier with same time.
+        // So that we use supplierDependencies.clear() instead of clear client and supplier one by one.
+        // And it will keep same action with clientDependencies case
         supplierDependencies.clear();
         // MOD zshen :softwareSystem don't belong to dependency but need to remove together.
         // MOD sizhaoliu TDQ-6316
