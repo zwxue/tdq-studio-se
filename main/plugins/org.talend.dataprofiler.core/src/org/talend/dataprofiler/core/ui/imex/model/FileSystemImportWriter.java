@@ -166,11 +166,6 @@ public class FileSystemImportWriter implements IImportWriter {
             checkConflict(record, isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()),
                     isOverWrite);
 
-            // Added 20120809 yyin TDQ-4189, when it is indicator, can be overwrite
-            // if (isOverWrite && (isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()))) {
-            // continue;
-            // }// ~
-
             checkDependency(record);
 
             if (!isOverWrite && record.getConflictObject() != null) {
