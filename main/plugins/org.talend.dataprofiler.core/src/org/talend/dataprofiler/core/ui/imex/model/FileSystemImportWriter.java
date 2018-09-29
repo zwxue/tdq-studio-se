@@ -167,9 +167,9 @@ public class FileSystemImportWriter implements IImportWriter {
                     isOverWrite);
 
             // Added 20120809 yyin TDQ-4189, when it is indicator, can be overwrite
-            if (isOverWrite && (isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()))) {
-                continue;
-            }// ~
+            // if (isOverWrite && (isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()))) {
+            // continue;
+            // }// ~
 
             checkDependency(record);
 
@@ -354,11 +354,12 @@ public class FileSystemImportWriter implements IImportWriter {
             if (record.isInvalidNAMEConflictExist()) {
                 record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.needSameNameConflictObject", //$NON-NLS-1$
                         record.getName()));
+            } else {
+                record
+                        .addWarn(DefaultMessagesImpl
+                                .getString(
+                                        "FileSystemImproWriter.sameUUIDDifferentNameReplace", record.getName(), record.getConflictObject().getLabel(), record.getName())); //$NON-NLS-1$
             }
-            record
-                    .addWarn(DefaultMessagesImpl
-                            .getString(
-                                    "FileSystemImproWriter.sameUUIDDifferentNameReplace", record.getName(), record.getConflictObject().getLabel(), record.getName())); //$NON-NLS-1$
             // replace message needed by warn
             return true;
         } else if (isIdSame) {
@@ -367,8 +368,11 @@ public class FileSystemImportWriter implements IImportWriter {
             if (!isSamePath) {
                 record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.needSamePathConflictObject", //$NON-NLS-1$
                         record.getName()));
+            } else {
+                record
+                        .addWarn(DefaultMessagesImpl.getString(
+                                "FileSystemImproWriter.sameUUIDReplace", record.getName())); //$NON-NLS-1$
             }
-            record.addWarn(DefaultMessagesImpl.getString("FileSystemImproWriter.sameUUIDReplace", record.getName())); //$NON-NLS-1$
             // replace message needed by warn
             return true;
         } else if (isNameSame) {
@@ -1453,7 +1457,6 @@ public class FileSystemImportWriter implements IImportWriter {
                     if (conflictProperty.eIsProxy()) {
                         conflictProperty =
                                 PropertyHelper.getProperty(PropertyHelper.getItemFile(conflictProperty), true);
-
                     }
                     Property currentProperty =
                             EMFSharedResources.getInstance().reloadModelElementInNode(conflictProperty);
@@ -1465,23 +1468,35 @@ public class FileSystemImportWriter implements IImportWriter {
                     ModelElement modelElement = PropertyHelper.getModelElement(currentProperty);
 
                     for (IFile clientElementIFile : itemRecord.getClientDepenFileList()) {
-                        Property clientProperty =
-                                EMFSharedResources.getInstance().reloadModelElementInNode(
-                                        PropertyHelper.getProperty(clientElementIFile, false));
-                        ModelElement clientElement = PropertyHelper.getModelElement(clientProperty);
-                        DependenciesHandler.getInstance().removeClientDependency(clientElement, modelElement);
-                        DependenciesHandler.getInstance().setUsageDependencyOn(clientElement, modelElement);
-                        ProxyRepositoryFactory.getInstance().save(clientProperty.getItem(), false);
+                        IFile workspaceChekFile =
+                                ResourcesPlugin.getWorkspace().getRoot().getFile(clientElementIFile.getFullPath());
+                        File osCheckFile = WorkspaceUtils.ifileToLocationPath(clientElementIFile).toFile();
+                        if (workspaceChekFile != null && workspaceChekFile.exists() && osCheckFile != null
+                                && osCheckFile.exists()) {
+                            Property clientProperty =
+                                    EMFSharedResources.getInstance().reloadModelElementInNode(
+                                            PropertyHelper.getProperty(clientElementIFile, false));
+                            ModelElement clientElement = PropertyHelper.getModelElement(clientProperty);
+                            DependenciesHandler.getInstance().removeClientDependency(clientElement, modelElement);
+                            DependenciesHandler.getInstance().setUsageDependencyOn(clientElement, modelElement);
+                            ProxyRepositoryFactory.getInstance().save(clientProperty.getItem(), false);
+                        }
                         this.allImportItems.add(WorkspaceUtils.ifileToLocationPath(clientElementIFile));
                     }
                     for (IFile SupplierElementIFile : itemRecord.getSupplierDepenFileList()) {
-                        Property supplierProperty =
-                                EMFSharedResources.getInstance().reloadModelElementInNode(
-                                        PropertyHelper.getProperty(SupplierElementIFile, false));
-                        ModelElement supplierElement = PropertyHelper.getModelElement(supplierProperty);
-                        DependenciesHandler.getInstance().removeClientDependency(modelElement, supplierElement);
-                        DependenciesHandler.getInstance().setUsageDependencyOn(modelElement, supplierElement);
-                        ProxyRepositoryFactory.getInstance().save(supplierProperty.getItem(), false);
+                        IFile workspaceChekFile =
+                                ResourcesPlugin.getWorkspace().getRoot().getFile(SupplierElementIFile.getFullPath());
+                        File osCheckFile = WorkspaceUtils.ifileToLocationPath(SupplierElementIFile).toFile();
+                        if (workspaceChekFile != null && workspaceChekFile.exists() && osCheckFile != null
+                                && osCheckFile.exists()) {
+                            Property supplierProperty =
+                                    EMFSharedResources.getInstance().reloadModelElementInNode(
+                                            PropertyHelper.getProperty(SupplierElementIFile, false));
+                            ModelElement supplierElement = PropertyHelper.getModelElement(supplierProperty);
+                            DependenciesHandler.getInstance().removeClientDependency(modelElement, supplierElement);
+                            DependenciesHandler.getInstance().setUsageDependencyOn(modelElement, supplierElement);
+                            ProxyRepositoryFactory.getInstance().save(supplierProperty.getItem(), false);
+                        }
                         this.allImportItems.add(WorkspaceUtils.ifileToLocationPath(SupplierElementIFile));
                     }
                     ProxyRepositoryFactory.getInstance().save(currentProperty.getItem(), false);

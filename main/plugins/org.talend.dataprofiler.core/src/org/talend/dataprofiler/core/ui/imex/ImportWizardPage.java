@@ -362,7 +362,7 @@ public class ImportWizardPage extends WizardPage {
      */
     protected void updatePageStatus() {
         boolean valid = getErrorMessage() == null;
-        valid = valid && (this.errors.size() < 0 || isOverWrite());
+        valid = valid && (this.errors.size() == 0 || isOverWrite());
         setPageComplete(valid);
     }
 
@@ -384,16 +384,15 @@ public class ImportWizardPage extends WizardPage {
 
         dErrors.addAll(writer.check());
 
-        boolean onlyWarnMessage = true;
-
         ItemRecord[] elements = getElements();
+
+        boolean onlyWarnMessage = false;
         for (ItemRecord record : elements) {
             // only warn to show mean that no error message
-            if (onlyWarnMessage && !record.onlyWarnToShow()) {
-                onlyWarnMessage = false;
-            } else {
-                dErrors.addAll(record.getErrorMessage());
+            if (!onlyWarnMessage && record.onlyWarnToShow()) {
+                onlyWarnMessage = true;
             }
+            dErrors.addAll(record.getErrorMessage());
             for (File depFile : record.getDependencySet()) {
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
@@ -429,7 +428,7 @@ public class ImportWizardPage extends WizardPage {
 
         if (!dErrors.isEmpty()) {
             setErrorMessage(dErrors.get(0));
-        } else if (onlyWarnMessage) {
+        } else if (onlyWarnMessage && elements.length > 0) {
             setErrorMessage(null);
             this.setMessage(Messages.getString("ImportWizardPage.replaceWarn"), ERROR); //$NON-NLS-1$
         } else {
