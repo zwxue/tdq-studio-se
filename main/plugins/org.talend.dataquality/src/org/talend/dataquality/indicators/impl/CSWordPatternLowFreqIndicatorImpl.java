@@ -15,7 +15,7 @@ package org.talend.dataquality.indicators.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.CSWordPatternLowFreqIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.statistics.frequency.recognition.TypoUnicodePatternRecognizer;
+import org.talend.dataquality.statistics.frequency.recognition.WordPatternRecognizer;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +28,7 @@ import org.talend.dataquality.statistics.frequency.recognition.TypoUnicodePatter
  */
 public class CSWordPatternLowFreqIndicatorImpl extends FrequencyIndicatorImpl implements CSWordPatternLowFreqIndicator {
 
-    private TypoUnicodePatternRecognizer typoUnicodePatternRecognizer = null;
+    private WordPatternRecognizer wordPatternRecognizer = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -51,7 +51,7 @@ public class CSWordPatternLowFreqIndicatorImpl extends FrequencyIndicatorImpl im
 
     @Override
     public boolean prepare() {
-        typoUnicodePatternRecognizer = TypoUnicodePatternRecognizer.withCase();
+        wordPatternRecognizer = WordPatternRecognizer.withCase();
         return super.prepare();
     }
 
@@ -61,14 +61,14 @@ public class CSWordPatternLowFreqIndicatorImpl extends FrequencyIndicatorImpl im
             return false;
         }
         String sentence = data.toString();
-        Object pattern = typoUnicodePatternRecognizer.getValuePattern(sentence).toArray()[0];
+        Object pattern = wordPatternRecognizer.getValuePattern(sentence).toArray()[0];
         return super.handle(pattern);
 
     }
 
     @Override
     protected String getFrequencyLabel(Object name) {
-        Object object = typoUnicodePatternRecognizer.getValuePattern(name.toString()).toArray()[0];
+        Object object = wordPatternRecognizer.getValuePattern(name.toString()).toArray()[0];
         return object == null ? null : object.toString();
     }
 } //CSWordPatternLowFreqIndicatorImpl
