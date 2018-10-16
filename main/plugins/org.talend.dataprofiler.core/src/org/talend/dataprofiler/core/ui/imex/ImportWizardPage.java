@@ -57,7 +57,9 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
+import org.talend.dataprofiler.core.ui.imex.model.EMessageType;
 import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
+import org.talend.dataprofiler.core.ui.imex.model.ImportMessage;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
@@ -98,7 +100,7 @@ public class ImportWizardPage extends WizardPage {
 
     protected String basePath;
 
-    private List<String> errors = new ArrayList<String>();
+    private List<ImportMessage> errors = new ArrayList<ImportMessage>();
 
     private final String underlineStr = "_";//$NON-NLS-1$
 
@@ -281,7 +283,7 @@ public class ImportWizardPage extends WizardPage {
      * if the user select:overwrite, the conflick records become valid.otherwise, invalid when conflict
      */
     private void populateElement() {
-        ItemRecord[] invalidRecords = writer.populate(getElements(), !overwriteBTN.getSelection());
+        ItemRecord[] invalidRecords = writer.populate(getElements(), overwriteBTN.getSelection());
         updateErrorList(invalidRecords);
 
         if (invalidRecords.length > 0) {
@@ -295,12 +297,12 @@ public class ImportWizardPage extends WizardPage {
      * @param invalidRecords
      */
     public void removeInvalidRecords(ItemRecord[] invalidRecords) {
+        if (overwriteBTN.getSelection()) {
+            return;
+        }
         if (invalidRecords != null) {
             for (ItemRecord record : invalidRecords) {
-
-                if (!overwriteBTN.getSelection()) {
-                    repositoryTree.setChecked(record, false);
-                }
+                repositoryTree.setChecked(record, false);
             }
 
             repositoryTree.refresh();
@@ -360,6 +362,7 @@ public class ImportWizardPage extends WizardPage {
      */
     protected void updatePageStatus() {
         boolean valid = getErrorMessage() == null;
+        valid = valid && (this.errors.size() == 0 || isOverWrite());
         setPageComplete(valid);
     }
 
@@ -382,17 +385,23 @@ public class ImportWizardPage extends WizardPage {
         dErrors.addAll(writer.check());
 
         ItemRecord[] elements = getElements();
+
+        boolean onlyWarnMessage = false;
         for (ItemRecord record : elements) {
-            dErrors.addAll(record.getErrors());
+            // only warn to show mean that no error message
+            if (!onlyWarnMessage && record.onlyWarnToShow()) {
+                onlyWarnMessage = true;
+            }
+            dErrors.addAll(record.getErrorMessage());
             for (File depFile : record.getDependencySet()) {
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
-                    
+
                     // TDQ-12410: if the dependency comes from reference project, we ingore it.
                     if (!DqFileUtils.isFileUnderBasePath(depFile, writer.getBasePath())) {
                         continue;
                     }
-                    
+
                     ModelElement element = ItemRecord.getElement(depFile);
                     // if the element is IndicatorDefinition and it exist in the current project and don't include any
                     // sql and java templates and the AggregatedDefinitions is not empty or TableOverview/ViewOverview
@@ -407,8 +416,10 @@ public class ImportWizardPage extends WizardPage {
                     // MOD qiongli 2012-12-13 TDQ-5356 use itself file name for jrxml
                     boolean isJrxmlDepFile = depFile.getName().endsWith(FactoriesUtil.JRXML);
                     // MOD msjian TDQ-5909: modify to displayName
-                    String dptLabel = element != null && !isJrxmlDepFile && PropertyHelper.getProperty(element) != null ? PropertyHelper
-                            .getProperty(element).getDisplayName() : depFile.getName();
+                    String dptLabel =
+                            element != null && !isJrxmlDepFile && PropertyHelper.getProperty(element) != null ? PropertyHelper
+                                    .getProperty(element)
+                                    .getDisplayName() : depFile.getName();
                     // TDQ-5909~
                     dErrors.add("\"" + record.getName() + "\" miss dependency :" + dptLabel); //$NON-NLS-1$ //$NON-NLS-2$
                 }
@@ -417,6 +428,9 @@ public class ImportWizardPage extends WizardPage {
 
         if (!dErrors.isEmpty()) {
             setErrorMessage(dErrors.get(0));
+        } else if (onlyWarnMessage && elements.length > 0) {
+            setErrorMessage(null);
+            this.setMessage(Messages.getString("ImportWizardPage.replaceWarn"), ERROR); //$NON-NLS-1$
         } else {
             setErrorMessage(null);
         }
@@ -493,7 +507,8 @@ public class ImportWizardPage extends WizardPage {
              */
             @Override
             public Image getImage(Object element) {
-                if (overwriteBTN.getSelection()) {
+                ImportMessage imporMessage = (ImportMessage) element;
+                if (EMessageType.WARN == imporMessage.getType()) {
                     return ImageLib.getImage(ImageLib.WARN_OVR);
                 }
                 return ImageLib.getImage(ImageLib.ICON_ERROR_INFO);
@@ -704,8 +719,10 @@ public class ImportWizardPage extends WizardPage {
             return;
         }
         String version = record.getProperty().getVersion();
-        String nameWithoutVersion = file.getName().replaceAll(underlineStr + version, PluginConstant.EMPTY_STRING)
-                .replaceAll(PluginConstant.DOT_STRING + FactoriesUtil.JRXML, PluginConstant.EMPTY_STRING);
+        String nameWithoutVersion =
+                file.getName()
+                        .replaceAll(underlineStr + version, PluginConstant.EMPTY_STRING)
+                        .replaceAll(PluginConstant.DOT_STRING + FactoriesUtil.JRXML, PluginConstant.EMPTY_STRING);
         File parentFile = file.getParentFile().getParentFile();
         if (parentFile == null || !parentFile.exists()) {
             return;
@@ -738,6 +755,15 @@ public class ImportWizardPage extends WizardPage {
                 }
             }
         }
+    }
+
+    /**
+     * Get the status of overwrite
+     * 
+     * @return true if all conflict element should be overwrite else false
+     */
+    public boolean isOverWrite() {
+        return this.overwriteBTN.getSelection();
     }
 
 }

@@ -55,7 +55,7 @@ public interface IImportWriter {
     public List<String> check();
 
     /**
-     * DOC bZhou Comment method "populate".
+     * Recompute the statu of records
      * 
      * @param elements
      * @param checkExisted
@@ -87,6 +87,15 @@ public interface IImportWriter {
      * @param monitor
      */
     public void write(ItemRecord[] records, IProgressMonitor monitor);
+
+    /**
+     * Write down all elements into worksapce.
+     * 
+     * @param records All records which will write into worksapce
+     * @param monitor The monitor of whole process
+     * @param isOverwrite True if conflict record should be overwrite else false
+     */
+    public void write(ItemRecord[] records, IProgressMonitor monitor, boolean isOverwrite);
 
     /**
      * DOC bZhou Comment method "migration".

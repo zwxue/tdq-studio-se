@@ -30,7 +30,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.XmiResourceManager;
@@ -339,21 +339,23 @@ public final class EMFSharedResources {
     }
 
     public ModelElement reloadModelElementInNode(IRepositoryNode repNode) {
+        Property reloadModelElementInNode = reloadModelElementInNode(repNode.getObject().getProperty());
+        return PropertyHelper.getModelElement(reloadModelElementInNode);
+    }
+
+    public Property reloadModelElementInNode(Property property) {
         try {
-            IRepositoryViewObject repViewObj = repNode.getObject();
-            String id = repViewObj.getProperty().getId();
+            String id = property.getId();
+            URI uri = property.getItem().eResource().getURI();
 
-            URI uri = repViewObj.getProperty().getItem().eResource().getURI();
-
-            ProxyRepositoryFactory.getInstance().unloadResources(repViewObj.getProperty());
-            String fileExtension = repViewObj.getProperty().getItem().getFileExtension();
+            ProxyRepositoryFactory.getInstance().unloadResources(property);
+            String fileExtension = property.getItem().getFileExtension();
             String removeEnd = StringUtils.removeEnd(uri.path(), "." + FactoriesUtil.PROPERTIES_EXTENSION); //$NON-NLS-1$
 
             ProxyRepositoryFactory.getInstance().unloadResources(uri.scheme() + ":" + removeEnd + "." + fileExtension); //$NON-NLS-1$ //$NON-NLS-2$
 
             IRepositoryViewObject lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(id);
-            Item item = lastVersion.getProperty().getItem();
-            return PropertyHelper.getModelElement(item.getProperty());
+            return lastVersion.getProperty();
         } catch (PersistenceException e) {
             log.error("reload model element error: " + e.getMessage()); //$NON-NLS-1$
             return null;

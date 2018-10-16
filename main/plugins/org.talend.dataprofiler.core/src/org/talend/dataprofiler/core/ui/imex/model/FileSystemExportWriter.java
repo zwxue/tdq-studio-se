@@ -79,7 +79,8 @@ public class FileSystemExportWriter implements IExportWriter {
             // TDQ-11370: get a relative path to make the export structure correctly.
             itemDesPath = PropertyHelper.getItemPath(property).makeRelative();
         } else {
-            itemDesPath = itemResPath.makeRelativeTo(ResourceManager.getRootProject().getLocation().removeLastSegments(1));
+            itemDesPath =
+                    itemResPath.makeRelativeTo(ResourceManager.getRootProject().getLocation().removeLastSegments(1));
         }
 
         // property
@@ -124,14 +125,18 @@ public class FileSystemExportWriter implements IExportWriter {
 
                     for (IPath resPath : toImportMap.keySet()) {
                         IPath desPath = toImportMap.get(resPath);
-                        synchronized (ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                        synchronized (ProxyRepositoryFactory
+                                .getInstance()
+                                .getRepositoryFactoryFromProvider()
                                 .getResourceManager().resourceSet) {
                             write(resPath, desPath);
                         }
                     }
-                } else {
-                    for (String error : record.getErrors()) {
-                        log.error(error);
+                } else {// may not come here check if have time
+                    for (ImportMessage error : record.getErrors()) {
+                        if (EMessageType.ERROR == error.getType()) {
+                            log.error(error.toString());
+                        }
                     }
                 }
 
@@ -158,7 +163,7 @@ public class FileSystemExportWriter implements IExportWriter {
         if (resFile.exists()) {
             FilesUtils.copyFile(resFile, desFile);
         } else {
-            log.warn(DefaultMessagesImpl.getString("FileSystemExportWriter.ExportFail", resFile.getAbsolutePath()));//$NON-NLS-1$ //$NON-NLS-2$ 
+            log.warn(DefaultMessagesImpl.getString("FileSystemExportWriter.ExportFail", resFile.getAbsolutePath()));//$NON-NLS-1$ 
         }
     }
 
@@ -202,8 +207,12 @@ public class FileSystemExportWriter implements IExportWriter {
      */
     public ItemRecord computeInput(IPath path) {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        File file = path == null ? ResourceManager.getRootProject().getLocation().toFile() : workspace.getRoot().getFolder(path)
-                .getLocation().toFile();
+        File file =
+                path == null ? ResourceManager.getRootProject().getLocation().toFile() : workspace
+                        .getRoot()
+                        .getFolder(path)
+                        .getLocation()
+                        .toFile();
 
         return new ItemRecord(file);
     }
