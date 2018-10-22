@@ -56,6 +56,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.utils.URIHelper;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
@@ -196,21 +197,32 @@ public class FileSystemImportWriter implements IImportWriter {
         Property property = conflictObject.getProperty();
         ModelElement modelElement = PropertyHelper.getModelElement(property);
         if (modelElement instanceof Analysis) {
-            for (Indicator indicator : ((Analysis) modelElement).getResults().getIndicators()) {
-                if (indicator instanceof AllMatchIndicator) {
-                    List<RegexpMatchingIndicator> compositeIndicators =
-                            ((AllMatchIndicator) indicator).getCompositeRegexMatchingIndicators();
-                    for (Indicator ind : compositeIndicators) {
-                        if (ind.getParameters().getDataValidDomain().getBuiltInPatterns().size() > 0) {
-                            record.addError(DefaultMessagesImpl.getString("FileSystemImportWriter.builtinCheck", //$NON-NLS-1$
-                                    ind.getName(), modelElement.getName()));
-                        }
-                    }
-                } else if (indicator instanceof PatternMatchingIndicator
-                        && indicator.getParameters().getDataValidDomain().getBuiltInPatterns().size() > 0) {
-                    record.addError(DefaultMessagesImpl.getString("FileSystemImportWriter.builtinCheck", //$NON-NLS-1$
-                            indicator.getName(), modelElement.getName()));
+            checkBuintInOnAnalysis(record, modelElement);
+        } else if (modelElement instanceof Connection) {
+            EList<Dependency> supplierDependency = modelElement.getSupplierDependency();
+            for (Dependency clientDep : supplierDependency) {
+                for (ModelElement clientModelElement : clientDep.getClient()) {
+                    checkBuintInOnAnalysis(record, clientModelElement);
                 }
+            }
+        }
+    }
+
+    protected void checkBuintInOnAnalysis(ItemRecord record, ModelElement modelElement) {
+        for (Indicator indicator : ((Analysis) modelElement).getResults().getIndicators()) {
+            if (indicator instanceof AllMatchIndicator) {
+                List<RegexpMatchingIndicator> compositeIndicators =
+                        ((AllMatchIndicator) indicator).getCompositeRegexMatchingIndicators();
+                for (Indicator ind : compositeIndicators) {
+                    if (ind.getParameters().getDataValidDomain().getBuiltInPatterns().size() > 0) {
+                        record.addError(DefaultMessagesImpl.getString("FileSystemImportWriter.builtinCheck", //$NON-NLS-1$
+                                ind.getName(), modelElement.getName()));
+                    }
+                }
+            } else if (indicator instanceof PatternMatchingIndicator
+                    && indicator.getParameters().getDataValidDomain().getBuiltInPatterns().size() > 0) {
+                record.addError(DefaultMessagesImpl.getString("FileSystemImportWriter.builtinCheck", //$NON-NLS-1$
+                        indicator.getName(), modelElement.getName()));
             }
         }
     }
@@ -665,6 +677,7 @@ public class FileSystemImportWriter implements IImportWriter {
                                                 } else if (isWhereRule(modEle)) {
                                                     storeDependencyForIndicator(record);
                                                     isDelete = false;
+                                                    needToRemoveList.add(record);
                                                 }
                                             } else if (isMatchRuleDefinition(modEle)) {
                                                 // do nothing here now
@@ -1470,7 +1483,6 @@ public class FileSystemImportWriter implements IImportWriter {
      * [], org.eclipse.core.runtime.IProgressMonitor)
      */
     public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
-        // TODO replace all item uuid if we can find in the map
         mergeImportItemsDependency(records);
         cleanImportedItems();
         doMigration(monitor);
@@ -1485,12 +1497,27 @@ public class FileSystemImportWriter implements IImportWriter {
             if (itemRecord.geteConflictType() != null && itemRecord.isEMFValid() && itemRecord.needMergeDependency()) {
                 try {
                     Property conflictProperty = itemRecord.getConflictObject().getProperty();
+                    IFile itemFile = PropertyHelper.getItemFile(conflictProperty);
+                    File locationFile = itemFile.getLocation().toFile();
+
                     if (conflictProperty.eIsProxy()) {
-                        conflictProperty =
-                                PropertyHelper.getProperty(PropertyHelper.getItemFile(conflictProperty), true);
+                        conflictProperty = PropertyHelper.getProperty(itemFile, true);
                     }
-                    Property currentProperty =
-                            EMFSharedResources.getInstance().reloadModelElementInNode(conflictProperty);
+                    Property currentProperty = null;
+                    if (locationFile.exists()) {
+                        currentProperty = EMFSharedResources.getInstance().reloadModelElementInNode(conflictProperty);
+                    } else {
+                        // sql rule case
+                        Map<IPath, IPath> toImportMap = mapping(itemRecord);
+                        IFile desIFile =
+                                ResourceService.file2IFile(toImportMap.get(itemRecord.getPropertyPath()).toFile());
+                        URI platformResourceURI =
+                                URI.createPlatformResourceURI(desIFile.getFullPath().toOSString(), false);
+                        IFile afterCopyPropertyFile = URIHelper.getFile(platformResourceURI);
+                        currentProperty =
+                                EMFSharedResources.getInstance().reloadModelElementInNode(conflictProperty,
+                                        afterCopyPropertyFile);
+                    }
                     // NAME conflict will not come here
                     if (itemRecord.isNeedToRenameFirst()) {
                         // find a way to create a new item and keep old one

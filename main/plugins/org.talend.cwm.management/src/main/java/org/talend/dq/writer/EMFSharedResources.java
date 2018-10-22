@@ -361,4 +361,24 @@ public final class EMFSharedResources {
             return null;
         }
     }
+
+    /**
+     * Unload property resource and reload from the file
+     */
+    public Property reloadModelElementInNode(Property property, IFile file) {
+        try {
+            URI uri = property.getItem().eResource().getURI();
+
+            ProxyRepositoryFactory.getInstance().unloadResources(property);
+            String fileExtension = property.getItem().getFileExtension();
+            String removeEnd = StringUtils.removeEnd(uri.path(), "." + FactoriesUtil.PROPERTIES_EXTENSION); //$NON-NLS-1$
+
+            ProxyRepositoryFactory.getInstance().unloadResources(uri.scheme() + ":" + removeEnd + "." + fileExtension); //$NON-NLS-1$ //$NON-NLS-2$
+
+            return ProxyRepositoryFactory.getInstance().reload(property, file);
+        } catch (PersistenceException e) {
+            log.error("reload model element error: " + e.getMessage()); //$NON-NLS-1$
+            return null;
+        }
+    }
 }
