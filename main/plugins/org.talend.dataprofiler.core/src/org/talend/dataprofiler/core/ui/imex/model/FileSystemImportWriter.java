@@ -198,17 +198,21 @@ public class FileSystemImportWriter implements IImportWriter {
         ModelElement modelElement = PropertyHelper.getModelElement(property);
         if (modelElement instanceof Analysis) {
             checkBuintInOnAnalysis(record, modelElement);
-        } else if (modelElement instanceof Connection) {
+        } else if (modelElement instanceof Connection || modelElement instanceof IndicatorDefinition
+                || modelElement instanceof Pattern) {
             EList<Dependency> supplierDependency = modelElement.getSupplierDependency();
             for (Dependency clientDep : supplierDependency) {
                 for (ModelElement clientModelElement : clientDep.getClient()) {
-                    checkBuintInOnAnalysis(record, clientModelElement);
+                    if (clientModelElement instanceof Analysis) {
+                        checkBuintInOnAnalysis(record, clientModelElement);
+                    }
                 }
             }
         }
     }
 
-    protected void checkBuintInOnAnalysis(ItemRecord record, ModelElement modelElement) {
+    private void checkBuintInOnAnalysis(ItemRecord record, ModelElement modelElement) {
+
         for (Indicator indicator : ((Analysis) modelElement).getResults().getIndicators()) {
             if (indicator instanceof AllMatchIndicator) {
                 List<RegexpMatchingIndicator> compositeIndicators =
