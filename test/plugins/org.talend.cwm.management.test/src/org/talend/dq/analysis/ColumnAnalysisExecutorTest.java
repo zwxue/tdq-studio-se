@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
@@ -28,6 +28,7 @@ import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
+
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
@@ -120,7 +121,8 @@ public class ColumnAnalysisExecutorTest {
 
         ColumnAnalysisExecutor columnAnalysisExecutor = new ColumnAnalysisExecutor();
         assertEquals(
-                "SELECT columnName FROM catalogName.schemaName.tableName", columnAnalysisExecutor.createSqlStatement(analysis)); //$NON-NLS-1$
+                "SELECT \"columnName\" FROM \"catalogName\".\"schemaName\".\"tableName\"", //$NON-NLS-1$
+                columnAnalysisExecutor.createSqlStatement(analysis));
     }
 
 }

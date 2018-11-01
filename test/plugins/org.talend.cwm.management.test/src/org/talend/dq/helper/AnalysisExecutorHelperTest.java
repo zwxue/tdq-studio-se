@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -36,6 +39,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.ReturnCode;
+
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
@@ -87,7 +91,8 @@ public class AnalysisExecutorHelperTest {
         catalog.setName("catalogName"); //$NON-NLS-1$
         schema.setNamespace(catalog);
 
-        assertEquals("catalogName.schemaName.tableName", AnalysisExecutorHelper.getTableName(tdColumn, dbmsLanguage)); //$NON-NLS-1$
+        assertEquals("\"catalogName\".\"schemaName\".\"tableName\"", //$NON-NLS-1$
+                AnalysisExecutorHelper.getTableName(tdColumn, dbmsLanguage));
 
     }
 
