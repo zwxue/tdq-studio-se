@@ -132,7 +132,7 @@ public class AbstractSchemaEvaluatorTest {
 
         String catalogNameWithQuote = schemaEvaluator.getCatalogNameWithQuote(schemarIndicator);
         assertNotNull(catalogNameWithQuote);
-        assertEquals(catalogNameWithQuote, "\"" + catalogName + "\"");
+        assertEquals("\"" + catalogName + "\"", catalogNameWithQuote);
 
     }
 
