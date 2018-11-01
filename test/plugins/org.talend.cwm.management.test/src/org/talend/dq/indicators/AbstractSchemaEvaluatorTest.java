@@ -45,6 +45,7 @@ import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -131,7 +132,7 @@ public class AbstractSchemaEvaluatorTest {
 
         String catalogNameWithQuote = schemaEvaluator.getCatalogNameWithQuote(schemarIndicator);
         assertNotNull(catalogNameWithQuote);
-        assertEquals(catalogNameWithQuote, catalogName);
+        assertEquals(catalogNameWithQuote, "\"" + catalogName + "\"");
 
     }
 
