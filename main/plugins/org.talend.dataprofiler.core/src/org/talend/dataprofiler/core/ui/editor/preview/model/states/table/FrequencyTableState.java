@@ -62,7 +62,7 @@ public abstract class FrequencyTableState extends AbstractTableTypeStates {
 
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
-                    String keyLabel = FrequencyTypeStateUtil.getKeyLabel(freqExt, 30);
+                    String keyLabel = FrequencyTypeStateUtil.getKeyLabel(freqExt, FrequencyTypeStateUtil.MAX_KEY_LENGTH);
                     dataEnities.add(FrequencyTypeStateUtil.createChartEntity(unit.getIndicator(), freqExt, keyLabel,
                             withRowCountIndicator));
                 }
