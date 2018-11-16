@@ -27,7 +27,9 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
  */
 public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
-    private static final String REGEX = "SELECT.*\\s*MAX\\((.*)\\)\\s*, (SOUNDEX|NYSIIS)\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
+    // this should support all the database type's definitions in the soundex indicators.
+    private static final String REGEX =
+            "SELECT.*\\s*MAX\\((.*)\\)\\s*,( )*(SOUNDEX|NYSIIS)\\(.*\\)\\s*,( )*COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*,( )*COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s*( )+FROM"; //$NON-NLS-1$
 
     @Override
     protected String getFreqRowsStatement() {
@@ -55,8 +57,7 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         String function = getFunction();
 
         // MOD zshen bug 11005 sometimes(when instead of soundex() with some sql),the Variable named "function" is not
-        // is
-        // colName.
+        // is colName.
         if (function != null
                 && (DbmsLanguageFactory.isInfomix(this.dbmsLanguage.getDbmsName()) || DbmsLanguageFactory
                         .isOracle(this.dbmsLanguage.getDbmsName()))) {
@@ -81,9 +82,10 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
         Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
         Matcher matcher = p.matcher(instantiatedSQL);
-        matcher.find();
-        String group = matcher.group(1);
-        return group;
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null; // normally, should not come to here
     }
 
     @Override
