@@ -45,6 +45,10 @@
          id="org.talend.updates.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.talend.repository.feature"
+         version="0.0.0"/>
+
    <plugin
          id="org.talend.cwm.management"
          download-size="0"
