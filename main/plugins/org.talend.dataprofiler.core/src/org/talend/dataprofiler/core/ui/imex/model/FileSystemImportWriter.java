@@ -1042,8 +1042,10 @@ public class FileSystemImportWriter implements IImportWriter {
             private Boolean findContextInImportList(String repositoryContextId, List<String> importedContext) {
                 if (importedContext.isEmpty()) {
                     for (ItemRecord record : fRecords) {
-                        if (record.getProperty().getItem() instanceof ContextItem) {
-                            importedContext.add(record.getProperty().getId());
+                        if (record.getProperty() != null && record.getProperty().getItem() != null) {
+                            if (record.getProperty().getItem() instanceof ContextItem) {
+                                importedContext.add(record.getProperty().getId());
+                            }
                         }
                     }
                 }
