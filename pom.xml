@@ -77,6 +77,7 @@
 		<!--module>main/plugins/org.talend.dataquality.standardization</module-->
 		<module>main/plugins/org.talend.dataquality.standardization.migration</module>
 		<module>main/plugins/org.talend.libraries.google.libphonumber</module>
+		<module>main/plugins/org.talend.libraries.google.re2j</module>
 		<module>main/plugins/org.talend.libraries.jung</module>
 		<module>main/plugins/org.talend.libraries.mapdb</module>
 		<module>main/plugins/org.talend.libraries.clearspring.analytics</module>

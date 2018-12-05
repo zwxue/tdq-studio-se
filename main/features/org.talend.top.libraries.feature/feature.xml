@@ -298,6 +298,7 @@
   <plugin id="org.mortbay.jetty.server" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
   <plugin id="org.mortbay.jetty.util" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
   <plugin id="org.talend.libraries.google.libphonumber" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+  <plugin id="org.talend.libraries.google.re2j" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
   <plugin id="org.talend.libraries.jfreechart" download-size="0" install-size="0" version="0.0.0"/>
   <plugin id="org.talend.libraries.jung" download-size="0" install-size="0" version="0.0.0"/>
   <plugin id="org.talend.libraries.mapdb" download-size="0" install-size="0" version="0.0.0"/>
