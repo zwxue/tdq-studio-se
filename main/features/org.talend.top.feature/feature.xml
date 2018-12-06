@@ -4,43 +4,45 @@
   <description url="http://www.example.com/description">[Enter Feature Description here.]</description>  
   <copyright url="http://www.example.com/copyright">[Enter Copyright Description here.]</copyright>  
   <license url="http://www.example.com/license">[Enter License Description here.]</license>  
-  <includes id="org.eclipse.help" version="0.0.0"/>
-  <includes id="org.eclipse.rcp" version="0.0.0"/>
-  <includes id="org.talend.core.feature" version="0.0.0"/>
-  <includes id="org.talend.hadoop.distribution.feature" version="0.0.0"/>
-  <includes id="org.talend.model.migration.feature" version="0.0.0"/>
-  <includes id="org.talend.repository.feature" version="0.0.0"/>
-  <includes id="org.talend.top.libraries.feature" version="0.0.0"/>
-  <includes id="org.talend.updates.feature" version="0.0.0"/>
-  <plugin id="com.cedarsoftware.json-io" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="com.fasterxml.jackson.core.jackson-annotations" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="com.fasterxml.jackson.core.jackson-core" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="com.fasterxml.jackson.core.jackson-databind" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="com.thoughtworks.paranamer" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="net.jeeeyul.eclipse.themes" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="net.jeeeyul.swtend" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.beanutils" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.codec" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.collections" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.httpclient" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.io" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.lang" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.lang3" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.logging" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.commons.pool" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.httpcomponents.httpclient" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.httpcomponents.httpcore" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.apache.servicemix.bundles.avro" download-size="0" install-size="0" version="0.0.0"/>
-  <plugin id="org.eclipse.aether.api" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.eclipse.aether.connector.basic" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.eclipse.aether.impl" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.eclipse.aether.spi" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.eclipse.aether.transport.file" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.eclipse.aether.transport.http" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.eclipse.aether.util" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.eclipse.nebula.widgets.nattable.core" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.ops4j.pax.url.mvn" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+  <requires>
+    <import feature="org.eclipse.help" version="0.0.0" match="greaterOrEqual"/>
+    <import feature="org.eclipse.rcp" version="0.0.0" match="greaterOrEqual"/>
+    <import feature="org.talend.core.feature" version="0.0.0" match="greaterOrEqual"/>
+    <import feature="org.talend.hadoop.distribution.feature" version="0.0.0" match="greaterOrEqual"/>
+    <import feature="org.talend.model.migration.feature" version="0.0.0" match="greaterOrEqual"/>
+    <import feature="org.talend.repository.feature" version="0.0.0" match="greaterOrEqual"/>
+    <import feature="org.talend.top.libraries.feature" version="0.0.0" match="greaterOrEqual"/>
+    <import feature="org.talend.updates.feature" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="com.cedarsoftware.json-io" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="com.fasterxml.jackson.core.jackson-annotations" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="com.fasterxml.jackson.core.jackson-core" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="com.fasterxml.jackson.core.jackson-databind" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="com.thoughtworks.paranamer" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="net.jeeeyul.eclipse.themes" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="net.jeeeyul.swtend" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.beanutils" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.codec" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.collections" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.httpclient" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.io" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.lang" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.lang3" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.logging" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.commons.pool" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.httpcomponents.httpclient" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.httpcomponents.httpcore" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.apache.servicemix.bundles.avro" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.aether.api" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.aether.connector.basic" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.aether.impl" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.aether.spi" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.aether.transport.file" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.aether.transport.http" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.aether.util" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.nebula.widgets.nattable.core" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.ops4j.pax.url.mvn" version="0.0.0" match="greaterOrEqual"/>
+  </requires>
   <plugin id="org.talend.cwm.compare" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
   <plugin id="org.talend.cwm.compare.nl" download-size="0" install-size="0" version="0.0.0" fragment="true" unpack="false"/>
   <plugin id="org.talend.cwm.compare.ui" download-size="0" install-size="0" version="0.0.0" unpack="false"/>

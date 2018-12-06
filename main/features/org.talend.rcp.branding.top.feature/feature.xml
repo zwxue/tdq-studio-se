@@ -8,11 +8,11 @@
     <discovery label="TOP Talend Update Site" url="http://talendforge.org/core/updatesite/testing/"/> 
   </url>  
   <requires>
-    <import plugin="org.talend.designer.maven"/>
-    <import plugin="org.talend.designer.maven.ui"/>
+    <import feature="org.talend.top.feature" version="0.0.0" match="greaterOrEqual"/>
+    <import feature="org.talend.update.p2.feature" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.talend.designer.maven" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.talend.designer.maven.ui" version="0.0.0" match="greaterOrEqual"/>
   </requires>  
-  <includes id="org.talend.top.feature" version="0.0.0"/>
-  <includes id="org.talend.update.p2.feature" version="0.0.0"/>
   <plugin id="org.talend.dataprofiler.rcp" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
   <plugin id="org.talend.dataprofiler.rcp.nl" download-size="0" install-size="0" version="0.0.0" fragment="true" unpack="false"/>
   <plugin id="org.talend.designer.maven.tos" download-size="0" install-size="0" version="0.0.0" fragment="true"/>
