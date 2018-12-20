@@ -51,6 +51,7 @@
 		<module>i18n/plugins/org.talend.dataquality.standardization.nl</module>
 		<module>i18n/plugins/org.talend.rcp.branding.top.nl</module>
 		<!--<module>main/features/org.talend.dataquality.test.feature</module>-->
+        <module>main/features/org.talend.fragment.jars.dq.feature</module>
 		<module>main/features/org.talend.rcp.branding.top.feature</module>
 		<module>main/features/org.talend.top.feature</module>
 		<module>main/features/org.talend.top.libraries.feature</module>
