@@ -110,7 +110,7 @@
     <import plugin="org.eclipse.jface.text" version="0.0.0" match="greaterOrEqual"/>
     <import plugin="org.eclipse.ltk.core.refactoring" version="0.0.0" match="greaterOrEqual"/>
     <import plugin="org.eclipse.ltk.ui.refactoring" version="0.0.0" match="greaterOrEqual"/>
-    <import plugin="org.eclipse.nebula.widgets.grid" version="0.0.0" match="greaterOrEqual"/>
+    <import plugin="org.eclipse.nebula.widgets.grid" version="7.2.1" match="greaterOrEqual"/>
     <import plugin="org.eclipse.nebula.widgets.pagination" version="0.0.0" match="greaterOrEqual"/>
     <import plugin="org.eclipse.nebula.widgets.tablecombo" version="0.0.0" match="greaterOrEqual"/>
     <import plugin="org.eclipse.osgi" version="0.0.0" match="greaterOrEqual"/>
