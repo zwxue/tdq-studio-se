@@ -571,6 +571,9 @@ public class AnalysisRecordGroupingUtils {
             AnalysisRecordGroupingUtils.survivKeyColumn = surKey.getColumn();
             if (surKey != null && survivKeyColumn.equals(inputColumn)) {
                 String referenceColumn = surKey.getFunction().getReferenceColumn();
+                if (referenceColumn == null) {
+                    referenceColumn = inputColumn;
+                }
                 String referenceColumnIndex = findColumnIndex(columnMap, referenceColumn, survivKeyColumn);
                 matchKeyMap.put(IRecordGrouping.REFERENCE_COLUMN_IDX, referenceColumnIndex);
             }
