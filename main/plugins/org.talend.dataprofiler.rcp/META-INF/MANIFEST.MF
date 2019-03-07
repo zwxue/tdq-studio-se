@@ -15,7 +15,6 @@ Require-Bundle: org.eclipse.ui,
  org.apache.xerces,
  org.eclipse.ui.cheatsheets,
  org.talend.registration,
- org.eclipse.update.core,
  org.eclipse.core.expressions,
  org.apache.log4j;bundle-version="1.2.13",
  org.eclipse.ui.views.log;bundle-version="1.0.0";resolution:=optional,
@@ -26,7 +25,11 @@ Require-Bundle: org.eclipse.ui,
  org.talend.core.repository,
  org.eclipse.core.resources,
  org.talend.model,
- org.talend.librariesmanager
+ org.talend.librariesmanager,
+ org.eclipse.e4.core.contexts,
+ org.eclipse.e4.core.di,
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.e4.ui.workbench
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.rcp,
