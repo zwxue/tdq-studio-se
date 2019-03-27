@@ -6,6 +6,7 @@ Bundle-Version: 7.2.1.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.navigator,
  org.talend.dataquality;visibility:=reexport,
+ org.talend.daikon.exception,
  org.talend.utils,
  org.apache.commons.collections,
  org.apache.commons.beanutils,
