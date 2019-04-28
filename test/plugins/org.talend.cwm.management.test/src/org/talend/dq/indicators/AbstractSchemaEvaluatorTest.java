@@ -59,7 +59,7 @@ import orgomg.cwm.resource.relational.Schema;
         Evaluator.class, Schema.class })
 public class AbstractSchemaEvaluatorTest {
 
-    private String dbVersion = "502"; //$NON-NLS-1$
+    private String dbVersion = "5.0.2"; //$NON-NLS-1$
 
     private String catalogName = "catalog1"; //$NON-NLS-1$
 
