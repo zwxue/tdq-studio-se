@@ -1,5 +1,5 @@
 Talend Open Studio for Data Quality
-Copyright (c) 2006 - 2019 Talend Inc. - www.talend.com
+Copyright (c) 2006-2019 Talend Inc. - www.talend.com
 All rights reserved.
 
 
@@ -94,7 +94,7 @@ Licensed under Apache-2.0
 This product includes software developed at
 Jackson JSON Processor (http://wiki.fasterxml.com/JacksonLicensing).
 Licensed under Apache-2.0
-Copyright © 2012-2013 FasterXML.
+Copyright (C) 2012-2013 FasterXML.
 
 This product includes software developed at
 Jackson JSON processor.
